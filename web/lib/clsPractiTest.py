@@ -185,3 +185,4 @@ class clsPractiTest:
             with open(path + '\\' + file, "rb") as fileObj:
                 fileBase64Utf8 = base64.b64encode(fileObj.read()).decode('utf-8') 
                 files.append({"filename": fileObj.name.split("\\")[len(fileObj.name.split("\\")) - 1], "content_encoded": fileBase64Utf8})
+        return files
