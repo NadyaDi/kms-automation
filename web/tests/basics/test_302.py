@@ -5,6 +5,7 @@ from clsTestService import clsTestService
 from localSettings import *
 import localSettings
 from login import Login
+from upload import Upload
 from utilityTestFunc import *
 
 
@@ -48,6 +49,7 @@ class Test:
             
             ################### TEST REUSABLE CLASS HELPERS ##################
             common = Common(self.driver)
+            upload = Upload(self.driver)
             ##################################################################
 
             ##################### TEST STEPS - MAIN FLOW #####################
@@ -56,8 +58,10 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED")
                 return
-            ##################################################################
             
+            upload.upload("filePath", "namename", "descritiondescrition", "tags1,tags2,")
+            ##################################################################
+            print("DONE")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status =self.testService.handleException(self,inst,self.startTime)

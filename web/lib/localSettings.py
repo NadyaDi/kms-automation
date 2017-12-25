@@ -48,6 +48,7 @@ LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "oleg.sigalov@kaltura.co
 # LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "Alex.strusberg@kaltura.com"
 
 # Will be updated after test starts
+LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
 LOCAL_SETTINGS_TEST_BASE_URL                = LOCAL_SETTINGS_URL_PREFIX
 LOCAL_SETTINGS_KMS_LOGIN_URL                = None
