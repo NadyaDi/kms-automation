@@ -1,8 +1,6 @@
 from asyncio.tasks import sleep
-import csv, pytest, os.path, sys
-import datetime
+import csv, pytest, os.path, sys, uuid, datetime, time
 import importlib
-import time
 from timeit import Timer
 
 from openpyxl import load_workbook
@@ -32,38 +30,9 @@ class clsTestService():
         PC_BROWSER_CHROME            = "pc_chrome"
         PC_BROWSER_FIREFOX           = "pc_firefox"
         MAC_BROWSER_SAFARI           = "mac_Safari"    
-        ANDROID_CHROME               = "android_chrome"    
-
-        DELIEVERY_AUTO               = "auto"
-        DELIEVERY_PROGRESSIVE        = "progressive"
-        DELIEVERY_AKAMAI             = "akamai"
-        DELIEVERY_HDS                = "hds"
-        DELIEVERY_HLS                = "LeadWithHLSOnFlash"
-        DELIEVERY_FLASH_SAFARI       = "ForceFlashOnDesktopSafari"
-        DELIEVERY_FORCE_HDS          = "forceHDS"
-        DELIEVERY_ANDROID_HLS        = "androidHLS"
+        ANDROID_CHROME               = "android_chrome"   
         IMPLICITLY_WAIT_TIME_TO_WAIT = 30
-        TEST_TIMEOUT                 = 600
-        
-        ANALYTICS_GA                 = "googleAnalytics"
-        ANALYTICS_COMSCORE           = "comscore"
-
-        #===============================================================================
-        # function that imports player settings per module
-        #===============================================================================
-
-        def loadPlayerSettings(self,env):
-
-            if (env is None):
-                env = ""
-            playerSettingsModule = importlib.import_module('clsPlayerSettings' + env)
-            return getattr(playerSettingsModule, "clsPlayerSettings")        
-        
-        def getTime(self):
-            X0 = 1
-            Y0 = 0
-            t = Timer("Y0 = myfunctions.func1(X0)", "import myfunctions; X0 = %i" % (X0,))
-            return t.timeit.default_timer()
+        TEST_TIMEOUT                 = 600 
         
         #===============================================================================
         # function with all the redundant start functions 
@@ -235,6 +204,8 @@ class clsTestService():
             test.myProxy = None
             test.TEST_TIMEOUT = estimatedDuration
             localSettings.LOCAL_RUNNING_BROWSER = driverFix
+            localSettings.LOCAL_SETTINGS_GUID = str(uuid.uuid4())[:8]
+            
             if (test.enableProxy == True):
                 try:
                     capture = clsBrowserMobCapture(test.testNum,driverFix)

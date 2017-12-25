@@ -1,14 +1,15 @@
-import sys
+import sys, datetime
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
+
 from logger import *
 
-class Base:
 
+class Base:
+    
     def __init__(self, driver):
         self.driver = driver
 
-    # get elements
     def get_element(self, locator):
         """
         Returns element based on provided locator.
@@ -33,6 +34,31 @@ class Base:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
             raise NoSuchElementException
+        
+    def get_child_element(self, parent, locator):
+        """
+        Returns element based on provided locator.
+        Locator include the method and locator value in a tuple.
+        :param locator:
+        :return:
+        """
+
+        method = locator[0]
+        values = locator[1]
+        
+        if type(values) is str:
+            try:
+                return self.get_child_element_by_type(parent, method, values)
+            except NoSuchElementException:
+                raise NoSuchElementException
+        elif type(values) is list:
+            for value in values:
+                try:
+                    return self.get_child_element_by_type(parent, method, value)
+                except NoSuchElementException:
+                    pass
+            writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
+            raise NoSuchElementException        
 
     def get_element_by_type(self, method, value):
         if method == 'accessibility_id':
@@ -49,9 +75,32 @@ class Base:
             return self.driver.find_element_by_xpath(value)
         elif method == 'name':
             return self.driver.find_element_by_name(value)
+        elif method == 'tag_name':
+            return self.driver.find_element_by_tag_name(value)        
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')
+        
+    def get_child_element_by_type(self, parent, method, value):
+        if method == 'accessibility_id':
+            return parent.find_element_by_accessibility_id(value)
+        elif method == 'android':
+            return parent.find_element_by_android_uiautomator('new UiSelector().%s' % value)
+        elif method == 'ios':
+            return parent.find_element_by_ios_uiautomation(value)
+        elif method == 'class_name':
+            return parent.find_element_by_class_name(value)
+        elif method == 'id':
+            return parent.find_element_by_id(value)
+        elif method == 'xpath':
+            return parent.find_element_by_xpath(value)
+        elif method == 'name':
+            return parent.find_element_by_name(value)
+        elif method == 'tag_name':
+            return self.driver.find_element_by_tag_name(value)        
+        else:
+            writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
+            raise Exception('Invalid locator method.')        
 
     def get_elements(self, locator):
         """
@@ -89,6 +138,8 @@ class Base:
             return self.driver.find_elements_by_xpath(value)
         elif method == 'name':
             return self.driver.find_elements_by_name(value)
+        elif method == 'tag_name':
+            return self.driver.find_elements_by_tag_name(value)        
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Element not found by: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')
@@ -96,11 +147,24 @@ class Base:
     # element visible
     def is_visible(self, locator):
         try:
-            self.get_element(locator).is_displayed()
-            return True
+            if self.get_element(locator).is_displayed() == True:
+                return True
+            else:
+                return False
         except NoSuchElementException:
             return False
-        
+    
+    # Wait till element is disappear and return True, elase return False after timeout    
+    def wait_while_not_visible(self, locator, timeout=30):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        while True:
+            if self.is_visible(locator) == False:
+                return True
+            if wait_until < datetime.datetime.now():
+                writeToLog("DEBUG",'Element still visible')
+                break
+        return False
+           
     # element present
     def is_present(self, locator):
         try:
@@ -144,7 +208,6 @@ class Base:
             return False
         else:
             element.click()
-            return True
             
         
     # click with offset
@@ -167,6 +230,15 @@ class Base:
             element.send_keys(text)
             return True 
     
+    def clear_and_send_keys(self, locator, text):
+        element = self.wait_visible(locator)
+        if element == None:
+            return False
+        else:
+            element.clear()
+            element.send_keys(text)
+            return True
+            
     # key event
     def keyevent(self, locator, event):
         element = self.wait_visible(locator)
@@ -206,6 +278,7 @@ class Base:
         if page_state == 'complete':
             return True
         else:
+            writeToLog("DEBUG","Page readyState was not completed after timeout: '" + timeout + "'")
             return False
         
     # Create a screeshot with a given name it the test log folder
@@ -219,4 +292,7 @@ class Base:
         try:
             self.driver.save_screenshot(pngPath)  
         except:
-            writeToLog("INFO","Failed to take a screenshot, bad driver")        
+            writeToLog("INFO","Failed to take a screenshot, bad driver")
+            
+    def switch_to_default_content(self):
+        self.driver.switch_to.default_content()
