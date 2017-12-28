@@ -14,6 +14,7 @@ LOCAL_QRCODE_TEMP_DIR_LINUX                 = os.path.abspath(os.path.join(os.pa
 LOCAL_QR_DECODER_PATH                       = "C:\\Program Files (x86)\\Kaltura\\QRCodeDetector\\QRCodeDetector.exe"
 
 # LOCAL_SETTINGS_AMAZON_HUB_AND_PROXY         = "34.249.96.7"
+LOCAL_SETTINGS_IMPLICITLY_WAIT              = 30
 LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY        = "il-SeleniumHub-qa.dev.kaltura.com"
 LOCAL_SETTINGS_SELENIUM_HUB_URL             = "http://" + LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":4444/wd/hub" #hub address
 LOCAL_SETTINGS_BROWSER_PROXY                = LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":9090" #proxy server address and port.    
@@ -51,7 +52,8 @@ LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "oleg.sigalov@kaltura.co
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
 LOCAL_SETTINGS_TEST_BASE_URL                = LOCAL_SETTINGS_URL_PREFIX
-LOCAL_SETTINGS_KMS_LOGIN_URL                = None
+LOCAL_SETTINGS_KMS_LOGIN_URL                = None 
+LOCAL_SETTINGS_KMS_MY_MEDIA_URL             = None
 
 LOCAL_SETTINGS_PROD_ENVIRONMENT             = 'PROD'              
 LOCAL_SETTINGS_TESTING_ENVIRONMENT          = 'TESTING'

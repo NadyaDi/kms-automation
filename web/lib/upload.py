@@ -1,10 +1,18 @@
-from base import *
-from general import *
-import win32com.client  
 from symbol import except_clause
 
+import win32com.client  
+
+from base import *
+import clsTestService
+from general import General
 
 class Upload(Base):
+    driver = None
+    clsCommon = None
+         
+    def __init__(self, clsCommon, driver):
+        self.driver = driver
+        self.clsCommon = clsCommon
     #=============================================================================================================
     #Upload XPATH locators:
     #=============================================================================================================
@@ -17,10 +25,12 @@ class Upload(Base):
     UPLOAD_ENTRY_DESCRIPTION_IFRAME             = ('class_name', "wysihtml5-sandbox")
     UPLOAD_ENTRY_DETAILS_ENTRY_DESCRIPTION      = ('tag_name', 'body') #before using need to switch frame and click on the description box
     UPLOAD_ENTRY_DETAILS_ENTRY_TAGS             = ('id', 's2id_Entry-tags')
-    UPLOAD_ENTRY_DETAILS_ENTRY_TAGS2             = ('id', 'tags-list')
+    UPLOAD_ENTRY_DETAILS_ENTRY_TAGS2            = ('id', 'tags-list')
     UPLOAD_ENTRY_SAVE_BUTTON                    = ('id', 'Entry-submit')
+    UPLOAD_ENTRY_PROGRESS_BAR                   = ('id', 'progressBar')
+    UPLOAD_ENTRY_SUCCESS_MESSAGE                = ('xpath', "//span[contains(.,'Your changes have been saved.')]")
     #============================================================================================================
-#     general = General(Base.driver) #TODO
+#     base = Base(clsTestService.WEB_DRIVER)
     
     def clickMediaUpload(self):
         try:
@@ -29,10 +39,10 @@ class Upload(Base):
             return True
         except NoSuchElementException:
             return False        
-
     
-    def upload(self, filePath, name, descrition, tags, timeout=60):
-#         filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\QR_05_minutes.mp4"
+    
+    def uploadEntry(self, filePath, name, descrition, tags, timeout=60):
+    #         filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\QR_05_minutes.mp4"
         filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
         try:
             # Click Add New
@@ -59,6 +69,10 @@ class Upload(Base):
             startTime = datetime.datetime.now().replace(microsecond=0)
             self.waitUploadCompleted(startTime, timeout)
             
+            if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
+                return False
+                writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
+                            
             # Fill entry details: name, descrition, tags
             self.fillFileUploadEntryDetails(name, descrition, tags)
             
@@ -66,29 +80,31 @@ class Upload(Base):
             if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Save' button")
                 return False
-            sleep(4)
+            sleep(5)
             
             # Wait for loader to disappear
-#             self.general.waitForLoaderToDisappear(timeout) #TODO
-            self.wait_while_not_visible(General.KMS_LOADER, 60)
-            sleep(2)
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
             # Wait for 'Your changes have been saved.' message
-                   
-#             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
+            if self.get_element(self.UPLOAD_ENTRY_SUCCESS_MESSAGE) != None:
+                writeToLog("INFO","Successfully uploaded entry: '" + name + "'")
+            else:
+                writeToLog("INFO","FAILED to upload entry, no seccess message was appeared'")
+
         except Exception as inst:
-#             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
+    #             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
             self.takeScreeshotGeneric("FAIL_UPLOAD")
             raise Exception(inst)
         
         
     def waitUploadCompleted(self, startTime, timeout=60):
         if self.wait_for_text(self.UPLOAD_COMPLETED_LABEL, "Upload Completed!", timeout) != True:
-            writeToLog("INFO","Upload didn't finish after timeout:" + timeout + "' seconds")
+            writeToLog("INFO","Upload didn't finish after timeout: " + timeout + "' seconds")
             return False
         else:
             now = datetime.datetime.now().replace(microsecond=0)
             uploadDuration = now - startTime
-            writeToLog("INFO","Upload finished after:" + str(uploadDuration) + "'")
+            writeToLog("INFO","Upload finished after: " + str(uploadDuration) + "'")
             return True
         
         
@@ -161,4 +177,12 @@ class Upload(Base):
             return True
         else:
             writeToLog("DEBUG","FAILED to type in Tags")
+            return False
+        
+    # Return true if error message ('Oops! Entry could not be created.') appeared after upload    
+    def isErrorUploadMessage(self):
+        progressBarText = self.get_element_text(self.UPLOAD_ENTRY_PROGRESS_BAR)
+        if progressBarText == 'Oops! Entry could not be created.':
+            return True
+        else:
             return False

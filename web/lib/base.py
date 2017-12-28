@@ -1,4 +1,4 @@
-import sys, datetime
+import sys, datetime, re
 from time import sleep
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 
@@ -158,11 +158,14 @@ class Base:
     def wait_while_not_visible(self, locator, timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         while True:
-            if self.is_visible(locator) == False:
+            try:
+                if self.is_visible(locator) == False:
+                    return True
+                if wait_until < datetime.datetime.now():
+                    writeToLog("DEBUG",'Element still visible')
+                    break
+            except:
                 return True
-            if wait_until < datetime.datetime.now():
-                writeToLog("DEBUG",'Element still visible')
-                break
         return False
            
     # element present
@@ -176,22 +179,30 @@ class Base:
     # waits
     def wait_visible(self, locator, timeout=10):
         i = 0
+        self.driver.implicitly_wait(0)
         while i != timeout:
             try:
-                self.is_visible(locator)
-                return self.get_element(locator)
+                if self.is_visible(locator) == True:
+                    self.setImplicitlyWaitToDefault()
+                    return self.get_element(locator)
+                else:
+                    sleep(1)
+                    i += 1                    
             except NoSuchElementException:
                 sleep(1)
                 i += 1
+        self.setImplicitlyWaitToDefault()                
         return None
 
     def wait_for_text(self, locator, text, timeout=10):
         i = 0
+        self.driver.implicitly_wait(0)
         while i != timeout:
             try:
                 element = self.get_element(locator)
                 element_text = element.text
                 if element_text.lower() == text.lower():
+                    self.setImplicitlyWaitToDefault() 
                     return True
                 else:
                     pass
@@ -199,11 +210,12 @@ class Base:
                 pass
             sleep(1)
             i += 1
+        self.setImplicitlyWaitToDefault() 
         return None
 
     # clicks and taps
-    def click(self, locator):
-        element = self.wait_visible(locator)
+    def click(self, locator, timeout=10):
+        element = self.wait_visible(locator, timeout)
         if element == None:
             return False
         else:
@@ -268,6 +280,31 @@ class Base:
         self.driver.get(url)
         self.wait_for_page_readyState()
         
+        
+    # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
+    def verifyUrl(self, expectedUrl, isRegex):
+        currentUrl = self.driver.current_url
+        if isRegex == True:
+            m = re.search(expectedUrl, currentUrl)
+            if m:
+                return True
+            else:
+                writeToLog("FAILED","Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = True")
+                return False
+        # Compare URL with contains method ('in')
+        else:
+            # remove the http/https from the current and expected URL and compare
+            newCurrentUrl = currentUrl.replace('https://', '')
+            newCurrentUrl = currentUrl.replace('http://', '')
+            newExpectedUrl = expectedUrl.replace('https://', '')
+            newExpectedUrl = expectedUrl.replace('http://', '')
+            # Compare the URLs
+            if newExpectedUrl in newCurrentUrl:
+                return True
+            else:
+                writeToLog("FAILED","Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = False")
+                return False
+            
     def wait_for_page_readyState(self, timeout=30):
         i = 0
         page_state = ''
@@ -296,3 +333,6 @@ class Base:
             
     def switch_to_default_content(self):
         self.driver.switch_to.default_content()
+        
+    def setImplicitlyWaitToDefault(self):
+        self.driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)

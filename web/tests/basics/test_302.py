@@ -1,11 +1,9 @@
 import time, pytest
 
 from clsCommon import Common
-from clsTestService import clsTestService
+import clsTestService
 from localSettings import *
 import localSettings
-from login import Login
-from upload import Upload
 from utilityTestFunc import *
 
 
@@ -18,11 +16,10 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
-    testService = clsTestService()
     testNum     = "302"
     enableProxy = False
     
-    supported_platforms = testService.updatePlatforms(testNum)
+    supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
     timeout_accured = "False"
@@ -43,32 +40,32 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-#             self,capture,driver = self.testService.initializeAndLoginAsUser(self, driverFix)
-            self,capture,self.driver = self.testService.initialize(self, driverFix)
+            self,capture,driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+#             self,captur,self.driver = clsTestService.initialize(self, driverFix)
             ##################################################################
             
             ################### TEST REUSABLE CLASS HELPERS ##################
             common = Common(self.driver)
-            upload = Upload(self.driver)
             ##################################################################
 
             ##################### TEST STEPS - MAIN FLOW #####################
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED")
-                return
-            
-            upload.upload("filePath", "namename", "descritiondescrition", "tags1,tags2,")
+#             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
+#             if common.loginAsUser() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 1: FAILED")
+#                 return
+#
+            common.myMedia.navigateToEntryPage('RedGreenBlueImage.png')
+#             common.upload.uploadEntry("filePath", "namename", "descritiondescrition", "tags1,tags2,")
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
-            self.status =self.testService.handleException(self,inst,self.startTime)
+            self.status = clsTestService.handleException(self,inst,self.startTime)
             
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
-        self.testService.basicTearDown(self)
+        clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)
         assert (self.status == "Pass")    
