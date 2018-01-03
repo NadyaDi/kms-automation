@@ -26,25 +26,18 @@ class MyMedia(Base):
         self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON)
         self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False)
         
-#     def navigateToEntryPage(self, entryName):
-        # Navigate to My Media and Search Entry
-        
-        # Click on Entry
-        
-        # Verify/Wait Entry page was loaded
-#         
 #     def navigateToEditEntryPage(self):
 #         
 #     def deleteSingleEntryFromMyMedia(self):
 #         
 #     def deleteMultipleEntries(self):
+#     
+    def showAllEntriesInMyMedia(self, timeout):
+        # Navigate to My Media
+        self.navigateToMyMedia()
+        # Press END key till "There are no more media items." is visible
+        # Press Home
 
-    def navigateToEntryPage(self, entryName):
-        self.searchEntryMyMedia(entryName)
-        self.clickEntryAfterSearchInMyMedia(entryName)
-        # Wait page load - wait for entry title
-        self.wait_visible(self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE, 15)
-        
         
     def searchEntryMyMedia(self, entryName):
         # Navigate to My Media

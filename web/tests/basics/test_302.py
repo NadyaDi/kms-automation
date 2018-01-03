@@ -55,8 +55,8 @@ class Test:
 #                 writeToLog("INFO","Step 1: FAILED")
 #                 return
 #
-            common.myMedia.navigateToEntryPage('RedGreenBlueImage.png')
-#             common.upload.uploadEntry("filePath", "namename", "descritiondescrition", "tags1,tags2,")
+#             common.entryPage.navigateToEntryPage('RedGreenBlueImage.png')
+            common.upload.uploadEntry("filePath", "namename", "descritiondescrition", "tags1,tags2,")
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       
