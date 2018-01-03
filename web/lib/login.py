@@ -6,7 +6,12 @@ from base import *
 
 
 class Login(Base):
-    
+    driver = None
+    clsCommon = None
+         
+    def __init__(self, clsCommon, driver):
+        self.driver = driver
+        self.clsCommon = clsCommon    
     #=============================================================================================================
     #Login XPATH locators:
     #=============================================================================================================
@@ -20,7 +25,7 @@ class Login(Base):
         try:
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Navigate to login page
-            self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
+            self.navigateToLoginPage()
             # Enter test partner username
             self.send_keys(self.LOGIN_USERNAME_FIELD, username)
             # Enter test partner password
@@ -43,3 +48,7 @@ class Login(Base):
             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
             raise Exception(inst)
+        
+    def navigateToLoginPage(self):
+        self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
+        self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)        
