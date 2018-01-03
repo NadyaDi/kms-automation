@@ -56,7 +56,8 @@ class Test:
 #                 return
 #
 #             common.entryPage.navigateToEntryPage('RedGreenBlueImage.png')
-            common.upload.uploadEntry("filePath", "namename", "descritiondescrition", "tags1,tags2,")
+#             common.upload.uploadEntry("filePath", "namename", "descritiondescrition", "tags1,tags2,")
+            common.myMedia.deleteSingleEntryFromMyMedia("namename")
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       
