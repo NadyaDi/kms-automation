@@ -1,0 +1,8 @@
+*.pyc
+*.project
+*.pydevproject
+*.log
+*.png
+*.har
+*.prefs
+lastfailed

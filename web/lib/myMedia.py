@@ -15,7 +15,11 @@ class MyMedia(Base):
     #=============================================================================================================
     MY_MEDIA_SEARCH_BAR                         = ('id', 'searchBar')
     MY_MEDIA_NO_RESULTS_ALERT                   = ('xpath',"//div[@class='alert alert-info no-results']")
+    MY_MEDIA_ENRTY_DELETE_BUTTON                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')
+    MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('id', 'delete_button_1_g9uqjz6t')
     #=============================================================================================================
+    def getSearchBarElement(self):
+        return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self):
@@ -37,7 +41,20 @@ class MyMedia(Base):
         
 #     def navigateToEditEntryPage(self):
 #         
-#     def deleteSingleEntryFromMyMedia(self):
+    def deleteSingleEntryFromMyMedia(self, entryName):
+        # Search for entry in my media
+        self.searchEntryMyMedia(entryName)
+        # Click on delete button
+        tmp_entry_name = self.MY_MEDIA_ENRTY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName)
+#         tep_entry_name = tep_entry_name[1].replace('ENTRY_NAME', entryName)
+        self.click(tmp_entry_name)
+        # Click on confirm delete
+         
+         
+         
+         
+         
+         
 #         
 #     def deleteMultipleEntries(self):
 #     
@@ -52,7 +69,7 @@ class MyMedia(Base):
         # Navigate to My Media
         self.navigateToMyMedia()
         # Search Entry     
-        self.click(self.MY_MEDIA_SEARCH_BAR)
+        self.getSearchBarElement().click()
         self.send_keys(self.MY_MEDIA_SEARCH_BAR, entryName)
         self.clsCommon.general.waitForLoaderToDisappear()
         

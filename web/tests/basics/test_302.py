@@ -63,7 +63,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
                 return                        
-            
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       
