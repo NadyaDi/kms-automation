@@ -13,7 +13,7 @@ class Login(Base):
         self.driver = driver
         self.clsCommon = clsCommon    
     #=============================================================================================================
-    #Login XPATH locators:
+    #Login locators:
     #=============================================================================================================
     LOGIN_USERNAME_FIELD                = ('id', 'Login-username')
     LOGIN_PASSWORD_FIELD                = ('id', 'Login-password')

@@ -18,15 +18,16 @@ class Common():
     driver = None
      
     # Module
-    base    = None
-    login   = None
-    upload  = None
-    general = None
-    myMedia = None
+    base        = None
+    login       = None
+    upload      = None
+    general     = None
+    myMedia     = None
+    entryPage   = None
     
     def __init__(self, driver):
+        self.driver         = driver        
         self.base           = Base(driver)
-        self.driver         = driver
         self.login          = Login(self, driver)
         self.upload         = Upload(self, driver)
         self.general        = General(self, driver)

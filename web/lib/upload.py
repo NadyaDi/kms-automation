@@ -14,7 +14,7 @@ class Upload(Base):
         self.driver = driver
         self.clsCommon = clsCommon
     #=============================================================================================================
-    #Upload XPATH locators:
+    #Upload locators:
     #=============================================================================================================
     UPLOAD_MENU_DROP_DOWN_ELEMENT               = ('id', 'uploadMenuDropDown')
     DROP_DOWN_MEDIA_UPLOAD_BUTTON               = ('xpath', ".//span[text()='Media Upload']")

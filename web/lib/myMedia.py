@@ -11,7 +11,7 @@ class MyMedia(Base):
         self.driver = driver
         self.clsCommon = clsCommon
     #=============================================================================================================
-    #Upload XPATH locators:
+    #My Media locators:
     #=============================================================================================================
     MY_MEDIA_SEARCH_BAR                         = ('id', 'searchBar')
     MY_MEDIA_NO_RESULTS_ALERT                   = ('xpath',"//div[@class='alert alert-info no-results']")
@@ -24,11 +24,20 @@ class MyMedia(Base):
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self):
         # Click on User Menu Toggle Button
-        self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON)
+        if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on User Menu Toggle Button")
+            return False
         
-        # Click on Me Media
-        self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON)
-        self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False)
+        # Click on My Media
+        if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
+            writeToLog("INFO","FAILED to on My Media from the menu")
+            return False
+        
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
+            writeToLog("INFO","FAILED to navigate to My Media")
+            return False
+        
+        return True
         
 #     def navigateToEditEntryPage(self):
 #         
