@@ -1,6 +1,7 @@
 from base import *
 import clsTestService
 from general import General
+from logger import writeToLog
 
 
 class MyMedia(Base):
@@ -16,7 +17,7 @@ class MyMedia(Base):
     MY_MEDIA_SEARCH_BAR                         = ('id', 'searchBar')
     MY_MEDIA_NO_RESULTS_ALERT                   = ('xpath',"//div[@class='alert alert-info no-results']")
     MY_MEDIA_ENRTY_DELETE_BUTTON                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')
-    MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('id', 'delete_button_1_g9uqjz6t')
+    MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     #=============================================================================================================
     def getSearchBarElement(self):
         return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
@@ -43,18 +44,20 @@ class MyMedia(Base):
 #         
     def deleteSingleEntryFromMyMedia(self, entryName):
         # Search for entry in my media
-        self.searchEntryMyMedia(entryName)
+        if self.searchEntryMyMedia(entryName) == False:
+            return False
         # Click on delete button
-        tmp_entry_name = self.MY_MEDIA_ENRTY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName)
-#         tep_entry_name = tep_entry_name[1].replace('ENTRY_NAME', entryName)
-        self.click(tmp_entry_name)
+        tmp_entry_name = (self.MY_MEDIA_ENRTY_DELETE_BUTTON[0], self.MY_MEDIA_ENRTY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_entry_name) == False:
+            writeToLog("INFO","FAILED to click on delete entry button")
+            return False
+        sleep(2)
         # Click on confirm delete
-         
-         
-         
-         
-         
-         
+        if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True
 #         
 #     def deleteMultipleEntries(self):
 #     
@@ -67,12 +70,13 @@ class MyMedia(Base):
         
     def searchEntryMyMedia(self, entryName):
         # Navigate to My Media
-        self.navigateToMyMedia()
+        if self.navigateToMyMedia() == False:
+            return False
         # Search Entry     
         self.getSearchBarElement().click()
-        self.send_keys(self.MY_MEDIA_SEARCH_BAR, entryName)
+        self.getSearchBarElement().send_keys(entryName)
         self.clsCommon.general.waitForLoaderToDisappear()
-        
+        return True
         
     def clickEntryAfterSearchInMyMedia(self, entryName):    
         # Click on the Entry name
