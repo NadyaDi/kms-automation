@@ -108,7 +108,7 @@ class Upload(Base):
             return True
         
         
-    def typeIntoFileUploadDialog(self, filePath):
+    def typeIntoFileUploadDialog_old(self, filePath):
         try:
             shell = win32com.client.Dispatch("WScript.Shell")  
             shell.Sendkeys(filePath)
@@ -118,6 +118,14 @@ class Upload(Base):
         except Exception:
             writeToLog("INFO","FAILED to type into 'Choose File' window")
             return False
+        
+    def typeIntoFileUploadDialog(self, filePath):
+        try:
+            subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFile.exe' ,filePath])
+            return True       
+        except Exception:
+            writeToLog("INFO","FAILED to type into 'Choose File' window")
+            return False        
         
         
     # Fill basic entry details after upload is completed, only: name, descrition, tags     
