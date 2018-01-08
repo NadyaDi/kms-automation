@@ -1,4 +1,6 @@
 import os
+import sys
+
 
 if (os.getenv('MD_RELEASE',"") != ""):
     LOCAL_SETTINGS_TESTED_RELEASE           = os.getenv('MD_RELEASE',"")
@@ -49,6 +51,7 @@ LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "oleg.sigalov@kaltura.co
 # LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "Alex.strusberg@kaltura.com"
 
 # Will be updated after test starts
+LOCAL_SETTINGS_AUTOIT_SCRIPTS               = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','autoit'))
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
 LOCAL_SETTINGS_TEST_BASE_URL                = LOCAL_SETTINGS_URL_PREFIX
