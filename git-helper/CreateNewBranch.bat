@@ -26,10 +26,11 @@ echo Version number:  %id%
 
 ::Saving number in text file for next branch version
 echo %id% > branch.txt
-"C:\Program Files (x86)\Git\bin\git.exe" reset --hard
-"C:\Program Files (x86)\Git\bin\git.exe" checkout master
-"C:\Program Files (x86)\Git\bin\git.exe" pull origin master
-"C:\Program Files (x86)\Git\bin\git.exe" checkout -b KmsGoOleg-%id%
+"C:\Work\Git Projects\kms-automation\"
+"C:\Program Files\Git\bin\git.exe" reset --hard
+"C:\Program Files\Git\bin\git.exe" checkout master
+"C:\Program Files\Git\bin\git.exe" pull origin master
+"C:\Program Files\Git\bin\git.exe" checkout -b UserKMS-%id%
 
 :end
 Pause
