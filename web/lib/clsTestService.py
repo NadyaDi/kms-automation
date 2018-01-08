@@ -207,7 +207,7 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
     test.myProxy = None
     test.TEST_TIMEOUT = estimatedDuration
     localSettings.LOCAL_RUNNING_BROWSER = driverFix
-    localSettings.LOCAL_SETTINGS_GUID = str(uuid.uuid4())[:8]
+    localSettings.LOCAL_SETTINGS_GUID = str(uuid.uuid4())[:8].upper()
     
     if (test.enableProxy == True):
         try:
@@ -346,6 +346,7 @@ def initializeDriver(test, driverFix):
         raise
     return driver
 
+
 # Delete old filed from the log folder
 # fileType - Exmaple: '.png'
 def clearFilesFromLogFolderPath(fileType):
@@ -353,3 +354,7 @@ def clearFilesFromLogFolderPath(fileType):
     filelist = [ f for f in os.listdir(path) if f.endswith(fileType) ]
     for f in filelist:
         os.remove(os.path.join(path, f))
+        
+        
+def addGuidToString(value):
+    return localSettings.LOCAL_SETTINGS_GUID + '_' + value        

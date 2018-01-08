@@ -1,3 +1,4 @@
+import subprocess
 from symbol import except_clause
 
 import win32com.client  
@@ -5,6 +6,7 @@ import win32com.client
 from base import *
 import clsTestService
 from general import General
+
 
 class Upload(Base):
     driver = None
@@ -42,8 +44,6 @@ class Upload(Base):
     
     
     def uploadEntry(self, filePath, name, descrition, tags, timeout=60):
-    #         filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\QR_05_minutes.mp4"
-        filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
         try:
             # Click Add New
             if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:

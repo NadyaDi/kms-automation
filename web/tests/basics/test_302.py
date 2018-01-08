@@ -24,7 +24,9 @@ class Test:
     status = "Pass"
     timeout_accured = "False"
     driver = None
-    
+    common = None
+    # Test variables
+    entryName = None
     filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
     
     #run test as different instances on all the supported platforms
@@ -36,33 +38,32 @@ class Test:
 
         #write to log we started the test
         logStartTest(self,driverFix)
-
         try:
             ########################### TEST SETUP ###########################
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
             self,captur,self.driver = clsTestService.initialize(self, driverFix)
-            common = Common(self.driver)
-
+            self.common = Common(self.driver)
+            self.entryName = clsTestService.addGuidToString('entryName')
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if common.loginAsUser() == False:
+            if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
-            
+             
             writeToLog("INFO","Step 2: Going to upload entry")
-            if common.upload.uploadEntry(self.filePath, "My Entry Name", "descritiondescrition", "tags1,tags2,") == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, "descritiondescrition", "tags1,tags2,") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
-                   
+                    
             writeToLog("INFO","Step 3: Going to navigate to Entry Page")
-            if common.entryPage.navigateToEntryPage('My Entry Name') == False:
+            if self.common.entryPage.navigateToEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
-                return                        
+                return
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       
@@ -71,6 +72,7 @@ class Test:
             
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
+        self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
         clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)
