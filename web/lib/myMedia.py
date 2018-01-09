@@ -17,6 +17,7 @@ class MyMedia(Base):
     MY_MEDIA_SEARCH_BAR                         = ('id', 'searchBar')
     MY_MEDIA_NO_RESULTS_ALERT                   = ('xpath',"//div[@class='alert alert-info no-results']")
     MY_MEDIA_ENRTY_DELETE_BUTTON                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')
+    MY_MEDIA_ENRTY_EDIT_BUTTON                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')
     MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     #=============================================================================================================
     def getSearchBarElement(self):
@@ -78,9 +79,21 @@ class MyMedia(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
         
+        
     def clickEntryAfterSearchInMyMedia(self, entryName):    
         # Click on the Entry name
         if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
+            # If entry not found, search for 'No Entries Found' alert
+            if self.wait_for_text(self.MY_MEDIA_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
+                writeToLog("INFO","No Entry: '" + entryName + "' was found")
+            else:
+                writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
+    
+
+    def clickEditEntryAfterSearchInMyMedia(self, entryName):    
+        # Click on the Edit Entry button
+        tmp_entry_name = (self.MY_MEDIA_ENRTY_EDIT_BUTTON[0], self.MY_MEDIA_ENRTY_EDIT_BUTTON[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_entry_name) == False:
             # If entry not found, search for 'No Entries Found' alert
             if self.wait_for_text(self.MY_MEDIA_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
                 writeToLog("INFO","No Entry: '" + entryName + "' was found")

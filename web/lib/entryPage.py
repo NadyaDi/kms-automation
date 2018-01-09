@@ -12,7 +12,9 @@ class EntryPage(Base):
     #=============================================================================================================
     #Entry Page locators:
     #=============================================================================================================
-    ENTRY_PAGE_ENTRY_TITLE                      = ('class_name', 'entryTitle')
+    ENTRY_PAGE_ENTRY_TITLE                                 = ('class_name', 'entryTitle')
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST                        = ('id', "entryActionsMenuBtn")    
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON            = ('id', "tabLabel-Edit")      
     #=============================================================================================================
     
     def navigateToEntryPage(self, entryName):
@@ -20,3 +22,5 @@ class EntryPage(Base):
         self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName)
         # Wait page load - wait for entry title
         self.wait_visible(self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE, 15)    
+
+    
