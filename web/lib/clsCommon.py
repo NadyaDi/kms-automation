@@ -7,6 +7,7 @@ from upload import Upload
 from general import General
 from myMedia import MyMedia
 from entryPage import EntryPage
+from editEntryPage import EditEntryPage
 
 
     #============================================================================================================
@@ -18,21 +19,24 @@ class Common():
     driver = None
      
     # Module
-    base        = None
-    login       = None
-    upload      = None
-    general     = None
-    myMedia     = None
-    entryPage   = None
+    base            = None
+    login           = None
+    upload          = None
+    general         = None
+    myMedia         = None
+    entryPage       = None
+    editEntryPage   = None
     
     def __init__(self, driver):
-        self.driver         = driver        
-        self.base           = Base(driver)
-        self.login          = Login(self, driver)
-        self.upload         = Upload(self, driver)
-        self.general        = General(self, driver)
-        self.myMedia        = MyMedia(self, driver)
-        self.entryPage      = EntryPage(self, driver)
+        self.driver             = driver        
+        self.base               = Base(driver)
+        self.login              = Login(self, driver)
+        self.upload             = Upload(self, driver)
+        self.general            = General(self, driver)
+        self.myMedia            = MyMedia(self, driver)
+        self.entryPage          = EntryPage(self, driver)
+        self.editEntryPage      = EditEntryPage(self, driver)
+        
     #=============================================================================================================
     # Locators:
     #=============================================================================================================
