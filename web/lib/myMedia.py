@@ -2,6 +2,7 @@ from base import *
 import clsTestService
 from general import General
 from logger import writeToLog
+from comtypes.server import localserver
 
 
 class MyMedia(Base):
@@ -21,7 +22,10 @@ class MyMedia(Base):
     MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     #=============================================================================================================
     def getSearchBarElement(self):
-        return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
+        else:
+            return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self):
