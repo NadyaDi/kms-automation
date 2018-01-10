@@ -1,3 +1,2 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_302,Publish to channel multiple,1756201,qakmstest.dev.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
-test_0168,Publish to channel multiple,1756201,qakmstest.dev.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_302,Publish to channel multiple,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!

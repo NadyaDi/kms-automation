@@ -72,7 +72,10 @@ class Test:
             
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
-        self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+        try:
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+        except:
+            pass            
         clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)

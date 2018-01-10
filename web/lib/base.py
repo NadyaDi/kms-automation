@@ -295,9 +295,9 @@ class Base:
         else:
             # remove the http/https from the current and expected URL and compare
             newCurrentUrl = currentUrl.replace('https://', '')
-            newCurrentUrl = currentUrl.replace('http://', '')
+            newCurrentUrl = newCurrentUrl.replace('http://', '')
             newExpectedUrl = expectedUrl.replace('https://', '')
-            newExpectedUrl = expectedUrl.replace('http://', '')
+            newExpectedUrl = newExpectedUrl.replace('http://', '')
             # Compare the URLs
             if newExpectedUrl in newCurrentUrl:
                 return True
