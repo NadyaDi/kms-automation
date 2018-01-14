@@ -2,7 +2,6 @@ from base import *
 import clsTestService
 from general import General
 from logger import writeToLog
-from comtypes.server import localserver
 
 
 class MyMedia(Base):
