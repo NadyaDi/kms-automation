@@ -14,11 +14,16 @@ class MyMedia(Base):
     #=============================================================================================================
     #My Media locators:
     #=============================================================================================================
-    MY_MEDIA_SEARCH_BAR                         = ('id', 'searchBar')
-    MY_MEDIA_NO_RESULTS_ALERT                   = ('xpath',"//div[@class='alert alert-info no-results']")
-    MY_MEDIA_ENRTY_DELETE_BUTTON                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
-    MY_MEDIA_ENRTY_EDIT_BUTTON                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
-    MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
+    MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
+    MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
+    MY_MEDIA_ENRTY_EDIT_BUTTON                                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
+    MY_MEDIA_CONFIRM_ENTRY_DELETE                               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
+    MY_MEDIA_ENTRY_CHECKBOX                                     = ('xpath', '//*[@title = "ENTRY_NAME"]')
+    MY_MEDIA_ACTIONS_BUTTON                                     = ('id', 'actionsDropDown')
+    MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON                      = ('id', 'Publish')
+    MY_MEDIA_PUBLISH_UNLISTED                                   = ('id', 'unlisted')
+    MY_MEDIA_PUBLISH_SAVE_BUTTON                                = ('xpath', "//button[@class='btn btn-primary pblSave' and text()='Save']")
+    MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG                          = ('xpath', "//div[contains(.,'Media successfully set to Unlisted')]")
     #=============================================================================================================
     def getSearchBarElement(self):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -50,17 +55,20 @@ class MyMedia(Base):
         # Search for entry in my media
         if self.searchEntryMyMedia(entryName) == False:
             return False
+        
         # Click on delete button
         tmp_entry_name = (self.MY_MEDIA_ENRTY_DELETE_BUTTON[0], self.MY_MEDIA_ENRTY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))
         if self.click(tmp_entry_name) == False:
             writeToLog("INFO","FAILED to click on delete entry button")
             return False
         sleep(2)
+        
         # Click on confirm delete
         if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
+        
         return True
 #         
 #     def deleteMultipleEntries(self):
@@ -91,6 +99,8 @@ class MyMedia(Base):
                 writeToLog("INFO","No Entry: '" + entryName + "' was found")
             else:
                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
+                
+        return True
     
 
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
@@ -102,4 +112,58 @@ class MyMedia(Base):
                 writeToLog("INFO","No Entry: '" + entryName + "' was found")
             else:
                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
-            
+                
+        return True       
+                
+    def checkSingleEntryInMyMedia(self, entryName):  
+        if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to find: '" + entryName + "'")
+            return False
+        
+        # Click on the Entry's check-box in MyMedia page
+        tmp_entry_name = (self.MY_MEDIA_ENTRY_CHECKBOX[0], self.MY_MEDIA_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_entry_name) == False:
+            # If entry not found, search for 'No Entries Found' alert
+            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        return True
+    
+    
+    def clickActionsAndPublish(self):
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Action button")
+            return False 
+        
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Publish button")
+            return False
+        
+        return True
+    
+    
+    def publishSingleEntryPrivacyToUnlisted(self, entryName):  
+        if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        if self.clickActionsAndPublish() == False:
+            writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        if self.click(self.MY_MEDIA_PUBLISH_UNLISTED) == False:
+            writeToLog("INFO","FAILED to click on Unlisted button")
+            return False 
+        
+        if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Unlisted button")
+            return False
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG, 20) == False:
+            writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        return True 
+        
