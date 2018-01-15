@@ -2,7 +2,6 @@ from base import *
 import clsTestService
 from general import General
 from logger import writeToLog
-from comtypes.server import localserver
 
 
 class MyMedia(Base):
@@ -17,8 +16,8 @@ class MyMedia(Base):
     #=============================================================================================================
     MY_MEDIA_SEARCH_BAR                         = ('id', 'searchBar')
     MY_MEDIA_NO_RESULTS_ALERT                   = ('xpath',"//div[@class='alert alert-info no-results']")
-    MY_MEDIA_ENRTY_DELETE_BUTTON                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')
-    MY_MEDIA_ENRTY_EDIT_BUTTON                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')
+    MY_MEDIA_ENRTY_DELETE_BUTTON                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
+    MY_MEDIA_ENRTY_EDIT_BUTTON                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_CONFIRM_ENTRY_DELETE               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     #=============================================================================================================
     def getSearchBarElement(self):
