@@ -1,25 +1,25 @@
+from base import Base
+from admin import Admin
+from editEntryPage import EditEntryPage
+from entryPage import EntryPage
+from general import General
 import localSettings
 from logger import *
-
-from base import Base
 from login import Login
-from upload import Upload
-from general import General
 from myMedia import MyMedia
-from entryPage import EntryPage
-from editEntryPage import EditEntryPage
+from upload import Upload
 
 
     #============================================================================================================
     # The class contains functions that relates to common actions
     #============================================================================================================
-    
 class Common():
     # Parameters
     driver = None
      
     # Module
     base            = None
+    admin           = None
     login           = None
     upload          = None
     general         = None
@@ -30,6 +30,7 @@ class Common():
     def __init__(self, driver):
         self.driver             = driver        
         self.base               = Base(driver)
+        self.admin              = Admin(self, driver)
         self.login              = Login(self, driver)
         self.upload             = Upload(self, driver)
         self.general            = General(self, driver)

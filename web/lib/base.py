@@ -278,8 +278,11 @@ class Base:
 
     def navigate(self, url):
         self.driver.get(url)
-        self.wait_for_page_readyState()
-        
+        if self.wait_for_page_readyState() == False:
+            writeToLog("INFO","FAILED to load page: '" + url + "'")
+            return False
+        else:
+            return True
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
     def verifyUrl(self, expectedUrl, isRegex):
@@ -289,7 +292,7 @@ class Base:
             if m:
                 return True
             else:
-                writeToLog("FAILED","Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = True")
+                writeToLog("INFO","FAILED, Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = True")
                 return False
         # Compare URL with contains method ('in')
         else:
@@ -302,7 +305,7 @@ class Base:
             if newExpectedUrl in newCurrentUrl:
                 return True
             else:
-                writeToLog("FAILED","Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = False")
+                writeToLog("INFO","FAILED, Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = False")
                 return False
             
     def wait_for_page_readyState(self, timeout=30):
