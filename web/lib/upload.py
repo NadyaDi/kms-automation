@@ -31,6 +31,7 @@ class Upload(Base):
     UPLOAD_ENTRY_SAVE_BUTTON                    = ('id', 'Entry-submit')
     UPLOAD_ENTRY_PROGRESS_BAR                   = ('id', 'progressBar')
     UPLOAD_ENTRY_SUCCESS_MESSAGE                = ('xpath', "//span[contains(.,'Your changes have been saved.')]")
+    UPLOAD_ENTRY_DISCLAIMER_CHECKBOX            = ('id', 'disclaimer-Accepted')
     #============================================================================================================
 #     base = Base(clsTestService.WEB_DRIVER)
     
@@ -40,21 +41,41 @@ class Upload(Base):
             self.get_child_element(parentElement, self.DROP_DOWN_MEDIA_UPLOAD_BUTTON).click()
             return True
         except NoSuchElementException:
-            return False        
-    
-    
-    def uploadEntry(self, filePath, name, descrition, tags, timeout=60):
+            return False
+
+
+    def handleDisclaimerBeforeUplod(self):
+        try:
+            if self.wait_visible(self.clsCommon.upload.CHOOSE_A_FILE_TO_UPLOAD_BUTTON, 5) == None:
+                if self.click(self.UPLOAD_ENTRY_DISCLAIMER_CHECKBOX) == False:
+                    writeToLog("INFO","FAILED to click on disclaimer check-box")
+                    return False
+            else:
+                writeToLog("INFO","FAILED, upload button is presented before User agree to terms of Use (disclaimer)")
+                return False
+        except NoSuchElementException:
+            return False
+        
+        return True
+
+
+    def uploadEntry(self, filePath, name, descrition, tags, timeout=60, disclaimer=False):
         try:
             # Click Add New
             if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Add New' button")
                 return False
-             
             # Click Media Upload
             if self.clickMediaUpload() == False:
                 writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
-                return False 
-                        
+                return False
+            
+            #checking if disclaimer is turned on for "Before upload"
+            if disclaimer == True:
+                if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
+                    writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
+                    return False
+                
             # Wait page load
             self.wait_for_page_readyState()
             # Click Choose a file to upload
@@ -88,8 +109,10 @@ class Upload(Base):
             # Wait for 'Your changes have been saved.' message
             if self.get_element(self.UPLOAD_ENTRY_SUCCESS_MESSAGE) != None:
                 writeToLog("INFO","Successfully uploaded entry: '" + name + "'")
+                return True
             else:
-                writeToLog("INFO","FAILED to upload entry, no seccess message was appeared'")
+                writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
+                return False
 
         except Exception as inst:
     #             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")

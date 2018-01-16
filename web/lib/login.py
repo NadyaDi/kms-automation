@@ -19,10 +19,9 @@ class Login(Base):
     LOGIN_PASSWORD_FIELD                = ('id', 'Login-password')
     LOGIN_SIGN_IN_BTN                   = ('id', 'Login-login')
     USER_MENU_TOGGLE_BTN                = ('id', 'userMenuToggleBtn')
-    USER_LOGOUT_BTN                     = ('xpath', "//i[@class_name='icon-signout']")
+    USER_LOGOUT_BTN                     = ('xpath', "//i[@class='icon-signout']")
     USER_GUEST                          = ('xpath', "//span[@id='userMenuDisplayName' and contains(text(), 'Guest')]")
     #============================================================================================================
-    
     def loginToKMS(self, username, password):
         try:
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
@@ -55,7 +54,7 @@ class Login(Base):
         self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
         self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)       
         
-    def LogOutOfKMS(self):
+    def logOutOfKMS(self):
         # Click on the user menu button
         if self.click(self.USER_MENU_TOGGLE_BTN) == False:
             writeToLog("INFO","FAILED to click on user menu button")
@@ -63,7 +62,7 @@ class Login(Base):
         
         sleep(2)
         # Click on logout button
-        if self.clickOnLogOutButton == False:
+        if self.clickOnLogOutButton() == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False
         
@@ -78,4 +77,5 @@ class Login(Base):
     
     
     def clickOnLogOutButton(self):
-        return self.click(self.USER_LOGOUT_BTN[1])
+        el = self.get_elements(self.USER_LOGOUT_BTN)[1]
+        return el.click()
