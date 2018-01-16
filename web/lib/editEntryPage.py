@@ -43,9 +43,11 @@ class EditEntryPage(Base):
         if self.wait_visible(tmp_entry_name, 5) == None:
             writeToLog("INFO","FAILED to open edit entry page, Entry name: '" + entryName + "'")
             return False
+        
+        return True
+    
 
-
-    def navigateToEditEntryPageFromEntryPage(self,entryName):
+    def navigateToEditEntryPageFromEntryPage(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
         #Check if we already in edit entry page
         if self.wait_visible(tmp_entry_name, 5) != None:
@@ -56,9 +58,6 @@ class EditEntryPage(Base):
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
             writeToLog("INFO","FAILED to click on Actions button")
             return False
-        
-        #Wait up to 5s
-        self.wait_visible(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON, 5)  
          
         #Click on Edit button
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON) == False:
