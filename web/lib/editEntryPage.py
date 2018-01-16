@@ -27,7 +27,7 @@ class EditEntryPage(Base):
     def navigateToEditEntryPageFromMyMedia(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
         #Check if we already in edit entry page
-        if self.wait_visible(tmp_entry_name, 5) == True:
+        if self.wait_visible(tmp_entry_name, 5) != None:
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True        
         
@@ -40,14 +40,15 @@ class EditEntryPage(Base):
             return False
         
         #Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 5) == False:
+        if self.wait_visible(tmp_entry_name, 5) == None:
             writeToLog("INFO","FAILED to open edit entry page, Entry name: '" + entryName + "'")
             return False
+
 
     def navigateToEditEntryPageFromEntryPage(self,entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
         #Check if we already in edit entry page
-        if self.wait_visible(tmp_entry_name, 5) == True:
+        if self.wait_visible(tmp_entry_name, 5) != None:
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
@@ -65,9 +66,10 @@ class EditEntryPage(Base):
             return False    
         
         #Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 5) == False:
+        if self.wait_visible(tmp_entry_name, 5) == None:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
+        
         
     def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
         if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
@@ -135,6 +137,14 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
             
-            
-            
+    # TODO NOT FINISHED        
+    def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 
+        if self.navigateToEditEntryPageFromEntryPage(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page from entry page with collaborator user")
+            return False
+        
+        if self.clsCommon.Upload.fillFileUploadEntryDetails(newEntryName, newDescription, NewTags)  == False:
+            writeToLog("INFO","FAILED to insert new metadata to entry '" +  entryName + "' with collaborator user")
+            return False
+                              
             
