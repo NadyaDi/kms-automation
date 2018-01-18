@@ -29,7 +29,7 @@ class Test:
     entryName = None
     newUserId = None
     newUserPass = None
-    newTitle = None
+    newEntryName = None
     newDescription = None
     newTags = None
     filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
@@ -50,30 +50,41 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString('Michal entry ')
+            self.entryName = clsTestService.addGuidToString('Michal entry')
             self.newUserId = "Automation_User_1"
-            self.newUserPass = "123456"
+            self.newUserPass = "Kaltura1!"
+            self.newEntryName = clsTestService.addGuidToString('Michal edit entry name')
+            self.newDescription = "Edit description"
+            self.newTags = "Edit Tags"
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
+             
+            if self.common.myMedia.publishSingleEntryInMyMedia("2E959360_Michal entry", "", "") == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                return
+            
+            
             
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, "description  description", "tags1,tags2,") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
-            
+             
             writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
-            if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False):
+            if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
                 return
-                    
+            
+            sleep(2)     
             writeToLog("INFO","Step 4: Going to logout from main user")
-            if self.common.login.LogOutOfKMS() == False:
+            if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED failed to logout from main user")
                 return  
@@ -84,7 +95,12 @@ class Test:
                 writeToLog("INFO","Step 5: FAILED to login with the user that was added as Collaborator")
                 return     
             
-                   
+            writeToLog("INFO","Step 6: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to edit entry metadata with the user that was added as Collaborator")
+                return  
+            
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       

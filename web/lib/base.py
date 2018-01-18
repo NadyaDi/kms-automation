@@ -1,6 +1,8 @@
 import sys, datetime, re
 from time import sleep
+
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.webdriver.support.ui import Select
 
 from logger import *
 
@@ -9,6 +11,7 @@ class Base:
     
     def __init__(self, driver):
         self.driver = driver
+
 
     def get_element(self, locator):
         """
@@ -35,6 +38,7 @@ class Base:
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
             raise NoSuchElementException
         
+        
     def get_child_element(self, parent, locator):
         """
         Returns element based on provided locator.
@@ -60,6 +64,7 @@ class Base:
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
             raise NoSuchElementException        
 
+
     def get_element_by_type(self, method, value):
         if method == 'accessibility_id':
             return self.driver.find_element_by_accessibility_id(value)
@@ -80,6 +85,7 @@ class Base:
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')
+        
         
     def get_child_element_by_type(self, parent, method, value):
         if method == 'accessibility_id':
@@ -102,6 +108,7 @@ class Base:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')        
 
+
     def get_elements(self, locator):
         """
         Returns element based on provided locator.
@@ -122,6 +129,7 @@ class Base:
                 except NoSuchElementException:
                     pass
             raise NoSuchElementException
+
 
     def get_elements_by_type(self, method, value):
         if method == 'accessibility_id':
@@ -144,6 +152,7 @@ class Base:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Element not found by: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')
 
+
     # element visible
     def is_visible(self, locator):
         try:
@@ -153,6 +162,7 @@ class Base:
                 return False
         except NoSuchElementException:
             return False
+    
     
     # Wait till element is disappear and return True, elase return False after timeout    
     def wait_while_not_visible(self, locator, timeout=30):
@@ -168,6 +178,7 @@ class Base:
                 return True
         return False
            
+           
     # element present
     def is_present(self, locator):
         try:
@@ -175,6 +186,7 @@ class Base:
             return True
         except NoSuchElementException:
             return False
+
 
     # waits
     def wait_visible(self, locator, timeout=10):
@@ -194,6 +206,7 @@ class Base:
         self.setImplicitlyWaitToDefault()                
         return None
 
+
     def wait_for_text(self, locator, text, timeout=10):
         i = 0
         self.driver.implicitly_wait(0)
@@ -212,6 +225,7 @@ class Base:
             i += 1
         self.setImplicitlyWaitToDefault() 
         return None
+
 
     # clicks and taps
     def click(self, locator, timeout=10):
@@ -242,6 +256,7 @@ class Base:
             element.send_keys(text)
             return True 
     
+    
     def clear_and_send_keys(self, locator, text):
         element = self.wait_visible(locator)
         if element == None:
@@ -251,6 +266,7 @@ class Base:
             element.send_keys(text)
             return True
             
+            
     # key event
     def keyevent(self, locator, event):
         element = self.wait_visible(locator)
@@ -259,6 +275,7 @@ class Base:
         else:
             element.keyevent(event)
             return True     
+
 
     def get_element_attributes(self, locator):
         element = self.get_element(locator)
@@ -272,9 +289,11 @@ class Base:
             'center_y': (element.size['height']/2) + element.location['y']
         }
         
+        
     def get_element_text(self, locator):
         element = self.get_element(locator)
         return element.text
+
 
     def navigate(self, url):
         self.driver.get(url)
@@ -283,6 +302,7 @@ class Base:
             return False
         else:
             return True
+        
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
     def verifyUrl(self, expectedUrl, isRegex):
@@ -308,6 +328,7 @@ class Base:
                 writeToLog("INFO","FAILED, Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = False")
                 return False
             
+            
     def wait_for_page_readyState(self, timeout=30):
         i = 0
         page_state = ''
@@ -320,6 +341,7 @@ class Base:
         else:
             writeToLog("DEBUG","Page readyState was not completed after timeout: '" + timeout + "'")
             return False
+       
         
     # Create a screeshot with a given name it the test log folder
     def takeScreeshotGeneric(self, scName):
@@ -334,8 +356,36 @@ class Base:
         except:
             writeToLog("INFO","Failed to take a screenshot, bad driver")
             
+            
     def switch_to_default_content(self):
         self.driver.switch_to.default_content()
         
+        
     def setImplicitlyWaitToDefault(self):
         self.driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
+        
+        
+    def select_from_combo_by_text(self, locator, optionToSelect):
+        try:
+            select = Select(self.get_element(locator))
+            
+            # select by visible text
+            select.select_by_visible_text(optionToSelect)
+        except:
+            writeToLog("INFO","FAILED to select: '" + optionToSelect + "' from locator: '" + locator[1] + "'")
+            return False
+        
+        return True            
+        
+        
+    def select_from_combo_by_value(self, locator, value):
+        try:
+            select = Select(self.get_element(locator))
+            
+            # select by value 
+            select.select_by_value(value)
+        except:
+            writeToLog("INFO","FAILED to select: '" + value + "' from locator: '" + locator[1] + "'")
+            return False
+        
+        return True          
