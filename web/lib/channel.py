@@ -38,9 +38,18 @@ class Channel(Base):
     MY_CHANNELS_SERACH_FIELD                        = ('id', 'searchBar')
     MY_CHANNELS_EDIT_BUTTON                         = ('xpath', "//a[contains(@class,'edit')]")
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
-    EDIT_CHANNEL_DELETE                             = ('xpath', "//*[contains(.,'Delete Channel')]")
-    EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[contains(.,'Delete')]")
+    EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
+    EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
+    CHANNEL_DELETED_ALERT                           = ('xpath', "//div[@class='alert alert-success ']")
     #============================================================================================================
+    def clickDeleteChannel(self):
+        try:
+            self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
+            return True
+        except:
+            return False
+        
+        
     def deleteChannel(self, channelName):
         try:
             if self.navigateToMyChannels() == False:
@@ -71,15 +80,19 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to click on Edit channel button")
                 return False
             
-            if self.click(self.EDIT_CHANNEL_DELETE) == False:
+            if self.clickDeleteChannel() == False:
                 writeToLog("INFO","FAILED to click on Delete channel button")
                 return False
+            sleep(2)
             
             if self.click(self.EDIT_CHANNEL_DELETE_CONFIRM) == False:
                 writeToLog("INFO","FAILED to click on Delete confirmation button")
                 return False
             
-            sleep(2)
+            if self.wait_visible(self.CHANNEL_DELETED_ALERT, 15) == False:
+                writeToLog("INFO","FAILED to deleted channel after clicking on delete confirmation msg")
+                return False
+            
         except NoSuchElementException:
             return False
         
@@ -90,7 +103,7 @@ class Channel(Base):
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
     # TODO: linkToCategoriesList
-    def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList=""):
+    def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList=''):
         try:
             if self.navigateToMyChannels() == False:
                 writeToLog("INFO","FAILED to native to my channels page")
