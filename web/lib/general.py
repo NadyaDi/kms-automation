@@ -15,6 +15,7 @@ class General(Base):
     ADD_NEW_DROP_DOWN_BUTTON                = ('id', 'addNewDropDown')
     USER_MENU_TOGGLE_BUTTON                 = ('id', 'userMenuToggleBtn')
     USER_MENU_MY_MEDIA_BUTTON               = ('xpath', "//a[@href='/my-media' and @role='menuitem']")
+    USER_MENU_MY_CHANNELS_BUTTON            = ('xpath', "//a[@href='/my-channels' and @role='menuitem']")
     #=============================================================================================================
 
     def waitForLoaderToDisappear(self, timeout=60):

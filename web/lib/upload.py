@@ -43,7 +43,8 @@ class Upload(Base):
         except NoSuchElementException:
             return False
 
-
+# In case disclaimer module is turned on and set to "before upload" 
+# The following function will check that upload is prevented before disclaimer's check-box was checked.
     def handleDisclaimerBeforeUplod(self):
         try:
             if self.wait_visible(self.clsCommon.upload.CHOOSE_A_FILE_TO_UPLOAD_BUTTON, 5) == None:
@@ -65,6 +66,7 @@ class Upload(Base):
             if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Add New' button")
                 return False
+            
             # Click Media Upload
             if self.clickMediaUpload() == False:
                 writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
