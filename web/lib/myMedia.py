@@ -28,7 +28,9 @@ class MyMedia(Base):
     MY_MEDIA_PUBLISHED_RADIO_BUTTON                             = ('id', 'published') #This refers to the publish radio button after clicking action > publish
     MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION                         = ('class_name', 'pblTabCategory')
     MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION                          = ('class_name', 'pblTabChannel')
-    
+    MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH                         = ('xpath', "//span[contains(.,'PUBLISHED_CATEGORY')]")# When using this locator, replace 'PUBLISHED_CATEGORY' string with your real category/channel name
+    MY_MEDIA_SAVE_MESSAGE_CONFIRM                               = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'Media successfully published')]")
+                 
     #=============================================================================================================
     def getSearchBarElement(self):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -41,7 +43,7 @@ class MyMedia(Base):
     def navigateToMyMedia(self):
         # Check if we are already in my media page
         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
-            writeToLog("INFO","Already in my media page")
+            writeToLog("INFO","Success Already in my media page")
             return True  
         
         # Click on User Menu Toggle Button
@@ -127,7 +129,7 @@ class MyMedia(Base):
                 
                 
     def checkSingleEntryInMyMedia(self, entryName):  
-        if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
+        if self.searchEntryMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to find: '" + entryName + "'")
             return False
         
@@ -154,7 +156,7 @@ class MyMedia(Base):
     
     
     def publishSingleEntryPrivacyToUnlistedInMyMedia(self, entryName):  
-        if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
+        if self.checkSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
         
@@ -178,7 +180,7 @@ class MyMedia(Base):
         
         return True 
      
-    # TODO NOT FINISHED 
+     
     # in categoryList / channelList will have all the names of the categories / channels to publish to  
     def publishSingleEntryInMyMedia(self, entryName, categoryList, channelList): 
         if self.navigateToMyMedia() == False:
@@ -192,13 +194,14 @@ class MyMedia(Base):
         if self.clickActionsAndPublishFromMyMedia() == False:
             writeToLog("INFO","FAILED to click on action button")
             return False
+        sleep(7)
         
         # Choose publish radio button          
         if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on publish radio button")
             return False
         
-        # Click if list is empty
+        # Click if category list is empty
         if len(categoryList) != 0:
             # Click on Publish in Category
             if self.click(self.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
@@ -206,6 +209,37 @@ class MyMedia(Base):
                 return False
         
             # choose all the  categories to publish to
-            #for category in self.categoryList:
+            for category in categoryList:
+                tmoCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+                if self.click(tmoCategoryName, 30) == False:
+                    writeToLog("INFO","FAILED to select published category '" + category + "'")
+                    return False
+
+        # Click if channel list is empty
+        if len(channelList) != 0:
+            # Click on Publish in Channel
+            if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
+                writeToLog("INFO","FAILED to click on Publish in channel")
+                return False
+        
+            # choose all the  channels to publish to
+            for channel in channelList:
+                tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
+                if self.click(tmpChannelName, 30) == False:
+                    writeToLog("INFO","FAILED to select published channel '" + channel + "'")
+                    return False
                 
-      
+        if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False                
+                
+        if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == None:
+            writeToLog("INFO","FAILED to find confirm save message")
+            return False
+                
+        writeToLog("INFO","Success to publish entry '" + entryName + "'")
+        return True
+    
+    #TODO
+    #def verifyPublish(self, entryName, categoryList, channelList):
+                
