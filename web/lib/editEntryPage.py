@@ -28,7 +28,7 @@ class EditEntryPage(Base):
     def navigateToEditEntryPageFromMyMedia(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
         #Check if we already in edit entry page
-        if self.wait_visible(tmp_entry_name, 5) != None:
+        if self.wait_visible(tmp_entry_name, 5) != False:
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True        
         
@@ -41,7 +41,7 @@ class EditEntryPage(Base):
             return False
         
         #Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 5) == None:
+        if self.wait_visible(tmp_entry_name, 5) == False:
             writeToLog("INFO","FAILED to open edit entry page, Entry name: '" + entryName + "'")
             return False
         
@@ -51,7 +51,7 @@ class EditEntryPage(Base):
     def navigateToEditEntryPageFromEntryPage(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
         #Check if we already in edit entry page
-        if self.wait_visible(tmp_entry_name, 5) != None:
+        if self.wait_visible(tmp_entry_name, 5) != False:
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
@@ -66,7 +66,7 @@ class EditEntryPage(Base):
             return False    
         
         #Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 5) == None:
+        if self.wait_visible(tmp_entry_name, 5) == False:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
         
