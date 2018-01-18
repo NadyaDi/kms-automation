@@ -75,14 +75,28 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return        
-        
             
             
-            
-            parentEl = self.common.base.get_element(self.common.category.CATEGORY_SEARCH_RESULT)
-            tmpEntrySearchName = (self.common.category.CATEGORY_ENTRY_SEARCH_RESULT[0], self.common.category.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', self.entryName))
-            self.common.base.get_child_element(parentEl, tmpEntrySearchName).click()
-
+#             if self.common.category.searchEntryInCategory(self.entryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 8: FAILED failed search entry'" + self.entryName + "' in category" + self.categoryList[0])
+#                 return         
+#             if self.common.category.clickOnEntryAfterSearchInCategory(self.entryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
+#                 return
+#                          
+#             writeToLog("INFO","Step 11: Going to navigate to edit entry page from entry page")
+#             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 12: FAILED to navigate to edit entry page from entry page")
+#                 return 
+#              
+            writeToLog("INFO","Step 12: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to edit entry metadata with the user that was added as Collaborator")
+                return  
             
             
             
@@ -132,17 +146,21 @@ class Test:
             
             # click on the entry
             writeToLog("INFO","Step 9: Going to click on entry name from category search")
-            tmpEntrySearchName = (self.common.category.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', self.entryName))
-            if self.click(tmpEntrySearchName, 30) == False:
+            if self.common.category.clickOnEntryAfterSearchInCategory(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to click on entry " + self.entryName)
                 return                  
             
-              
-            writeToLog("INFO","Step 10: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            writeToLog("INFO","Step 11: Going to navigate to edit entry page from entry page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to navigate to edit entry page from entry page")
+                return 
+             
+            writeToLog("INFO","Step 12: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
             if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to edit entry metadata with the user that was added as Collaborator")
+                writeToLog("INFO","Step 12: FAILED to edit entry metadata with the user that was added as Collaborator")
                 return  
             
             ##################################################################

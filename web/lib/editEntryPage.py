@@ -22,6 +22,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON                     = ('xpath', "//a[@class='btn btn btn-primary' and contains(text(), 'Add')]")
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
+
     #=============================================================================================================
     
     def navigateToEditEntryPageFromMyMedia(self, entryName):
@@ -136,14 +137,13 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
             
+            
     # TODO NOT FINISHED        
     def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 
         if self.navigateToEditEntryPageFromEntryPage(entryName) == False:
             writeToLog("INFO","FAILED navigate to edit entry page from entry page with collaborator user")
             return False
-        
-        if self.clsCommon.Upload.fillFileUploadEntryDetails(newEntryName, newDescription, NewTags)  == False:
+        sleep(2)
+        if self.clsCommon.upload.fillFileUploadEntryDetails(newEntryName, newDescription, NewTags)  == False:
             writeToLog("INFO","FAILED to insert new metadata to entry '" +  entryName + "' with collaborator user")
             return False
-                              
-            
