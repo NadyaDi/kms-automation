@@ -1,6 +1,6 @@
 from datetime import datetime 
 from collections import OrderedDict
-from clsAnalytics import clsAnalytics
+# from clsAnalytics import clsAnalytics
 from localSettings import *
 import browsermobproxy
 import re
@@ -59,18 +59,18 @@ class clsBrowserMobCapture:
         save_har.write(har_data)
         save_har.close()
 
-    #the function run over the HAR file, add the relevant google analytics events to a dictionary and return it.
-    def createHttpGoogleAnalyticsDict(self,harFile):
-        analytics   = clsAnalytics()
-        actualHttpEvents = [] # will contain all the events parsed
-        for ent in harFile['log']['entries']:
-            currEvent = ent['request']['url']
-            if('utm.gif' in currEvent): #we ensure this is a google analytics event 
-                currEventDic = analytics.gaParseHTTPLine(currEvent)
-                if(currEventDic != -1): # we don't add the packet to the dictionary if one of the values ['utme','utmhn','utmt','utmsr','utmvp','utmdt','utmac','optval'] is missing
-                    currEventDic['Time'] = ent['startedDateTime']
-                    actualHttpEvents.append(currEventDic)
-        return actualHttpEvents
+#     #the function run over the HAR file, add the relevant google analytics events to a dictionary and return it.
+#     def createHttpGoogleAnalyticsDict(self,harFile):
+#         analytics   = clsAnalytics()
+#         actualHttpEvents = [] # will contain all the events parsed
+#         for ent in harFile['log']['entries']:
+#             currEvent = ent['request']['url']
+#             if('utm.gif' in currEvent): #we ensure this is a google analytics event 
+#                 currEventDic = analytics.gaParseHTTPLine(currEvent)
+#                 if(currEventDic != -1): # we don't add the packet to the dictionary if one of the values ['utme','utmhn','utmt','utmsr','utmvp','utmdt','utmac','optval'] is missing
+#                     currEventDic['Time'] = ent['startedDateTime']
+#                     actualHttpEvents.append(currEventDic)
+#         return actualHttpEvents
     
     #The function run over the HAR file, filters the request URL, add to dictionary and return it.
     def createFilteredRequestUrlDict(self, harFile, filterString):

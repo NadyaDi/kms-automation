@@ -62,7 +62,33 @@ class Base:
                 except NoSuchElementException:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
-            raise NoSuchElementException        
+            raise NoSuchElementException
+        
+
+    def get_child_elements(self, parent, locator):
+        """
+        Return elements based on provided locator.
+        Locator include the method and locator value in a tuple.
+        :param locator:
+        :return:
+        """
+
+        method = locator[0]
+        values = locator[1]
+        
+        if type(values) is str:
+            try:
+                return self.get_child_elements_by_type(parent, method, values)
+            except NoSuchElementException:
+                raise NoSuchElementException
+        elif type(values) is list:
+            for value in values:
+                try:
+                    return self.get_child_elements_by_type(parent, method, value)
+                except NoSuchElementException:
+                    pass
+            writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
+            raise NoSuchElementException                
 
 
     def get_element_by_type(self, method, value):
@@ -106,7 +132,29 @@ class Base:
             return self.driver.find_element_by_tag_name(value)        
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
-            raise Exception('Invalid locator method.')        
+            raise Exception('Invalid locator method.')
+        
+        
+    def get_child_elements_by_type(self, parent, method, value):
+        if method == 'accessibility_id':
+            return parent.find_elements_by_accessibility_id(value)
+        elif method == 'android':
+            return parent.find_elements_by_android_uiautomator('new UiSelector().%s' % value)
+        elif method == 'ios':
+            return parent.find_elements_by_ios_uiautomation(value)
+        elif method == 'class_name':
+            return parent.find_elements_by_class_name(value)
+        elif method == 'id':
+            return parent.find_elements_by_id(value)
+        elif method == 'xpath':
+            return parent.find_elements_by_xpath(value)
+        elif method == 'name':
+            return parent.find_elements_by_name(value)
+        elif method == 'tag_name':
+            return self.driver.find_elements_by_tag_name(value)        
+        else:
+            writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
+            raise Exception('Invalid locator method.')             
 
 
     def get_elements(self, locator):
@@ -204,7 +252,7 @@ class Base:
                 sleep(1)
                 i += 1
         self.setImplicitlyWaitToDefault()                
-        return None
+        return False
 
 
     def wait_for_text(self, locator, text, timeout=10):
@@ -305,7 +353,33 @@ class Base:
         
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
-    def verifyUrl(self, expectedUrl, isRegex):
+    def verifyUrl(self, expectedUrl, isRegex, timeout=30):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        while True:        
+            currentUrl = self.driver.current_url
+            if isRegex == True:
+                m = re.search(expectedUrl, currentUrl)
+                if m:
+                    return True
+                else:
+                    if wait_until < datetime.datetime.now():
+                        return False
+            # Compare URL with contains method ('in')
+            else:
+                # remove the http/https from the current and expected URL and compare
+                newCurrentUrl = currentUrl.replace('https://', '')
+                newCurrentUrl = newCurrentUrl.replace('http://', '')
+                newExpectedUrl = expectedUrl.replace('https://', '')
+                newExpectedUrl = newExpectedUrl.replace('http://', '')
+                # Compare the URLs
+                if newExpectedUrl in newCurrentUrl:
+                    return True
+                else:
+                    if wait_until < datetime.datetime.now():
+                        return False
+            
+    # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
+    def verifyUrl_old(self, expectedUrl, isRegex, timeout=30):
         currentUrl = self.driver.current_url
         if isRegex == True:
             m = re.search(expectedUrl, currentUrl)
@@ -326,7 +400,7 @@ class Base:
                 return True
             else:
                 writeToLog("INFO","FAILED, Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = False")
-                return False
+                return False            
             
             
     def wait_for_page_readyState(self, timeout=30):

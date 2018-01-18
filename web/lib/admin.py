@@ -16,7 +16,7 @@ class Admin(Base):
     ADMIN_ENABLED                                   = ('id', 'enabled')
     #=============================================================================================================
     def navigateToAdminPage(self):
-        if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False) == True:
+        if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False, 1) == True:
             writeToLog("INFO","Already on Admin page")
             return True
             
