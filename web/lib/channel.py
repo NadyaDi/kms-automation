@@ -40,7 +40,7 @@ class Channel(Base):
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
     EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
-    CHANNEL_DELETED_ALERT                           = ('xpath', "//div[@class='alert alert-success ']")
+    CHANNEL_DELETED_ALERT                           = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'was deleted')]")
     #============================================================================================================
     def clickDeleteChannel(self):
         try:
@@ -149,7 +149,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to click on Save button")
                 return False 
             
-            if self.wait_visible(self.CHANNEL_CREATION_DONE, 30) == False:
+            if self.wait_visible(self.CHANNEL_CREATION_DONE, 45) == False:
                 writeToLog("INFO","FAILED to create a Channel")
                 return False                                        
             else:
