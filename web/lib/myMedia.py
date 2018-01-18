@@ -40,7 +40,7 @@ class MyMedia(Base):
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self):
         # Check if we are already in my media page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == True:
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
             writeToLog("INFO","Already in my media page")
             return True  
         
@@ -60,8 +60,7 @@ class MyMedia(Base):
         
         return True
         
-#     def navigateToEditEntryPage(self):
-#         
+
     def deleteSingleEntryFromMyMedia(self, entryName):
         # Search for entry in my media
         if self.searchEntryMyMedia(entryName) == False:

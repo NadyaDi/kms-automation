@@ -47,7 +47,7 @@ class Upload(Base):
 # The following function will check that upload is prevented before disclaimer's check-box was checked.
     def handleDisclaimerBeforeUplod(self):
         try:
-            if self.wait_visible(self.clsCommon.upload.CHOOSE_A_FILE_TO_UPLOAD_BUTTON, 5) == None:
+            if self.wait_visible(self.clsCommon.upload.CHOOSE_A_FILE_TO_UPLOAD_BUTTON, 5) == False:
                 if self.click(self.UPLOAD_ENTRY_DISCLAIMER_CHECKBOX) == False:
                     writeToLog("INFO","FAILED to click on disclaimer check-box")
                     return False

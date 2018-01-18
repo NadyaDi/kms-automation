@@ -6,7 +6,7 @@ import win32com.client
 from base import *
 import clsTestService
 from general import General
-
+import enums
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -34,7 +34,7 @@ class Channel(Base):
     CHANNEL_DETAILS_OPTION_COMMENT                  = ('id', 'Category-options-enableComments')
     CHANNEL_DETAILS_OPTION_SUBSCRIPTION             = ('id', 'Category-options-enableChannelSubscription')
     CHANNEL_SAVE_BUTTON                             = ('id', 'Category-submit')
-    CHANNEL_CREATION_DONE                           = ('xpath', "//h1[@id='channel_title_edit']")
+    CHANNEL_CREATION_DONE                           = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'The information was saved successfully')]")
     MY_CHANNELS_SERACH_FIELD                        = ('id', 'searchBar')
     MY_CHANNELS_EDIT_BUTTON                         = ('xpath', "//a[contains(@class,'edit')]")
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
@@ -87,10 +87,10 @@ class Channel(Base):
 
 
     # This function will create a Channel, please follow the following instructions:
-    # in order to choose the Channel's privacy please use one of the following values ONLY: open , restricted , private , shared-repository , public
+    # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
     # TODO: linkToCategoriesList
-    def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList):
+    def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList=""):
         try:
             if self.navigateToMyChannels() == False:
                 writeToLog("INFO","FAILED to native to my channels page")
@@ -150,7 +150,7 @@ class Channel(Base):
         
     def navigateToMyChannels(self):
         # Check if we are already in my Channels page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False) == True:
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 1) == True:
             writeToLog("INFO","Already in my Channels page")
             return True     
            
@@ -193,29 +193,29 @@ class Channel(Base):
             writeToLog("DEBUG","FAILED to type in Tags")
             return False
         
-        
+    # privacy - is ChannelPrivacyType enum type
     def selectChannelPrivacy(self, privacy):
-        if privacy == "open":
+        if privacy == enums.ChannelPrivacyType.OPEN:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_OPEN) == False:
                 writeToLog("INFO","FAILED to click on open option")
                 return False
             
-        elif privacy == "restricted":
+        elif privacy == enums.ChannelPrivacyType.RESTRICTED:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_RESTRICTED) == False:
                 writeToLog("INFO","FAILED to click on restricted option")
                 return False
             
-        elif privacy == "private":
+        elif privacy == enums.ChannelPrivacyType.PRIVATE:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_PRIVATE) == False:
                 writeToLog("INFO","FAILED to click on private option")
                 return False
             
-        elif privacy == "sharedrepository":
+        elif privacy == enums.ChannelPrivacyType.SHAREDREPOSITORY:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY) == False:
                 writeToLog("INFO","FAILED to click on shared-repository option")
                 return False
             
-        elif privacy == "public":
+        elif privacy == enums.ChannelPrivacyType.PUBLIC:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC) == False:
                 writeToLog("INFO","FAILED to click on public option")
                 return False  
