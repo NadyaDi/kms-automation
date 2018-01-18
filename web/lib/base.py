@@ -62,7 +62,33 @@ class Base:
                 except NoSuchElementException:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
-            raise NoSuchElementException        
+            raise NoSuchElementException
+        
+
+    def get_child_elements(self, parent, locator):
+        """
+        Return elements based on provided locator.
+        Locator include the method and locator value in a tuple.
+        :param locator:
+        :return:
+        """
+
+        method = locator[0]
+        values = locator[1]
+        
+        if type(values) is str:
+            try:
+                return self.get_child_elements_by_type(parent, method, values)
+            except NoSuchElementException:
+                raise NoSuchElementException
+        elif type(values) is list:
+            for value in values:
+                try:
+                    return self.get_child_elements_by_type(parent, method, value)
+                except NoSuchElementException:
+                    pass
+            writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
+            raise NoSuchElementException                
 
 
     def get_element_by_type(self, method, value):
@@ -106,7 +132,29 @@ class Base:
             return self.driver.find_element_by_tag_name(value)        
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
-            raise Exception('Invalid locator method.')        
+            raise Exception('Invalid locator method.')
+        
+        
+    def get_child_elements_by_type(self, parent, method, value):
+        if method == 'accessibility_id':
+            return parent.find_elements_by_accessibility_id(value)
+        elif method == 'android':
+            return parent.find_elements_by_android_uiautomator('new UiSelector().%s' % value)
+        elif method == 'ios':
+            return parent.find_elements_by_ios_uiautomation(value)
+        elif method == 'class_name':
+            return parent.find_elements_by_class_name(value)
+        elif method == 'id':
+            return parent.find_elements_by_id(value)
+        elif method == 'xpath':
+            return parent.find_elements_by_xpath(value)
+        elif method == 'name':
+            return parent.find_elements_by_name(value)
+        elif method == 'tag_name':
+            return self.driver.find_elements_by_tag_name(value)        
+        else:
+            writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
+            raise Exception('Invalid locator method.')             
 
 
     def get_elements(self, locator):

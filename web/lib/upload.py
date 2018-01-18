@@ -60,7 +60,7 @@ class Upload(Base):
         return True
 
 
-    def uploadEntry(self, filePath, name, descrition, tags, timeout=60, disclaimer=False):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False):
         try:
             # Click Add New
             if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
@@ -96,8 +96,8 @@ class Upload(Base):
                 return False
                 writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
                             
-            # Fill entry details: name, descrition, tags
-            self.fillFileUploadEntryDetails(name, descrition, tags)
+            # Fill entry details: name, description, tags
+            self.fillFileUploadEntryDetails(name, description, tags)
             
             # Click Save
             if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
@@ -153,15 +153,15 @@ class Upload(Base):
             return False        
         
         
-    # Fill basic entry details after upload is completed, only: name, descrition, tags     
-    def fillFileUploadEntryDetails(self, name="", descrition="", tags=""): 
+    # Fill basic entry details after upload is completed, only: name, description, tags     
+    def fillFileUploadEntryDetails(self, name="", description="", tags=""): 
         self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME).clear()
         if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
             writeToLog("INFO","FAILED to fill a entry name:'" + name + "'")
             return False
         
-        if self.fillFileUploadEntryDescription(descrition) == False:
-            writeToLog("INFO","FAILED to fill a entry Description:'" + descrition + "'")
+        if self.fillFileUploadEntryDescription(description) == False:
+            writeToLog("INFO","FAILED to fill a entry Description:'" + description + "'")
             return False
         
         if self.fillFileUploadEntryTags(tags) == False:
@@ -175,7 +175,8 @@ class Upload(Base):
         self.driver.switch_to.frame(descpriptionIframe)
         
         # Click on Description text box
-        el = self.driver.find_element_by_xpath("//div[@class='content' and contains(text(), 'Enter Description')]")
+        #el = self.driver.find_element_by_xpath("//div[@class='content' and contains(text(), 'Enter Description')]")
+        el = self.driver.find_element_by_xpath("//body[contains(@class,'description span11 wysiwyg-Active wysihtml5-editor')]")
         if el.click() == False:
             writeToLog("DEBUG","FAILED to click on Description filed")
             return False               
