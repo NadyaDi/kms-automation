@@ -8,6 +8,7 @@ from logger import *
 from login import Login
 from myMedia import MyMedia
 from upload import Upload
+from category import Category
 
 
     #============================================================================================================
@@ -26,6 +27,7 @@ class Common():
     myMedia         = None
     entryPage       = None
     editEntryPage   = None
+    category        = None
     
     def __init__(self, driver):
         self.driver             = driver        
@@ -37,6 +39,7 @@ class Common():
         self.myMedia            = MyMedia(self, driver)
         self.entryPage          = EntryPage(self, driver)
         self.editEntryPage      = EditEntryPage(self, driver)
+        self.category           = Category(self, driver)
         
     #=============================================================================================================
     # Locators:
