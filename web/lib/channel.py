@@ -42,6 +42,8 @@ class Channel(Base):
     EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
     CHANNEL_DELETED_ALERT                           = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'was deleted')]")
     #============================================================================================================
+    
+    #  @Author: Tzachi Guetta    
     def clickDeleteChannel(self):
         try:
             self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
@@ -49,7 +51,7 @@ class Channel(Base):
         except:
             return False
         
-        
+    #  @Author: Tzachi Guetta        
     def deleteChannel(self, channelName):
         try:
             if self.navigateToMyChannels() == False:
@@ -98,7 +100,7 @@ class Channel(Base):
         
         return True
 
-
+    #  @Author: Tzachi Guetta
     # This function will create a Channel, please follow the following instructions:
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
@@ -160,7 +162,7 @@ class Channel(Base):
         
         return True
         
-        
+    #  @Author: Tzachi Guetta        
     def navigateToMyChannels(self):
         # Check if we are already in my Channels page
         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 1) == True:
@@ -205,7 +207,7 @@ class Channel(Base):
         else:
             writeToLog("DEBUG","FAILED to type in Tags")
             return False
-        
+    #  @Author: Tzachi Guetta    
     # privacy - is ChannelPrivacyType enum type
     def selectChannelPrivacy(self, privacy):
         if privacy == enums.ChannelPrivacyType.OPEN:
