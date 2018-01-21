@@ -59,7 +59,7 @@ class Test:
             ########################### KMS ADMIN SETUP ###########################
             
             self.common.admin.navigateToAdminPage()
-            self.common.admin.adminDisclaimer(True)
+            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
             
             ##################### TEST STEPS - MAIN FLOW ##########################
             
