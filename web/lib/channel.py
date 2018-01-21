@@ -70,10 +70,7 @@ class Channel(Base):
             self.clsCommon.general.waitForLoaderToDisappear()
             
             tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
-            element = self.get_element(tmp_entry_name)
-            hover = ActionChains(self.driver).move_to_element(element)
-            
-            if hover.perform() == False:
+            if self.hover_on_element(tmp_entry_name) == False:
                 writeToLog("INFO","FAILED to Hover above Channel's thumbnail")
                 return False
     
@@ -165,7 +162,7 @@ class Channel(Base):
     #  @Author: Tzachi Guetta        
     def navigateToMyChannels(self):
         # Check if we are already in my Channels page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 1) == True:
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 3) == True:
             writeToLog("INFO","Already in my Channels page")
             return True     
            
