@@ -32,7 +32,7 @@ class MyMedia(Base):
     MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION                          = ('class_name', 'pblTabChannel')
     MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH                         = ('xpath', "//span[contains(.,'PUBLISHED_CATEGORY')]")# When using this locator, replace 'PUBLISHED_CATEGORY' string with your real category/channel name
     MY_MEDIA_SAVE_MESSAGE_CONFIRM                               = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'Media successfully published')]")
-    MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ']")
+    MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to categories or channels.')]")
     #=============================================================================================================
     def getSearchBarElement(self):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -157,6 +157,7 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to click on Publish button")
             return False
         
+        sleep(1)
         return True
     
     

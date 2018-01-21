@@ -20,7 +20,7 @@ class Admin(Base):
     ADMIN_CONFIRMATION_MSG_OK_BUTTON                = ('xpath', "//span[@class='ui-button-text' and text()='OK']")
     ADMIN_DISCLAIMER_DISPLAY_AREA                   = ('id', 'displayArea')
     ADMIN_DISCLAIMER_AGREE_REQUIRED                 = ('id', 'agreeRequired')
-    
+    ADMIN_LOGOUT_BUTTON                             = ('id', 'logout-button')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -42,6 +42,10 @@ class Admin(Base):
     def loginToAdminPage(self):
         if self.navigateToAdminPage() == False:
             return False
+                
+        # Verify if already logged in
+        if self.wait_visible(self.ADMIN_LOGOUT_BUTTON, 3) == True:
+            return True
         
         # Enter test partner username
         if self.send_keys(self.clsCommon.login.LOGIN_USERNAME_FIELD, localSettings.LOCAL_SETTINGS_ADMIN_USERNAME) == False:
