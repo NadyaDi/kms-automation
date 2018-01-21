@@ -10,5 +10,10 @@ class ChannelPrivacyType(Enum):
     SHAREDREPOSITORY   = "sharedrepository"
     PUBLIC             = "public"
     
-    def open(self):
-        return str(self.OPEN)
+    
+class DisclaimerDisplayArea(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    BEFORE_UPLOAD          = 'Before Upload'       
+    BEFORE_PUBLISH         = "Before Publish"

@@ -123,7 +123,7 @@ class Upload(Base):
         
         
     def waitUploadCompleted(self, startTime, timeout=60):
-        if self.wait_for_text(self.UPLOAD_COMPLETED_LABEL, "Upload Completed!", timeout) != True:
+        if self.wait_for_text(self.UPLOAD_COMPLETED_LABEL, "Upload Completed!", timeout) == False:
             writeToLog("INFO","Upload didn't finish after timeout: " + timeout + "' seconds")
             return False
         else:

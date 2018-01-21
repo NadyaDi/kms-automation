@@ -220,7 +220,7 @@ class Base:
                 if self.is_visible(locator) == False:
                     return True
                 if wait_until < datetime.datetime.now():
-                    writeToLog("DEBUG",'Element still visible')
+                    writeToLog('INFO','Element still visible')
                     break
             except:
                 return True
@@ -238,41 +238,37 @@ class Base:
 
     # waits
     def wait_visible(self, locator, timeout=10):
-        i = 0
-        self.driver.implicitly_wait(0)
-        while i != timeout:
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        while True:
             try:
                 if self.is_visible(locator) == True:
-                    self.setImplicitlyWaitToDefault()
                     return self.get_element(locator)
-                else:
-                    sleep(1)
-                    i += 1                    
-            except NoSuchElementException:
-                sleep(1)
-                i += 1
-        self.setImplicitlyWaitToDefault()                
+                if wait_until < datetime.datetime.now():
+                    writeToLog('INFO','Element not visible')
+                    break                
+            except:
+                return False
         return False
 
-
-    def wait_for_text(self, locator, text, timeout=10):
-        i = 0
-        self.driver.implicitly_wait(0)
-        while i != timeout:
+    # If you want to verify partial (contains) text set 'contains' True
+    def wait_for_text(self, locator, text, timeout=10, contains=False):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        while True:
             try:
                 element = self.get_element(locator)
                 element_text = element.text
-                if element_text.lower() == text.lower():
-                    self.setImplicitlyWaitToDefault() 
-                    return True
-                else:
-                    pass
-            except NoSuchElementException:
-                pass
-            sleep(1)
-            i += 1
-        self.setImplicitlyWaitToDefault() 
-        return None
+                if contains == True:
+                    if text.lower() in element_text.lower():
+                        return True                    
+                else:    
+                    if element_text.lower() == text.lower():
+                        return True
+                if wait_until < datetime.datetime.now():
+                    writeToLog('INFO','Text element not visible')
+                    break                  
+            except:
+                return False
+        return False
 
 
     # clicks and taps
