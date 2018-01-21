@@ -42,7 +42,7 @@ class Upload(Base):
             return True
         except NoSuchElementException:
             return False
-
+#  @Author: Tzachi Guetta
 # In case disclaimer module is turned on and set to "before upload" 
 # The following function will check that upload is prevented before disclaimer's check-box was checked.
     def handleDisclaimerBeforeUplod(self):
@@ -59,7 +59,7 @@ class Upload(Base):
         
         return True
 
-
+#  @Authors: Oleg Sigalov &  Tzachi Guetta
     def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False):
         try:
             # Click Add New

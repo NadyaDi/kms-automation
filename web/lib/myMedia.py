@@ -2,6 +2,8 @@ from base import *
 import clsTestService
 from general import General
 from logger import writeToLog
+from editEntryPage import EditEntryPage
+
 
 
 class MyMedia(Base):
@@ -30,7 +32,7 @@ class MyMedia(Base):
     MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION                          = ('class_name', 'pblTabChannel')
     MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH                         = ('xpath', "//span[contains(.,'PUBLISHED_CATEGORY')]")# When using this locator, replace 'PUBLISHED_CATEGORY' string with your real category/channel name
     MY_MEDIA_SAVE_MESSAGE_CONFIRM                               = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'Media successfully published')]")
-                 
+    MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ']")
     #=============================================================================================================
     def getSearchBarElement(self):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -40,11 +42,12 @@ class MyMedia(Base):
     
     
     # This method, clicks on the menu and My Media
-    def navigateToMyMedia(self):
+    def navigateToMyMedia(self, forceNavigate = False):
         # Check if we are already in my media page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
-            writeToLog("INFO","Success Already in my media page")
-            return True  
+        if forceNavigate == False:
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
+                writeToLog("INFO","Success Already in my media page")
+                return True
         
         # Click on User Menu Toggle Button
         if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
@@ -94,7 +97,7 @@ class MyMedia(Base):
         
     def searchEntryMyMedia(self, entryName):
         # Navigate to My Media
-        if self.navigateToMyMedia() == False:
+        if self.navigateToMyMedia(True) == False:
             return False
         # Search Entry     
         self.getSearchBarElement().click()
@@ -126,8 +129,9 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
                 
         return True       
+          
                 
-                
+    #  @Author: Tzachi Guetta                   
     def checkSingleEntryInMyMedia(self, entryName):  
         if self.searchEntryMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to find: '" + entryName + "'")
@@ -143,6 +147,7 @@ class MyMedia(Base):
         return True
     
     
+    #  @Author: Tzachi Guetta       
     def clickActionsAndPublishFromMyMedia(self):
         if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Action button")
@@ -155,6 +160,7 @@ class MyMedia(Base):
         return True
     
     
+    #  @Author: Tzachi Guetta       
     def publishSingleEntryPrivacyToUnlistedInMyMedia(self, entryName):  
         if self.checkSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
@@ -179,14 +185,56 @@ class MyMedia(Base):
             return False
         
         return True 
-     
-     
+    
+    
+    #  @Author: Tzachi Guetta       
+    def handleDisclaimerBeforePublish(self, entryName):  
+        if self.checkSingleEntryInMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        if self.clickActionsAndPublishFromMyMedia() == False:
+            writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        if self.wait_visible(self.MY_MEDIA_DISCLAIMER_MSG) == False:
+            writeToLog("INFO","Disclaimer alert (before publish) wasn't presented although Disclaimer module is turned on")
+            return False
+        
+        if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to navigate to Edit entry page, Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        if self.click(self.clsCommon.upload.UPLOAD_ENTRY_DISCLAIMER_CHECKBOX) == False:
+            writeToLog("INFO","FAILED to click on disclaimer check-box")
+            return False
+        
+        if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on save button at edit entry page")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.navigateToMyMedia() == False:
+            writeToLog("INFO","FAILED to navigate to my media")
+            return False         
+        
+        return True      
+    
+    
+    #  @Author: Michal Zomper        
     # in categoryList / channelList will have all the names of the categories / channels to publish to  
-    def publishSingleEntryInMyMedia(self, entryName, categoryList, channelList): 
+    def publishSingleEntryInMyMedia(self, entryName, categoryList, channelList, disclaimer=False): 
         if self.navigateToMyMedia() == False:
             writeToLog("INFO","FAILED to navigate to my media")
             return False
-        
+
+        #checking if disclaimer is turned on for "Before publish"
+        if disclaimer == True:
+            if self.handleDisclaimerBeforePublish(entryName) == False:
+                writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
+                return False
+                    
         if self.checkSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
             return False
