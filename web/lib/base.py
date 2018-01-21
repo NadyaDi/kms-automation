@@ -2,6 +2,7 @@ import sys, datetime, re
 from time import sleep
 
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 
 from logger import *
@@ -458,4 +459,15 @@ class Base:
             writeToLog("INFO","FAILED to select: '" + value + "' from locator: '" + locator[1] + "'")
             return False
         
-        return True          
+        return True   
+    
+    
+    def hover_on_element(self, locator):
+        try:
+            element = self.get_element(locator)
+            ActionChains(self.driver).move_to_element(element).perform()
+        except:
+            writeToLog("INFO","FAILED to hover on locator: '" + locator[1] + "'")
+            return False
+        
+        return True         
