@@ -129,7 +129,7 @@ class Admin(Base):
         if self.click(self.ADMIN_SAVE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Save button")
             return False            
-        
+        sleep(2)
         # Verify message - The cache was cleared...
         if self.wait_for_text(self.ADMIN_AFTER_CLICK_SAVE_MSG, 'The cache was cleared.', 20, True) == False:
             writeToLog("INFO","FAILED to verify success message: '...The cache was cleared.'")

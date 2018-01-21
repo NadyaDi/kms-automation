@@ -2,6 +2,7 @@ import time, pytest
 
 from clsCommon import Common
 import clsTestService
+import enums
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
@@ -58,7 +59,7 @@ class Test:
             
             ########################### KMS ADMIN SETUP ###########################
             self.common.admin.navigateToAdminPage()
-            self.common.admin.adminDisclaimer(True)
+            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
             ########################### KMS ADMIN SETUP ###########################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
