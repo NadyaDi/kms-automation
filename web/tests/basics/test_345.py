@@ -129,7 +129,7 @@ class Test:
                 
             writeToLog("INFO","Step 11: Going to verify entry new  metadata  (entry name, description, tags) with the user that  added as Collaborator")
             # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
-            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.entryTags.lower() + self.newTags.lower()[:-1]) == False:
+            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.entryTags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify entry new  metadata with the user that was added as Collaborator")
                 return  
