@@ -175,7 +175,8 @@ class Upload(Base):
         self.driver.switch_to.frame(descpriptionIframe)
         
         # Click on Description text box
-        el = self.driver.find_element_by_xpath("//div[@class='content' and contains(text(), 'Enter Description')]")
+        el = self.driver.find_element_by_xpath("//div[@class='content']")
+        #el = self.driver.find_element_by_xpath("//div[@class='content' and contains(text(), 'Enter Description')]")
         #el = self.driver.find_element_by_xpath("//body[contains(@class,'description span11 wysiwyg-Active wysihtml5-editor')]")
         if el.click() == False:
             writeToLog("DEBUG","FAILED to click on Description filed")

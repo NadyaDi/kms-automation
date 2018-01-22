@@ -27,13 +27,14 @@ class Test:
     common = None
     # Test variables
     entryName = None
+    entryDescription = None
+    entryTags = None 
     newUserId = None
     newUserPass = None
     newEntryName = None
     newDescription = None
     newTags = None
     categoryList = None
-    channelList = None
     
     categoryName = None
     filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
@@ -54,55 +55,25 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            
-            
-            #self.entryName = clsTestService.addGuidToString('Michal entry')
-            
-            
-            
-            self.entryName = "2E959360_Michal entry"
+            self.entryName = clsTestService.addGuidToString("Collaboration entry - Co Edit")
+            self.entryDescription = "Description"
+            self.entryTags = "Tags,"
             self.newUserId = "Automation_User_1"
             self.newUserPass = "Kaltura1!"
-            self.newEntryName = clsTestService.addGuidToString('Michal edit entry name')
+            self.newEntryName = clsTestService.addGuidToString('Edit Collaboration entry - Co Edit')
             self.newDescription = "Edit description"
-            self.newTags = "Edit Tags"
+            self.newTags = "Edit Tags,"
             self.categoryList = [("Apps Automation Category")]
-            self.channelList = ""
             
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
-                return        
-            
-            
-#             if self.common.category.searchEntryInCategory(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 8: FAILED failed search entry'" + self.entryName + "' in category" + self.categoryList[0])
-#                 return         
-#             if self.common.category.clickOnEntryAfterSearchInCategory(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
-#                 return
-#                          
-#             writeToLog("INFO","Step 11: Going to navigate to edit entry page from entry page")
-#             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 12: FAILED to navigate to edit entry page from entry page")
-#                 return 
-#              
-            writeToLog("INFO","Step 12: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
-            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to edit entry metadata with the user that was added as Collaborator")
-                return  
-            
-            
-            
-            
+                return         
+
             writeToLog("INFO","Step 2: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, "description  description", "tags1,tags2,") == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
@@ -115,7 +86,7 @@ class Test:
             
             sleep(2)     
             writeToLog("INFO","Step 4: Going to publish the entry so the add user as a collaborator can see it")            
-            if self.common.myMedia.publishSingleEntryInMyMedia(self.entryName, self.categoryList, self.channelList) == False:
+            if self.common.myMedia.publishSingleEntryInMyMedia(self.entryName, self.categoryList, "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
                 return
@@ -132,39 +103,39 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to login with the user that was added as Collaborator")
                 return
             
-            writeToLog("INFO","Step 7: Going to navigate to published category")
-            if self.common.category.navigateToCategory(self.categoryList[0]) == False:
+            writeToLog("INFO","Step 7: Going to navigate to entry page from category page with the user that was added as Collaborator")
+            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.categoryList[0], self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED failed navigate to category:" + self.categoryList[0])
-                return             
+                writeToLog("INFO","Step 7: FAILED to navigate to entry page with the user that was added as Collaborator")
+                return                                  
             
-            writeToLog("INFO","Step 8: Going search entry in category")
-            if self.common.category.searchEntryInCategory(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED failed search entry'" + self.entryName + "' in category" + self.categoryList[0])
-                return  
-            
-            # click on the entry
-            writeToLog("INFO","Step 9: Going to click on entry name from category search")
-            if self.common.category.clickOnEntryAfterSearchInCategory(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to click on entry " + self.entryName)
-                return                  
-            
-            writeToLog("INFO","Step 11: Going to navigate to edit entry page from entry page")
+            writeToLog("INFO","Step 8: Going to navigate to edit entry page from entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to navigate to edit entry page from entry page")
+                writeToLog("INFO","Step 8: FAILED to navigate to edit entry page from entry page")
                 return 
              
-            writeToLog("INFO","Step 12: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            writeToLog("INFO","Step 9: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
             if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to edit entry metadata with the user that was added as Collaborator")
+                writeToLog("INFO","Step 9: FAILED to edit entry metadata with the user that was added as Collaborator")
+                return  
+            
+            writeToLog("INFO","Step 10: Going to navigate to entry page from category page")
+            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.categoryList[0], self.newEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to navigate to entry page with the user that was added as Collaborator")
+                return                 
+                
+            writeToLog("INFO","Step 11: Going to verify entry new  metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
+            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.entryTags.lower() + self.newTags.lower()[:-1]) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to verify entry new  metadata with the user that was added as Collaborator")
                 return  
             
             ##################################################################
-            print("DONE")
+            print("Test 'Entry Collaboration - co editor' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -172,7 +143,9 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.login.logOutOfKMS()
+            self.common.loginAsUser()
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.newEntryName)
         except:
             pass            
         clsTestService.basicTearDown(self)

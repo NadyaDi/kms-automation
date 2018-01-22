@@ -32,7 +32,7 @@ class Category(Base):
     def navigateToCategory(self, categoryName):
         # Check if we are already in category page
         tmpCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
-        if self.wait_visible(tmpCategoryName, 5) != None:
+        if self.wait_visible(tmpCategoryName, 5) != False:
             writeToLog("INFO","Success Already in my category page")
             return True
         
@@ -43,7 +43,7 @@ class Category(Base):
             return False
         
         # Verify category page open
-        if self.wait_visible(tmpCategoryName, 30) == None:
+        if self.wait_visible(tmpCategoryName, 30) == False:
             writeToLog("INFO","FAILED to verify category page is display")
             return False
         
