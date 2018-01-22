@@ -45,7 +45,7 @@ class Admin(Base):
             return False
                 
         # Verify if already logged in
-        if self.wait_visible(self.ADMIN_LOGOUT_BUTTON, 3) == True:
+        if self.wait_visible(self.ADMIN_LOGOUT_BUTTON, 3) != False:
             return True
         
         # Enter test partner username
