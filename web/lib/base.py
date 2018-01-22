@@ -248,7 +248,7 @@ class Base:
                     self.setImplicitlyWaitToDefault()
                     return self.get_element(locator)
                 if wait_until < datetime.datetime.now():
-                    writeToLog('DEBUG','Element not visible')
+                    #writeToLog('DEBUG','Element not visible')
                     self.setImplicitlyWaitToDefault()
                     return False                
             except:

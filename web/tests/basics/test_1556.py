@@ -31,11 +31,11 @@ class Test:
     # Test variables
     entryName = None
     channelName = None
-    entryDescription = "Tzachi Entry description"
+    entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
-    channelDescription = "Tzachi Channel description"
+    channelDescription = "Channel description"
     channelTags = "Channeltags1,Channeltags2,"
-    filePath = "C:\\Users\\tzachi.guetta\\Downloads\\1.JPG"
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -47,22 +47,19 @@ class Test:
         #write to log we started the test
         logStartTest(self,driverFix)
         try:
-            ########################### TEST SETUP ################################
+            ############################# TEST SETUP ###############################
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
             self,captur,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString('Tzachi Entry name')
-            self.channelName = clsTestService.addGuidToString('Tzachi Channel name') 
-               
-            ########################### KMS ADMIN SETUP ###########################
             
-            self.common.admin.navigateToAdminPage()
+            ########################################################################
+            self.entryName = clsTestService.addGuidToString('Entry name')
+            self.channelName = clsTestService.addGuidToString('Channel name') 
             self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
             
-            ##################### TEST STEPS - MAIN FLOW ##########################
-            
+            ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
@@ -86,9 +83,9 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
-            ##################################################################
+            #########################################################################
             print("DONE")
-        # if an exception happened we need to handle it and fail the test       
+        # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
             
