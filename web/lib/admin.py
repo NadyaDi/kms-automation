@@ -20,7 +20,7 @@ class Admin(Base):
     ADMIN_CONFIRMATION_MSG_OK_BUTTON                = ('xpath', "//span[@class='ui-button-text' and text()='OK']")
     ADMIN_DISCLAIMER_DISPLAY_AREA                   = ('id', 'displayArea')
     ADMIN_DISCLAIMER_AGREE_REQUIRED                 = ('id', 'agreeRequired')
-    
+    ADMIN_MEDIA_COLLABORATION_ENABLED               = ('id', 'mediaCollaborationEnabled-label')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -63,7 +63,7 @@ class Admin(Base):
         return True
     
     
-    # @Author: Oleg Sigalov    
+    # @Author: Oleg Sigalov
     # NOT FINISHED    
     # isEnabled - True to enable, False to disable
     # displayArea - enums.DisclaimerDisplayArea
@@ -86,13 +86,9 @@ class Admin(Base):
             return False
         
         # Enable/Disable Disclaimer
-        if isEnabled == True:
-            selction = 'Yes'
-        else:
-            selction = 'No'
-
-        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selction) == False:
-            writeToLog("INFO","FAILED to set disclaimer as: " + str(selction))
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set disclaimer as: " + str(selection))
             return False
         
         # Set Display Area
@@ -103,13 +99,9 @@ class Admin(Base):
             
         # Set Agree Required
         if agreeRequired != '':
-            if agreeRequired == True:
-                selction = 'Yes'
-            else:
-                selction = 'No'
-                        
-            if self.select_from_combo_by_text(self.ADMIN_DISCLAIMER_AGREE_REQUIRED, str(selction)) == False:
-                writeToLog("INFO","FAILED to Set Display Area as: " + str(selction))
+            selection = self.convertBooleanToYesNo(agreeRequired)
+            if self.select_from_combo_by_text(self.ADMIN_DISCLAIMER_AGREE_REQUIRED, str(selection)) == False:
+                writeToLog("INFO","FAILED to Set Display Area as: " + str(selection))
                 return False            
 
         if self.adminSave() == False:
@@ -137,5 +129,28 @@ class Admin(Base):
             return False 
         
         sleep(2)
-        return True       
+        return True
+    
+
+    # @Author: Oleg Sigalov    
+    # isEnabled - True to enable, False to disable
+    # changeOwnerEnabled - True for Yes, False - No
+    # allowGroupsCollaboration - True for Yes, False - No
+    # collaborationEnabledInUploadForm - True for Yes, False - No
+    # showInSearch - True for Yes, False - No
+    def adminMediaCollaboration(self, isEnabled, changeOwnerEnabled='', allowGroupsCollaboration='', collaborationEnabledInUploadForm='', showInSearch=''):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            return False
+        
+        # Navigate to Media Collaboration page
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/mediaCollaboration#mediaCollaborationEnabled') == False:
+            writeToLog("INFO","FAILED to load Admin Media Collaboration page")
+            return False
+        
+        # Enable/Disable Media Collaboration
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_MEDIA_COLLABORATION_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set disclaimer as: " + str(selection))
+            return False        
     

@@ -6,6 +6,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 
 from logger import *
+from builtins import str
 
 
 class Base:
@@ -470,4 +471,14 @@ class Base:
             writeToLog("INFO","FAILED to hover on locator: '" + locator[1] + "'")
             return False
         
-        return True         
+        return True  
+    
+    def convertBooleanToYesNo(self, booleanExp):
+        strExp = None
+        if booleanExp == True:
+            strExp = 'Yes'
+        elif booleanExp == False:
+            strExp = 'No'      
+        else:
+            raise Exception("Unknown boolean expression")
+        return strExp
