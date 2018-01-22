@@ -42,6 +42,8 @@ class Channel(Base):
     EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
     CHANNEL_DELETED_ALERT                           = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'was deleted')]")
     #============================================================================================================
+    
+    #  @Author: Tzachi Guetta    
     def clickDeleteChannel(self):
         try:
             self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
@@ -49,7 +51,7 @@ class Channel(Base):
         except:
             return False
         
-        
+    #  @Author: Tzachi Guetta        
     def deleteChannel(self, channelName):
         try:
             if self.navigateToMyChannels() == False:
@@ -68,10 +70,7 @@ class Channel(Base):
             self.clsCommon.general.waitForLoaderToDisappear()
             
             tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
-            element = self.get_element(tmp_entry_name)
-            hover = ActionChains(self.driver).move_to_element(element)
-            
-            if hover.perform() == False:
+            if self.hover_on_element(tmp_entry_name) == False:
                 writeToLog("INFO","FAILED to Hover above Channel's thumbnail")
                 return False
     
@@ -98,7 +97,7 @@ class Channel(Base):
         
         return True
 
-
+    #  @Author: Tzachi Guetta
     # This function will create a Channel, please follow the following instructions:
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
@@ -160,10 +159,10 @@ class Channel(Base):
         
         return True
         
-        
+    #  @Author: Tzachi Guetta        
     def navigateToMyChannels(self):
         # Check if we are already in my Channels page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 1) == True:
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 3) == True:
             writeToLog("INFO","Already in my Channels page")
             return True     
            
@@ -205,7 +204,7 @@ class Channel(Base):
         else:
             writeToLog("DEBUG","FAILED to type in Tags")
             return False
-        
+    #  @Author: Tzachi Guetta    
     # privacy - is ChannelPrivacyType enum type
     def selectChannelPrivacy(self, privacy):
         if privacy == enums.ChannelPrivacyType.OPEN:

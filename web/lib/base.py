@@ -223,7 +223,7 @@ class Base:
                     return True
                 if wait_until < datetime.datetime.now():
                     writeToLog('INFO','Element still visible')
-                    break
+                    return False
             except:
                 return True
         return False
@@ -241,36 +241,44 @@ class Base:
     # waits
     def wait_visible(self, locator, timeout=10):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
         while True:
             try:
                 if self.is_visible(locator) == True:
+                    self.setImplicitlyWaitToDefault()
                     return self.get_element(locator)
                 if wait_until < datetime.datetime.now():
-                    writeToLog('INFO','Element not visible')
-                    break                
+                    writeToLog('DEBUG','Element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False                
             except:
+                self.setImplicitlyWaitToDefault()
                 return False
-        return False
+
 
     # If you want to verify partial (contains) text set 'contains' True
     def wait_for_text(self, locator, text, timeout=10, contains=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
         while True:
             try:
                 element = self.get_element(locator)
                 element_text = element.text
                 if contains == True:
                     if text.lower() in element_text.lower():
+                        self.setImplicitlyWaitToDefault()
                         return True                    
                 else:    
                     if element_text.lower() == text.lower():
+                        self.setImplicitlyWaitToDefault()
                         return True
                 if wait_until < datetime.datetime.now():
                     writeToLog('INFO','Text element not visible')
-                    break                  
+                    self.setImplicitlyWaitToDefault()
+                    return False                  
             except:
+                self.setImplicitlyWaitToDefault()
                 return False
-        return False
 
 
     # clicks and taps
@@ -436,6 +444,8 @@ class Base:
     def setImplicitlyWaitToDefault(self):
         self.driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
         
+    def setImplicitlyWait(self, timeout):
+        self.driver.implicitly_wait(timeout)        
         
     def select_from_combo_by_text(self, locator, optionToSelect):
         try:

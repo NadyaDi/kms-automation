@@ -21,6 +21,7 @@ class Admin(Base):
     ADMIN_DISCLAIMER_DISPLAY_AREA                   = ('id', 'displayArea')
     ADMIN_DISCLAIMER_AGREE_REQUIRED                 = ('id', 'agreeRequired')
     ADMIN_MEDIA_COLLABORATION_ENABLED               = ('id', 'mediaCollaborationEnabled-label')
+    ADMIN_LOGOUT_BUTTON                             = ('id', 'logout-button')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -42,6 +43,10 @@ class Admin(Base):
     def loginToAdminPage(self):
         if self.navigateToAdminPage() == False:
             return False
+                
+        # Verify if already logged in
+        if self.wait_visible(self.ADMIN_LOGOUT_BUTTON, 3) == True:
+            return True
         
         # Enter test partner username
         if self.send_keys(self.clsCommon.login.LOGIN_USERNAME_FIELD, localSettings.LOCAL_SETTINGS_ADMIN_USERNAME) == False:
@@ -117,7 +122,7 @@ class Admin(Base):
         if self.click(self.ADMIN_SAVE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Save button")
             return False            
-        
+        sleep(2)
         # Verify message - The cache was cleared...
         if self.wait_for_text(self.ADMIN_AFTER_CLICK_SAVE_MSG, 'The cache was cleared.', 20, True) == False:
             writeToLog("INFO","FAILED to verify success message: '...The cache was cleared.'")
