@@ -35,6 +35,7 @@ class Test:
     entryTags = "entrytags1,entrytags2,"
     channelDescription = "Channel description"
     channelTags = "Channeltags1,Channeltags2,"
+    categoryList = ['Galleries - Admin', 'Open Gallery - admin owner']
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
     
     #run test as different instances on all the supported platforms
@@ -67,13 +68,13 @@ class Test:
                 return
              
             writeToLog("INFO","Step 2: Going to create Channel")
-            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True, self.categoryList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return   
                
             writeToLog("INFO","Step 3: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
@@ -81,7 +82,7 @@ class Test:
             writeToLog("INFO","Step 4: Going to publish the entry while Disclaimer before published turned ON")
             if self.common.myMedia.publishSingleEntryInMyMedia(self.entryName, "", [self.channelName], True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED failed to upload entry")
+                writeToLog("INFO","Step 4: FAILED publish entry (Disclaimer is on)")
                 return
             #########################################################################
             print("DONE")

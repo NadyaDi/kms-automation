@@ -32,6 +32,8 @@ class Upload(Base):
     UPLOAD_ENTRY_PROGRESS_BAR                   = ('id', 'progressBar')
     UPLOAD_ENTRY_SUCCESS_MESSAGE                = ('xpath', "//span[contains(.,'Your changes have been saved.')]")
     UPLOAD_ENTRY_DISCLAIMER_CHECKBOX            = ('id', 'disclaimer-Accepted')
+    UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@class='btn btn-link']")
+    UPLOAD_ENABLE_SCHEDULING_RADIO              = ('id', 'schedulingRadioButtons_5a65e5d39199d-scheduled')
     #============================================================================================================
 #     base = Base(clsTestService.WEB_DRIVER)
     
@@ -58,32 +60,45 @@ class Upload(Base):
             return False
         
         return True
-
+    
+    
+    def extractEntryID (self):
+        try:
+            div = self.get_element(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+            href = div.get_attribute('href')
+            entryID = href.split("/")[len(href.split("/"))-1]
+            
+        except NoSuchElementException:
+            return False
+        
+        return entryID
+    
+    
 #  @Authors: Oleg Sigalov &  Tzachi Guetta
     def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False):
         try:
             # Click Add New
             if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Add New' button")
-                return False
+                return None
             
             # Click Media Upload
             if self.clickMediaUpload() == False:
                 writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
-                return False
+                return None
             
             #checking if disclaimer is turned on for "Before upload"
             if disclaimer == True:
                 if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
                     writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
-                    return False
+                    return None
                 
             # Wait page load
             self.wait_for_page_readyState()
             # Click Choose a file to upload
             if self.click(self.CHOOSE_A_FILE_TO_UPLOAD_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
-                return False
+                return None
             
             # Type in a file path
             self.typeIntoFileUploadDialog(filePath)
@@ -93,7 +108,7 @@ class Upload(Base):
             self.waitUploadCompleted(startTime, timeout)
             
             if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
-                return False
+                return None
                 writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
                             
             # Fill entry details: name, description, tags
@@ -102,7 +117,7 @@ class Upload(Base):
             # Click Save
             if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Save' button")
-                return False
+                return None
             sleep(5)
             
             # Wait for loader to disappear
@@ -110,11 +125,13 @@ class Upload(Base):
             
             # Wait for 'Your changes have been saved.' message
             if self.get_element(self.UPLOAD_ENTRY_SUCCESS_MESSAGE) != None:
-                writeToLog("INFO","Successfully uploaded entry: '" + name + "'")
-                return True
+                entryID = self.extractEntryID()
+                if entryID != None:
+                    writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
+                    return entryID
             else:
                 writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
-                return False
+                return None
 
         except Exception as inst:
     #             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
@@ -207,13 +224,13 @@ class Upload(Base):
             writeToLog("DEBUG","FAILED to click on Tags filed")
             return False            
         sleep(1)
-        
+
         if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS, tags) == True:
             return True
         else:
             writeToLog("DEBUG","FAILED to type in Tags")
             return False
-        
+
     # Return true if error message ('Oops! Entry could not be created.') appeared after upload    
     def isErrorUploadMessage(self):
         progressBarText = self.get_element_text(self.UPLOAD_ENTRY_PROGRESS_BAR)
