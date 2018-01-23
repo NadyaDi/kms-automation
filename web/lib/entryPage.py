@@ -16,7 +16,8 @@ class EntryPage(Base):
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST                        = ('id', "entryActionsMenuBtn")    
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON            = ('id', "tabLabel-Edit")      
     ENTRY_PAGE_DESCRIPTION                                 = ('xpath', "//div[@class='row-fluid normalWordBreak']")
-    ENTRY_PAGE_TAGS                                        = ('class_name', "tagsWrapper")       
+    ENTRY_PAGE_TAGS                                        = ('class_name', "tagsWrapper")    
+    ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")  
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -97,4 +98,5 @@ class EntryPage(Base):
         
         writeToLog("INFO","Success all entry '" + entryName + "' metadata are correct")
         return True  
+    
     

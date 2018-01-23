@@ -3,6 +3,7 @@ import clsTestService
 from general import General
 from logger import writeToLog
 from editEntryPage import EditEntryPage
+import enums
 
 
 
@@ -224,32 +225,45 @@ class MyMedia(Base):
     
     
     # Author: Michal Zomper       
-    # in categoryList / channelList will have all the names of the categories / channels to publish to  
-    def publishSingleEntryInMyMedia(self, entryName, categoryList, channelList, disclaimer=False): 
-        if self.navigateToMyMedia() == False:
-            writeToLog("INFO","FAILED to navigate to my media")
-            return False
-
+    # publishFrom - enums.PublishFrom
+    # in categoryList / channelList will have all the names of the categories / channels to publish to
+    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.PublishFrom.MY_MEDIA, disclaimer=False): 
+        if publishFrom == enums.PublishFrom.MY_MEDIA: 
+            if self.navigateToMyMedia() == False:
+                writeToLog("INFO","FAILED to navigate to my media")
+                return False
+            
+        elif publishFrom == enums.PublishFrom.ENTRY_PAGE: 
+            # Click on action tab
+            if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
+                writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
+                return False  
+        
+            # Click on publish button
+            if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
+                return False
+            
         #checking if disclaimer is turned on for "Before publish"
         if disclaimer == True:
             if self.handleDisclaimerBeforePublish(entryName) == False:
                 writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
                 return False
-                    
+                     
         if self.checkSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
             return False
-        
+         
         if self.clickActionsAndPublishFromMyMedia() == False:
             writeToLog("INFO","FAILED to click on action button")
             return False
-        sleep(7)
+        sleep(7)            
         
         # Choose publish radio button          
         if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on publish radio button")
             return False
-        
+            
         # Click if category list is empty
         if len(categoryList) != 0:
             # Click on Publish in Category
