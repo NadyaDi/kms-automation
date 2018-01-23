@@ -144,6 +144,15 @@ class Channel(Base):
                     writeToLog("INFO","FAILED to click on subscription checkbox")
                     return False  
             
+            # Click if category list is empty
+            if len(linkToCategoriesList) != 0:            
+                # choose all the  categories to publish to
+                for category in linkToCategoriesList:
+                    tmoCategoryName = (self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+                    if self.click(tmoCategoryName, 30) == False:
+                        writeToLog("INFO","FAILED to select published category '" + category + "'")
+                        return False
+            
             if self.click(self.CHANNEL_SAVE_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on Save button")
                 return False 
