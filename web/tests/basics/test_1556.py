@@ -67,7 +67,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 2: Going to create Channel")
-            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return   
@@ -79,7 +79,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to publish the entry while Disclaimer before published turned ON")
-            if self.common.myMedia.publishSingleEntryInMyMedia(self.entryName, "", [self.channelName], True) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return

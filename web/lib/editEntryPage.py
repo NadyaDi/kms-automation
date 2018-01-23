@@ -1,6 +1,7 @@
 from base import *
 import clsTestService
 import clsCommon
+import enums
 
 
 class EditEntryPage(Base):
@@ -23,7 +24,12 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
-    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
+    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath', "//div[@class='alert alert-success ']")
+    EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
+    EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
+    EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
+    EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
+    
     #=============================================================================================================
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
@@ -78,7 +84,7 @@ class EditEntryPage(Base):
             return False    
         
         #Click on collaboration tab
-        if self.click(self.EDIT_ENTRY_COLLABORATION_TAB, 30) == False:
+        if self.clickOnEditTab(enums.EditEntryPageTabName.COLLABORATION) == False:
             writeToLog("INFO","FAILED to click on collaboration tab")
             return False    
         
@@ -159,6 +165,52 @@ class EditEntryPage(Base):
         
         writeToLog("INFO","Success metadata were change successfully")
         return True
-            
-            
     
+    # Author: Michal Zomper    
+    # tabName - enums.EditEntryPageTabName    
+    def clickOnEditTab(self, tabName):
+        if tabName == enums.EditEntryPageTabName.OPTIONS: 
+            if self.click(self.EDIT_ENTRY_OPTION_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on option tab")
+                return False
+    
+        elif tabName == enums.EditEntryPageTabName.COLLABORATION:
+            if self.click(self.EDIT_ENTRY_COLLABORATION_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on Collaboration tab")
+                return False
+            
+        elif tabName == enums.EditEntryPageTabName.THUMBNAILS:
+            if self.click(self.EDIT_ENTRY_THUMBNAIL_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on Thumbnails tab")
+                return False
+            
+        elif tabName == enums.EditEntryPageTabName.CAPTIONS:
+            if self.click(self.EDIT_ENTRY_CAPTION_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on Captions tab")
+                return False
+            
+        return True
+    
+# TODO
+#     def changeEntryOptions(self, isDisable):
+#         if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
+#             writeToLog("INFO","FAILED to click on options tab")
+#             return False
+#         
+#         # check Disable comments option
+#         if self.click(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX, 30) == False:
+#             writeToLog("INFO","FAILED to check 'Disable comments' option")
+#             return False
+#                     
+#         if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+#             writeToLog("INFO","FAILED to find save massage")
+#             return False
+#         sleep(3)
+#         
+#         
+#         
+#         el = self.driver.find_element_by_id(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX[1])
+#         if  el.get_attribute("checked") != True:
+#             writeToLog("INFO","FAILED to")
+#             return False
+#         

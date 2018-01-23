@@ -1,6 +1,7 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title,,
 test_302,1,0,0,0,monetization: DoubleClick pre-roll,,
 test_345,1,0,0,0,monetization: DoubleClick pre-roll,,
+test_346,1,0,0,0,monetization: DoubleClick pre-roll,,
 test_1556,1,0,0,0,Disclaimer - before publish,,
 test_1555,1,0,0,0,Disclaimer - before upload,,
 test_0029,1,1,0,0,monetization: DoubleClick pre-roll,,

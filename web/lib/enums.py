@@ -17,3 +17,26 @@ class DisclaimerDisplayArea(Enum):
 
     BEFORE_UPLOAD          = 'Before Upload'       
     BEFORE_PUBLISH         = 'Before Publish'
+
+
+class PublishFrom(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MY_MEDIA               = 'my media'
+    ENTRY_PAGE             = 'entry page'
+
+
+class EditEntryPageTabName(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    OPTIONS                = 'options'
+    COLLABORATION          = 'collaboration'
+    THUMBNAILS             = 'thumbnails'
+    CAPTIONS               = 'captions'
+    DOWNLOADS              = 'downloads'
+    TIMELINE               = 'timeline'
+    
+     
+
