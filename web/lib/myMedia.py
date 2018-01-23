@@ -65,7 +65,7 @@ class MyMedia(Base):
         
         return True
         
-
+    # Author: Michal Zomper   
     def deleteSingleEntryFromMyMedia(self, entryName):
         # Search for entry in my media
         if self.searchEntryMyMedia(entryName) == False:
@@ -117,7 +117,7 @@ class MyMedia(Base):
                 
         return True
     
-
+    # Author: Michal Zomper    
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
         # Click on the Edit Entry button
         tmp_entry_name = (self.MY_MEDIA_ENRTY_EDIT_BUTTON[0], self.MY_MEDIA_ENRTY_EDIT_BUTTON[1].replace('ENTRY_NAME', entryName))
@@ -223,7 +223,7 @@ class MyMedia(Base):
         return True      
     
     
-    #  @Author: Michal Zomper        
+    # Author: Michal Zomper       
     # in categoryList / channelList will have all the names of the categories / channels to publish to  
     def publishSingleEntryInMyMedia(self, entryName, categoryList, channelList, disclaimer=False): 
         if self.navigateToMyMedia() == False:
@@ -285,7 +285,8 @@ class MyMedia(Base):
         if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == None:
             writeToLog("INFO","FAILED to find confirm save message")
             return False
-                
+        
+        sleep(3)       
         writeToLog("INFO","Success to publish entry '" + entryName + "'")
         return True
     

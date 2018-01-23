@@ -72,7 +72,7 @@ class Test:
                 return
                
             writeToLog("INFO","Step 3: Going to navigate to Entry Page")
-            if self.common.entryPage.navigateToEntryPage(self.entryName) == False:
+            if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
                 return

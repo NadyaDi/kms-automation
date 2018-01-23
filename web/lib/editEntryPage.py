@@ -24,6 +24,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
+    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
     #=============================================================================================================
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
@@ -71,7 +72,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to open edit entry page")
             return False
         
-        
+    # Author: Michal Zomper   
     def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
         if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to navigate to edit entry page")
@@ -138,8 +139,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
             
-            
-    # TODO NOT FINISHED        
+    # Author: Michal Zomper                
     def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 
         if self.navigateToEditEntryPageFromEntryPage(entryName) == False:
             writeToLog("INFO","FAILED navigate to edit entry page from entry page with collaborator user")
@@ -149,7 +149,18 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to insert new metadata to entry '" +  entryName + "' with collaborator user")
             return False
         
+        if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button ")
+            return False
         
+        if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+            writeToLog("INFO","FAILED to find save massage")
+            return False
+        sleep(3)
+        
+        writeToLog("INFO","Success metadata were change successfully")
+        return True
+            
 #     def addPublishingSchedule(self, starDate, startTime, endDate='', endTime='', timeZone=''):
 #         try:
 #             if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
