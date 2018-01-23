@@ -22,7 +22,7 @@ class Test:
     # then, Navigating to Entry page. 
     # test cleanup: deleting the uploaded file, turning off disclaimer module
     #================================================================================================================================
-    testNum     = "1555"
+    testNum     = "883"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -56,7 +56,7 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
-            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
+#             self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
             
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -65,16 +65,22 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
              
-            writeToLog("INFO","Step 2: Going to upload entry while disclaimer turned ON")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=True) == None:
+            writeToLog("INFO","Step 2: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
-               
-            writeToLog("INFO","Step 3: Going to navigate to Entry Page")
-            if self.common.entryPage.navigateToEntryPage(self.entryName) == False:
+            
+            writeToLog("INFO","Step 3: Going to navigate to edit entry page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
+                writeToLog("INFO","Step 3: FAILED to navigate to edit entry page")
+                return
+            
+            writeToLog("INFO","Step 3: Going to add Specific Publishing Schedule Time Frame")
+            if self.common.editEntryPage.AddPublishingSchedule() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to add Specific Publishing Schedule Time Frame")
                 return
             #########################################################################
             print("DONE")
@@ -86,7 +92,7 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.admin.adminDisclaimer(False)
+#             self.common.admin.adminDisclaimer(False)
         except:
             pass            
         clsTestService.basicTearDown(self)

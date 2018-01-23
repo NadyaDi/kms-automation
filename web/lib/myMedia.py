@@ -199,7 +199,7 @@ class MyMedia(Base):
             return False
         
         if self.wait_visible(self.MY_MEDIA_DISCLAIMER_MSG) == False:
-            writeToLog("INFO","Disclaimer alert (before publish) wasn't presented although Disclaimer module is turned on")
+            writeToLog("INFO","FAILED, Disclaimer alert (before publish) wasn't presented although Disclaimer module is turned on")
             return False
         
         if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:

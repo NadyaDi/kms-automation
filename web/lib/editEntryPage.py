@@ -23,6 +23,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
+    EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
     #=============================================================================================================
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
@@ -147,3 +148,18 @@ class EditEntryPage(Base):
         if self.clsCommon.upload.fillFileUploadEntryDetails(newEntryName, newDescription, NewTags)  == False:
             writeToLog("INFO","FAILED to insert new metadata to entry '" +  entryName + "' with collaborator user")
             return False
+        
+        
+#     def addPublishingSchedule(self, starDate, startTime, endDate='', endTime='', timeZone=''):
+#         try:
+#             if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
+#                 writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
+#                 return False
+#              
+#             if len(startTimeDate) != 0:
+#              
+#          
+#         except NoSuchElementException:
+#             return False
+#          
+#         return True

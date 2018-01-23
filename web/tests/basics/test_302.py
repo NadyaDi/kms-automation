@@ -27,7 +27,7 @@ class Test:
     common = None
     # Test variables
     entryName = None
-    filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -54,7 +54,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 2: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, "descritiondescrition", "tags1,tags2,") == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
