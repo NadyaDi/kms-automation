@@ -29,7 +29,8 @@ class EditEntryPage(Base):
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
-    
+    EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
+    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
     #=============================================================================================================
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
@@ -178,7 +179,7 @@ class EditEntryPage(Base):
             if self.click(self.EDIT_ENTRY_COLLABORATION_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on Collaboration tab")
                 return False
-            
+
         elif tabName == enums.EditEntryPageTabName.THUMBNAILS:
             if self.click(self.EDIT_ENTRY_THUMBNAIL_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on Thumbnails tab")
@@ -188,7 +189,7 @@ class EditEntryPage(Base):
             if self.click(self.EDIT_ENTRY_CAPTION_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on Captions tab")
                 return False
-            
+        # TODO ELSE!  Unknown tabName   
         return True
     
 # TODO
@@ -214,3 +215,18 @@ class EditEntryPage(Base):
 #             writeToLog("INFO","FAILED to")
 #             return False
 #         
+
+#     def addPublishingSchedule(self, starDate, startTime, endDate='', endTime='', timeZone=''):
+#         try:
+#             if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
+#                 writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
+#                 return False
+#              
+#             if len(startTimeDate) != 0:
+#              
+#          
+#         except NoSuchElementException:
+#             return False
+#          
+#         return True
+

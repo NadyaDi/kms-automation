@@ -3,4 +3,5 @@ test_302,Publish to channel multiple,2307831,qakmstest.dev.kaltura.com,automatio
 test_345,Add collaborator - co edit - metadata,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
 test_346,Add collaborator,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
 test_1556,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_883,add Publishing Schedule via edit entry page,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1555,Disclaimer - Before upload,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
