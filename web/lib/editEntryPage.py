@@ -25,6 +25,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
+    EDIT_ENTRY_SCHEDULING_START_TIME                                       = ('xpath' ,"//input[@aria-label='Start Time Time']")
     #=============================================================================================================
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
@@ -160,17 +161,35 @@ class EditEntryPage(Base):
         
         writeToLog("INFO","Success metadata were change successfully")
         return True
-            
-#     def addPublishingSchedule(self, starDate, startTime, endDate='', endTime='', timeZone=''):
-#         try:
-#             if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
-#                 writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
-#                 return False
-#              
-#             if len(startTimeDate) != 0:
-#              
-#          
-#         except NoSuchElementException:
-#             return False
-#          
-#         return True
+    
+#     TODO: add calendar support 
+#     TODO: add support for end time field
+    def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
+        try:
+            if len(entryName) != 0:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False   
+                
+            if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
+                writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
+                return False
+              
+            if len(startTime) != 0:
+                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME, startTime) 
+            # else = use the default value
+              
+            if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on save button ")
+                return False
+        
+            self.clsCommon.general.waitForLoaderToDisappear()
+                    
+            if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+                writeToLog("INFO","FAILED to find save massage")
+                return False   
+          
+        except NoSuchElementException:
+            return False
+          
+        return True
