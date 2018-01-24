@@ -30,8 +30,14 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
-    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
-    EDIT_ENTRY_SCHEDULING_START_TIME                                       = ('xpath' ,"//input[@aria-label='Start Time Time']")
+    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' , "//div[@class='alert alert-success ']")
+    EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Time']")
+    EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Date']")
+    EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR                   = ('xpath' , "//input[@aria-label='End Time Date']")
+    EDIT_ENTRY_SCHEDULING_CALENDAR_TOP                          = ('xpath' , "//th[@class='datepicker-switch' and @colspan='5']")
+    EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR                         = ('xpath' , "//span[contains(@class,'year') and text()='YEAR']")# When using this locator, replace 'YEAR' string with your real year
+    EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH                        = ('xpath' , "//span[contains(@class,'month') and text()='MONTH']")# When using this locator, replace 'MONTH' string with your real month
+    EDIT_ENTRY_SCHEDULING_CALENDAR_DAY                          = ('xpath' , "//td[contains(@class,'day') and text()='DAY']")# When using this locator, replace 'DAY' string with your real day
     #=============================================================================================================
     
     
@@ -81,6 +87,8 @@ class EditEntryPage(Base):
         if self.wait_visible(tmp_entry_name, 5) == False:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
+        
+        return True
         
         
     # Author: Michal Zomper   
@@ -188,7 +196,7 @@ class EditEntryPage(Base):
                 return False
               
             if len(startTime) != 0:
-                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME, startTime) 
+                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, startTime) 
             # else = use the default value
               
             if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
@@ -255,3 +263,59 @@ class EditEntryPage(Base):
 #             writeToLog("INFO","FAILED to")
 #             return False
 #         
+    # Format desteStr - '24/01/2018'
+    # startOrEnd - String 'start' or 'end'
+    def setScheduleStartDate(self, dateStr):
+        return self.setScheduleDate(dateStr, 'start')
+    
+    def setScheduleEndDate(self, dateStr):
+        return self.setScheduleDate(dateStr, 'end')
+        
+    def setScheduleDate(self, dateStr, startOrEnd):
+        if startOrEnd.lower() == 'start':
+            locator = self.EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR
+        elif startOrEnd.lower() == 'end':
+            locator = self.EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR
+        else:
+            writeToLog("INFO","FAILED, unknown Schedule start/stop type: '" + startOrEnd + "'")
+            return False            
+        # Extract from dateStr the day, month, year
+        day = dateStr.split('/')[0]
+        # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3'
+        intDay = int(day)
+        day = str(intDay)
+        formated_month = datetime.datetime.strptime(dateStr, "%d/%m/%Y")
+        month = formated_month.strftime("%b")
+        year = dateStr.split('/')[2]
+        
+        # Click on Start Date calendar
+        if self.click(locator) == False:
+                writeToLog("INFO","FAILED to click start date calendar")
+                return False
+            
+        # Set a year
+        # Click on the year - at the top of the calendar
+        if self.click(self.EDIT_ENTRY_SCHEDULING_CALENDAR_TOP) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False
+        
+        # Click again to show all years
+        if self.click(self.EDIT_ENTRY_SCHEDULING_CALENDAR_TOP, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False
+        
+        # Select a year
+        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[1].replace('YEAR', year))) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False        
+        
+        # Set Month
+        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[1].replace('MONTH', month))) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the month")
+            return False
+        
+        # Set Day
+        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
+            return False                     
+        

@@ -282,12 +282,22 @@ class Base:
 
 
     # clicks and taps
-    def click(self, locator, timeout=10):
+    # When you have more then one elemnet found with your locator, use multipleElements = True
+    # it will search for element from the elements list, and find the one with size not 0
+    def click(self, locator, timeout=10, multipleElements=False):
+        if multipleElements == True:
+            elements = self.get_elements(locator)
+            for el in elements:
+                if el.size['width']!=0 and el.size['height']!=0:
+                    el.click()
+                    return True
+            return False
         element = self.wait_visible(locator, timeout)
         if element == None:
             return False
         else:
             element.click()
+            return True
             
         
     # click with offset
