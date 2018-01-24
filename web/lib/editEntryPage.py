@@ -37,9 +37,11 @@ class EditEntryPage(Base):
     EDIT_ENTRY_GO_TO_MEDIA_BUTTON                               = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Go To Media')]")
     EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL                        = ('xpath', "//a[@title='...']")
     EDIT_ENTRY_THUMBNAIL_EDIT_ENTRY_BUTTON                      = ('xpath', "//i[@class='icon-pencil']")
+    EDIT_ENTRY_SCHEDULING_START_TIME                            = ('xpath' ,"//input[@aria-label='Start Time Time']")
 
-    
     #=============================================================================================================
+    
+    
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
@@ -62,6 +64,7 @@ class EditEntryPage(Base):
             return False
         
         return True
+    
     
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromEntryPage(self, entryName):
@@ -87,7 +90,6 @@ class EditEntryPage(Base):
             return False
         
         return True
-        
         
     # Author: Michal Zomper   
     def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
@@ -156,6 +158,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
             
+        
     # Author: Michal Zomper                
     def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 
         if self.navigateToEditEntryPageFromEntryPage(entryName) == False:
@@ -178,6 +181,40 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success metadata were change successfully")
         return True
     
+
+#     TODO: add calendar support 
+#     TODO: add support for end time field
+    def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
+        try:
+            if len(entryName) != 0:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False   
+                
+            if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
+                writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
+                return False
+              
+            if len(startTime) != 0:
+                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME, startTime) 
+            # else = use the default value
+              
+            if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on save button ")
+                return False
+        
+            self.clsCommon.general.waitForLoaderToDisappear()
+                    
+            if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+                writeToLog("INFO","FAILED to find save massage")
+                return False   
+          
+        except NoSuchElementException:
+            return False
+          
+        return True
+
+      
     # Author: Michal Zomper    
     # tabName - enums.EditEntryPageTabName    
     def clickOnEditTab(self, tabName):
@@ -202,8 +239,8 @@ class EditEntryPage(Base):
                 return False
         # TODO ELSE!  Unknown tabName   
         return True
-    
-# TODO
+
+      
     # Author: Michal Zomper 
     def changeEntryOptions(self, isEnableComments, isEnableCloseDiscussion, isEnableEveryoneToCreateClip):
         if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
@@ -292,3 +329,5 @@ class EditEntryPage(Base):
 #             return False            
 #         
         
+      
+

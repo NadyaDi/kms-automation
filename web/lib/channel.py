@@ -40,7 +40,12 @@ class Channel(Base):
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
     EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
-    CHANNEL_DELETED_ALERT                           = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'was deleted')]")
+    CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@class='inline' and contains(text(), 'CHANNEL_TITLE')]")
+    CHANNEL_PAGE_SEARCH_TAB                         = ('id', 'channelSearch-tab')
+    CHANNEL_PAGE_SEARCH_BAR                         = ('id', 'searchBar')
+    CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
+    CHANNEL_PAGE_ENTRY_THUMBNAIL                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and contains(@title,'ENTRY_NAME')]")
+    CHANNEL_DELETE_ALERT                            = ('xpath', "//div[@class='alert alert-success ']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -54,16 +59,8 @@ class Channel(Base):
     #  @Author: Tzachi Guetta        
     def deleteChannel(self, channelName):
         try:
-            if self.navigateToMyChannels() == False:
-                writeToLog("INFO","FAILED to navigate to my channels page")
-                return False
-            
-            if self.click(self.MY_CHANNELS_SERACH_FIELD) == False:
-                writeToLog("INFO","FAILED to click on name text field")
-                return False
-            
-            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName) == False:
-                writeToLog("INFO","FAILED to type in 'name' text field")
+            if self.searchAChannelInMyChannels(channelName) == False:
+                writeToLog("INFO","FAILED to search in my channels")
                 return False
             
             sleep(1)
@@ -88,9 +85,14 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to click on Delete confirmation button")
                 return False
             
-            if self.wait_visible(self.CHANNEL_DELETED_ALERT, 15) == False:
-                writeToLog("INFO","FAILED to deleted channel after clicking on delete confirmation msg")
-                return False
+            # Verify delete channel confirmation
+            strDeleteConf = "was deleted"
+            elementdeleteconf = self.get_element(self.CHANNEL_DELETE_ALERT)
+            if strDeleteConf in elementdeleteconf.text:
+                writeToLog("INFO","The Alert delete Channel message was found")
+            else:
+                writeToLog("INFO","The Alert delete Channel message was not found")
+                return False 
             
         except NoSuchElementException:
             return False
@@ -245,3 +247,88 @@ class Channel(Base):
             return False
         
         return True
+    
+    def searchAChannelInMyChannels(self, channelName):
+        try:                
+            if self.navigateToMyChannels() == False:
+                writeToLog("INFO","FAILED to navigate to my channels page")
+                return False
+            
+            if self.click(self.MY_CHANNELS_SERACH_FIELD) == False:
+                writeToLog("INFO","FAILED to click on name text field")
+                return False
+            
+            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName) == False:
+                writeToLog("INFO","FAILED to type in 'name' text field")
+                return False
+            
+        except NoSuchElementException:
+            return False
+        
+        return True
+    
+    def navigateToChannel(self, channelName):
+        try:                
+            if self.searchAChannelInMyChannels(channelName) == False:
+                writeToLog("INFO","FAILED to search in my channels")
+                return False
+            
+            tmp_channel_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
+            if self.click(tmp_channel_name) == False:
+                writeToLog("INFO","FAILED to click on Channel's thumbnail")
+                return False
+            
+            tmp_channel_title = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+            if self.wait_visible(tmp_channel_title, 30) == False:
+                writeToLog("INFO","FAILED to navigate to Channel page")
+                return False
+
+        except NoSuchElementException:
+            return False
+        
+        return True
+    
+    def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
+        try:                
+            if self.navigateToChannel(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to Channel page")
+                return False
+
+            if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
+                writeToLog("INFO","FAILED to click on Channel's search Tab")
+                return False
+            
+            if self.click(self.CHANNEL_PAGE_SEARCH_BAR) == False:
+                writeToLog("INFO","FAILED to click on Channel's search bar")
+                return False
+            
+            if self.send_keys(self.CHANNEL_PAGE_SEARCH_BAR, entryName) == False:
+                writeToLog("INFO","FAILED to type in channel search bar")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if self.wait_visible(self.CHANNEL_PAGE_NO_RESULT_ALERT, 5) == False:
+                if isExpected == True:
+                    self.get_element((self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)))
+                    writeToLog("INFO","As Expected: Entry was found in the channel")
+                    return True
+                else:
+                    self.get_element((self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)))
+                    writeToLog("INFO","NOT Expected: Entry was found in the channel")
+                    return False
+            else:
+                if isExpected == False:
+                    writeToLog("INFO","As Expected: Entry wasn't found in the channel")
+                    return True
+                else:
+                    writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
+                    return False
+                
+        except NoSuchElementException:
+            if isExpected == False:
+                writeToLog("INFO","NOT Expected: Entry was found in the channel")
+                return False
+            else:
+                writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
+                return False
