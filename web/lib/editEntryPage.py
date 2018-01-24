@@ -31,7 +31,10 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
+    EDIT_ENTRY_SCHEDULING_START_TIME                                       = ('xpath' ,"//input[@aria-label='Start Time Time']")
     #=============================================================================================================
+    
+    
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromMyMedia(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
@@ -55,6 +58,7 @@ class EditEntryPage(Base):
         
         return True
     
+    
     #  @Author: Tzachi Guetta
     def navigateToEditEntryPageFromEntryPage(self, entryName):
         tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
@@ -77,6 +81,7 @@ class EditEntryPage(Base):
         if self.wait_visible(tmp_entry_name, 5) == False:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
+        
         
     # Author: Michal Zomper   
     def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
@@ -145,6 +150,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
             
+        
     # Author: Michal Zomper                
     def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 
         if self.navigateToEditEntryPageFromEntryPage(entryName) == False:
@@ -167,6 +173,40 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success metadata were change successfully")
         return True
     
+
+#     TODO: add calendar support 
+#     TODO: add support for end time field
+    def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
+        try:
+            if len(entryName) != 0:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False   
+                
+            if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
+                writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
+                return False
+              
+            if len(startTime) != 0:
+                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME, startTime) 
+            # else = use the default value
+              
+            if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on save button ")
+                return False
+        
+            self.clsCommon.general.waitForLoaderToDisappear()
+                    
+            if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+                writeToLog("INFO","FAILED to find save massage")
+                return False   
+          
+        except NoSuchElementException:
+            return False
+          
+        return True
+
+      
     # Author: Michal Zomper    
     # tabName - enums.EditEntryPageTabName    
     def clickOnEditTab(self, tabName):
@@ -215,18 +255,3 @@ class EditEntryPage(Base):
 #             writeToLog("INFO","FAILED to")
 #             return False
 #         
-
-#     def addPublishingSchedule(self, starDate, startTime, endDate='', endTime='', timeZone=''):
-#         try:
-#             if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
-#                 writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
-#                 return False
-#              
-#             if len(startTimeDate) != 0:
-#              
-#          
-#         except NoSuchElementException:
-#             return False
-#          
-#         return True
-
