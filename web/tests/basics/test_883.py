@@ -1,5 +1,7 @@
-import time, pytest
-import datetime
+from time import strftime
+
+import pytest
+
 from clsCommon import Common
 import clsTestService
 import enums
@@ -35,14 +37,15 @@ class Test:
     entryName = None
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
-    
     channelDescription = "Channel description"
     channelTags = "Channeltags1,Channeltags2,"
     categoryList = ['Galleries - Admin', 'Open Gallery - admin owner']
+    entryTodayStartDate = Date.today().strftime("%d/%m/%Y")
+    entryFutureStartDate = (Date.today() + timedelta(days=10)).strftime("%d/%m/%Y")
 
     entryFutureStartTime = time.time() + (60*60)
     entryFutureStartTime= time.strftime("%I:%M %p",time.localtime(entryFutureStartTime))
-    
+     
     entryPastStartTime = time.time() - (60*60)
     entryPastStartTime= time.strftime("%I:%M %p",time.localtime(entryPastStartTime))
     
@@ -67,8 +70,7 @@ class Test:
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
             self.channelName = clsTestService.addGuidToString('Channel name') 
-#             self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
-            
+
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
@@ -77,6 +79,8 @@ class Test:
                 return
             
             writeToLog("INFO","Step 2: Going to set Future time-frame publishing to entry ")
+#             self.common.editEntryPage.setScheduleStartDate(self.entryTodayStartDate)
+#             self.common.editEntryPage.setScheduleEndDate(self.entryFutureStartDate)            
             if self.common.editEntryPage.addPublishingSchedule(startTime=self.entryFutureStartTime, entryName=self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to set Future time-frame publishing to entry")
