@@ -1,4 +1,3 @@
-from pymysql.times import Date
 from time import strftime
 
 import pytest
@@ -41,8 +40,8 @@ class Test:
     channelDescription = "Channel description"
     channelTags = "Channeltags1,Channeltags2,"
     categoryList = ['Galleries - Admin', 'Open Gallery - admin owner']
-    entryTodayStartDate = Date.today().strftime("%d/%m/%Y")
-    entryFutureStartDate = (Date.today() + timedelta(days=10)).strftime("%d/%m/%Y")
+    entryTodayStartDate = datetime.datetime.now().strftime("%d/%m/%y")
+    entryFutureStartDate = (datetime.datetime.now() + timedelta(days=10)).strftime("%d/%m/%y")
 
     entryFutureStartTime = time.time() + (60*60)
     entryFutureStartTime= time.strftime("%I:%M %p",time.localtime(entryFutureStartTime))
