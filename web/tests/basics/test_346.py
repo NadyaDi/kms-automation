@@ -16,7 +16,7 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
-    testNum     = "345"
+    testNum     = "346"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -35,9 +35,11 @@ class Test:
     newDescription = None
     newTags = None
     categoryList = None
-    channelList = None
-
-    filePath = "C:\\TestComplete\\automation-tests\\KalturaCore\\TestData\\Videos\\Images\\automation.jpg"
+    channelList = ""
+    categoryName = None
+    whereToPublishFrom = None
+    
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + '\videos\QR_Code_10sec.mp4'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -64,6 +66,7 @@ class Test:
             self.newDescription = "Edit description"
             self.newTags = "Edit Tags,"
             self.categoryList = [("Apps Automation Category")]
+            self.whereToPublishFrom = "Entry Page"
             
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -71,13 +74,24 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return         
-
-            writeToLog("INFO","Step 2: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, "description  description", "tags1,tags2,") == None:
+# 
+#             writeToLog("INFO","Step 2: Going to upload entry")
+#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
+#                 return
+            
+            
+            if self.common.editEntryPage.changeEntryOptions("isDisable") == False: 
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
                 return
-             
+            
+
+
+
+
+            
             writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
                 self.status = "Fail"
@@ -114,25 +128,10 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate to edit entry page from entry page")
                 return 
-             
-            writeToLog("INFO","Step 9: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
-            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to edit entry metadata with the user that was added as Collaborator")
-                return  
             
-            writeToLog("INFO","Step 10: Going to navigate to entry page from category page")
-            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.categoryList[0], self.newEntryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to navigate to entry page with the user that was added as Collaborator")
-                return                 
-                
-            writeToLog("INFO","Step 11: Going to verify entry new  metadata  (entry name, description, tags) with the user that  added as Collaborator")
-            # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
-            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.entryTags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify entry new  metadata with the user that was added as Collaborator")
-                return  
+            
+            
+         
             
             ##################################################################
             print("Test 'Entry Collaboration - co editor' was done successfully")
