@@ -24,6 +24,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
+    EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON                          = ('id', "EntryOptions-submit")
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath', "//div[@class='alert alert-success ']")
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
@@ -33,11 +34,18 @@ class EditEntryPage(Base):
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' , "//div[@class='alert alert-success ']")
     EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Time']")
     EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Date']")
-    EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR                   = ('xpath' , "//input[@aria-label='End Time Date']")
+    EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR                     = ('xpath' , "//input[@aria-label='End Time Date']")
     EDIT_ENTRY_SCHEDULING_CALENDAR_TOP                          = ('xpath' , "//th[@class='datepicker-switch' and @colspan='5']")
     EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR                         = ('xpath' , "//span[contains(@class,'year') and text()='YEAR']")# When using this locator, replace 'YEAR' string with your real year
     EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH                        = ('xpath' , "//span[contains(@class,'month') and text()='MONTH']")# When using this locator, replace 'MONTH' string with your real month
     EDIT_ENTRY_SCHEDULING_CALENDAR_DAY                          = ('xpath' , "//td[contains(@class,'day') and text()='DAY']")# When using this locator, replace 'DAY' string with your real day
+    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' ,"//div[@class='alert alert-success ']")
+    EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX                         = ('id', 'EntryOptions-commentsMulti-discussionClosed')
+    EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX                = ('id', 'EntryOptions-ClipPermission-everyone')
+    EDIT_ENTRY_GO_TO_MEDIA_BUTTON                               = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Go To Media')]")
+    EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL                        = ('xpath', "//a[@title='...']")
+    EDIT_ENTRY_THUMBNAIL_EDIT_ENTRY_BUTTON                      = ('xpath', "//i[@class='icon-pencil']")
+    EDIT_ENTRY_SCHEDULING_START_TIME                            = ('xpath' ,"//input[@aria-label='Start Time Time']")
     #=============================================================================================================
     
     
@@ -89,7 +97,7 @@ class EditEntryPage(Base):
             return False
         
         return True
-        
+
         
     # Author: Michal Zomper   
     def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
@@ -239,38 +247,84 @@ class EditEntryPage(Base):
                 return False
         # TODO ELSE!  Unknown tabName   
         return True
-    
-# TODO
-#     def changeEntryOptions(self, isDisable):
-#         if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
-#             writeToLog("INFO","FAILED to click on options tab")
-#             return False
-#         
-#         # check Disable comments option
-#         if self.click(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX, 30) == False:
-#             writeToLog("INFO","FAILED to check 'Disable comments' option")
-#             return False
-#                     
-#         if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
-#             writeToLog("INFO","FAILED to find save massage")
-#             return False
-#         sleep(3)
-#         
-#         
-#         
-#         el = self.driver.find_element_by_id(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX[1])
-#         if  el.get_attribute("checked") != True:
-#             writeToLog("INFO","FAILED to")
-#             return False
-#         
+
+      
+    # Author: Michal Zomper 
+    def changeEntryOptions(self, isEnableComments, isEnableCloseDiscussion, isEnableEveryoneToCreateClip):
+        if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
+            writeToLog("INFO","FAILED to click on options tab")
+            return False
+         
+        # Disable comments 
+        if self.check_element(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX, isEnableComments) == False:
+            writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
+            return False
+                   
+        # Close Discussion 
+        if self.check_element(self.EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX, isEnableCloseDiscussion) == False:
+            writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
+            return False
+                   
+        # Enable Everyone To Create Clip
+        if self.check_element(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX, isEnableEveryoneToCreateClip) == False:
+            writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
+            return False
+                                    
+        if self.click(self.EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(3)
+       
+        if self.get_elements(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON)[1].click() == False:
+        #if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on 'go to media' button")
+            return False            
+        sleep(3)
+        
+        #Open "Actions" drop-down list 
+        if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+            writeToLog("INFO","FAILED to click on Actions button")
+            return False
+         
+        #Click on Edit button
+        if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Edit button")
+            return False 
+        sleep(2)
+        
+        if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
+            writeToLog("INFO","FAILED to click on option tab")
+            return False 
+        
+        # Verify Disable comments 
+        if self.is_element_checked(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX) == False:
+            writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
+            return False
+                   
+        # Verify Close Discussion 
+        if self.is_element_checked(self.EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX) == False:
+            writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
+            return False
+                   
+        # Verify Enable Everyone To Create Clip
+        if self.is_element_checked(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX) == False:
+            writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
+            return False
+        
+        return True
+     
+
     # Format desteStr - '24/01/2018'
     # startOrEnd - String 'start' or 'end'
     def setScheduleStartDate(self, dateStr):
         return self.setScheduleDate(dateStr, 'start')
     
+    
     def setScheduleEndDate(self, dateStr):
         return self.setScheduleDate(dateStr, 'end')
         
+       
     def setScheduleDate(self, dateStr, startOrEnd):
         if startOrEnd.lower() == 'start':
             locator = self.EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR
@@ -317,5 +371,10 @@ class EditEntryPage(Base):
         # Set Day
         if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))) == False:
             writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
-            return False                     
-        
+            return False
+          
+    # TODO  
+#     def navigateToEditEntryPageFromCategoryPage(self, categoryName, entryName): 
+#         if self.clsCommon.Category.navigateToCategory(categoryName) == False:
+#             writeToLog("INFO","FAILED to navigate to category: " + categoryName)
+#             return False              

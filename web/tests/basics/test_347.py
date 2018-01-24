@@ -16,7 +16,7 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
-    testNum     = "346"
+    testNum     = "347"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -56,14 +56,11 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Options tab")
+            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Thumbnail tab")
             self.entryDescription = "Description"
             self.entryTags = "Tags,"
             self.newUserId = "Automation_User_1"
             self.newUserPass = "Kaltura1!"
-            self.EnableComments = True
-            self.CloseDiscussion = True
-            self.EveryoneToCreateClip = True
             self.categoryList = [("Apps Automation Category")]
             self.whereToPublishFrom = "Entry Page"
             
@@ -117,14 +114,12 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED to navigate to edit entry page from entry page")
                 return 
             
-            writeToLog("INFO","Step 9: Going to change entry options with the user that was added as Collaborator")
-            if self.common.editEntryPage.changeEntryOptions(self.EnableComments, self.CloseDiscussion, self.EveryoneToCreateClip) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to change entry options with the user that was added as Collaborator")
-                return 
+            
+            
+
             
             ##################################################################
-            print("Test 'Entry Collaboration co editor - Options tab' was done successfully")
+            print("Test 'Entry Collaboration co editor - Thumbnail tab' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

@@ -357,6 +357,33 @@ class Base:
     def get_element_text(self, locator):
         element = self.get_element(locator)
         return element.text
+    
+    
+    def is_element_checked(self, locator):
+        element = self.get_element(locator)
+        if element.get_attribute("checked") != "true":
+            writeToLog("INFO","element is not checked")
+            return False
+        
+        return True
+        
+        
+    def check_element(self, locator, action):
+        if action == True:
+            if self.is_element_checked(locator) == True:
+                writeToLog("INFO","element is already checked")
+                return True
+            
+        elif action == False:
+            if self.is_element_checked(locator) == False:
+                writeToLog("INFO","element is already unchecked")
+                return True               
+        
+        if self.click(locator, 30) == False:
+            writeToLog("INFO","FAILED to click on element checkbox")
+            return False
+        
+        return True
 
 
     def navigate(self, url):

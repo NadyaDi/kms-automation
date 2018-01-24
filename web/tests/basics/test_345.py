@@ -55,12 +55,12 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration entry - Co Edit")
+            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Details tab")
             self.entryDescription = "Description"
             self.entryTags = "Tags,"
             self.newUserId = "Automation_User_1"
             self.newUserPass = "Kaltura1!"
-            self.newEntryName = clsTestService.addGuidToString('Edit Collaboration entry - Co Edit')
+            self.newEntryName = clsTestService.addGuidToString('Edit Collaboration entry Co Edit - Details tab')
             self.newDescription = "Edit description"
             self.newTags = "Edit Tags,"
             self.categoryList = [("Apps Automation Category")]
@@ -135,7 +135,7 @@ class Test:
                 return  
             
             ##################################################################
-            print("Test 'Entry Collaboration - co editor' was done successfully")
+            print("Test 'Entry Collaboration co editor - Details Tab' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
