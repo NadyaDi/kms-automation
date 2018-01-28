@@ -198,15 +198,32 @@ class EditEntryPage(Base):
                 if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
                     writeToLog("INFO","FAILED to navigate to edit entry page")
                     return False   
-                
+        
             if self.click(self.EDIT_ENTRY_ENABLE_SCHEDULING_RADIO) == False:
                 writeToLog("INFO","FAILED to click on 'Specific Time Frame' radiobox")
                 return False
-              
-            if len(startTime) != 0:
-                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, startTime) 
+            
+            if len(startDate) != 0:
+                self.setScheduleStartDate(startDate)
+                sleep(2) 
             # else = use the default value
-              
+            
+            if len(startTime) != 0:
+                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, startTime)
+                sleep(2) 
+            # else = use the default value
+            
+            if len(endDate) != 0:
+                self.setScheduleEndDate(endDate)
+                sleep(2)  
+            # else = use the default value
+            
+            if len(endTime) != 0:
+                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, endTime)
+                sleep(2)
+            # else = use the default value
+            
+            
             if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on save button ")
                 return False
