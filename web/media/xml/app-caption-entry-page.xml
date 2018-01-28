@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<tt xmlns="http://www.w3.org/2006/04/ttaf1" xmlns:tts="http://www.w3.org/2006/04/ttaf1#styling" xml:lang="en"> 
+   <head> 
+      <styling> 
+         <style id="defaultSpeaker" tts:fontSize="18" tts:fontFamily="Arial" tts:fontWeight="normal" tts:fontStyle="normal" tts:textDecoration="none" tts:color="#ffffff" tts:backgroundColor="black" tts:textAlign="center" /> 
+         <style id="defaultCaption" tts:fontSize="18" tts:fontFamily="Arial" tts:fontWeight="normal" tts:fontStyle="normal" tts:textDecoration="none" tts:color="#ffffff" tts:backgroundColor="black" tts:textAlign="center" />
+      </styling>
+   </head>
+   <body style="defaultCaption" id="thebody">
+      <div xml:lang="en">
+         <p begin="00:00:00.20" end="00:00:28.00">QA Application Automation:<br/>This is a 1st caption</p>
+         <p begin="00:00:29.20" end="00:00:48.00">QA Application Automation:<br/>This is a 2nd caption</p>
+         <p begin="00:00:49.20" end="00:01:10.00">QA Application Automation:<br/>This is a 3rd caption</p>
+    </div>
+  </body>
+</tt>

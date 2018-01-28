@@ -43,9 +43,19 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX                         = ('id', 'EntryOptions-commentsMulti-discussionClosed')
     EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX                = ('id', 'EntryOptions-ClipPermission-everyone')
     EDIT_ENTRY_GO_TO_MEDIA_BUTTON                               = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Go To Media')]")
-    EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL                        = ('xpath', "//a[@title='...']")
-    EDIT_ENTRY_THUMBNAIL_EDIT_ENTRY_BUTTON                      = ('xpath', "//i[@class='icon-pencil']")
+    EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL                        = ('xpath', "//a[@href='javascript:;' and contains(text(),'...')]")
+    EDIT_ENTRY_EDIT_ENTRY_BUTTON_ON_THUMBNAIL                   = ('xpath', "//i[@class='icon-pencil'and @aria-hidden='true']")
     EDIT_ENTRY_SCHEDULING_START_TIME                            = ('xpath' ,"//input[@aria-label='Start Time Time']")
+    EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON                         = ('xpath', "//button[@id='thumbnail-capture-button']")
+    EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA             = ('xpath', "//img[@alt='Thumbnail for media']")
+    EDIT_ENTRY_THUMBNAIL_ENTRY_IN_CATEGORY                      = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']") # When using this locator, replace 'ENTRY_NAME' string with your real entry name
+    EDIT_ENTRY_UPLOAD_CAPTION_BUTTON                            = ('id', 'upload')   
+    EDIT_ENTRY_CAPTION_BROWSE_BUTTON                            = ('xpath', "//label[@class='captions-browse-button btn responsiveSize fileinput-button' and contains(text(), 'Browse...')]")
+    EDIT_ENTRY_UPLOAD_CAPTION_SUCCESS_MESSAGE                   = ('xpath', "//div[@class='captions-upload-complete-message alert alert-success text-center']")
+    EDIT_ENTRY_CAPTION_LABEL                                    = ('xpath', "//input[@id='Upload-label' and @name='Upload[label]']")
+    EDIT_ENTRY_CAPTION_LANGUAGE                                 = ('id', 'Upload-language')
+    EDIT_ENTRY_CAPTION_SAVE_BUTTON                              = ('xpath', "//a[@class='btn btn-primary captions-upload-modal-save-btn' and contains(text(), 'Save')]")
+    EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE            = ('xpath', "//span[@data-type='label' and contains(text(), 'LABEL_NAME')]")# When using this locator, replace 'LABEL_NAME' string with your real label name
     #=============================================================================================================
     
     
@@ -372,9 +382,136 @@ class EditEntryPage(Base):
         if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))) == False:
             writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
             return False
-          
-    # TODO  
-#     def navigateToEditEntryPageFromCategoryPage(self, categoryName, entryName): 
-#         if self.clsCommon.Category.navigateToCategory(categoryName) == False:
-#             writeToLog("INFO","FAILED to navigate to category: " + categoryName)
-#             return False              
+         
+    # Author: Michal Zomper 
+    # TODO : add stop player in the given time and verify that the image that was capture is correct   
+    def captureThumbnai(self, timeToStop, qrCodeRedult): 
+        if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
+            writeToLog("INFO","FAILED to click on the thumbnail tab")
+            return False
+                     
+        if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on capture thumbnail button")
+            return False
+        
+        # verify image was add
+        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
+            writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
+            return False
+        
+        return True
+            
+    # Author: Michal Zomper 
+    # TODO BY Oleg
+    def navigateToEditEntryPageFromCategoryPage(self, categoryName, entryName): 
+        tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
+        #Check if we already in edit entry page
+        if self.wait_visible(tmp_entry_name, 5) != False:
+            writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
+            return True  
+        
+        if self.clsCommon.category.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED to navigate to category: " + categoryName)
+            return False 
+        sleep(3)
+        
+        tmp_entry = (self.EDIT_ENTRY_THUMBNAIL_ENTRY_IN_CATEGORY[0], self.EDIT_ENTRY_THUMBNAIL_ENTRY_IN_CATEGORY[1].replace('ENTRY_NAME', entryName))
+        tmp_entryParentEl = self.get_element(tmp_entry)
+        if tmp_entryParentEl == None:
+            writeToLog("INFO","FAILED to find entry '" + entryName +"' in category '" + categoryName + "'")
+            return False      
+        
+        if self.hover_on_element(tmp_entry) == False:
+            writeToLog("INFO","FAILED to hover on entry '" + entryName +"' in category '" + categoryName + "'")
+            return False                
+        
+        # Check the 3 dots on the entry thumbnail
+        try:
+            EntryDotsButton = self.get_child_element(tmp_entryParentEl, self.EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL)
+            EntryDotsButton.click()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to find 3 dots on entry '" + entryName + "' thumbnail")
+            return False  
+         
+#         try:
+#            
+#         except NoSuchElementException:
+#             writeToLog("INFO","FAILED to find 3 dots on entry '" + entryName + "' thumbnail")
+#             return False  
+#          
+        
+        # Check the edit button on the thumbnail
+        try:
+            editEntryButton = self.get_child_element(tmp_entryParentEl, self.EDIT_ENTRY_EDIT_ENTRY_BUTTON_ON_THUMBNAIL)
+            editEntryButton.click()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to find edit button on entry '" + entryName + "' thumbnail")
+            return False  
+        
+#         try:
+#             
+#         except NoSuchElementException:
+#             writeToLog("INFO","FAILED to click on entry '" + entryName + "' edit button")
+#             return False
+
+
+        #Check if we already in edit entry page
+        if self.wait_visible(tmp_entry_name, 5) == False:
+            writeToLog("INFO","FAILED to verify edit entry '" + entryName + "'page display")
+            return False         
+
+    
+    # Author: Michal Zomper
+    def addCaptions(self, captionFilePath, captionLanguage, captionLabel):
+        if self.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
+            writeToLog("INFO","FAILED to click on the caption tab")
+            return False
+            
+        if self.click(self.EDIT_ENTRY_UPLOAD_CAPTION_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on upload caption file button")
+            return False
+        sleep(2)
+        
+        # Click on browse
+        if self.click(self.EDIT_ENTRY_CAPTION_BROWSE_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on browse caption button")
+            return False
+        sleep(2)
+        # Type in a file path
+        self.clsCommon.upload.typeIntoFileUploadDialog(captionFilePath)
+        
+        # Verify caption file was uploaded
+        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_CAPTION_SUCCESS_MESSAGE, 20) == False:
+            writeToLog("INFO","FAILED to find caption uploaded success message")
+            return False
+        sleep(1)            
+        
+        # choose caption language
+        if self.select_from_combo_by_text(self.EDIT_ENTRY_CAPTION_LANGUAGE, captionLanguage) == False:
+            writeToLog("INFO","FAILED select caption language")
+            return False 
+        sleep(1)
+        
+        # Enter caption label
+        if self.click(self.EDIT_ENTRY_CAPTION_LABEL, 20) == False:
+            writeToLog("INFO","FAILED to on label name text box")
+            return False  
+            
+        if self.send_keys(self.EDIT_ENTRY_CAPTION_LABEL, captionLabel) == False:
+            writeToLog("INFO","FAILED to insert label name")
+            return False  
+            
+        # Click save
+        if self.click(self.EDIT_ENTRY_CAPTION_SAVE_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED click on save caption button")
+            return False              
+        sleep(3)
+        
+        # Verify caption was added to caption table
+        tmpLabel = (self.EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE[0], self.EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE[1].replace('LABEL_NAME', captionLabel))
+        if self.is_visible(tmpLabel) == False:
+            writeToLog("INFO","FAILED verify uploaded caption added to caption table")
+            return False    
+               
+        return True
+            
