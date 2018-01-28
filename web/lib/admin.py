@@ -100,7 +100,9 @@ class Admin(Base):
         if displayArea != '':
             if self.select_from_combo_by_text(self.ADMIN_DISCLAIMER_DISPLAY_AREA, str(displayArea)) == False:
                 writeToLog("INFO","FAILED to Set Display Area as: " + str(displayArea))
-                return False 
+                return False
+            else:
+                writeToLog("INFO","KMS Admin: Module disclaimer - Display Area set to: '" + str(displayArea) + "'")
             
         # Set Agree Required
         if agreeRequired != '':
@@ -113,7 +115,9 @@ class Admin(Base):
             writeToLog("INFO","FAILED to save changes in admin page")
             return False
         
+        writeToLog("INFO","KMS Admin: Module disclaimer saved as: " + str(selection))
         return True
+
     
     # @Author: Oleg Sigalov 
     # Click Save on admin page and verify success message

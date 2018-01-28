@@ -36,10 +36,11 @@ class MyMedia(Base):
     MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to categories or channels.')]")
     #=============================================================================================================
     def getSearchBarElement(self):
-        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
-        else:
-            return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
+#         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
+#         else:
+#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
+        return self.get_element(self.MY_MEDIA_SEARCH_BAR)
     
     
     # This method, clicks on the menu and My Media

@@ -40,7 +40,7 @@ class Channel(Base):
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
     EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
-    CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@class='inline' and contains(text(), 'CHANNEL_TITLE')]")
+    CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@id='channel_title' and contains(text(), 'CHANNEL_TITLE')]")
     CHANNEL_PAGE_SEARCH_TAB                         = ('id', 'channelSearch-tab')
     CHANNEL_PAGE_SEARCH_BAR                         = ('id', 'searchBar')
     CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
@@ -51,7 +51,10 @@ class Channel(Base):
     #  @Author: Tzachi Guetta    
     def clickDeleteChannel(self):
         try:
-            self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
+            else:
+                self.get_elements(self.EDIT_CHANNEL_DELETE)[0].click()
             return True
         except:
             return False
@@ -66,10 +69,11 @@ class Channel(Base):
             sleep(1)
             self.clsCommon.general.waitForLoaderToDisappear()
             
-            tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
-            if self.hover_on_element(tmp_entry_name) == False:
-                writeToLog("INFO","FAILED to Hover above Channel's thumbnail")
-                return False
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
+                if self.hover_on_element(tmp_entry_name) == False:
+                    writeToLog("INFO","FAILED to Hover above Channel's thumbnail")
+                    return False
     
             sleep(1)
             if self.click(self.MY_CHANNELS_EDIT_BUTTON) == False:
@@ -77,7 +81,7 @@ class Channel(Base):
                 return False
             
             if self.clickDeleteChannel() == False:
-                writeToLog("INFO","FAILED to click on Delete channel button")
+                writeToLog("INFO","FAILED to click on Delete channel button (at Edit channel page)")
                 return False
             sleep(2)
             
