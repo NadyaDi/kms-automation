@@ -68,7 +68,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 2: Going to create Channel")
-            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True, self.categoryList) == False:
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
 
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
@@ -81,12 +81,12 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to publish the entry while Disclaimer before published turned ON")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], True) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], disclaimer=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED publish entry (Disclaimer is on)")
                 return
             #########################################################################
-            print("DONE")
+            writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -94,9 +94,11 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName)
             self.common.admin.adminDisclaimer(False)
+            writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
         clsTestService.basicTearDown(self)

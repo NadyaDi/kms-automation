@@ -77,7 +77,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
                 return
             #########################################################################
-            print("DONE")
+            writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -85,8 +85,10 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.admin.adminDisclaimer(False)
+            writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
         clsTestService.basicTearDown(self)

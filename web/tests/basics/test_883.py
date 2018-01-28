@@ -76,7 +76,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 2: Going to create Channel")
-            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True, self.categoryList) == False:
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Channel")
                 return
