@@ -16,7 +16,7 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
-    testNum     = "347"
+    testNum     = "348"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -39,6 +39,9 @@ class Test:
     categoryName = None
     whereToPublishFrom = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    captionFilePath = None
+    captionLanguage = None
+    captionLabel = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -54,7 +57,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Thumbnail tab")
             self.entryDescription = "Description"
@@ -63,63 +66,62 @@ class Test:
             self.newUserPass = "Kaltura1!"
             self.categoryList = [("Apps Automation Category")]
             self.whereToPublishFrom = "Entry Page"
+            self.captionFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\xml\app-caption-entry-page.xml'
+            self.captionLanguage = "English (American)"
+            self.captionLabel = "English"
             
-            ##################### TEST STEPS - MAIN FLOW #####################
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
-                return         
+            ##################### TEST STEPS - MAIN FLOW ##################### 
  
-            writeToLog("INFO","Step 2: Going to upload entry")
+            writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                               
-            writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
+            writeToLog("INFO","Step 2: Going to add Collaborator in edit Entry Page")
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
+                writeToLog("INFO","Step 2: FAILED failed to add user as a collaborator")
                 return
              
             sleep(2)     
-            writeToLog("INFO","Step 4: Going to publish the entry so the add user as a collaborator can see it")            
+            writeToLog("INFO","Step 3: Going to publish the entry so the add user as a collaborator can see it")            
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
                 return
              
-            writeToLog("INFO","Step 5: Going to logout from main user")
+            writeToLog("INFO","Step 3: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
                                
-            writeToLog("INFO","Step 6: Going to login with the user that was added as Collaborator")
+            writeToLog("INFO","Step 4: Going to login with the user that was added as Collaborator")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to login with the user that was added as Collaborator")
+                writeToLog("INFO","Step 4: FAILED to login with the user that was added as Collaborator")
                 return
              
-            writeToLog("INFO","Step 7: Going to navigate to entry page from category page with the user that was added as Collaborator")
+            writeToLog("INFO","Step 5: Going to navigate to entry page from category page with the user that was added as Collaborator")
             if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.categoryList[0], self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to navigate to entry page with the user that was added as Collaborator")
+                writeToLog("INFO","Step 5: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                                  
              
-            writeToLog("INFO","Step 8: Going to navigate to edit entry page from entry page")
+            writeToLog("INFO","Step 6: Going to navigate to edit entry page from entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to edit entry page from entry page")
+                writeToLog("INFO","Step 6: FAILED to navigate to edit entry page from entry page")
                 return 
-             
-            writeToLog("INFO","Step 9: Going to capture thumbnail")
-            if self.common.editEntryPage.captureThumbnai("", "") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to capture thambnail")
-                return             
             
+            writeToLog("INFO","Step 7: Going to add caption with added as Collaborator user")
+            if self.common.editEntryPage.addCaptions(self.captionFilePath, self.captionLanguage, self.captionLabel) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to add caption to entry '" + self.entryName + "' with Collaborator user")
+                return
+
+
             
             ##################################################################
             print("Test 'Entry Collaboration co editor - Thumbnail tab' was done successfully")
