@@ -85,6 +85,7 @@ class MyMedia(Base):
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
         
+        writeToLog("INFO","Entry: '" + entryName + "' Was Deleted")
         return True
 #         
 #     def deleteMultipleEntries(self):

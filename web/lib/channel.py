@@ -89,7 +89,7 @@ class Channel(Base):
             strDeleteConf = "was deleted"
             elementdeleteconf = self.get_element(self.CHANNEL_DELETE_ALERT)
             if strDeleteConf in elementdeleteconf.text:
-                writeToLog("INFO","The Alert delete Channel message was found")
+                writeToLog("INFO","Channel: '" + channelName + "' Was Deleted")
             else:
                 writeToLog("INFO","The Alert delete Channel message was not found")
                 return False 
