@@ -107,7 +107,7 @@ class Channel(Base):
     # This function will create a Channel, please follow the following instructions:
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
-    # TODO: linkToCategoriesList
+    # TODO: handle fillFileUploadEntryDescription for both Http and https
     def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList=''):
         try:
             if self.navigateToMyChannels() == False:
