@@ -298,8 +298,24 @@ class Base:
         else:
             element.click()
             return True
-            
-        
+    
+    
+    # Click on given element.
+    # When you have more then one elemnet (= list of elements) found with your locator, use multipleElements = True
+    # it will search for element from the elements list, and find the one with size not 0       
+    def clickElement(self, element, multipleElements=False):
+        if multipleElements == True:
+            for el in element:
+                if el.size['width']!=0 and el.size['height']!=0:
+                    el.click()
+                    return True
+            return False
+        if element == None:
+            return False
+        else:
+            element.click()
+            return True
+                    
     # click with offset
 #     def click_with_offset(self, locator, x, y):
 #         element = self.wait_visible(locator)

@@ -234,65 +234,74 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to navigate to my media")
                 return False
             
+            if self.checkSingleEntryInMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
+                return False
+         
+            if self.clickActionsAndPublishFromMyMedia() == False:
+                writeToLog("INFO","FAILED to click on action button")
+                return False
+                sleep(7)  
+                  
         elif publishFrom == enums.PublishFrom.ENTRY_PAGE: 
+            sleep(1)
             # Click on action tab
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
                 writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
                 return False  
-        
+            
+            sleep(1)
             # Click on publish button
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
-            
+
+        elif publishFrom == enums.PublishFrom.UPLOAD_PAGE: 
+            writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
+         
         #checking if disclaimer is turned on for "Before publish"
         if disclaimer == True:
             if self.handleDisclaimerBeforePublish(entryName) == False:
                 writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
                 return False
-                     
-        if self.checkSingleEntryInMyMedia(entryName) == False:
-            writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
-            return False
          
-        if self.clickActionsAndPublishFromMyMedia() == False:
-            writeToLog("INFO","FAILED to click on action button")
-            return False
-        sleep(7)            
-        
-        # Choose publish radio button          
-        if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
-            writeToLog("INFO","FAILED to click on publish radio button")
-            return False
-            
+        sleep(2)            
+        self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30)
+     
+        sleep(2)    
         # Click if category list is empty
         if len(categoryList) != 0:
             # Click on Publish in Category
             if self.click(self.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in Category")
                 return False
-        
+            
             # choose all the  categories to publish to
-            for category in categoryList:
+            for category in categoryList: 
                 tmoCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+ 
                 if self.click(tmoCategoryName, 30) == False:
                     writeToLog("INFO","FAILED to select published category '" + category + "'")
                     return False
-
+                
+        sleep(2)
         # Click if channel list is empty
         if len(channelList) != 0:
             # Click on Publish in Channel
             if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in channel")
-                return False
-        
+                return False 
+            sleep(2)
+            
             # choose all the  channels to publish to
             for channel in channelList:
                 tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
+   
                 if self.click(tmpChannelName, 30) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
                 
+        sleep(1)   
         if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False                
