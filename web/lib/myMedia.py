@@ -301,15 +301,24 @@ class MyMedia(Base):
                 if self.click(tmpChannelName, 30) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
-                
-        sleep(1)   
-        if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
-            writeToLog("INFO","FAILED to click on save button")
-            return False                
-                
-        if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == None:
-            writeToLog("INFO","FAILED to find confirm save message")
-            return False
+        
+        sleep(1) 
+        if publishFrom == enums.PublishFrom.MY_MEDIA or publishFrom == enums.PublishFrom.ENTRY_PAGE:  
+            if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on save button")
+                return False                
+                    
+            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == None:
+                writeToLog("INFO","FAILED to find confirm save message")
+                return False
+        else:
+            if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                writeToLog("DEBUG","FAILED to click on 'Save' button")
+                return None
+            sleep(2)
+
+            # Wait for loader to disappear
+            self.clsCommon.general.waitForLoaderToDisappear()            
         
         sleep(3)       
         writeToLog("INFO","Success to publish entry '" + entryName + "'")

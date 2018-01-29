@@ -199,9 +199,9 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success metadata were change successfully")
         return True
     
-
-#     TODO: add calendar support 
-#     TODO: add support for end time field
+    
+#    How-to: if entryName was delivered - the function will first navigate to the entry's edit page
+#    TODO: add full description this the function
     def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
         try:
             if len(entryName) != 0:
@@ -233,16 +233,26 @@ class EditEntryPage(Base):
                 sleep(2)
             # else = use the default value
             
+            # The below if checking if you are in Edit entry page OR in upload page
+            if len(entryName) != 0: 
+                if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+                    writeToLog("INFO","FAILED to click on save button ")
+                    return False
             
-            if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
-                writeToLog("INFO","FAILED to click on save button ")
-                return False
-        
-            self.clsCommon.general.waitForLoaderToDisappear()
-                    
-            if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
-                writeToLog("INFO","FAILED to find save massage")
-                return False   
+                self.clsCommon.general.waitForLoaderToDisappear()
+
+                if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+                    writeToLog("INFO","FAILED to find save massage")
+                    return False
+            else:
+                # You are at Upload page, then: Click Save
+                if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                    writeToLog("DEBUG","FAILED to click on 'Save' button")
+                    return None
+                sleep(2)
+    
+                # Wait for loader to disappear
+                self.clsCommon.general.waitForLoaderToDisappear()
           
         except NoSuchElementException:
             return False
