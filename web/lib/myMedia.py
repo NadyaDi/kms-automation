@@ -301,7 +301,7 @@ class MyMedia(Base):
                 if self.click(tmpChannelName, 30) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
-                
+        
         sleep(1) 
         if publishFrom == enums.PublishFrom.MY_MEDIA or publishFrom == enums.PublishFrom.ENTRY_PAGE:  
             if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
