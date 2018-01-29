@@ -19,4 +19,5 @@ class General(Base):
     #=============================================================================================================
 
     def waitForLoaderToDisappear(self, timeout=60):
+        sleep(1)
         self.wait_while_not_visible(self.KMS_LOADER, timeout)

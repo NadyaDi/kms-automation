@@ -115,7 +115,7 @@ class Test:
                 return 
              
             writeToLog("INFO","Step 9: Going to capture thumbnail")
-            if self.common.editEntryPage.captureThumbnai("", "") == False:
+            if self.common.editEntryPage.captureThumbnail() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to capture thambnail")
                 return             

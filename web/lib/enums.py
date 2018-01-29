@@ -25,6 +25,7 @@ class PublishFrom(Enum):
     
     MY_MEDIA               = 'my media'
     ENTRY_PAGE             = 'entry page'
+    UPLOAD_PAGE            = 'upload page'
 
 
 class EditEntryPageTabName(Enum):
