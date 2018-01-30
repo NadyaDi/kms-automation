@@ -88,7 +88,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to publish the entry from Step #2")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], publishFrom = enums.PublishFrom.UPLOAD_PAGE) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], publishFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish the entry from Step #")
                 return

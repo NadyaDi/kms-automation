@@ -104,7 +104,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 7: Going to navigate to entry page from category page with the user that was added as Collaborator")
-            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.categoryList[0], self.entryName) == False:
+            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                                  
@@ -122,7 +122,7 @@ class Test:
                 return  
             
             writeToLog("INFO","Step 10: Going to navigate to entry page from category page")
-            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.categoryList[0], self.newEntryName) == False:
+            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                 
