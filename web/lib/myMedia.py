@@ -24,6 +24,7 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_CHECKBOX                                     = ('xpath', '//*[@title = "ENTRY_NAME"]')
     MY_MEDIA_ACTIONS_BUTTON                                     = ('id', 'actionsDropDown')
     MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON                      = ('id', 'Publish')
+    MY_MEDIA_ACTIONS_BUTTON_ADDTOPLAYLIST_BUTTON                = ('id', 'Addtoplaylists')
     MY_MEDIA_PUBLISH_UNLISTED                                   = ('id', 'unlisted')
     MY_MEDIA_PUBLISH_SAVE_BUTTON                                = ('xpath', "//button[@class='btn btn-primary pblSave' and text()='Save']")
     MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG                          = ('xpath', "//div[contains(.,'Media successfully set to Unlisted')]")
@@ -163,6 +164,19 @@ class MyMedia(Base):
         sleep(1)
         return True
     
+    #  @Author: Tzachi Guetta
+    def clickActionsAndAddToPlaylistFromMyMedia(self):
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Action button")
+            return False 
+        
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON_ADDTOPLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Publish button")
+            return False
+        
+        sleep(1)
+        return True
+    
     
     #  @Author: Tzachi Guetta       
     def publishSingleEntryPrivacyToUnlistedInMyMedia(self, entryName):  
@@ -244,7 +258,7 @@ class MyMedia(Base):
                 return False
                 sleep(7)  
                   
-        elif publishFrom == enums.PublishFrom.ENTRY_PAGE: 
+        elif publishFrom == enums.PublishFrom.ENTRY_PAGE:
             sleep(1)
             # Click on action tab
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
@@ -257,7 +271,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
 
-        elif publishFrom == enums.PublishFrom.UPLOAD_PAGE: 
+        elif publishFrom == enums.PublishFrom.UPLOAD_PAGE:  
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
          
         #checking if disclaimer is turned on for "Before publish"

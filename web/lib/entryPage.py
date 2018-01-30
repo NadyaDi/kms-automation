@@ -17,7 +17,8 @@ class EntryPage(Base):
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON            = ('id', "tabLabel-Edit")      
     ENTRY_PAGE_DESCRIPTION                                 = ('xpath', "//div[@class='row-fluid normalWordBreak']")
     ENTRY_PAGE_TAGS                                        = ('class_name', "tagsWrapper")    
-    ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")  
+    ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")
+    ENTRY_PAGE_ADDTOPLAYLIST_BUTTON                        = ('id', "Addtoplaylists")  
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
