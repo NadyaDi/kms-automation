@@ -227,10 +227,10 @@ class MyMedia(Base):
     
     
     # Author: Michal Zomper       
-    # publishFrom - enums.PublishFrom
+    # publishFrom - enums.Location
     # in categoryList / channelList will have all the names of the categories / channels to publish to
-    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.PublishFrom.MY_MEDIA, disclaimer=False): 
-        if publishFrom == enums.PublishFrom.MY_MEDIA: 
+    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.Location.MY_MEDIA, disclaimer=False): 
+        if publishFrom == enums.Location.MY_MEDIA: 
             if self.navigateToMyMedia() == False:
                 writeToLog("INFO","FAILED to navigate to my media")
                 return False
@@ -244,7 +244,7 @@ class MyMedia(Base):
                 return False
                 sleep(7)  
                   
-        elif publishFrom == enums.PublishFrom.ENTRY_PAGE: 
+        elif publishFrom == enums.Location.ENTRY_PAGE: 
             sleep(1)
             # Click on action tab
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
@@ -257,7 +257,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
 
-        elif publishFrom == enums.PublishFrom.UPLOAD_PAGE: 
+        elif publishFrom == enums.Location.UPLOAD_PAGE: 
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
          
         #checking if disclaimer is turned on for "Before publish"
@@ -303,12 +303,12 @@ class MyMedia(Base):
                     return False
         
         sleep(1) 
-        if publishFrom == enums.PublishFrom.MY_MEDIA or publishFrom == enums.PublishFrom.ENTRY_PAGE:  
+        if publishFrom == enums.Location.MY_MEDIA or publishFrom == enums.Location.ENTRY_PAGE:  
             if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on save button")
                 return False                
                     
-            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == None:
+            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == False:
                 writeToLog("INFO","FAILED to find confirm save message")
                 return False
         else:
@@ -323,6 +323,9 @@ class MyMedia(Base):
         sleep(3)       
         writeToLog("INFO","Success to publish entry '" + entryName + "'")
         return True
+    
+    
+
     
     #TODO
     #def verifyPublish(self, entryName, categoryList, channelList):
