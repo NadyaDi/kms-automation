@@ -8,5 +8,6 @@ test_349,Add collaborator co publish,2307831,qakmstest.dev.kaltura.com,automatio
 test_350,Add collaborator co edit - delete and change collaboration,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
 test_1556,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,add Publishing Schedule during upload,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_869,add Publishing  - playlist flows,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_883,add Publishing Schedule via edit entry page,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1555,Disclaimer - Before upload,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
