@@ -1,5 +1,7 @@
 from base import *
 import clsTestService
+import enums
+
 
 
 class EntryPage(Base):
@@ -18,6 +20,8 @@ class EntryPage(Base):
     ENTRY_PAGE_DESCRIPTION                                 = ('xpath', "//div[@class='row-fluid normalWordBreak']")
     ENTRY_PAGE_TAGS                                        = ('class_name', "tagsWrapper")    
     ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")  
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON          = ('id', "tabLabel-Delete")
+    ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -37,7 +41,7 @@ class EntryPage(Base):
         return True
         
     # Author: Michal Zomper     
-    def navigateToEntryPageFromCategoryPage(self, categoryName, entryName):
+    def navigateToEntryPageFromCategoryPage(self, entryName, categoryName):
         tmp_entry_name = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         if self.wait_visible(tmp_entry_name, 5) != False:
             writeToLog("INFO","Already in entry page: '" + entryName + "'")
@@ -96,7 +100,67 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to verify entry tags: '" + entryTags + "'")
             return True   
         
-        writeToLog("INFO","Success all entry '" + entryName + "' metadata are correct")
+        writeToLog("INFO","Success, all entry '" + entryName + "' metadata are correct")
         return True  
     
     
+    
+    def navigateToEntry(self, entryName, navigateFrom = enums.Location.MY_MEDIA, categoryName ="", channelName= ""):
+        if navigateFrom == enums.Location.MY_MEDIA:
+            if self.navigateToEntryPageFromMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_MEDIA)
+                return False  
+            
+        elif navigateFrom == enums.Location.CATEGORY_PAGE:
+            if self.navigateToEntryPageFromCategoryPage(entryName, categoryName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.CATEGORY_PAGE)
+                return False  
+                
+        elif navigateFrom == enums.Location.CHANNEL_PAGE:
+            if self.clsCommon.channel.naviagteToEntryFromChannelPage(entryName, channelName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.CHANNEL_PAGE)
+                return False
+        
+        return True
+        
+    def deleteEntryFromEntryPage(self, entryName, deleteFrom= enums.Location.MY_MEDIA, categoryName="", channelName=""):
+        if self.navigateToEntry(entryName, deleteFrom, categoryName, channelName) == False:
+            writeToLog("INFO","FAILED navigate to entry page")
+            return False             
+        
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 20) == False:
+            writeToLog("INFO","FAILED to click on 'Actions' button")
+            return False
+        
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on delete button")
+            return False
+        
+        if self.click(self.ENTRY_PAGE_CONFIRM_DELETE_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click confirm delete button")
+            return False
+        
+        # Verify entry was delete: after entry delete the page that will display is the page that we enter the entry from
+        if deleteFrom == enums.Location.MY_MEDIA:
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == False:
+                writeToLog("INFO","FAILED to verify that entry deleted")
+                return False      
+ 
+        elif deleteFrom == enums.Location.CATEGORY_PAGE:
+            tmpCategoryName = (self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
+            if self.wait_visible(tmpCategoryName, 20) == False:
+                writeToLog("INFO","FAILED to verify that entry deleted")
+                return False
+        
+        elif deleteFrom == enums.Location.CHANNEL_PAGE:
+            tmp_channel_title = (self.clsCommon.channel.CHANNEL_PAGE_TITLE[0], self.clsCommon.channel.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+            if self.wait_visible(tmp_channel_title, 20) == False:
+                writeToLog("INFO","FAILED to verify that entry deleted")
+                return False
+
+        writeToLog("INFO","FAILED to verify that entry deleted")
+        return True
+        
+            
+        
+        

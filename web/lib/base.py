@@ -293,7 +293,7 @@ class Base:
                     return True
             return False
         element = self.wait_visible(locator, timeout)
-        if element == None:
+        if element == False:
             return False
         else:
             element.click()
@@ -330,7 +330,7 @@ class Base:
     # send keys
     def send_keys(self, locator, text):
         element = self.wait_visible(locator)
-        if element == None:
+        if element == False:
             return False
         else:
             element.send_keys(text)
@@ -339,7 +339,7 @@ class Base:
     
     def clear_and_send_keys(self, locator, text):
         element = self.wait_visible(locator)
-        if element == None:
+        if element == False:
             return False
         else:
             element.clear()
@@ -350,7 +350,7 @@ class Base:
     # key event
     def keyevent(self, locator, event):
         element = self.wait_visible(locator)
-        if element == None:
+        if element == False:
             return False
         else:
             element.keyevent(event)

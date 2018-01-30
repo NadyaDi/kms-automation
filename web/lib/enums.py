@@ -19,19 +19,23 @@ class DisclaimerDisplayArea(Enum):
     BEFORE_PUBLISH         = 'Before Publish'
 
 
-class PublishFrom(Enum):
+class Location(Enum):
     def __str__(self):
         return str(self.value)
     
     MY_MEDIA               = 'my media'
     ENTRY_PAGE             = 'entry page'
     UPLOAD_PAGE            = 'upload page'
+    CHANNEL_PAGE           = 'channel page'
+    CATEGORY_PAGE          = 'category page'
 
 
 class EditEntryPageTabName(Enum):
     def __str__(self):
         return str(self.value)
     
+    
+    DETAILS                = 'details'
     OPTIONS                = 'options'
     COLLABORATION          = 'collaboration'
     THUMBNAILS             = 'thumbnails'
@@ -39,5 +43,5 @@ class EditEntryPageTabName(Enum):
     DOWNLOADS              = 'downloads'
     TIMELINE               = 'timeline'
     
-     
+
 

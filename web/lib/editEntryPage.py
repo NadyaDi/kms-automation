@@ -521,3 +521,7 @@ class EditEntryPage(Base):
         
         writeToLog("INFO","Success caption was deleted successfully") 
         return True
+    
+    
+  
+    
