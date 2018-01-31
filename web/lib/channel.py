@@ -108,7 +108,7 @@ class Channel(Base):
     # This function will create a Channel, please follow the following instructions:
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
-    # TODO: linkToCategoriesList
+    # TODO: handle fillFileUploadEntryDescription for both Http and https
     def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList=''):
         try:
             if self.navigateToMyChannels() == False:
@@ -290,7 +290,7 @@ class Channel(Base):
 
         except NoSuchElementException:
             return False
-        
+        sleep(2)
         return True
     
     def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
@@ -338,6 +338,7 @@ class Channel(Base):
                 writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
                 return False
             
+
     #@Author: Elad Binyamin 
     #Description:Import entries channel to another channel
     def importChannel (self, channelNameFrom, channelNameTo, entryName):
@@ -381,3 +382,42 @@ class Channel(Base):
             return False
         
         return True    
+
+            
+    def naviagteToEntryFromChannelPage(self, entryName, channelName):
+        # Check if we are already in channel page
+        tmp_channel_title = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+        if self.wait_visible(tmp_channel_title, 5) == True:
+            writeToLog("INFO","Success, Already in channel page")
+            return True
+        
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED to navigate to Channel page '" + channelName + "'")
+            return False
+        
+        if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
+            writeToLog("INFO","FAILED to click on Channel's search Tab icon")
+            return False
+            
+        if self.click(self.CHANNEL_PAGE_SEARCH_BAR) == False:
+            writeToLog("INFO","FAILED to click on Channel's search bar text box")
+            return False
+            
+        if self.send_keys(self.CHANNEL_PAGE_SEARCH_BAR, entryName) == False:
+            writeToLog("INFO","FAILED to type in channel search bar")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        tmpEntry = self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)
+        if self.click(tmpEntry, 20, True) == False:
+            writeToLog("INFO","FAILED to click ob entry thumbnail")
+            return False
+        
+        tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        if self.wait_visible(tmp_entry_name, 20) == False:
+            writeToLog("INFO","FAILED to verify entry page display")
+            return False
+                
+        writeToLog("INFO","Success, Entry page display")
+        sleep(2)
+        return True
