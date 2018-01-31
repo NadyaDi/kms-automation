@@ -1,13 +1,7 @@
-import subprocess
-from symbol import except_clause
-
-import win32com.client  
-
 from base import *
 import clsTestService
 from general import General
 import enums
-from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
 
@@ -46,6 +40,13 @@ class Channel(Base):
     CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
     CHANNEL_PAGE_ENTRY_THUMBNAIL                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and contains(@title,'ENTRY_NAME')]")
     CHANNEL_DELETE_ALERT                            = ('xpath', "//div[@class='alert alert-success ']")
+    CHANNEL_ACTION_BUTTON                           = ('id', 'channelActionsDropdown')
+    CHANNEL_IMPORT_MENU                             = ('xpath', "//a[contains(@href,'/importchannel/') and @role='menuitem']")
+    CHANNEL_IMPORT_CHANNEL                          = ('xpath', "//label[@class='radio' and text()='CHANNEL_NAME']")
+    CHANNEL_IMPORT_BUTTON                           = ('xpath', "//a[@class='btn btn-primary importButton']")
+    CHANNEL_IMPORT_ALERT                            = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Importing completed successfully. To refresh the page and view the imported entries')]")
+    CHANNEL_CLICKHERE_REFRESH_BUTTON                = ('xpath', "//a[@href='#' and text()='click here.']")
+    
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -337,6 +338,51 @@ class Channel(Base):
                 writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
                 return False
             
+
+    #@Author: Elad Binyamin 
+    #Description:Import entries channel to another channel
+    def importChannel (self, channelNameFrom, channelNameTo, entryName):
+        try:
+            if self.navigateToChannel(channelNameTo) == False:
+                writeToLog("INFO","FAILED to native to my channels page")
+                return False
+            
+            if self.click(self.CHANNEL_ACTION_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on channel action button")
+                return False 
+            
+            if self.click(self.CHANNEL_IMPORT_MENU) == False:
+                writeToLog("INFO","FAILED to click on channel import menu button")
+                return False 
+            sleep(2)
+            
+            importchanneltmp = (self.CHANNEL_IMPORT_CHANNEL[0], self.CHANNEL_IMPORT_CHANNEL[1].replace('CHANNEL_NAME', channelNameFrom))
+            if self.click(importchanneltmp) == False:
+                writeToLog("INFO","FAILED to click on import channel option button")
+                return False 
+            
+            if self.click(self.CHANNEL_IMPORT_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on import button")
+                return False
+            
+            if self.wait_visible(self.CHANNEL_IMPORT_ALERT, 180) == False:
+                writeToLog("INFO","FAILED to get the import alert message")
+                return False
+            
+            if self.click(self.CHANNEL_CLICKHERE_REFRESH_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on click here ")
+                return False
+            sleep(3)
+            
+            if self.verifyIfSingleEntryInChannel(channelNameTo, entryName, isExpected=True) == False:
+                writeToLog("INFO","FAILED to verify entry on channel ")
+                return False
+             
+        except NoSuchElementException:
+            return False
+        
+        return True    
+
             
     def naviagteToEntryFromChannelPage(self, entryName, channelName):
         # Check if we are already in channel page
@@ -375,5 +421,3 @@ class Channel(Base):
         writeToLog("INFO","Success, Entry page display")
         sleep(2)
         return True
-
-        

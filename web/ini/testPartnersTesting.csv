@@ -3,6 +3,7 @@ test_0001,Publish to channel multiple,1756201,qakmstest.dev.kaltura.com,oleg.sig
 test_0168,Publish to channel multiple,1756201,qakmstest.dev.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1556,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_883,add Publishing Schedule via edit entry page,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_1557,ImportChannel,1722461,mediaspace.kaltura.com,webcast@mailinator.com,Automation1!,Elad,123456
 test_1555,Disclaimer - Before upload,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,add Publishing Schedule during upload,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_869,add Publishing - Playlist flows,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
