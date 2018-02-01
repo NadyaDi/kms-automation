@@ -11,6 +11,8 @@ from logger import *
 from login import Login
 from myMedia import MyMedia
 from upload import Upload
+from myPlaylists import MyPlaylists
+
 
 
     #============================================================================================================
@@ -32,6 +34,7 @@ class Common():
     editEntryPage   = None
     category        = None
     channel         = None
+    MyPlaylists     = None
     
     def __init__(self, driver):
         self.driver             = driver
@@ -46,6 +49,8 @@ class Common():
         self.editEntryPage      = EditEntryPage(self, driver)
         self.category           = Category(self, driver)
         self.channel            = Channel(self, driver)
+        self.myPlaylists        = MyPlaylists(self, driver)
+        
     #=============================================================================================================
     # Locators:
     #=============================================================================================================

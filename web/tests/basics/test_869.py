@@ -1,5 +1,5 @@
-import time, pytest
-
+from time import strftime
+import pytest
 from clsCommon import Common
 import clsTestService
 import enums
@@ -13,16 +13,11 @@ sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..',
 class Test:
     
     #================================================================================================================================
-    #  @Author: Tzachi Guetta
+    # @Author: Tzachi Guetta
     # Test description:
     # In case disclaimer module is turned on and set to "before upload" 
-    # The following test will check that upload is prevented before disclaimer's check-box was checked.
-    # The test's Flow: 
-    # Login -> Checking that the user is not able to upload before accepting disclaimer -> Accepting disclaimer -> performing upload
-    # then, Navigating to Entry page. 
-    # test cleanup: deleting the uploaded file, turning off disclaimer module
     #================================================================================================================================
-    testNum     = "1555"
+    testNum     = "869"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -35,6 +30,20 @@ class Test:
     entryName = None
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
+    channelDescription = "Channel description"
+    channelTags = "Channeltags1,Channeltags2,"
+    categoryList = ['Galleries - Admin', 'Open Gallery - admin owner']
+    
+    entryPastStartDate = (datetime.datetime.now() + timedelta(days=-1)).strftime("%d/%m/%Y")
+    entryTodayStartDate = datetime.datetime.now().strftime("%d/%m/%Y")
+    entryFutureStartDate = (datetime.datetime.now() + timedelta(days=10)).strftime("%d/%m/%Y")
+
+    entryFutureStartTime = time.time() + (60*60)
+    entryFutureStartTime= time.strftime("%I:%M %p",time.localtime(entryFutureStartTime))
+     
+    entryPastStartTime = time.time() - (60*60)
+    entryPastStartTime= time.strftime("%I:%M %p",time.localtime(entryPastStartTime))
+    
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg' 
     
     #run test as different instances on all the supported platforms
@@ -51,43 +60,37 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,captur,self.driver = clsTestService.initialize(self, driverFix)
+            self,captur,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
-            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
-            
+            self.channelName = clsTestService.addGuidToString('Channel name') 
             ########################## TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
+            
+            writeToLog("INFO","Step x: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
+                writeToLog("INFO","Step x: FAILED failed to upload entry")
                 return
-             
-            writeToLog("INFO","Step 2: Going to upload entry while disclaimer turned ON")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=True) == None:
+                        
+            writeToLog("INFO","Step 1: Going to x")
+            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, toCreateNewPlaylist = False, playlistName = "Tzachi") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
-                return
-               
-            writeToLog("INFO","Step 3: Going to navigate to Entry Page")
-            if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
-                return
+                writeToLog("INFO","Step 1: FAILED to x")
+                return                     
+
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
             
-    ########################### TEST TEARDOWN ###########################    
+    ########################### TEST TEARDOWN ###########################
     def teardown_method(self,method):
         try:
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.admin.adminDisclaimer(False)
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

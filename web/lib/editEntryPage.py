@@ -43,8 +43,6 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX                         = ('id', 'EntryOptions-commentsMulti-discussionClosed')
     EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX                = ('id', 'EntryOptions-ClipPermission-everyone')
     EDIT_ENTRY_GO_TO_MEDIA_BUTTON                               = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Go To Media')]")
-    EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL                        = ('xpath', "//a[@href='javascript:;' and contains(text(),'...')]")
-    EDIT_ENTRY_EDIT_ENTRY_BUTTON_ON_THUMBNAIL                   = ('xpath', "//i[@class='icon-pencil'and @aria-hidden='true']")
     EDIT_ENTRY_SCHEDULING_START_TIME                            = ('xpath' ,"//input[@aria-label='Start Time Time']")
     EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON                         = ('xpath', "//button[@id='thumbnail-capture-button']")
     EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA             = ('xpath', "//img[@alt='Thumbnail for media']")
@@ -56,6 +54,8 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CAPTION_LANGUAGE                                 = ('id', 'Upload-language')
     EDIT_ENTRY_CAPTION_SAVE_BUTTON                              = ('xpath', "//a[@class='btn btn-primary captions-upload-modal-save-btn' and contains(text(), 'Save')]")
     EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE            = ('xpath', "//span[@data-type='label' and contains(text(), 'LABEL_NAME')]")# When using this locator, replace 'LABEL_NAME' string with your real label name
+    EDIT_ENTRY_REMOVE_CAPTION_BUTTON                            = ('xpath', "//i[@class='icon-remove']")
+    EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete')]")
     #=============================================================================================================
     
     
@@ -199,9 +199,9 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success metadata were change successfully")
         return True
     
-
-#     TODO: add calendar support 
-#     TODO: add support for end time field
+    
+#    How-to: if entryName was delivered - the function will first navigate to the entry's edit page
+#    TODO: add full description this the function
     def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
         try:
             if len(entryName) != 0:
@@ -233,16 +233,26 @@ class EditEntryPage(Base):
                 sleep(2)
             # else = use the default value
             
+            # The below if checking if you are in Edit entry page OR in upload page
+            if len(entryName) != 0: 
+                if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+                    writeToLog("INFO","FAILED to click on save button ")
+                    return False
             
-            if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
-                writeToLog("INFO","FAILED to click on save button ")
-                return False
-        
-            self.clsCommon.general.waitForLoaderToDisappear()
-                    
-            if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
-                writeToLog("INFO","FAILED to find save massage")
-                return False   
+                self.clsCommon.general.waitForLoaderToDisappear()
+
+                if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+                    writeToLog("INFO","FAILED to find save massage")
+                    return False
+            else:
+                # You are at Upload page, then: Click Save
+                if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                    writeToLog("DEBUG","FAILED to click on 'Save' button")
+                    return None
+                sleep(2)
+    
+                # Wait for loader to disappear
+                self.clsCommon.general.waitForLoaderToDisappear()
           
         except NoSuchElementException:
             return False
@@ -402,80 +412,22 @@ class EditEntryPage(Base):
          
     # Author: Michal Zomper 
     # TODO : add stop player in the given time and verify that the image that was capture is correct   
-    def captureThumbnai(self, timeToStop, qrCodeRedult): 
+    def captureThumbnail(self, timeToStop="", qrCodeRedult=""): 
         if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
             writeToLog("INFO","FAILED to click on the thumbnail tab")
             return False
-                     
-        if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
-            writeToLog("INFO","FAILED to click on capture thumbnail button")
-            return False
         
-        # verify image was add
-        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
-            writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
-            return False
-        
-        return True
+        if timeToStop == "" or qrCodeRedult == "":
+            if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on capture thumbnail button")
+                return False
             
-    # Author: Michal Zomper 
-    # TODO BY Oleg
-    def navigateToEditEntryPageFromCategoryPage(self, categoryName, entryName): 
-        tmp_entry_name = (self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
-        #Check if we already in edit entry page
-        if self.wait_visible(tmp_entry_name, 5) != False:
-            writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
-            return True  
+            # verify image was add
+            if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
+                writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
+                return False
         
-        if self.clsCommon.category.navigateToCategory(categoryName) == False:
-            writeToLog("INFO","FAILED to navigate to category: " + categoryName)
-            return False 
-        sleep(3)
-        
-        tmp_entry = (self.EDIT_ENTRY_THUMBNAIL_ENTRY_IN_CATEGORY[0], self.EDIT_ENTRY_THUMBNAIL_ENTRY_IN_CATEGORY[1].replace('ENTRY_NAME', entryName))
-        tmp_entryParentEl = self.get_element(tmp_entry)
-        if tmp_entryParentEl == None:
-            writeToLog("INFO","FAILED to find entry '" + entryName +"' in category '" + categoryName + "'")
-            return False      
-        
-        if self.hover_on_element(tmp_entry) == False:
-            writeToLog("INFO","FAILED to hover on entry '" + entryName +"' in category '" + categoryName + "'")
-            return False                
-        
-        # Check the 3 dots on the entry thumbnail
-        try:
-            EntryDotsButton = self.get_child_element(tmp_entryParentEl, self.EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL)
-            EntryDotsButton.click()
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to find 3 dots on entry '" + entryName + "' thumbnail")
-            return False  
-         
-#         try:
-#            
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to find 3 dots on entry '" + entryName + "' thumbnail")
-#             return False  
-#          
-        
-        # Check the edit button on the thumbnail
-        try:
-            editEntryButton = self.get_child_element(tmp_entryParentEl, self.EDIT_ENTRY_EDIT_ENTRY_BUTTON_ON_THUMBNAIL)
-            editEntryButton.click()
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to find edit button on entry '" + entryName + "' thumbnail")
-            return False  
-        
-#         try:
-#             
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to click on entry '" + entryName + "' edit button")
-#             return False
-
-
-        #Check if we already in edit entry page
-        if self.wait_visible(tmp_entry_name, 5) == False:
-            writeToLog("INFO","FAILED to verify edit entry '" + entryName + "'page display")
-            return False         
+        return True       
 
     
     # Author: Michal Zomper
@@ -529,6 +481,47 @@ class EditEntryPage(Base):
         if self.is_visible(tmpLabel) == False:
             writeToLog("INFO","FAILED verify uploaded caption added to caption table")
             return False    
-               
+        sleep(2)    
+        
+        writeToLog("INFO","Success caption was added successfully") 
         return True
             
+    def removeCaption(self, captionLabel):
+        if self.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
+            writeToLog("INFO","FAILED to click on the caption tab")
+            return False
+        
+        tmpLabel = self.EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE[1].replace('LABEL_NAME', captionLabel)
+        sleep(1)
+        
+        # find caption label click on the remove button in the label row
+        elParent = self.driver.find_element_by_xpath(tmpLabel+"/ancestor::div[@class='row-fluid captionRow']")
+        if elParent == None:
+            writeToLog("INFO","FAILED find caption row in captions table")
+        sleep(2)
+        
+        elements = elParent.find_elements_by_xpath(self.EDIT_ENTRY_REMOVE_CAPTION_BUTTON[1])
+        if self.clickElement(elements, True) == False:
+            writeToLog("INFO","FAILED to click on remove caption button")
+        sleep(3)
+        
+        # Click on confirm delete
+        if self.click(self.EDIT_ENTRY_CONFIRM_DELETE_BUTTON, 20, True) == False:
+            writeToLog("INFO","FAILED to click on remove caption button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(3)
+        
+        # Verify caption was deleted to caption table
+        tmpLabel = (self.EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE[0], self.EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE[1].replace('LABEL_NAME', captionLabel))
+        if self.is_visible(tmpLabel) == True:
+            writeToLog("INFO","FAILED to delete caption from caption table")
+            return False 
+        sleep(2)     
+        
+        writeToLog("INFO","Success caption was deleted successfully") 
+        return True
+    
+    
+  
+    

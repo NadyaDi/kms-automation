@@ -24,6 +24,7 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_CHECKBOX                                     = ('xpath', '//*[@title = "ENTRY_NAME"]')
     MY_MEDIA_ACTIONS_BUTTON                                     = ('id', 'actionsDropDown')
     MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON                      = ('id', 'Publish')
+    MY_MEDIA_ACTIONS_BUTTON_ADDTOPLAYLIST_BUTTON                = ('id', 'Addtoplaylists')
     MY_MEDIA_PUBLISH_UNLISTED                                   = ('id', 'unlisted')
     MY_MEDIA_PUBLISH_SAVE_BUTTON                                = ('xpath', "//button[@class='btn btn-primary pblSave' and text()='Save']")
     MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG                          = ('xpath', "//div[contains(.,'Media successfully set to Unlisted')]")
@@ -36,10 +37,11 @@ class MyMedia(Base):
     MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to categories or channels.')]")
     #=============================================================================================================
     def getSearchBarElement(self):
-        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
-        else:
-            return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
+#         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
+#         else:
+#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
+        return self.get_element(self.MY_MEDIA_SEARCH_BAR)
     
     
     # This method, clicks on the menu and My Media
@@ -162,6 +164,19 @@ class MyMedia(Base):
         sleep(1)
         return True
     
+    #  @Author: Tzachi Guetta
+    def clickActionsAndAddToPlaylistFromMyMedia(self):
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Action button")
+            return False 
+        
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON_ADDTOPLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Publish button")
+            return False
+        
+        sleep(1)
+        return True
+    
     
     #  @Author: Tzachi Guetta       
     def publishSingleEntryPrivacyToUnlistedInMyMedia(self, entryName):  
@@ -226,84 +241,105 @@ class MyMedia(Base):
     
     
     # Author: Michal Zomper       
-    # publishFrom - enums.PublishFrom
+    # publishFrom - enums.Location
     # in categoryList / channelList will have all the names of the categories / channels to publish to
-    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.PublishFrom.MY_MEDIA, disclaimer=False): 
-        if publishFrom == enums.PublishFrom.MY_MEDIA: 
+    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.Location.MY_MEDIA, disclaimer=False): 
+        if publishFrom == enums.Location.MY_MEDIA: 
             if self.navigateToMyMedia() == False:
                 writeToLog("INFO","FAILED to navigate to my media")
                 return False
             
-        elif publishFrom == enums.PublishFrom.ENTRY_PAGE: 
+            if self.checkSingleEntryInMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
+                return False
+         
+            if self.clickActionsAndPublishFromMyMedia() == False:
+                writeToLog("INFO","FAILED to click on action button")
+                return False
+                sleep(7)        
+
+        elif publishFrom == enums.Location.ENTRY_PAGE:
+            sleep(1)
             # Click on action tab
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
                 writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
                 return False  
-        
+            
+            sleep(1)
             # Click on publish button
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
-            
+
+        elif publishFrom == enums.Location.UPLOAD_PAGE: 
+            writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
+         
         #checking if disclaimer is turned on for "Before publish"
         if disclaimer == True:
             if self.handleDisclaimerBeforePublish(entryName) == False:
                 writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
                 return False
-                     
-        if self.checkSingleEntryInMyMedia(entryName) == False:
-            writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
-            return False
          
-        if self.clickActionsAndPublishFromMyMedia() == False:
-            writeToLog("INFO","FAILED to click on action button")
-            return False
-        sleep(7)            
-        
-        # Choose publish radio button          
-        if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
-            writeToLog("INFO","FAILED to click on publish radio button")
-            return False
-            
+        sleep(2)            
+        self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30)
+     
+        sleep(2)    
         # Click if category list is empty
         if len(categoryList) != 0:
             # Click on Publish in Category
             if self.click(self.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in Category")
                 return False
-        
+            
             # choose all the  categories to publish to
-            for category in categoryList:
+            for category in categoryList: 
                 tmoCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+ 
                 if self.click(tmoCategoryName, 30) == False:
                     writeToLog("INFO","FAILED to select published category '" + category + "'")
                     return False
-
+                
+        sleep(2)
         # Click if channel list is empty
         if len(channelList) != 0:
             # Click on Publish in Channel
             if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in channel")
-                return False
-        
+                return False 
+            sleep(2)
+            
             # choose all the  channels to publish to
             for channel in channelList:
                 tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
+   
                 if self.click(tmpChannelName, 30) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
-                
-        if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
-            writeToLog("INFO","FAILED to click on save button")
-            return False                
-                
-        if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == None:
-            writeToLog("INFO","FAILED to find confirm save message")
-            return False
+        
+        sleep(1) 
+        if publishFrom == enums.Location.MY_MEDIA or publishFrom == enums.Location.ENTRY_PAGE:  
+            if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on save button")
+                return False                
+                    
+            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == False:
+                writeToLog("INFO","FAILED to find confirm save message")
+                return False
+        else:
+            if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                writeToLog("DEBUG","FAILED to click on 'Save' button")
+                return None
+            sleep(2)
+
+            # Wait for loader to disappear
+            self.clsCommon.general.waitForLoaderToDisappear()            
         
         sleep(3)       
         writeToLog("INFO","Success to publish entry '" + entryName + "'")
         return True
+    
+    
+
     
     #TODO
     #def verifyPublish(self, entryName, categoryList, channelList):

@@ -19,7 +19,7 @@ class Test:
     # Test description:
     # In case disclaimer module is turned on and set to "before upload" 
     #================================================================================================================================
-    testNum     = "883"
+    testNum     = "876"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -67,30 +67,30 @@ class Test:
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
             self.channelName = clsTestService.addGuidToString('Channel name') 
-
             ########################## TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
             
-            writeToLog("INFO","Step 2: Going to create Channel")
+            writeToLog("INFO","Step 1: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create Channel")
+                writeToLog("INFO","Step 1: FAILED to create Channel")
+                return            
+            
+            writeToLog("INFO","Step 2: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
             
             writeToLog("INFO","Step 3: Going to set Future time-frame publishing to entry ")   
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName=self.entryName) == False:
+            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to set Future time-frame publishing to entry")
                 return
             
-            writeToLog("INFO","Step 4: Going to publish the entry from Step #3")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName]) == False:
+            writeToLog("INFO","Step 4: Going to publish the entry from Step #2")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], publishFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish the entry from Step #3")
+                writeToLog("INFO","Step 4: FAILED to publish the entry from Step #")
                 return
             
             writeToLog("INFO","Step 5: Verify if the entry is presented inside the channel from step #2 (Expected: should not be presented)")
@@ -109,7 +109,7 @@ class Test:
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName, isExpected=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, Entry is not presented although it should")
-                return
+                return            
 
             #########################################################################
             writeToLog("INFO","TEST PASSED")

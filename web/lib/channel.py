@@ -1,13 +1,7 @@
-import subprocess
-from symbol import except_clause
-
-import win32com.client  
-
 from base import *
 import clsTestService
 from general import General
 import enums
-from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 
 
@@ -40,18 +34,28 @@ class Channel(Base):
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
     EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
-    CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@class='inline' and contains(text(), 'CHANNEL_TITLE')]")
+    CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@id='channel_title' and contains(text(), 'CHANNEL_TITLE')]")
     CHANNEL_PAGE_SEARCH_TAB                         = ('id', 'channelSearch-tab')
     CHANNEL_PAGE_SEARCH_BAR                         = ('id', 'searchBar')
     CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
     CHANNEL_PAGE_ENTRY_THUMBNAIL                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and contains(@title,'ENTRY_NAME')]")
     CHANNEL_DELETE_ALERT                            = ('xpath', "//div[@class='alert alert-success ']")
+    CHANNEL_ACTION_BUTTON                           = ('id', 'channelActionsDropdown')
+    CHANNEL_IMPORT_MENU                             = ('xpath', "//a[contains(@href,'/importchannel/') and @role='menuitem']")
+    CHANNEL_IMPORT_CHANNEL                          = ('xpath', "//label[@class='radio' and text()='CHANNEL_NAME']")
+    CHANNEL_IMPORT_BUTTON                           = ('xpath', "//a[@class='btn btn-primary importButton']")
+    CHANNEL_IMPORT_ALERT                            = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Importing completed successfully. To refresh the page and view the imported entries')]")
+    CHANNEL_CLICKHERE_REFRESH_BUTTON                = ('xpath', "//a[@href='#' and text()='click here.']")
+    
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
     def clickDeleteChannel(self):
         try:
-            self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                self.get_elements(self.EDIT_CHANNEL_DELETE)[1].click()
+            else:
+                self.get_elements(self.EDIT_CHANNEL_DELETE)[0].click()
             return True
         except:
             return False
@@ -66,10 +70,11 @@ class Channel(Base):
             sleep(1)
             self.clsCommon.general.waitForLoaderToDisappear()
             
-            tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
-            if self.hover_on_element(tmp_entry_name) == False:
-                writeToLog("INFO","FAILED to Hover above Channel's thumbnail")
-                return False
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
+                if self.hover_on_element(tmp_entry_name) == False:
+                    writeToLog("INFO","FAILED to Hover above Channel's thumbnail")
+                    return False
     
             sleep(1)
             if self.click(self.MY_CHANNELS_EDIT_BUTTON) == False:
@@ -77,7 +82,7 @@ class Channel(Base):
                 return False
             
             if self.clickDeleteChannel() == False:
-                writeToLog("INFO","FAILED to click on Delete channel button")
+                writeToLog("INFO","FAILED to click on Delete channel button (at Edit channel page)")
                 return False
             sleep(2)
             
@@ -103,7 +108,7 @@ class Channel(Base):
     # This function will create a Channel, please follow the following instructions:
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
     # for isModarated, isCommnets, isSubscription - use boolean
-    # TODO: linkToCategoriesList
+    # TODO: handle fillFileUploadEntryDescription for both Http and https
     def createChannel(self, channelName, channelDescription, channelTags, privacyType, isModarated, isCommnets, isSubscription, linkToCategoriesList=''):
         try:
             if self.navigateToMyChannels() == False:
@@ -285,7 +290,7 @@ class Channel(Base):
 
         except NoSuchElementException:
             return False
-        
+        sleep(2)
         return True
     
     def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
@@ -332,3 +337,87 @@ class Channel(Base):
             else:
                 writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
                 return False
+            
+
+    #@Author: Elad Binyamin 
+    #Description:Import entries channel to another channel
+    def importChannel (self, channelNameFrom, channelNameTo, entryName):
+        try:
+            if self.navigateToChannel(channelNameTo) == False:
+                writeToLog("INFO","FAILED to native to my channels page")
+                return False
+            
+            if self.click(self.CHANNEL_ACTION_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on channel action button")
+                return False 
+            
+            if self.click(self.CHANNEL_IMPORT_MENU) == False:
+                writeToLog("INFO","FAILED to click on channel import menu button")
+                return False 
+            sleep(2)
+            
+            importchanneltmp = (self.CHANNEL_IMPORT_CHANNEL[0], self.CHANNEL_IMPORT_CHANNEL[1].replace('CHANNEL_NAME', channelNameFrom))
+            if self.click(importchanneltmp) == False:
+                writeToLog("INFO","FAILED to click on import channel option button")
+                return False 
+            
+            if self.click(self.CHANNEL_IMPORT_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on import button")
+                return False
+            
+            if self.wait_visible(self.CHANNEL_IMPORT_ALERT, 180) == False:
+                writeToLog("INFO","FAILED to get the import alert message")
+                return False
+            
+            if self.click(self.CHANNEL_CLICKHERE_REFRESH_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on click here ")
+                return False
+            sleep(3)
+            
+            if self.verifyIfSingleEntryInChannel(channelNameTo, entryName, isExpected=True) == False:
+                writeToLog("INFO","FAILED to verify entry on channel ")
+                return False
+             
+        except NoSuchElementException:
+            return False
+        
+        return True    
+
+            
+    def naviagteToEntryFromChannelPage(self, entryName, channelName):
+        # Check if we are already in channel page
+        tmp_channel_title = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+        if self.wait_visible(tmp_channel_title, 5) == True:
+            writeToLog("INFO","Success, Already in channel page")
+            return True
+        
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED to navigate to Channel page '" + channelName + "'")
+            return False
+        
+        if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
+            writeToLog("INFO","FAILED to click on Channel's search Tab icon")
+            return False
+            
+        if self.click(self.CHANNEL_PAGE_SEARCH_BAR) == False:
+            writeToLog("INFO","FAILED to click on Channel's search bar text box")
+            return False
+            
+        if self.send_keys(self.CHANNEL_PAGE_SEARCH_BAR, entryName) == False:
+            writeToLog("INFO","FAILED to type in channel search bar")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        tmpEntry = self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)
+        if self.click(tmpEntry, 20, True) == False:
+            writeToLog("INFO","FAILED to click ob entry thumbnail")
+            return False
+        
+        tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        if self.wait_visible(tmp_entry_name, 20) == False:
+            writeToLog("INFO","FAILED to verify entry page display")
+            return False
+                
+        writeToLog("INFO","Success, Entry page display")
+        sleep(2)
+        return True

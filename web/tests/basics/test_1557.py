@@ -8,21 +8,22 @@ import localSettings
 from utilityTestFunc import *
 
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
-
 class Test:
     
     #================================================================================================================================
-    #  @Author: Tzachi Guetta
+    # @Author: Elad Binyamin
     # Test description:
-    # In case disclaimer module is turned on and set to "before upload" 
-    # The following test will check that upload is prevented before disclaimer's check-box was checked.
-    # The test's Flow: 
-    # Login -> Checking that the user is not able to upload before accepting disclaimer -> Accepting disclaimer -> performing upload
-    # then, Navigating to Entry page. 
-    # test cleanup: deleting the uploaded file, turning off disclaimer module
+    # Import channel to another channel 
+    # 1. Login
+    # 2. upload entry
+    # 3. create channel #1
+    # 4. create channel #2
+    # 5. publish the entry from step#2 to channel #1
+    # 6. import channel #1 to channel #2
+    # 7. verify entry from step#2 presented in channel #2
+    #
     #================================================================================================================================
-    testNum     = "1555"
+    testNum     = "1557"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -33,6 +34,12 @@ class Test:
     common = None
     # Test variables
     entryName = None
+    channelName1 = None
+    channelName2 = None
+    entryDescription = "Entry description"
+    entryTags = "entrytags1,entrytags2,"
+    channelDescription = "Channel description"
+    channelTags = "Channeltags1,Channeltags2,"
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg' 
@@ -51,31 +58,45 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,captur,self.driver = clsTestService.initialize(self, driverFix)
+            self,captur,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             
             ########################################################################
+            self.channelName1 = clsTestService.addGuidToString('Channel name1')
+            self.channelName2 = clsTestService.addGuidToString('Channel name2') 
             self.entryName = clsTestService.addGuidToString('entryName')
-            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
             
             ########################## TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
+            writeToLog("INFO","Step 1: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
+                writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-             
-            writeToLog("INFO","Step 2: Going to upload entry while disclaimer turned ON")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=True) == None:
+            
+            writeToLog("INFO","Step 2: Going to create Channel#1")
+            if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
-               
-            writeToLog("INFO","Step 3: Going to navigate to Entry Page")
-            if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
+            
+            writeToLog("INFO","Step 3: Going to create Channel#2")
+            if self.common.channel.createChannel(self.channelName2, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
+                writeToLog("INFO","Step 3: FAILED to create Channel#2")
                 return
+            
+            writeToLog("INFO","Step 4: Going to publish single entry")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName1]) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to publish entry to Channel#1")
+                return
+            
+            writeToLog("INFO","Step 5: Going to import channel")
+            if self.common.channel.importChannel(self.channelName1, self.channelName2, self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to import channel 1 to Channel#2")
+                return
+            
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
@@ -87,7 +108,8 @@ class Test:
         try:
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.admin.adminDisclaimer(False)
+            self.common.channel.deleteChannel(self.channelName1)
+            self.common.channel.deleteChannel(self.channelName2)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
