@@ -467,7 +467,7 @@ class Base:
             LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
         runningTestNum = os.getenv('RUNNING_TEST_ID',"")
         if (runningTestNum != ""):            
-            pngPath = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX,runningTestNum + LOG_FOLDER_PREFIX + scName + '.png'))   
+            pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,runningTestNum + LOG_FOLDER_PREFIX + scName + '.png'))   
         try:
             self.driver.save_screenshot(pngPath)  
         except:

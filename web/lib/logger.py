@@ -12,7 +12,7 @@ def writeStatsToCSV(test):
         LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
     if (os.getenv('SESSION_RUN_TIME',"") != ""):
         timeSuffix = '_' + os.getenv('SESSION_RUN_TIME',"")
-    CSV_STATS_FILE            = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.csv'))
+    CSV_STATS_FILE            = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.csv'))
     practiTestSessionID = os.getenv('MD_PRACTITEST_SET_ID',"") 
     
     if (os.path.isfile(CSV_STATS_FILE) == False):
@@ -29,7 +29,7 @@ def getLogFileFolderPath():
     LOG_FOLDER_PREFIX = ""
     if (os.getenv('BUILD_ID',"") != ""):
         LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-    return os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))    
+    return os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))    
     
 #===========================================================================
 #the class contains functions that manage and update the log file
@@ -43,9 +43,9 @@ def writeToLog(logLevel, logLine):
         LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
     if (os.getenv('SESSION_RUN_TIME',"") != ""):
         timeSuffix = '_' + os.getenv('SESSION_RUN_TIME',"")
-    LOGFILE                   = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.log'))
-    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
-    TEST_LOG_FILE             = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum + "/",runningTestNum + '.log'))
+    LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.log'))
+    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
+    TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum + "/",runningTestNum + '.log'))
 
     # Write to main log file
     d = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())

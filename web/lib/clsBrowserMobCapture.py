@@ -28,7 +28,7 @@ class clsBrowserMobCapture:
         
             self.testNum = testNum
             self.testBrowser = testBrowser
-            self.harPath = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum + "/","test_" + runningTestNum + "_" + self.testBrowser + '.har'))
+            self.harPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum + "/","test_" + runningTestNum + "_" + self.testBrowser + '.har'))
    
     #the function creates a new client to the proxy 'browser proxy'
     def createProxyClient(self,proxyUrl):

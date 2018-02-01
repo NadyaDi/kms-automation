@@ -1,8 +1,4 @@
 import subprocess
-from symbol import except_clause
-
-import win32com.client  
-
 from base import *
 import clsTestService
 from general import General
@@ -35,7 +31,6 @@ class Upload(Base):
     UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@class='btn btn-link']")
     UPLOAD_ENABLE_SCHEDULING_RADIO              = ('id', 'schedulingRadioButtons_5a65e5d39199d-scheduled')
     #============================================================================================================
-#     base = Base(clsTestService.WEB_DRIVER)
     
     def clickMediaUpload(self):
         try:
@@ -118,7 +113,7 @@ class Upload(Base):
             if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Save' button")
                 return None
-            sleep(5)
+            sleep(3)
             
             # Wait for loader to disappear
             self.clsCommon.general.waitForLoaderToDisappear()
@@ -134,7 +129,6 @@ class Upload(Base):
                 return None
 
         except Exception as inst:
-    #             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
             self.takeScreeshotGeneric("FAIL_UPLOAD")
             raise Exception(inst)
         
@@ -163,7 +157,11 @@ class Upload(Base):
         
     def typeIntoFileUploadDialog(self, filePath):
         try:
-            subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFile.exe' ,filePath])
+            # If running on remote node
+            if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.REMOTE_RUN_MODE:
+                self.clsCommon.instertPathInFileUploadWindows(filePath)
+            else:    
+                subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFile.exe' ,filePath])
             return True       
         except Exception:
             writeToLog("INFO","FAILED to type into 'Choose File' window")

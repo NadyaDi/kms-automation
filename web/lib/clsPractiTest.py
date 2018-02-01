@@ -82,7 +82,7 @@ class clsPractiTest:
         instance = ""
         
         case_str = "test_" + testID
-        testSetFilePath = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','ini','testSetAuto.csv'))
+        testSetFilePath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
         with open(testSetFilePath, 'r') as csv_mat: #windows
                 platform_matrix = csv.DictReader(csv_mat)
                 for row in platform_matrix:
@@ -100,7 +100,7 @@ class clsPractiTest:
         LOG_FOLDER_PREFIX = ""
         if (os.getenv('BUILD_ID',"") != ""):
             LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-        TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
+        TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
         
         practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
        
@@ -132,7 +132,7 @@ class clsPractiTest:
     #=============================================================================================================
     def createAutomationTestSetFile(self, environment, platform, testIDsDict):
         platformList = ["pc_firefox","pc_chrome","pc_internet explorer","android_chrome"]
-        testSetFile  = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','ini','testSetAuto.csv'))
+        testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
         
         automationTestSetFileHeader = "environment,case"
         for plat in platformList:
