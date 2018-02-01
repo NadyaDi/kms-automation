@@ -21,6 +21,7 @@ class EntryPage(Base):
     ENTRY_PAGE_TAGS                                        = ('class_name', "tagsWrapper")    
     ENTRY_PAGE_ADDTOPLAYLIST_BUTTON                        = ('id', "Addtoplaylists")  
     ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON          = ('id', "tab-Delete")                        
     ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     #=============================================================================================================
     
@@ -120,7 +121,7 @@ class EntryPage(Base):
             if self.clsCommon.channel.naviagteToEntryFromChannelPage(entryName, channelName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.CHANNEL_PAGE)
                 return False
-        
+        sleep(2)
         return True
         
     def deleteEntryFromEntryPage(self, entryName, deleteFrom= enums.Location.MY_MEDIA, categoryName="", channelName=""):
@@ -138,6 +139,8 @@ class EntryPage(Base):
         
         if self.click(self.ENTRY_PAGE_CONFIRM_DELETE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click confirm delete button")
+            # Click on the actions button to close the drop down list 
+            self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON, 15)
             return False
         
         # Verify entry was delete: after entry delete the page that will display is the page that we enter the entry from
