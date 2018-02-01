@@ -217,15 +217,20 @@ class Base:
     # Wait till element is disappear and return True, elase return False after timeout    
     def wait_while_not_visible(self, locator, timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
         while True:
             try:
                 if self.is_visible(locator) == False:
+                    self.setImplicitlyWaitToDefault()
                     return True
                 if wait_until < datetime.datetime.now():
                     writeToLog('INFO','Element still visible')
+                    self.setImplicitlyWaitToDefault()
                     return False
             except:
+                self.setImplicitlyWaitToDefault()
                 return True
+        self.setImplicitlyWaitToDefault()    
         return False
            
            
