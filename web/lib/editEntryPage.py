@@ -214,7 +214,8 @@ class EditEntryPage(Base):
                 return False
             
             if len(startDate) != 0:
-                self.setScheduleStartDate(startDate)
+                if self.setScheduleStartDate(startDate) == False:
+                    return False
                 sleep(2) 
             # else = use the default value
             
@@ -224,7 +225,8 @@ class EditEntryPage(Base):
             # else = use the default value
             
             if len(endDate) != 0:
-                self.setScheduleEndDate(endDate)
+                if self.setScheduleEndDate(endDate) == False:
+                    return False
                 sleep(2)  
             # else = use the default value
             
