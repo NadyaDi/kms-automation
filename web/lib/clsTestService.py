@@ -133,7 +133,7 @@ def updatePlatforms(test_num):
             
     supported_platforms=[]
     case_str = "test_" + test_num
-    matrixPath=os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','ini','testSet' + env +  '.csv'))
+    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet' + env +  '.csv'))
     with open(matrixPath, 'r') as csv_mat: #windows
         platform_matrix = csv.DictReader(csv_mat)
         for row in platform_matrix:
@@ -176,7 +176,7 @@ def updateTestCredentials(case_str):
         newuiStr = "NewUI"
     else:
         newuiStr = ""
-    testPartnersPath=os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
+    testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
     with open(testPartnersPath, 'r') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
         for row in testPartners:
@@ -326,7 +326,7 @@ def createScreenshot(test):
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
         LOG_FOLDER_PREFIX = LOG_FOLDER_PREFIX + "/" + runningTestNum + "/" 
-    pngPath = os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','logs' + LOG_FOLDER_PREFIX,runningTestNum + "_" + localSettings.LOCAL_RUNNING_BROWSER + '.png'))
+    pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,runningTestNum + "_" + localSettings.LOCAL_RUNNING_BROWSER + '.png'))
     test.driver.save_screenshot(pngPath)          
     
     
