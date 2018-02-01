@@ -73,56 +73,17 @@ class Category(Base):
         writeToLog("INFO","Success entry '" + entryName + "' was found")
         return True
         
-        
-        
+    
     # Author: Michal Zomper 
-    # TODO Not complete
-#     def navigateToEditEntryPageFromCategoryPage(self, categoryName, entryName): 
-#         tmp_entry_name = (self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
-#         #Check if we already in edit entry page
-#         if self.wait_visible(tmp_entry_name, 5) != False:
-#             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
-#             return True  
-#         
-#         if self.navigateToCategory(categoryName) == False:
-#             writeToLog("INFO","FAILED to navigate to category: " + categoryName)
-#             return False 
-#         sleep(3)
-#         
-#         tmp_entry = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
-#         tmp_entryParentEl = self.get_element(tmp_entry)
-#         if tmp_entryParentEl == None:
-#             writeToLog("INFO","FAILED to find entry '" + entryName +"' in category '" + categoryName + "'")
-#             return False      
-#         
-#         if self.hover_on_element(tmp_entry) == False:
-#             writeToLog("INFO","FAILED to hover on entry '" + entryName +"' in category '" + categoryName + "'")
-#             return False                
-#         
-#         # Check the 3 dots on the entry thumbnail
-#         try:
-#             EntryDotsButton = self.get_child_element(tmp_entryParentEl, self.EDIT_ENTRY_3_DOTS_ON_ENTRY_THUMBNAIL)
-#             EntryDotsButton.click()
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to find 3 dots on entry '" + entryName + "' thumbnail")
-#             return False  
-#          
-#         
-#         # Check the edit button on the thumbnail
-#         try:
-#             editEntryButton = self.get_child_element(tmp_entryParentEl, self.EDIT_ENTRY_EDIT_ENTRY_BUTTON_ON_THUMBNAIL)
-#             editEntryButton.click()
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to find edit button on entry '" + entryName + "' thumbnail")
-#             return False              # verify image was add
-#             if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
-#                 writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
-#                 return False
-#          
-# 
-# 
-#         #Check if we already in edit entry page
-#         if self.wait_visible(tmp_entry_name, 5) == False:
-#             writeToLog("INFO","FAILED to verify edit entry '" + entryName + "'page display")
-#             return False         
-#         return True          
+    def navigateToEditEntryPageFromCategoryPage(self, entryName, categoryName):
+        if self.clsCommon.entryPage.navigateToEntryPageFromCategoryPage(entryName, categoryName) == False:
+            writeToLog("INFO","FAILED navigate to category")
+            return False
+        
+        if self.clsCommon.editEntryPage.navigateToEditEntryPageFromEntryPage(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page")
+            return False
+        
+        writeToLog("INFO","Success, edit  entry '" + entryName + "' is display")
+        return True
+             
