@@ -243,7 +243,13 @@ class MyMedia(Base):
     # Author: Michal Zomper       
     # publishFrom - enums.Location
     # in categoryList / channelList will have all the names of the categories / channels to publish to
-    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.Location.MY_MEDIA, disclaimer=False): 
+    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.Location.MY_MEDIA, disclaimer=False):  
+        #checking if disclaimer is turned on for "Before publish"
+        if disclaimer == True:
+            if self.handleDisclaimerBeforePublish(entryName) == False:
+                writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
+                return False
+            
         if publishFrom == enums.Location.MY_MEDIA: 
             if self.navigateToMyMedia() == False:
                 writeToLog("INFO","FAILED to navigate to my media")
@@ -273,12 +279,6 @@ class MyMedia(Base):
 
         elif publishFrom == enums.Location.UPLOAD_PAGE: 
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
-         
-        #checking if disclaimer is turned on for "Before publish"
-        if disclaimer == True:
-            if self.handleDisclaimerBeforePublish(entryName) == False:
-                writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
-                return False
          
         sleep(2)            
         self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30)
