@@ -22,6 +22,7 @@ class EntryPage(Base):
     ENTRY_PAGE_ADDTOPLAYLIST_BUTTON                        = ('id', "Addtoplaylists")  
     ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")
     ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
+    ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//h3[@class='muted' and contains(text(), 'Media is being processed')]")
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -162,5 +163,7 @@ class EntryPage(Base):
         return True
         
             
-        
-        
+    def waitTillMediaIsBeingProcessed(self, timeout=120):
+        sleep(3)
+        self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
+        return True

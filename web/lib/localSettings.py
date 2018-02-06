@@ -1,6 +1,9 @@
 import os
 import sys
 
+import enums
+
+
 LOCAL_SETTINGS_KMS_WEB_DIR                  = os.getenv('KMS_WEB')
 LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR           = 'C:\\selenium\\kms-automation\\web\\'
 if (os.getenv('MD_RELEASE',"") != ""):
@@ -74,8 +77,8 @@ LOCAL_SETTINGS_KMS_ADMIN_URL                = None
 
 LOCAL_SETTINGS_PROD_ENVIRONMENT             = 'PROD'              
 LOCAL_SETTINGS_TESTING_ENVIRONMENT          = 'TESTING'
-LOCAL_SETTINGS_IS_NEW_UI                    = True
-LOCAL_SETTINGS_RUN_ENVIRONMENT              = LOCAL_SETTINGS_TESTING_ENVIRONMENT
+LOCAL_SETTINGS_IS_NEW_UI                    = False
+LOCAL_SETTINGS_RUN_ENVIRONMENT              = LOCAL_SETTINGS_PROD_ENVIRONMENT
 # Partner credentials
 LOCAL_SETTINGS_PARTNER                      = None
 LOCAL_SETTINGS_LOGIN_USERNAME               = None
@@ -83,3 +86,5 @@ LOCAL_SETTINGS_LOGIN_PASSWORD               = None
 LOCAL_SETTINGS_ADMIN_USERNAME               = None
 LOCAL_SETTINGS_ADMIN_PASSWORD               = None
 LOCAL_SETTINGS_USERNAME_AFTER_LOGIN         = None
+# Test run variables
+TEST_CURRENT_IFRAME_ENUM                    = enums.IframeName.DEFAULT

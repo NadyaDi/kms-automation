@@ -1,8 +1,6 @@
-# import inspect
 from base import *
-# from logger import *
-# import localSettings
-
+from logger import *
+import localSettings
 
 
 class Login(Base):
