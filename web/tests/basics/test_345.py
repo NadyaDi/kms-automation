@@ -77,61 +77,66 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
-             
-            writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
+            
+            writeToLog("INFO","Step 3: Going to navigate to edit Entry Page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
+                writeToLog("INFO","Step 3: FAILED to navigate to edit entry page")
+                return False
+            
+            writeToLog("INFO","Step 4: Going to add Collaborator in edit Entry Page")
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
+                writeToLog("INFO","Step 4: FAILED failed to add user as a collaborator")
                 return
             
             sleep(2)     
-            writeToLog("INFO","Step 4: Going to publish the entry so the add user as a collaborator can see it")            
+            writeToLog("INFO","Step 5: Going to publish the entry so the add user as a collaborator can see it")            
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
+                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "'")
                 return
             
-            writeToLog("INFO","Step 5: Going to logout from main user")
+            writeToLog("INFO","Step 6: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED failed to logout from main user")
+                writeToLog("INFO","Step 6: FAILED failed to logout from main user")
                 return  
                               
-            writeToLog("INFO","Step 6: Going to login with the user that was added as Collaborator")
+            writeToLog("INFO","Step 7: Going to login with the user that was added as Collaborator")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to login with the user that was added as Collaborator")
+                writeToLog("INFO","Step 7: FAILED to login with the user that was added as Collaborator")
                 return
             
-            writeToLog("INFO","Step 7: Going to navigate to entry page from category page with the user that was added as Collaborator")
+            writeToLog("INFO","Step 8: Going to navigate to entry page from category page with the user that was added as Collaborator")
             if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to navigate to entry page with the user that was added as Collaborator")
+                writeToLog("INFO","Step 8: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                                  
             
-            writeToLog("INFO","Step 8: Going to navigate to edit entry page from entry page")
+            writeToLog("INFO","Step 9: Going to navigate to edit entry page from entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to edit entry page from entry page")
+                writeToLog("INFO","Step 9: FAILED to navigate to edit entry page from entry page")
                 return 
              
-            writeToLog("INFO","Step 9: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            writeToLog("INFO","Step 10: Going to change entry metadata  (entry name, description, tags) with the user that  added as Collaborator")
             if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to edit entry metadata with the user that was added as Collaborator")
+                writeToLog("INFO","Step 10: FAILED to edit entry metadata with the user that was added as Collaborator")
                 return  
             
-            writeToLog("INFO","Step 10: Going to navigate to entry page from category page")
+            writeToLog("INFO","Step 11: Going to navigate to entry page from category page")
             if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to navigate to entry page with the user that was added as Collaborator")
+                writeToLog("INFO","Step 11: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                 
                 
-            writeToLog("INFO","Step 11: Going to verify entry new  metadata  (entry name, description, tags) with the user that  added as Collaborator")
+            writeToLog("INFO","Step 12: Going to verify entry new  metadata  (entry name, description, tags) with the user that  added as Collaborator")
             # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
             if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.entryTags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify entry new  metadata with the user that was added as Collaborator")
+                writeToLog("INFO","Step 12: FAILED to verify entry new  metadata with the user that was added as Collaborator")
                 return  
             
             ##################################################################
