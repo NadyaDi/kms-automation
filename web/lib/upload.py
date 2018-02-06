@@ -1,4 +1,7 @@
 import subprocess
+
+import win32com.client
+import enums
 from base import *
 import clsTestService
 from general import General
@@ -28,7 +31,7 @@ class Upload(Base):
     UPLOAD_ENTRY_PROGRESS_BAR                   = ('id', 'progressBar')
     UPLOAD_ENTRY_SUCCESS_MESSAGE                = ('xpath', "//span[contains(.,'Your changes have been saved.')]")
     UPLOAD_ENTRY_DISCLAIMER_CHECKBOX            = ('id', 'disclaimer-Accepted')
-    UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@class='btn btn-link']")
+    UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@class='btn btn-link' and text() = 'Go To Media']")
     UPLOAD_ENABLE_SCHEDULING_RADIO              = ('id', 'schedulingRadioButtons_5a65e5d39199d-scheduled')
     #============================================================================================================
     
@@ -236,3 +239,7 @@ class Upload(Base):
             return True
         else:
             return False
+        
+    # Use after upload is done, from upload page    
+    def clickGoToMyMedia(self):
+        return self.click(self.UPLOAD_GO_TO_MEDIA_BUTTON)

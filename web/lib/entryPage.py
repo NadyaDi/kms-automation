@@ -23,6 +23,7 @@ class EntryPage(Base):
     ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON          = ('id', "tab-Delete")                        
     ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
+    ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//h3[@class='muted' and contains(text(), 'Media is being processed')]")
     ENTRY_PAGE_PLAYER_IFRAME                               = ('xpath',"//iframe[@id='kplayer_ifp' and @class='mwEmbedKalturaIframe']") 
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
     ENTRY_PAGE_PLAYER_IFRAME2                              = ('id','kplayer_ifp')
@@ -168,7 +169,13 @@ class EntryPage(Base):
         writeToLog("INFO","FAILED to verify that entry deleted")
         return True
         
-            
+
+    def waitTillMediaIsBeingProcessed(self, timeout=120):
+        sleep(3)
+        self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
+        return True
+
+      
     def VerifySlidesonThePlayerInEntryPage(self, entryName):
         if self.navigateToEntry(entryName, navigateFrom = enums.Location.MY_MEDIA) == False:
             writeToLog("INFO","FAILED navigate to entry: " + entryName)
@@ -182,4 +189,3 @@ class EntryPage(Base):
         if self.is_visible(self.ENTRY_PAGE_CHAPTER_MENU_ON_THE_PLAYER) == False:
             writeToLog("INFO","FAILED to find chapter menu on the player")
             return False
-        
