@@ -29,6 +29,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
+    EDIT_ENTRY_TIMELINE_TAB                                     = ('id', 'chapters-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' , "//div[@class='alert alert-success ']")
@@ -57,8 +58,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_REMOVE_CAPTION_BUTTON                            = ('xpath', "//i[@class='icon-remove']")
     EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete')]")
     EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON              = ('xpath', "//a[@class='btn btn-large fulldeck btn-combo kmstooltip' and @aria-label='Upload Slides Deck (PPT, PPTX, PDF)']")
-    EDIT_ENTRY_UPLOAD_SLIDES_BUTTON                             = ('xpath', "//i[@class='icon-upload-alt icon-4x']")
-    EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE         = ('xpath', "//i[@class='btn btn-link fileinput-button']")
+    EDIT_ENTRY_UPLOAD_SLIDES_BUTTON                             = ('id', 'upload-fulldeck')
+    EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE         = ('xpath', "//label[@class='btn btn-link fileinput-button']")
+    EDIT_ENTRY_CUEPOINT_ON_TIMELINE                             = ('xpath', "//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle']")
     #=============================================================================================================
     
     
@@ -285,7 +287,7 @@ class EditEntryPage(Base):
                 return False
             
         elif tabName == enums.EditEntryPageTabName.TIMELINE:
-            if self.click(self.EDIT_ENTRY_CAPTION_TAB, 30) == False:
+            if self.click(self.EDIT_ENTRY_TIMELINE_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on time-line tab")
                 return False
         else:
@@ -541,19 +543,32 @@ class EditEntryPage(Base):
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
-        
+         
         # Click on the upload slides button in the time line bar 
-        if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_DECK_BUTTON, 20) == False:
+        if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides deck button in the time line bar")
             return False           
-        
+         
         # click on the upload button 
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides button")
             return False              
-        
+         
         if self.click(self.EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE, 20) == False:
             writeToLog("INFO","FAILED to click on choose a file to upload button")
             return False            
-        
+         
         self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
+         
+        # Wait until the ptt will upload 
+        sleep(20)
+         
+        # Verify cuepoint  were added to time line
+        # Their should be 9 cuepoint
+        if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != 9:
+            writeToLog("INFO","FAILED, Not all cuepoints were added to timeline")
+            return False 
+        
+        writeToLog("INFO","Success presentation was upload and added to time line successfully")
+        return True
+            
