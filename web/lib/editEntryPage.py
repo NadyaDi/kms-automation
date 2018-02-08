@@ -25,10 +25,12 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
     EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON                          = ('id', "EntryOptions-submit")
+    EDIT_ENTRY_SAVE_BUTTON_FLAVOR                               = ('id', "EditFlavors-submit")
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath', "//div[@class='alert alert-success ']")
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
+    EDIT_ENTRY_DOWNLOADS_TAB                                    = ('id', 'downloads-tab-tab')
     EDIT_ENTRY_TIMELINE_TAB                                     = ('id', 'chapters-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
@@ -58,6 +60,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_REMOVE_CAPTION_BUTTON                            = ('xpath', "//i[@class='icon-remove']")
     EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete')]")
     EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON              = ('xpath', "//a[@class='btn btn-large fulldeck btn-combo kmstooltip' and @aria-label='Upload Slides Deck (PPT, PPTX, PDF)']")
+    EDIT_ENTRY_DOWNLOADS_FLAVOR                                 = ('xpath', "//label[@class='checkbox' and contains(.,'FLAVOR_NAME')]") #pay attention: this locator is relevant to SOURCE Flavor ONLY
     EDIT_ENTRY_UPLOAD_SLIDES_BUTTON                             = ('id', 'upload-fulldeck')
     EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE         = ('xpath', "//label[@class='btn btn-link fileinput-button']")
     EDIT_ENTRY_CUEPOINT_ON_TIMELINE                             = ('xpath', "//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle']")
@@ -290,6 +293,11 @@ class EditEntryPage(Base):
             if self.click(self.EDIT_ENTRY_TIMELINE_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on time-line tab")
                 return False
+            
+        elif tabName == enums.EditEntryPageTabName.DOWNLOADS:
+            if self.click(self.EDIT_ENTRY_DOWNLOADS_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on time-line tab")
+                return False            
         else:
             writeToLog("INFO","FAILED, Unknown tabName")
             return False
@@ -569,6 +577,47 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED, Not all cuepoints were added to timeline")
             return False 
         
+        self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
         writeToLog("INFO","Success presentation was upload and added to time line successfully")
         return True
+      
+    
+    def addFlavorsToEntry(self, entryName, flavorsList):
+        try:
+            if len(entryName) != 0:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                  
+                if self.clickOnEditTab(enums.EditEntryPageTabName.DOWNLOADS) == False:
+                    writeToLog("INFO","FAILED to navigate to DOWNLOADS tab")
+                    return False
+                
+                if len(flavorsList) != 0:
+                    for flavor in flavorsList: 
+                        tmoFlavorName = (self.EDIT_ENTRY_DOWNLOADS_FLAVOR[0], self.EDIT_ENTRY_DOWNLOADS_FLAVOR[1].replace('FLAVOR_NAME', flavor))
+                        if self.click(tmoFlavorName, 30) == False:
+                            writeToLog("INFO","FAILED to click on flavor:" + flavor)
+                            return False
+                        writeToLog("INFO","Flavor: " + flavor + " added successfully")
+                else:   
+                    writeToLog("INFO","flavorsList not supplied")
+                    return False
+                
+                sleep(1)
+                if self.click(self.EDIT_ENTRY_SAVE_BUTTON_FLAVOR, 30) == False:
+                    writeToLog("INFO","FAILED to click on save button ")
+                    return False
             
+                if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+                    writeToLog("INFO","FAILED to find save massage")
+                    return False
+                sleep(3)
+            else:
+                writeToLog("INFO","Entry name not supplied")
+                return False
+            
+        except NoSuchElementException:
+            return False
+          
+        return True
