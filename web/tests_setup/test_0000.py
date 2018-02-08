@@ -2,8 +2,9 @@ import pytest
 import sys,os
 from utilityTestFunc import *
 from clsPractiTest import clsPractiTest
+import clsTestService
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','..','lib')))
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','lib')))
 
 class Test:
     
