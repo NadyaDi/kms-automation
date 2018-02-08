@@ -83,13 +83,24 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
                 fp.update_preferences()
                 return webdriver.Firefox(firefox_profile=fp)
             else:
-                return webdriver.Firefox()
+                fp = webdriver.FirefoxProfile()
+                fp.set_preference('browser.download.folderList', 2) # custom location
+                fp.set_preference('browser.download.manager.showWhenStarting', False)
+                fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
+                fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'video/mpeg,video/avi,video/MP2T,video/3gpp,' +
+                                    'video/quicktime,video/x-msvideo,video/x-flv,video/mp4,application/x-mpegURL,video/x-ms-wmv,' +
+                                    'video/x-ms-asf,image/bmp,image/x-png,image/gif,audio/wav,image/png,image/jpg,audio/x-ms-wma,application/vnd.ms-asf')
+                fp.update_preferences()
+                return webdriver.Firefox(firefox_profile=fp)
+#                 return webdriver.Firefox()
         elif(hostBrowser == PC_BROWSER_CHROME):
             if (myProxy != None): 
                 chrome_options = webdriver.ChromeOptions()
                 chrome_options.add_argument('--proxy-server=http://' + myProxy.proxy)
                 return webdriver.Chrome(LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH,chrome_options=chrome_options)
             else:
+                chrome_options = webdriver.ChromeOptions()
+                chrome_options.add_argument("download.default_directory=" + localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
                 return webdriver.Chrome(LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH)
         elif(hostBrowser == PC_BROWSER_IE):
             return webdriver.Ie(LOCAL_SETTINGS_WEBDRIVER_LOCAL_IE_PATH,capabilities={'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True})

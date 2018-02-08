@@ -132,8 +132,7 @@ class clsPractiTest:
     #=============================================================================================================
     def createAutomationTestSetFile(self, environment, platform, testIDsDict):
         platformList = ["pc_firefox","pc_chrome","pc_internet explorer","android_chrome"]
-        testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
-        
+        testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'web','ini','testSetAuto.csv'))
         automationTestSetFileHeader = "environment,case"
         for plat in platformList:
             automationTestSetFileHeader = automationTestSetFileHeader + "," + plat

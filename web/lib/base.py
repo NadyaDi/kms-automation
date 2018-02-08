@@ -1,6 +1,6 @@
 import sys, datetime, re
 from time import sleep
-
+import utilityTestFunc
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
@@ -490,20 +490,45 @@ class Base:
         if (runningTestNum != ""):            
             pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,runningTestNum + LOG_FOLDER_PREFIX + scName + '.png'))   
         try:
-            self.driver.save_screenshot(pngPath)  
+            self.driver.save_screenshot(pngPath)
+            return True
         except:
             writeToLog("INFO","Failed to take a screenshot, bad driver")
+            return False
+            
+           
+    # Create a screeshot with a given path
+    def takeScreeshot(self, filePath):
+        try:
+            os.path.abspath(filePath)
+            self.driver.save_screenshot(filePath)
+            return True
+        except:
+            writeToLog("INFO","Failed to take a screenshot, bad driver")
+            return False
+
+            
+    def swith_to_iframe(self, locator, timeout=30):
+        elementIframe = self.wait_visible(locator, timeout)
+        if elementIframe == False:
+            writeToLog("INFO","FAILED to get IFRAME element")
+            return False      
+        self.driver.switch_to.frame(elementIframe)
+        return True         
             
             
     def switch_to_default_content(self):
+        localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.DEFAULT
         self.driver.switch_to.default_content()
         
         
     def setImplicitlyWaitToDefault(self):
         self.driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
         
+        
     def setImplicitlyWait(self, timeout):
         self.driver.implicitly_wait(timeout)        
+        
         
     def select_from_combo_by_text(self, locator, optionToSelect):
         try:

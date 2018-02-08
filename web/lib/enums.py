@@ -43,5 +43,10 @@ class EditEntryPageTabName(Enum):
     DOWNLOADS              = 'downloads'
     TIMELINE               = 'timeline'
     
+class IframeName(Enum):
+    def __str__(self):
+        return str(self.value)
 
+    DEFAULT                             = 'DEFAULT'
+    PLAYER                              = 'PLAYER'
 

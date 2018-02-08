@@ -13,20 +13,26 @@ except:
     pass
 import platform
 
-class clsQrCodeReader():
+class QrCodeReader(Base):
+    driver = None
+    clsCommon = None
+         
+    def __init__(self, clsCommon, driver):
+        self.driver = driver
+        self.clsCommon = clsCommon
                
     # Take screenshot of the whole page, return the full file path of the screenshot 
-    def takeQrCodeScreenshot(self, driver):
+    def takeQrCodeScreenshot(self):
         if platform.system() == 'Windows':
             filePath = LOCAL_QRCODE_TEMP_DIR_WINDOWS + "\\" + generateTimeStamp() + ".png"
         elif platform.system() == 'Linux':    
             filePath = LOCAL_QRCODE_TEMP_DIR_LINUX + "/" + generateTimeStamp() + ".png"
-        if saveScreenshotToFile(driver, filePath) == True:
-            writeToLog("DEBUG","Screenshot of the page save to: " + filePath)
+        if self.takeScreeshot(filePath) == True:
+            writeToLog("INFO","Screenshot of the page save to: " + filePath)
             return filePath
         else:
-            writeToLog("DEBUG","Failed to take screenshot of the page")
-            return
+            writeToLog("INFO","FAILED to take screenshot of the page")
+            return False
         
     #Take screenshot of the iframe (player), return the full file path of the screenshot
     def takeQrCodePlayerScreenshot(self, player, driver, fullScreen=False, live=True):
@@ -67,66 +73,66 @@ class clsQrCodeReader():
             return
         
         
-    def getTopBottomLeftRightOfElement(self, driver, element, isLive, isFullScreen):
-        #Get the location and size of the Iframe (for cropping the image)
-        location = element.location
-        size = element.size
-        outTop = -1
-        outBottom = -1
-        outLeft = -1
-        outRight = -1
-        locataionY = -1
-                 
-        if isLive:
-            if isFullScreen:
-                outTop = 0
-                outBottom = (size['height'] * 24) / 100
-                if localSettings.LOCAL_SETTINGS_RUN_MDOE == "REMOTE":
-                    outLeft = (size['width'] * 73) / 100
-                    outRight = (size['width'] * 88) / 100
-                else:    
-                    outLeft = (size['width'] * 71) / 100
-                    outRight = (size['width'] * 85) / 100
-            else:
-                currentBrowserName = localSettings.LOCAL_RUNNING_BROWSER
-                if currentBrowserName == clsTestService.PC_BROWSER_CHROME:
-                    locataionY = location['y']
-                elif currentBrowserName == clsTestService.PC_BROWSER_FIREFOX:
-                    locataionY = 0
-                elif currentBrowserName == clsTestService.PC_BROWSER_IE:
-                    locataionY = location['y']
-                else:
-                    self.testService.writeToLog("Unknown browser: " + currentBrowserName)
-                    self.status="Fail"
-                    return
-                outTop = locataionY
-                outBottom = locataionY + (size['height'] * 21) / 100
-                outLeft = location['x'] + (size['width'] * 78) / 100
-                outRight = location['x'] + (size['width'] * 97) / 100       
-        else:
-            if isFullScreen:
-                outTop = 0
-                outBottom = (size['height'] * 60) / 100
-                outLeft = (size['width'] * 62) / 100   
-                outRight = (size['width'] * 86) / 100       
-            else:
-                outTop = location['y']
-                outBottom = location['y'] + (size['height'] * 56) / 100
-                outLeft = location['x'] + (size['width'] * 63) / 100
-                outRight = location['x'] + (size['width'] * 93) / 100                
-        return outTop, outBottom, outLeft, outRight 
+#     def getTopBottomLeftRightOfElement(self, driver, element, isLive, isFullScreen):
+#         #Get the location and size of the Iframe (for cropping the image)
+#         location = element.location
+#         size = element.size
+#         outTop = -1
+#         outBottom = -1
+#         outLeft = -1
+#         outRight = -1
+#         locataionY = -1
+#                  
+#         if isLive:
+#             if isFullScreen:
+#                 outTop = 0
+#                 outBottom = (size['height'] * 24) / 100
+#                 if localSettings.LOCAL_SETTINGS_RUN_MDOE == "REMOTE":
+#                     outLeft = (size['width'] * 73) / 100
+#                     outRight = (size['width'] * 88) / 100
+#                 else:    
+#                     outLeft = (size['width'] * 71) / 100
+#                     outRight = (size['width'] * 85) / 100
+#             else:
+#                 currentBrowserName = localSettings.LOCAL_RUNNING_BROWSER
+#                 if currentBrowserName == clsTestService.PC_BROWSER_CHROME:
+#                     locataionY = location['y']
+#                 elif currentBrowserName == clsTestService.PC_BROWSER_FIREFOX:
+#                     locataionY = 0
+#                 elif currentBrowserName == clsTestService.PC_BROWSER_IE:
+#                     locataionY = location['y']
+#                 else:
+#                     self.testService.writeToLog("Unknown browser: " + currentBrowserName)
+#                     self.status="Fail"
+#                     return
+#                 outTop = locataionY
+#                 outBottom = locataionY + (size['height'] * 21) / 100
+#                 outLeft = location['x'] + (size['width'] * 78) / 100
+#                 outRight = location['x'] + (size['width'] * 97) / 100       
+#         else:
+#             if isFullScreen:
+#                 outTop = 0
+#                 outBottom = (size['height'] * 60) / 100
+#                 outLeft = (size['width'] * 62) / 100   
+#                 outRight = (size['width'] * 86) / 100       
+#             else:
+#                 outTop = location['y']
+#                 outBottom = location['y'] + (size['height'] * 56) / 100
+#                 outLeft = location['x'] + (size['width'] * 63) / 100
+#                 outRight = location['x'] + (size['width'] * 93) / 100                
+#         return outTop, outBottom, outLeft, outRight 
      
     # Resolve and return the given path to image with QR code    
     def resolveQrCode(self, filePath):
         if platform.system() == 'Windows':
-            proc = subprocess.Popen(LOCAL_QR_DECODER_PATH + ' ' + filePath, stdout=subprocess.PIPE)
+            proc = subprocess.Popen(LOCAL_QR_DECODER_PATH + ' "' + filePath + '"', stdout=subprocess.PIPE)
             output = str(proc.stdout.read(),'utf-8')
             rcArr = output.split('"')
             try:
                 rc = rcArr[1]
                 return rc
             except:
-                return
+                return None
             
         elif platform.system() == 'Linux':
             with open(filePath, 'rb') as image_file:
