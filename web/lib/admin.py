@@ -2,6 +2,7 @@ from base import *
 import clsTestService
 import enums
 from logger import writeToLog
+from selenium.webdriver.support.ui import Select
 
 
 class Admin(Base):
@@ -22,6 +23,8 @@ class Admin(Base):
     ADMIN_DISCLAIMER_AGREE_REQUIRED                 = ('id', 'agreeRequired')
     ADMIN_MEDIA_COLLABORATION_ENABLED               = ('id', 'mediaCollaborationEnabled-label')
     ADMIN_LOGOUT_BUTTON                             = ('id', 'logout-button')
+    ADMIN_DOWNLOAD_ADD                              = ('xpath', "//a[@class='add']")
+    ADMIN_DOWNLOAD_FLAVOR_NAME                      = ('xpath', "//input[@data-name='name']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -161,5 +164,44 @@ class Admin(Base):
         selection = self.convertBooleanToYesNo(isEnabled)
         if self.select_from_combo_by_text(self.ADMIN_MEDIA_COLLABORATION_ENABLED, selection) == False:
             writeToLog("INFO","FAILED to set disclaimer as: " + str(selection))
-            return False        
-    
+            return False
+            
+            
+    def adminDownloadMedia(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            return False
+        
+        # Navigate to Disclaimer page
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/downloadmedia#enabled') == False:
+            writeToLog("INFO","FAILED to load Admin Download-media page")
+            return False
+        
+        # Enable/Disable Disclaimer
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set Download as: " + str(selection))
+            return False
+        
+        flavorsList = ["Source", "Mobile (3GP)", "Basic/Small - WEB/MBL (H264/400)","Basic/Small - WEB/MBL (H264/600)", "SD/Small - WEB/MBL (H264/900)", "SD/Large - WEB/MBL (H264/1500)","HD/720 - WEB (H264/2500)","HD/1080 - WEB (H264/4000)","WebM"] 
+        for flavor in flavorsList:
+            if self.click(self.ADMIN_DOWNLOAD_ADD) == False:
+                writeToLog("INFO","FAILED to click on Add flavor button")
+                return False
+             
+            asteriskElement = self.driver.find_element_by_xpath(".//legend[@class='num' and contains(text(), '*')]")
+            parentAsteriskElement = asteriskElement.find_element_by_xpath("..")
+            comboboxElement = parentAsteriskElement.find_element_by_tag_name("select")
+            Select(comboboxElement).select_by_visible_text(flavor)
+
+            textElement = parentAsteriskElement.find_element_by_tag_name("input")
+            textElement.clear()
+            textElement.send_keys(flavor)
+            
+            if self.adminSave() == False:
+                writeToLog("INFO","FAILED to save changes in admin page")
+                return False
+            else:
+                writeToLog("INFO","the following Flavor was added: " + flavor)
+                
+        return True
