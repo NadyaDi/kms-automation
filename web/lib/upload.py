@@ -1,6 +1,8 @@
 import subprocess
-
-import win32com.client
+try:
+    import win32com.client
+except:
+    pass
 import enums
 from base import *
 import clsTestService
