@@ -38,6 +38,7 @@ class Test:
                     writeToLog("INFO","Unable to get test list")
          
         except Exception as inst:
+            print("DEBUG !!!!!! : " + str(inst))
             self.status = self.testService.handleException(self,inst,self.startTime)
                 
     def teardown_method(self,method):
