@@ -100,7 +100,7 @@ class clsPractiTest:
         LOG_FOLDER_PREFIX = ""
         if (os.getenv('BUILD_ID',"") != ""):
             LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-        TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'..','logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
+        TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
         
         practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
        
