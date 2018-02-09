@@ -44,9 +44,9 @@ def writeToLog(logLevel, logLine):
 #         LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/''
     if (os.getenv('SESSION_RUN_TIME',"") != ""):
         timeSuffix = '_' + os.getenv('SESSION_RUN_TIME',"")
-    LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'..','logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.log'))
-    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',LOG_FOLDER_PREFIX,runningTestNum))
-    TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',LOG_FOLDER_PREFIX,runningTestNum,runningTestNum + '.log'))
+    LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, '..', 'logs', LOG_FOLDER_PREFIX, LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.log'))
+    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', LOG_FOLDER_PREFIX, runningTestNum))
+    TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs' , LOG_FOLDER_PREFIX, runningTestNum,runningTestNum + '.log'))
 #     TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum))
 #     TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + runningTestNum + "/",runningTestNum + '.log'))    
 
