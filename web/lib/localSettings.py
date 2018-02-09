@@ -48,8 +48,8 @@ if LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE:
 else:
     LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'media'))
     LOCAL_SETTINGS_TEMP_PATH                    = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'media'))
-    LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp\\downloads\\'))  
-    LOCAL_QRCODE_TEMP_DIR_LINUX                 = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'screenShots/qrCode/'))
+    LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))  
+    LOCAL_QRCODE_TEMP_DIR_LINUX                 = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'screenShots','qrCode'))
 
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
