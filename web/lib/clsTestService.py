@@ -337,8 +337,8 @@ def createScreenshot(test):
         LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
-        LOG_FOLDER_PREFIX = LOG_FOLDER_PREFIX + "/" + runningTestNum + "/" 
-    pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,runningTestNum + "_" + localSettings.LOCAL_RUNNING_BROWSER + '.png'))
+        LOG_FOLDER_PREFIX = LOG_FOLDER_PREFIX + "/" + str(runningTestNum) + "/" 
+    pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,str(runningTestNum)+ "_" + localSettings.LOCAL_RUNNING_BROWSER + '.png'))
     test.driver.save_screenshot(pngPath)          
     
     

@@ -118,4 +118,15 @@ def wait_for_page_readyState(driver, timeout=30):
     if page_state == 'complete':
         return True
     else:
-        return False    
+        return False   
+
+def isAutoEnvironment():
+    env = ""   
+    for arg in sys.argv[1:]:
+        if ("--env" in arg):
+            env = arg[6:]
+            break
+    if (env == "Auto"):
+        return True
+    
+    return False
