@@ -30,7 +30,7 @@ class Base:
             try:
                 return self.get_element_by_type(method, values)
             except NoSuchElementException:
-                raise NoSuchElementException
+                raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         elif type(values) is list:
             for value in values:
                 try:
@@ -38,7 +38,7 @@ class Base:
                 except NoSuchElementException:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
-            raise NoSuchElementException
+            raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         
         
     def get_child_element(self, parent, locator):
@@ -56,7 +56,7 @@ class Base:
             try:
                 return self.get_child_element_by_type(parent, method, values)
             except NoSuchElementException:
-                raise NoSuchElementException
+                raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         elif type(values) is list:
             for value in values:
                 try:
@@ -64,7 +64,7 @@ class Base:
                 except NoSuchElementException:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
-            raise NoSuchElementException
+            raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         
 
     def get_child_elements(self, parent, locator):
@@ -82,7 +82,7 @@ class Base:
             try:
                 return self.get_child_elements_by_type(parent, method, values)
             except NoSuchElementException:
-                raise NoSuchElementException
+                raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         elif type(values) is list:
             for value in values:
                 try:
@@ -90,7 +90,7 @@ class Base:
                 except NoSuchElementException:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
-            raise NoSuchElementException                
+            raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)                
 
 
     def get_element_by_type(self, method, value):
@@ -178,7 +178,7 @@ class Base:
                     return self.get_elements_by_type(method, value)
                 except NoSuchElementException:
                     pass
-            raise NoSuchElementException
+            raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
 
 
     def get_elements_by_type(self, method, value):
@@ -375,7 +375,9 @@ class Base:
         }
         
         
-    def get_element_text(self, locator):
+    def get_element_text(self, locator, timeout=30):
+        if self.wait_visible(locator, timeout) == False:
+            return None
         element = self.get_element(locator)
         return element.text
     
@@ -483,12 +485,9 @@ class Base:
         
     # Create a screeshot with a given name it the test log folder
     def takeScreeshotGeneric(self, scName):
-        LOG_FOLDER_PREFIX = "/"
-        if (os.getenv('BUILD_ID',"") != ""):
-            LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
         runningTestNum = os.getenv('RUNNING_TEST_ID',"")
-        if (runningTestNum != ""):            
-            pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,str(runningTestNum) + LOG_FOLDER_PREFIX + scName + '.png'))   
+        if (runningTestNum != ""):      
+            pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',runningTestNum, scName + '.png')) 
         try:
             self.driver.save_screenshot(pngPath)
             return True

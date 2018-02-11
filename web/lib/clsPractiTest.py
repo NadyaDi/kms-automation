@@ -181,7 +181,7 @@ class clsPractiTest:
         files = []
         fileList =  os.listdir(path)
         for file in fileList:
-            with open(path + '\\' + file, "rb") as fileObj:
+            with open(os.path.abspath(os.path.join(path,file)), "rb") as fileObj:
                 fileBase64Utf8 = base64.b64encode(fileObj.read()).decode('utf-8') 
                 files.append({"filename": fileObj.name.split("\\")[len(fileObj.name.split("\\")) - 1], "content_encoded": fileBase64Utf8})
         return files
