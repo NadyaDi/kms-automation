@@ -101,18 +101,21 @@ class Upload(Base):
                 return None
             
             # Type in a file path
-            self.typeIntoFileUploadDialog(filePath)
+            if self.typeIntoFileUploadDialog(filePath) == False:
+                return None
             
             # Wait for success message "Upload Completed"
             startTime = datetime.datetime.now().replace(microsecond=0)
-            self.waitUploadCompleted(startTime, timeout)
+            if self.waitUploadCompleted(startTime, timeout) == False:
+                return None
             
             if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
                 return None
                 writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
-                            
+                
             # Fill entry details: name, description, tags
-            self.fillFileUploadEntryDetails(name, description, tags)
+            if self.fillFileUploadEntryDetails(name, description, tags) == False:
+                return None
             
             # Click Save
             if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
@@ -133,14 +136,14 @@ class Upload(Base):
                 writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
                 return None
 
-        except Exception as inst:
+        except Exception:
             self.takeScreeshotGeneric("FAIL_UPLOAD")
-            raise Exception(inst)
+            raise Exception("FAIL_UPLOAD")
         
         
     def waitUploadCompleted(self, startTime, timeout=60):
         if self.wait_for_text(self.UPLOAD_COMPLETED_LABEL, "Upload Completed!", timeout) == False:
-            writeToLog("INFO","Upload didn't finish after timeout: " + timeout + " seconds")
+            writeToLog("INFO","Upload didn't finish after timeout: " + str(timeout) + " seconds")
             return False
         else:
             now = datetime.datetime.now().replace(microsecond=0)
@@ -175,6 +178,8 @@ class Upload(Base):
         
     # Fill basic entry details after upload is completed, only: name, description, tags     
     def fillFileUploadEntryDetails(self, name="", description="", tags=""): 
+        if self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME) == False:
+            return False
         self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME).clear()
         if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
             writeToLog("INFO","FAILED to fill a entry name:'" + name + "'")
@@ -237,6 +242,8 @@ class Upload(Base):
     # Return true if error message ('Oops! Entry could not be created.') appeared after upload    
     def isErrorUploadMessage(self):
         progressBarText = self.get_element_text(self.UPLOAD_ENTRY_PROGRESS_BAR)
+        if progressBarText == None:
+            return False
         if progressBarText == 'Oops! Entry could not be created.':
             return True
         else:
