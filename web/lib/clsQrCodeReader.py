@@ -23,10 +23,7 @@ class QrCodeReader(Base):
                
     # Take screenshot of the whole page, return the full file path of the screenshot 
     def takeQrCodeScreenshot(self):
-        if platform.system() == 'Windows':
-            filePath = LOCAL_QRCODE_TEMP_DIR_WINDOWS + "\\" + generateTimeStamp() + ".png"
-        elif platform.system() == 'Linux':    
-            filePath = LOCAL_QRCODE_TEMP_DIR_LINUX + "/" + generateTimeStamp() + ".png"
+        filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
         if self.takeScreeshot(filePath) == True:
             writeToLog("INFO","Screenshot of the page save to: " + filePath)
             return filePath
