@@ -93,5 +93,31 @@ class Player(Base):
             writeToLog("INFO","FAILED to verify playing, the image and timer are not synchronized; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
             return False
         
-        writeToLog("INFO","Playing varified; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
+        writeToLog("INFO","Playing verified; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
         return True    
+    
+    # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
+    # tolerance - seconds: the deviation from the time and image.
+    # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03')
+    def navigateToEntryClickPlayPauseAndVerify(self, entryName, delay, timeout=30, tolerance=1):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False 
+                  
+                if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
+                    writeToLog("INFO","FAILED to click Play Pause And Verify")
+                    return False
+            else:
+                writeToLog("INFO","Entry name not supplied")
+                return False
+            
+        except NoSuchElementException:
+            return False
+          
+        return True

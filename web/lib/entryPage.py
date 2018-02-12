@@ -196,7 +196,7 @@ class EntryPage(Base):
         return True        
     
     
-    def waitTillMediaIsBeingProcessed(self, timeout=120):
+    def waitTillMediaIsBeingProcessed(self, timeout=150):
         sleep(3)
         self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
         return True

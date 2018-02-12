@@ -33,7 +33,7 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to navigate to my media")
                     return False
                 
-                if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
+                if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entryName) == False:
                     writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
                     return False
              
