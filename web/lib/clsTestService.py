@@ -379,7 +379,7 @@ def cleanTempDownloadFolder():
     
     
 def cleanTempQrCodeFolder():
-    folder = os.path.join(localSettings.LOCAL_QRCODE_TEMP_DIR_WINDOWS, '')
+    folder = os.path.join(localSettings.LOCAL_QRCODE_TEMP_DIR, '')
     return cleanFolder(folder)
                
                
