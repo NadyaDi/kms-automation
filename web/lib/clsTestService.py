@@ -16,6 +16,9 @@ from localSettings import *
 import localSettings
 from logger import *
 import utilityTestFunc
+import shutil
+import glob, os
+
 
 
 #===========================================================================
@@ -52,11 +55,13 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 #===============================================================================
 def initialize(test,driverFix,duration=60):
     clearFilesFromLogFolderPath('.png')
+    cleanTempQrCodeFolder()
+    cleanTempDownloadFolder()
     #setup the test, initialize self and capture
     test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     #write to log we started the test
     driver = initializeDriver(test,driverFix)
-    return (test, capture, driver)        
+    return (test, capture, driver)    
     
 #host and hostBrowser are optional.
 #if we want to run the tests locally the default browser is firefox, we can give a different browser value. 
@@ -368,5 +373,29 @@ def clearFilesFromLogFolderPath(fileType):
         os.remove(os.path.join(path, f))
         
         
+def cleanTempDownloadFolder():
+    folder = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, '')
+    return cleanFolder(folder)
+    
+    
+def cleanTempQrCodeFolder():
+    folder = os.path.join(localSettings.LOCAL_QRCODE_TEMP_DIR_WINDOWS, '')
+    return cleanFolder(folder)
+               
+               
+def cleanFolder(folderPath):
+    for the_file in os.listdir(folderPath):
+        file_path = os.path.join(folderPath, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path): shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
+            return False
+            
+    return True
+
+
 def addGuidToString(value):
     return localSettings.LOCAL_SETTINGS_GUID + '_' + value        

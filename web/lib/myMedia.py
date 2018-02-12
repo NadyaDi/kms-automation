@@ -136,11 +136,19 @@ class MyMedia(Base):
           
                 
     #  @Author: Tzachi Guetta                   
-    def checkSingleEntryInMyMedia(self, entryName):  
+    def serachAndCheckSingleEntryInMyMedia(self, entryName):  
         if self.searchEntryMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to find: '" + entryName + "'")
             return False
         
+        # Click on the Entry's check-box in MyMedia page
+        if self.checkSingleEntryInMyMedia(entryName) == False:
+            return False
+    
+        return True
+    
+    
+    def checkSingleEntryInMyMedia(self, entryName):
         # Click on the Entry's check-box in MyMedia page
         tmp_entry_name = (self.MY_MEDIA_ENTRY_CHECKBOX[0], self.MY_MEDIA_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
         if self.click(tmp_entry_name) == False:
@@ -180,7 +188,7 @@ class MyMedia(Base):
     
     #  @Author: Tzachi Guetta       
     def publishSingleEntryPrivacyToUnlistedInMyMedia(self, entryName):  
-        if self.checkSingleEntryInMyMedia(entryName) == False:
+        if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
         
@@ -207,7 +215,7 @@ class MyMedia(Base):
     
     #  @Author: Tzachi Guetta       
     def handleDisclaimerBeforePublish(self, entryName):  
-        if self.checkSingleEntryInMyMedia(entryName) == False:
+        if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
         
@@ -255,7 +263,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to navigate to my media")
                 return False
             
-            if self.checkSingleEntryInMyMedia(entryName) == False:
+            if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
                 return False
          
