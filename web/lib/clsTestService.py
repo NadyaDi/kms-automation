@@ -54,9 +54,10 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 # Load the driver
 #===============================================================================
 def initialize(test,driverFix,duration=60):
-    clearFilesFromLogFolderPath('.png')
-    cleanTempQrCodeFolder()
-    cleanTempDownloadFolder()
+    if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
+        clearFilesFromLogFolderPath('.png')
+        cleanTempQrCodeFolder()
+        cleanTempDownloadFolder()
     #setup the test, initialize self and capture
     test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     #write to log we started the test
