@@ -64,6 +64,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_UPLOAD_SLIDES_BUTTON                             = ('id', 'upload-fulldeck')
     EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE         = ('xpath', "//label[@class='btn btn-link fileinput-button']")
     EDIT_ENTRY_CUEPOINT_ON_TIMELINE                             = ('xpath', "//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle']")
+    EDIT_ENTRY_UPLOAD_DECK_PROCES                               = ('id', 'inProgressMessage')
     #=============================================================================================================
     
     
@@ -550,7 +551,7 @@ class EditEntryPage(Base):
     
     # Author: Michal Zomper
     # NOT finish
-    def uploadSlidesDeck(self, filePath):
+    def uploadSlidesDeck(self, filePath, totalSlideNum):
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
@@ -571,16 +572,22 @@ class EditEntryPage(Base):
          
         self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
          
-        # Wait until the ptt will upload 
-        sleep(20)
+        # verify ptt start procecing
+        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 20) == False:
+            writeToLog("INFO","FAILED, Can NOT find upload deck processing message")
+            return False
+          
+        # Wait until the ptt will upload   
+        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 120) == False:
+            writeToLog("INFO","FAILED, upload deck processing isn't done after 2 minutes")
+            return False
+            
          
         # Verify cuepoint  were added to time line
-        # Their should be 9 cuepoint
-        if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != 9:
-            writeToLog("INFO","FAILED, Not all cuepoints were added to timeline")
+        if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
+            writeToLog("INFO","FAILED, Not all cuepoints were added to time line")
             return False 
         
-        self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
         writeToLog("INFO","Success presentation was upload and added to time line successfully")
         return True
       
