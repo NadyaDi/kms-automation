@@ -39,7 +39,7 @@ LOCAL_SETTINGS_SELENIUM_GRID_POOL           = LOCAL_SETTINGS_SELENIUM_GRID_POOL_
     
 LOCAL_RUN_MODE                              = "LOCAL"
 REMOTE_RUN_MODE                             = "REMOTE"
-LOCAL_SETTINGS_RUN_MDOE                     = LOCAL_RUN_MODE
+LOCAL_SETTINGS_RUN_MDOE                     = REMOTE_RUN_MODE
 
 
 LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                  = 1328
