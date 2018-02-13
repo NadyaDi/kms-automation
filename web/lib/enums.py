@@ -49,4 +49,16 @@ class IframeName(Enum):
 
     DEFAULT                             = 'DEFAULT'
     PLAYER                              = 'PLAYER'
+    
+    
+class PlayerView(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    PIP                = 'pip'
+    SIDEBYSIDE         = 'sideBySide' 
+    SINGLEVIEW         = 'singleView'
+    SWITCHVIEW         = 'switchView'
+    
+    
 

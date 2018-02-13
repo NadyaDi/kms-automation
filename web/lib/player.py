@@ -19,7 +19,15 @@ class Player(Base):
     PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER                     = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-replay')]")
     PLAYER_GENERIC_PLAY_REPLAY_PASUSE_BUTTON_CONTROLS_CONTAINER = ('xpath', "//button[@data-plugin-name='playPauseBtn']")
     PLAYER_CURRENT_TIME_LABEL                                   = ('xpath', "//div[@data-plugin-name='currentTimeLabel']")
-                                          
+    PLAYER_SLIDE_SIDE_BAR_MENU                                  = ('id','sideBarContainerReminderContainer')
+    PLAYER_SLIDE_IN_SIDE_MENU                                   = ('xpath', "//li[@class='mediaBox slideBox']")
+    PLAYER_VIEW_PIP                                             = ('id','pip')
+    PLAYER_VIEW_SIDEBYSIDE                                      = ('id','sideBySide')
+    PLAYER_VIEW_SINGLEVIEW                                      = ('id','singleView')
+    PLAYER_VIEW_SWITCHVIEW                                      = ('id','switchView')
+    PLAYER_LAYOUT                                               = ('id','kplayer')
+    PLAYER_SIDE_BAR_MENU_PARENT                                 = ('xpath',"//div[@class='nano-content']")   
+    PLAYER_SLIDE_IN_SIDE_BAR_MENU                               = ('xpath',"//li[contains (@class,'mediaBox slideBox')]")                  
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -49,7 +57,7 @@ class Player(Base):
             
             
     # fromActionBar = True, to click pause on the bar below the player
-    # fromActionBar = Flase, to click pause on middle of the screen player
+    # fromActionBar = False, to click pause on middle of the screen player
     def clickPause(self, fromActionBar=True):
         self.switchToPlayerIframe()
         if fromActionBar == True:
@@ -121,3 +129,47 @@ class Player(Base):
             return False
           
         return True
+    
+    # creator: Michal zomper
+    def verifySlidesInPlayerSideBar(self, totalSlideNum):
+        self.switchToPlayerIframe()
+        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+            writeToLog("INFO","FAILED to click on the slide side bar menu")
+            return False
+        
+        # find the parent of all menu slides
+        sideMenu = self.get_element(self.PLAYER_SIDE_BAR_MENU_PARENT)
+        # check if the number of slides is correct
+        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != totalSlideNum: 
+            writeToLog("INFO","FAILED to verify number of slides in side bar menu")
+            return False
+        
+        writeToLog("INFO","SUCCESS verify slides in side bar menu")
+        return True
+    
+    # creator: Michal zomper
+    def changePlayerView(self, playerView = enums.PlayerView.PIP):
+        self.switchToPlayerIframe()
+        #self.hover_on_element(self.PLAYER_LAYOUT)
+        ActionChains(self.driver).move_to_element(self.get_element(self.PLAYER_LAYOUT)).perform()
+        if playerView == enums.PlayerView.PIP:
+            if self.click(self.PLAYER_VIEW_PIP, 30) == False:
+                writeToLog("INFO","FAILED to click on pip view on the player")
+                return False
+
+        if playerView == enums.PlayerView.SIDEBYSIDE:
+            if self.click(self.PLAYER_VIEW_SIDEBYSIDE, 30) == False:
+                writeToLog("INFO","FAILED to click on sidebyside view on the player")
+                return False
+
+        if playerView == enums.PlayerView.SINGLEVIEW:
+            if self.click(self.PLAYER_VIEW_SINGLEVIEW, 30) == False:
+                writeToLog("INFO","FAILED to click on singleView view on the player")
+                return False
+            
+        if playerView == enums.PlayerView.SWITCHVIEW:
+            if self.click(self.PLAYER_VIEW_SWITCHVIEW, 30) == False:
+                writeToLog("INFO","FAILED to click on switchView view on the player")
+                return False
+            
+        writeToLog("INFO","FAILED to click on switchView view on the player")
