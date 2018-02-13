@@ -45,6 +45,7 @@ class Player(Base):
             if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER) == False:
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
                 return False
+            
         return True     
             
             
@@ -56,6 +57,7 @@ class Player(Base):
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER) == False:
                 writeToLog("INFO","FAILED to click Pause; fromActionBar = " + str(fromActionBar))
                 return False
+            
         return True      
     
     
@@ -64,10 +66,15 @@ class Player(Base):
         self.switchToPlayerIframe()
         if self.clickPlay() == False:
             return False
+        
         # Wait for delay
-        self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout)
+        if self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout) == False:
+            writeToLog("INFO","FAILED to seek timer to: '" + delay + "'")
+            return False
+        
         if self.clickPause() == False:
             return False
+        
         return True
     
     
@@ -95,6 +102,7 @@ class Player(Base):
         
         writeToLog("INFO","Playing verified; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
         return True    
+    
     
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
     # tolerance - seconds: the deviation from the time and image.
