@@ -289,7 +289,9 @@ class MyMedia(Base):
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
          
         sleep(2)            
-        self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30)
+        if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
+            writeToLog("DEBUG","FAILED to click on publish button")
+            return False        
      
         sleep(2)    
         # Click if category list is empty

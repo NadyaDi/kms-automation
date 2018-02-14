@@ -4,6 +4,7 @@ import utilityTestFunc
 from selenium.common.exceptions import NoSuchElementException, WebDriverException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
+from selenium.common.exceptions import InvalidElementStateException
 
 from logger import *
 from builtins import str
@@ -290,36 +291,42 @@ class Base:
     # When you have more then one elemnet found with your locator, use multipleElements = True
     # it will search for element from the elements list, and find the one with size not 0
     def click(self, locator, timeout=10, multipleElements=False):
-        if multipleElements == True:
-            elements = self.get_elements(locator)
-            for el in elements:
-                if el.size['width']!=0 and el.size['height']!=0:
-                    el.click()
-                    return True
-            return False
-        element = self.wait_visible(locator, timeout)
-        if element == False:
-            return False
-        else:
-            element.click()
-            return True
+        try:
+            if multipleElements == True:
+                elements = self.get_elements(locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.click()
+                        return True
+                return False
+            element = self.wait_visible(locator, timeout)
+            if element == False:
+                return False
+            else:
+                element.click()
+                return True
+            
+        except InvalidElementStateException:
+            writeToLog("DEBUG","Element was found, but FAILED to click")
+            return False        
     
     
     # Click on given element.
     # When you have more then one elemnet (= list of elements) found with your locator, use multipleElements = True
     # it will search for element from the elements list, and find the one with size not 0       
     def clickElement(self, element, multipleElements=False):
-        if multipleElements == True:
-            for el in element:
-                if el.size['width']!=0 and el.size['height']!=0:
-                    el.click()
-                    return True
-            return False
-        if element == None:
-            return False
-        else:
-            element.click()
-            return True
+            if multipleElements == True:
+                for el in element:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.click()
+                        return True
+                return False
+            if element == None:
+                return False
+            else:
+                element.click()
+                return True
+     
                     
     # click with offset
 #     def click_with_offset(self, locator, x, y):
