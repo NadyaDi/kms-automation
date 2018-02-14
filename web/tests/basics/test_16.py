@@ -105,8 +105,7 @@ class Test:
         try:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName + '_Downloaded')
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryName + '_Downloaded'])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
