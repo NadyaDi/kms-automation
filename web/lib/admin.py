@@ -25,6 +25,8 @@ class Admin(Base):
     ADMIN_LOGOUT_BUTTON                             = ('id', 'logout-button')
     ADMIN_DOWNLOAD_ADD                              = ('xpath', "//a[@class='add']")
     ADMIN_DOWNLOAD_FLAVOR_NAME                      = ('xpath', "//input[@data-name='name']")
+    ADMIN_DESCRIPTION_REQUIRED_ENABLE               = ('id', 'descriptionRequired')
+    ADMIN_TAGS_REQUIRED_ENABLE                      = ('id', 'tagsRequired')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -205,3 +207,38 @@ class Admin(Base):
                 writeToLog("INFO","the following Flavor was added: " + flavor)
                 
         return True
+    
+    
+    # @Autor: Inbar Willman
+    # isEnabled - True to enable, False to disable
+    def enableRequiredField(self, isEnableDescripiton, isEnableTags, requiredFieldDescription, requiredFieldTags):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            return False
+         
+        #Navigate to required fields in metadata module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/metadata#descriptionRequired') == False:
+            writeToLog("INFO","FAILED to load Admin Metadata page")
+            return False  
+         
+        #Enable/Disable description field
+        if requiredFieldDescription == True:
+            selection_description = self.convertBooleanToYesNo(isEnableDescripiton)
+            if self.select_from_combo_by_text(self.ADMIN_DESCRIPTION_REQUIRED_ENABLE, selection_description) == False:
+                writeToLog("INFO","FAILED to set descriptionRequired as: " + str(selection_description))
+                return False 
+         
+        #Enable/Disable tag field   
+        if requiredFieldTags == True:
+            selection_tags = self.convertBooleanToYesNo(isEnableTags)
+            if self.select_from_combo_by_text(self.ADMIN_TAGS_REQUIRED_ENABLE, selection_tags) == False:
+                writeToLog("INFO","FAILED to set tagsRequired as: " + str(selection_tags))
+                return False
+         
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save required fields")
+            return False 
+ 
+        return True    
+    
