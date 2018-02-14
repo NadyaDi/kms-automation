@@ -53,7 +53,7 @@ class Test:
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
-            self.filePathDownloaded = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + self.entryName + "_" + '(' + self.flavorsList[0] + ')'  + ".mp4"
+            self.filePathDownloaded = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, self.entryName + "_" + '(' + self.flavorsList[0] + ')'  + ".mp4")
 #           TO-DO: move the below line to "crate evn test"
 #           self.common.admin.adminDownloadMedia(True)
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -89,7 +89,7 @@ class Test:
                 return
               
             writeToLog("INFO","Step 2: Going to verify uploaded entry")
-            if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName + '_Downloaded', "0:05") == False:
+            if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName + '_Downloaded', "0:07") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to verify uploaded entry")
                 return
@@ -105,7 +105,7 @@ class Test:
         try:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
-            self.common.myMedia.deleteSingleEnthryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName + '_Downloaded')
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:

@@ -62,6 +62,9 @@ else:
     
 if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
+    LOCAL_SETTINGS_TEMP_PATH                = 'C:\\selenium\\kms-automation\\web\\temp'
+    LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'C:\\selenium\\kms-automation\\web\\temp\\downloads'
+    LOCAL_QRCODE_TEMP_DIR                   = 'C:\\selenium\\kms-automation\\web\\screenShots\\qrCode'
     
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'

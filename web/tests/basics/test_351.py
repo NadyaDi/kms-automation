@@ -31,6 +31,7 @@ class Test:
     entryDescription = None
     entryTags = None 
     slideDeckFilePath = None
+    totalSlideNum = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,29 +52,39 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Slide Deck Upload")
             self.entryDescription = "Description"
             self.entryTags = "Tags,"
-            self.filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+            self.filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
             self.slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
             self.whereToPublishFrom = "Entry Page"
+            self.totalSlideNum = 9
 
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
                 
-#             writeToLog("INFO","Step 1: Going to upload entry")
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
-#                 return
-#                      
-#             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
-#             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-#                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-#                 return False
-#             
-#             writeToLog("INFO","Step 3: Going add upload slide deck")
-#             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath) == False:
-#                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
-#                 return False
-#                           
+            self.common.player.verifySlidesInPlayerSideBar(self.totalSlideNum) 
+            if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                return     
+                
+                
+           
+                
+            writeToLog("INFO","Step 1: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                return
+                      
+            writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
+                writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
+                return False
+             
+            writeToLog("INFO","Step 3: Going add upload slide deck")
+            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.totalSlideNum) == False:
+                writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
+                return False
+                           
             writeToLog("INFO","Step 4: Going add upload slide deck")
             if self.common.entryPage.VerifySlidesonThePlayerInEntryPage("118379DC_Slide Deck Upload")  == False:
                 writeToLog("INFO","Step 4: FAILED to verify slides on the player")

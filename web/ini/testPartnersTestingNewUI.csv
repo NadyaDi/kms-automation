@@ -1,17 +1,17 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_302,Publish to channel multiple,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_345,Add collaborator co edit - details tab,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_346,Add collaborator co edit - options tab,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_347,Add collaborator co edit - thumbnail tab,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_348,Add collaborator co edit - cpation tab,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_349,Add collaborator co publish,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_350,Add collaborator co edit,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_351,Slide Deck Upload,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_1556,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_876,add Publishing Schedule during upload,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_869,add Publishing  - playlist flows,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_883,add Publishing Schedule via edit entry page,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_1555,Disclaimer - Before upload,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_16,Download Source File,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_1557,importchannel,1722461,mediaspace.kaltura.com,webcast@mailinator.com,Automation1!,Elad,123456
+test_302,Publish to channel multiple,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_345,Add collaborator co edit - details tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_346,Add collaborator co edit - options tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_347,Add collaborator co edit - thumbnail tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_348,Add collaborator co edit - cpation tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_349,Add collaborator co publish,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_350,Add collaborator co edit,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_351,Slide Deck Upload,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1556,Disclaimer - Before publish,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_876,Disclaimer - Before publish,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_869,add Publishing  - playlist flows,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_883,add Publishing Schedule via edit entry page,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_1555,Disclaimer - Before upload,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_16,Download Source File,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_1557,importchannel,1722461,mediaspace.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Elad,123456
 test_1594,Entry required field,2296941-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Alika1987!,inbar.willman@kaltura.com,Alika1987!
