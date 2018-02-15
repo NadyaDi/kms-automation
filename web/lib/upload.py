@@ -74,7 +74,7 @@ class Upload(Base):
         return entryID
     
     
-#  @Authors: Oleg Sigalov &  Tzachi Guetta
+    # @Authors: Oleg Sigalov &  Tzachi Guetta
     def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False):
         try:
             # Click Add New
