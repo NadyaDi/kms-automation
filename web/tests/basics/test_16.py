@@ -83,7 +83,6 @@ class Test:
                 return
             
             sleep(15)
-              
             writeToLog("INFO","Step 2: Going to upload the downloaded  Flavor")
             if self.common.upload.uploadEntry(self.filePathDownloaded, self.entryName + '_Downloaded', "downloaded description", "downloadedtags1,downloadedtags2,") == None:
                 self.status = "Fail"
