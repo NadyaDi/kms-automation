@@ -93,11 +93,11 @@ class Player(Base):
         if self.clickPlayAndPause(delay, timeout) == False:
             return False
         
-        qrCodeSc = self.clsCommon.qacode.takeQrCodeScreenshot()
+        qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
         if qrCodeSc == False:
             return False
         
-        result = self.clsCommon.qacode.resolveQrCode(qrCodeSc)
+        result = self.clsCommon.qrcode.resolveQrCode(qrCodeSc)
         if result == None:
             return False
         
