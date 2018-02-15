@@ -551,7 +551,7 @@ class EditEntryPage(Base):
     
     # Author: Michal Zomper
     # NOT finish
-    def uploadSlidesDeck(self, filePath, totalSlideNum):
+    def uploadSlidesDeck(self, filePath, mySlidesList):
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
@@ -572,20 +572,20 @@ class EditEntryPage(Base):
          
         self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
          
-        # verify ptt start procecing
+        # verify ptt start processing
         if self.wait_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 20) == False:
             writeToLog("INFO","FAILED, Can NOT find upload deck processing message")
             return False
           
         # Wait until the ptt will upload   
-        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 120) == False:
+        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 180) == False:
             writeToLog("INFO","FAILED, upload deck processing isn't done after 2 minutes")
             return False
-            
          
-        # Verify cuepoint  were added to time line
-        if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
-            writeToLog("INFO","FAILED, Not all cuepoints were added to time line")
+        # Verify cuepoint were added on the player
+        if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
+        #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
+            writeToLog("INFO","FAILED, Not all cuepoints were verify")
             return False 
         
         writeToLog("INFO","Success presentation was upload and added to time line successfully")

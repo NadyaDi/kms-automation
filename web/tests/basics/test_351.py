@@ -31,7 +31,7 @@ class Test:
     entryDescription = None
     entryTags = None 
     slideDeckFilePath = None
-    totalSlideNum = None
+    slidesQrCodeAndTimeList = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -55,42 +55,48 @@ class Test:
             self.filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
             self.slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
             self.whereToPublishFrom = "Entry Page"
-            self.totalSlideNum = 9
-
+            # The key is the qrcode result and the value is the time that the slide need to appear in
+            # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
+            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09'}
+            
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                
-            self.common.player.verifySlidesInPlayerSideBar(self.totalSlideNum) 
-            if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return     
-                
-                
-           
-                
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                      
+                       
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return False
-             
+              
             writeToLog("INFO","Step 3: Going add upload slide deck")
-            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.totalSlideNum) == False:
+            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return False
-                           
-            writeToLog("INFO","Step 4: Going add upload slide deck")
-            if self.common.entryPage.VerifySlidesonThePlayerInEntryPage("118379DC_Slide Deck Upload")  == False:
-                writeToLog("INFO","Step 4: FAILED to verify slides on the player")
+                            
+            writeToLog("INFO","Step 4: Going to navigate to edit Entry Page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
+                writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return False
-
+ 
+            writeToLog("INFO","Step 5: Going to switch the player view so that the player will be in the big window and the slides in the small window")
+            if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to switch the player view")
+                return  
             
+            index = 0
+            writeToLog("INFO","Step 6: Going to check 3 slide (slide from the start / middle / end of the video) and see that they appear at the correct time")
+            for i in range(3):
+                index = index + i + 2 
+                if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 6: FAILED to verify slide")
+                    return  
+                    
             ##################################################################
             print("Test 'Slide Deck Upload' was done successfully")
         # if an exception happened we need to handle it and fail the test       
@@ -100,11 +106,10 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.login.logOutOfKMS()
-            self.common.loginAsUser()
+            self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
         except:
-            pass            
+            pass       
         clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)
