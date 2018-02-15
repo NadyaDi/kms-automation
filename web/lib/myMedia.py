@@ -119,8 +119,13 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to click Action -> Delete")
             return False
         
-        self.clsCommon.general.waitForLoaderToDisappear()
+        if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False
         
+        self.clsCommon.general.waitForLoaderToDisappear()    
+                     
+        # Printing the deleted entries       
         if type(entriesNames) is list: 
             entries = ", ".join(entriesNames)
             writeToLog("INFO","The following entries were deleted: " + entries + "")
