@@ -37,7 +37,8 @@ class Test:
     entryDescription = "description"
     entryTags = "tag1,"
     channelList = [('test 111')]
-    filePath = os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'media','videos','QR_Code_10sec.mp4')
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4' 
+    
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
