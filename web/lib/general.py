@@ -17,6 +17,7 @@ class General(Base):
     USER_MENU_MY_MEDIA_BUTTON               = ('xpath', "//a[@href='/my-media' and @role='menuitem']")
     USER_MENU_MY_CHANNELS_BUTTON            = ('xpath', "//a[@href='/my-channels' and @role='menuitem']")
     USER_MENU_MY_PLAYLISTS_BUTTON           = ('xpath', "//a[@href='/my-playlists' and @role='menuitem']")
+    USER_MENU_MY_HISTORY_BUTTON             = ('xpath', "//a[@href='/history' and @role='menuitem']")
     #=============================================================================================================
 
     def waitForLoaderToDisappear(self, timeout=60):
