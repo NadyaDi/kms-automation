@@ -73,7 +73,7 @@ class Player(Base):
         return True      
     
     
-    # delay - (string) time to play in seconds in format: M:SS (fro example, 3 secodns = '0:03'
+    # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     def clickPlayAndPause(self, delay, timeout=30):
         self.switchToPlayerIframe()
         if self.clickPlay() == False:
@@ -145,10 +145,12 @@ class Player(Base):
     # creator: Michal zomper
     def verifySlidesInPlayerSideBar(self, mySlidesList):
         self.switchToPlayerIframe()
+        sleep(1)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the slide side bar menu")
             return False
-           
+        
+        sleep(2) 
         # find the parent of all menu slides
         sideMenu = self.get_element(self.PLAYER_SIDE_BAR_MENU_PARENT)
         # check if the number of slides is correct
@@ -156,6 +158,8 @@ class Player(Base):
             writeToLog("INFO","FAILED to verify number of slides in side bar menu")
             return False
          
+        sleep(2)
+        slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         sleep(2)
         # Verify that the slides time is correct
         for slide in mySlidesList:
@@ -169,12 +173,13 @@ class Player(Base):
                 scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
                 action = ActionChains(self.driver)
                 action.move_to_element(scroller)
-                action.move_by_offset( 0, scroller.size['height'])
+                action.move_by_offset(0, slideHeight)
                 action.click_and_hold()
                 action.release()
                 action.perform()
                 
         writeToLog("INFO","SUCCESS verify slides in side bar menu")
+        self.clsCommon.base.switch_to_default_content()
         return True
     
     # creator: Michal zomper
@@ -203,14 +208,15 @@ class Player(Base):
                 return False
             
         writeToLog("INFO","SUCCESS to change player view")
+        self.clsCommon.base.switch_to_default_content()
         return True
-    
+        
     # creator: Michal zomper
     def verifySlideDisplayAtTheCorrctTime(self, timeToStop, qrResult):
         self.switchToPlayerIframe()
         
         sleep(2)
-        if self.clickPlayAndPause(timeToStop, timeout=30) == False:
+        if self.clickPlayAndPause(timeToStop, timeout=120) == False:
             writeToLog("INFO","FAILED to click on the player")
             return False
         #TODO
@@ -223,11 +229,12 @@ class Player(Base):
         playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
         # 
         if (playerTime == videoImage == slideImage == qrResult) == False:
-            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: "+  playerTime + " videoImage: " + videoImage + " slideImage: " + slideImage)
+            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: "+  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
             return False
         
         writeToLog("INFO","SUCCESS, slide appear in the correct time")
         return True
+
 
     # creator: Michal zomper
     def verifySlidesDisplayAtTheCorrctTime(self, mySlidesList):

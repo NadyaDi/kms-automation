@@ -27,6 +27,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON                          = ('id', "EntryOptions-submit")
     EDIT_ENTRY_SAVE_BUTTON_FLAVOR                               = ('id', "EditFlavors-submit")
     EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath', "//div[@class='alert alert-success ']")
+    EDIT_ENTRY_DETAILS_TAB                                      = ('id', 'details-tab')
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
@@ -273,7 +274,12 @@ class EditEntryPage(Base):
     # Author: Michal Zomper    
     # tabName - enums.EditEntryPageTabName    
     def clickOnEditTab(self, tabName):
-        if tabName == enums.EditEntryPageTabName.OPTIONS: 
+        if tabName == enums.EditEntryPageTabName.DETAILS:
+            if self.click(self.EDIT_ENTRY_DETAILS_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on details tab")
+                return False
+            
+        elif tabName == enums.EditEntryPageTabName.OPTIONS: 
             if self.click(self.EDIT_ENTRY_OPTION_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on option tab")
                 return False
@@ -307,7 +313,6 @@ class EditEntryPage(Base):
             return False
         
         return True   
-
 
       
     # Author: Michal Zomper 
@@ -578,8 +583,8 @@ class EditEntryPage(Base):
             return False
           
         # Wait until the ptt will upload   
-        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 180) == False:
-            writeToLog("INFO","FAILED, upload deck processing isn't done after 2 minutes")
+        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 300) == False:
+            writeToLog("INFO","FAILED, upload deck processing isn't done after 5 minutes")
             return False
          
         # Verify cuepoint were added on the player
@@ -631,3 +636,22 @@ class EditEntryPage(Base):
             return False
           
         return True
+
+    def navigateToEntryPageFromEditEntryPage(self, entryName):
+        if self.clickOnEditTab(enums.EditEntryPageTabName.DETAILS) == False:
+            writeToLog("INFO","FAILED to click on the details tab")
+            return False
+        
+        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on go to media button")
+            return False
+            
+        tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        # Wait page load - wait for entry title
+        if self.wait_visible(tmp_entry_name, 15) == False:
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            return False
+        
+        writeToLog("INFO","Success, entry page open")
+        return True
+        
