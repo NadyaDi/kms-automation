@@ -524,8 +524,14 @@ class Base:
             
             
     def switch_to_default_content(self):
-        localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.DEFAULT
-        self.driver.switch_to.default_content()
+        try:
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.DEFAULT
+            self.driver.switch_to.default_content()
+            return True
+        except Exception:
+            writeToLog("INFO","FAILED to switch to default content")
+            return False        
+
         
         
     def setImplicitlyWaitToDefault(self):
@@ -581,3 +587,6 @@ class Base:
         else:
             raise Exception("Unknown boolean expression")
         return strExp
+    
+    
+        
