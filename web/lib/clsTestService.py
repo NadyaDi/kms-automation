@@ -242,6 +242,7 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
 # the function handles exception inst, mark the test as fail and writes the error in the log 
 #===========================================================================================
 def handleException(test,inst,startTime):
+    createScreenshot(test, 'EXCEPTION')
     log_exception(inst)
     test.status = "Fail"
     return test.status
@@ -255,8 +256,6 @@ def basicTearDown(test):
     
     try:
         if (test.driver != None):
-            #if (test.status == "Fail"): TODO: OLEG take last screenshot if failed 
-            #    createScreenshot(test)
             test.driver.quit()
             writeToLog("DEBUG", "tearDown: closed web driver")
         if (test.myProxy != None):
@@ -306,14 +305,12 @@ def disableLocalSystemProxyViaRegistry(self):
 #===============================================================================
 # the function takes a screenshot of the test at the end of it, and save it
 #===============================================================================
-def createScreenshot(test):
-    LOG_FOLDER_PREFIX = ""
-    if (os.getenv('BUILD_ID',"") != ""):
-        LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
+def createScreenshot(test, scName=''):
+    if scName != '':
+        scName = '_' + scName
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
-        LOG_FOLDER_PREFIX = LOG_FOLDER_PREFIX + "/" + str(runningTestNum) + "/" 
-    pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,str(runningTestNum)+ "_" + localSettings.LOCAL_RUNNING_BROWSER + '.png'))
+        pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',str(runningTestNum) + scName + '.png'))
     test.driver.save_screenshot(pngPath)          
     
     
