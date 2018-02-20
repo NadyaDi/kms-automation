@@ -39,6 +39,8 @@ class Common():
     myPlaylists     = None
     player          = None
     myHistory       = None
+    qrcode          = None
+
     
     def __init__(self, driver):
         self.driver             = driver
@@ -55,8 +57,9 @@ class Common():
         self.channel            = Channel(self, driver)
         self.myPlaylists        = MyPlaylists(self, driver)
         self.player             = Player(self, driver)
-        self.qacode             = QrCodeReader(self, driver)
         self.myHistory          = MyHistory(self, driver)
+        self.qrcode             = QrCodeReader(self, driver)
+
         
     #=============================================================================================================
     # Locators:

@@ -24,6 +24,7 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_CHECKBOX                                     = ('xpath', '//*[@title = "ENTRY_NAME"]')
     MY_MEDIA_ACTIONS_BUTTON                                     = ('id', 'actionsDropDown')
     MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON                      = ('id', 'Publish')
+    MY_MEDIA_ACTIONS_BUTTON_DELETE_BUTTON                       = ('id', 'tab-Delete')
     MY_MEDIA_ACTIONS_BUTTON_ADDTOPLAYLIST_BUTTON                = ('id', 'Addtoplaylists')
     MY_MEDIA_PUBLISH_UNLISTED                                   = ('id', 'unlisted')
     MY_MEDIA_PUBLISH_SAVE_BUTTON                                = ('xpath', "//button[@class='btn btn-primary pblSave' and text()='Save']")
@@ -89,15 +90,50 @@ class MyMedia(Base):
         
         writeToLog("INFO","Entry: '" + entryName + "' Was Deleted")
         return True
-#         
-#     def deleteMultipleEntries(self):
-#     
-    def showAllEntriesInMyMedia(self, timeout):
-        # Navigate to My Media
-        self.navigateToMyMedia()
-        # Press END key till "There are no more media items." is visible
-        # Press Home
-
+    
+    # The following method can handle list of entries and a single entry:
+    #    in order to delete list of entries pass a List[] of entries name, for single entry - just pass the entry name
+    #    also: the method will navigate to My media
+    # Known limitation: entries MUST be presented on the first page of my media
+    def deleteEntriesFromMyMedia(self, entriesNames):
+        if self.navigateToMyMedia() == False:
+            writeToLog("INFO","FAILED Navigate to my media page")
+            return False
+        
+        # Checking if entriesNames list type
+        if type(entriesNames) is list: 
+            for entryName in entriesNames: 
+                if self.checkSingleEntryInMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry in my-media page")
+                    return False
+                
+                writeToLog("INFO","Going to delete Entry: " + entryName)
+        else:
+            if self.checkSingleEntryInMyMedia(entriesNames) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry in my-media page")
+                    return False
+                
+            writeToLog("INFO","Going to delete Entry: " + entriesNames)
+        
+        if self.clickActionsAndDeleteFromMyMedia() == False:
+            writeToLog("INFO","FAILED to click Action -> Delete")
+            return False
+        
+        if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()    
+                     
+        # Printing the deleted entries       
+        if type(entriesNames) is list: 
+            entries = ", ".join(entriesNames)
+            writeToLog("INFO","The following entries were deleted: " + entries + "")
+        else:
+            writeToLog("INFO","The following entry was deleted: " + entriesNames + "")
+            
+        return True
+     
         
     def searchEntryMyMedia(self, entryName):
         # Navigate to My Media
@@ -120,6 +156,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
                 
         return True
+    
     
     # Author: Michal Zomper    
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
@@ -171,6 +208,21 @@ class MyMedia(Base):
         
         sleep(1)
         return True
+    
+    
+    #  @Author: Tzachi Guetta       
+    def clickActionsAndDeleteFromMyMedia(self):
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Action button")
+            return False 
+        
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON_DELETE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Publish button")
+            return False
+        
+        sleep(1)
+        return True
+    
     
     #  @Author: Tzachi Guetta
     def clickActionsAndAddToPlaylistFromMyMedia(self):

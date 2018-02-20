@@ -1,6 +1,8 @@
 from base import *
 import clsTestService
 import enums
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 
 class Player(Base):
@@ -27,7 +29,9 @@ class Player(Base):
     PLAYER_VIEW_SWITCHVIEW                                      = ('id','switchView')
     PLAYER_LAYOUT                                               = ('id','kplayer')
     PLAYER_SIDE_BAR_MENU_PARENT                                 = ('xpath',"//div[@class='nano-content']")   
-    PLAYER_SLIDE_IN_SIDE_BAR_MENU                               = ('xpath',"//li[contains (@class,'mediaBox slideBox')]")                  
+    PLAYER_SLIDE_IN_SIDE_BAR_MENU                               = ('xpath',"//li[contains (@class,'mediaBox slideBox')]")
+    PLAYER_SILDE_START_TIME                                     = ('xpath', "//span[contains(text(), 'SLIDE_TIME')]") #  When using this locator, replace 'SLIDE_TIME' string with your real slide_time
+    PLAYER_SCROLLER_SIDE_BAR_MENU                               = ('xpath', "//div[@class='nano-slider']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -93,11 +97,11 @@ class Player(Base):
         if self.clickPlayAndPause(delay, timeout) == False:
             return False
         
-        qrCodeSc = self.clsCommon.qacode.takeQrCodeScreenshot()
+        qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
         if qrCodeSc == False:
             return False
         
-        result = self.clsCommon.qacode.resolveQrCode(qrCodeSc)
+        result = self.clsCommon.qrcode.resolveQrCode(qrCodeSc)
         if result == None:
             return False
         
@@ -139,19 +143,37 @@ class Player(Base):
         return True
     
     # creator: Michal zomper
-    def verifySlidesInPlayerSideBar(self, totalSlideNum):
+    def verifySlidesInPlayerSideBar(self, mySlidesList):
         self.switchToPlayerIframe()
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the slide side bar menu")
             return False
-        
+           
         # find the parent of all menu slides
         sideMenu = self.get_element(self.PLAYER_SIDE_BAR_MENU_PARENT)
         # check if the number of slides is correct
-        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != totalSlideNum: 
+        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList): 
             writeToLog("INFO","FAILED to verify number of slides in side bar menu")
             return False
-        
+         
+        sleep(2)
+        # Verify that the slides time is correct
+        for slide in mySlidesList:
+            slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', mySlidesList[slide]))
+            if self.wait_visible(slide_time) == False:
+                writeToLog("INFO","FAILED to verify slide time in the slide menu")
+                return False
+
+            # After the 4 slide we need to move the side menu scroller down so we can see the rest of the slides
+            if slide > '3':
+                scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
+                action = ActionChains(self.driver)
+                action.move_to_element(scroller)
+                action.move_by_offset( 0, scroller.size['height'])
+                action.click_and_hold()
+                action.release()
+                action.perform()
+                
         writeToLog("INFO","SUCCESS verify slides in side bar menu")
         return True
     
@@ -180,4 +202,44 @@ class Player(Base):
                 writeToLog("INFO","FAILED to click on switchView view on the player")
                 return False
             
-        writeToLog("INFO","FAILED to click on switchView view on the player")
+        writeToLog("INFO","SUCCESS to change player view")
+        return True
+    
+    # creator: Michal zomper
+    def verifySlideDisplayAtTheCorrctTime(self, timeToStop, qrResult):
+        self.switchToPlayerIframe()
+        
+        sleep(2)
+        if self.clickPlayAndPause(timeToStop, timeout=30) == False:
+            writeToLog("INFO","FAILED to click on the player")
+            return False
+        #TODO
+        #videoImage = self.cropImage
+        #slideImage = self.cropI,age 
+        videoImage = qrResult
+        slideImage = qrResult 
+        
+        # Get the time in the player time line
+        playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
+        # 
+        if (playerTime == videoImage == slideImage == qrResult) == False:
+            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: "+  playerTime + " videoImage: " + videoImage + " slideImage: " + slideImage)
+            return False
+        
+        writeToLog("INFO","SUCCESS, slide appear in the correct time")
+        return True
+
+    # creator: Michal zomper
+    def verifySlidesDisplayAtTheCorrctTime(self, mySlidesList):
+        self.switchToPlayerIframe()
+        
+        for slide in mySlidesList:
+            if self.verifySlideDisplayAtTheCorrctTime(slide, mySlidesList[slide][1:]) == False:
+                writeToLog("INFO","FAILED to verify slide:" + slide + " at time: " + mySlidesList[slide][1:])
+                return False
+            
+        writeToLog("INFO","SUCCESS, all slides are verified and appear at the correct time")
+        return True
+                
+        
+        

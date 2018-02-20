@@ -33,7 +33,7 @@ class Test:
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
     flavorsList = ["Source", "Mobile (3GP)", "Basic/Small - WEB/MBL (H264/400)","Basic/Small - WEB/MBL (H264/600)", "SD/Small - WEB/MBL (H264/900)", "SD/Large - WEB/MBL (H264/1500)","HD/720 - WEB (H264/2500)","HD/1080 - WEB (H264/4000)","WebM"] 
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4' 
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -49,7 +49,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,captur,self.driver = clsTestService.initialize(self, driverFix)
+            self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
@@ -80,14 +80,15 @@ class Test:
             if self.common.entryPage.downloadAFlavor(self.entryName, self.flavorsList[0]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to Download the flavor")
-                return                  
-              
+                return
+            
+            sleep(15)
             writeToLog("INFO","Step 2: Going to upload the downloaded  Flavor")
             if self.common.upload.uploadEntry(self.filePathDownloaded, self.entryName + '_Downloaded', "downloaded description", "downloadedtags1,downloadedtags2,") == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload the downloaded  Flavor")
                 return
-              
+               
             writeToLog("INFO","Step 2: Going to verify uploaded entry")
             if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName + '_Downloaded', "0:07") == False:
                 self.status = "Fail"
@@ -105,8 +106,7 @@ class Test:
         try:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName + '_Downloaded')
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryName + '_Downloaded'])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -74,9 +74,11 @@ class Upload(Base):
         return entryID
     
     
-#  @Authors: Oleg Sigalov &  Tzachi Guetta
+    # @Authors: Oleg Sigalov &  Tzachi Guetta
     def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False):
         try:
+            # Convert path for Windows
+            filePath = filePath.replace("/", "\\")     
             # Click Add New
             if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
                 writeToLog("DEBUG","FAILED to click on 'Add New' button")

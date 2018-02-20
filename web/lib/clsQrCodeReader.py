@@ -137,10 +137,8 @@ class QrCodeReader(Base):
                     image = Image.open(image_file)
                     image.load()
                     codes = zbarlight.scan_codes('qrcode', image)
-                    writeToLog("DEBUG", "DEBUG 1: " + str(codes[0]))
                     rcArr = str(codes[0]).split("'")
                     rc = str(rcArr[1])
-                    writeToLog("DEBUG", "DEBUG 1: " + rc)
                     return rc
                 except:
                     return
