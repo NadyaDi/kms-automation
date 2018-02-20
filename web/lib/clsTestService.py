@@ -182,7 +182,7 @@ def updatePlatforms(test_num):
                         localSettings.LOCAL_SETTINGS_IS_NEW_UI = False
     return supported_platforms        
 
-    
+
 #===============================================================================
 # function to setup the following things:
 #  - capture traffic object
