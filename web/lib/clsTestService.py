@@ -58,9 +58,14 @@ def initialize(test,driverFix,duration=60):
         clearFilesFromLogFolderPath('.png')
         cleanTempQrCodeFolder()
         cleanTempDownloadFolder()
+        
+    # Update localSetting partner details(base URL, credentials, Practitest ID
+    if updateTestCredentials('test_' + test.testNum) == False:
+        writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
+        raise Exception("Unable to find credentials for test")         
     #setup the test, initialize self and capture
     test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
-    #write to log we started the test
+    # Strat driver - Open browser and navigate to base URL
     driver = initializeDriver(test,driverFix)
     return (test, capture, driver)    
     
@@ -180,11 +185,6 @@ def updatePlatforms(test_num):
                         localSettings.LOCAL_SETTINGS_IS_NEW_UI = True
                     else:
                         localSettings.LOCAL_SETTINGS_IS_NEW_UI = False
-                
-        # Update localSetting partner details(base URL, credentials, Practitest ID
-        if updateTestCredentials(case_str) == False:
-            writeToLog("INFO","Unable to find credentials for test: '" + case_str + "'")
-            raise Exception("Unable to find credentials for test")
     return supported_platforms        
 
     
@@ -216,6 +216,7 @@ def updateTestCredentials(case_str):
                 localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
                 localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL     = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'              
                 found = True
+                break
     return found          
 #===============================================================================
 # function to setup the following things:
