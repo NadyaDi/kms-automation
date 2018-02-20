@@ -19,6 +19,8 @@ class MyHistory(Base):
     #=============================================================================================================
     MY_HISTORY_SEARCH_BAR                                         = ('id', 'searchBar')
     MY_HISTORY_RESULTS_ENTRY                                      = ('xpath', '//span[@class="entry-name" and text() = "ENTRY_NAME"]')
+    MY_HISTORY_REMOVE_ENTRY_BUTTON                                = ('class_name', 'icon-trash icon-white')
+    MY_HISTORY_ENTRY_SECTION_PARENT                               = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::div[@class='fullsize']")  
     #=============================================================================================================
     def getSearchBarElement(self):
         return self.get_element(self.MY_HISTORY_SEARCH_BAR)    
@@ -82,3 +84,15 @@ class MyHistory(Base):
                 return True
         writeToLog("INFO","FAILED to find entry in My History")
         return False
+    
+    
+    #  @Author: Inbar Willman
+    def removeEntryFromWatchListMyHistory(self, entryName):
+        tmpParent = (self.MY_HISTORY_ENTRY_SECTION_PARENT[0], self.MY_HISTORY_ENTRY_SECTION_PARENT[1].replace('ENTRY_NAME', entryName))
+        parent = self.get_element(tmpParent)
+        remove_btn_list = self.get_child_elements(parent, self.MY_HISTORY_REMOVE_ENTRY_BUTTON)
+        remove_btn = remove_btn_list[1]
+        self.clickElement(remove_btn)
+
+        return True
+    
