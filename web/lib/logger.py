@@ -75,6 +75,11 @@ def writeToLog(logLevel, logLine):
 # the function writes to the log that we started the test, on browser X and player version Y. we allso write the test url
 #===============================================================================
 def logStartTest(test,browser):
+    # Update localSetting partner details(base URL, credentials, Practitest ID
+    if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
+        writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
+        raise Exception("Unable to find credentials for test") 
+        
     os.environ["RUNNING_TEST_ID"] = test.testNum
     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO","test_" + test.testNum + " Start on browser " + browser)
