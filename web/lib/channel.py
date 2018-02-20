@@ -46,7 +46,11 @@ class Channel(Base):
     CHANNEL_IMPORT_BUTTON                           = ('xpath', "//a[@class='btn btn-primary importButton']")
     CHANNEL_IMPORT_ALERT                            = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Importing completed successfully. To refresh the page and view the imported entries')]")
     CHANNEL_CLICKHERE_REFRESH_BUTTON                = ('xpath', "//a[@href='#' and text()='click here.']")
-    
+    CHANNEL_ADD_TO_CHANNEL_BUTTON                   = ('xpath', "//a[@id='tab-addcontent']")
+    CHANNEL_LOADING_MSG                             = ('xpath', "//div[contains(.,'Loading')]")
+    CHANNEL_PUBLISH_BUTTON                          = ('xpath', "//a[contains(@class,'btn tight btn-primary addMedia')]")
+    CHANNEL_MODARATE_PUBLISH_MSG                    = ('xpath', "//div[text() ='All media was published successfully. Note that your media will not be listed until a moderator approves it.']")
+    CHANNEL_PUBLISH_MSG                             = ('xpath', "//div[text() ='All media was published successfully. ']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -197,6 +201,23 @@ class Channel(Base):
             return False
         
         return True
+    
+    #  @Author: Tzachi Guetta        
+    def navigateToChannels(self):
+        # Check if we are already in my Channels page
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL, False, 3) == True:
+            writeToLog("INFO","Already in my Channels page")
+            return True     
+        
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL) == False:
+            writeToLog("INFO","FAILED to navigate to Channels")
+            return False
+        
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL, False) == False:
+            writeToLog("INFO","FAILED to navigate to Channels")
+            return False
+        
+        return True
        
        
     # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
@@ -272,11 +293,38 @@ class Channel(Base):
         
         return True
     
-    def navigateToChannel(self, channelName):
+    #  @Author: Tzachi Guetta  
+    def searchAChannelInChannels(self, channelName):
         try:                
-            if self.searchAChannelInMyChannels(channelName) == False:
-                writeToLog("INFO","FAILED to search in my channels")
+            if self.navigateToChannels() == False:
+                writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
+            
+            if self.click(self.MY_CHANNELS_SERACH_FIELD) == False:
+                writeToLog("INFO","FAILED to click on name text field")
+                return False
+            
+            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName) == False:
+                writeToLog("INFO","FAILED to type in 'name' text field")
+                return False
+            
+        except NoSuchElementException:
+            return False
+        
+        return True
+    
+    
+    #  @Author: Tzachi Guetta  
+    def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE):
+        try:                
+            if navigateFrom == enums.Location.MY_CHANNELS_PAGE:
+                if self.searchAChannelInMyChannels(channelName) == False:
+                    writeToLog("INFO","FAILED to search in my channels")
+                    return False
+            elif navigateFrom == enums.Location.CHANNELS_PAGE:
+                if self.searchAChannelInChannels(channelName) == False:
+                    writeToLog("INFO","FAILED to search in channels")
+                    return False            
             
             tmp_channel_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
             if self.click(tmp_channel_name) == False:
@@ -387,7 +435,7 @@ class Channel(Base):
     def naviagteToEntryFromChannelPage(self, entryName, channelName):
         # Check if we are already in channel page
         tmp_channel_title = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
-        if self.wait_visible(tmp_channel_title, 5) == True:
+        if self.wait_visible(tmp_channel_title, 5) != False:
             writeToLog("INFO","Success, Already in channel page")
             return True
         
@@ -420,4 +468,64 @@ class Channel(Base):
                 
         writeToLog("INFO","Success, Entry page display")
         sleep(2)
+        return True
+    
+#  @Author: Tzachi Guetta    
+    def addContentToChannel(self, channelName, entriesNames, isChannelModerate):
+        try:                
+            if self.navigateToChannel(channelName, enums.Location.CHANNELS_PAGE) == False:
+                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                return False
+            
+            if self.click(self.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+                writeToLog("INFO","FAILED to click add to channel button")
+                return False           
+            
+            sleep(1)
+            self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
+            
+            # Checking if entriesNames list type
+            if type(entriesNames) is list: 
+                for entryName in entriesNames: 
+                    if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
+                        writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
+                        return False
+                    
+                    writeToLog("INFO","Going to publish Entry: " + entryName + " to: " + channelName)
+            else:
+                if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entriesNames) == False:
+                        writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                        return False
+                    
+                writeToLog("INFO","Going to publish Entry: " + entriesNames + " to: " + channelName)
+                
+            if self.click(self.CHANNEL_PUBLISH_BUTTON) == False:
+                writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                return False             
+            
+            sleep(1)
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            published = False
+            
+            if isChannelModerate == True:
+                if self.wait_visible(self.CHANNEL_MODARATE_PUBLISH_MSG, 30) != False:
+                    published = True
+            else:
+                if self.wait_visible(self.CHANNEL_PUBLISH_MSG, 30) != False:
+                    published = True
+            
+            if published == True:
+                if type(entriesNames) is list: 
+                    entries = ", ".join(entriesNames)
+                    writeToLog("INFO","The following entries were published: " + entries + "")
+                else:
+                    writeToLog("INFO","The following entry was published: " + entriesNames + "")
+            else:
+                writeToLog("INFO","Publish confirmation massage were not presented")
+                return False
+            
+        except NoSuchElementException:
+            return False
+        
         return True

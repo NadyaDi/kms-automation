@@ -26,7 +26,8 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName1 = None
+    entryName2 = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
     
     #run test as different instances on all the supported platforms
@@ -45,7 +46,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,captur,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.entryName1 = clsTestService.addGuidToString('entryName1')
+            self.entryName2 = clsTestService.addGuidToString('entryName2')
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
@@ -54,13 +56,19 @@ class Test:
                 return
              
             writeToLog("INFO","Step 2: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, "descritiondescrition", "tags1,tags2,") == None:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName1, "descritiondescrition", "tags1,tags2,") == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                return
+            
+            writeToLog("INFO","Step 2: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName2, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
                     
             writeToLog("INFO","Step 3: Going to navigate to Entry Page")
-            if self.common.entryPage.navigateToEntry(self.entryName) == False:
+            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2], isChannelModerate=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
                 return
@@ -73,7 +81,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
         except:
             pass            
         clsTestService.basicTearDown(self)
