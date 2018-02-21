@@ -35,7 +35,8 @@ def updateTestCredentials(case_str):
                 localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL   = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
                 localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
                 localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
-                localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL     = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'              
+                localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL     = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
+                localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
                 found = True
                 break
     return found 

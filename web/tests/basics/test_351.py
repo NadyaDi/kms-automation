@@ -108,6 +108,8 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            if self.status == "Fail":
+                self.common.base.takeScreeshotGeneric('LAST_SCRENNSHOT')              
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
         except:
