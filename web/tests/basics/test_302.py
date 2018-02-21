@@ -29,6 +29,8 @@ class Test:
     entryName1 = None
     entryName2 = None
     entryName3 = None
+    entryName4 = None
+    entryName5 = None
     newUserId = None
     newUserPass = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
@@ -52,6 +54,8 @@ class Test:
             self.entryName1 = clsTestService.addGuidToString('entryName1')
             self.entryName2 = clsTestService.addGuidToString('entryName2')
             self.entryName3 = clsTestService.addGuidToString('entryName3')
+            self.entryName4 = clsTestService.addGuidToString('entryName4')
+            self.entryName5 = clsTestService.addGuidToString('entryName5')
             self.newUserId = "webcast@mailinator.com"
             self.newUserPass = "Automation1!"
             ##################### TEST STEPS - MAIN FLOW #####################
@@ -79,8 +83,20 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
             
+            writeToLog("INFO","Step 2: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName4, "descritiondescrition", "tags1,tags2,") == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                return
+            
+            writeToLog("INFO","Step 2: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName5, "descritiondescrition", "tags1,tags2,") == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                return            
+            
             writeToLog("INFO","Step 3: Going to publish two entries to Moderated channel")
-            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True) == False:
+            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5], isChannelModerate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish two entries to Moderated channel")
                 return
@@ -97,10 +113,10 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to login with channel's owner")
                 return
             
-            writeToLog("INFO","Step 3: Going to ")
-            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", [self.entryName1], [self.entryName2]) == False:
+            writeToLog("INFO","Step 3: Going to handle entries in Pending tab")
+            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2], [self.entryName3, self.entryName4]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to ")
+                writeToLog("INFO","Step 3: FAILED to handle entries in Pending tab")
                 return    
             ##################################################################
             print("DONE")
@@ -114,7 +130,9 @@ class Test:
             if self.status == "Fail":
                 self.common.base.takeScreeshotGeneric('LAST_SCRENNSHOT')              
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
+            self.common.login.logOutOfKMS()
+            self.common.loginAsUser()
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -62,9 +62,9 @@ class Upload(Base):
         return True
     
     
-    def extractEntryID (self):
+    def extractEntryID (self, locator):
         try:
-            div = self.get_element(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+            div = self.get_element(locator)
             href = div.get_attribute('href')
             entryID = href.split("/")[len(href.split("/"))-1]
             
@@ -130,7 +130,7 @@ class Upload(Base):
             
             # Wait for 'Your changes have been saved.' message
             if self.get_element(self.UPLOAD_ENTRY_SUCCESS_MESSAGE) != None:
-                entryID = self.extractEntryID()
+                entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
                 if entryID != None:
                     writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
                     return entryID
