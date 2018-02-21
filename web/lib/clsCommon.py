@@ -14,6 +14,7 @@ from myPlaylists import MyPlaylists
 from player import Player
 from upload import Upload
 from clsQrCodeReader import QrCodeReader
+from myHistory import MyHistory
 
 
     #============================================================================================================
@@ -37,7 +38,9 @@ class Common():
     channel         = None
     myPlaylists     = None
     player          = None
+    myHistory       = None
     qrcode          = None
+
     
     def __init__(self, driver):
         self.driver             = driver
@@ -54,7 +57,9 @@ class Common():
         self.channel            = Channel(self, driver)
         self.myPlaylists        = MyPlaylists(self, driver)
         self.player             = Player(self, driver)
+        self.myHistory          = MyHistory(self, driver)
         self.qrcode             = QrCodeReader(self, driver)
+
         
     #=============================================================================================================
     # Locators:

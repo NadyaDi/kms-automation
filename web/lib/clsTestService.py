@@ -60,7 +60,7 @@ def initialize(test,driverFix,duration=60):
         cleanTempDownloadFolder()
     #setup the test, initialize self and capture
     test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
-    #write to log we started the test
+    # Strat driver - Open browser and navigate to base URL
     driver = initializeDriver(test,driverFix)
     return (test, capture, driver)    
     
@@ -180,42 +180,9 @@ def updatePlatforms(test_num):
                         localSettings.LOCAL_SETTINGS_IS_NEW_UI = True
                     else:
                         localSettings.LOCAL_SETTINGS_IS_NEW_UI = False
-                
-        # Update localSetting partner details(base URL, credentials, Practitest ID
-        if updateTestCredentials(case_str) == False:
-            writeToLog("INFO","Unable to find credentials for test: '" + case_str + "'")
-            raise Exception("Unable to find credentials for test")
     return supported_platforms        
 
-    
-# Read from testPartners csv the test details(base URL, credentials, Practitest ID       
-def updateTestCredentials(case_str):    
-    found = False
-    if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-        newuiStr = "NewUI"
-    else:
-        newuiStr = ""
-    testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
-    with open(testPartnersPath, 'r') as csv_mat: #windows
-        testPartners = csv.DictReader(csv_mat)
-        for row in testPartners:
-            if (row['case'] == case_str):
-                # SET PARTNER DETAILS
-                localSettings.LOCAL_SETTINGS_PARTNER            = row['partner']
-                localSettings.LOCAL_SETTINGS_LOGIN_USERNAME     = row['login_username']
-                localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD     = row['login_password']
-                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME     = row['admin_username']
-                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = row['admin_password']
-                
-                # SET KMS URLS
-                localSettings.LOCAL_SETTINGS_TEST_BASE_URL          = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
-                localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
-                localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'
-                localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL   = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
-                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
-                localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'                
-                found = True
-    return found          
+
 #===============================================================================
 # function to setup the following things:
 #  - capture traffic object
@@ -275,6 +242,7 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
 # the function handles exception inst, mark the test as fail and writes the error in the log 
 #===========================================================================================
 def handleException(test,inst,startTime):
+    createScreenshot(test, 'EXCEPTION')
     log_exception(inst)
     test.status = "Fail"
     return test.status
@@ -288,8 +256,6 @@ def basicTearDown(test):
     
     try:
         if (test.driver != None):
-            #if (test.status == "Fail"): TODO: OLEG take last screenshot if failed 
-            #    createScreenshot(test)
             test.driver.quit()
             writeToLog("DEBUG", "tearDown: closed web driver")
         if (test.myProxy != None):
@@ -339,14 +305,12 @@ def disableLocalSystemProxyViaRegistry(self):
 #===============================================================================
 # the function takes a screenshot of the test at the end of it, and save it
 #===============================================================================
-def createScreenshot(test):
-    LOG_FOLDER_PREFIX = ""
-    if (os.getenv('BUILD_ID',"") != ""):
-        LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
+def createScreenshot(test, scName=''):
+    if scName != '':
+        scName = '_' + scName
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
-        LOG_FOLDER_PREFIX = LOG_FOLDER_PREFIX + "/" + str(runningTestNum) + "/" 
-    pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,str(runningTestNum)+ "_" + localSettings.LOCAL_RUNNING_BROWSER + '.png'))
+        pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',str(runningTestNum) + scName + '.png'))
     test.driver.save_screenshot(pngPath)          
     
     

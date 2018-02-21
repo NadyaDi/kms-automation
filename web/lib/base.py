@@ -263,7 +263,7 @@ class Base:
 
 
     # If you want to verify partial (contains) text set 'contains' True
-    def wait_for_text(self, locator, text, timeout=10, contains=False):
+    def wait_for_text2(self, locator, text, timeout=10, contains=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
         while True:
@@ -285,6 +285,45 @@ class Base:
             except:
                 self.setImplicitlyWaitToDefault()
                 return False
+            
+
+    # If you want to verify partial (contains) text set 'contains' True
+    def wait_for_text(self, locator, text, timeout=30, contains=False):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        element = None
+        while True:
+            try:
+                element = self.get_element(locator)
+                if element != None:
+                    # If element found, move to the next while
+                    break
+            except:
+                if wait_until < datetime.datetime.now():
+                    writeToLog('INFO','Element was not found')
+                    self.setImplicitlyWaitToDefault()
+                    return False                   
+                pass
+        
+        while True:
+            try:
+                element_text = element.text
+                if contains == True:
+                    if text.lower() in element_text.lower():
+                        self.setImplicitlyWaitToDefault()
+                        return True                    
+                else:    
+                    if element_text.lower() == text.lower():
+                        self.setImplicitlyWaitToDefault()
+                        return True
+                if wait_until < datetime.datetime.now():
+                    writeToLog('INFO','Text element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False
+                time.sleep(0.5)                 
+            except:
+                self.setImplicitlyWaitToDefault()
+                return False            
 
 
     # clicks and taps
@@ -524,8 +563,14 @@ class Base:
             
             
     def switch_to_default_content(self):
-        localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.DEFAULT
-        self.driver.switch_to.default_content()
+        try:
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.DEFAULT
+            self.driver.switch_to.default_content()
+            return True
+        except Exception:
+            writeToLog("INFO","FAILED to switch to default content")
+            return False        
+
         
         
     def setImplicitlyWaitToDefault(self):
@@ -581,3 +626,6 @@ class Base:
         else:
             raise Exception("Unknown boolean expression")
         return strExp
+    
+    
+        

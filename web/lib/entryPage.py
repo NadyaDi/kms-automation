@@ -112,7 +112,7 @@ class EntryPage(Base):
     
     
     
-    def navigateToEntry(self, entryName, navigateFrom = enums.Location.MY_MEDIA, categoryName ="", channelName= ""):
+    def navigateToEntry(self, entryName="", navigateFrom = enums.Location.MY_MEDIA, categoryName ="", channelName= ""):
         if navigateFrom == enums.Location.MY_MEDIA:
             if self.navigateToEntryPageFromMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_MEDIA)
@@ -127,6 +127,11 @@ class EntryPage(Base):
             if self.clsCommon.channel.naviagteToEntryFromChannelPage(entryName, channelName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.CHANNEL_PAGE)
                 return False
+            
+        elif navigateFrom == enums.Location.UPLOAD_PAGE:
+            if self.clsCommon.upload.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.UPLOAD_PAGE)
+                return False            
         sleep(2)
         return True
         
