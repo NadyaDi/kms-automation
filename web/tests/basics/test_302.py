@@ -66,13 +66,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
-            
+             
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName2, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
-            
+             
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName3, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
@@ -111,6 +111,8 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            if self.status == "Fail":
+                self.common.base.takeScreeshotGeneric('LAST_SCRENNSHOT')              
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
