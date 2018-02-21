@@ -30,10 +30,7 @@ def writeStatsToCSV(test):
     
 def getLogFileFolderPath():
     runningTestNum    = os.getenv('RUNNING_TEST_ID',"")
-    LOG_FOLDER_PREFIX = ""
-    if (os.getenv('BUILD_ID',"") != ""):
-        LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-    return os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + str(runningTestNum)))    
+    return os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', runningTestNum))    
     
 #===========================================================================
 #the class contains functions that manage and update the log file

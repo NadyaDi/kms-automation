@@ -7,8 +7,6 @@ import localSettings
 from utilityTestFunc import *
 
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
-
 class Test:
     
     #==============================================================================================================
@@ -111,8 +109,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            if self.status == "Fail":
-                self.common.base.takeScreeshotGeneric('LAST_SCRENNSHOT')              
+            self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
