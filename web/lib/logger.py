@@ -49,11 +49,16 @@ def writeToLog(logLevel, logLine):
         LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, '..', 'logs', LOG_FOLDER_PREFIX, LOCAL_SETTINGS_TESTED_RELEASE + str(timeSuffix) + '.log'))
     else:
         LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', LOG_FOLDER_PREFIX, LOCAL_SETTINGS_TESTED_RELEASE + str(timeSuffix) + '.log'))
-    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', LOG_FOLDER_PREFIX, str(runningTestNum)))
+    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', runningTestNum))
     TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs' , runningTestNum, runningTestNum + '.log'))
     
     # Write to main log file
     d = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+    
+    try:
+        file = open(LOGFILE, 'r')
+    except IOError:
+        file = open(LOGFILE, 'w')    
     file = open(LOGFILE, "a")
     file.write (d + " " + logLine + "\n")
     if (logLevel == "INFO"):        
@@ -64,6 +69,10 @@ def writeToLog(logLevel, logLine):
     if (os.path.isdir(TEST_LOG_FILE_FOLDER_PATH) == False):
         os.makedirs(TEST_LOG_FILE_FOLDER_PATH, exist_ok=True)             
         d = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+    try:
+        file = open(TEST_LOG_FILE, 'r')
+    except IOError:
+        file = open(TEST_LOG_FILE, 'w')         
     file = open(TEST_LOG_FILE, "a")
     file.write (d + " " + logLine + "\n")
     file.close()
