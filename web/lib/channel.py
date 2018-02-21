@@ -51,6 +51,10 @@ class Channel(Base):
     CHANNEL_PUBLISH_BUTTON                          = ('xpath', "//a[contains(@class,'btn tight btn-primary addMedia')]")
     CHANNEL_MODARATE_PUBLISH_MSG                    = ('xpath', "//div[text() ='All media was published successfully. Note that your media will not be listed until a moderator approves it.']")
     CHANNEL_PUBLISH_MSG                             = ('xpath', "//div[text() ='All media was published successfully. ']")
+    CHANNEL_MODERATION_TAB                          = ('id', 'channelmoderation-tab')
+    CHANNEL_ENTRY_IN_PENDING_TAB_PARENT             = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]/ancestor::div[@class='fullsize']") 
+    CHANNEL_REJECT_BUTTON                           = ('xpath', "//button[contains(@id,'reject_btn_')]")
+    CHANNEL_APPROVE_BUTTON                          = ('xpath', "//button[contains(@id,'accept_btn_')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -522,10 +526,44 @@ class Channel(Base):
                 else:
                     writeToLog("INFO","The following entry was published: " + entriesNames + "")
             else:
-                writeToLog("INFO","Publish confirmation massage were not presented")
+                writeToLog("INFO","Publish confirmation massage was not presented")
                 return False
             
         except NoSuchElementException:
+            return False
+        
+        return True
+    
+    
+    #   @Author: Tzachi Guetta    
+    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames):
+        try:                
+            if self.navigateToChannel(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                return False
+            
+            if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on channel's moderation tab")
+                return False        
+            
+            sleep(1)
+            self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
+            
+            if len(toRejectEntriesNames) != 0:  
+                for rejectEntry in toRejectEntriesNames:
+                    tmpParent = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
+                    parent = self.get_element(tmpParent)
+                    self.get_child_elements(parent, self.CHANNEL_REJECT_BUTTON)[1].click()
+            
+            
+            if len(toApproveEntriesNames) != 0:  
+                for approveEntry in toApproveEntriesNames:
+                    tmpParent = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
+                    parent = self.get_element(tmpParent)
+                    self.get_child_elements(parent, self.CHANNEL_APPROVE_BUTTON)[1].click()    
+        
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to Reject\Approve on entries")
             return False
         
         return True
