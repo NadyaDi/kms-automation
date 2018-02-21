@@ -64,9 +64,9 @@ class Channel(Base):
     CHANNEL_MODARATE_PUBLISH_MSG                    = ('xpath', "//div[text() ='All media was published successfully. Note that your media will not be listed until a moderator approves it.']")
     CHANNEL_PUBLISH_MSG                             = ('xpath', "//div[text() ='All media was published successfully. ']")
     CHANNEL_MODERATION_TAB                          = ('id', 'channelmoderation-tab')
-    CHANNEL_ENTRY_IN_PENDING_TAB_PARENT             = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]/ancestor::div[@class='fullsize']") 
-    CHANNEL_REJECT_BUTTON                           = ('xpath', "//button[contains(@id,'reject_btn_')]")
-    CHANNEL_APPROVE_BUTTON                          = ('xpath', "//button[contains(@id,'accept_btn_')]")
+    CHANNEL_ENTRY_IN_PENDING_TAB_PARENT             = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]") 
+    CHANNEL_REJECT_BUTTON                           = ('xpath', "//button[contains(@id,'reject_btn_ENTRY_ID')]")
+    CHANNEL_APPROVE_BUTTON                          = ('xpath', "//button[contains(@id,'accept_btn_ENTRY_ID')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -655,21 +655,41 @@ class Channel(Base):
             sleep(1)
             self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
             
-            if len(toRejectEntriesNames) != 0:  
+            if type(toRejectEntriesNames) is list:
                 for rejectEntry in toRejectEntriesNames:
-                    tmpParent = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
-                    parent = self.get_element(tmpParent)
-                    self.get_child_elements(parent, self.CHANNEL_REJECT_BUTTON)[1].click()
+                    self.method_helper_rejectEntry(rejectEntry)
+            else:
+                self.method_helper_rejectEntry(toRejectEntriesNames)                
+                
             
-            
-            if len(toApproveEntriesNames) != 0:  
+            if type(toApproveEntriesNames) is list:
                 for approveEntry in toApproveEntriesNames:
-                    tmpParent = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
-                    parent = self.get_element(tmpParent)
-                    self.get_child_elements(parent, self.CHANNEL_APPROVE_BUTTON)[1].click()    
+                    self.method_helper_approveEntry(approveEntry)
+                    
+            else:
+                self.method_helper_approveEntry(toApproveEntriesNames)
         
         except NoSuchElementException:
-            writeToLog("INFO","FAILED to Reject\Approve on entries")
             return False
         
         return True
+    
+    def method_helper_rejectEntry(self, rejectEntry):
+        tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
+        entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+        tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+        if self.click(tmpRejectBtn) == False:
+            writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
+            return False 
+        writeToLog("INFO","the following entry was rejected : " + rejectEntry)  
+        
+    
+    def method_helper_approveEntry(self, approveEntry):
+        tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
+        entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+        tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
+        if self.click(tmpApproveBtn) == False:
+            writeToLog("INFO","FAILED to approve entry: " + approveEntry)
+            return False                    
+        
+        writeToLog("INFO","the following entry was approved : " + approveEntry)
