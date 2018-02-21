@@ -55,9 +55,10 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 #===============================================================================
 def initialize(test,driverFix,duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
-        clearFilesFromLogFolderPath('.png')
         cleanTempQrCodeFolder()
         cleanTempDownloadFolder()
+    clearFilesFromLogFolderPath('.png')
+    clearFilesFromLogFolderPath('.log')        
     #setup the test, initialize self and capture
     test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     # Strat driver - Open browser and navigate to base URL
@@ -310,9 +311,9 @@ def createScreenshot(test, scName=''):
         scName = '_' + scName
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
-        pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',str(runningTestNum) + scName + '.png'))
+        pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs', runningTestNum, scName + '.png'))
     test.driver.save_screenshot(pngPath)          
-    
+
     
 def initializeDriver(test, driverFix):
     writeToLog("INFO","initialize driver " + driverFix)

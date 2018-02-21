@@ -8,6 +8,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 
+
 class Test:
     
     #================================================================================================================================
@@ -109,8 +110,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            if self.status == "Fail":
-                self.common.base.takeScreeshotGeneric('LAST_SCRENNSHOT')              
+            self.common.base.handleTestFail(self.status)        
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.admin.enableRequiredField(False, False, True, True)
