@@ -46,7 +46,19 @@ class Channel(Base):
     CHANNEL_IMPORT_BUTTON                           = ('xpath', "//a[@class='btn btn-primary importButton']")
     CHANNEL_IMPORT_ALERT                            = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Importing completed successfully. To refresh the page and view the imported entries')]")
     CHANNEL_CLICKHERE_REFRESH_BUTTON                = ('xpath', "//a[@href='#' and text()='click here.']")
-    
+    CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH           = ('xpath', "//p[@class='channel_content' and text()='CHANNEL_NAME']")
+    CHANNEL_EDIT_DROP_DOWN_MENU                     = ('id', "channelActionsDropdown")
+    CHANNEL_EDIT_BUTTON                             = ('xpath', "//i[@class='icon-wrench']")
+    CHANNEL_EDIT_CHANNNEL_PAGE                      = ('xpath', "//a[contains(@href,'/channel/') and text()= 'CHANNEL_NAME']")
+    CHANNEL_PLAYLISTS_TAB                           = ('id', 'channelPlaylists-tab')
+    CHANNEL_CREATE_NEW_PLAYLIST_DROP_DOWN           = ('id', 'typeLabel')
+    CHANNEL_MANUAL_PLAYLIST_BUTTON                  = ('xpath', "//ul[@id='typeLabelMenu']")
+    CHANNEL_ENTER_PLAYLIST_TITLE                    = ('id', 'playlistTitle')
+    CHANNEL_PLAYLISTS_DESCRIPTION                   = ('id', 'playlistDescription')
+    CHANNEL_PLAYLISTS_TAG                           = ('id', 's2id_StaticPlaylist-tags')
+    CHANNEL_PLAYLISTS_ADD_MEDIA_URL                 = ('xpath', "//a[@class='accordion-toggle collapsed' and @data-toggle= 'collapse']")
+    CHANNEL_PLAYLISTS_HEADER                        = ('xpath', "//h3[ text()= 'Create a Manual Playlist']")
+
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -60,6 +72,7 @@ class Channel(Base):
         except:
             return False
         
+ 
     #  @Author: Tzachi Guetta        
     def deleteChannel(self, channelName):
         try:
@@ -104,6 +117,7 @@ class Channel(Base):
         
         return True
 
+ 
     #  @Author: Tzachi Guetta
     # This function will create a Channel, please follow the following instructions:
     # in order to choose the Channel's privacy please use enums.ChannelPrivacyType
@@ -175,6 +189,7 @@ class Channel(Base):
         
         return True
         
+
     #  @Author: Tzachi Guetta        
     def navigateToMyChannels(self):
         # Check if we are already in my Channels page
@@ -220,6 +235,8 @@ class Channel(Base):
         else:
             writeToLog("DEBUG","FAILED to type in Tags")
             return False
+  
+    
     #  @Author: Tzachi Guetta    
     # privacy - is ChannelPrivacyType enum type
     def selectChannelPrivacy(self, privacy):
@@ -253,6 +270,7 @@ class Channel(Base):
         
         return True
     
+ 
     def searchAChannelInMyChannels(self, channelName):
         try:                
             if self.navigateToMyChannels() == False:
@@ -272,6 +290,7 @@ class Channel(Base):
         
         return True
     
+ 
     def navigateToChannel(self, channelName):
         try:                
             if self.searchAChannelInMyChannels(channelName) == False:
@@ -293,6 +312,7 @@ class Channel(Base):
         sleep(2)
         return True
     
+ 
     def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
         try:                
             if self.navigateToChannel(channelName) == False:
@@ -410,7 +430,7 @@ class Channel(Base):
         
         tmpEntry = self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)
         if self.click(tmpEntry, 20, True) == False:
-            writeToLog("INFO","FAILED to click ob entry thumbnail")
+            writeToLog("INFO","FAILED to click on entry thumbnail")
             return False
         
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
@@ -421,3 +441,92 @@ class Channel(Base):
         writeToLog("INFO","Success, Entry page display")
         sleep(2)
         return True
+
+
+    #@Author: Oded Berihon 
+    #Description:Creating channel playlist
+    def navigateToEditChannelPage(self, channelName):
+        if self.searchAChannelInMyChannels(channelName) == False: 
+            writeToLog("INFO","FAILED to find Channel: '" + channelName + "'" )
+            return False
+        
+        tmpChannelName = (self.CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH[0], self.CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH[1].replace('CHANNEL_NAME', channelName))
+        if self.click(tmpChannelName) == False:
+            writeToLog("INFO","FAILED to Click on Channel name: '" + channelName + "'")
+            return False   
+        
+        if self.click(self.CHANNEL_EDIT_DROP_DOWN_MENU) == False:
+            writeToLog("INFO","FAILED to Click on edit drop down menu")
+            return False  
+        sleep(1)
+        
+        if self.click(self.CHANNEL_EDIT_BUTTON) == False:
+            writeToLog("INFO","FAILED to Click on edit drop down menu")
+            return False  
+        
+        tmpChannelName = (self.CHANNEL_EDIT_CHANNNEL_PAGE[0], self.CHANNEL_EDIT_CHANNNEL_PAGE[1].replace('CHANNEL_NAME', channelName))
+        if self.wait_visible(tmpChannelName, 30) == False:
+            writeToLog("INFO","creation didn't finish after timeout: " )
+            return False
+        
+        return True
+
+
+    #@Author: Oded Berihon     
+    def navigateToChannelPlaylistTab(self, channelName):
+        if self.navigateToEditChannelPage(channelName) == False:
+            writeToLog("INFO","FAILED to go to channel edit page: '" + channelName + "'" )
+            return False
+
+        if self.click(self.CHANNEL_PLAYLISTS_TAB) == False:
+            writeToLog("INFO","FAILED to Click on play-lists tab button")
+            return False  
+
+        return True
+
+    #TODO NOT FINISHED
+    #@Author: Oded Berihon     
+    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag): 
+        if self.navigateToChannelPlaylistTab(channelName) == False:
+            writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
+            return False 
+        
+        if self.click(self.CHANNEL_CREATE_NEW_PLAYLIST_DROP_DOWN) == False:
+            writeToLog("INFO","FAILED to Click on drop down play-lists tab button")
+            return False           
+
+        if self.click(self.CHANNEL_MANUAL_PLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to Click on play-lists tab button")
+            return False
+        
+        if self.wait_visible(self.CHANNEL_PLAYLISTS_HEADER) == False:
+            writeToLog("INFO","FAILED to open 'Create a Manual Playlist' window")
+            return False    
+        sleep(3)
+  
+        if self.send_keys(self.CHANNEL_ENTER_PLAYLIST_TITLE, playlisTitle) == False:
+            writeToLog("INFO","FAILED to fill a playlist title :'" + playlisTitle + "'")
+            return False
+        
+        if self.send_keys(self.CHANNEL_PLAYLISTS_DESCRIPTION, playlistDescription) == False:
+            writeToLog("INFO","FAILED to fill a playlistDescription title :'" + playlistDescription + "'")
+            return False    
+       
+        if self.click(self.CHANNEL_PLAYLISTS_TAG) == False:
+            writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
+            return False   
+      
+        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
+            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+            return False     
+        
+        if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
+            writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
+            return False  
+      
+        return True
+    
+    
+    
+    
+     
