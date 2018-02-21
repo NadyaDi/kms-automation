@@ -58,7 +58,8 @@ def writeToLog(logLevel, logLine):
     try:
         file = open(LOGFILE, 'r')
     except IOError:
-        file = open(LOGFILE, 'w')    
+        file = open(LOGFILE, 'w')
+        file.close()  
     file = open(LOGFILE, "a")
     file.write (d + " " + logLine + "\n")
     if (logLevel == "INFO"):        
@@ -72,7 +73,8 @@ def writeToLog(logLevel, logLine):
     try:
         file = open(TEST_LOG_FILE, 'r')
     except IOError:
-        file = open(TEST_LOG_FILE, 'w')         
+        file = open(TEST_LOG_FILE, 'w')
+        file.close()      
     file = open(TEST_LOG_FILE, "a")
     file.write (d + " " + logLine + "\n")
     file.close()
