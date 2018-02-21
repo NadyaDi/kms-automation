@@ -2,6 +2,7 @@ from base import *
 import clsTestService
 import clsCommon
 import enums
+import utilityTestFunc
 
 
 class EditEntryPage(Base):
@@ -66,6 +67,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE         = ('xpath', "//label[@class='btn btn-link fileinput-button']")
     EDIT_ENTRY_CUEPOINT_ON_TIMELINE                             = ('xpath', "//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle']")
     EDIT_ENTRY_UPLOAD_DECK_PROCES                               = ('id', 'inProgressMessage')
+    EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE               = ('xpath', "//a[@class='btn btn-link remove' and @role ='button']")
+    EDIT_ENTRY_SLIDE_IN_TIMELINE                                = ('xpath',"//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle' and @data-time='SLIDE_TIME']")
+    EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('id', 'refresh')
     #=============================================================================================================
     
     
@@ -80,7 +84,7 @@ class EditEntryPage(Base):
         if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to find: '" + entryName + "'")
             return False
-                    
+                  
         if self.clsCommon.myMedia.clickEditEntryAfterSearchInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to on entry Edit button, Entry name: '" + entryName + "'")
             return False
@@ -636,7 +640,8 @@ class EditEntryPage(Base):
             return False
           
         return True
-
+    
+    # Author: Michal Zomper
     def navigateToEntryPageFromEditEntryPage(self, entryName):
         if self.clickOnEditTab(enums.EditEntryPageTabName.DETAILS) == False:
             writeToLog("INFO","FAILED to click on the details tab")
@@ -654,4 +659,47 @@ class EditEntryPage(Base):
         
         writeToLog("INFO","Success, entry page open")
         return True
+     
+    # Author: Michal Zomper   
+    def deleteSingelSlideFromTimeLine(self, slideTime):
+        slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(slideTime)
+        locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+        if self.click(locatorSlideTime, 20) == False:
+            writeToLog("INFO","FAILED to find and click on slide at time : '" + str(slideTime) + "' in time line")
+            return False
         
+        if self.click(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE, 20) == False:
+            writeToLog("INFO","FAILED to click on delete slide button")
+            return False
+            
+        sleep(2)
+        deleteEl = self.driver.find_elements_by_xpath(self.EDIT_ENTRY_CONFIRM_DELETE_BUTTON[1])
+        if self.clickElement(deleteEl, True) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False   
+        
+        if self.is_visible(locatorSlideTime) == True:
+            writeToLog("INFO","FAILED, slide in time '" + str(slideTime) + "' was found although this slide was deleted")
+            return False   
+        
+        writeToLog("INFO","Success, slide at " + str(slideTime) + " second was delete from time line")
+        return True      
+    
+    
+    # Author: Michal Zomper   
+    def deleteSlidesFromTimeLine(self, entryName, deleteSlidesList):
+        if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page")
+            return False
+        
+        if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
+            writeToLog("INFO","FAILED to click on the time-line tab")
+            return False
+        
+        for slide in deleteSlidesList:
+            if self.deleteSingelSlideFromTimeLine(deleteSlidesList[str(slide)][1:]) == False:
+                writeToLog("INFO","FAILED to delete slide")
+                return False
+            
+        writeToLog("INFO","Success, all slides were deleted successfully")
+        return True
