@@ -25,21 +25,18 @@ class Test:
     common = None
     # Test variables
     entryName = None
-    entryDescription = None
-    entryTags = None 
-    newUserId = None
-    newUserPass = None
-    EnableComments = None
-    CloseDiscussion = None
-    EveryoneToCreateClip = None
-    categoryList = None
-    channelList = ""
     categoryName = None
-    whereToPublishFrom = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
-    captionFilePath = None
-    captionLanguage = None
-    captionLabel = None
+    entryDescription = "Description"
+    entryTags = "Tags,"
+    newUserId = "Automation_User_1"
+    newUserPass = "Kaltura1!"
+    categoryList = [("Apps Automation Category")]
+    channelList = ""
+    whereToPublishFrom = "Entry Page"
+    captionFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\xml\app-caption-entry-page.xml'
+    captionLanguage = "English (American)"
+    captionLabel = clsTestService.addGuidToString("English")
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -58,16 +55,6 @@ class Test:
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Caption tab")
-            self.entryDescription = "Description"
-            self.entryTags = "Tags,"
-            self.newUserId = "Automation_User_1"
-            self.newUserPass = "Kaltura1!"
-            self.categoryList = [("Apps Automation Category")]
-            self.whereToPublishFrom = "Entry Page"
-            self.captionFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\xml\app-caption-entry-page.xml'
-            self.captionLanguage = "English (American)"
-            self.captionLabel = clsTestService.addGuidToString("English")
-            
             ##################### TEST STEPS - MAIN FLOW ##################### 
    
             writeToLog("INFO","Step 1: Going to upload entry")

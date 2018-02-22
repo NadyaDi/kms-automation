@@ -1,5 +1,5 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_302,Publish to channel multiple,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_302,Publish to channel multiple,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_345,Add collaborator co edit - details tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_346,Add collaborator co edit - options tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_347,Add collaborator co edit - thumbnail tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -7,8 +7,8 @@ test_348,Add collaborator co edit - cpation tab,2370151,qakmstest.dev.kaltura.co
 test_349,Add collaborator co publish,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_350,Add collaborator co edit,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_351,Slide Deck Upload,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_352,Slide Deck Upload - delete slide,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_353,Slide Deck Upload,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_352,Slide Deck Upload - delete slides,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_353,Slide Deck Upload - add chapters,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1556,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_869,add Publishing  - playlist flows,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
@@ -21,3 +21,4 @@ test_1557,Import Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mai
 test_2565,My history - Add Add entry (Private) to watch list history,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_2566,My history - Add entry (Published to channel- public) to watch list history,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_2567,My history - delete entry (Published to channel) from watch list history,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+
