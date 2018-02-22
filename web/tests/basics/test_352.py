@@ -8,8 +8,6 @@ from utilityTestFunc import *
 import enums
 
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
-
 class Test:
     
     #==============================================================================================================
@@ -51,7 +49,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete slide")
+            self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
@@ -63,7 +61,7 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
@@ -71,17 +69,17 @@ class Test:
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                return False
+                return
                
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
-                return False
+                return
                            
             writeToLog("INFO","Step 4: Going remove slides from time line")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
-                return False
+                return
               
             # remove deleted slides from  slides list (slidesQrCodeAndTimeList)
             writeToLog("INFO","Step 5: Going to remove the deleted slides from slides main list (slidesQrCodeAndTimeList)")
@@ -96,7 +94,7 @@ class Test:
             writeToLog("INFO","Step 6: Going to navigate to Entry Page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED navigate to entry page")
-                return False
+                return
             sleep(4)
             
             writeToLog("INFO","Step 7: Going verify that the deleted slides doesn't appear in the player")

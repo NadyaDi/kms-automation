@@ -62,9 +62,9 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.channelName1 = clsTestService.addGuidToString('Channel name1')
-            self.channelName2 = clsTestService.addGuidToString('Channel name2') 
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.channelName1 = clsTestService.addGuidToString('Channel name1', self.testNum)
+            self.channelName2 = clsTestService.addGuidToString('Channel name2', self.testNum)
+            self.entryName = clsTestService.addGuidToString('ImportChannel', self.testNum)
             
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")

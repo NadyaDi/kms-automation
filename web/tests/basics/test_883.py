@@ -63,8 +63,8 @@ class Test:
             self,captur,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
-            self.channelName = clsTestService.addGuidToString('Channel name') 
+            self.entryName = clsTestService.addGuidToString('DisclaimerEntry', self.testNum)
+            self.channelName = clsTestService.addGuidToString('DisclaimerChannel', self.testNum)
 
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
