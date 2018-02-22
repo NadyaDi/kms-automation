@@ -62,5 +62,13 @@ class PlayerView(Enum):
     SINGLEVIEW         = 'singleView'
     SWITCHVIEW         = 'switchView'
     
-    
+class EntryPrivacyType(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    PRIVATE            = 'private'       
+    UNLISTED           = "unlisted"
+    PUBLISHED          = "published"
+    PENDING            = "pending"
+    REJECTED           = "rejected"
 
