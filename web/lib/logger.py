@@ -87,7 +87,9 @@ def logStartTest(test,browser):
     if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
         writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
         raise Exception("Unable to find credentials for test") 
-        
+    # Clear log folder
+    utilityTestFunc.clearFilesFromLogFolderPath('.png')
+    utilityTestFunc.clearFilesFromLogFolderPath('.log')    
     os.environ["RUNNING_TEST_ID"] = test.testNum
     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO","test_" + test.testNum + " Start on browser " + browser)

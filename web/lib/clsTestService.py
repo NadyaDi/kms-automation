@@ -57,8 +57,6 @@ def initialize(test,driverFix,duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
         cleanTempDownloadFolder()
-    clearFilesFromLogFolderPath('.png')
-    clearFilesFromLogFolderPath('.log')        
     #setup the test, initialize self and capture
     test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     # Strat driver - Open browser and navigate to base URL
@@ -331,15 +329,6 @@ def initializeDriver(test, driverFix):
         raise
     return driver
 
-
-# Delete old filed from the log folder
-# fileType - Exmaple: '.png'
-def clearFilesFromLogFolderPath(fileType):
-    path = getLogFileFolderPath()
-    filelist = [ f for f in os.listdir(path) if f.endswith(fileType) ]
-    for f in filelist:
-        os.remove(os.path.join(path, f))
-        
         
 def cleanTempDownloadFolder():
     folder = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, '')
