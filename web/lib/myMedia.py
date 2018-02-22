@@ -411,23 +411,23 @@ class MyMedia(Base):
     #def verifyPublish(self, entryName, categoryList, channelList):
     
     
-    def verifyEntryPrivacyInMyMedia(self, entryName, expectedEntryPrivacy):
-        try:                
-            if self.navigateToMyMedia() == False:
-                writeToLog("INFO","FAILED to navigate to  my media")
-                return False
-            
-            if self.searchEntryMyMedia(entryName) == False:
-                writeToLog("INFO","FAILED to find: '" + entryName + "'" " in My-media page")
-                return False
-            
-            if expectedEntryPrivacy == enums.EntryPrivacyType.UNLISTED:
-                
-            
-    
-        
-        except NoSuchElementException:
-            return False
-    
-    return True
+#     def verifyEntryPrivacyInMyMedia(self, entryName, expectedEntryPrivacy):
+#         try:                
+#             if self.navigateToMyMedia() == False:
+#                 writeToLog("INFO","FAILED to navigate to  my media")
+#                 return False
+#             
+#             if self.searchEntryMyMedia(entryName) == False:
+#                 writeToLog("INFO","FAILED to find: '" + entryName + "'" " in My-media page")
+#                 return False
+#             
+#             if expectedEntryPrivacy == enums.EntryPrivacyType.UNLISTED:
+#                 
+#             
+#     
+#         
+#         except NoSuchElementException:
+#             return False
+#     
+#     return True
             
