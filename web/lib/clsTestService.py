@@ -40,6 +40,9 @@ TEST_TIMEOUT                    = 60
 # function with all the redundant start functions 
 #===============================================================================
 def initializeAndLoginAsUser(test, driverFix, duration=60):
+    if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
+        cleanTempQrCodeFolder()
+        cleanTempDownloadFolder()
     test, capture, driver = initialize(test, driverFix, duration)
     # Login
     common = clsCommon.Common(test.driver)
