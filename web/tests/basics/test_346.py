@@ -54,9 +54,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Options tab")
-  
-            
+            self.entryName = clsTestService.addGuidToString("Collaboration", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
@@ -65,7 +63,7 @@ class Test:
                 return         
   
             writeToLog("INFO","Step 2: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
@@ -73,7 +71,7 @@ class Test:
             writeToLog("INFO","Step 3: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 3: FAILED to navigate to edit entry page")
-                return False
+                return
              
             writeToLog("INFO","Step 4: Going to add Collaborator in edit Entry Page")
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:

@@ -632,8 +632,12 @@ class Channel(Base):
                 else:
                     writeToLog("INFO","The following entry was published: " + entriesNames + "")
             else:
-                writeToLog("INFO","Publish confirmation massage was not presented")
-                return False
+                if isChannelModerate == True:
+                    writeToLog("INFO","Publish to channel: confirmation massage was not presented")
+                    return False
+                else:
+                    writeToLog("INFO","Publish to moderate channel: confirmation massage was not presented")
+                    return False
             
         except NoSuchElementException:
             return False

@@ -54,8 +54,8 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('entryName3')
             self.entryName4 = clsTestService.addGuidToString('entryName4')
             self.entryName5 = clsTestService.addGuidToString('entryName5')
-            self.newUserId = "webcast@mailinator.com"
-            self.newUserPass = "Automation1!"
+            self.newUserId = "pythonautomation1@mailinator.com"
+            self.newUserPass = "Kaltura1!"
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
@@ -91,31 +91,43 @@ class Test:
             if self.common.upload.uploadEntry(self.filePath, self.entryName5, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
-                return            
+                return
             
+            writeToLog("INFO","Step 3: Going to set entry #4 as Unlisted")
+            if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to set entry #4 as Unlisted")
+                return     
+             
             writeToLog("INFO","Step 3: Going to publish two entries to Moderated channel")
-            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5], isChannelModerate=True) == False:
+            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish two entries to Moderated channel")
                 return
-            
+             
             writeToLog("INFO","Step 5: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
-                                  
+                                   
             writeToLog("INFO","Step 6: Going to login with channel's owner")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to login with channel's owner")
                 return
-            
+             
             writeToLog("INFO","Step 3: Going to handle entries in Pending tab")
-            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2], [self.entryName3, self.entryName4]) == False:
+            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", self.entryName1, self.entryName2) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to handle entries in Pending tab")
-                return    
+                return
+             
+#            entry #1 - Rejected
+#            entry #2 - Approved (published)
+#            entry #3 - Pending
+#            entry #4 - Unlisted
+#            entry #5 - Private
             ##################################################################
             print("DONE")
         # if an exception happened we need to handle it and fail the test       
@@ -127,8 +139,8 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.login.logOutOfKMS()
-            self.common.loginAsUser()
+#             self.common.login.logOutOfKMS()
+#             self.common.loginAsUser()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
