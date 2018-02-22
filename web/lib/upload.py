@@ -131,7 +131,7 @@ class Upload(Base):
             self.clsCommon.general.waitForLoaderToDisappear()
             
             # Wait for 'Your changes have been saved.' message
-            if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 30) == True:                
+            if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 30) != False:                
                 entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
                 if entryID != None:
                     writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
