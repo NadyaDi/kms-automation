@@ -26,14 +26,16 @@ class Test:
     common = None
     # Test variables
     entryName = None
-    entryDescription = None
-    entryTags = None 
-    newUserId = None
-    newUserPass = None
-    categoryList = None
-    channelList = None
+    entryDescription = "Description"
+    entryTags = "Tags,"
+    newUserId = "Automation_User_1"
+    newUserPass = "Kaltura1!"
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    categoryList = [("Apps Automation Category")]
     categoryName = None
-    whereToPublishFrom = None
+    whereToPublishFrom = "Entry Page"
+    channelList = [("Test1")]
+ 
 
     
     #run test as different instances on all the supported platforms
@@ -53,16 +55,6 @@ class Test:
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration entry Co Publish")
-            self.entryDescription = "Description"
-            self.entryTags = "Tags,"
-            self.newUserId = "Automation_User_1"
-            self.newUserPass = "Kaltura1!"
-            self.filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
-            self.categoryList = [("Apps Automation Category")]
-            self.whereToPublishFrom = "Entry Page"
-            self.channelList = [("Test1")]
- 
-            
             ##################### TEST STEPS - MAIN FLOW ##################### 
   
             writeToLog("INFO","Step 1: Going to upload entry")

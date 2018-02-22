@@ -51,7 +51,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete slide")
+            self.entryName = clsTestService.addGuidToString("Slide Deck Upload - add chapters")
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
@@ -59,7 +59,6 @@ class Test:
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
-            self.deleteSlidesList = {'5': '00:05', '11': '00:11','5': '00:05' ,'15': '00:15', '21': '00:21','24': '00:24','28': '00:28'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry")
@@ -115,8 +114,10 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.base.handleTestFail(self.status)
+            writeToLog("INFO","**************** Starting: teardown_method ****************") 
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            writeToLog("INFO","**************** Ended: teardown_method *******************")  
         except:
             pass       
         clsTestService.basicTearDown(self)

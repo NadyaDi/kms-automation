@@ -25,17 +25,17 @@ class Test:
     common = None
     # Test variables
     entryName = None
-    entryDescription = None
-    entryTags = None 
-    newUserId = None
-    newUserPass = None
-    EnableComments = None
-    CloseDiscussion = None
-    EveryoneToCreateClip = None
-    categoryList = None
+    entryDescription = "Description"
+    entryTags = "Tags,"
+    newUserId = "Automation_User_1"
+    newUserPass = "Kaltura1!"
+    EnableComments = True
+    CloseDiscussion = True
+    EveryoneToCreateClip = True
+    categoryList = [("Apps Automation Category")]
     channelList = ""
     categoryName = None
-    whereToPublishFrom = None
+    whereToPublishFrom = "Entry Page"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
     
     #run test as different instances on all the supported platforms
@@ -55,15 +55,7 @@ class Test:
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Options tab")
-            self.entryDescription = "Description"
-            self.entryTags = "Tags,"
-            self.newUserId = "Automation_User_1"
-            self.newUserPass = "Kaltura1!"
-            self.EnableComments = True
-            self.CloseDiscussion = True
-            self.EveryoneToCreateClip = True
-            self.categoryList = [("Apps Automation Category")]
-            self.whereToPublishFrom = "Entry Page"
+  
             
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -127,7 +119,7 @@ class Test:
                 return 
              
             ##################################################################
-            writeToLog("INFO","Test 'Entry Collaboration co editor - Options tab' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co editor - Options tab' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

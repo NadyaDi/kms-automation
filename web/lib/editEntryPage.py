@@ -70,6 +70,11 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE               = ('xpath', "//a[@class='btn btn-link remove' and @role ='button']")
     EDIT_ENTRY_SLIDE_IN_TIMELINE                                = ('xpath',"//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle' and @data-time='SLIDE_TIME']")
     EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('id', 'refresh')
+    EDIT_ENTRY_ADD_CHAPTER                                      = ('xpath', "//a[@class='btn btn-large chapter kmstooltip' and @title='Create a new Chapter')]")
+    EDIT_ENTRY_INSERT_CHAPTER_TITLE                             = ('xpath',"//input[@id='k-title' and @title='Create a new Chapter' and @placeholder='Enter Chapter Title')]")
+    EDIT_ENTRY_INSERT_CHAPTER_TIME                              = ('xpath', "//input[@id='k-currentTime' and @title='Create a new Chapter' and @name='chapters[time]')]")
+    EDIT_ENTRY_SAVE_CHAPTER                                     = ('xpath', "//a[@id='save' and @class='btn btn-large btn-block btn-primary')]")
+    EDIT_ENTRY_SAVED_CHAPTER_SUCCESS                            = ('xpath', "//a[@id='saved' and @class='btn btn-large btn-block btn-success')]")
     #=============================================================================================================
     
     
@@ -703,3 +708,13 @@ class EditEntryPage(Base):
             
         writeToLog("INFO","Success, all slides were deleted successfully")
         return True
+    
+    # Author: Michal Zomper 
+    def addChapter(self, chapterName, chapterTime):
+        if self.click(self.EDIT_ENTRY_ADD_CHAPTER, 20) == False:
+            writeToLog("INFO","FAILED to click on add chapter button")
+            return False
+        
+     #   if
+            
+        
