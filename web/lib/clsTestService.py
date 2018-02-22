@@ -358,4 +358,7 @@ def cleanFolder(folderPath):
 
 
 def addGuidToString(value, testID=""):
-    return localSettings.LOCAL_SETTINGS_GUID + '_' + testID + '_' + value        
+    if testID=="":
+        return localSettings.LOCAL_SETTINGS_GUID + '_' + value
+    else:
+        return localSettings.LOCAL_SETTINGS_GUID + '_' + testID + '_' + value     
