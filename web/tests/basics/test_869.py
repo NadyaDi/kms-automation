@@ -56,11 +56,11 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,captur,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
-            self.playlistName = clsTestService.addGuidToString('playlistName')
+            self.entryName = clsTestService.addGuidToString('DisclaimerEntry', self.testNum)
+            self.playlistName = clsTestService.addGuidToString('DisclaimerPlaylist', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to upload entry")

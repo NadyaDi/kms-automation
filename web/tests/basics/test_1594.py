@@ -58,7 +58,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.entryName = clsTestService.addGuidToString('Requiredfields', self.testNum)
             self.common.admin.enableRequiredField(True, True, True, True)
             
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -84,12 +84,12 @@ class Test:
             writeToLog("INFO","Step 4: Going to fill required fields")
             if self.common.upload.fillFileUploadEntryDetails(self.entryName, self.entryDescription, self.entryTags) == False:
                 writeToLog("INFO","Step 4: FAILED to fill tags and description")
-                return False
+                return
             
             writeToLog("INFO","Step 5: Going to save changes in required fields")
             if self.common.upload.click(self.common.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                 writeToLog("INFO","Step 5: FAILED to save changes")
-                return False 
+                return 
             sleep(2)
 
             self.common.general.waitForLoaderToDisappear()
@@ -98,7 +98,7 @@ class Test:
             writeToLog("INFO","Step 6: Going to publish entry after filling required fields")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
                 writeToLog("INFO","Step 6: FAILED to publish entry")
-                return False
+                return
             
             
             #########################################################################
