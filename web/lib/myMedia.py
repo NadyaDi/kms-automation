@@ -119,11 +119,15 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to click Action -> Delete")
             return False
         
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear() 
+        
         if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
         
-        self.clsCommon.general.waitForLoaderToDisappear()    
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear() 
                      
         # Printing the deleted entries       
         if type(entriesNames) is list: 
@@ -405,4 +409,25 @@ class MyMedia(Base):
     
     #TODO
     #def verifyPublish(self, entryName, categoryList, channelList):
+    
+    
+    def verifyEntryPrivacyInMyMedia(self, entryName, expectedEntryPrivacy):
+        try:                
+            if self.navigateToMyMedia() == False:
+                writeToLog("INFO","FAILED to navigate to  my media")
+                return False
+            
+            if self.searchEntryMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED to find: '" + entryName + "'" " in My-media page")
+                return False
+            
+            if expectedEntryPrivacy == enums.EntryPrivacyType.UNLISTED:
                 
+            
+    
+        
+        except NoSuchElementException:
+            return False
+    
+    return True
+            
