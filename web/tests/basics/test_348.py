@@ -117,10 +117,9 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to remove added caption to entry '" + self.entryName + "' with Collaborator user")
                 return
-
             
             ##################################################################
-            print("Test 'Entry Collaboration co editor - Caption tab' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co editor - Caption tab' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

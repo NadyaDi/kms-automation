@@ -117,7 +117,7 @@ class Test:
             
             
             ##################################################################
-            print("Test 'Entry Collaboration co editor - Thumbnail tab' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co editor - Thumbnail tab' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

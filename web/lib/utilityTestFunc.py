@@ -157,3 +157,12 @@ def isAutoEnvironment():
         return True
     
     return False
+
+
+# Delete old filed from the log folder
+# fileType - Exmaple: '.png'
+def clearFilesFromLogFolderPath(fileType):
+    path = getLogFileFolderPath()
+    filelist = [ f for f in os.listdir(path) if f.endswith(fileType) ]
+    for f in filelist:
+        os.remove(os.path.join(path, f))

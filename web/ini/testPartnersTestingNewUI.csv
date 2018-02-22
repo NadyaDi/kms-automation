@@ -15,5 +15,10 @@ test_869,add Publishing  - playlist flows,5447,qakmstest.dev.kaltura.com,webcast
 test_883,add Publishing Schedule via edit entry page,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1555,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_16,Download Source File,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_1557,importchannel,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_1594,Entry required field,2296941-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Alika1987!,inbar.willman@kaltura.com,Alika1987!
+test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
+test_767,Channel Playlist,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1557,Import Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_2565,My history - Add Add entry (Private) to watch list history,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_2566,My history - Add entry (Published to channel- public) to watch list history,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_2567,My history - delete entry (Published to channel) from watch list history,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+
