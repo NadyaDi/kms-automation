@@ -44,9 +44,11 @@ class Upload(Base):
             return True
         except NoSuchElementException:
             return False
-#  @Author: Tzachi Guetta
-# In case disclaimer module is turned on and set to "before upload" 
-# The following function will check that upload is prevented before disclaimer's check-box was checked.
+        
+        
+    #  @Author: Tzachi Guetta
+    # In case disclaimer module is turned on and set to "before upload" 
+    # The following function will check that upload is prevented before disclaimer's check-box was checked.
     def handleDisclaimerBeforeUplod(self):
         try:
             if self.wait_visible(self.clsCommon.upload.CHOOSE_A_FILE_TO_UPLOAD_BUTTON, 5) == False:
@@ -129,7 +131,7 @@ class Upload(Base):
             self.clsCommon.general.waitForLoaderToDisappear()
             
             # Wait for 'Your changes have been saved.' message
-            if self.get_element(self.UPLOAD_ENTRY_SUCCESS_MESSAGE) != None:
+            if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 30) == True:                
                 entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
                 if entryID != None:
                     writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
@@ -139,7 +141,6 @@ class Upload(Base):
                 return None
 
         except Exception:
-            self.takeScreeshotGeneric("FAIL_UPLOAD")
             raise Exception("FAIL_UPLOAD")
         
         
