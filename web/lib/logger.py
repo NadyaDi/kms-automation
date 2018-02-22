@@ -59,6 +59,7 @@ def writeToLog(logLevel, logLine):
         file = open(LOGFILE, 'r')
     except IOError:
         file = open(LOGFILE, 'w')
+        file.write ("************************************************************************************************************************\n")
         file.close()  
     file = open(LOGFILE, "a")
     file.write (d + " " + logLine + "\n")
@@ -74,6 +75,7 @@ def writeToLog(logLevel, logLine):
         file = open(TEST_LOG_FILE, 'r')
     except IOError:
         file = open(TEST_LOG_FILE, 'w')
+        file.write ("************************************************************************************************************************\n")
         file.close()      
     file = open(TEST_LOG_FILE, "a")
     file.write (d + " " + logLine + "\n")
@@ -91,7 +93,7 @@ def logStartTest(test,browser):
     utilityTestFunc.clearFilesFromLogFolderPath('.png')
     utilityTestFunc.clearFilesFromLogFolderPath('.log')    
     os.environ["RUNNING_TEST_ID"] = test.testNum
-    writeToLog("INFO","************************************************************************************************************************")
+#     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO","test_" + test.testNum + " Start on browser " + browser)
     writeToLog("INFO","Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
      
