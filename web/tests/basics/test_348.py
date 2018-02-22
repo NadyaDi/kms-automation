@@ -54,8 +54,9 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Caption tab", self.testNum)
             self.captionLabel = clsTestService.addGuidToString("English", self.testNum)
+
             ##################### TEST STEPS - MAIN FLOW ##################### 
    
             writeToLog("INFO","Step 1: Going to upload entry")

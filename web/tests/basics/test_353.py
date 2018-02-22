@@ -31,7 +31,10 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
     slidesQrCodeAndTimeList = None
-    deleteSlidesList = None
+    chaptersList = None
+    slidesWithoutChapter = None
+    firstChapterSlidesList = None
+    secondChapterSlidesList = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -57,7 +60,15 @@ class Test:
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
+            self.chaptersList = {'First Chapter':'00:05', 'Second Chapter':'00:14'}
+            self.slidesWithoutChapter = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04'}
+            self.firstChapterSlidesList = {'1.1': '00:05', '1.2': '00:06', '1.2': '00:07', '1.3': '00:08', '1.4': '00:09', '1.5': '00:10', '1.6': '00:11','1.7': '00:12', '1.8': '00:13'}
+            self.secondChapterSlidesList = {'2.1': '00:14','2.2': '00:15', '2.3': '00:16', '2.4': '00:17', '2.5': '00:18', '2.6': '00:19','2.7': '00:20', '2.8': '00:21','2.9': '00:22',
+                                            '2.10': '00:23', '2.11': '00:24','2.12': '00:25', '2.13': '00:26', '2.14': '00:27', '2.15': '00:28', '2.16': '00:29'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            
+            self.common.editEntryPage.addChapters("QR_30_sec_new.mp4", self.chaptersList)
+            
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
@@ -103,7 +114,7 @@ class Test:
                 return  
 
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Slide Deck Upload -delete slide' was done successfully")            
+            writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - add chapters' was done successfully")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
