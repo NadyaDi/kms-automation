@@ -36,7 +36,7 @@ class Test:
     whereToPublishFrom = "Entry Page"
     captionFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\xml\app-caption-entry-page.xml'
     captionLanguage = "English (American)"
-    captionLabel = clsTestService.addGuidToString("English")
+    captionLabel = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -55,6 +55,7 @@ class Test:
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Caption tab")
+            self.captionLabel = clsTestService.addGuidToString("English")
             ##################### TEST STEPS - MAIN FLOW ##################### 
    
             writeToLog("INFO","Step 1: Going to upload entry")
