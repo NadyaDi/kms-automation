@@ -1,3 +1,4 @@
+import csv
 from datetime import timedelta
 import subprocess
 from time import sleep
@@ -8,12 +9,38 @@ from selenium.webdriver.common.action_chains import ActionChains
 from logger import *
 
 
-# from clsTestService import *
-# from clsPractiTest import clsPractiTest
-# from localSettings import *
-# from selenium.webdriver.common.keys import Keys
-# from selenium.common.exceptions import *
-# from asyncio.tasks import sleep
+# Read from testPartners csv the test details(base URL, credentials, Practitest ID       
+def updateTestCredentials(case_str):    
+    found = False
+    if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+        newuiStr = "NewUI"
+    else:
+        newuiStr = ""
+    testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
+    with open(testPartnersPath, 'r') as csv_mat: #windows
+        testPartners = csv.DictReader(csv_mat)
+        for row in testPartners:
+            if (row['case'] == case_str):
+                # SET PARTNER DETAILS
+                localSettings.LOCAL_SETTINGS_PARTNER            = row['partner']
+                localSettings.LOCAL_SETTINGS_LOGIN_USERNAME     = row['login_username']
+                localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD     = row['login_password']
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME     = row['admin_username']
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = row['admin_password']
+                
+                # SET KMS URLS
+                localSettings.LOCAL_SETTINGS_TEST_BASE_URL          = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
+                localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
+                localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'
+                localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL   = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
+                localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
+                localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL     = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
+                localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
+                found = True
+                break
+    return found 
+
 #===============================================================================
 #Take screenshoot of whole screen.
 #'fullpath' should contain the file name with its extension PNG!
@@ -130,3 +157,12 @@ def isAutoEnvironment():
         return True
     
     return False
+
+
+# Delete old filed from the log folder
+# fileType - Exmaple: '.png'
+def clearFilesFromLogFolderPath(fileType):
+    path = getLogFileFolderPath()
+    filelist = [ f for f in os.listdir(path) if f.endswith(fileType) ]
+    for f in filelist:
+        os.remove(os.path.join(path, f))

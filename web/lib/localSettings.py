@@ -51,7 +51,7 @@ LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "oleg.sigalov@kaltura.co
 LOCAL_SETTINGS_AUTOIT_SCRIPTS                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'autoit'))
 if LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE:
     LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'media'))
-    LOCAL_SETTINGS_TEMP_PATH                    = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'media'))
+    LOCAL_SETTINGS_TEMP_PATH                    = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp'))
     LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp', 'downloads'))
     LOCAL_QRCODE_TEMP_DIR                       = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'screenShots', 'qrCode'))
 else:
@@ -71,6 +71,7 @@ LOCAL_SETTINGS_KMS_LOGIN_URL                = None
 LOCAL_SETTINGS_KMS_MY_MEDIA_URL             = None
 LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL         = None
 LOCAL_SETTINGS_KMS_MY_CHANNELS_URL          = None
+LOCAL_SETTINGS_KMS_CHANNELS_URL             = None
 LOCAL_SETTINGS_KMS_ADMIN_URL                = None
 LOCAL_SETTINGS_KMS_MY_HISTORY_URL           = None
 

@@ -532,8 +532,8 @@ class Base:
     # Create a screeshot with a given name it the test log folder
     def takeScreeshotGeneric(self, scName):
         runningTestNum = os.getenv('RUNNING_TEST_ID',"")
-        if (runningTestNum != ""):      
-            pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',runningTestNum, scName + '.png')) 
+        if (runningTestNum != ""):
+            pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',runningTestNum, scName + '.png'))
         try:
             self.driver.save_screenshot(pngPath)
             return True
@@ -617,6 +617,7 @@ class Base:
         
         return True  
     
+
     def convertBooleanToYesNo(self, booleanExp):
         strExp = None
         if booleanExp == True:
@@ -627,5 +628,11 @@ class Base:
             raise Exception("Unknown boolean expression")
         return strExp
     
-    
         
+    def handleTestFail(self, status):
+        if status == "Fail":
+            if self.takeScreeshotGeneric('LAST_SCRENNSHOT') == True:
+                return True
+            else:
+                return False
+            

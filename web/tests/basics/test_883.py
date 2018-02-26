@@ -10,8 +10,6 @@ import localSettings
 from utilityTestFunc import *
 
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
-
 class Test:
     
     #================================================================================================================================
@@ -65,8 +63,8 @@ class Test:
             self,captur,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
-            self.channelName = clsTestService.addGuidToString('Channel name') 
+            self.entryName = clsTestService.addGuidToString('DisclaimerEntry', self.testNum)
+            self.channelName = clsTestService.addGuidToString('DisclaimerChannel', self.testNum)
 
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
@@ -120,6 +118,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################
     def teardown_method(self,method):
         try:
+            self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName)

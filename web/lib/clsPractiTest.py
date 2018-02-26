@@ -97,10 +97,11 @@ class clsPractiTest:
     #============================================================================================================= 
     def setPractitestInstanceTestResults(self,testStatus,testID):
         runningTestNum    = os.getenv('RUNNING_TEST_ID',"")
-        LOG_FOLDER_PREFIX = ""
-        if (os.getenv('BUILD_ID',"") != ""):
-            LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-        TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + str(runningTestNum)))
+#         LOG_FOLDER_PREFIX = ""
+#         if (os.getenv('BUILD_ID',"") != ""):
+#             LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
+#         TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + str(runningTestNum)))
+        TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',str(runningTestNum)))
         
         practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
        
@@ -178,10 +179,24 @@ class clsPractiTest:
     # Function that gets all the file names in a given folder
     #=============================================================================================================
     def getFilesInTestLogFolder(self,path):
+        # Check on which platform we run
+        if 'win' in sys.platform:
+            delimiter = "\\"
+        else:
+            delimiter = "/" 
         files = []
         fileList =  os.listdir(path)
         for file in fileList:
             with open(os.path.abspath(os.path.join(path,file)), "rb") as fileObj:
                 fileBase64Utf8 = base64.b64encode(fileObj.read()).decode('utf-8') 
-                files.append({"filename": fileObj.name.split("\\")[len(fileObj.name.split("\\")) - 1], "content_encoded": fileBase64Utf8})
+                files.append({"filename": self.getDateAndTime() + '__' + fileObj.name.split(delimiter)[len(fileObj.name.split(delimiter)) - 1], "content_encoded": fileBase64Utf8})
         return files
+    
+    
+    #=============================================================================================================
+    # Return current date and time using strftime, for example: 21-02-2018_16:34
+    #=============================================================================================================
+    def getDateAndTime(self):
+        now = datetime.datetime.now()
+        return now.strftime("%d-%m-%Y_%H:%M")
+        

@@ -8,8 +8,6 @@ import localSettings
 from utilityTestFunc import *
 
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
-
 class Test:
     
     #================================================================================================================================
@@ -55,7 +53,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.entryName = clsTestService.addGuidToString('Disclaimer', self.testNum)
             self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_UPLOAD)
             
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -85,6 +83,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            self.common.base.handleTestFail(self.status)          
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.admin.adminDisclaimer(False)

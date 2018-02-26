@@ -30,10 +30,7 @@ def writeStatsToCSV(test):
     
 def getLogFileFolderPath():
     runningTestNum    = os.getenv('RUNNING_TEST_ID',"")
-    LOG_FOLDER_PREFIX = ""
-    if (os.getenv('BUILD_ID',"") != ""):
-        LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-    return os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + str(runningTestNum)))    
+    return os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', runningTestNum))    
     
 #===========================================================================
 #the class contains functions that manage and update the log file
@@ -52,11 +49,17 @@ def writeToLog(logLevel, logLine):
         LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, '..', 'logs', LOG_FOLDER_PREFIX, LOCAL_SETTINGS_TESTED_RELEASE + str(timeSuffix) + '.log'))
     else:
         LOGFILE                   = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', LOG_FOLDER_PREFIX, LOCAL_SETTINGS_TESTED_RELEASE + str(timeSuffix) + '.log'))
-    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', LOG_FOLDER_PREFIX, str(runningTestNum)))
-    TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs' , LOG_FOLDER_PREFIX, str(runningTestNum),str(runningTestNum) + '.log'))
+    TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs', runningTestNum))
+    TEST_LOG_FILE             = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR, 'logs' , runningTestNum, runningTestNum + '.log'))
     
     # Write to main log file
     d = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+    
+    try:
+        file = open(LOGFILE, 'r')
+    except IOError:
+        file = open(LOGFILE, 'w')
+        file.close()  
     file = open(LOGFILE, "a")
     file.write (d + " " + logLine + "\n")
     if (logLevel == "INFO"):        
@@ -67,6 +70,11 @@ def writeToLog(logLevel, logLine):
     if (os.path.isdir(TEST_LOG_FILE_FOLDER_PATH) == False):
         os.makedirs(TEST_LOG_FILE_FOLDER_PATH, exist_ok=True)             
         d = '{:%Y-%m-%d %H:%M:%S}'.format(datetime.datetime.now())
+    try:
+        file = open(TEST_LOG_FILE, 'r')
+    except IOError:
+        file = open(TEST_LOG_FILE, 'w')
+        file.close()      
     file = open(TEST_LOG_FILE, "a")
     file.write (d + " " + logLine + "\n")
     file.close()
@@ -75,6 +83,13 @@ def writeToLog(logLevel, logLine):
 # the function writes to the log that we started the test, on browser X and player version Y. we allso write the test url
 #===============================================================================
 def logStartTest(test,browser):
+    # Update localSetting partner details(base URL, credentials, Practitest ID
+    if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
+        writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
+        raise Exception("Unable to find credentials for test") 
+    # Clear log folder
+    utilityTestFunc.clearFilesFromLogFolderPath('.png')
+    utilityTestFunc.clearFilesFromLogFolderPath('.log')    
     os.environ["RUNNING_TEST_ID"] = test.testNum
     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO","test_" + test.testNum + " Start on browser " + browser)

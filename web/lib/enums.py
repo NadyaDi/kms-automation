@@ -28,6 +28,8 @@ class Location(Enum):
     UPLOAD_PAGE            = 'upload page'
     CHANNEL_PAGE           = 'channel page'
     CATEGORY_PAGE          = 'category page'
+    MY_CHANNELS_PAGE       = 'my channels page'
+    CHANNELS_PAGE          = 'channels page'
 
 
 class EditEntryPageTabName(Enum):
@@ -60,5 +62,13 @@ class PlayerView(Enum):
     SINGLEVIEW         = 'singleView'
     SWITCHVIEW         = 'switchView'
     
-    
+class EntryPrivacyType(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    PRIVATE            = 'private'       
+    UNLISTED           = "unlisted"
+    PUBLISHED          = "published"
+    PENDING            = "pending"
+    REJECTED           = "rejected"
 

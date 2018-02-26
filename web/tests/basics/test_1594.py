@@ -8,6 +8,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 
+
 class Test:
     
     #================================================================================================================================
@@ -60,7 +61,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.entryName = clsTestService.addGuidToString('Requiredfields', self.testNum)
             self.common.admin.enableRequiredField(True, True, True, True)
             
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -107,7 +108,6 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to publish entry")
                 return False
             
-            
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
@@ -117,6 +117,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            self.common.base.handleTestFail(self.status)        
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.channel.navigateToMyChannels()

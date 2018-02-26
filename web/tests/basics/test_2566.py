@@ -8,6 +8,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 
+
 class Test:
     
     #================================================================================================================================
@@ -53,7 +54,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.entryName = clsTestService.addGuidToString('MyHistory', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
@@ -64,39 +65,39 @@ class Test:
             writeToLog("INFO","Step 2: Going to publish entry to channel")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:         
                 writeToLog("INFO","Step 2: FAILED failed to publish entry")
-                return False          
+                return          
             
             writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 writeToLog("INFO","Step 3: FAILED to navigate to entry page")
-                return False           
+                return           
             
             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
-                return False
+                return
              
             writeToLog("INFO","Step 5: Going to Search entry in My History page")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
                 writeToLog("INFO","Step 5: FAILED - New entry is displayed in my history page")
-                return False
+                return
             
             writeToLog("INFO","Step 5: Previous Step Failed as Expected - The entry should not be displayed")
             
             writeToLog("INFO","Step 6: Going to play entry")
             if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName, '0:05') == False:
                 writeToLog("INFO","Step 6: FAILED to navigate and play entry")
-                return False  
+                return  
             
             writeToLog("INFO","Step 7: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
                 writeToLog("INFO","Step 7: FAILED to switch to default content")
-                return False  
+                return  
             
             writeToLog("INFO","Step 8: Going to navigate to my history and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
                 writeToLog("INFO","Step 8: FAILED find entry in my history")
-                return False               
+                return               
               
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -107,6 +108,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)

@@ -9,8 +9,6 @@ import localSettings
 from utilityTestFunc import *
 
 
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
-
 class Test:
     
     #================================================================================================================================
@@ -56,8 +54,8 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('Entry name')
-            self.channelName = clsTestService.addGuidToString('Channel name') 
+            self.entryName = clsTestService.addGuidToString('Entry name', self.testNum)
+            self.channelName = clsTestService.addGuidToString('Channel name', self.testNum)
             self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
             
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -69,7 +67,6 @@ class Test:
              
             writeToLog("INFO","Step 2: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
-
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return   
@@ -94,6 +91,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            self.common.base.handleTestFail(self.status)           
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName)
