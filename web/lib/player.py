@@ -30,8 +30,11 @@ class Player(Base):
     PLAYER_LAYOUT                                               = ('id','kplayer')
     PLAYER_SIDE_BAR_MENU_PARENT                                 = ('xpath',"//div[@class='nano-content']")   
     PLAYER_SLIDE_IN_SIDE_BAR_MENU                               = ('xpath',"//li[contains (@class,'mediaBox slideBox')]")
-    PLAYER_SILDE_START_TIME                                     = ('xpath', "//span[contains(text(), 'SLIDE_TIME')]") #  When using this locator, replace 'SLIDE_TIME' string with your real slide_time
+    PLAYER_SILDE_START_TIME                                     = ('xpath', "//span[contains(text(), 'SLIDE_TIME')]") # When using this locator, replace 'SLIDE_TIME' string with your real slide_time
     PLAYER_SCROLLER_SIDE_BAR_MENU                               = ('xpath', "//div[@class='nano-slider']")
+    PLAYER_SLIDE_DECK_CHAPTER                                   = ('xpath', "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']/ancestor::div[@class='boxInfo']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
+    PLAYER_SLIDE_NUMBER                                         = ('xpath', "//div[@class='slideNumber' and @title='Slide number' and contains(text(),'SLIDE_NUMBER')]") # When using this locator, replace 'SLIDE_NUMBER' string with your real slide number
+    PLAYER_OPEN_CHAPTER_ICON                                    = ('xpath', "//div[@class='slideBoxToggle icon-toggle' and @title='Expand/collapse chapter']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -143,6 +146,8 @@ class Player(Base):
         return True
     
     # creator: Michal zomper
+    # The function verify the slides in the menu slide bar
+    # checking that the total number of slides is correct + verify that the time for each slide is correct 
     def verifySlidesInPlayerSideBar(self, mySlidesList):
         self.switchToPlayerIframe()
         sleep(1)
@@ -157,19 +162,37 @@ class Player(Base):
         if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList): 
             writeToLog("INFO","FAILED to verify number of slides in side bar menu")
             return False
-         
         sleep(2)
+        
+        if self.checkSlidesTimeInSlideBarMenu(mySlidesList) == False:
+            writeToLog("INFO","FAILED to verify one or more slides in slide bar menu")
+            return False
+            
+        writeToLog("INFO","SUCCESS verify slides in side bar menu")
+        self.clsCommon.base.switch_to_default_content()
+        return True
+    
+    # creator: Michal zomper
+    # The Function go over the slides in the slide menu bar and verify that the time is correct 
+    def checkSlidesTimeInSlideBarMenu(self, mySlidesList, isVerifySlideNumber=False):
         slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         sleep(2)
         # Verify that the slides time is correct
+        count = 0
         for slide in mySlidesList:
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', mySlidesList[slide]))
             if self.wait_visible(slide_time) == False:
-                writeToLog("INFO","FAILED to verify slide time in the slide menu")
+                writeToLog("INFO","FAILED to verify slide time in the slide menu bar")
                 return False
+            
+            if isVerifySlideNumber == True:
+                slideNumber = (self.PLAYER_SLIDE_NUMBER[0], self.PLAYER_SLIDE_NUMBER[1].replace('SLIDE_NUMBER',slide))
+                if self.wait_visible(slideNumber) == False:
+                    writeToLog("INFO","FAILED to verify slide number in slides menu bar")
+                    return False
 
             # After the 4 slide we need to move the side menu scroller down so we can see the rest of the slides
-            if slide > '3':
+            if count > 2:
                 scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
                 action = ActionChains(self.driver)
                 action.move_to_element(scroller)
@@ -177,11 +200,12 @@ class Player(Base):
                 action.click_and_hold()
                 action.release()
                 action.perform()
-                
-        writeToLog("INFO","SUCCESS verify slides in side bar menu")
-        self.clsCommon.base.switch_to_default_content()
+            count = count + 1
+        
+        writeToLog("INFO","SUCCESS slides are display in the correct time in the slides bar menu")
         return True
-    
+        
+        
     # creator: Michal zomper
     def changePlayerView(self, playerView = enums.PlayerView.PIP):
         self.switchToPlayerIframe()
@@ -212,6 +236,8 @@ class Player(Base):
         return True
         
     # creator: Michal zomper
+    # The function check that the slides display at the correct time when the player is running
+    # The function check the QR code in the video, ptt are much and that they both much to the player time
     def verifySlideDisplayAtTheCorrctTime(self, timeToStop, qrResult):
         self.switchToPlayerIframe()
         
@@ -229,7 +255,7 @@ class Player(Base):
         playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
         # 
         if (playerTime == videoImage == slideImage == qrResult) == False:
-            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: "+  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
+            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: " +  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
             return False
         
         writeToLog("INFO","SUCCESS, slide appear in the correct time")
@@ -248,5 +274,49 @@ class Player(Base):
         writeToLog("INFO","SUCCESS, all slides are verified and appear at the correct time")
         return True
                 
+    
+     # creator: Michal zomper
+     # The function checking all the info in the slides menu bar  
+     # The function check that the chapters are display in the correct time + all the slides that need to be in the chapters display correctly
+    def vrifyChapterAndSlidesInItInSlidesMenuBar(self, chapterName, chapterTime, slidesListInChapter): 
+        self.switchToPlayerIframe() 
+        
+        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+            writeToLog("INFO","FAILED to click on the slide side bar menu")
+            return False
+        
+        chapterDetails = (self.PLAYER_SLIDE_DECK_CHAPTER[0], self.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapterName))
+        try:
+            detsils = self.get_element(chapterDetails)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED find chapter '" + chapterName + "' details")
+            return False
+
+        chapterDetailsList = (detsils.text).split('\n')
+        
+        # check chapter details
+        if chapterDetailsList[1] != chapterName:
+            writeToLog("INFO","FAILED , chapter name is not correct")
+            return False
+
+        if chapterDetailsList[2] != chapterTime:
+            writeToLog("INFO","FAILED , chapter time is not correct")
+            return False
+            
+        #el = detsils.find_elements_by_xpath("..")
         
         
+        # open chapter in order to see all the slides
+        if self.click(self.PLAYER_OPEN_CHAPTER_ICON) == False:
+            writeToLog("INFO","FAILED to open chapter in order to see all the slides")
+            return False
+            
+        # Verify that all the slides in the chapter are correct
+        if self.checkSlidesTimeInSlideBarMenu(slidesListInChapter, isVerifySlideNumber=True) == False:
+            writeToLog("INFO","FAILED, can NOT verify that all the needed slides are display under chapter " + chapterName)
+            return False
+        
+        
+        
+        
+        writeToLog("INFO","SUCCESS, all slides are verified and appear at the correct time")

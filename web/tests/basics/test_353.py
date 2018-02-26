@@ -69,7 +69,7 @@ class Test:
                                             '2.10': '00:23', '2.11': '00:24','2.12': '00:25', '2.13': '00:26', '2.14': '00:27', '2.15': '00:28', '2.16': '00:29'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.editEntryPage.addChapters("QR_30_sec_new.mp4", self.chaptersList)
+            self.common.player.vrifyChapterAndSlidesInItInSlidesMenuBar("First Chapter", "00:05", self.firstChapterSlidesList)
             
             
             writeToLog("INFO","Step 1: Going to upload entry")

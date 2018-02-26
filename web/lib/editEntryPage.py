@@ -69,12 +69,14 @@ class EditEntryPage(Base):
     EDIT_ENTRY_UPLOAD_DECK_PROCES                               = ('id', 'inProgressMessage')
     EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE               = ('xpath', "//a[@class='btn btn-link remove' and @role ='button']")
     EDIT_ENTRY_SLIDE_IN_TIMELINE                                = ('xpath',"//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle' and @data-time='SLIDE_TIME']")
-    EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('id', 'refresh')
+    EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('xpath',"//a[@id='refresh' and @class='btn btn-block']")
     EDIT_ENTRY_ADD_CHAPTER                                      = ('xpath', "//a[@class='btn btn-large chapter kmstooltip' and @aria-label='Create a new Chapter']")
     EDIT_ENTRY_INSERT_CHAPTER_TITLE                             = ('xpath',"//input[@id='k-title' and @placeholder='Enter Chapter Title']")
     EDIT_ENTRY_INSERT_CHAPTER_TIME                              = ('xpath', "//input[@id='k-currentTime' and @name='chapters[time]']")
     EDIT_ENTRY_SAVE_CHAPTER                                     = ('xpath', "//a[@id='save' and @class='btn btn-large btn-block btn-primary']")
     EDIT_ENTRY_SAVED_CHAPTER_SUCCESS                            = ('xpath', "//a[@id='saved' and @class='btn btn-large btn-block btn-success']")
+    EDIT_ENTRY_CHAPTER_IN_TIME_LINE                             = ('xpath', "//div[@class='k-cuepoint chapter ui-draggable ui-draggable-handle' and @data-time='CHAPTER_TIME']")# When using this locator, replace 'CHAPTER_TIME' string with your real chapter time
+    EDIT_ENTRY_DELETE_CHAPTER_BUTTON                            = ('xpath', "//a[@class='btn btn-link remove' and @role='button']")
     #=============================================================================================================
     
     
@@ -760,5 +762,59 @@ class EditEntryPage(Base):
         return True  
         
     
-    #def vrifySlidesInChapter(self, slidesListInChapter):
+    
+    def deleteChapter (self, chapterTime):
+        chapterTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(chapterTime)
+        ChapterTime = (self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[0], self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[1].replace('CHAPTER_TIME', str(chapterTimeInSec * 1000)))
+        
+        if self.click(ChapterTime) == False:
+            writeToLog("INFO","FAILED to click on chapter icon in time line")
+            return False          
+        sleep(2)
+        
+        if self.click(self.EDIT_ENTRY_DELETE_CHAPTER_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on delete chapter button")
+            return False
+        sleep(3)
+        
+        # Click on confirm delete
+        if self.click(self.EDIT_ENTRY_CONFIRM_DELETE_BUTTON, 20, True) == False:
+            writeToLog("INFO","FAILED to click on remove caption button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Verify that the chapter was delete
+        if self.is_visible(ChapterTime) == True:
+            writeToLog("INFO","FAILED, chapter was found although the chapter was deleted")
+            return False
+            
+        writeToLog("INFO","Success, Chapters was deleted successfully")
+        return True  
+    
+    
+    def deletechpaters(self, entryName, chaptersList):
+        if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page")
+            return False
+        
+        if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
+            writeToLog("INFO","FAILED to click on the time-line tab")
+            return False
+        
+        for chapter in chaptersList:
+            if self.deleteChapter(chaptersList[chapter]) == False:
+                writeToLog("INFO","FAILED add chapter name: " + chapter)
+                return False
+            
+        if self.click(self.EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON, 20, True) == False:
+            writeToLog("INFO","FAILED to click on 'view in player' button")
+            return False
+            
+        sleep(2)
+        writeToLog("INFO","Success, All chapters were deleted successfully")
+        return True  
+        
+        
+
+        
         
