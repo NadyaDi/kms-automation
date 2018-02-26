@@ -636,3 +636,6 @@ class Base:
             else:
                 return False
             
+            
+    def replaceInLocator(self, locator, replaceWhat, replaceWith):
+        return (locator[0], locator[1].replace(replaceWhat, replaceWith))            

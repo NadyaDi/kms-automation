@@ -68,7 +68,7 @@ class EntryPrivacyType(Enum):
 
     PRIVATE            = 'private'       
     UNLISTED           = "unlisted"
-    PUBLISHED          = "published"
-    PENDING            = "pending"
-    REJECTED           = "rejected"
+    PUBLISHED          = "Published"
+    PENDING            = "Pending"
+    REJECTED           = "Rejected"
 
