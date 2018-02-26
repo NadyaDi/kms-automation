@@ -54,13 +54,13 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Caption tab")
-            captionLabel = clsTestService.addGuidToString("English")
-            
+            self.entryName = clsTestService.addGuidToString("Collaboration entry Co Edit - Caption tab", self.testNum)
+            self.captionLabel = clsTestService.addGuidToString("English", self.testNum)
+
             ##################### TEST STEPS - MAIN FLOW ##################### 
    
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
@@ -68,7 +68,7 @@ class Test:
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                return False
+                return
             
                                  
             writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")

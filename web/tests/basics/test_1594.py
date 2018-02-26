@@ -37,7 +37,10 @@ class Test:
     entryEmptyTags = "   ,"
     entryDescription = "description"
     entryTags = "tag1,"
-    channelList = [('test 111')]
+    channelName = "test required field"
+    channelDescription = "test"
+    channelTags = "test,"
+    
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4' 
     
     
@@ -58,7 +61,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryName')
+            self.entryName = clsTestService.addGuidToString('Requiredfields', self.testNum)
             self.common.admin.enableRequiredField(True, True, True, True)
             
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -67,39 +70,43 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
+            
+            writeToLog("INFO","Step 2: Going to Create channel")
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, False, False, False, linkToCategoriesList='') == False:
+                writeToLog("INFO","Step 2: FAILED to create channel")
+                return
              
-            writeToLog("INFO","Step 2: Going to upload entry while required fields turned ON")
+            writeToLog("INFO","Step 3: Going to upload entry while required fields turned ON")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryEmptyDescription, self.entryEmptyTags, disclaimer=False) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
            
-            writeToLog("INFO","Step 3: Going to publish without filling required field")
+            writeToLog("INFO","Step 4: Going to publish without filling required field")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], [], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == True:
-                writeToLog("INFO","Step 3: FAILED - publish shouldn't be enabled")
+                writeToLog("INFO","Step 4: FAILED - publish shouldn't be enabled")
                 return
       
             writeToLog("INFO","Expected result is failed - publish shouldn't be enabled")
             
-            writeToLog("INFO","Step 4: Going to fill required fields")
+            writeToLog("INFO","Step 5: Going to fill required fields")
             if self.common.upload.fillFileUploadEntryDetails(self.entryName, self.entryDescription, self.entryTags) == False:
-                writeToLog("INFO","Step 4: FAILED to fill tags and description")
+                writeToLog("INFO","Step 5: FAILED to fill tags and description")
                 return False
             
-            writeToLog("INFO","Step 5: Going to save changes in required fields")
+            writeToLog("INFO","Step 6: Going to save changes in required fields")
             if self.common.upload.click(self.common.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
-                writeToLog("INFO","Step 5: FAILED to save changes")
+                writeToLog("INFO","Step 6: FAILED to save changes")
                 return False 
             sleep(2)
 
             self.common.general.waitForLoaderToDisappear()
             sleep(6)
         
-            writeToLog("INFO","Step 6: Going to publish entry after filling required fields")
-            if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
-                writeToLog("INFO","Step 6: FAILED to publish entry")
+            writeToLog("INFO","Step 7: Going to publish entry after filling required fields")
+            if self.common.myMedia.publishSingleEntry(self.entryName, [], [self.channelName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
+                writeToLog("INFO","Step 7: FAILED to publish entry")
                 return False
-            
             
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -113,6 +120,8 @@ class Test:
             self.common.base.handleTestFail(self.status)        
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.channel.navigateToMyChannels()
+            self.common.channel.deleteChannel(self.channelName)
             self.common.admin.enableRequiredField(False, False, True, True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:

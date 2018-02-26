@@ -54,7 +54,7 @@ class Test:
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
-            self.playlisTitle = clsTestService.addGuidToString('Channel playlist')
+            self.playlisTitle = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.filePathDownloaded = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, self.entryName + "_" + '(' + self.flavorsList[0] + ')'  + ".mp4")
 #           TO-DO: move the below line to "crate evn test"
 #           self.common.admin.adminDownloadMedia(True)
@@ -65,7 +65,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return      
-                                
            
             if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag) == False:    
                 self.status = "Fail"

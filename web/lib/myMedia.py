@@ -36,6 +36,11 @@ class MyMedia(Base):
     MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH                         = ('xpath', "//span[contains(.,'PUBLISHED_CATEGORY')]")# When using this locator, replace 'PUBLISHED_CATEGORY' string with your real category/channel name
     MY_MEDIA_SAVE_MESSAGE_CONFIRM                               = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'Media successfully published')]")
     MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to categories or channels.')]")
+    MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")
+    MY_MEDIA_ENTRY_CHILD                                        = ('xpath', "//p[@class='status_content' and contains(text(), 'ENTRY_PRIVACY')]")
+    MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::a[@class='entryTitle tight']")                                   
+    MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id = 'accordion-ENTRY_ID']")
+    MY_MEDIA_ENTRY_CHILD_POPUP                                  = ('xpath', "//strong[@class='valign-top']")
     #=============================================================================================================
     def getSearchBarElement(self):
 #         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -50,7 +55,6 @@ class MyMedia(Base):
         # Check if we are already in my media page
         if forceNavigate == False:
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
-                writeToLog("INFO","Success Already in my media page")
                 return True
         
         # Click on User Menu Toggle Button
@@ -119,11 +123,15 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to click Action -> Delete")
             return False
         
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear() 
+        
         if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
         
-        self.clsCommon.general.waitForLoaderToDisappear()    
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear() 
                      
         # Printing the deleted entries       
         if type(entriesNames) is list: 
@@ -401,8 +409,46 @@ class MyMedia(Base):
         return True
     
     
-
-    
-    #TODO
-    #def verifyPublish(self, entryName, categoryList, channelList):
+    # Author: Tzachi Guetta 
+    def verifyEntryPrivacyInMyMedia(self, entryName, expectedEntryPrivacy):
+        try:                
+            if self.navigateToMyMedia() == False:
+                writeToLog("INFO","FAILED to navigate to  my media")
+                return False
+            
+            if expectedEntryPrivacy == enums.EntryPrivacyType.UNLISTED:
+            
+                parent = self.wait_visible(self.replaceInLocator(self.MY_MEDIA_ENTRY_PARNET, "ENTRY_NAME", entryName))
+                child = self.replaceInLocator(self.MY_MEDIA_ENTRY_CHILD, "ENTRY_PRIVACY", 'Unlisted')
+                if self.clsCommon.base.get_child_element(parent, child) != None:
+                    writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(enums.EntryPrivacyType.UNLISTED) + "'")
+                    return True 
+            
+            elif expectedEntryPrivacy == enums.EntryPrivacyType.PRIVATE:
+            
+                parent = self.wait_visible(self.replaceInLocator(self.MY_MEDIA_ENTRY_PARNET, "ENTRY_NAME", entryName))
+                child = self.replaceInLocator(self.MY_MEDIA_ENTRY_CHILD, "ENTRY_PRIVACY", 'Private')
+                if self.clsCommon.base.get_child_element(parent, child) != None:
+                    writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(enums.EntryPrivacyType.PRIVATE) + "'")
+                    return True 
                 
+            elif expectedEntryPrivacy == enums.EntryPrivacyType.REJECTED or expectedEntryPrivacy == enums.EntryPrivacyType.PENDING or expectedEntryPrivacy == enums.EntryPrivacyType.PUBLISHED:
+                
+                tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_PARNET, "ENTRY_NAME", entryName) 
+                entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+                tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN[1].replace('ENTRY_ID', entryId))
+                if self.click(tmpBtn) == False:
+                    writeToLog("INFO","FAILED to click on the 'published' pop-up of: " + entryName)
+                    return False
+                sleep(3)
+                
+                if str(expectedEntryPrivacy) in self.get_element(tmpBtn).find_element_by_xpath(self.MY_MEDIA_ENTRY_CHILD_POPUP[1]).text:
+                    writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
+                    return True
+        
+        except NoSuchElementException:
+            return False
+    
+        return True
+        
+        

@@ -54,70 +54,103 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('entryName3')
             self.entryName4 = clsTestService.addGuidToString('entryName4')
             self.entryName5 = clsTestService.addGuidToString('entryName5')
-            self.newUserId = "webcast@mailinator.com"
-            self.newUserPass = "Automation1!"
+            self.newUserId = "pythonautomation1@mailinator.com"
+            self.newUserPass = "Kaltura1!"
             ##################### TEST STEPS - MAIN FLOW #####################
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
+            writeToLog("INFO","Step 1: Going to perform login to KMS site as End-user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
+                writeToLog("INFO","Step 1: FAILED to login as End-user")
                 return
              
-            writeToLog("INFO","Step 2: Going to upload entry")
+            writeToLog("INFO","Step 2: Going to upload entry #1")
             if self.common.upload.uploadEntry(self.filePath, self.entryName1, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 2: FAILED failed to upload entry #1")
                 return
-             
-            writeToLog("INFO","Step 2: Going to upload entry")
+              
+            writeToLog("INFO","Step 3: Going to upload entry #2")
             if self.common.upload.uploadEntry(self.filePath, self.entryName2, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 3: FAILED failed to upload entry #2")
                 return
-             
-            writeToLog("INFO","Step 2: Going to upload entry")
+              
+            writeToLog("INFO","Step 4: Going to upload entry #3")
             if self.common.upload.uploadEntry(self.filePath, self.entryName3, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 4: FAILED failed to upload entry #3")
                 return
-            
-            writeToLog("INFO","Step 2: Going to upload entry")
+             
+            writeToLog("INFO","Step 5: Going to upload entry #4")
             if self.common.upload.uploadEntry(self.filePath, self.entryName4, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 2: FAILED failed to upload entry #4")
                 return
-            
-            writeToLog("INFO","Step 2: Going to upload entry")
+             
+            writeToLog("INFO","Step 5: Going to upload entry #5")
             if self.common.upload.uploadEntry(self.filePath, self.entryName5, "descritiondescrition", "tags1,tags2,") == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
-                return            
-            
-            writeToLog("INFO","Step 3: Going to publish two entries to Moderated channel")
-            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5], isChannelModerate=True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to publish two entries to Moderated channel")
+                writeToLog("INFO","Step 2: FAILED failed to upload entry #5")
                 return
-            
-            writeToLog("INFO","Step 5: Going to logout from main user")
+             
+            writeToLog("INFO","Step 6: Going to set entry #4 as Unlisted")
+            if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to set entry #4 as Unlisted")
+                return     
+              
+            writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
+            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
+                return
+              
+            writeToLog("INFO","Step 8: Going to logout from End-user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED failed to logout from main user")
+                writeToLog("INFO","Step 8: FAILED failed to logout from End-user")
                 return  
-                                  
-            writeToLog("INFO","Step 6: Going to login with channel's owner")
+                                    
+            writeToLog("INFO","Step 9: Going to login to KMS with channel's owner")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to login with channel's owner")
+                writeToLog("INFO","Step 9: FAILED to login with channel's owner")
+                return
+              
+            writeToLog("INFO","Step 10: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
+            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", self.entryName1, self.entryName2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to handle entries in Pending tab")
                 return
             
-            writeToLog("INFO","Step 3: Going to handle entries in Pending tab")
-            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2], [self.entryName3, self.entryName4]) == False:
+            writeToLog("INFO","Step 11: Going to logout ")
+            if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to handle entries in Pending tab")
-                return    
+                writeToLog("INFO","Step 11: FAILED failed to logout")
+                return  
+            
+            writeToLog("INFO","Step 12: Going to perform login to KMS site End-user")
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to login as End-user")
+                return
+            
+            self.entries = {self.entryName1: enums.EntryPrivacyType.REJECTED, self.entryName2: enums.EntryPrivacyType.PUBLISHED,
+                            self.entryName3: enums.EntryPrivacyType.PENDING, self.entryName4: enums.EntryPrivacyType.UNLISTED,
+                            self.entryName5: enums.EntryPrivacyType.PRIVATE }
+            
+            writeToLog("INFO","Step 13: Going to verify the entries' privacy on my-media")
+            try:
+                for entry in self.entries:
+                    if self.common.myMedia.verifyEntryPrivacyInMyMedia(entry, self.entries.get(entry)) == False:
+                        writeToLog("INFO","Step 13: FAILED verify privacy for entry: " + str(entry))  
+                        self.status = "Fail"
+                        return                        
+            except:
+                writeToLog("INFO","Step 13: FAILED verify privacy for entry: " + str(entry))  
+                self.status = "Fail"
+                return
             ##################################################################
-            print("DONE")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -127,12 +160,10 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.login.logOutOfKMS()
-            self.common.loginAsUser()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
-            pass            
+            pass
         clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)
