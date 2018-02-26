@@ -678,6 +678,8 @@ class Channel(Base):
         
         return True
     
+    
+    # Author: Tzachi Guetta     
     def method_helper_rejectEntry(self, rejectEntry):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
@@ -685,9 +687,10 @@ class Channel(Base):
         if self.click(tmpRejectBtn) == False:
             writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
             return False 
-        writeToLog("INFO","the following entry was rejected : " + rejectEntry)  
+        writeToLog("INFO","The following entry was rejected : " + rejectEntry)  
         
-    
+        
+    # Author: Tzachi Guetta     
     def method_helper_approveEntry(self, approveEntry):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
@@ -696,4 +699,4 @@ class Channel(Base):
             writeToLog("INFO","FAILED to approve entry: " + approveEntry)
             return False                    
         
-        writeToLog("INFO","the following entry was approved : " + approveEntry)
+        writeToLog("INFO","The following entry was approved : " + approveEntry)
