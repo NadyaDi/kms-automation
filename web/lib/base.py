@@ -630,6 +630,7 @@ class Base:
     
         
     def handleTestFail(self, status):
+        self.switch_to_default_content()
         if status == "Fail":
             if self.takeScreeshotGeneric('LAST_SCRENNSHOT') == True:
                 return True
