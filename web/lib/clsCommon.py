@@ -23,25 +23,7 @@ from myHistory import MyHistory
 class Common():
     # Parameters
     driver = None
-     
-    # Module
-    base            = None
-    autoit          = None
-    admin           = None
-    login           = None
-    upload          = None
-    general         = None
-    myMedia         = None
-    entryPage       = None
-    editEntryPage   = None
-    category        = None
-    channel         = None
-    myPlaylists     = None
-    player          = None
-    myHistory       = None
-    qrcode          = None
-
-    
+   
     def __init__(self, driver):
         self.driver             = driver
         self.base               = Base(driver)
