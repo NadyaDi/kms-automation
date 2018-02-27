@@ -19,8 +19,12 @@ class MyHistory(Base):
     #=============================================================================================================
     MY_HISTORY_SEARCH_BAR                                         = ('id', 'searchBar')
     MY_HISTORY_RESULTS_ENTRY                                      = ('xpath', '//span[@class="entry-name" and text() = "ENTRY_NAME"]')
-    MY_HISTORY_REMOVE_ENTRY_BUTTON                                = ('class_name', 'icon-trash icon-white')
-    MY_HISTORY_ENTRY_SECTION_PARENT                               = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::div[@class='fullsize']")  
+    MY_HISTORY_REMOVE_ENTRY_BUTTON                                = ('xpath', "//a[@href = '/history/delete/entry-id/ENTRY_ID']")
+    MY_HISTORY_ENTRY                                              = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]")  
+    MY_HISTORY_ENTRY_DELETED_MESSAGE                              = ('xpath', '//div[@class = "lead"]')  
+    MY_HISTORY_CLEAR_HISORY_BUTTON                                = ('xpath', '//button[@href = "/history/clear"]')  
+    MY_HISTORY_CONFIRM_HISTORY_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and @data-handler = '1']")
+    MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE                      = ('class_name', 'empty-header')
     #=============================================================================================================
     def getSearchBarElement(self):
         return self.get_element(self.MY_HISTORY_SEARCH_BAR)    
@@ -88,11 +92,38 @@ class MyHistory(Base):
     
     #  @Author: Inbar Willman
     def removeEntryFromWatchListMyHistory(self, entryName):
-        tmpParent = (self.MY_HISTORY_ENTRY_SECTION_PARENT[0], self.MY_HISTORY_ENTRY_SECTION_PARENT[1].replace('ENTRY_NAME', entryName))
-        parent = self.get_element(tmpParent)
-        remove_btn_list = self.get_child_elements(parent, self.MY_HISTORY_REMOVE_ENTRY_BUTTON)
-        remove_btn = remove_btn_list[1]
-        self.clickElement(remove_btn)
-
+        tmpEntry = (self.MY_HISTORY_ENTRY[0], self.MY_HISTORY_ENTRY[1].replace('ENTRY_NAME', entryName))
+        entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+        tmpDeleteBtn = (self.MY_HISTORY_REMOVE_ENTRY_BUTTON[0], self.MY_HISTORY_REMOVE_ENTRY_BUTTON[1].replace('ENTRY_ID', entryId))
+        if self.click(tmpDeleteBtn) == False:
+            writeToLog("INFO","FAILED to delete entry: " + entryName)
+            return False 
+        
+        #Verify that correct message is displayed
+        tmpMessage = self.get_element_text(self.MY_HISTORY_ENTRY_DELETED_MESSAGE)
+        if "This item has been removed from your history." != tmpMessage:
+            writeToLog("INFO","FAILED to display correct message")
+            return False 
+        
         return True
+
     
+    #  @Author: Inbar Willman      
+    def clearHistory(self):
+        if self.click(self.MY_HISTORY_CLEAR_HISORY_BUTTON) ==  False:
+            writeToLog("INFO","FAILED to click clear history")
+            return False 
+        
+        sleep(2)
+        
+        if self.click(self.MY_HISTORY_CONFIRM_HISTORY_DELETE) == False:
+            writeToLog("INFO","FAILED to click confirm deletion")
+            return False
+        
+        #Verify that correct message is displayed
+        tmpMessage = self.get_element_text(self.MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE)
+        if 'Your feed is empty' != tmpMessage:
+            writeToLog("INFO","FAILED to display correct answer")
+            return False 
+        
+        return True

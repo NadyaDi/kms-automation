@@ -32,10 +32,9 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = '8CEC6076_entryName'
+    entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    channelList = [('test my history')]
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
@@ -55,62 +54,57 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-#             self.entryName = clsTestService.addGuidToString('entryName', self.testNum)
-            ########################## TEST STEPS - MAIN FLOW ####################### 
-#             writeToLog("INFO","Step 1: Going to upload entry")
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
-#                 return
-#             
-#             writeToLog("INFO","Step 2: Going to publish entry to channel")
-#             if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:         
-#                 writeToLog("INFO","Step 2: FAILED failed to publish entry")
-#                 return          
-#             
-#             writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
-#             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-#                 writeToLog("INFO","Step 3: FAILED to navigate to entry page")
-#                 return           
-#             
-#             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
-#                 return
-#              
-#             writeToLog("INFO","Step 5: Going to Search entry in My History page")
-#             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-#                 writeToLog("INFO","Step 5: FAILED - New entry is displayed in my history page")
-#                 return
-#             
-#             writeToLog("INFO","Step 5: Previous Step Failed as Expected - The entry should not be displayed")
-#             
-#             writeToLog("INFO","Step 6: Going to play entry")
-#             if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName, '0:05') == False:
-#                 writeToLog("INFO","Step 6: FAILED to navigate and play entry")
-#                 return  
-#             
-#             writeToLog("INFO","Step 7: Going to switch to default content")
-#             if self.common.base.switch_to_default_content() == False:
-#                 writeToLog("INFO","Step 7: FAILED to switch to default content")
-#                 return  
+            self.entryName = clsTestService.addGuidToString('MyHistoryEntry', self.testNum)
+            ######################### TEST STEPS - MAIN FLOW ####################### 
+            writeToLog("INFO","Step 1: Going to upload entry")
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                return
+             
+            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+             
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+              
+            writeToLog("INFO","Step 4: Going to Search entry in My History page")
+            if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
+                writeToLog("INFO","Step 4: FAILED - New entry is displayed in my history page")
+                return
+             
+            writeToLog("INFO","Step 4: Previous Step Failed as Expected - The entry should not be displayed")
+             
+            writeToLog("INFO","Step 5: Going to play entry")
+            if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName, '0:05') == False:
+                writeToLog("INFO","Step 5: FAILED to navigate and play entry")
+                return  
+             
+            writeToLog("INFO","Step 6: Going to switch to default content")
+            if self.common.base.switch_to_default_content() == False:
+                writeToLog("INFO","Step 6: FAILED to switch to default content")
+                return  
             
-            writeToLog("INFO","Step 8: Going to navigate to My History and check for entry")
+            writeToLog("INFO","Step 7: Going to navigate to My History and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
-                writeToLog("INFO","Step 8: FAILED find entry in My History")
+                writeToLog("INFO","Step 7: FAILED find entry in My History")
                 return   
             
-            writeToLog("INFO","Step 9: Going to delete entry from My History")
+            writeToLog("INFO","Step 8: Going to delete entry from My History")
             if self.common.myHistory.removeEntryFromWatchListMyHistory(self.entryName) == False:
-                writeToLog("INFO","Step 9: FAILED to delete entry from My History")
+                writeToLog("INFO","Step 8: FAILED to delete entry from My History")
                 return               
             
-            writeToLog("INFO","Step 10: Going to verify that entry isn't displayed in My History")
+            writeToLog("INFO","Step 9: Going to verify that entry isn't displayed in My History")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-                writeToLog("INFO","Step 5: FAILED - Deleted entry is displayed in My History page")
+                writeToLog("INFO","Step 9: FAILED - Deleted entry is displayed in My History page")
                 return
             
-            writeToLog("INFO","Step 5: Previous Step Failed as Expected - The entry should not be displayed")
+            writeToLog("INFO","Step 9: Previous Step Failed as Expected - The entry should not be displayed")
               
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -123,7 +117,6 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
