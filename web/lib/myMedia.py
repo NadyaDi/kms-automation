@@ -41,6 +41,12 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::a[@class='entryTitle tight']")                                   
     MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id = 'accordion-ENTRY_ID']")
     MY_MEDIA_ENTRY_CHILD_POPUP                                  = ('xpath', "//strong[@class='valign-top']")
+    MY_MEDIA_SORT_BY_DROPDOWNLIST                               = ('xpath', "//a[@id='sort-btn']")
+    MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST                      = ('xpath', "//a[@id='status-btn']")
+    MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST                        = ('xpath', "//a[@id='type-btn']")
+    MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
+    MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST                  = ('xpath', "//a[@id='sched-btn']")
+    MY_MEDIA_DROPDOWNLIST_ITEM                                  = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
     #=============================================================================================================
     def getSearchBarElement(self):
 #         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -452,3 +458,42 @@ class MyMedia(Base):
         return True
         
         
+    # Author: Tzachi Guetta 
+    def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
+        try:                
+            if dropDownListName == enums.SortAndFilter.SORT_BY:
+                tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST
+            
+            elif dropDownListName == enums.SortAndFilter.PRIVACY:
+                tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
+                
+            elif dropDownListName == enums.SortAndFilter.MEDIA_TYPE:
+                tmplocator = self.MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST
+            
+            elif dropDownListName == enums.SortAndFilter.COLLABORATION:
+                tmplocator = self.MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST
+                
+            elif dropDownListName == enums.SortAndFilter.SCHEDULING:
+                tmplocator = self.MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST
+                
+            else:
+                writeToLog("INFO","FAILED, drop-down-list name was not provided")
+                return False
+                
+            if self.click(tmplocator) == False:
+                writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
+                return False
+            
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
+            if self.click(tmpEntry) == False:
+                writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem)
+                return False
+            
+            sleep(1)
+            self.clsCommon.general.waitForLoaderToDisappear()    
+        
+        except NoSuchElementException:
+            return False
+    
+        return True
+    
