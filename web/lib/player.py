@@ -32,9 +32,11 @@ class Player(Base):
     PLAYER_SLIDE_IN_SIDE_BAR_MENU                               = ('xpath',"//li[contains (@class,'mediaBox slideBox')]")
     PLAYER_SILDE_START_TIME                                     = ('xpath', "//span[contains(text(), 'SLIDE_TIME')]") # When using this locator, replace 'SLIDE_TIME' string with your real slide_time
     PLAYER_SCROLLER_SIDE_BAR_MENU                               = ('xpath', "//div[@class='nano-slider']")
-    PLAYER_SLIDE_DECK_CHAPTER                                   = ('xpath', "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']/ancestor::div[@class='boxInfo']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
+    PLAYER_SLIDE_DECK_CHAPTER_PARENT                            = ('xpath', "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']/ancestor::div[@class='boxInfo']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
+    PLAYER_SLIDE_DECK_CHAPTER                                   = ("xpath", "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
     PLAYER_SLIDE_NUMBER                                         = ('xpath', "//div[@class='slideNumber' and @title='Slide number' and contains(text(),'SLIDE_NUMBER')]") # When using this locator, replace 'SLIDE_NUMBER' string with your real slide number
     PLAYER_OPEN_CHAPTER_ICON                                    = ('xpath', "//div[@class='slideBoxToggle icon-toggle' and @title='Expand/collapse chapter']")
+    PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS                         = ('xpath', "//span[@class='toggleAll icon-toggleAll']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -175,7 +177,6 @@ class Player(Base):
     # creator: Michal zomper
     # The Function go over the slides in the slide menu bar and verify that the time is correct 
     def checkSlidesTimeInSlideBarMenu(self, mySlidesList, isVerifySlideNumber=False):
-        slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         sleep(2)
         # Verify that the slides time is correct
         count = 0
@@ -192,19 +193,26 @@ class Player(Base):
                     return False
 
             # After the 4 slide we need to move the side menu scroller down so we can see the rest of the slides
-            if count > 2:
-                scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
-                action = ActionChains(self.driver)
-                action.move_to_element(scroller)
-                action.move_by_offset(0, slideHeight)
-                action.click_and_hold()
-                action.release()
-                action.perform()
+            if count > 1:
+                self.scrollInSlidesMenuBar(1)
             count = count + 1
         
         writeToLog("INFO","SUCCESS slides are display in the correct time in the slides bar menu")
         return True
         
+        
+    # creator: Michal zomper
+    # The function move the scroller in the slides menu bar according to the size that the function get
+    # size - the number of slides that need to scroll to get to the right point (in order to scroll down size need to be positive / in order to scroll up size need to be negative )
+    def scrollInSlidesMenuBar(self, size):
+        slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
+        scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
+        action = ActionChains(self.driver)
+        action.move_to_element(scroller)
+        action.move_by_offset(0,  (slideHeight * size))
+        action.click_and_hold()
+        action.release()
+        action.perform()
         
     # creator: Michal zomper
     def changePlayerView(self, playerView = enums.PlayerView.PIP):
@@ -275,48 +283,69 @@ class Player(Base):
         return True
                 
     
-     # creator: Michal zomper
-     # The function checking all the info in the slides menu bar  
-     # The function check that the chapters are display in the correct time + all the slides that need to be in the chapters display correctly
-    def vrifyChapterAndSlidesInItInSlidesMenuBar(self, chapterName, chapterTime, slidesListInChapter): 
+    # creator: Michal zomper
+    # The function checking all the info in the slides menu bar  
+    # The function check that the chapters are display in the correct time + all the slides that need to be in the chapters display correctly
+    def vrifyChapterAndSlidesInSlidesMenuBar(self, chapterName, slidesListInChapter, chapterIsclose=False): 
         self.switchToPlayerIframe() 
         
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
-            writeToLog("INFO","FAILED to click on the slide side bar menu")
+            writeToLog("INFO","FAILED to click and open slides bar menu")
             return False
-        
-        chapterDetails = (self.PLAYER_SLIDE_DECK_CHAPTER[0], self.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapterName))
+        sleep(2)
+    
+        chapterDetails = (self.PLAYER_SLIDE_DECK_CHAPTER_PARENT[0], self.PLAYER_SLIDE_DECK_CHAPTER_PARENT[1].replace('CHAPTER_NAME', chapterName))
         try:
-            detsils = self.get_element(chapterDetails)
+            details = self.get_element(chapterDetails)
         except NoSuchElementException:
             writeToLog("INFO","FAILED find chapter '" + chapterName + "' details")
             return False
 
-        chapterDetailsList = (detsils.text).split('\n')
+        chapterDetailsList = (details.text).split('\n')
         
         # check chapter details
         if chapterDetailsList[1] != chapterName:
-            writeToLog("INFO","FAILED , chapter name is not correct")
+            writeToLog("INFO","FAILED, chapter name is not correct")
             return False
 
-        if chapterDetailsList[2] != chapterTime:
-            writeToLog("INFO","FAILED , chapter time is not correct")
+        if chapterDetailsList[2] != slidesListInChapter[next(iter(slidesListInChapter))]:
+            writeToLog("INFO","FAILED, chapter time is not correct")
             return False
-            
-        #el = detsils.find_elements_by_xpath("..")
         
-        
-        # open chapter in order to see all the slides
-        if self.click(self.PLAYER_OPEN_CHAPTER_ICON) == False:
-            writeToLog("INFO","FAILED to open chapter in order to see all the slides")
+        if self.MoveToChapter(chapterName) == False:
+            writeToLog("INFO","FAILED to hover chapter in slides menu bar")
             return False
+        
+        if chapterIsclose == True:
+            el = details.find_element_by_xpath("..")
+            child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
+            sleep(2)
+            # open chapter in order to see all the slides
+            if self.clickElement(child) == False:
+                writeToLog("INFO","FAILED to open chapter in order to see all the slides")
+                return False
             
         # Verify that all the slides in the chapter are correct
         if self.checkSlidesTimeInSlideBarMenu(slidesListInChapter, isVerifySlideNumber=True) == False:
             writeToLog("INFO","FAILED, can NOT verify that all the needed slides are display under chapter " + chapterName)
             return False
         
+        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+            writeToLog("INFO","FAILED to click and close slides bar menu")
+            return False
         
+        writeToLog("INFO","SUCCESS," + chapterName + ":all slides are verified and appear at the correct time")
+        return True
+    
+    # creator: Michal zomper
+    # The function move the scroller in the slides menu bar so that the needed chapter is now display
+    def MoveToChapter(self, chapterName, timeOut=10):
+        tmpLocator = (self.PLAYER_SLIDE_DECK_CHAPTER[0], self.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapterName))
+        sleep(1)
+        if self.hover_on_element(tmpLocator) == False:
+            if self.click(tmpLocator, timeOut) == False:
+                writeToLog("INFO","FAILED to find chapter")
+                return False
+        self.scrollInSlidesMenuBar(1)
+        return True
         
-        
-        writeToLog("INFO","SUCCESS, all slides are verified and appear at the correct time")

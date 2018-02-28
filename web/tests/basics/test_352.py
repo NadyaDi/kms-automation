@@ -69,16 +69,19 @@ class Test:
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
+                self.status = "Fail"
                 return
                
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
+                self.status = "Fail"
                 return
                            
             writeToLog("INFO","Step 4: Going remove slides from time line")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
+                self.status = "Fail"
                 return
               
             # remove deleted slides from  slides list (slidesQrCodeAndTimeList)
@@ -94,6 +97,7 @@ class Test:
             writeToLog("INFO","Step 6: Going to navigate to Entry Page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED navigate to entry page")
+                self.status = "Fail"
                 return
             sleep(4)
             

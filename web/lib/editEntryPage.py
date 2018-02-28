@@ -803,7 +803,7 @@ class EditEntryPage(Base):
         
         for chapter in chaptersList:
             if self.deleteChapter(chaptersList[chapter]) == False:
-                writeToLog("INFO","FAILED add chapter name: " + chapter)
+                writeToLog("INFO","FAILED to delete chapter name: " + chapter)
                 return False
             
         if self.click(self.EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON, 20, True) == False:
