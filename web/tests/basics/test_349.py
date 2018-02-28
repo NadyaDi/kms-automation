@@ -66,6 +66,7 @@ class Test:
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
+                self.status = "Fail"
                 return
             
             writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
