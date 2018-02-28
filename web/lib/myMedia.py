@@ -486,11 +486,48 @@ class MyMedia(Base):
             
             tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
             if self.click(tmpEntry) == False:
-                writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem)
+                writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
                 return False
-            
-            sleep(1)
+
             self.clsCommon.general.waitForLoaderToDisappear()    
+        
+        except NoSuchElementException:
+            return False
+    
+        return True
+    
+    
+        # Author: Tzachi Guetta 
+    def SortAndFilterInMyMedia(self, sortBy='', filterPrivacy='', filterMediaType='', filterCollaboration='', filterScheduling='', resetFields=False):
+        try:         
+            if self.navigateToMyMedia(forceNavigate = resetFields) == False:
+                writeToLog("INFO","FAILED to navigate to  my media")
+                return False                
+            
+            if sortBy != '':
+                if self.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
+                    writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
+                    return False
+                
+            if filterPrivacy != '':
+                if self.SortAndFilter(enums.SortAndFilter.PRIVACY, filterPrivacy) == False:
+                    writeToLog("INFO","FAILED to set filter: " + str(filterPrivacy) + " in my media")
+                    return False
+                
+            if filterMediaType != '':
+                if self.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
+                    writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
+                    return False
+                
+            if filterCollaboration != '':
+                if self.SortAndFilter(enums.SortAndFilter.COLLABORATION, filterCollaboration) == False:
+                    writeToLog("INFO","FAILED to set filter: " + str(filterCollaboration) + " in my media")
+                    return False
+                
+            if filterScheduling != '':
+                if self.SortAndFilter(enums.SortAndFilter.SCHEDULING, filterScheduling) == False:
+                    writeToLog("INFO","FAILED to set filter: " + str(filterScheduling) + " in my media")
+                    return False                                                     
         
         except NoSuchElementException:
             return False
