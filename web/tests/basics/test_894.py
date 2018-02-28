@@ -62,51 +62,10 @@ class Test:
             self.entryName = clsTestService.addGuidToString('DisclaimerEntry', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.navigateToMyMedia() == None:
+            if self.common.myMedia.SortAndFilterInMyMedia(enums.SortBy.VIEWS, enums.EntryPrivacyType.PUBLISHED, enums.MediaType.VIDEO, enums.Collaboration.CO_PUBLISH, enums.Scheduling.FUTURE_SCHEDULING) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-            
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, enums.SortBy.VIEWS) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
-            
-                        
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY, enums.EntryPrivacyType.PUBLISHED) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
-            
-                        
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.VIDEO) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
-            
-                        
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.COLLABORATION, enums.Collaboration.CO_PUBLISH) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
-            
-                        
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.SCHEDULING, enums.Scheduling.FUTURE_SCHEDULING) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
-
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.SCHEDULING, enums.Scheduling.FUTURE_SCHEDULING) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
-            
 
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -119,7 +78,7 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+#             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
