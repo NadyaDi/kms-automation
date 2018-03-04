@@ -597,7 +597,8 @@ class EditEntryPage(Base):
         if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 300) == False:
             writeToLog("INFO","FAILED, upload deck processing isn't done after 5 minutes")
             return False
-         
+        sleep(2)
+        
         # Verify cuepoint were added on the player
         if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
         #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
@@ -788,7 +789,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED, chapter was found although the chapter was deleted")
             return False
             
-        writeToLog("INFO","Success, Chapters was deleted successfully")
+        writeToLog("INFO","Success, Chapter was deleted successfully")
         return True  
     
     

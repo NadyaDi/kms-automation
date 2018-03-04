@@ -21,7 +21,7 @@ class Player(Base):
     PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER                     = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-replay')]")
     PLAYER_GENERIC_PLAY_REPLAY_PASUSE_BUTTON_CONTROLS_CONTAINER = ('xpath', "//button[@data-plugin-name='playPauseBtn']")
     PLAYER_CURRENT_TIME_LABEL                                   = ('xpath', "//div[@data-plugin-name='currentTimeLabel']")
-    PLAYER_SLIDE_SIDE_BAR_MENU                                  = ('id','sideBarContainerReminderContainer')
+    PLAYER_SLIDE_SIDE_BAR_MENU                                  = ('xpath', "//div[@id='sideBarContainerReminderContainer' and @class='icon-chapterMenu']")
     PLAYER_SLIDE_IN_SIDE_MENU                                   = ('xpath', "//li[@class='mediaBox slideBox']")
     PLAYER_VIEW_PIP                                             = ('id','pip')
     PLAYER_VIEW_SIDEBYSIDE                                      = ('id','sideBySide')
@@ -152,7 +152,7 @@ class Player(Base):
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
     def verifySlidesInPlayerSideBar(self, mySlidesList):
         self.switchToPlayerIframe()
-        sleep(1)
+        sleep(3)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the slide side bar menu")
             return False
@@ -286,9 +286,9 @@ class Player(Base):
     # creator: Michal zomper
     # The function checking all the info in the slides menu bar  
     # The function check that the chapters are display in the correct time + all the slides that need to be in the chapters display correctly
-    def vrifyChapterAndSlidesInSlidesMenuBar(self, chapterName, slidesListInChapter, chapterIsclose=False): 
+    def vrifyChapterAndSlidesInSlidesMenuBarInEntrypage(self, chapterName, slidesListInChapter, chapterIsclose=False): 
         self.switchToPlayerIframe() 
-        
+        sleep(2)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click and open slides bar menu")
             return False
@@ -311,11 +311,11 @@ class Player(Base):
         if chapterDetailsList[2] != slidesListInChapter[next(iter(slidesListInChapter))]:
             writeToLog("INFO","FAILED, chapter time is not correct")
             return False
-        
+        sleep(2)
         if self.MoveToChapter(chapterName) == False:
             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
             return False
-        
+        sleep(2)
         if chapterIsclose == True:
             el = details.find_element_by_xpath("..")
             child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
@@ -324,11 +324,13 @@ class Player(Base):
             if self.clickElement(child) == False:
                 writeToLog("INFO","FAILED to open chapter in order to see all the slides")
                 return False
-            
+         
+        sleep(1)   
         # Verify that all the slides in the chapter are correct
         if self.checkSlidesTimeInSlideBarMenu(slidesListInChapter, isVerifySlideNumber=True) == False:
-            writeToLog("INFO","FAILED, can NOT verify that all the needed slides are display under chapter " + chapterName)
+            writeToLog("INFO","FAILED, can NOT verify that all the needed slides are display under chapter: " + chapterName)
             return False
+        sleep(1)
         
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click and close slides bar menu")

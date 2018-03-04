@@ -336,7 +336,11 @@ class MyMedia(Base):
             if self.clickActionsAndPublishFromMyMedia() == False:
                 writeToLog("INFO","FAILED to click on action button")
                 return False
-                sleep(7)        
+                sleep(7)   
+
+            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
+                writeToLog("DEBUG","FAILED to click on publish button")
+                return False     
 
         elif publishFrom == enums.Location.ENTRY_PAGE:
             sleep(1)
@@ -345,20 +349,20 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
                 return False  
             
-            sleep(1)
+            sleep(5)
             # Click on publish button
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
 
         elif publishFrom == enums.Location.UPLOAD_PAGE: 
-            writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")            
-         
-        sleep(2)            
-        if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
-            writeToLog("DEBUG","FAILED to click on publish button")
-            return False        
-     
+            writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")       
+            sleep(2)            
+            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
+                writeToLog("DEBUG","FAILED to click on publish button")
+                return False        
+          
+
         sleep(2)    
         # Click if category list is empty
         if len(categoryList) != 0:

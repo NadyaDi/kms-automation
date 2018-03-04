@@ -94,15 +94,21 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
                 return
                 
-            writeToLog("INFO","Step 5: Going to verify that chapter one is display correctly in the player (in entry page)")
-            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBar(next(iter(self.chaptersList)), self.firstChapterSlidesList, chapterIsclose=True) == False:
+            writeToLog("INFO","Step 5: Going to navigate to entry page")
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to verify chapter one and all of his slides")
+                writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName)
+                return  
+                
+            writeToLog("INFO","Step 6: Going to verify that chapter one is display correctly in the player (in entry page)")
+            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage(next(iter(self.chaptersList)), self.firstChapterSlidesList, chapterIsclose=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify chapter one and all of his slides")
                 return            
               
-            writeToLog("INFO","Step 6: Going to open slides menu bar")
+            writeToLog("INFO","Step 7: Going to open slides menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
-                writeToLog("INFO","Step 6: FAILED to click and open slides bar menu")
+                writeToLog("INFO","Step 7: FAILED to click and open slides bar menu")
                 self.status = "Fail"
                 return
               
@@ -110,46 +116,46 @@ class Test:
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
               
-            writeToLog("INFO","Step 7: Going to close slides menu bar")
+            writeToLog("INFO","Step 8: Going to close slides menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
-                writeToLog("INFO","Step 7: FAILED to click and open slides bar menu")
+                writeToLog("INFO","Step 8: FAILED to click and open slides bar menu")
                 return
               
-            writeToLog("INFO","Step 8: Going to verify that chapter two is display correctly in the player (in entry page)")
-            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBar("Second Chapter", self.secondChapterSlidesList) == False:
+            writeToLog("INFO","Step 9: Going to verify that chapter two is display correctly in the player (in entry page)")
+            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage("Second Chapter", self.secondChapterSlidesList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to verify chapter two and all of his slides")
+                writeToLog("INFO","Step 9: FAILED to verify chapter two and all of his slides")
                 return  
               
             self.common.base.switch_to_default_content()
-            writeToLog("INFO","Step 9: Going to delete chapters")
+            writeToLog("INFO","Step 10: Going to delete chapters")
             if self.common.editEntryPage.deletechpaters(self.entryName, self.chaptersList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to delete chapters")
+                writeToLog("INFO","Step 10: FAILED to delete chapters")
                 return
             
-            writeToLog("INFO","Step 10: Going to navigate to entry page")
+            writeToLog("INFO","Step 11: Going to navigate to entry page")
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
-                writeToLog("INFO","Step 10: FAILED to navigate to entry page")
+                writeToLog("INFO","Step 11: FAILED to navigate to entry page")
                 self.status = "Fail"
                 return
             
             self.common.player.switchToPlayerIframe() 
-            writeToLog("INFO","Step 11: Going to open slide menu bar")
+            writeToLog("INFO","Step 12: Going to open slide menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
-                writeToLog("INFO","Step 11: FAILED to click and open slides bar menu")
+                writeToLog("INFO","Step 121: FAILED to click and open slides bar menu")
                 self.status = "Fail"
                 return
 
-            writeToLog("INFO","Step 12: Going to verify that all chapters was deleted")              
+            writeToLog("INFO","Step 13: Going to verify that all chapters was deleted")              
             # click on the EXPAND_COLLAPSE button in the slides menu bar in order to open all the chapters
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
             for chapter in self.chaptersList:
                 if self.common.player.MoveToChapter(chapter, timeOut=5) == True:
-                    writeToLog("INFO","Step 12:FAILED chapter '" + chapter + "' was found although he was deleted")
+                    writeToLog("INFO","Step 13:FAILED chapter '" + chapter + "' was found although he was deleted")
                     self.status = "Fail"
                     return
-                writeToLog("INFO","Step 12: Previous Step Failed as Expected - The chapter '" +  chapter + "' should not be displayed")
+                writeToLog("INFO","Step 13: Previous Step Failed as Expected - The chapter '" +  chapter + "' should not be displayed")
 
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - add chapters' was done successfully")            
