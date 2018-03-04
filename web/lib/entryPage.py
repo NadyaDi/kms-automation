@@ -81,7 +81,7 @@ class EntryPage(Base):
         # Check if we already in edit entry page
         if self.wait_visible(tmp_entry_name, 20) == False:
             writeToLog("INFO","FAILED to verify entry name: '" + entryName + "'")
-            return True     
+            return False     
         
         # Verify description
         # First get the description frame
@@ -105,7 +105,7 @@ class EntryPage(Base):
         # Check that the description is the correct description
         if self.wait_for_text(self.ENTRY_PAGE_TAGS, entryTags, 30, True) == False:
             writeToLog("INFO","FAILED to verify entry tags: '" + entryTags + "'")
-            return True   
+            return False   
         
         writeToLog("INFO","Success, all entry '" + entryName + "' metadata are correct")
         return True  
