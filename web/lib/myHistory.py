@@ -27,7 +27,12 @@ class MyHistory(Base):
     MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE                      = ('class_name', 'empty-header')
     #=============================================================================================================
     def getSearchBarElement(self):
-        return self.get_element(self.MY_HISTORY_SEARCH_BAR)    
+        # We got multiple elements, search for element which is not size = 0
+        elements = self.get_elements(self.MY_HISTORY_SEARCH_BAR)
+        for el in elements:
+            if el.size['width']!=0 and el.size['height']!=0:
+                return el
+        return False      
     
     #  @Author: Inbar Willman
     # This method, clicks on the menu and My History
