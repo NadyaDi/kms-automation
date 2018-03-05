@@ -14,14 +14,13 @@ class Test:
     #================================================================================================================================
     #  @Author: Inbar Willman
     # Test description:
-    # Before entry is played, history page doesn't displayed the entry
-    # After entry was played, it displayed in history page
+    # Check that audio entry is displayed in My History page after it was played
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> publish entry to channel -> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
-    # MY History page and make sure that entry exists in page -> 
+    # Login to KMS-> Upload video entry-> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
+    # MY History page and make sure that entry exists in page 
     # test cleanup: deleting the uploaded file
     #================================================================================================================================
-    testNum     = "2566"
+    testNum     = "2571"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -31,11 +30,10 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName= None
     entryDescription = "description"
     entryTags = "tag1,"
-    channelList = [('test my history')]
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -54,58 +52,51 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('MyHistory', self.testNum)
-            ########################## TEST STEPS - MAIN FLOW ####################### 
-            writeToLog("INFO","Step 1: Going to upload entry")
+            self.entryName = clsTestService.addGuidToString('MyHistoryAudioEntry')
+            ######################### TEST STEPS - MAIN FLOW #######################
+            writeToLog("INFO","Step 1: Going to upload audio entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
-            
-            writeToLog("INFO","Step 2: Going to publish entry to channel")
-            if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False: 
-                self.status = "Fail"        
-                writeToLog("INFO","Step 2: FAILED failed to publish entry")
-                return          
-            
-            writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
-            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to entry page")
-                return           
-            
-            writeToLog("INFO","Step 4: Going to wait until media will finish processing")
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED - New entry is still processing")
+                writeToLog("INFO","Step 1: FAILED failed to upload audio entry")
                 return
              
-            writeToLog("INFO","Step 5: Going to Search entry in My History page")
+            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+             
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+              
+            writeToLog("INFO","Step 4: Going to Search entry in My History page")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED - New entry is displayed in my history page")
-                return
+                writeToLog("INFO","Step 4: FAILED - New entry is displayed in my history page")
+                return       
+            writeToLog("INFO","Step 4: Previous Step Failed as Expected - The entry should not be displayed")          
             
-            writeToLog("INFO","Step 5: Previous Step Failed as Expected - The entry should not be displayed")
-            
-            writeToLog("INFO","Step 6: Going to play entry")
-            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05') == False:
+            writeToLog("INFO","Step 5: Going to play entry")
+            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:09', toVerify=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate and play entry")
+                writeToLog("INFO","Step 5: FAILED to navigate and play entry")
                 return  
             
-            writeToLog("INFO","Step 7: Going to switch to default content")
+            writeToLog("INFO","Step 6: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to switch to default content")
+                writeToLog("INFO","Step 6: FAILED to switch to default content")
                 return  
             
-            writeToLog("INFO","Step 8: Going to navigate to my history and check for entry")
+            writeToLog("INFO","Step 7: Going to navigate to my history and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED find entry in my history")
-                return               
-              
+                writeToLog("INFO","Step 7: FAILED find entry in my history")
+                return        
+
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
@@ -115,10 +106,10 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)              
+            self.common.base.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.base.switch_to_default_content()
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)         
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -73,6 +73,7 @@ class Test:
             
             writeToLog("INFO","Step 2: Going to Create channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, False, False, False, linkToCategoriesList='') == False:
+                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create channel")
                 return
              
@@ -84,6 +85,7 @@ class Test:
            
             writeToLog("INFO","Step 4: Going to publish without filling required field")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], [], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == True:
+                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - publish shouldn't be enabled")
                 return
       
@@ -91,13 +93,15 @@ class Test:
             
             writeToLog("INFO","Step 5: Going to fill required fields")
             if self.common.upload.fillFileUploadEntryDetails(self.entryName, self.entryDescription, self.entryTags) == False:
+                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to fill tags and description")
-                return False
+                return 
             
             writeToLog("INFO","Step 6: Going to save changes in required fields")
             if self.common.upload.click(self.common.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to save changes")
-                return False 
+                return 
             sleep(2)
 
             self.common.general.waitForLoaderToDisappear()
@@ -105,8 +109,9 @@ class Test:
         
             writeToLog("INFO","Step 7: Going to publish entry after filling required fields")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], [self.channelName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
+                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to publish entry")
-                return False
+                return 
             
             #########################################################################
             writeToLog("INFO","TEST PASSED")

@@ -61,7 +61,12 @@ class MyHistory(Base):
         # Navigate to My Media
         if self.navigateToMyHistory(True) == False:
             return False
-        # Search Entry     
+        
+        # Check if search field is displayed 
+        if self.isSearchFieldIsDisplayed() == False:
+            return False
+        
+        #If search field is displayed make a search
         self.getSearchBarElement().click()
         self.getSearchBarElement().send_keys(entryName)
         self.clsCommon.general.waitForLoaderToDisappear()
@@ -71,7 +76,8 @@ class MyHistory(Base):
     #  @Author: Inbar Willman    
     #This method search if entry exists or not in My history page    
     def isEntryExistsInMyHistory(self, entryName, timeout=30):    
-        self.searchEntryMyHistory(entryName)
+        if self.searchEntryMyHistory(entryName) == False:
+            return False
         tmpEntryName = (self.MY_HISTORY_RESULTS_ENTRY [0], self.MY_HISTORY_RESULTS_ENTRY [1].replace('ENTRY_NAME', entryName))
         if self.wait_visible(tmpEntryName, timeout) == False: 
             return False
@@ -127,3 +133,15 @@ class MyHistory(Base):
             return False 
         
         return True
+    
+    
+    # @Author: Inbar Willman   
+    # Check if search field is displayed in page (in case My History is empty search field isn't displayed).
+    def isSearchFieldIsDisplayed(self):
+        if self.wait_visible(self.MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE) == False:
+            if self.wait_visible(self.MY_HISTORY_SEARCH_BAR) == False:
+                return False 
+            return True
+      
+        return False
+        
