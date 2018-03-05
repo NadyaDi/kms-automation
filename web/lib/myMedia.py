@@ -110,7 +110,7 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     # Known limitation: entries MUST be presented on the first page of my media
     def deleteEntriesFromMyMedia(self, entriesNames):
-        if self.navigateToMyMedia() == False:
+        if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
         
@@ -493,7 +493,7 @@ class MyMedia(Base):
                 return False
             
             tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
-            if self.click(tmpEntry) == False:
+            if self.click(tmpEntry, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
                 return False
 
@@ -547,7 +547,7 @@ class MyMedia(Base):
     # MUST: enableLoadButton must be turned off in KMS admin 
     def scrollToBottom(self, retries=5):
         try:           
-            if len(self.wait_visible(self.MY_MEDIA_TABLE_SIZE), 5) < 4:
+            if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
                 return True
             else:
                 count = 0
@@ -601,6 +601,22 @@ class MyMedia(Base):
                 else:
                     return False
                 tmpTop = currentEntryTop
+                
+        except NoSuchElementException:
+            return False
+    
+        return True
+
+    # Author: Tzachi Guetta 
+    def isEntryPresented(self, entryName, isExpected):
+        try:         
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
+            isPresented = self.is_present(tmpEntry)
+            
+            if isPresented == isExpected:
+                return True
+            else:
+                return False             
                 
         except NoSuchElementException:
             return False
