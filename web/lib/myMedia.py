@@ -4,6 +4,7 @@ from general import General
 from logger import writeToLog
 from editEntryPage import EditEntryPage
 import enums
+from selenium.webdriver.common.keys import Keys
 
 
 
@@ -47,6 +48,9 @@ class MyMedia(Base):
     MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
     MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST                  = ('xpath', "//a[@id='sched-btn']")
     MY_MEDIA_DROPDOWNLIST_ITEM                                  = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
+    MY_MEDIA_ENTRY_TOP                                          = ('xpath',"//span[@class='entry-name' and text()='ENTRY_NAME']")
+    MY_MEDIA_END_OF_PAGE                                        = ('xpath',"//div[@class='alert alert-info endlessScrollAlert']")
+    MY_MEDIA_TABLE_SIZE                                         = ('xpath',"//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
     #=============================================================================================================
     def getSearchBarElement(self):
 #         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
@@ -502,7 +506,7 @@ class MyMedia(Base):
     
     
         # Author: Tzachi Guetta 
-    def SortAndFilterInMyMedia(self, sortBy='', filterPrivacy='', filterMediaType='', filterCollaboration='', filterScheduling='', resetFields=False):
+    def sortAndFilterInMyMedia(self, sortBy='', filterPrivacy='', filterMediaType='', filterCollaboration='', filterScheduling='', resetFields=False):
         try:         
             if self.navigateToMyMedia(forceNavigate = resetFields) == False:
                 writeToLog("INFO","FAILED to navigate to  my media")
@@ -533,6 +537,71 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to set filter: " + str(filterScheduling) + " in my media")
                     return False                                                     
         
+        except NoSuchElementException:
+            return False
+    
+        return True
+
+    
+    # Author: Tzachi Guetta 
+    # MUST: enableLoadButton must be turned off in KMS admin 
+    def scrollToBottom(self, retries=5):
+        try:           
+            if len(self.wait_visible(self.MY_MEDIA_TABLE_SIZE), 5) < 4:
+                return True
+            else:
+                count = 0
+                while count < retries:
+                    self.driver.find_element_by_xpath('//body').send_keys(Keys.END)
+                    writeToLog("INFO","Scrolling to bottom, retry #: " + str(count+1))
+                    sleep(2)
+                    if self.wait_visible(self.MY_MEDIA_END_OF_PAGE, 1) != False:
+                        writeToLog("INFO","*** Reached the End of page ***")
+                        return True
+                    count += 1
+                    
+                writeToLog("INFO","FAILED, scrolled " + str(retries) + " times and didn't reached the bottom of the page, maybe you need add more retries")
+
+        except NoSuchElementException:
+            return False
+    
+        return False
+        
+        
+    # Author: Tzachi Guetta 
+    def getTop(self, entryName):
+        try: 
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
+            entrytop = self.get_element_attributes(tmpEntry)['top']
+            writeToLog("INFO","The top of: '" + entryName + "' is: " + str(entrytop))
+            return entrytop
+        
+        except NoSuchElementException:          
+            writeToLog("INFO","The top of: '" + entryName + "' could not be located")
+            return False
+    
+    
+    # Author: Tzachi Guetta 
+    def verifyEntriesOrder(self, expectedEntriesOrder):
+        try:         
+            if self.navigateToMyMedia() == False:
+                return False
+            
+            if self.scrollToBottom() == False:
+                writeToLog("INFO","FAILED to scroll to bottom in my-media")
+                return False                  
+            
+            tmpTop = -9999
+            for entry in expectedEntriesOrder:
+                currentEntryTop = self.getTop(entry)
+                if currentEntryTop != False:
+                    if currentEntryTop < tmpTop:
+                        writeToLog("INFO","FAILED, the location of: '" + entry + "' is not as expected. (the top is '" + str(currentEntryTop) + "' and it should be higher than: '" + str(tmpTop) + "')")
+                        return False
+                else:
+                    return False
+                tmpTop = currentEntryTop
+                
         except NoSuchElementException:
             return False
     
