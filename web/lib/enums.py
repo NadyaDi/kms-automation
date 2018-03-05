@@ -79,7 +79,8 @@ class SortBy(Enum):
         return str(self.value)
 
     MOST_RECENT             = 'Most Recent'  
-    VIEWS                   = 'Views'      
+    VIEWS                   = 'Views'
+    LIKES                   = 'Likes'
     ALPHABETICAL            = "Alphabetical"
     COMMENTS                = "Comments"
     SCHEDULING_ASC          = "Scheduling Ascending"
