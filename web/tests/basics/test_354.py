@@ -15,7 +15,7 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
-    testNum     = "353"
+    testNum     = "354"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -29,7 +29,7 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
+    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
     slidesQrCodeAndTimeList = None
     chaptersList = None
     slidesWithoutChapter = None
@@ -52,7 +52,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Slide Deck Upload - add/remove chapters", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Slide Deck Upload - delete slides", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
@@ -60,14 +60,9 @@ class Test:
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
-            self.chaptersList = {'First Chapter':'00:05', 'Second Chapter':'00:14'}
-            
-            self.slidesWithoutChapter = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04'}
-            
-            self.firstChapterSlidesList = {'1.1': '00:05', '1.2': '00:06', '1.3': '00:07', '1.4': '00:08', '1.5': '00:09', '1.6': '00:10', '1.7': '00:11','1.8': '00:12', '1.9': '00:13'}
-            
-            self.secondChapterSlidesList = {'2.1': '00:14','2.2': '00:15', '2.3': '00:16', '2.4': '00:17', '2.5': '00:18', '2.6': '00:19','2.7': '00:20', '2.8': '00:21','2.9': '00:22',
-                                            '2.10': '00:23', '2.11': '00:24','2.12': '00:25', '2.13': '00:26', '2.14': '00:27', '2.15': '00:28', '2.16': '00:29'}
+            self.newSlidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09',
+                                            '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
+                                            '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
        
             writeToLog("INFO","Step 1: Going to upload entry")
@@ -87,6 +82,10 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
+            
+            
+            
+            
                              
             writeToLog("INFO","Step 4: Going add chapters")
             if self.common.editEntryPage.addChapters(self.entryName, self.chaptersList) == False:
@@ -158,7 +157,7 @@ class Test:
                 writeToLog("INFO","Step 13: Previous Step Failed as Expected - The chapter '" +  chapter + "' should not be displayed")
 
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - add/remove chapters' was done successfully")            
+            writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - delete slides' was done successfully")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
