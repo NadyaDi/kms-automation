@@ -97,7 +97,7 @@ class Test:
 #                 return
 #                
 #             writeToLog("INFO","Step 2: Going to verify uploaded entry")
-#             if self.common.player.navigateToEntryClickPlayPauseAndVerify(self.entryName + '_Downloaded', "0:07") == False:
+#             if self.common.player.navigateToEntryClickPlayPause(self.entryName + '_Downloaded', "0:07") == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 2: FAILED to verify uploaded entry")
 #                 return
