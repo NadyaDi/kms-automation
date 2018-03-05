@@ -119,7 +119,39 @@ class Player(Base):
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
     # tolerance - seconds: the deviation from the time and image.
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03')
-    def navigateToEntryClickPlayPauseAndVerify(self, entryName, delay, timeout=30, tolerance=1):
+    def navigateToEntryClickPlayPause(self, entryName, delay, toVerify=True, timeout=30, tolerance=1):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False
+                 
+                if toVerify == True:  
+                    if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
+                        writeToLog("INFO","FAILED to click Play Pause And Verify")
+                        return False
+                else:
+                    if self.clickPlayAndPause(delay, timeout) == False:
+                        writeToLog("INFO","FAILED to click Play Pause")
+                        return False                   
+            else:
+                writeToLog("INFO","Entry name not supplied")
+                return False
+            
+        except NoSuchElementException:
+            return False
+          
+        return True
+    
+    
+    # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
+    # tolerance - seconds: the deviation from the time and image.
+    # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03')
+    def navigateToEntryClickPlayPauseAndVerify2(self, entryName, delay, timeout=30, tolerance=1):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -140,7 +172,8 @@ class Player(Base):
         except NoSuchElementException:
             return False
           
-        return True
+        return True    
+    
     
     # creator: Michal zomper
     def verifySlidesInPlayerSideBar(self, mySlidesList):
