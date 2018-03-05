@@ -739,7 +739,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, chapter was created successfully")
         return True  
     
-    
+    # Author: Michal Zomper 
     def addChapters(self, entryName, chaptersList):
         if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
             writeToLog("INFO","FAILED navigate to edit entry page")
@@ -763,7 +763,7 @@ class EditEntryPage(Base):
         return True  
         
     
-    
+    # Author: Michal Zomper 
     def deleteChapter (self, chapterTime):
         chapterTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(chapterTime)
         ChapterTime = (self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[0], self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[1].replace('CHAPTER_TIME', str(chapterTimeInSec * 1000)))
@@ -792,7 +792,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, Chapter was deleted successfully")
         return True  
     
-    
+    # Author: Michal Zomper 
     def deletechpaters(self, entryName, chaptersList):
         if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
             writeToLog("INFO","FAILED navigate to edit entry page")
@@ -814,7 +814,6 @@ class EditEntryPage(Base):
         sleep(2)
         writeToLog("INFO","Success, All chapters were deleted successfully")
         return True  
-        
         
 
         
