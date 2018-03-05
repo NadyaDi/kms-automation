@@ -18,6 +18,7 @@ class MyMedia(Base):
     #My Media locators:
     #=============================================================================================================
     MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
+    MY_MEDIA_NO_RESULTS_ALERT                                   = ('xpath', "//div[@id='myMedia_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_ENRTY_EDIT_BUTTON                                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_CONFIRM_ENTRY_DELETE                               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
@@ -49,11 +50,16 @@ class MyMedia(Base):
     MY_MEDIA_DROPDOWNLIST_ITEM                                  = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
     #=============================================================================================================
     def getSearchBarElement(self):
+        # We got multiple elements, search for element which is not size = 0
+        elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR)
+        for el in elements:
+            if el.size['width']!=0 and el.size['height']!=0:
+                return el
+        return False        
 #         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
 #             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
 #         else:
 #             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
-        return self.get_element(self.MY_MEDIA_SEARCH_BAR)
     
     
     # This method, clicks on the menu and My Media
