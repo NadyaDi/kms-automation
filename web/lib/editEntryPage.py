@@ -712,6 +712,19 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, all slides were deleted successfully")
         return True
     
+    def navigateToEditEntry(self, entryName="", navigateFrom = enums.Location.MY_MEDIA):
+            if navigateFrom == enums.Location.MY_MEDIA:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.MY_MEDIA)
+                    return False  
+                
+            elif navigateFrom == enums.Location.ENTRY_PAGE:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.ENTRY_PAGE)
+                    return False            
+            sleep(2)
+            return True    
+    
     # Author: Michal Zomper 
     def addChapter(self, chapterName, chapterTime):
         if self.click(self.EDIT_ENTRY_ADD_CHAPTER, 20) == False:
@@ -815,6 +828,54 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, All chapters were deleted successfully")
         return True  
         
-
+    # Author: Michal Zomper
+    # The function change a single slide time in the time line
+    def changeSlideTimeInTimeLine(self, oldSlideTime, newSlideTime):
+        slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(oldSlideTime)
+        locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+        if self.click(locatorSlideTime, 20) == False:
+            writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
+            return False   
         
+        if self.click(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, 30, True) == False:
+#         if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime) == False:
+            writeToLog("INFO","FAILED insert new slide time")
+            return False
+         
+        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime) == False:
+            writeToLog("INFO","FAILED insert new slide time")
+            return False             
+            
+        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 20) == False:
+            writeToLog("INFO","FAILED click on save button")
+            return False               
         
+        sleep(3)
+        # Verify new time saved 
+        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS) == False:
+            writeToLog("INFO","FAILED to fined saved success label")
+            return False  
+        
+        sleep(1)
+        writeToLog("INFO","Success, slide time was changed successfully")
+        return True  
+    
+    
+    # Author: Michal Zomper
+    # The function go over all the the slide list and change the slides time
+    def changeSlidesTimeInTimeLine(self, entryName, changeTimeOfSlidesList):
+        if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page")
+            return False
+        
+        if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
+            writeToLog("INFO","FAILED to click on the time-line tab")
+            return False      
+        
+        for slide in changeTimeOfSlidesList:
+            if self.changeSlideTimeInTimeLine(slide, changeTimeOfSlidesList[slide]) == False:
+                writeToLog("INFO","FAILED change slide in time: " + str(slide) + " to time: " + str(changeTimeOfSlidesList[slide]))
+                return False
+             
+        writeToLog("INFO","Success, All slides time was changed successfully")
+        return True             
