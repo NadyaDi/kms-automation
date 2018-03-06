@@ -449,7 +449,7 @@ class Base:
     def is_element_checked(self, locator):
         element = self.get_element(locator)
         if element.get_attribute("checked") != "true":
-            writeToLog("INFO","element is not checked")
+            writeToLog("INFO", "'" + locator[1] + "' - element is not checked")
             return False
         
         return True
