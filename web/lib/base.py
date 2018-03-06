@@ -313,9 +313,9 @@ class Base:
         while True:
             try:
                 element = self.get_element(locator)
-                if element != None:
-                    # If element found, move to the next while
-                    break
+#                 if element != None:
+                # If element found (no exception), move to the next while
+                break
             except:
                 if wait_until < datetime.datetime.now():
                     writeToLog('INFO','Element was not found')
@@ -331,7 +331,7 @@ class Base:
                         self.setImplicitlyWaitToDefault()
                         return True                    
                 else:    
-                    if element_text.lower() == text.lower():
+                    if str(element_text.lower()) == str(text.lower()):
                         self.setImplicitlyWaitToDefault()
                         return True
                 if wait_until < datetime.datetime.now():
