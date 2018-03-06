@@ -617,15 +617,34 @@ class MyMedia(Base):
     def isEntryPresented(self, entryName, isExpected):
         try:         
             tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
-            isPresented = self.is_present(tmpEntry)
+            isPresented = self.is_present(tmpEntry, 5)
             
+            strPresented = "Not Presented" 
+            if isPresented == True:
+                strPresented = "Presented"
+
             if isPresented == isExpected:
-                return True
+                    writeToLog("INFO","Passed, As expected, Entry: '" + entryName + "' is " + strPresented)
+                    return True
+            
             else:
-                return False             
+                writeToLog("INFO","FAILED, Not expected, Entry: '" + entryName + "' is " + strPresented)
+                return False          
                 
         except NoSuchElementException:
             return False
     
         return True
     
+        # Author: Tzachi Guetta 
+    def areEntriesPresented(self, entriesDict):
+        try:
+            for entry in entriesDict:
+                if self.isEntryPresented(entry, entriesDict.get(entry)) == False:
+                    writeToLog("INFO","FAILED to verify if entry presented for entry: " + str(entry))  
+                    return False
+                
+        except NoSuchElementException:
+            return False
+    
+        return True

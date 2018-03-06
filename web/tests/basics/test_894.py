@@ -141,10 +141,16 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED to sort&filter entries - by Scheduling ASC & only Privacy=Private")
                 return
             
-            writeToLog("INFO","Step 12: Going to verify entries order - by Scheduling ASC & only Privacy=Private")
+            writeToLog("INFO","Step 12: Going to verify that entry #3 is not presented")
+            if self.common.myMedia.isEntryPresented(self.entryName3, False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to verify that entry #3 is not presented")
+                return
+                   
+            writeToLog("INFO","Step 13: Going to verify entries order - by Scheduling ASC & only Privacy=Private")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList_SCHEDULING_AND_PRIVATE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify entries order - by Scheduling ASC & only Privacy=Private")
+                writeToLog("INFO","Step 13: FAILED to verify entries order - by Scheduling ASC & only Privacy=Private")
                 return
             #########################################################################
             writeToLog("INFO","TEST PASSED")

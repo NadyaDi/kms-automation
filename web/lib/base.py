@@ -235,14 +235,32 @@ class Base:
         return False
            
            
-    # element present
-    def is_present(self, locator):
-        try:
-            self.get_element(locator)
-            return True
-        except NoSuchElementException:
-            return False
-
+#     # element present
+#     def is_present(self, locator):
+#         try:
+#             self.get_element(locator)
+#             return True
+#         except NoSuchElementException:
+#             return False
+    # waits
+    def is_present(self, locator, timeout=10):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                self.get_element(locator)
+                if wait_until < datetime.datetime.now():
+                    #writeToLog('DEBUG','Element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False
+                
+                self.setImplicitlyWaitToDefault()
+                return True   
+            except:
+                if wait_until < datetime.datetime.now():
+                    #writeToLog('DEBUG','Element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False
 
     # waits
     def wait_visible(self, locator, timeout=10):
