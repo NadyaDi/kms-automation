@@ -372,7 +372,7 @@ class MyMedia(Base):
         elif publishFrom == enums.Location.UPLOAD_PAGE: 
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")       
             sleep(2)            
-            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
+            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
                 return False        
           
@@ -416,7 +416,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on save button")
                 return False                
                     
-            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == False:
+            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 45) == False:
                 writeToLog("INFO","FAILED to find confirm save message")
                 return False
         else:

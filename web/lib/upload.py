@@ -77,71 +77,75 @@ class Upload(Base):
     
     
     # @Authors: Oleg Sigalov &  Tzachi Guetta
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False):
-        try:
-            # Convert path for Windows
-            filePath = filePath.replace("/", "\\")     
-            # Click Add New
-            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
-                writeToLog("DEBUG","FAILED to click on 'Add New' button")
-                return None
-            
-            # Click Media Upload
-            if self.clickMediaUpload() == False:
-                writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
-                return None
-            
-            #checking if disclaimer is turned on for "Before upload"
-            if disclaimer == True:
-                if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
-                    writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
-                    return None
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3):
+        for i in range(retries):
+            try:
+                if i > 0:
+                    writeToLog("INFO","FAILED to upload after " + str(i) + " retries of " + str(retries) + ". Going to upload again...")
+                # Convert path for Windows
+                filePath = filePath.replace("/", "\\")     
+                # Click Add New
+                if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+                    writeToLog("DEBUG","FAILED to click on 'Add New' button")
+                    continue
                 
-            # Wait page load
-            self.wait_for_page_readyState()
-            # Click Choose a file to upload
-            if self.click(self.CHOOSE_A_FILE_TO_UPLOAD_BUTTON) == False:
-                writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
-                return None
-            
-            # Type in a file path
-            if self.typeIntoFileUploadDialog(filePath) == False:
-                return None
-            
-            # Wait for success message "Upload Completed"
-            startTime = datetime.datetime.now().replace(microsecond=0)
-            if self.waitUploadCompleted(startTime, timeout) == False:
-                return None
-            
-            if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
-                return None
-                writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
+                # Click Media Upload
+                if self.clickMediaUpload() == False:
+                    writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
+                    continue
                 
-            # Fill entry details: name, description, tags
-            if self.fillFileUploadEntryDetails(name, description, tags) == False:
-                return None
-            
-            # Click Save
-            if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
-                writeToLog("DEBUG","FAILED to click on 'Save' button")
-                return None
-            sleep(3)
-            
-            # Wait for loader to disappear
-            self.clsCommon.general.waitForLoaderToDisappear()
-            
-            # Wait for 'Your changes have been saved.' message
-            if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 30) != False:                
-                entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
-                if entryID != None:
-                    writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
-                    return entryID
-            else:
-                writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
-                return None
-
-        except Exception:
-            raise Exception("FAIL_UPLOAD")
+                #checking if disclaimer is turned on for "Before upload"
+                if disclaimer == True:
+                    if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
+                        writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
+                        continue
+                    
+                # Wait page load
+                self.wait_for_page_readyState()
+                # Click Choose a file to upload
+                if self.click(self.CHOOSE_A_FILE_TO_UPLOAD_BUTTON) == False:
+                    writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
+                    continue
+                
+                # Type in a file path
+                if self.typeIntoFileUploadDialog(filePath) == False:
+                    continue
+                
+                # Wait for success message "Upload Completed"
+                startTime = datetime.datetime.now().replace(microsecond=0)
+                if self.waitUploadCompleted(startTime, timeout) == False:
+                    continue
+                
+                if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
+                    writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
+                    continue
+                    
+                # Fill entry details: name, description, tags
+                if self.fillFileUploadEntryDetails(name, description, tags) == False:
+                    continue
+                
+                # Click Save
+                if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                    writeToLog("DEBUG","FAILED to click on 'Save' button")
+                    continue
+                sleep(3)
+                
+                # Wait for loader to disappear
+                self.clsCommon.general.waitForLoaderToDisappear()
+                
+                # Wait for 'Your changes have been saved.' message
+                if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False:                
+                    entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+                    if entryID != None:
+                        writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
+                        return entryID
+                else:
+                    writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
+                    continue
+    
+            except Exception:
+                writeToLog("INFO","FAILED to upload entry, retry number " + i)
+                pass
         
         
     def waitUploadCompleted(self, startTime, timeout=60):
