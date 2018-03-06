@@ -118,7 +118,7 @@ class Player(Base):
             return False
         
         writeToLog("INFO","Playing verified; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
-        return True    
+        return True
     
     
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
@@ -286,16 +286,15 @@ class Player(Base):
         if self.clickPlayAndPause(timeToStop, timeout=120) == False:
             writeToLog("INFO","FAILED to click on the player")
             return False
+        
         #TODO
-        #videoImage = self.cropImage
-        #slideImage = self.cropI,age 
-        videoImage = qrResult
-        slideImage = qrResult 
+        videoImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
+        slideImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
         
         # Get the time in the player time line
         playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
         # 
-        if (playerTime == videoImage == slideImage == qrResult) == False:
+        if (str(playerTime) == videoImage == slideImage == qrResult) == False:
             writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: " +  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
             return False
         
