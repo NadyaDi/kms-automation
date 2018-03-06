@@ -294,7 +294,7 @@ class Player(Base):
         # Get the time in the player time line
         playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
         # 
-        if (str(playerTime) == videoImage == slideImage == qrResult) == False:
+        if (str(playerTime) == str(videoImage) == str(slideImage) == str(qrResult)) == False:
             writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: " +  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
             return False
         
