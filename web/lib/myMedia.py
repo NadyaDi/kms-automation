@@ -167,6 +167,7 @@ class MyMedia(Base):
         # Navigate to My Media
         if self.navigateToMyMedia(True) == False:
             return False
+        sleep(2)
         # Search Entry     
         self.getSearchBarElement().click()
         self.getSearchBarElement().send_keys(entryName)

@@ -397,14 +397,21 @@ class Base:
 
         
     # send keys
-    def send_keys(self, locator, text):
-        element = self.wait_visible(locator)
-        if element == False:
+    def send_keys(self, locator, text, multipleElements=False):
+        try:
+            if multipleElements == True:
+                elements = self.get_elements(locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.send_keys(text)
+                        return True
+            else:
+                element = self.get_element(locator)
+                element.send_keys(text)
+                return True 
+        except:
+            writeToLog("INFO", "FAILED to type text: " + str(text))
             return False
-        else:
-            element.send_keys(text)
-            return True 
-    
     
     def clear_and_send_keys(self, locator, text):
         element = self.wait_visible(locator)
