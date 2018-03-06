@@ -126,3 +126,11 @@ class SortAndFilter(Enum):
     MEDIA_TYPE                = "MediaType"
     COLLABORATION             = "Collaboration"
     SCHEDULING                = 'Scheduling'
+    
+    
+class PlayerPart(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    TOP                       = 'top'  
+    BOTTOM                    = 'bottom'      
