@@ -120,18 +120,19 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
         
+        success = True
         # Checking if entriesNames list type
         if type(entriesNames) is list: 
             for entryName in entriesNames: 
                 if self.checkSingleEntryInMyMedia(entryName) == False:
                     writeToLog("INFO","FAILED to CHECK the entry in my-media page")
-                    return False
-                
+                    success = False
+            
                 writeToLog("INFO","Going to delete Entry: " + entryName)
         else:
             if self.checkSingleEntryInMyMedia(entriesNames) == False:
                     writeToLog("INFO","FAILED to CHECK the entry in my-media page")
-                    return False
+                    success = False
                 
             writeToLog("INFO","Going to delete Entry: " + entriesNames)
         
@@ -149,14 +150,17 @@ class MyMedia(Base):
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear() 
                      
-        # Printing the deleted entries       
-        if type(entriesNames) is list: 
-            entries = ", ".join(entriesNames)
-            writeToLog("INFO","The following entries were deleted: " + entries + "")
-        else:
-            writeToLog("INFO","The following entry was deleted: " + entriesNames + "")
+        # Printing the deleted entries
+        if success == True:    
+            if type(entriesNames) is list: 
+                entries = ", ".join(entriesNames)
+                writeToLog("INFO","The following entries were deleted: " + entries + "")
+            else:
+                writeToLog("INFO","The following entry was deleted: " + entriesNames + "")
+        else:  
+            writeToLog("INFO","Failed, Not all entries were deleted")
             
-        return True
+        return success
      
         
     def searchEntryMyMedia(self, entryName):
