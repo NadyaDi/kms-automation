@@ -80,7 +80,7 @@ class MyMedia(Base):
         
         # Click on My Media
         if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
-            writeToLog("INFO","FAILED to on My Media from the menu")
+            writeToLog("INFO","FAILED to click on My Media from the user menu")
             return False
         
         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
@@ -111,6 +111,7 @@ class MyMedia(Base):
         writeToLog("INFO","Entry: '" + entryName + "' Was Deleted")
         return True
     
+    #  @Author: Tzachi Guetta      
     # The following method can handle list of entries and a single entry:
     #    in order to delete list of entries pass a List[] of entries name, for single entry - just pass the entry name
     #    also: the method will navigate to My media
@@ -628,9 +629,8 @@ class MyMedia(Base):
                 strPresented = "Presented"
 
             if isPresented == isExpected:
-                    writeToLog("INFO","Passed, As expected, Entry: '" + entryName + "' is " + strPresented)
-                    return True
-            
+                writeToLog("INFO","Passed, As expected, Entry: '" + entryName + "' is " + strPresented)
+                return True
             else:
                 writeToLog("INFO","FAILED, Not expected, Entry: '" + entryName + "' is " + strPresented)
                 return False          
@@ -640,7 +640,7 @@ class MyMedia(Base):
     
         return True
     
-        # Author: Tzachi Guetta 
+    # Author: Tzachi Guetta 
     def areEntriesPresented(self, entriesDict):
         try:
             for entry in entriesDict:
