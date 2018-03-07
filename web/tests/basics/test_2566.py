@@ -34,7 +34,7 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    channelList = [('test my history')]
+    channelList = [('Open Channel')]
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms

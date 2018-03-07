@@ -1,8 +1,9 @@
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 from base import *
 import clsTestService
 import enums
-from selenium.webdriver.common.action_chains import ActionChains
-
 
 
 class Player(Base):
@@ -185,7 +186,9 @@ class Player(Base):
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
     def verifySlidesInPlayerSideBar(self, mySlidesList):
         self.switchToPlayerIframe()
-        sleep(3)
+        sleep(1)
+        self.get_element(self.PLAYER_SLIDE_SIDE_BAR_MENU).send_keys(Keys.PAGE_UP)
+        sleep(1)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the slide side bar menu")
             return False
@@ -206,6 +209,7 @@ class Player(Base):
         writeToLog("INFO","SUCCESS verify slides in side bar menu")
         self.clsCommon.base.switch_to_default_content()
         return True
+    
     
     # creator: Michal zomper
     # The Function go over the slides in the slide menu bar and verify that the time is correct 
@@ -247,6 +251,7 @@ class Player(Base):
         action.release()
         action.perform()
         
+        
     # creator: Michal zomper
     def changePlayerView(self, playerView = enums.PlayerView.PIP):
         self.switchToPlayerIframe()
@@ -275,6 +280,7 @@ class Player(Base):
         writeToLog("INFO","SUCCESS to change player view")
         self.clsCommon.base.switch_to_default_content()
         return True
+        
         
     # creator: Michal zomper
     # The function check that the slides display at the correct time when the player is running
@@ -370,6 +376,7 @@ class Player(Base):
         
         writeToLog("INFO","SUCCESS," + chapterName + ":all slides are verified and appear at the correct time")
         return True
+    
     
     # creator: Michal zomper
     # The function move the scroller in the slides menu bar so that the needed chapter is now display

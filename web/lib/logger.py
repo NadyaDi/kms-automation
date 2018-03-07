@@ -93,7 +93,7 @@ def logStartTest(test,browser):
     os.environ["RUNNING_TEST_ID"] = test.testNum
     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO","test_" + test.testNum + " Start on browser " + browser)
-    writeToLog("INFO","Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
+    writeToLog("INFO","NEW UI is " + str(localSettings.LOCAL_SETTINGS_IS_NEW_UI) + "; Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
      
 #===============================================================================
 # the function writes to the log that we started sniffing http traffic
