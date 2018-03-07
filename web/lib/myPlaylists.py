@@ -26,6 +26,7 @@ class MyPlaylists(Base):
     #============================================================================================================
 
     # TODO BOM add description and how to use (playlistName....)
+    #  @Author: Tzachi Guetta      
     def addSingleEntryToPlaylist(self, entryName, playlistName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
         try:
             if currentLocation == enums.Location.MY_MEDIA: 
@@ -105,7 +106,7 @@ class MyPlaylists(Base):
             
         return True
     
-    
+    #  @Author: Tzachi Guetta      
     def navigateToMyPlaylists(self, forceNavigate = False):
         # Check if we are already in my media page
         if forceNavigate == False:
@@ -129,7 +130,7 @@ class MyPlaylists(Base):
         
         return True
     
-    
+    #  @Author: Tzachi Guetta      
     def deletePlaylist(self, playlistName):
         try:
             if playlistName != '':
@@ -168,7 +169,7 @@ class MyPlaylists(Base):
             
         return True
     
-    
+    #  @Author: Tzachi Guetta      
     def verifySingleEntryInPlaylist(self, playlistName, entryName, isExpected=True):
         try:                
             if playlistName != '':
