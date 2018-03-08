@@ -51,6 +51,8 @@ class IframeName(Enum):
 
     DEFAULT                             = 'DEFAULT'
     PLAYER                              = 'PLAYER'
+    KEA                                 = 'KEA'
+    KEA_QUIZ_PLAYER                     = 'KEA_QUIZ_PLAYER'
     
     
 class PlayerView(Enum):
@@ -127,10 +129,20 @@ class SortAndFilter(Enum):
     COLLABORATION             = "Collaboration"
     SCHEDULING                = 'Scheduling'
     
+
+class KeaQuizButtons(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    SAVE                       = 'Save'  
+    DELETE                     = 'Delete'      
+    START                      = "Start"
+    DONE                       = "Done"
+
     
 class PlayerPart(Enum):
     def __str__(self):
         return str(self.value)
 
     TOP                       = 'top'  
-    BOTTOM                    = 'bottom'      
+    BOTTOM                    = 'bottom'

@@ -15,6 +15,7 @@ from player import Player
 from upload import Upload
 from clsQrCodeReader import QrCodeReader
 from myHistory import MyHistory
+from kea import Kea
 
 
     #============================================================================================================
@@ -41,6 +42,7 @@ class Common():
         self.player             = Player(self, driver)
         self.myHistory          = MyHistory(self, driver)
         self.qrcode             = QrCodeReader(self, driver)
+        self.kea                = Kea(self, driver)
 
         
     #=============================================================================================================

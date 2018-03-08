@@ -393,18 +393,7 @@ class Base:
             else:
                 element.click()
                 return True
-     
-                    
-    # click with offset
-#     def click_with_offset(self, locator, x, y):
-#         element = self.wait_visible(locator)
-#         if element == None:
-#             return False
-#         else:
-#             action = TouchAction(self.driver)
-#             action.tap(element, x, y).perform()
-#             return True         
-
+        
         
     # send keys
     def send_keys(self, locator, text, multipleElements=False):
@@ -422,26 +411,40 @@ class Base:
         except:
             writeToLog("INFO", "FAILED to type text: " + str(text))
             return False
-    
 
-        
-    def clear_and_send_keys(self, locator, text, multipleElements=False):
+          
+    # send keys
+    def click_and_send_keys(self, locator, text, multipleElements=False):
         try:
             if multipleElements == True:
                 elements = self.get_elements(locator)
                 for el in elements:
                     if el.size['width']!=0 and el.size['height']!=0:
-                        el.clear()
+                        if el.click() == False:
+                            writeToLog("INFO", "FAILED to click before typing in")
+                            return False                        
                         el.send_keys(text)
                         return True
             else:
                 element = self.get_element(locator)
-                element.clear()
+                if element.click() == False:
+                    writeToLog("INFO", "FAILED to click before typing in")
+                    return False
                 element.send_keys(text)
                 return True 
         except:
             writeToLog("INFO", "FAILED to type text: " + str(text))
+            return False    
+
+    
+    def clear_and_send_keys(self, locator, text):
+        element = self.wait_visible(locator)
+        if element == False:
             return False
+        else:
+            element.clear()
+            element.send_keys(text)
+            return True
             
             
     # key event

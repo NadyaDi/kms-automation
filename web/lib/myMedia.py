@@ -165,9 +165,9 @@ class MyMedia(Base):
         return success
      
         
-    def searchEntryMyMedia(self, entryName):
+    def searchEntryMyMedia(self, entryName, forceNavigate=True):
         # Navigate to My Media
-        if self.navigateToMyMedia(True) == False:
+        if self.navigateToMyMedia(forceNavigate) == False:
             return False
         sleep(2)
         # Search Entry     
