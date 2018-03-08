@@ -836,13 +836,8 @@ class EditEntryPage(Base):
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
             return False   
-        
-        if self.click(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, 30, True) == False:
-#         if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime) == False:
-            writeToLog("INFO","FAILED insert new slide time")
-            return False
          
-        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime) == False:
+        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime, multipleElements= True) == False:
             writeToLog("INFO","FAILED insert new slide time")
             return False             
             
@@ -852,7 +847,7 @@ class EditEntryPage(Base):
         
         sleep(3)
         # Verify new time saved 
-        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS) == False:
+        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS, multipleElements=True) == False:
             writeToLog("INFO","FAILED to fined saved success label")
             return False  
         
@@ -867,7 +862,7 @@ class EditEntryPage(Base):
         if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
             writeToLog("INFO","FAILED navigate to edit entry page")
             return False
-        
+         
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False      
