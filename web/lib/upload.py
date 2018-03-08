@@ -35,6 +35,8 @@ class Upload(Base):
     UPLOAD_ENTRY_DISCLAIMER_CHECKBOX            = ('id', 'disclaimer-Accepted')
     UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@class='btn btn-link' and text() = 'Go To Media']")
     UPLOAD_ENABLE_SCHEDULING_RADIO              = ('id', 'schedulingRadioButtons_5a65e5d39199d-scheduled')
+    DROP_DOWN_VIDEO_QUIZ_BUTTON                 = ('xpath', ".//span[text()='Video Quiz']")
+    VIDEO_QUIZ_PAGE_TITLE                       = ('xpath', "//h1[@class='editorBreadcrumbs inline']")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -43,8 +45,20 @@ class Upload(Base):
             self.get_child_element(parentElement, self.DROP_DOWN_MEDIA_UPLOAD_BUTTON).click()
             return True
         except NoSuchElementException:
+            writeToLog("INFO","FAILED to click on Media Upload from drop down menu")
             return False
         
+        
+    #  @Author: Inbar Willman  
+    def clickVideoQuiz(self):
+        try:
+            parentElement = self.get_element(self.UPLOAD_MENU_DROP_DOWN_ELEMENT)
+            self.get_child_element(parentElement, self.DROP_DOWN_VIDEO_QUIZ_BUTTON).click()
+            return True
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to click on Video Quiz from drop down menu")
+            return False    
+    
         
     #  @Author: Tzachi Guetta
     # In case disclaimer module is turned on and set to "before upload" 
@@ -255,3 +269,24 @@ class Upload(Base):
     # Use after upload is done, from upload page    
     def clickGoToMyMedia(self):
         return self.click(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+    
+    
+    # @Author: Inbar Willman
+    def addNewVideoQuiz(self):
+        # Click Add New
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on 'Add New' button")
+            return False
+            
+        # Click video quiz
+        if self.clickVideoQuiz() == False:
+            writeToLog("DEBUG","FAILED to click on 'Video Quiz' button")
+            return False
+
+        if self.wait_visible(self.VIDEO_QUIZ_PAGE_TITLE, 30) == False:
+            writeToLog("DEBUG","FAILED to navigate to add new video quiz page")
+            return False
+        
+    return True
+        
+        

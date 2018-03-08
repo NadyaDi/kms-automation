@@ -153,9 +153,9 @@ class MyMedia(Base):
         return True
      
         
-    def searchEntryMyMedia(self, entryName):
+    def searchEntryMyMedia(self, entryName, forceNavigate=True):
         # Navigate to My Media
-        if self.navigateToMyMedia(True) == False:
+        if self.navigateToMyMedia(forceNavigate) == False:
             return False
         # Search Entry     
         self.getSearchBarElement().click()

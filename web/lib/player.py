@@ -52,6 +52,7 @@ class Player(Base):
         else:
             localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
             self.swith_to_iframe(self.PLAYER_IFRAME)
+            return True
     
     
     # fromActionBar = True, to click play on the bar below the player

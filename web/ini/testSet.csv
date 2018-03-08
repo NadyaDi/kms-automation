@@ -150,3 +150,4 @@ test_2567,1,0,0,0,My history - delete entry (Published to channel) from watch li
 test_2568,1,0,0,0,My history - delete multiple entries from watch list history,,
 test_2569,1,0,0,0,My history - clear history,,
 test_2571,1,0,0,0,My history - Add entry audio (Private) to watch list history,,
+test_2573,1,0,0,0,My history - Add entry quiz (Private) to watch list history,,
