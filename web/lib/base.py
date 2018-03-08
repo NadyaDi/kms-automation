@@ -235,14 +235,32 @@ class Base:
         return False
            
            
-    # element present
-    def is_present(self, locator):
-        try:
-            self.get_element(locator)
-            return True
-        except NoSuchElementException:
-            return False
-
+#     # element present
+#     def is_present(self, locator):
+#         try:
+#             self.get_element(locator)
+#             return True
+#         except NoSuchElementException:
+#             return False
+    # waits
+    def is_present(self, locator, timeout=10):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                self.get_element(locator)
+                if wait_until < datetime.datetime.now():
+                    #writeToLog('DEBUG','Element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False
+                
+                self.setImplicitlyWaitToDefault()
+                return True   
+            except:
+                if wait_until < datetime.datetime.now():
+                    #writeToLog('DEBUG','Element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False
 
     # waits
     def wait_visible(self, locator, timeout=10):
@@ -295,9 +313,9 @@ class Base:
         while True:
             try:
                 element = self.get_element(locator)
-                if element != None:
-                    # If element found, move to the next while
-                    break
+#                 if element != None:
+                # If element found (no exception), move to the next while
+                break
             except:
                 if wait_until < datetime.datetime.now():
                     writeToLog('INFO','Element was not found')
@@ -313,7 +331,7 @@ class Base:
                         self.setImplicitlyWaitToDefault()
                         return True                    
                 else:    
-                    if element_text.lower() == text.lower():
+                    if str(element_text.lower()) == str(text.lower()):
                         self.setImplicitlyWaitToDefault()
                         return True
                 if wait_until < datetime.datetime.now():
@@ -379,14 +397,21 @@ class Base:
 
         
     # send keys
-    def send_keys(self, locator, text):
-        element = self.wait_visible(locator)
-        if element == False:
+    def send_keys(self, locator, text, multipleElements=False):
+        try:
+            if multipleElements == True:
+                elements = self.get_elements(locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.send_keys(text)
+                        return True
+            else:
+                element = self.get_element(locator)
+                element.send_keys(text)
+                return True 
+        except:
+            writeToLog("INFO", "FAILED to type text: " + str(text))
             return False
-        else:
-            element.send_keys(text)
-            return True 
-    
     
     def clear_and_send_keys(self, locator, text):
         element = self.wait_visible(locator)
@@ -431,7 +456,7 @@ class Base:
     def is_element_checked(self, locator):
         element = self.get_element(locator)
         if element.get_attribute("checked") != "true":
-            writeToLog("INFO","element is not checked")
+            writeToLog("INFO", "'" + locator[1] + "' - element is not checked")
             return False
         
         return True

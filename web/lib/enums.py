@@ -129,7 +129,7 @@ class SortAndFilter(Enum):
     COLLABORATION             = "Collaboration"
     SCHEDULING                = 'Scheduling'
     
-    
+
 class KeaQuizButtons(Enum):
     def __str__(self):
         return str(self.value)
@@ -138,3 +138,11 @@ class KeaQuizButtons(Enum):
     DELETE                     = 'Delete'      
     START                      = "Start"
     DONE                       = "Done"
+
+    
+class PlayerPart(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    TOP                       = 'top'  
+    BOTTOM                    = 'bottom'

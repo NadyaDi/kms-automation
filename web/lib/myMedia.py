@@ -19,6 +19,7 @@ class MyMedia(Base):
     #My Media locators:
     #=============================================================================================================
     MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
+    MY_MEDIA_NO_RESULTS_ALERT                                   = ('xpath', "//div[@id='myMedia_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_ENRTY_EDIT_BUTTON                                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_CONFIRM_ENTRY_DELETE                               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
@@ -37,10 +38,11 @@ class MyMedia(Base):
     MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH                         = ('xpath', "//span[contains(.,'PUBLISHED_CATEGORY')]")# When using this locator, replace 'PUBLISHED_CATEGORY' string with your real category/channel name
     MY_MEDIA_SAVE_MESSAGE_CONFIRM                               = ('xpath', "//div[@class='alert alert-success ' and contains(text(), 'Media successfully published')]")
     MY_MEDIA_DISCLAIMER_MSG                                     = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to categories or channels.')]")
-    MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")
+    #MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")
     MY_MEDIA_ENTRY_CHILD                                        = ('xpath', "//p[@class='status_content' and contains(text(), 'ENTRY_PRIVACY')]")
     MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::a[@class='entryTitle tight']")                                   
-    MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id = 'accordion-ENTRY_ID']")
+    MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI                         = ('xpath', "//a[@id = 'accordion-ENTRY_ID']")
+    MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id = 'accordion-ENTRY_ID']/i[@class='icon-plus-sign kmstooltip']")
     MY_MEDIA_ENTRY_CHILD_POPUP                                  = ('xpath', "//strong[@class='valign-top']")
     MY_MEDIA_SORT_BY_DROPDOWNLIST                               = ('xpath', "//a[@id='sort-btn']")
     MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST                      = ('xpath', "//a[@id='status-btn']")
@@ -53,11 +55,16 @@ class MyMedia(Base):
     MY_MEDIA_TABLE_SIZE                                         = ('xpath',"//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
     #=============================================================================================================
     def getSearchBarElement(self):
+        # We got multiple elements, search for element which is not size = 0
+        elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR)
+        for el in elements:
+            if el.size['width']!=0 and el.size['height']!=0:
+                return el
+        return False        
 #         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
 #             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
 #         else:
 #             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
-        return self.get_element(self.MY_MEDIA_SEARCH_BAR)
     
     
     # This method, clicks on the menu and My Media
@@ -74,7 +81,7 @@ class MyMedia(Base):
         
         # Click on My Media
         if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
-            writeToLog("INFO","FAILED to on My Media from the menu")
+            writeToLog("INFO","FAILED to click on My Media from the user menu")
             return False
         
         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
@@ -105,27 +112,29 @@ class MyMedia(Base):
         writeToLog("INFO","Entry: '" + entryName + "' Was Deleted")
         return True
     
+    #  @Author: Tzachi Guetta      
     # The following method can handle list of entries and a single entry:
     #    in order to delete list of entries pass a List[] of entries name, for single entry - just pass the entry name
     #    also: the method will navigate to My media
     # Known limitation: entries MUST be presented on the first page of my media
     def deleteEntriesFromMyMedia(self, entriesNames):
-        if self.navigateToMyMedia() == False:
+        if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
         
+        success = True
         # Checking if entriesNames list type
         if type(entriesNames) is list: 
             for entryName in entriesNames: 
                 if self.checkSingleEntryInMyMedia(entryName) == False:
                     writeToLog("INFO","FAILED to CHECK the entry in my-media page")
-                    return False
-                
+                    success = False
+            
                 writeToLog("INFO","Going to delete Entry: " + entryName)
         else:
             if self.checkSingleEntryInMyMedia(entriesNames) == False:
                     writeToLog("INFO","FAILED to CHECK the entry in my-media page")
-                    return False
+                    success = False
                 
             writeToLog("INFO","Going to delete Entry: " + entriesNames)
         
@@ -143,20 +152,24 @@ class MyMedia(Base):
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear() 
                      
-        # Printing the deleted entries       
-        if type(entriesNames) is list: 
-            entries = ", ".join(entriesNames)
-            writeToLog("INFO","The following entries were deleted: " + entries + "")
-        else:
-            writeToLog("INFO","The following entry was deleted: " + entriesNames + "")
+        # Printing the deleted entries
+        if success == True:    
+            if type(entriesNames) is list: 
+                entries = ", ".join(entriesNames)
+                writeToLog("INFO","The following entries were deleted: " + entries + "")
+            else:
+                writeToLog("INFO","The following entry was deleted: " + entriesNames + "")
+        else:  
+            writeToLog("INFO","Failed, Not all entries were deleted")
             
-        return True
+        return success
      
         
     def searchEntryMyMedia(self, entryName, forceNavigate=True):
         # Navigate to My Media
         if self.navigateToMyMedia(forceNavigate) == False:
             return False
+        sleep(2)
         # Search Entry     
         self.getSearchBarElement().click()
         self.getSearchBarElement().send_keys(entryName)
@@ -362,7 +375,7 @@ class MyMedia(Base):
         elif publishFrom == enums.Location.UPLOAD_PAGE: 
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")       
             sleep(2)            
-            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
+            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
                 return False        
           
@@ -406,7 +419,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on save button")
                 return False                
                     
-            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 30) == False:
+            if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 45) == False:
                 writeToLog("INFO","FAILED to find confirm save message")
                 return False
         else:
@@ -456,15 +469,17 @@ class MyMedia(Base):
                     return False
                 sleep(3)
                 
+                if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                    tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId))
                 if str(expectedEntryPrivacy) in self.get_element(tmpBtn).find_element_by_xpath(self.MY_MEDIA_ENTRY_CHILD_POPUP[1]).text:
                     writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
                     return True
-        
+                    
         except NoSuchElementException:
             return False
     
         return True
-        
+          
         
     # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
@@ -493,7 +508,7 @@ class MyMedia(Base):
                 return False
             
             tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
-            if self.click(tmpEntry) == False:
+            if self.click(tmpEntry, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
                 return False
 
@@ -547,7 +562,7 @@ class MyMedia(Base):
     # MUST: enableLoadButton must be turned off in KMS admin 
     def scrollToBottom(self, retries=5):
         try:           
-            if len(self.wait_visible(self.MY_MEDIA_TABLE_SIZE), 5) < 4:
+            if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
                 return True
             else:
                 count = 0
@@ -606,4 +621,38 @@ class MyMedia(Base):
             return False
     
         return True
+
+    # Author: Tzachi Guetta 
+    def isEntryPresented(self, entryName, isExpected):
+        try:         
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
+            isPresented = self.is_present(tmpEntry, 5)
+            
+            strPresented = "Not Presented" 
+            if isPresented == True:
+                strPresented = "Presented"
+
+            if isPresented == isExpected:
+                writeToLog("INFO","Passed, As expected, Entry: '" + entryName + "' is " + strPresented)
+                return True
+            else:
+                writeToLog("INFO","FAILED, Not expected, Entry: '" + entryName + "' is " + strPresented)
+                return False          
+                
+        except NoSuchElementException:
+            return False
     
+        return True
+    
+    # Author: Tzachi Guetta 
+    def areEntriesPresented(self, entriesDict):
+        try:
+            for entry in entriesDict:
+                if self.isEntryPresented(entry, entriesDict.get(entry)) == False:
+                    writeToLog("INFO","FAILED to verify if entry presented for entry: " + str(entry))  
+                    return False
+                
+        except NoSuchElementException:
+            return False
+    
+        return True

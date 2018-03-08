@@ -81,16 +81,16 @@ class Test:
                 return
             
             sleep(15)
-            writeToLog("INFO","Step 2: Going to upload the downloaded  Flavor")
+            writeToLog("INFO","Step 5: Going to upload the downloaded  Flavor")
             if self.common.upload.uploadEntry(self.filePathDownloaded, self.entryName + '_Downloaded', "downloaded description", "downloadedtags1,downloadedtags2,") == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to upload the downloaded  Flavor")
+                writeToLog("INFO","Step 5: FAILED to upload the downloaded  Flavor")
                 return
                
-            writeToLog("INFO","Step 2: Going to verify uploaded entry")
+            writeToLog("INFO","Step 6: Going to verify uploaded entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName + '_Downloaded', "0:07") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to verify uploaded entry")
+                writeToLog("INFO","Step 6: FAILED to verify uploaded entry")
                 return
 
             #########################################################################

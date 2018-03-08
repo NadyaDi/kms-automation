@@ -29,7 +29,7 @@ class Channel(Base):
     CHANNEL_DETAILS_OPTION_SUBSCRIPTION             = ('id', 'Category-options-enableChannelSubscription')
     CHANNEL_SAVE_BUTTON                             = ('id', 'Category-submit')
     CHANNEL_CREATION_DONE                           = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'The information was saved successfully')]")
-    MY_CHANNELS_SERACH_FIELD                        = ('id', 'searchBar')
+    MY_CHANNELS_SERACH_FIELD                        = ('xpath', "//input[@id='searchBar']")
     MY_CHANNELS_EDIT_BUTTON                         = ('xpath', "//a[contains(@class,'edit')]")
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
@@ -302,11 +302,11 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
             
-            if self.click(self.MY_CHANNELS_SERACH_FIELD) == False:
+            if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on name text field")
                 return False
             
-            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName) == False:
+            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to type in 'name' text field")
                 return False
             
@@ -323,11 +323,11 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
             
-            if self.click(self.MY_CHANNELS_SERACH_FIELD) == False:
+            if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on name text field")
                 return False
             
-            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName) == False:
+            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to type in 'name' text field")
                 return False
             

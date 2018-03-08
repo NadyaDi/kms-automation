@@ -52,7 +52,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Slide Deck Upload - add chapters", self.testNum)
+            self.entryName = clsTestService.addGuidToString("SlideDeckUpload add-remove chapters", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
@@ -158,7 +158,7 @@ class Test:
                 writeToLog("INFO","Step 13: Previous Step Failed as Expected - The chapter '" +  chapter + "' should not be displayed")
 
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - add chapters' was done successfully")            
+            writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - add/remove chapters' was done successfully")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

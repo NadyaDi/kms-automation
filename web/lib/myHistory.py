@@ -26,10 +26,6 @@ class MyHistory(Base):
     MY_HISTORY_CONFIRM_HISTORY_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and @data-handler = '1']")
     MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE                      = ('class_name', 'empty-header')
     #=============================================================================================================
-    def getSearchBarElement(self):
-        return self.get_element(self.MY_HISTORY_SEARCH_BAR)    
-    
-    #  @Author: Inbar Willman
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
         # Check if we are already in my history page
@@ -67,8 +63,8 @@ class MyHistory(Base):
             return False
         
         #If search field is displayed make a search
-        self.getSearchBarElement().click()
-        self.getSearchBarElement().send_keys(entryName)
+        self.clsCommon.myMedia.getSearchBarElement().click()
+        self.clsCommon.myMedia.getSearchBarElement().send_keys(entryName)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
      
