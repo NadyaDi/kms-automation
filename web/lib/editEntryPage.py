@@ -77,6 +77,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_SAVED_CHAPTER_SUCCESS                            = ('xpath', "//a[@id='saved' and @class='btn btn-large btn-block btn-success']")
     EDIT_ENTRY_CHAPTER_IN_TIME_LINE                             = ('xpath', "//div[@class='k-cuepoint chapter ui-draggable ui-draggable-handle' and @data-time='CHAPTER_TIME']")# When using this locator, replace 'CHAPTER_TIME' string with your real chapter time
     EDIT_ENTRY_DELETE_CHAPTER_BUTTON                            = ('xpath', "//a[@class='btn btn-link remove' and @role='button']")
+    EDIT_ENTRY_DISCLAIMER_TEXT_BOX                              = ('xpath', "//div[@id='disclaimet-text']")
     #=============================================================================================================
     
     
@@ -217,8 +218,9 @@ class EditEntryPage(Base):
         return True
     
     
-#    How-to: if entryName was delivered - the function will first navigate to the entry's edit page
-#    TODO: add full description this the function
+    #    How-to: if entryName was delivered - the function will first navigate to the entry's edit page
+    #    TODO: add full description this the function
+    # Author: Tzachi Guetta
     def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
         try:
             if len(entryName) != 0:
@@ -608,7 +610,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success presentation was upload and added to time line successfully")
         return True
       
-    
+    # Author: Tzachi Guetta
     def addFlavorsToEntry(self, entryName, flavorsList):
         try:
             if len(entryName) != 0:
@@ -878,4 +880,23 @@ class EditEntryPage(Base):
                 return False
              
         writeToLog("INFO","Success, All slides time was changed successfully")
-        return True             
+        return True
+
+
+    # Author: Tzachi Guetta
+    def verifyDisclaimerText(self, entryName, expectedText):
+        try:
+            if self.navigateToEditEntry(entryName) == False:
+                writeToLog("INFO","FAILED to navigate to edit entry page, Entry name: " + entryName)
+                return False
+            
+            if not self.get_element(self.EDIT_ENTRY_DISCLAIMER_TEXT_BOX).text in expectedText:
+                writeToLog("INFO","FAILED, the expected text wasn't presented")
+                return False
+                            
+            writeToLog("INFO","Passed, the expected text was presented")
+            return True
+            
+        except:
+            writeToLog("INFO","FAILED Disclaimer text wasn't found, Entry name: " + entryName)
+            return False
