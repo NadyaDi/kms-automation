@@ -1,9 +1,10 @@
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 from base import *
 import clsTestService
-from general import General
 import enums
-from selenium.webdriver.common.action_chains import ActionChains
-
+from general import General
 
 
 class Channel(Base):
@@ -67,6 +68,15 @@ class Channel(Base):
     CHANNEL_ENTRY_IN_PENDING_TAB_PARENT             = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]") 
     CHANNEL_REJECT_BUTTON                           = ('xpath', "//button[contains(@id,'reject_btn_ENTRY_ID')]")
     CHANNEL_APPROVE_BUTTON                          = ('xpath', "//button[contains(@id,'accept_btn_ENTRY_ID')]")
+    CHANNEL_ADD_MEDIA_TO_CHANNEL_PLAYLIST           = ('xpath', "//span[@class='searchme' and text() ='ENTRY_NAME']/ancestor::div[@class='fullsize']")
+    CHANNEL_ADD_MEDIA_BUTTON                        = ('xpath', "//a[@class='playlist-entry-select action' and @title='Add to Playlist']")
+    CHANNEL_SEARCH_BUTTON_CHANNEL_PLAYLIST          = ('xpath', "//form[@id='navbar-search' and @class= 'navbar-search']")
+    CHANNEL_SEARCH_BUTTON_FIELD                     = ('xpath', "//input[@id='searchBar' and @placeholder= 'Search Media']")
+    CHANNEL_SAVE_PLAYLIST_BUTTON                    = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
+    CHANNEL_CHANNEL_PLAYLIST_SAVED_MASSAGE          = ('xpath', "//div[@class='alert alert-success ']")  
+    CHANNEL_PLAYLIST_DELETE_CONFIRMATION            = ('xpath', "//a[@class='btn btn-danger' and contains(text(),'Delete')]")
+    CHANNEL_PLAYLIST_NAME_COLUMN                    = ('xpath', "//p[@class='playlistNameColumn' and text()= 'PLYLIST_TITLE']")
+    CHANNEL_PLAYLIST_DELETE_ICON_TABLE              = ('xpath', "//a[@onclick=\"channelPlaylistsjs.deletePlaylist('PLAYLIST_ID')\"]")                                                                      
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -539,7 +549,7 @@ class Channel(Base):
       
     #TODO NOT FINISHED
     #@Author: Oded Berihon     
-    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag): 
+    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, entriesNames): 
         if self.navigateToChannelPlaylistTab(channelName) == False:
             writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
             return False 
@@ -576,8 +586,70 @@ class Channel(Base):
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
             return False  
-      
+        
+        if self.click(self.CHANNEL_SEARCH_BUTTON_CHANNEL_PLAYLIST) == False:
+            writeToLog("INFO","FAILED to click on search button")
+            return False   
+
+        if self.click(self.CHANNEL_SEARCH_BUTTON_FIELD) == False:
+            writeToLog("INFO","FAILED to click on search field")
+            return False  
+        sleep(1)
+        
+        for entryName in entriesNames:
+            if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, Keys.CONTROL + 'a') == False:
+                writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
+                return False        
+                    
+            if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, entryName + Keys.ENTER) == False:
+                writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
+                return False
+            
+            # Wait for loader to disappear
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if self.click(self.CHANNEL_ADD_MEDIA_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on add button")
+                return False             
+            sleep(1)   
+            
+        if self.click(self.CHANNEL_SAVE_PLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on save")
+            return False             
+ 
+        el = self.get_element(self.CHANNEL_CHANNEL_PLAYLIST_SAVED_MASSAGE)
+        if not playlisTitle in el.text:
+            writeToLog("INFO","FAILED to LOCATE SUCCESS MASSAGE")
+            return False
+                                         
         return True
+    
+    
+    #@Author: Oded Berihon  
+    def deleteChannelPlaylist(self, channelName, playlisTitle):
+        if self.navigateToChannelPlaylistTab(channelName) == False:
+            writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
+            return False 
+        
+        templocator = (self.CHANNEL_PLAYLIST_NAME_COLUMN[0], self.CHANNEL_PLAYLIST_NAME_COLUMN[1].replace('PLYLIST_TITLE', playlisTitle))        
+        playlistId = self.wait_visible(templocator).find_element_by_xpath("../..").get_attribute("data-playlistid")
+        templocator = (self.CHANNEL_PLAYLIST_DELETE_ICON_TABLE[0], self.CHANNEL_PLAYLIST_DELETE_ICON_TABLE[1].replace('PLAYLIST_ID', playlistId))
+                            
+        if self.click(templocator) == False:
+            writeToLog("INFO","FAILED to Click on delete button: '" + playlisTitle + "'")
+            return False
+        
+        sleep(2)
+        if self.click(self.CHANNEL_PLAYLIST_DELETE_CONFIRMATION, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on delete button")
+            return False  
+        
+        el = self.wait_visible(self.CHANNEL_CHANNEL_PLAYLIST_SAVED_MASSAGE, 45)
+        if not "The playlist " + playlisTitle + " was deleted successfully" in el.text:
+            writeToLog("INFO","FAILED to LOCATE Deleted MASSAGE")
+            return False
+            
+        return True 
 
     
     #  @Author: Tzachi Guetta    
