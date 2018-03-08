@@ -205,12 +205,22 @@ class Base:
 
 
     # element visible
-    def is_visible(self, locator):
+    def is_visible(self, locator, multipleElements=False):
         try:
-            if self.get_element(locator).is_displayed() == True:
-                return True
+            if multipleElements == True:
+                elements = self.get_elements(locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        if el.is_displayed() == True:
+                            return True
+                        else:
+                            return False
+            
             else:
-                return False
+                if self.get_element(locator).is_displayed() == True:
+                    return True
+                else:
+                    return False
         except NoSuchElementException:
             return False
     
@@ -413,14 +423,25 @@ class Base:
             writeToLog("INFO", "FAILED to type text: " + str(text))
             return False
     
-    def clear_and_send_keys(self, locator, text):
-        element = self.wait_visible(locator)
-        if element == False:
+
+        
+    def clear_and_send_keys(self, locator, text, multipleElements=False):
+        try:
+            if multipleElements == True:
+                elements = self.get_elements(locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.clear()
+                        el.send_keys(text)
+                        return True
+            else:
+                element = self.get_element(locator)
+                element.clear()
+                element.send_keys(text)
+                return True 
+        except:
+            writeToLog("INFO", "FAILED to type text: " + str(text))
             return False
-        else:
-            element.clear()
-            element.send_keys(text)
-            return True
             
             
     # key event

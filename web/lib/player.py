@@ -80,7 +80,8 @@ class Player(Base):
     
     
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
-    def clickPlayAndPause(self, delay, timeout=30):
+    # additional = additional delay befor pause 
+    def clickPlayAndPause(self, delay, timeout=30, additional=0):
         self.switchToPlayerIframe()
         if self.clickPlay() == False:
             return False
@@ -89,7 +90,7 @@ class Player(Base):
         if self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout) == False:
             writeToLog("INFO","FAILED to seek timer to: '" + delay + "'")
             return False
-        
+        sleep(additional)
         if self.clickPause() == False:
             return False
         
@@ -197,7 +198,7 @@ class Player(Base):
         # find the parent of all menu slides
         sideMenu = self.get_element(self.PLAYER_SIDE_BAR_MENU_PARENT)
         # check if the number of slides is correct
-        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList): 
+        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList):
             writeToLog("INFO","FAILED to verify number of slides in side bar menu")
             return False
         sleep(2)
