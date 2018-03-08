@@ -291,6 +291,6 @@ class Upload(Base):
             writeToLog("DEBUG","FAILED to navigate to add new video quiz page")
             return False
         
-    return True
+        return True
         
         
