@@ -10,7 +10,8 @@ test_351,Slide Deck Upload,2370151,qakmstest.dev.kaltura.com,pythonautomation1@m
 test_352,Slide Deck Upload - delete slides,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_353,Slide Deck Upload - add / remove chapters,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_354,Slide Deck Upload - delete slides,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_1556,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_1558,Disclaimer - Before publish (agreeRequired = No),5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_869,Scheduling: add Publishing  - playlist flows,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_883,Scheduling: add Publishing Schedule via edit entry page,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456

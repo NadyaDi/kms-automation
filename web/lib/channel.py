@@ -295,7 +295,7 @@ class Channel(Base):
         
         return True
     
- 
+    # Author: Tzachi Guetta
     def searchAChannelInMyChannels(self, channelName):
         try:                
             if self.navigateToMyChannels() == False:
@@ -364,7 +364,7 @@ class Channel(Base):
         sleep(2)
         return True
     
- 
+    #  Author: Tzachi Guetta
     def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
         try:                
             if self.navigateToChannel(channelName) == False:
