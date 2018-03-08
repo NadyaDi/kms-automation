@@ -61,7 +61,7 @@ class Test:
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
-            self.entryName1 = clsTestService.addGuidToString('Image', self.testNum)
+            self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('Audio', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('Video', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel playlist', self.testNum)
@@ -75,10 +75,10 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return    
             
-            writeToLog("INFO","Step 2: Going to upload image type entry")            
+            writeToLog("INFO","Step 2: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry image")
+                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
                 return
             
             writeToLog("INFO","Step 3: Going to upload audio type entry")
@@ -101,7 +101,7 @@ class Test:
              
             writeToLog("INFO","Step 6: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 6: FAILED - could not publish image to channel")
+                writeToLog("INFO","Step 6: FAILED - could not publish Video to channel")
                 return
                 
             writeToLog("INFO","Step 7: Going to publish entry2")
