@@ -29,7 +29,7 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
+    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
     slidesQrCodeAndTimeList = None
     deleteSlidesList = None
     
@@ -49,7 +49,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete slides", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
@@ -69,16 +69,19 @@ class Test:
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
+                self.status = "Fail"
                 return
                
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
+                self.status = "Fail"
                 return
                            
             writeToLog("INFO","Step 4: Going remove slides from time line")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
+                self.status = "Fail"
                 return
               
             # remove deleted slides from  slides list (slidesQrCodeAndTimeList)
@@ -94,6 +97,7 @@ class Test:
             writeToLog("INFO","Step 6: Going to navigate to Entry Page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED navigate to entry page")
+                self.status = "Fail"
                 return
             sleep(4)
             

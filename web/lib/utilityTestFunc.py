@@ -29,14 +29,15 @@ def updateTestCredentials(case_str):
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = row['admin_password']
                 
                 # SET KMS URLS
-                localSettings.LOCAL_SETTINGS_TEST_BASE_URL          = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
-                localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
-                localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'
-                localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL   = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
-                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
-                localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
-                localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL     = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
-                localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
+                localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
+                localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
+                localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'
+                localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
+                localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL        = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
+                localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL         = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
+                localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
+                localSettings.LOCAL_SETTINGS_KMS_MEDIA_SELECTION_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/quiz/entry/add-quiz/context/'  
                 found = True
                 break
     return found 

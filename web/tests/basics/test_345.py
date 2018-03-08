@@ -56,6 +56,7 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Collaboration", self.testNum)
             self.newEntryName = clsTestService.addGuidToString('Edit Collaboration', self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
+        
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
@@ -63,13 +64,14 @@ class Test:
                 return         
 
             writeToLog("INFO","Step 2: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, "description  description", "tags1,tags2,") == None:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
             
             writeToLog("INFO","Step 3: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
+                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to edit entry page")
                 return
             
@@ -117,7 +119,7 @@ class Test:
                 return  
             
             writeToLog("INFO","Step 11: Going to navigate to entry page from category page")
-            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
+            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.newEntryName, self.categoryList[0]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                 

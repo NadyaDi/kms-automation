@@ -14,10 +14,10 @@ class Test:
     #================================================================================================================================
     #  @Author: Tzachi Guetta
     # Test description:
-    # In case disclaimer module is turned on and set to "before Publish" (and agreeRequired = Yes)
-    # The following test will check that publish is prevented before disclaimer's check-box was checked.
+    # In case disclaimer module is turned on and set to "before Publish" (and agreeRequired = No)
+    # The following test will check that publish is enabled and (because agreeRequired = No)
     #================================================================================================================================
-    testNum     = "1556"
+    testNum     = "1558"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -29,6 +29,7 @@ class Test:
     # Test variables
     entryName = None
     channelName = None
+    disclaimerText  = None
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
     channelDescription = "Channel description"
@@ -56,7 +57,8 @@ class Test:
             ########################################################################
             self.entryName = clsTestService.addGuidToString('Entry name', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel name', self.testNum)
-            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
+            self.disclaimerText = clsTestService.addGuidToString('disclaimer\nText\nThis is the text for Disclaimer', self.testNum)
+            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, False, disclaimerText = self.disclaimerText)
             
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -77,10 +79,16 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
             
-            writeToLog("INFO","Step 4: Going to publish the entry while Disclaimer before published turned ON")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], disclaimer=True) == False:
+            writeToLog("INFO","Step 4: Going to verify Disclaimer Text")
+            if self.common.editEntryPage.verifyDisclaimerText(self.entryName, self.disclaimerText) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED publish entry (Disclaimer is on)")
+                writeToLog("INFO","Step 3: FAILED to verify Disclaimer Text")
+                return
+            
+            writeToLog("INFO","Step 5: Going to publish the entry while Disclaimer before published turned ON")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], disclaimer=False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED publish entry (Disclaimer is on)")
                 return
             #########################################################################
             writeToLog("INFO","TEST PASSED")

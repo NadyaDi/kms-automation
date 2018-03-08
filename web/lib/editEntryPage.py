@@ -69,12 +69,15 @@ class EditEntryPage(Base):
     EDIT_ENTRY_UPLOAD_DECK_PROCES                               = ('id', 'inProgressMessage')
     EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE               = ('xpath', "//a[@class='btn btn-link remove' and @role ='button']")
     EDIT_ENTRY_SLIDE_IN_TIMELINE                                = ('xpath',"//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle' and @data-time='SLIDE_TIME']")
-    EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('id', 'refresh')
+    EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('xpath',"//a[@id='refresh' and @class='btn btn-block']")
     EDIT_ENTRY_ADD_CHAPTER                                      = ('xpath', "//a[@class='btn btn-large chapter kmstooltip' and @aria-label='Create a new Chapter']")
     EDIT_ENTRY_INSERT_CHAPTER_TITLE                             = ('xpath',"//input[@id='k-title' and @placeholder='Enter Chapter Title']")
     EDIT_ENTRY_INSERT_CHAPTER_TIME                              = ('xpath', "//input[@id='k-currentTime' and @name='chapters[time]']")
     EDIT_ENTRY_SAVE_CHAPTER                                     = ('xpath', "//a[@id='save' and @class='btn btn-large btn-block btn-primary']")
     EDIT_ENTRY_SAVED_CHAPTER_SUCCESS                            = ('xpath', "//a[@id='saved' and @class='btn btn-large btn-block btn-success']")
+    EDIT_ENTRY_CHAPTER_IN_TIME_LINE                             = ('xpath', "//div[@class='k-cuepoint chapter ui-draggable ui-draggable-handle' and @data-time='CHAPTER_TIME']")# When using this locator, replace 'CHAPTER_TIME' string with your real chapter time
+    EDIT_ENTRY_DELETE_CHAPTER_BUTTON                            = ('xpath', "//a[@class='btn btn-link remove' and @role='button']")
+    EDIT_ENTRY_DISCLAIMER_TEXT_BOX                              = ('xpath', "//div[@id='disclaimet-text']")
     #=============================================================================================================
     
     
@@ -95,7 +98,7 @@ class EditEntryPage(Base):
             return False
         
         #Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 5) == False:
+        if self.wait_visible(tmp_entry_name, 30) == False:
             writeToLog("INFO","FAILED to open edit entry page, Entry name: '" + entryName + "'")
             return False
         
@@ -215,8 +218,9 @@ class EditEntryPage(Base):
         return True
     
     
-#    How-to: if entryName was delivered - the function will first navigate to the entry's edit page
-#    TODO: add full description this the function
+    #    How-to: if entryName was delivered - the function will first navigate to the entry's edit page
+    #    TODO: add full description this the function
+    # Author: Tzachi Guetta
     def addPublishingSchedule(self, startDate='', startTime='', endDate='', endTime='', timeZone='', entryName=''):
         try:
             if len(entryName) != 0:
@@ -595,7 +599,8 @@ class EditEntryPage(Base):
         if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 300) == False:
             writeToLog("INFO","FAILED, upload deck processing isn't done after 5 minutes")
             return False
-         
+        sleep(2)
+        
         # Verify cuepoint were added on the player
         if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
         #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
@@ -605,7 +610,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success presentation was upload and added to time line successfully")
         return True
       
-    
+    # Author: Tzachi Guetta
     def addFlavorsToEntry(self, entryName, flavorsList):
         try:
             if len(entryName) != 0:
@@ -709,6 +714,19 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, all slides were deleted successfully")
         return True
     
+    def navigateToEditEntry(self, entryName="", navigateFrom = enums.Location.MY_MEDIA):
+            if navigateFrom == enums.Location.MY_MEDIA:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.MY_MEDIA)
+                    return False  
+                
+            elif navigateFrom == enums.Location.ENTRY_PAGE:
+                if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.ENTRY_PAGE)
+                    return False            
+            sleep(2)
+            return True    
+    
     # Author: Michal Zomper 
     def addChapter(self, chapterName, chapterTime):
         if self.click(self.EDIT_ENTRY_ADD_CHAPTER, 20) == False:
@@ -736,7 +754,7 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, chapter was created successfully")
         return True  
     
-    
+    # Author: Michal Zomper 
     def addChapters(self, entryName, chaptersList):
         if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
             writeToLog("INFO","FAILED navigate to edit entry page")
@@ -760,5 +778,120 @@ class EditEntryPage(Base):
         return True  
         
     
-    #def vrifySlidesInChapter(self, slidesListInChapter):
+    # Author: Michal Zomper 
+    def deleteChapter (self, chapterTime):
+        chapterTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(chapterTime)
+        ChapterTime = (self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[0], self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[1].replace('CHAPTER_TIME', str(chapterTimeInSec * 1000)))
         
+        if self.click(ChapterTime) == False:
+            writeToLog("INFO","FAILED to click on chapter icon in time line")
+            return False          
+        sleep(2)
+        
+        if self.click(self.EDIT_ENTRY_DELETE_CHAPTER_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on delete chapter button")
+            return False
+        sleep(3)
+        
+        # Click on confirm delete
+        if self.click(self.EDIT_ENTRY_CONFIRM_DELETE_BUTTON, 20, True) == False:
+            writeToLog("INFO","FAILED to click on remove caption button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Verify that the chapter was delete
+        if self.is_visible(ChapterTime) == True:
+            writeToLog("INFO","FAILED, chapter was found although the chapter was deleted")
+            return False
+            
+        writeToLog("INFO","Success, Chapter was deleted successfully")
+        return True  
+    
+    # Author: Michal Zomper 
+    def deletechpaters(self, entryName, chaptersList):
+        if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page")
+            return False
+        
+        if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
+            writeToLog("INFO","FAILED to click on the time-line tab")
+            return False
+        
+        for chapter in chaptersList:
+            if self.deleteChapter(chaptersList[chapter]) == False:
+                writeToLog("INFO","FAILED to delete chapter name: " + chapter)
+                return False
+            
+        if self.click(self.EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON, 20, True) == False:
+            writeToLog("INFO","FAILED to click on 'view in player' button")
+            return False
+            
+        sleep(2)
+        writeToLog("INFO","Success, All chapters were deleted successfully")
+        return True  
+        
+    # Author: Michal Zomper
+    # The function change a single slide time in the time line
+    def changeSlideTimeInTimeLine(self, oldSlideTime, newSlideTime):
+        slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(oldSlideTime)
+        locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+        if self.click(locatorSlideTime, 20) == False:
+            writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
+            return False   
+         
+        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime, multipleElements= True) == False:
+            writeToLog("INFO","FAILED insert new slide time")
+            return False             
+            
+        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 20) == False:
+            writeToLog("INFO","FAILED click on save button")
+            return False               
+        
+        sleep(3)
+        # Verify new time saved 
+        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to fined saved success label")
+            return False  
+        
+        sleep(1)
+        writeToLog("INFO","Success, slide time was changed successfully")
+        return True  
+    
+    
+    # Author: Michal Zomper
+    # The function go over all the the slide list and change the slides time
+    def changeSlidesTimeInTimeLine(self, entryName, changeTimeOfSlidesList):
+        if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED navigate to edit entry page")
+            return False
+         
+        if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
+            writeToLog("INFO","FAILED to click on the time-line tab")
+            return False      
+        
+        for slide in changeTimeOfSlidesList:
+            if self.changeSlideTimeInTimeLine(slide, changeTimeOfSlidesList[slide]) == False:
+                writeToLog("INFO","FAILED change slide in time: " + str(slide) + " to time: " + str(changeTimeOfSlidesList[slide]))
+                return False
+             
+        writeToLog("INFO","Success, All slides time was changed successfully")
+        return True
+
+
+    # Author: Tzachi Guetta
+    def verifyDisclaimerText(self, entryName, expectedText):
+        try:
+            if self.navigateToEditEntry(entryName) == False:
+                writeToLog("INFO","FAILED to navigate to edit entry page, Entry name: " + entryName)
+                return False
+            
+            if not self.get_element(self.EDIT_ENTRY_DISCLAIMER_TEXT_BOX).text in expectedText:
+                writeToLog("INFO","FAILED, the expected text wasn't presented")
+                return False
+                            
+            writeToLog("INFO","Passed, the expected text was presented")
+            return True
+            
+        except:
+            writeToLog("INFO","FAILED Disclaimer text wasn't found, Entry name: " + entryName)
+            return False

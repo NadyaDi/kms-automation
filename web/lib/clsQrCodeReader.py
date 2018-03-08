@@ -31,6 +31,41 @@ class QrCodeReader(Base):
             writeToLog("INFO","FAILED to take screenshot of the page")
             return False
         
+        
+    # Take screenshot upper half of the player, return the full file path of the screenshot 
+    def takeQrCodeVideoScreenshot(self):
+        filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        if self.takeScreeshot(filePath) == True:
+            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+        else:
+            writeToLog("INFO","FAILED to take screenshot of the page")
+            return False       
+        playerElement = self.get_element_attributes(('xpath', '/html/body'))
+        # Crop the image
+        img = Image.open(filePath)
+        img2 = img.crop((playerElement['left'], playerElement['top'], playerElement['right'], playerElement['bottom'] / 1.63))
+        img2.save(filePath)
+        
+        return filePath
+    
+
+    # Take screenshot the bottom (slide on bottom right of the player) half of the player, return the full file path of the screenshot 
+    def takeQrCodeSlideScreenshot(self):
+        filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        if self.takeScreeshot(filePath) == True:
+            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+        else:
+            writeToLog("INFO","FAILED to take screenshot of the page")
+            return False       
+        playerElement = self.get_element_attributes(('xpath', '/html/body'))
+        # Crop the image
+        img = Image.open(filePath)
+        img2 = img.crop((playerElement['left'], playerElement['bottom'] / 1.63, playerElement['right'], playerElement['bottom']))
+        img2.save(filePath)
+        
+        return filePath
+        
+        
     #Take screenshot of the iframe (player), return the full file path of the screenshot
     def takeQrCodePlayerScreenshot(self, player, driver, fullScreen=False, live=True):
         outTop = -1
@@ -70,55 +105,6 @@ class QrCodeReader(Base):
             return
         
         
-#     def getTopBottomLeftRightOfElement(self, driver, element, isLive, isFullScreen):
-#         #Get the location and size of the Iframe (for cropping the image)
-#         location = element.location
-#         size = element.size
-#         outTop = -1
-#         outBottom = -1
-#         outLeft = -1
-#         outRight = -1
-#         locataionY = -1
-#                  
-#         if isLive:
-#             if isFullScreen:
-#                 outTop = 0
-#                 outBottom = (size['height'] * 24) / 100
-#                 if localSettings.LOCAL_SETTINGS_RUN_MDOE == "REMOTE":
-#                     outLeft = (size['width'] * 73) / 100
-#                     outRight = (size['width'] * 88) / 100
-#                 else:    
-#                     outLeft = (size['width'] * 71) / 100
-#                     outRight = (size['width'] * 85) / 100
-#             else:
-#                 currentBrowserName = localSettings.LOCAL_RUNNING_BROWSER
-#                 if currentBrowserName == clsTestService.PC_BROWSER_CHROME:
-#                     locataionY = location['y']
-#                 elif currentBrowserName == clsTestService.PC_BROWSER_FIREFOX:
-#                     locataionY = 0
-#                 elif currentBrowserName == clsTestService.PC_BROWSER_IE:
-#                     locataionY = location['y']
-#                 else:
-#                     self.testService.writeToLog("Unknown browser: " + currentBrowserName)
-#                     self.status="Fail"
-#                     return
-#                 outTop = locataionY
-#                 outBottom = locataionY + (size['height'] * 21) / 100
-#                 outLeft = location['x'] + (size['width'] * 78) / 100
-#                 outRight = location['x'] + (size['width'] * 97) / 100       
-#         else:
-#             if isFullScreen:
-#                 outTop = 0
-#                 outBottom = (size['height'] * 60) / 100
-#                 outLeft = (size['width'] * 62) / 100   
-#                 outRight = (size['width'] * 86) / 100       
-#             else:
-#                 outTop = location['y']
-#                 outBottom = location['y'] + (size['height'] * 56) / 100
-#                 outLeft = location['x'] + (size['width'] * 63) / 100
-#                 outRight = location['x'] + (size['width'] * 93) / 100                
-#         return outTop, outBottom, outLeft, outRight 
-     
     # Resolve and return the given path to image with QR code    
     def resolveQrCode(self, filePath):
         if platform.system() == 'Windows':
@@ -142,9 +128,27 @@ class QrCodeReader(Base):
                     return rc
                 except:
                     return
-                
-                        
-
+        
+        
+    # Take screenshot of the PALYER object page and resolve QR code    
+    def getScreenshotAndResolvePlayerQrCode(self, playerPart=''):
+        if playerPart == enums.PlayerPart.TOP:
+            sc = self.takeQrCodeVideoScreenshot()
+        elif playerPart == enums.PlayerPart.BOTTOM:
+            sc = self.takeQrCodeSlideScreenshot()
+        else:
+            sc = self.takeQrCodeScreenshot()
+        if sc == None:
+            writeToLog("DEBUG","Failed to get screenshot for QR code")
+            return None
+        result = self.resolveQrCode(sc)
+        if result == None:
+            writeToLog("DEBUG","Failed to resolve QR code")
+            return False
+        else:
+            writeToLog("DEBUG","QR code result is: " + result)
+            return result        
+        
         
     # Take screenshot of the PALYER object page and resolve QR code    
     def getAndResolvePlayerQrCode(self, player, driver, fullScreen=False, live=True):
@@ -160,6 +164,7 @@ class QrCodeReader(Base):
             writeToLog("DEBUG","QR code result is: " + result)
             return result
     
+    
     #Return live timer in seconds, if function failed, return -1    
     def getTimerFromQrCodeInSeconds(self, player, driver, fullScreen=False, live=True):
         result = self.getAndResolvePlayerQrCode(player, driver, fullScreen, live)
@@ -172,6 +177,7 @@ class QrCodeReader(Base):
         else:
             return seconds
 
+
     #Extract the timer (without the milliseconds) from the next format:"2016-08-14T06:27:29.282 00:41:13.597" ==> will return:"00:41:13" 
     def getTimerFromQrResult(self, result):
         resTime = result.split(" ")
@@ -183,6 +189,7 @@ class QrCodeReader(Base):
         except:
             writeToLog("DEBUG","Failed to get timer from string: '" + result + "'")
             return
+        
         
     # Converts timer (time format: HH:MM:SS) to seconds  
     def convertTimerToSeconds(self, timer):
@@ -221,7 +228,6 @@ class QrCodeReader(Base):
         else:
             writeToLog("DEBUG","Entry is not playing")
             return False
-
     
     
     #Works only with QR entries
@@ -253,6 +259,7 @@ class QrCodeReader(Base):
         else:
             writeToLog("DEBUG","Ad NOT started to play")
             return False        
+            
             
     # Verify that the QR from the video is corresponding with the timer.
     # This works function works only with specific entries which have QR code like this: "2015-06-14T19:50:59.600 00:00:18.666"

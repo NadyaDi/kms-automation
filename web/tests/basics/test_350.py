@@ -66,6 +66,7 @@ class Test:
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
+                self.status = "Fail"
                 return
                           
             writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
@@ -105,6 +106,7 @@ class Test:
             writeToLog("INFO","Step 8: Going navigate to edit entry page from category page")
             if self.common.category.navigateToEditEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False: 
                 writeToLog("INFO","Step 8: FAILED to navigate to edit entry page")
+                self.status = "Fail"
                 return False 
             
             writeToLog("INFO","Step 9: Going to try to add user as collaborator with added as Collaborator user")

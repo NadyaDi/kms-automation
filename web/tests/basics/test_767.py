@@ -125,7 +125,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED failed to delete channel playlist")
                 return      
-
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

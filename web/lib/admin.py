@@ -27,6 +27,7 @@ class Admin(Base):
     ADMIN_DOWNLOAD_FLAVOR_NAME                      = ('xpath', "//input[@data-name='name']")
     ADMIN_DESCRIPTION_REQUIRED_ENABLE               = ('id', 'descriptionRequired')
     ADMIN_TAGS_REQUIRED_ENABLE                      = ('id', 'tagsRequired')
+    ADMIN_DISCLAIMER_TEXT                           = ('xpath', "//textarea[@id='disclaimerText']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -101,6 +102,14 @@ class Admin(Base):
             writeToLog("INFO","FAILED to set disclaimer as: " + str(selection))
             return False
         
+        # Set disclaimer Text
+        if disclaimerText != '':
+            if self.clear_and_send_keys(self.ADMIN_DISCLAIMER_TEXT, str(disclaimerText)) == False:
+                writeToLog("INFO","FAILED to Set Disclaimer Text as: " + str(disclaimerText))
+                return False
+            else:
+                writeToLog("INFO","KMS Admin: Module disclaimer - Disclaimer Text was set")
+
         # Set Display Area
         if displayArea != '':
             if self.select_from_combo_by_text(self.ADMIN_DISCLAIMER_DISPLAY_AREA, str(displayArea)) == False:

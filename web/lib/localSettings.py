@@ -39,7 +39,7 @@ LOCAL_SETTINGS_SELENIUM_GRID_POOL           = LOCAL_SETTINGS_SELENIUM_GRID_POOL_
     
 LOCAL_RUN_MODE                              = "LOCAL"
 REMOTE_RUN_MODE                             = "REMOTE"
-LOCAL_SETTINGS_RUN_MDOE                     = REMOTE_RUN_MODE
+LOCAL_SETTINGS_RUN_MDOE                     = LOCAL_RUN_MODE
 
 
 LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                  = 1328
@@ -63,6 +63,7 @@ else:
 if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
     LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'C:\\selenium\\kms-automation\\web\\temp\\downloads'
+    LOCAL_SETTINGS_RUN_MDOE                 = REMOTE_RUN_MODE
     
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
@@ -74,6 +75,7 @@ LOCAL_SETTINGS_KMS_MY_CHANNELS_URL          = None
 LOCAL_SETTINGS_KMS_CHANNELS_URL             = None
 LOCAL_SETTINGS_KMS_ADMIN_URL                = None
 LOCAL_SETTINGS_KMS_MY_HISTORY_URL           = None
+LOCAL_SETTINGS_KMS_MEDIA_SELECTION_URL      = None
 
 LOCAL_SETTINGS_PROD_ENVIRONMENT             = 'Prod'              
 LOCAL_SETTINGS_TESTING_ENVIRONMENT          = 'Testing'
