@@ -18,6 +18,7 @@ test_883,Scheduling: add Publishing Schedule via edit entry page,5447,qakmstest.
 test_894,Sort in My-Media,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Scheduling,123456
 test_1555,Disclaimer - Before publish,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_16,Download Source File,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_675,Playlist reorder,5447,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
 test_767,Channel Playlist,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1557,Import Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!

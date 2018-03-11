@@ -34,9 +34,14 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to navigate to my media")
                     return False
                 
-                if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entryName) == False:
-                    writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
-                    return False
+                if type(entryName) is list: 
+                    if self.clsCommon.myMedia.checkEntriesInMyMedia(entryName) == False:
+                        writeToLog("INFO","FAILED to check entries in My-Media")
+                        return False
+                else: 
+                    if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entryName) == False:
+                        writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
+                        return False
              
                 if self.clsCommon.myMedia.clickActionsAndAddToPlaylistFromMyMedia() == False:
                     writeToLog("INFO","FAILED to click on action button")
@@ -105,6 +110,19 @@ class MyPlaylists(Base):
             return False
             
         return True
+
+
+    def addEntriesToPlaylist(self, entriesName, playlistName, toCreateNewPlaylist):
+        try:
+            if self.addSingleEntryToPlaylist(entriesName, playlistName, toCreateNewPlaylist, currentLocation = enums.Location.MY_MEDIA) == False:
+                    writeToLog("INFO","FAILED to add the entries to play-list")
+                    return False
+                
+        except NoSuchElementException:
+            return False
+            
+        return True
+    
     
     #  @Author: Tzachi Guetta      
     def navigateToMyPlaylists(self, forceNavigate = False):
@@ -204,4 +222,4 @@ class MyPlaylists(Base):
         except NoSuchElementException:
             return False
             
-        return True   
+        return True

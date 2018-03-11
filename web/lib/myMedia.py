@@ -215,7 +215,7 @@ class MyMedia(Base):
     
         return True
     
-    
+    #  @Author: Tzachi Guetta     
     def checkSingleEntryInMyMedia(self, entryName):
         # Click on the Entry's check-box in MyMedia page
         tmp_entry_name = (self.MY_MEDIA_ENTRY_CHECKBOX[0], self.MY_MEDIA_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
@@ -224,6 +224,19 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
         
+        return True
+    
+    #  @Author: Tzachi Guetta     
+    def checkEntriesInMyMedia(self, entriesNames):
+        if type(entriesNames) is list: 
+            for entryName in entriesNames: 
+                if self.checkSingleEntryInMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", in my media page")
+                    return False
+                
+        else:
+            writeToLog("INFO","FAILED, Entries list was not provided")
+            return False
         return True
     
     
