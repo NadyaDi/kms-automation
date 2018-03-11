@@ -31,6 +31,8 @@ class Test:
     entryName5 = None
     newUserId = None
     newUserPass = None
+    entryDescription = "Entry description"
+    entryTags = "entrytags1,entrytags2,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
     
     #run test as different instances on all the supported platforms
@@ -62,36 +64,20 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as End-user")
                 return
-             
-            writeToLog("INFO","Step 2: Going to upload entry #1")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName1, "descritiondescrition", "tags1,tags2,") == None:
+            
+            self.entriesToUpload = {
+                self.entryName1: self.filePath, 
+                self.entryName2: self.filePath,
+                self.entryName3: self.filePath, 
+                self.entryName4: self.filePath,
+                self.entryName5: self.filePath }
+            
+            writeToLog("INFO","Step 2: Going to upload 5 entries")
+            if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry #1")
+                writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
-              
-            writeToLog("INFO","Step 3: Going to upload entry #2")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName2, "descritiondescrition", "tags1,tags2,") == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED failed to upload entry #2")
-                return
-              
-            writeToLog("INFO","Step 4: Going to upload entry #3")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName3, "descritiondescrition", "tags1,tags2,") == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED failed to upload entry #3")
-                return
-             
-            writeToLog("INFO","Step 5: Going to upload entry #4")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName4, "descritiondescrition", "tags1,tags2,") == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry #4")
-                return
-             
-            writeToLog("INFO","Step 5: Going to upload entry #5")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName5, "descritiondescrition", "tags1,tags2,") == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry #5")
-                return
+
              
             writeToLog("INFO","Step 6: Going to set entry #4 as Unlisted")
             if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
@@ -135,8 +121,10 @@ class Test:
                 writeToLog("INFO","Step 12: FAILED to login as End-user")
                 return
             
-            self.entries = {self.entryName1: enums.EntryPrivacyType.REJECTED, self.entryName2: enums.EntryPrivacyType.PUBLISHED,
-                            self.entryName3: enums.EntryPrivacyType.PENDING, self.entryName4: enums.EntryPrivacyType.UNLISTED,
+            self.entries = {self.entryName1: enums.EntryPrivacyType.REJECTED, 
+                            self.entryName2: enums.EntryPrivacyType.PUBLISHED,
+                            self.entryName3: enums.EntryPrivacyType.PENDING, 
+                            self.entryName4: enums.EntryPrivacyType.UNLISTED,
                             self.entryName5: enums.EntryPrivacyType.PRIVATE }
             
             writeToLog("INFO","Step 13: Going to verify the entries' privacy on my-media")
