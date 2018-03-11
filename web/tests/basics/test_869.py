@@ -13,7 +13,7 @@ class Test:
     #================================================================================================================================
     # @Author: Tzachi Guetta
     # Test description:
-    # In case disclaimer module is turned on and set to "before upload" 
+    # Scheduling media – Add to playlist (anytime, Past, Future)
     #================================================================================================================================
     testNum     = "869"
     enableProxy = False
@@ -59,8 +59,8 @@ class Test:
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('DisclaimerEntry', self.testNum)
-            self.playlistName = clsTestService.addGuidToString('DisclaimerPlaylist', self.testNum)
+            self.entryName = clsTestService.addGuidToString('SchedulingEntry', self.testNum)
+            self.playlistName = clsTestService.addGuidToString('Scheduling_Playlist', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to upload entry")

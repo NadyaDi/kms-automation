@@ -54,7 +54,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('Entry name', self.testNum)
+            self.entryName = clsTestService.addGuidToString('Disclaimer', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel name', self.testNum)
             self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
             
