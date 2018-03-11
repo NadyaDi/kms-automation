@@ -16,6 +16,7 @@ from upload import Upload
 from clsQrCodeReader import QrCodeReader
 from myHistory import MyHistory
 from kea import Kea
+import clsTestService
 
 
     #============================================================================================================
@@ -54,7 +55,16 @@ class Common():
     # Common Methods
     #============================================================================================================
     def instertPathInFileUploadWindows(self, path):
-        self.autoit.autoitDriver.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFile.exe', path)
+        if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
+            # TODO IE not implemented yet
+            self.autoit.autoitDriver.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFile.exe', path)
+        elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
+            self.autoit.autoitDriver.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFileFirefox.exe', path)
+        elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+            self.autoit.autoitDriver.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFileChrome.exe', path)
+        else:
+            writeToLog("INFO","FAILED to type into 'Choose File' window, unknown browser: '" + localSettings.LOCAL_RUNNING_BROWSER + "'")
+        
         
         
     def loginAsUser(self):
