@@ -77,7 +77,7 @@ class Upload(Base):
         
         return True
     
-    
+    #  @Author: Tzachi Guetta    
     def extractEntryID (self, locator):
         try:
             div = self.get_element(locator)
@@ -294,3 +294,21 @@ class Upload(Base):
         return True
         
         
+    # @Author: Tzachi Guetta
+    # Note: all entries were shared the same description & tags
+    def uploadEntries(self, entriesDict, entryDescription, entryTags):
+        try:
+            # Checking if entriesNames list type
+            if type(entriesDict) is dict: 
+                for entryName in entriesDict: 
+                    if self.uploadEntry(entriesDict.get(entryName), entryName, entryDescription, entryTags) == None:
+                        writeToLog("INFO","FAILED to upload entry: " + entryName)
+                        return False
+            else:
+                writeToLog("INFO","FAILED, Entries list was not provided ")
+                return False
+            
+        except Exception:
+            return False
+        
+        return True   
