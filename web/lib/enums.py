@@ -30,6 +30,7 @@ class Location(Enum):
     CATEGORY_PAGE          = 'category page'
     MY_CHANNELS_PAGE       = 'my channels page'
     CHANNELS_PAGE          = 'channels page'
+    MY_PLAYLISTS           = 'my playlists'
 
 
 class EditEntryPageTabName(Enum):
