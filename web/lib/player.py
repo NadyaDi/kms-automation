@@ -38,6 +38,8 @@ class Player(Base):
     PLAYER_SLIDE_NUMBER                                         = ('xpath', "//div[@class='slideNumber' and @title='Slide number' and contains(text(),'SLIDE_NUMBER')]") # When using this locator, replace 'SLIDE_NUMBER' string with your real slide number
     PLAYER_OPEN_CHAPTER_ICON                                    = ('xpath', "//div[@class='slideBoxToggle icon-toggle' and @title='Expand/collapse chapter']")
     PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS                         = ('xpath', "//span[@class='toggleAll icon-toggleAll']")
+    PLAYER_QUIZ_CONTINUE_BUTTON                                 = ('xpath', "//div[@class='confirm-box' and text()='Continue']")
+    PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON                             = ('xpath', "//div[@class='ftr-right' and text()='SKIP FOR NOW']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -97,6 +99,27 @@ class Player(Base):
         
         return True
     
+    # Author: Inbar Willman
+    # Click play for quiz entry until specific given question
+    def clickPlayUntilSpecificQuestion(self, questionNumber):
+        self.switchToPlayerIframe()
+        if self.clickPlay() == False:
+            return False
+        
+        #Click continue button
+        if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click quiz continue button")
+            return False  
+        
+        for i in range(questionNumber):
+            self.wait_visible(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON)
+            if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON) == False:
+                writeToLog("INFO","FAILED to click quiz skip for now button")
+                return False 
+            i = i + 1 
+        
+        return True    
+    
     
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
     # tolerance - seconds: the deviation from the time and image.
@@ -155,6 +178,32 @@ class Player(Base):
           
         return True
     
+    
+    # @Author: Inbar Willman
+    # The method will navigate to quiz entry page and play quiz until given question
+    def navigateToQuizEntryAndClickPlay(self, entryName, questionNumber):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False
+                 
+                if self.clickPlayUntilSpecificQuestion(questionNumber) == False:
+                    writeToLog("INFO","FAILED to click Play Pause")
+                    return False                   
+            else:
+                writeToLog("INFO","Entry name not supplied")
+                return False
+            
+        except NoSuchElementException:
+            return False
+          
+        return True
+        
     
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
     # tolerance - seconds: the deviation from the time and image.

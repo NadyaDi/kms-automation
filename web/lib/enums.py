@@ -136,8 +136,10 @@ class KeaQuizButtons(Enum):
 
     SAVE                       = 'Save'  
     DELETE                     = 'Delete'      
-    START                      = "Start"
-    DONE                       = "Done"
+    START                      = 'Start'
+    DONE                       = 'Done'
+    GO_TO_MEDIA_PAGE           = 'Go to Media Page'
+    EDIT_QUIZ                  = 'Edit Quiz'
 
     
 class PlayerPart(Enum):
