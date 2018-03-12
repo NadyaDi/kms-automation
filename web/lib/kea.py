@@ -198,3 +198,32 @@ class Kea(Base):
                 i = i + 1
                               
         return True
+    
+    # @Author: Inbar Willman
+    # After creating quiz, click done.
+    # After that there are two options - Click 'Go to media page' or 'Edit Quiz'.
+    # Default value is 'Go To Media page'
+    def clickDone(self, doneOption=enums.KeaQuizButtons.GO_TO_MEDIA_PAGE):    
+        if self.keaQuizClickButton(enums.KeaQuizButtons.DONE) == False:
+            writeToLog("INFO","FAILED to click Done button")
+            return False 
+        
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+            writeToLog("INFO","FAILED to wait until spinner isn't visible")
+            return False  
+        
+        if doneOption == enums.KeaQuizButtons.GO_TO_MEDIA_PAGE:
+            if self.keaQuizClickButton(enums.KeaQuizButtons.GO_TO_MEDIA_PAGE) == False:
+                writeToLog("INFO","FAILED to click go to media page button")
+                return False
+            self.switch_to_default_content()
+        elif doneOption == enums.KeaQuizButtons.EDIT_QUIZ:
+            if self.keaQuizClickButton(enums.KeaQuizButtons.EDIT_QUIZ) == False:
+                writeToLog("INFO","FAILED to click edit quiz button")
+                return False
+        else:
+            writeToLog("INFO","FAILED, unknown doneoption: '" + doneOption + "'")
+            return False 
+         
+        sleep (3)   
+        return True
