@@ -60,7 +60,7 @@ class QrCodeReader(Base):
         playerElement = self.get_element_attributes(('xpath', '/html/body'))
         # Crop the image
         img = Image.open(filePath)
-        img2 = img.crop((playerElement['left'], playerElement['bottom'] / 1.63, playerElement['right'], playerElement['bottom']))
+        img2 = img.crop((playerElement['right'] / 1.37, playerElement['bottom'] / 1.63, playerElement['right'], playerElement['bottom']))
         img2.save(filePath)
         
         return filePath
