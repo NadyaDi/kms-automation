@@ -382,6 +382,7 @@ class Base:
     # When you have more then one elemnet (= list of elements) found with your locator, use multipleElements = True
     # it will search for element from the elements list, and find the one with size not 0       
     def clickElement(self, element, multipleElements=False):
+        try:
             if multipleElements == True:
                 for el in element:
                     if el.size['width']!=0 and el.size['height']!=0:
@@ -393,7 +394,9 @@ class Base:
             else:
                 element.click()
                 return True
-        
+        except:
+            writeToLog("DEBUG","FAILED to click on element")
+            return False        
         
     # send keys
     def send_keys(self, locator, text, multipleElements=False):
