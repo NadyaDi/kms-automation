@@ -158,7 +158,7 @@ class Upload(Base):
                     continue
     
             except Exception:
-                writeToLog("INFO","FAILED to upload entry, retry number " + int(i))
+                writeToLog("INFO","FAILED to upload entry, retry number " + str(i))
                 pass
         
         
