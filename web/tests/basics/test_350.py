@@ -10,11 +10,15 @@ import enums
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Main user add different user as a collaboration user on an entry.
+    # The collaboration permission is co publish
+    # The entry is published to category so the collaborator user can see the entry
+    # Login with the collaborator user - go to entry page and try to delete the entry. collaborator user doesn't have permission to delete entry
+    # Go to collaborator tab and add user as collaborator.collaborator user doesn't have permission to add collaborator user
+    #================================================================================================================================
     testNum     = "350"
     enableProxy = False
     
@@ -99,6 +103,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, the collaborator user succeed to delete entry although he don't have permission for it")
                 return
+            writeToLog("INFO","Step 7: Previous Step Failed as Expected - the collaborator user don't have permission to delete the entry")
             
             self.driver.refresh()
             sleep(3)
@@ -113,7 +118,8 @@ class Test:
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId2, True, False) == True:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED, the collaborator user succeed to add user as a collaborator although he don't have permission for it")
-                return           
+                return      
+            writeToLog("INFO","Step 9: Previous Step Failed as Expected - the collaborator user don't have permission to add collaborator user")     
 
             
             ##################################################################

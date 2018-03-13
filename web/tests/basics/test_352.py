@@ -10,11 +10,17 @@ import enums
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Slide Deck Upload - delete slides:
+    # Enter entry edit page and go to time line tab
+    # Upload a pdf file.
+    # All file slides will spread evenly in the entry time line
+    # In the player check that all the slides appear in the slides menu
+    # From the Time line delete several slides 
+    # In the player check that just the needed slides appear in the slides menu
+    #================================================================================================================================
     testNum     = "352"
     enableProxy = False
     
@@ -57,7 +63,7 @@ class Test:
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
-            self.deleteSlidesList = {'5': '00:05', '11': '00:11','5': '00:05' ,'15': '00:15', '21': '00:21','24': '00:24','28': '00:28'}
+            self.deleteSlidesList = {'5': '00:05', '11': '00:11','15': '00:15', '21': '00:21','24': '00:24','28': '00:28'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry")
@@ -106,7 +112,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify only the correct slides display in the player")
                 return  
-
+             
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload -delete slide' was done successfully")            
         # if an exception happened we need to handle it and fail the test       

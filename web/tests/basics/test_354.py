@@ -11,11 +11,18 @@ import enums
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Slide Deck Upload - - change slide location:
+    # Enter entry edit page and go to time line tab
+    # Upload a pptx file.
+    # All file slides will spread evenly in the entry time line
+    # In the player check that all the slides appear in the slides menu
+    # From the Time line delete several slides 
+    # Change to several slides their time in the time line  
+    # In the player verify that the slides that was changed display now in the new time
+    #================================================================================================================================
     testNum     = "354"
     enableProxy = False
     
@@ -30,7 +37,7 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
+    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
     slidesQrCodeAndTimeList = None
     deleteSlidesList = None
     changeTimeOfSlidesList = None
@@ -74,32 +81,32 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                                
+                                 
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                       
+                        
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-                  
+                   
             # remove slides from  slides list (slidesQrCodeAndTimeList) in order to move different slides location  
             writeToLog("INFO","Step 4: Going to remove slides from slides main list (slidesQrCodeAndTimeList)")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")  
                 self.status = "Fail"
                 return 
-                                 
+                                  
             writeToLog("INFO","Step 5: Going change slides time")
             if self.common.editEntryPage.changeSlidesTimeInTimeLine(self.entryName, self.changeTimeOfSlidesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to change slide time in time line")
                 return
-                    
+                     
             writeToLog("INFO","Step 6: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
