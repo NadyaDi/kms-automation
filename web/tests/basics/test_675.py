@@ -91,7 +91,7 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
             
-            entriesListBefore = [self.entryName5, self.entryName4, self.entryName4, self.entryName3, self.entryName1]
+            entriesListBefore = [self.entryName5, self.entryName4, self.entryName3, self.entryName2, self.entryName1]
             writeToLog("INFO","Step 2: Going to verify entries order before reorder")
             if self.common.myMedia.verifyEntriesOrder(entriesListBefore, location = enums.Location.MY_PLAYLISTS) == False:
                 self.status = "Fail"

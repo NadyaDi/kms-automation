@@ -132,7 +132,6 @@ class MyPlaylists(Base):
         # Check if we are already in my media page
         if forceNavigate == False:
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL, False, 1) == True:
-                writeToLog("INFO","Success Already in my playlists page")
                 return True
         
         # Click on User Menu Toggle Button
@@ -245,11 +244,11 @@ class MyPlaylists(Base):
                 source_element = self.get_element(tmp_entry_name)
                 
 
-                heightOfEntry = self.get_child_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
+                heightOfEntry = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
                 moveX = 0
                 moveY = int(heightOfEntry + (indexEntryTo * heightOfEntry))
                 if indexEntryFrom > indexEntryTo:
-                    moveY = int(heightOfEntry - (indexEntryTo * heightOfEntry))
+                    moveY = int(heightOfEntry - (indexEntryTo * heightOfEntry))#to verify it
                 ActionChains(self.driver).drag_and_drop_by_offset(source_element, moveX, moveY).perform()
                 
                 sleep(2)
