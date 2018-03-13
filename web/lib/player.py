@@ -188,9 +188,9 @@ class Player(Base):
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
     def verifySlidesInPlayerSideBar(self, mySlidesList):
         self.switchToPlayerIframe()
-        sleep(1)
+        sleep(2)
         self.get_element(self.PLAYER_SLIDE_SIDE_BAR_MENU).send_keys(Keys.PAGE_UP)
-        sleep(1)
+        sleep(3)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the slide side bar menu")
             return False
@@ -220,6 +220,7 @@ class Player(Base):
         # Verify that the slides time is correct
         count = 0
         for slide in mySlidesList:
+            sleep(1)
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', mySlidesList[slide]))
             if self.wait_visible(slide_time) == False:
                 writeToLog("INFO","FAILED to verify slide time in the slide menu bar")
@@ -295,15 +296,22 @@ class Player(Base):
             writeToLog("INFO","FAILED to click on the player")
             return False
         
-        #TODO
         videoImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
         slideImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
         
+        slideImageResult = int(slideImage)-1 <= int(qrResult) <= int(slideImage)+1 
+        videoImage1Result = int(videoImage)-1 <= int(qrResult) <= int(videoImage)+1 
+            
+        if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
+        #if (str(playerTime) == str(videoImage) == str(slideImage) == str(qrResult)) == False:
+            writeToLog("INFO","FAILED,  video /image time are NOT match to the result that we are expecting. videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
+            return False
+        
         # Get the time in the player time line
         playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
-        # 
-        if (str(playerTime) == str(videoImage) == str(slideImage) == str(qrResult)) == False:
-            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: " +  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
+         
+        if (int(playerTime)-1 <= int(playerTime) <= int(playerTime)+1) == False:
+            writeToLog("INFO","FAILED,  player time is NOT match to the result that we are expecting. plyerTime: " +  str(playerTime))
             return False
         
         writeToLog("INFO","SUCCESS, slide appear in the correct time")
@@ -392,3 +400,27 @@ class Player(Base):
         self.scrollInSlidesMenuBar(1)
         return True
         
+    # creator: Michal zomper
+    # The function only! check slides that changed their location in time line   
+    def verifyslidesThatChangedLocationInTimeLine(self, changeTimeOfSlidesList):
+        for slide in self.changeTimeOfSlidesList:
+            slidetime = changeTimeOfSlidesList[slide]
+            expectedSlideQrCodeResult =  utilityTestFunc.convertTimeToSecondsMSS(slide)
+            
+            if self.clickPlayAndPause(slidetime[1:], timeout=30, additional=0.5) == False:
+                writeToLog("INFO","FAILED to click on the player")
+                return False
+            
+            videoImage =  self.common.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
+            slideImage =  self.common.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
+              
+            slideImageResult = int(slideImage)-1 <= int(expectedSlideQrCodeResult) <= int(slideImage)+1 
+            videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(self.changeTimeOfSlidesList[slide])) <= int(videoImage)+1 
+                
+            if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
+                writeToLog("INFO","FAILED to verify slide in time: " + str(expectedSlideQrCodeResult) + "was change to time: " + str(slidetime))
+                return False
+            
+        writeToLog("INFO","SUCCESS, verify all slides changes")
+        return True
+                    

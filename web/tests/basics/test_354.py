@@ -74,63 +74,50 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                             
+                                
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                    
+                       
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-               
+                  
             # remove slides from  slides list (slidesQrCodeAndTimeList) in order to move different slides location  
             writeToLog("INFO","Step 4: Going to remove slides from slides main list (slidesQrCodeAndTimeList)")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")  
                 self.status = "Fail"
                 return 
-                               
+                                 
             writeToLog("INFO","Step 5: Going change slides time")
             if self.common.editEntryPage.changeSlidesTimeInTimeLine(self.entryName, self.changeTimeOfSlidesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to change slide time in time line")
                 return
-                  
+                    
             writeToLog("INFO","Step 6: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate to entry page: " + self.entryName)
                 return  
+              
+            sleep(3)
+            writeToLog("INFO","Step 7: Going to change player view")
+            if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
+                writeToLog("INFO","Step 7: FAILED change player view to: " + enums.PlayerView.SWITCHVIEW)
+                self.status = "Fail"
+                return
                 
-            self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW)  
-            writeToLog("INFO","Step 7: Going to verify that the new slides display correctly")
-            
-            for slide in self.changeTimeOfSlidesList:
-                slidetime = self.changeTimeOfSlidesList[slide]
-                expectedSlideQrCodeResult =  utilityTestFunc.convertTimeToSecondsMSS(slide)
-            
-                if self.common.player.clickPlayAndPause(slidetime[1:], timeout=30, additional=0.5) == False:
-                    writeToLog("INFO","FAILED to click on the player")
-                    return False
-            
-                videoImage =  self.common.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
-                slideImage =  self.common.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
-    
-                slideImageResult = int(slideImage)-1 <= int(expectedSlideQrCodeResult) <= int(slideImage)+1 
-                videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(self.changeTimeOfSlidesList[slide])) <= int(videoImage)+1 
-                
-                if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 7: FAILED to verify slide in time: " + str(expectedSlideQrCodeResult) + "was change to time: " + str(slidetime))
-                    return     
-                    
-                    
-            
-       
+            writeToLog("INFO","Step 8: Going to verify that the new slides display correctly")
+            if self.common.player.verifyslidesThatChangedLocationInTimeLine(self.changeTimeOfSlidesList) == False:
+                writeToLog("INFO","Step 8: FAILED to verify slide change")
+                self.status = "Fail"
+                return
               
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - change slide location' was done successfully")            
