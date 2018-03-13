@@ -625,8 +625,8 @@ class MyMedia(Base):
                     return False
                 
             elif location == enums.Location.MY_PLAYLISTS: 
-                if self.clsCommon.myPlaylists.navigateToMyPlaylists() == False:
-                    return False 
+                if self.clsCommon.myPlaylists.navigateToMyPlaylists(True) == False:
+                    return False
             
             tmpTop = -9999
             for entry in expectedEntriesOrder:
