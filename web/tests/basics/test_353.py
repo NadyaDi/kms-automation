@@ -10,11 +10,19 @@ import enums
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Slide Deck Upload add/remove chapters:
+    # Enter entry edit page and go to time line tab
+    # Upload a pdf file.
+    # All file slides will spread evenly in the entry time line
+    # In the player check that all the slides appear in the slides menu
+    # From the Time line add several chapters 
+    # In the player verify that the correct slides display under the correct chapter in the slides menu
+    # Go again to time line tab - remove the added chapter
+    # In the player verify that the chapter doen't display any more and that all the slides are still display in the slides menu
+    #================================================================================================================================
     testNum     = "353"
     enableProxy = False
     
@@ -29,7 +37,7 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
+    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
     slidesQrCodeAndTimeList = None
     chaptersList = None
     slidesWithoutChapter = None
@@ -52,7 +60,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("SlideDeckUpload add-remove chapters", self.testNum)
+            self.entryName = clsTestService.addGuidToString("SlideDeckUpload add/remove chapters", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
@@ -156,6 +164,24 @@ class Test:
                     self.status = "Fail"
                     return
                 writeToLog("INFO","Step 13: Previous Step Failed as Expected - The chapter '" +  chapter + "' should not be displayed")
+                
+                
+            sleep(4)
+            writeToLog("INFO","Step 14: Going to switch the player view so that the player will be in the big window and the slides in the small window")
+            if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to switch the player view")
+                return  
+            sleep(3)
+            index = 0
+            writeToLog("INFO","Step 15: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
+            for i in range(4):
+                sleep(2)
+                index = index + i + 4 
+                if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 15: FAILED to verify slide")
+                    return  
 
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - add/remove chapters' was done successfully")            

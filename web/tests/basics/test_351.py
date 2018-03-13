@@ -10,11 +10,16 @@ import enums
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Slide Deck Upload :
+    # Enter entry edit page and go to time line tab
+    # Upload a pptx file.
+    # All file slides will spread evenly in the entry time line
+    # In the player check that all the slides appear in the slides menu
+    # In entry page check some of the slides to see that the correct slide display in the correct time
+    #================================================================================================================================
     testNum     = "351"
     enableProxy = False
     

@@ -452,7 +452,7 @@ class Player(Base):
     # creator: Michal zomper
     # The function only! check slides that changed their location in time line   
     def verifyslidesThatChangedLocationInTimeLine(self, changeTimeOfSlidesList):
-        for slide in self.changeTimeOfSlidesList:
+        for slide in changeTimeOfSlidesList:
             slidetime = changeTimeOfSlidesList[slide]
             expectedSlideQrCodeResult =  utilityTestFunc.convertTimeToSecondsMSS(slide)
             
@@ -460,8 +460,8 @@ class Player(Base):
                 writeToLog("INFO","FAILED to click on the player")
                 return False
             
-            videoImage =  self.common.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
-            slideImage =  self.common.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
+            videoImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
+            slideImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
               
             slideImageResult = int(slideImage)-1 <= int(expectedSlideQrCodeResult) <= int(slideImage)+1 
             videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(self.changeTimeOfSlidesList[slide])) <= int(videoImage)+1 

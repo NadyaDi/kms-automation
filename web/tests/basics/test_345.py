@@ -9,11 +9,14 @@ from utilityTestFunc import *
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Main user add different user as a collaboration user on an entry.
+    # The collaboration permission is co edit
+    # The entry is published to category so the collaborator user can see the entry
+    # Login with the collaborator user and change the entry metadata (entry name / description / tags) successfully. 
+    #================================================================================================================================
     testNum     = "345"
     enableProxy = False
     
@@ -53,7 +56,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Collaboration - edit metadata", self.testNum)
             self.newEntryName = clsTestService.addGuidToString('Edit Collaboration', self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
         
