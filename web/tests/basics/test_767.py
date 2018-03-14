@@ -63,7 +63,7 @@ class Test:
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('Audio', self.testNum)
-            self.entryName3 = clsTestService.addGuidToString('Video', self.testNum)
+            self.entryName3 = clsTestService.addGuidToString('Video2', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.playlisTitle = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.entriesNames = [self.entryName1, self.entryName2, self.entryName3]
