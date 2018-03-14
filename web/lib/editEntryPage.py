@@ -596,8 +596,8 @@ class EditEntryPage(Base):
             return False
           
         # Wait until the ptt will upload   
-        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 300) == False:
-            writeToLog("INFO","FAILED, upload deck processing isn't done after 5 minutes")
+        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 360) == False:
+            writeToLog("INFO","FAILED, upload deck processing isn't done after 6 minutes")
             return False
         sleep(2)
         
