@@ -341,7 +341,7 @@ class Player(Base):
         self.switchToPlayerIframe()
         
         sleep(2)
-        if self.clickPlayAndPause(timeToStop, timeout=120) == False:
+        if self.clickPlayAndPause(timeToStop, timeout=30) == False:
             writeToLog("INFO","FAILED to click on the player")
             return False
         

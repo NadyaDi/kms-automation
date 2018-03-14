@@ -60,7 +60,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("SlideDeckUpload add/remove chapters", self.testNum)
+            self.entryName = clsTestService.addGuidToString("SlideDeckUpload add-remove chapters", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
