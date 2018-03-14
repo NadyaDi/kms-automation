@@ -60,7 +60,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CAPTION_SAVE_BUTTON                              = ('xpath', "//a[@class='btn btn-primary captions-upload-modal-save-btn' and contains(text(), 'Save')]")
     EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE            = ('xpath', "//span[@data-type='label' and contains(text(), 'LABEL_NAME')]")# When using this locator, replace 'LABEL_NAME' string with your real label name
     EDIT_ENTRY_REMOVE_CAPTION_BUTTON                            = ('xpath', "//i[@class='icon-remove']")
-    EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete')]")
+    EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete') and @href='javascript:;']")
     EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON              = ('xpath', "//a[@class='btn btn-large fulldeck btn-combo kmstooltip' and @aria-label='Upload Slides Deck (PPT, PPTX, PDF)']")
     EDIT_ENTRY_DOWNLOADS_FLAVOR                                 = ('xpath', "//label[@class='checkbox' and contains(.,'FLAVOR_NAME')]") #pay attention: this locator is relevant to SOURCE Flavor ONLY
     EDIT_ENTRY_UPLOAD_SLIDES_BUTTON                             = ('id', 'upload-fulldeck')
@@ -666,7 +666,7 @@ class EditEntryPage(Base):
         if self.wait_visible(tmp_entry_name, 15) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
             return False
-        
+        sleep(3)
         writeToLog("INFO","Success, entry page open")
         return True
      
@@ -745,7 +745,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED click on save chapter button")
             return False               
         
-        sleep(3)
+        sleep(4)
         # Verify chapter saved 
         if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS) == False:
             writeToLog("INFO","FAILED to fined saved chapter success label")

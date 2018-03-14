@@ -1,15 +1,15 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_302,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_345,Add collaborator co edit - details tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_346,Add collaborator co edit - options tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_347,Add collaborator co edit - thumbnail tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_348,Add collaborator co edit - cpation tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_349,Add collaborator co publish,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_350,Add collaborator co edit,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_351,Slide Deck Upload,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_352,Slide Deck Upload - delete slides,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_353,Slide Deck Upload - add / remove chapters,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_354,Slide Deck Upload - delete slides,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_345,Add collaborator co edit - details tab,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_346,Add collaborator co edit - options tab,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_347,Add collaborator co edit - thumbnail tab,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_348,Add collaborator co edit - cpation tab,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_349,Add collaborator co publish,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_350,Add collaborator co edit,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_351,Slide Deck Upload,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_352,Slide Deck Upload - delete slides,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_353,Slide Deck Upload - add / remove chapters,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_354,Slide Deck Upload - delete slides,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_869,Scheduling: add Publishing  - playlist flows,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
