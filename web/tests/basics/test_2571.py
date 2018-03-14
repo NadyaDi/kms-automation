@@ -16,7 +16,7 @@ class Test:
     # Test description:
     # Check that audio entry is displayed in My History page after it was played
     # The test's Flow: 
-    # Login to KMS-> Upload video entry-> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
+    # Login to KMS-> Upload audio entry-> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
     # MY History page and make sure that entry exists in page 
     # test cleanup: deleting the uploaded file
     #================================================================================================================================

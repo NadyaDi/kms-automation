@@ -91,23 +91,24 @@ class Upload(Base):
     
     
     # @Authors: Oleg Sigalov &  Tzachi Guetta
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE):
         for i in range(retries):
             try:
                 if i > 0:
                     writeToLog("INFO","FAILED to upload after " + str(i) + " retries of " + str(retries) + ". Going to upload again...")
                 # Convert path for Windows
                 filePath = filePath.replace("/", "\\")     
-                # Click Add New
-                if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
-                    writeToLog("DEBUG","FAILED to click on 'Add New' button")
-                    continue
                 
-                # Click Media Upload
-                if self.clickMediaUpload() == False:
-                    writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
-                    continue
-                
+                if uploadFrom == enums.Location.UPLOAD_PAGE:
+                    # Click Add New
+                    if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+                        writeToLog("DEBUG","FAILED to click on 'Add New' button")
+                        continue
+                    # Click Media Upload
+                    if self.clickMediaUpload() == False:
+                        writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
+                        continue
+
                 #checking if disclaimer is turned on for "Before upload"
                 if disclaimer == True:
                     if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:

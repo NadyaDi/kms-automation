@@ -1,5 +1,6 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_302,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
+test_706,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_345,Add collaborator co edit - details tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_346,Add collaborator co edit - options tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_347,Add collaborator co edit - thumbnail tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -20,7 +21,7 @@ test_1555,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@m
 test_16,Download Source File,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_675,Playlist reorder,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
-test_767,Channel Playlist,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_767,Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_1557,Import Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_2565,My history - Add Add entry (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,My history - Add entry (Published to channel- public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
