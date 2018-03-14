@@ -235,7 +235,7 @@ class Player(Base):
     # creator: Michal zomper
     # The function verify the slides in the menu slide bar
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
-    def verifySlidesInPlayerSideBar(self, mySlidesList):
+    def verifySlidesInPlayerSideBar(self, mySlidesList, checkSize=True):
         self.switchToPlayerIframe()
         sleep(2)
         self.get_element(self.PLAYER_SLIDE_SIDE_BAR_MENU).send_keys(Keys.PAGE_UP)
@@ -248,9 +248,10 @@ class Player(Base):
         # find the parent of all menu slides
         sideMenu = self.get_element(self.PLAYER_SIDE_BAR_MENU_PARENT)
         # check if the number of slides is correct
-        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList):
-            writeToLog("INFO","FAILED to verify number of slides in side bar menu")
-            return False
+        if checkSize == True:
+            if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList):
+                writeToLog("INFO","FAILED to verify number of slides in side bar menu")
+                return False
         sleep(2)
         
         if self.checkSlidesTimeInSlideBarMenu(mySlidesList) == False:
@@ -259,6 +260,7 @@ class Player(Base):
             
         writeToLog("INFO","SUCCESS verify slides in side bar menu")
         self.clsCommon.base.switch_to_default_content()
+        sleep(2)
         return True
     
     
@@ -294,10 +296,11 @@ class Player(Base):
     # The function move the scroller in the slides menu bar according to the size that the function get
     # size - the number of slides that need to scroll to get to the right point (in order to scroll down size need to be positive / in order to scroll up size need to be negative )
     def scrollInSlidesMenuBar(self, size):
+        self.switchToPlayerIframe()
         slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
         action = ActionChains(self.driver)
-        action.move_to_element(scroller)
+        action.move_to_element_with_offset(scroller, 0, 0)
         action.move_by_offset(0,  (slideHeight * size))
         action.click_and_hold()
         action.release()
@@ -413,10 +416,12 @@ class Player(Base):
             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
             return False
         sleep(2)
+        
         if chapterIsclose == True:
             el = details.find_element_by_xpath("..")
             child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
             sleep(2)
+            self.scrollInSlidesMenuBar(1)
             # open chapter in order to see all the slides
             if self.clickElement(child) == False:
                 writeToLog("INFO","FAILED to open chapter in order to see all the slides")
@@ -433,6 +438,7 @@ class Player(Base):
             writeToLog("INFO","FAILED to click and close slides bar menu")
             return False
         
+        sleep(2)
         writeToLog("INFO","SUCCESS," + chapterName + ":all slides are verified and appear at the correct time")
         return True
     
