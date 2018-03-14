@@ -20,6 +20,8 @@ class Category(Base):
     CATEGORY_SEARCH_RESULT                                      = ('class_name', 'entryTitle')
     CATEGORY_ENTRY_SEARCH_RESULT                                = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL                          = ("//a[@href='javascript:;' and contains(text(),'...')]")
+    CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='add-new-tab']")
+    CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON                        = ('xpath', "//a[@class='MediaUpload-tab']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
@@ -86,4 +88,33 @@ class Category(Base):
         
         writeToLog("INFO","Success, edit  entry '" + entryName + "' is display")
         return True
-             
+
+
+    # Author: Tzachi Guetta
+    def addNewContentToCategory(self, categoryName, filePath, entryName, entryDescription, entryTags):
+        try:
+            self.clsCommon.navigateTo(enums.Location.CATEGORY_PAGE, nameValue=categoryName)
+            
+            if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+                writeToLog("INFO","FAILED to click add to channel button")
+                return False     
+            
+            sleep(1)
+            self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+            
+            if self.click(self.CATEGORY_ADD_NEW_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on Add New at category page")
+                return False
+            
+            if self.click(self.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
+                return False
+            
+            if self.clsCommon.upload.uploadEntry(filePath, entryName, entryDescription, entryTags, uploadFrom=enums.Location.CATEGORY_PAGE) == None:
+                writeToLog("INFO","FAILED to upload media from category page")
+                return False
+            
+        except NoSuchElementException:
+            return False
+        
+        return True
