@@ -81,7 +81,7 @@ class Kea(Base):
             writeToLog("INFO","FAILED to click start quiz")
             return False  
         
-        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 50) == False:
             writeToLog("INFO","FAILED to wait until spinner isn't visible")
             return False   
          
