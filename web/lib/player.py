@@ -235,6 +235,7 @@ class Player(Base):
     # creator: Michal zomper
     # The function verify the slides in the menu slide bar
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
+    # checkSize parameter is to know when to check the slides list len 
     def verifySlidesInPlayerSideBar(self, mySlidesList, checkSize=True):
         self.switchToPlayerIframe()
         sleep(2)
@@ -421,7 +422,7 @@ class Player(Base):
             el = details.find_element_by_xpath("..")
             child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
             sleep(2)
-            self.scrollInSlidesMenuBar(1)
+            self.scrollInSlidesMenuBar(2)
             # open chapter in order to see all the slides
             if self.clickElement(child) == False:
                 writeToLog("INFO","FAILED to open chapter in order to see all the slides")
@@ -462,7 +463,7 @@ class Player(Base):
             slidetime = changeTimeOfSlidesList[slide]
             expectedSlideQrCodeResult =  utilityTestFunc.convertTimeToSecondsMSS(slide)
             
-            if self.clickPlayAndPause(slidetime[1:], timeout=30, additional=0.5) == False:
+            if self.clickPlayAndPause(slidetime[1:], timeout=30) == False:
                 writeToLog("INFO","FAILED to click on the player")
                 return False
             
@@ -470,7 +471,7 @@ class Player(Base):
             slideImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
               
             slideImageResult = int(slideImage)-1 <= int(expectedSlideQrCodeResult) <= int(slideImage)+1 
-            videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(self.changeTimeOfSlidesList[slide])) <= int(videoImage)+1 
+            videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(changeTimeOfSlidesList[slide])) <= int(videoImage)+1 
                 
             if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
                 writeToLog("INFO","FAILED to verify slide in time: " + str(expectedSlideQrCodeResult) + "was change to time: " + str(slidetime))

@@ -677,17 +677,20 @@ class EditEntryPage(Base):
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(slideTime) + "' in time line")
             return False
-        
+        sleep(2)
+        self.hover_on_element(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE)
+        sleep(1)
         if self.click(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE, 20) == False:
             writeToLog("INFO","FAILED to click on delete slide button")
             return False
             
-        sleep(2)
+        sleep(3)
         deleteEl = self.driver.find_elements_by_xpath(self.EDIT_ENTRY_CONFIRM_DELETE_BUTTON[1])
         if self.clickElement(deleteEl, True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False   
         
+        sleep(1)
         if self.is_visible(locatorSlideTime) == True:
             writeToLog("INFO","FAILED, slide in time '" + str(slideTime) + "' was found although this slide was deleted")
             return False   
@@ -843,8 +846,8 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED insert new slide time")
             return False             
             
-        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 20) == False:
-            writeToLog("INFO","FAILED click on save button")
+        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 30) == False:
+            writeToLog("INFO","FAILED to click on save button")
             return False               
         
         sleep(3)
