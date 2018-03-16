@@ -272,7 +272,8 @@ class Base:
                     self.setImplicitlyWaitToDefault()
                     return False
 
-    # waits
+
+    # waits for the element to appear
     def wait_visible(self, locator, timeout=10):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
@@ -282,13 +283,29 @@ class Base:
                     self.setImplicitlyWaitToDefault()
                     return self.get_element(locator)
                 if wait_until < datetime.datetime.now():
-                    #writeToLog('DEBUG','Element not visible')
                     self.setImplicitlyWaitToDefault()
                     return False                
             except:
                 self.setImplicitlyWaitToDefault()
                 return False
 
+
+    # waits for the element child to appear
+    def wait_visible_child(self, parent, locator, timeout=10):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                if self.is_visible(locator) == True:
+                    self.setImplicitlyWaitToDefault()
+                    return self.get_child_element(parent, locator)
+                if wait_until < datetime.datetime.now():
+                    self.setImplicitlyWaitToDefault()
+                    return False                
+            except:
+                self.setImplicitlyWaitToDefault()
+                return False
+            
 
     # If you want to verify partial (contains) text set 'contains' True
     def wait_for_text2(self, locator, text, timeout=10, contains=False):
@@ -351,7 +368,46 @@ class Base:
                 time.sleep(0.5)                 
             except:
                 self.setImplicitlyWaitToDefault()
-                return False            
+                return False
+            
+            
+    # If you want to verify partial (contains) child text set 'contains' True
+    def wait_for_child_text(self, parent, locator, text, timeout=30, contains=False):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        element = None
+        while True:
+            try:
+                element = self.get_child_element(parent, locator)
+#                 if element != None:
+                # If element found (no exception), move to the next while
+                break
+            except:
+                if wait_until < datetime.datetime.now():
+                    writeToLog('INFO','Element was not found')
+                    self.setImplicitlyWaitToDefault()
+                    return False                   
+                pass
+        
+        while True:
+            try:
+                element_text = element.text
+                if contains == True:
+                    if text.lower() in element_text.lower():
+                        self.setImplicitlyWaitToDefault()
+                        return True                    
+                else:    
+                    if str(element_text.lower()) == str(text.lower()):
+                        self.setImplicitlyWaitToDefault()
+                        return True
+                if wait_until < datetime.datetime.now():
+                    writeToLog('INFO','Text element not visible')
+                    self.setImplicitlyWaitToDefault()
+                    return False
+                time.sleep(0.5)                 
+            except:
+                self.setImplicitlyWaitToDefault()
+                return False                       
 
 
     # clicks and taps
@@ -375,7 +431,31 @@ class Base:
             
         except InvalidElementStateException:
             writeToLog("DEBUG","Element was found, but FAILED to click")
-            return False        
+            return False
+        
+        
+    # clicks on the child element
+    # When you have more then one elemnet found with your locator, use multipleElements = True
+    # it will search for element from the elements list, and find the one with size not 0
+    def click_child(self, parent, locator, timeout=10, multipleElements=False):
+        try:
+            if multipleElements == True:
+                elements = self.get_child_elements(parent, locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.click()
+                        return True
+                return False
+            element = self.wait_visible_child(parent, locator, timeout)
+            if element == False:
+                return False
+            else:
+                element.click()
+                return True
+            
+        except InvalidElementStateException:
+            writeToLog("DEBUG","Element was found, but FAILED to click")
+            return False              
     
     
     # Click on given element.
@@ -398,6 +478,7 @@ class Base:
             writeToLog("DEBUG","FAILED to click on element")
             return False        
         
+        
     # send keys
     def send_keys(self, locator, text, multipleElements=False):
         try:
@@ -415,7 +496,25 @@ class Base:
             writeToLog("INFO", "FAILED to type text: " + str(text))
             return False
 
-          
+
+    # send keys to child element
+    def send_keys_to_child(self, parent, locator, text, multipleElements=False):
+        try:
+            if multipleElements == True:
+                elements = self.get_child_elements(parent, locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.send_keys(text)
+                        return True
+            else:
+                element = self.get_child_element(parent, locator)
+                element.send_keys(text)
+                return True 
+        except:
+            writeToLog("INFO", "FAILED to type text: " + str(text))
+            return False
+        
+                  
     # send keys
     def click_and_send_keys(self, locator, text, multipleElements=False):
         try:
@@ -488,6 +587,13 @@ class Base:
             return None
         element = self.get_element(locator)
         return element.text
+    
+    
+    def get_element_child_text(self, parent, locator, timeout=30):
+        if self.wait_visible_child(parent, locator, timeout) == False:
+            return None
+        element = self.get_child_element(parent, locator)
+        return element.text    
     
     
     def is_element_checked(self, locator):
