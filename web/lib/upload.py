@@ -49,7 +49,6 @@ class Upload(Base):
     UPLOAD_ENTRY_DETAILS_ENTRY_DESCRIPTION      = ('tag_name', 'body') #before using need to switch frame and click on the description box
     UPLOAD_ENTRY_DETAILS_ENTRY_TAGS             = ('id', 's2id_Entry-tags')
     UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT       = ('xpath', "//input[contains(@id,'s2id_autogen')]")
-    UPLOAD_ENTRY_DETAILS_ENTRY_TAGS2            = ('id', 'tags-list')
     UPLOAD_ENTRY_SAVE_BUTTON                    = ('id', 'Entry-submit')
     UPLOAD_ENTRY_PROGRESS_BAR                   = ('id', 'progressBar')
     UPLOAD_ENTRY_SUCCESS_MESSAGE                = ('xpath', "//span[contains(.,'Your changes have been saved.')]")

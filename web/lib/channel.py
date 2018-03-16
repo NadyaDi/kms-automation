@@ -274,7 +274,7 @@ class Channel(Base):
                 writeToLog("DEBUG","FAILED to click on Tags filed")
                 return False                
             
-        if self.send_keys(self.CHANNEL_DETAILS_CHANNEL_TAGS, tags) == True:
+        if self.send_keys(self.clsCommon.upload.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
             return True
         else:
             writeToLog("DEBUG","FAILED to type in Tags")
