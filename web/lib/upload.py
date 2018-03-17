@@ -381,16 +381,16 @@ class Upload(Base):
     # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
     #        for example 'tags1,tags2,'
     def fillFileUploadEntryTags(self, tags, uploadboxId=-1):
-        # If upload single (method: uploadEntry)
-        if uploadboxId == -1:
-            uploadboxId = 1
-
         try:
             self.switch_to_default_content()
-            # Get the uploadbox element
-            uploadBoxElement = self.get_element(self.replaceInLocator(self.UPLOAD_UPLOADBOX, '[ID]', str(uploadboxId)))            
-            tagsElement = self.get_child_element(uploadBoxElement, self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
-            
+            # If upload single (method: uploadEntry)
+            if uploadboxId == -1:
+                tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
+            else:
+                # Get the uploadbox element
+                uploadBoxElement = self.get_element(self.replaceInLocator(self.UPLOAD_UPLOADBOX, '[ID]', str(uploadboxId)))            
+                tagsElement = self.get_child_element(uploadBoxElement, self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
+                
         except NoSuchElementException:
             writeToLog("DEBUG","FAILED to get Tags filed element")
             return False
@@ -407,13 +407,17 @@ class Upload(Base):
         
             if self.clickElement(tagsElement) == False:
                 writeToLog("DEBUG","FAILED to click on Tags filed")
-                return False          
-
-        if self.send_keys_to_child(uploadBoxElement, self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
-            return True
+                return False    
+                  
+        if uploadboxId == -1: # -1 stands for single
+            if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
+                return True
         else:
-            writeToLog("DEBUG","FAILED to type in Tags")
-            return False
+            if self.send_keys_to_child(uploadBoxElement, self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
+                return True
+            
+        writeToLog("DEBUG","FAILED to type in Tags")
+        return False                
         
     
     # The method supports BOTH single and multiple upload

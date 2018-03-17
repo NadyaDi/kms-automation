@@ -61,10 +61,6 @@ class MyMedia(Base):
             if el.size['width']!=0 and el.size['height']!=0:
                 return el
         return False        
-#         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
-#         else:
-#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
     
     
     # This method, clicks on the menu and My Media
