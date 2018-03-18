@@ -23,7 +23,7 @@ class Test:
     # Go again to time line tab - remove the added chapter
     # In the player verify that the chapter doen't display any more and that all the slides are still display in the slides menu
     #================================================================================================================================
-    testNum     = "353"
+    testNum     = "3275"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -77,70 +77,70 @@ class Test:
             self.secondChapterSlidesList = {'2.1': '00:14','2.2': '00:15', '2.3': '00:16', '2.4': '00:17', '2.5': '00:18', '2.6': '00:19','2.7': '00:20', '2.8': '00:21','2.9': '00:22',
                                             '2.10': '00:23', '2.11': '00:24','2.12': '00:25', '2.13': '00:26', '2.14': '00:27', '2.15': '00:28', '2.16': '00:29'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
-       
+
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                            
+                             
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                   
+                    
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-                              
+                               
             writeToLog("INFO","Step 4: Going add chapters")
             if self.common.editEntryPage.addChapters(self.entryName, self.chaptersList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
                 return
-                 
+                  
             writeToLog("INFO","Step 5: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName)
                 return  
-            
+             
             writeToLog("INFO","Step 6: Going to verify that all slides that aren't in chapters display in the slides side menu")
             if self.common.player.verifySlidesInPlayerSideBar(self.slidesWithoutChapter, checkSize=False) == False:
                 writeToLog("INFO","Step 6: FAILED to verify that all slides that aren't in chapters display in the slides side menu")
                 self.status = "Fail"
                 return
-            
+             
             self.common.player.switchToPlayerIframe() 
             writeToLog("INFO","Step 7: Going to close slides menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
                 writeToLog("INFO","Step 7: FAILED to click and open slides bar menu")
                 return
-            
+             
             writeToLog("INFO","Step 8: Going to verify that chapter one is display correctly in the player (in entry page)")
             if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage(next(iter(self.chaptersList)), self.firstChapterSlidesList, chapterIsclose=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to verify chapter one and all of his slides")
                 return            
-              
+               
             writeToLog("INFO","Step 9: Going to open slides menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
                 writeToLog("INFO","Step 9: FAILED to click and open slides bar menu")
                 self.status = "Fail"
                 return
-              
+               
             # click on the EXPAND_COLLAPSE button in the slides menu bar in order to open all the chapters
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
-              
+               
             writeToLog("INFO","Step 10: Going to close slides menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
                 writeToLog("INFO","Step 10: FAILED to click and open slides bar menu")
                 return
-              
+               
             writeToLog("INFO","Step 11: Going to verify that chapter two is display correctly in the player (in entry page)")
             if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage("Second Chapter", self.secondChapterSlidesList) == False:
                 self.status = "Fail"

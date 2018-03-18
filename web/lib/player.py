@@ -276,13 +276,13 @@ class Player(Base):
             sleep(1)
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', mySlidesList[slide]))
             if self.wait_visible(slide_time) == False:
-                writeToLog("INFO","FAILED to verify slide time in the slide menu bar")
+                writeToLog("INFO","FAILED to verify slide time ' " + mySlidesList[slide] + "' in the slide menu bar")
                 return False
             
             if isVerifySlideNumber == True:
                 slideNumber = (self.PLAYER_SLIDE_NUMBER[0], self.PLAYER_SLIDE_NUMBER[1].replace('SLIDE_NUMBER',slide))
                 if self.wait_visible(slideNumber) == False:
-                    writeToLog("INFO","FAILED to verify slide number in slides menu bar")
+                    writeToLog("INFO","FAILED to verify slide number '" + slide +"' in slides menu bar")
                     return False
 
             # After the 4 slide we need to move the side menu scroller down so we can see the rest of the slides
@@ -302,9 +302,9 @@ class Player(Base):
         slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
         action = ActionChains(self.driver)
-        action.move_to_element_with_offset(scroller, 0, 0)
-        action.move_by_offset(0,  (slideHeight * size))
+        action.move_to_element_with_offset(scroller, 1, 3)
         action.click_and_hold()
+        action.move_by_offset(0,  (slideHeight * size))
         action.release()
         action.perform()
         
@@ -423,7 +423,7 @@ class Player(Base):
             el = details.find_element_by_xpath("..")
             child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
             sleep(2)
-            self.scrollInSlidesMenuBar(2)
+            self.scrollInSlidesMenuBar(1)
             # open chapter in order to see all the slides
             if self.clickElement(child) == False:
                 writeToLog("INFO","FAILED to open chapter in order to see all the slides")
