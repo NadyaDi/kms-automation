@@ -21,7 +21,7 @@ class Test:
     # From the Time line delete several slides 
     # In the player check that just the needed slides appear in the slides menu
     #================================================================================================================================
-    testNum     = "352"
+    testNum     = "3274"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
