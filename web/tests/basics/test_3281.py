@@ -5,6 +5,7 @@ import clsTestService
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
+import enums
 
 
 class Test:
@@ -13,11 +14,11 @@ class Test:
     #  @Author: Michal Zomper
     # Test description:
     # Main user add different user as a collaboration user on an entry.
-    # The collaboration permission is co edit
+    # The collaboration permission is co publish
     # The entry is published to category so the collaborator user can see the entry
-    # Login with the collaborator user - go to entry option tab and change entry options EnableComments / CloseDiscussion / EveryoneToCreateClip successfully. 
+    # Login with the collaborator user - go to entry and publish him successfully.
     #================================================================================================================================
-    testNum     = "346"
+    testNum     = "3281"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -32,14 +33,13 @@ class Test:
     entryTags = "Tags,"
     newUserId = "Automation_User_1"
     newUserPass = "Kaltura1!"
-    EnableComments = True
-    CloseDiscussion = True
-    EveryoneToCreateClip = True
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
     categoryList = [("Apps Automation Category")]
-    channelList = ""
     categoryName = None
     whereToPublishFrom = "Entry Page"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    channelList = [("Test1")]
+ 
+
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -55,73 +55,62 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration", self.testNum)
-            ##################### TEST STEPS - MAIN FLOW #####################
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
-                return         
+            self.entryName = clsTestService.addGuidToString("Collaboration co publish", self.testNum)
+            ##################### TEST STEPS - MAIN FLOW ##################### 
   
-            writeToLog("INFO","Step 2: Going to upload entry")
+            writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry")
+                writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                              
-            writeToLog("INFO","Step 3: Going to navigate to edit Entry Page")
+                     
+            writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
+                writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to edit entry page")
                 return
-             
-            writeToLog("INFO","Step 4: Going to add Collaborator in edit Entry Page")
-            if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
+            
+            writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
+            if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, False, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED failed to add user as a collaborator")
+                writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
                 return
-             
+               
             sleep(2)     
-            writeToLog("INFO","Step 5: Going to publish the entry so the add user as a collaborator can see it")            
+            writeToLog("INFO","Step 4: Going to publish the entry so the add user as a collaborator can see it")            
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "'")
+                writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
                 return
-             
-            writeToLog("INFO","Step 6: Going to logout from main user")
+               
+            writeToLog("INFO","Step 5: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED failed to logout from main user")
+                writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
-                               
-            writeToLog("INFO","Step 7: Going to login with the user that was added as Collaborator")
+                                 
+            writeToLog("INFO","Step 6: Going to login with the user that was added as Collaborator")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to login with the user that was added as Collaborator")
+                writeToLog("INFO","Step 6: FAILED to login with the user that was added as Collaborator")
                 return
-             
-            writeToLog("INFO","Step 8: Going to navigate to entry page from category page with the user that was added as Collaborator")
+               
+            writeToLog("INFO","Step 7: Going to navigate to entry page from category page with the user that was added as Collaborator")
             if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to entry page with the user that was added as Collaborator")
+                writeToLog("INFO","Step 7: FAILED to navigate to entry page with the user that was added as Collaborator")
                 return                                  
              
-            writeToLog("INFO","Step 9: Going to navigate to edit entry page from entry page")
-            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
+            writeToLog("INFO","Step 8: Going to publish entry with added as Collaborator user")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelList, enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to navigate to edit entry page from entry page")
-                return 
-             
-            writeToLog("INFO","Step 10: Going to change entry options with the user that was added as Collaborator")
-            if self.common.editEntryPage.changeEntryOptions(self.EnableComments, self.CloseDiscussion, self.EveryoneToCreateClip) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to change entry options with the user that was added as Collaborator")
-                return 
-             
+                writeToLog("INFO","Step 8: FAILED to publish entry '" + self.entryName + "' with Collaborator user")
+                return
+            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co editor - Options tab' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co publish' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -130,11 +119,11 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.base.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")            
+            writeToLog("INFO","**************** Starting: teardown_method ****************")                    
             self.common.login.logOutOfKMS()
             self.common.loginAsUser()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            writeToLog("INFO","**************** Ended: teardown_method *******************")
+            writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
         clsTestService.basicTearDown(self)

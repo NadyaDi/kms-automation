@@ -78,6 +78,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHAPTER_IN_TIME_LINE                             = ('xpath', "//div[@class='k-cuepoint chapter ui-draggable ui-draggable-handle' and @data-time='CHAPTER_TIME']")# When using this locator, replace 'CHAPTER_TIME' string with your real chapter time
     EDIT_ENTRY_DELETE_CHAPTER_BUTTON                            = ('xpath', "//a[@class='btn btn-link remove' and @role='button']")
     EDIT_ENTRY_DISCLAIMER_TEXT_BOX                              = ('xpath', "//div[@id='disclaimet-text']")
+    EDIT_ENTRY_BACK_TO_TIMELINE                                 = ('xpath', "//a[contains(text(), 'Back to Timeline')]" )
     #=============================================================================================================
     
     
@@ -569,45 +570,52 @@ class EditEntryPage(Base):
     
     # Author: Michal Zomper
     # NOT finish
-    def uploadSlidesDeck(self, filePath, mySlidesList):
+    def uploadSlidesDeck(self, filePath, mySlidesList, waitToFinish=True):
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
-         
+          
         # Click on the upload slides button in the time line bar 
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides deck button in the time line bar")
             return False           
-         
+          
         # click on the upload button 
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides button")
             return False              
-         
+          
         if self.click(self.EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE, 20) == False:
             writeToLog("INFO","FAILED to click on choose a file to upload button")
             return False            
-         
+          
         self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
-         
+          
         # verify ptt start processing
         if self.wait_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 20) == False:
             writeToLog("INFO","FAILED, Can NOT find upload deck processing message")
             return False
-          
-        # Wait until the ptt will upload   
-        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 360) == False:
-            writeToLog("INFO","FAILED, upload deck processing isn't done after 6 minutes")
-            return False
-        sleep(2)
         
-        # Verify cuepoint were added on the player
-        if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
-        #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
-            writeToLog("INFO","FAILED, Not all cuepoints were verify")
-            return False 
-        
-        writeToLog("INFO","Success presentation was upload and added to time line successfully")
+        if waitToFinish == True: 
+            # Wait until the ptt will upload   
+            if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 360) == False:
+                writeToLog("INFO","FAILED, upload deck processing isn't done after 6 minutes")
+                return False
+            sleep(2)
+            
+            # Verify cuepoint were added on the player
+            if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
+            #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
+                writeToLog("INFO","FAILED, Not all cuepoints were verify")
+                return False
+             
+            writeToLog("INFO","Success presentation was upload and added to time line successfully")
+        else:
+            sleep(5)
+            if self.click(self.EDIT_ENTRY_BACK_TO_TIMELINE, 30) == False:
+                writeToLog("INFO","FAILED to click on 'back to timeline' button")
+                return False   
+             
         return True
       
     # Author: Tzachi Guetta
