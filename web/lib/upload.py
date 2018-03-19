@@ -48,8 +48,8 @@ class Upload(Base):
     UPLOAD_ENTRY_DESCRIPTION_TEXT_BOX           = ('xpath', "//div[@class='content']")
     UPLOAD_ENTRY_DETAILS_ENTRY_DESCRIPTION      = ('tag_name', 'body') #before using need to switch frame and click on the description box
     UPLOAD_ENTRY_DETAILS_ENTRY_TAGS             = ('id', 's2id_Entry-tags')
-    UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT       = ('xpath', "//input[contains(@id,'s2id_autogen')]")
-    UPLOAD_ENTRY_SAVE_BUTTON                    = ('id', 'Entry-submit')
+    UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT       = ('xpath', "//input[contains(@id,'s2id_autogen') and contains(@class, 'focused')]")
+    UPLOAD_ENTRY_SAVE_BUTTON                    = ('xpath', "//button[@id='Entry-submit']")
     UPLOAD_ENTRY_PROGRESS_BAR                   = ('id', 'progressBar')
     UPLOAD_ENTRY_SUCCESS_MESSAGE                = ('xpath', "//span[contains(.,'Your changes have been saved.')]")
     UPLOAD_ENTRY_DISCLAIMER_CHECKBOX            = ('id', 'disclaimer-Accepted')
@@ -58,7 +58,7 @@ class Upload(Base):
     DROP_DOWN_VIDEO_QUIZ_BUTTON                 = ('xpath', ".//span[text()='Video Quiz']")
     VIDEO_QUIZ_PAGE_TITLE                       = ('xpath', "//h1[@class='editorBreadcrumbs inline']")
     # Elements for multiple upload
-    UPLOAD_UPLOADBOX                            = ('id', 'uploadbox[ID]') #Replace [ID] with uploadbox ID
+    UPLOAD_UPLOADBOX                            = ('xpath', "//div[@id='uploadbox[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
     #============================================================================================================
     
@@ -211,25 +211,28 @@ class Upload(Base):
             if self.fillFileUploadEntryDetailsMultiple(entry.filePath, entry.name, entry.description, entry.tags, entry.timeout, uploadboxCount) == False:
                 return False 
             
-            # Get the uploadbox element
-            uploadBoxElement = self.get_element(self.replaceInLocator(self.UPLOAD_UPLOADBOX, '[ID]', str(uploadboxCount)))            
-            # Click Save
-            if self.click_child(uploadBoxElement, self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+#           # Click Save
+            if self.click(('xpath', self.UPLOAD_UPLOADBOX[1].replace('[ID]', str(uploadboxCount)) + self.UPLOAD_ENTRY_SAVE_BUTTON[1])) == False:
                 writeToLog("DEBUG","FAILED to click on 'Save' button")
                 return False
+            
+            # Click Save another time, it's a workaround
+            if self.click(('xpath', self.UPLOAD_UPLOADBOX[1].replace('[ID]', str(uploadboxCount)) + self.UPLOAD_ENTRY_SAVE_BUTTON[1])) == False:
+                writeToLog("DEBUG","FAILED to click on 'Save' button")
+                return False            
             sleep(3)
             
             # Wait for loader to disappear
             self.clsCommon.general.waitForLoaderToDisappear()
             
             # Wait for 'Your changes have been saved.' message
-            if self.wait_visible_child(uploadBoxElement, self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False:
+            if self.wait_visible(('xpath', self.UPLOAD_UPLOADBOX[1].replace('[ID]', str(uploadboxCount)) + self.UPLOAD_ENTRY_SUCCESS_MESSAGE[1]), 45) != False:
             # TODO return entry ID
-#                 entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+                entryID = self.extractEntryID(('xpath', self.UPLOAD_UPLOADBOX[1].replace('[ID]', str(uploadboxCount)) + self.UPLOAD_GO_TO_MEDIA_BUTTON[1]))
 #                 if entryID != None:
 #                     writeToLog("INFO","Successfully uploaded entry: '" + entry.name + "'"", entry ID: '" + entryID + "'")
 #                     return entryID
-                writeToLog("INFO","Successfully uploaded entry: '" + entry.name + "'")
+                writeToLog("INFO","Successfully uploaded entry: '" + entry.name + "'"", entry ID: '" + entryID + "'")
                 uploadboxCount += 1
                 continue
             else:
@@ -404,11 +407,11 @@ class Upload(Base):
             # Remove the Mask over all the screen (over tags filed also)
             maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
             self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))
-        
+         
             if self.clickElement(tagsElement) == False:
                 writeToLog("DEBUG","FAILED to click on Tags filed")
                 return False    
-                  
+                            
         if uploadboxId == -1: # -1 stands for single
             if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
                 return True
