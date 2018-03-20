@@ -25,6 +25,10 @@ class MyHistory(Base):
     MY_HISTORY_CLEAR_HISORY_BUTTON                                = ('xpath', '//button[@href = "/history/clear"]')  
     MY_HISTORY_CONFIRM_HISTORY_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and @data-handler = '1']")
     MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE                      = ('class_name', 'empty-header')
+    MY_HISTORY_ENTRY_DESCRIPTION                                  = ('xpath', "//a[@class='searchme']")
+    MY_HISTORY_ENTRY_LAST_WATCHED                                 = ('xpath', "//a[@class='watch-time']")
+    MY_HISTORY_ENTRY_VIEWD_IN                                     = ('xpath', "//a[contains(@href, 'channel/')")
+    MY_HISTORY_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::a[@class='dataTd entryDetails']") 
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -51,8 +55,8 @@ class MyHistory(Base):
         return True
      
     
-    #  @Author: Inbar Willman    
-    #This method search for entry in My history page   
+    # @Author: Inbar Willman    
+    # This method search for entry in My history page   
     def searchEntryMyHistory(self, entryName):
         # Navigate to My Media
         if self.navigateToMyHistory(True) == False:
@@ -69,8 +73,8 @@ class MyHistory(Base):
         return True
      
     
-    #  @Author: Inbar Willman    
-    #This method search if entry exists or not in My history page    
+    # @Author: Inbar Willman    
+    # This method search if entry exists or not in My history page    
     def isEntryExistsInMyHistory(self, entryName, timeout=30):    
         if self.searchEntryMyHistory(entryName) == False:
             return False
@@ -81,7 +85,7 @@ class MyHistory(Base):
         return True
     
     
-    #  @Author: Inbar Willman
+    # @Author: Inbar Willman
     def waitTillLocatorExistsInMyHistory(self, entryName, timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
         while wait_until > datetime.datetime.now(): 
@@ -122,7 +126,7 @@ class MyHistory(Base):
             writeToLog("INFO","FAILED to click confirm deletion")
             return False
         
-        #Verify that correct message is displayed
+        # Verify that correct message is displayed
         tmpMessage = self.get_element_text(self.MY_HISTORY_CLEAR_HISTORY_SUCCESS_MESSAGE)
         if 'Your feed is empty' != tmpMessage:
             writeToLog("INFO","FAILED to display correct answer")
@@ -141,3 +145,8 @@ class MyHistory(Base):
       
         return False
         
+    # @Author: Inbar Willman   
+    # Check that all entry data is correct in My History
+    def checkEntryDetailsInMyHistory(self, entryName):
+        tmp_entry_parent = (self.MY_HISTORY_ENTRY_PARNET[0], self.MY_HISTORY_ENTRY_PARNET[1].replace('ENTRY_NAME', entryName))
+        entry_text = self.get_element_text(tmp_entry_parent)
