@@ -38,10 +38,10 @@ class Test:
     entryName = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4'
-    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\timelineQRCode.pptx'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
+    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\10SlidestimelineQRCode.pptx'
     slidesQrCodeAndTimeList = None
-    timeToStop = "0:10"
+    timeToStop = "0:08"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -123,10 +123,11 @@ class Test:
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
                 writeToLog("INFO","Step 9: FAILED to open time line tab")
                 self.status = "Fail"
-                return                
-                  
+                return
+                            
+            sleep(3)     
             writeToLog("INFO","Step 10: Going to verify that all slides were uploaded and display in time line")
-            if self.common.player.verifyslidesThatChangedLocationInTimeLine(self.slidesQrCodeAndTimeList) == False:
+            if self.common.player.verifySlidesInPlayerSideBar(self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 10: FAILED to verify slide change")
                 self.status = "Fail"
                 return    

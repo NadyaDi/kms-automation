@@ -756,7 +756,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED click on save chapter button")
             return False               
         
-        sleep(4)
+        sleep(5)
         # Verify chapter saved 
         if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS) == False:
             writeToLog("INFO","FAILED to fined saved chapter success label")
