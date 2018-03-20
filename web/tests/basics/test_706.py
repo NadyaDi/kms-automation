@@ -71,10 +71,10 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
                         
-            writeToLog("INFO","Step 2: Going to upload 5 entries")
+            writeToLog("INFO","Step 2: Going to upload and publish 3 kind of entries to: " + self.categoryName )
             if self.common.category.addNewContentToCategory(self.categoryName, uploadEntrieList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to upload 5 entries")
+                writeToLog("INFO","Step 2: FAILED to upload and publish 3 kind of entries to: " + self.categoryName)
                 return
             
             sleep(30)
