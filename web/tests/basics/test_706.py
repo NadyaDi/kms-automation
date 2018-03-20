@@ -5,6 +5,7 @@ import clsTestService
 import enums
 from localSettings import *
 import localSettings
+from upload import UploadEntry
 from utilityTestFunc import *
 
 
@@ -30,8 +31,10 @@ class Test:
     entryName3 = None
     categoryName = None   
     entryDescription = "Entry description"
-    entryTags = "entrytags1,entrytags2,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg' 
+    entryTags = "entrytags1,entrytags2,"   
+    filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg' 
+    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3' 
+    filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4' 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -50,11 +53,15 @@ class Test:
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
-            self.entryName1 = clsTestService.addGuidToString('Category-entry1')
-            self.entryName2 = clsTestService.addGuidToString('Category-entry2')
-            self.entryName3 = clsTestService.addGuidToString('Category-entry3')
+            self.entryName1 = clsTestService.addGuidToString('Audio-entry1')
+            self.entryName2 = clsTestService.addGuidToString('Video-entry2')
+            self.entryName3 = clsTestService.addGuidToString('Image-entry3')
             self.categoryName = "KMS-Automation"
-            self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
+            
+            self.audioEntry = UploadEntry(self.filePathAudio, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            self.videoEntry = UploadEntry(self.filePathVideo, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            self.imageEntry = UploadEntry(self.filePathImage, self.entryName3, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            uploadEntrieList = [self.audioEntry, self.videoEntry, self.imageEntry] 
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -62,9 +69,9 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
-            
+                        
             writeToLog("INFO","Step 2: Going to upload 5 entries")
-            if self.common.category.addNewContentToCategory(self.categoryName, self.filePath, self.entryName1, self.entryDescription, self.entryTags) == False:
+            if self.common.category.addNewContentToCategory(self.categoryName, uploadEntrieList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
@@ -86,7 +93,7 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)           
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName1)
+            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName1, self.entryName2, self.entryName3)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
