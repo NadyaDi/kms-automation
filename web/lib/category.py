@@ -91,7 +91,7 @@ class Category(Base):
 
 
     # Author: Tzachi Guetta
-    def addNewContentToCategory(self, categoryName, filePath, entryName, entryDescription, entryTags):
+    def addNewContentToCategory(self, categoryName, uploadEntrieList):
         try:
             self.clsCommon.navigateTo(enums.Location.CATEGORY_PAGE, nameValue=categoryName)
             
@@ -110,7 +110,7 @@ class Category(Base):
                 writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
                 return False
             
-            if self.clsCommon.upload.uploadEntry(filePath, entryName, entryDescription, entryTags, uploadFrom=enums.Location.CATEGORY_PAGE) == None:
+            if self.clsCommon.upload.uploadMulitple(uploadEntrieList, uploadFrom=enums.Location.CATEGORY_PAGE) == False:
                 writeToLog("INFO","FAILED to upload media from category page")
                 return False
             
