@@ -6,7 +6,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import enums
-
+import collections
 
 class Test:
     
@@ -58,11 +58,13 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete slides", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
-            # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
+            # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2
+            self.slidesQrCodeAndTimeList = collections.OrderedDict() 
             self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09',
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
+            self.deleteSlidesList = collections.OrderedDict()
             self.deleteSlidesList = {'5': '00:05', '11': '00:11','15': '00:15', '21': '00:21','24': '00:24','28': '00:28'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
             

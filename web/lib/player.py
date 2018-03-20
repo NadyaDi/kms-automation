@@ -475,7 +475,7 @@ class Player(Base):
             videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(changeTimeOfSlidesList[slide])) <= int(videoImage)+1 
                 
             if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
-                writeToLog("INFO","FAILED to verify slide in time: " + str(expectedSlideQrCodeResult) + "was change to time: " + str(slidetime))
+                writeToLog("INFO","FAILED to verify slide that was in time: " + str(expectedSlideQrCodeResult) + " changed to time: " + str(slidetime))
                 return False
             
         writeToLog("INFO","SUCCESS, verify all slides changes")
