@@ -61,7 +61,8 @@ class Test:
             self.audioEntry = UploadEntry(self.filePathAudio, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)
             self.videoEntry = UploadEntry(self.filePathVideo, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
             self.imageEntry = UploadEntry(self.filePathImage, self.entryName3, self.entryDescription, self.entryTags, timeout=60, retries=3)
-            uploadEntrieList = [self.audioEntry, self.videoEntry, self.imageEntry] 
+            uploadEntrieList = [self.audioEntry, self.videoEntry, self.imageEntry]
+            self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -75,12 +76,12 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
-            
-            writeToLog("INFO","Step 2: Going to")
-            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName1, self.categoryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED ")
-                return
+            for entry in self.entriesList:
+                writeToLog("INFO","Step 2: Going to verify that " + entry + ", is presented inside the category")
+                if self.common.entryPage.navigateToEntryPageFromCategoryPage(entry, self.categoryName) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 2: FAILED to verify that " + entry + ", is presented inside the category")
+                    return
             
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -93,7 +94,7 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)           
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName1, self.entryName2, self.entryName3)
+            self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

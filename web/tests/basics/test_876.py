@@ -15,7 +15,7 @@ class Test:
     #================================================================================================================================
     # @Author: Tzachi Guetta
     # Test description:
-    # Scheduling media – Add to Channel from upload page 
+    # Scheduling media - add media to channel via upload page 
     #================================================================================================================================
     testNum     = "876"
     enableProxy = False

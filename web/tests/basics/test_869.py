@@ -13,7 +13,7 @@ class Test:
     #================================================================================================================================
     # @Author: Tzachi Guetta
     # Test description:
-    # Scheduling media – Add to playlist (anytime, Past, Future)
+    # Scheduling media - Add to playlist (any time, past, future)    
     #================================================================================================================================
     testNum     = "869"
     enableProxy = False
