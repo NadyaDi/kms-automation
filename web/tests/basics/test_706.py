@@ -76,6 +76,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
+            
+            sleep(30)
             for entry in self.entriesList:
                 writeToLog("INFO","Step 2: Going to verify that " + entry + ", is presented inside the category")
                 if self.common.entryPage.navigateToEntryPageFromCategoryPage(entry, self.categoryName) == False:

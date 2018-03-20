@@ -50,7 +50,6 @@ class Category(Base):
             writeToLog("INFO","FAILED to verify category page is display")
             return False
         
-        writeToLog("INFO","Success Category page display")
         return True
     
     
