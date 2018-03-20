@@ -299,14 +299,11 @@ class Player(Base):
     # size - the number of slides that need to scroll to get to the right point (in order to scroll down size need to be positive / in order to scroll up size need to be negative )
     def scrollInSlidesMenuBar(self, size):
         self.switchToPlayerIframe()
-        slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
+        #slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
         action = ActionChains(self.driver)
-        action.move_to_element_with_offset(scroller, 1, 3)
-        action.click_and_hold()
-        action.move_by_offset(0,  (slideHeight * size))
-        action.release()
-        action.perform()
+        #action.move_to_element(scroller).move_to_element_with_offset(scroller, 2.5, 3).click_and_hold().move_by_offset(0, 35).release().perform()
+        action.move_to_element(scroller).click_and_hold().move_by_offset(0, 35*size).release().perform()
         
         
     # creator: Michal zomper
@@ -417,6 +414,7 @@ class Player(Base):
         if self.MoveToChapter(chapterName) == False:
             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
             return False
+        self.scrollInSlidesMenuBar(2)
         sleep(2)
         
         if chapterIsclose == True:

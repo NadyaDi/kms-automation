@@ -148,14 +148,17 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to click on delete button")
             return False
         
+        sleep(2)
         if self.click(self.ENTRY_PAGE_CONFIRM_DELETE_BUTTON, 20, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click confirm delete button")
             # Click on the actions button to close the drop down list 
             self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON, 15)
             return False
         
+        sleep(5)
         # Verify entry was delete: after entry delete the page that will display is the page that we enter the entry from
         if deleteFrom == enums.Location.MY_MEDIA or deleteFrom == enums.Location.ENTRY_PAGE:
+            sleep(3)
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False      

@@ -81,7 +81,6 @@ class Test:
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14', '15': '00:01', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:23', '22': '00:22','23': '00:07', '24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
-       
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
