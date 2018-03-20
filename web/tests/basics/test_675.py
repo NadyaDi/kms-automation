@@ -30,6 +30,8 @@ class Test:
     entryName1 = None
     entryName2 = None
     entryName3 = None
+    entryName4 = None
+    entryName5 = None        
     entriesList = None
     playlistName = None        
     entryDescription = "Entry description"
@@ -56,8 +58,10 @@ class Test:
             self.entryName1 = clsTestService.addGuidToString('Playlist_entry1')
             self.entryName2 = clsTestService.addGuidToString('Playlist_entry2')
             self.entryName3 = clsTestService.addGuidToString('Playlist_entry3')
+            self.entryName4 = clsTestService.addGuidToString('Playlist_entry4')
+            self.entryName5 = clsTestService.addGuidToString('Playlist_entry5')
             self.playlistName = clsTestService.addGuidToString('Playlist_reorder', self.testNum)
-            self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
+            self.entriesList = [self.entryName5, self.entryName4, self.entryName3, self.entryName2, self.entryName1]
 #           TO-DO: move the below line to "crate evn test"
 #           self.common.admin.adminDownloadMedia(True)
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -71,7 +75,9 @@ class Test:
             self.entriesToUpload = {
                 self.entryName1: self.filePath, 
                 self.entryName2: self.filePath,
-                self.entryName3: self.filePath }
+                self.entryName3: self.filePath,
+                self.entryName4: self.filePath,
+                self.entryName5: self.filePath }
             
             writeToLog("INFO","Step 2: Going to upload 5 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
@@ -85,9 +91,22 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
             
-            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
+            entriesListBefore = [self.entryName5, self.entryName4, self.entryName3, self.entryName2, self.entryName1]
             writeToLog("INFO","Step 2: Going to verify entries order before reorder")
-            if self.common.myMedia.verifyEntriesOrder(expectedEntriesList) == False:
+            if self.common.myMedia.verifyEntriesOrder(entriesListBefore, location = enums.Location.MY_PLAYLISTS) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to verify entries order before reorder")
+                return
+            
+            writeToLog("INFO","Step 3: Going to Shuffle entries inside the playlist")
+            if self.common.myPlaylists.shufflePlaylistEntries(self.playlistName, self.entriesList ,0 ,3) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to Shuffle entries inside the playlist")
+                return
+            
+            entriesListAfter = [self.entryName4, self.entryName3, self.entryName5, self.entryName2, self.entryName1]
+            writeToLog("INFO","Step 2: Going to verify entries order before reorder")
+            if self.common.myMedia.verifyEntriesOrder(entriesListAfter, location = enums.Location.MY_PLAYLISTS) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to verify entries order before reorder")
                 return

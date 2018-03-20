@@ -20,6 +20,7 @@ class Channel(Base):
     MY_CHANNELS_CREATE_CHANNEL_BUTTON               = ('id', 'createChannelBtn')
     CHANNEL_DETAILS_NAME_FIELD                      = ('id', 'Category-name')
     CHANNEL_DETAILS_CHANNEL_TAGS                    = ('id', 's2id_tags')
+    CHANNEL_REMOVE_TAG_MASK                         = ('xpath', "//div[@id='select2-drop-mask']")
     CHANNEL_DETAILS_PRIVACY_OPEN                    = ('xpath', "//strong[contains(text(),'Open')]")
     CHANNEL_DETAILS_PRIVACY_RESTRICTED              = ('xpath', "//strong[contains(text(),'Restricted')]")
     CHANNEL_DETAILS_PRIVACY_PRIVATE                 = ('xpath', "//strong[contains(text(),'Private')]")
@@ -263,9 +264,17 @@ class Channel(Base):
         if tagsElement.click() == False:
             writeToLog("DEBUG","FAILED to click on Tags filed")
             return False            
-        sleep(2)
+        sleep(2)        
         
-        if self.send_keys(self.CHANNEL_DETAILS_CHANNEL_TAGS, tags) == True:
+        if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+            temp = self.get_element(self.CHANNEL_REMOVE_TAG_MASK)
+            self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(temp))
+        
+            if tagsElement.click() == False:
+                writeToLog("DEBUG","FAILED to click on Tags filed")
+                return False                
+            
+        if self.send_keys(self.clsCommon.upload.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
             return True
         else:
             writeToLog("DEBUG","FAILED to type in Tags")

@@ -54,6 +54,7 @@ class Player(Base):
             return True
         else:
             localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
+            self.wait_visible(self.PLAYER_IFRAME, 60)
             self.swith_to_iframe(self.PLAYER_IFRAME)
             return True
     
@@ -235,11 +236,12 @@ class Player(Base):
     # creator: Michal zomper
     # The function verify the slides in the menu slide bar
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
-    def verifySlidesInPlayerSideBar(self, mySlidesList):
+    # checkSize parameter is to know when to check the slides list len 
+    def verifySlidesInPlayerSideBar(self, mySlidesList, checkSize=True):
         self.switchToPlayerIframe()
-        sleep(1)
+        sleep(2)
         self.get_element(self.PLAYER_SLIDE_SIDE_BAR_MENU).send_keys(Keys.PAGE_UP)
-        sleep(1)
+        sleep(3)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the slide side bar menu")
             return False
@@ -248,9 +250,10 @@ class Player(Base):
         # find the parent of all menu slides
         sideMenu = self.get_element(self.PLAYER_SIDE_BAR_MENU_PARENT)
         # check if the number of slides is correct
-        if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList):
-            writeToLog("INFO","FAILED to verify number of slides in side bar menu")
-            return False
+        if checkSize == True:
+            if len(sideMenu.find_elements_by_xpath(self.PLAYER_SLIDE_IN_SIDE_BAR_MENU[1])) != len(mySlidesList):
+                writeToLog("INFO","FAILED to verify number of slides in side bar menu")
+                return False
         sleep(2)
         
         if self.checkSlidesTimeInSlideBarMenu(mySlidesList) == False:
@@ -259,6 +262,7 @@ class Player(Base):
             
         writeToLog("INFO","SUCCESS verify slides in side bar menu")
         self.clsCommon.base.switch_to_default_content()
+        sleep(2)
         return True
     
     
@@ -269,15 +273,16 @@ class Player(Base):
         # Verify that the slides time is correct
         count = 0
         for slide in mySlidesList:
+            sleep(1)
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', mySlidesList[slide]))
             if self.wait_visible(slide_time) == False:
-                writeToLog("INFO","FAILED to verify slide time in the slide menu bar")
+                writeToLog("INFO","FAILED to verify slide time ' " + mySlidesList[slide] + "' in the slide menu bar")
                 return False
             
             if isVerifySlideNumber == True:
                 slideNumber = (self.PLAYER_SLIDE_NUMBER[0], self.PLAYER_SLIDE_NUMBER[1].replace('SLIDE_NUMBER',slide))
                 if self.wait_visible(slideNumber) == False:
-                    writeToLog("INFO","FAILED to verify slide number in slides menu bar")
+                    writeToLog("INFO","FAILED to verify slide number '" + slide +"' in slides menu bar")
                     return False
 
             # After the 4 slide we need to move the side menu scroller down so we can see the rest of the slides
@@ -293,12 +298,13 @@ class Player(Base):
     # The function move the scroller in the slides menu bar according to the size that the function get
     # size - the number of slides that need to scroll to get to the right point (in order to scroll down size need to be positive / in order to scroll up size need to be negative )
     def scrollInSlidesMenuBar(self, size):
+        self.switchToPlayerIframe()
         slideHeight = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU).size['height']
         scroller = self.get_element(self.PLAYER_SCROLLER_SIDE_BAR_MENU)
         action = ActionChains(self.driver)
-        action.move_to_element(scroller)
-        action.move_by_offset(0,  (slideHeight * size))
+        action.move_to_element_with_offset(scroller, 1, 3)
         action.click_and_hold()
+        action.move_by_offset(0,  (slideHeight * size))
         action.release()
         action.perform()
         
@@ -340,19 +346,26 @@ class Player(Base):
         self.switchToPlayerIframe()
         
         sleep(2)
-        if self.clickPlayAndPause(timeToStop, timeout=120) == False:
+        if self.clickPlayAndPause(timeToStop, timeout=30) == False:
             writeToLog("INFO","FAILED to click on the player")
             return False
         
-        #TODO
         videoImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
         slideImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
         
+        slideImageResult = int(slideImage)-1 <= int(qrResult) <= int(slideImage)+1 
+        videoImage1Result = int(videoImage)-1 <= int(qrResult) <= int(videoImage)+1 
+            
+        if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
+        #if (str(playerTime) == str(videoImage) == str(slideImage) == str(qrResult)) == False:
+            writeToLog("INFO","FAILED,  video /image time are NOT match to the result that we are expecting. videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
+            return False
+        
         # Get the time in the player time line
         playerTime = utilityTestFunc.convertTimeToSecondsMSS((self.get_element(self.PLAYER_CURRENT_TIME_LABEL)).text)
-        # 
-        if (str(playerTime) == str(videoImage) == str(slideImage) == str(qrResult)) == False:
-            writeToLog("INFO","FAILED, not all slide/ video image / player time are match to the result that we are expecting. plyerTime: " +  str(playerTime) + " videoImage: " + str(videoImage) + " slideImage: " + str(slideImage))
+         
+        if (int(playerTime)-1 <= int(playerTime) <= int(playerTime)+1) == False:
+            writeToLog("INFO","FAILED,  player time is NOT match to the result that we are expecting. plyerTime: " +  str(playerTime))
             return False
         
         writeToLog("INFO","SUCCESS, slide appear in the correct time")
@@ -405,10 +418,12 @@ class Player(Base):
             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
             return False
         sleep(2)
+        
         if chapterIsclose == True:
             el = details.find_element_by_xpath("..")
             child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
             sleep(2)
+            self.scrollInSlidesMenuBar(1)
             # open chapter in order to see all the slides
             if self.clickElement(child) == False:
                 writeToLog("INFO","FAILED to open chapter in order to see all the slides")
@@ -425,6 +440,7 @@ class Player(Base):
             writeToLog("INFO","FAILED to click and close slides bar menu")
             return False
         
+        sleep(2)
         writeToLog("INFO","SUCCESS," + chapterName + ":all slides are verified and appear at the correct time")
         return True
     
@@ -441,3 +457,27 @@ class Player(Base):
         self.scrollInSlidesMenuBar(1)
         return True
         
+    # creator: Michal zomper
+    # The function only! check slides that changed their location in time line   
+    def verifyslidesThatChangedLocationInTimeLine(self, changeTimeOfSlidesList):
+        for slide in changeTimeOfSlidesList:
+            slidetime = changeTimeOfSlidesList[slide]
+            expectedSlideQrCodeResult =  utilityTestFunc.convertTimeToSecondsMSS(slide)
+            
+            if self.clickPlayAndPause(slidetime[1:], timeout=30) == False:
+                writeToLog("INFO","FAILED to click on the player")
+                return False
+            
+            videoImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.TOP)
+            slideImage =  self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
+              
+            slideImageResult = int(slideImage)-1 <= int(expectedSlideQrCodeResult) <= int(slideImage)+1 
+            videoImage1Result = int(videoImage)-1 <= int(utilityTestFunc.convertTimeToSecondsMSS(changeTimeOfSlidesList[slide])) <= int(videoImage)+1 
+                
+            if (slideImageResult == False or videoImage1Result == False) or (slideImageResult == False and videoImage1Result == False):
+                writeToLog("INFO","FAILED to verify slide that was in time: " + str(expectedSlideQrCodeResult) + " changed to time: " + str(slidetime))
+                return False
+            
+        writeToLog("INFO","SUCCESS, verify all slides changes")
+        return True
+                    
