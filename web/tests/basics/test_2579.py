@@ -14,7 +14,7 @@ class Test:
     #================================================================================================================================
     #  @Author: Inbar Willman
     # Test description:
-    # Entry that is published to private entry shouldn't be displayed in My History before it was played.
+    # Entry that is published to private channel shouldn't be displayed in My History before it was played.
     # After entry was played, it should be displayed in history page
     # The test's Flow: 
     # Login to KMS-> Upload entry -> publish entry to private channel -> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
@@ -35,9 +35,6 @@ class Test:
     channelList = ['PrivateChannelMyHistory']
     entryDescription = "description"
     entryTags = "tag1,"
-    QuizQuestion1 = 'First question'
-    QuizQuestion1Answer1 = 'First answer'
-    QuizQuestion1AdditionalAnswers = ['Second answer', 'Third question', 'Fourth question']
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     
     #run test as different instances on all the supported platforms
@@ -106,8 +103,7 @@ class Test:
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED find entry in my history")
-                return               
-              
+                return                      
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

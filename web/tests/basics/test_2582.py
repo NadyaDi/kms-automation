@@ -14,14 +14,14 @@ class Test:
     #================================================================================================================================
     #  @Author: Inbar Willman
     # Test description:
-    # Entry that is published to public channel shouldn't be displayed in My History before it was played.
+    # Entry that is published to public category shouldn't be displayed in My History before it was played.
     # After entry was played, it should be displayed in history page
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> publish entry to public channel -> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
+    # Login to KMS-> Upload entry -> publish entry to public category -> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
     # MY History page and make sure that entry exists in page -> 
     # test cleanup: deleting the uploaded file
     #================================================================================================================================
-    testNum     = "2566"
+    testNum     = "2582"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -31,11 +31,11 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName= None
+    categorylList = ['publicCategoryMyHistory']
     entryDescription = "description"
     entryTags = "tag1,"
-    channelList = [('publicChannelMyHistory')]
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -54,16 +54,16 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('MyHistory', self.testNum)
-            ########################## TEST STEPS - MAIN FLOW ####################### 
+            self.entryName = clsTestService.addGuidToString('MyHistoryEntry', self.testNum)
+            ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
             
-            writeToLog("INFO","Step 2: Going to publish entry to public channel")
-            if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False: 
+            writeToLog("INFO","Step 2: Going to publish entry to public category")
+            if self.common.myMedia.publishSingleEntry(self.entryName, self.categorylList, [], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False: 
                 self.status = "Fail"        
                 writeToLog("INFO","Step 2: FAILED failed to publish entry")
                 return          
@@ -85,7 +85,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED - New entry is displayed in my history page")
                 return
-            
             writeToLog("INFO","Step 5: Previous Step Failed as Expected - The entry should not be displayed")
             
             writeToLog("INFO","Step 6: Going to play entry")
@@ -104,8 +103,7 @@ class Test:
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED find entry in my history")
-                return               
-              
+                return                         
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
@@ -115,10 +113,9 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)              
+            self.common.base.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.base.switch_to_default_content()
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)        
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
