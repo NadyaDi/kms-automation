@@ -10,6 +10,7 @@ test_3273,Slide Deck Upload,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1
 test_3274,Slide Deck Upload - delete slides,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_3275,Slide Deck Upload - add / remove chapters,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_3283,Slide Deck Upload- A-sync upload,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_328,Slide Deck Upload- search slides,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_3276,Slide Deck Upload - change slide location,2370151-1,qakmstest.dev.kaltura.com,ythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_706,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
@@ -34,5 +35,6 @@ test_2573,My history - Add entry quiz (Private) to watch list history,2373952-1,
 test_2579,My history - Add entry (Published to channel- Private) to watch list history,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2580,My history - Add entry (Published to channel- Restricted) to watch list history,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2581,My history - Add entry (Published to channel- Open) to watch list history,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2582,My history - Add entry (Published to channel- Open) to watch list history,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2606,My history - Delete entry from KMS,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2667,My history - Entry Viewed in channel,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
