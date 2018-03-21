@@ -5,6 +5,7 @@ from logger import writeToLog
 from editEntryPage import EditEntryPage
 import enums
 import clsCommon
+import re
 
 
 class MyHistory(Base):
@@ -28,7 +29,7 @@ class MyHistory(Base):
     MY_HISTORY_ENTRY_DESCRIPTION                                  = ('xpath', "//a[@class='searchme']")
     MY_HISTORY_ENTRY_LAST_WATCHED                                 = ('xpath', "//a[@class='watch-time']")
     MY_HISTORY_ENTRY_VIEWD_IN                                     = ('xpath', "//a[contains(@href, 'channel/')")
-    MY_HISTORY_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::a[@class='dataTd entryDetails']") 
+    MY_HISTORY_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::td[@class='dataTd entryDetails']") 
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -147,6 +148,23 @@ class MyHistory(Base):
         
     # @Author: Inbar Willman   
     # Check that all entry data is correct in My History
-    def checkEntryDetailsInMyHistory(self, entryName):
+    def checkEntryDetailsInMyHistory(self, entryName, descripiton, tags, channelName):
         tmp_entry_parent = (self.MY_HISTORY_ENTRY_PARNET[0], self.MY_HISTORY_ENTRY_PARNET[1].replace('ENTRY_NAME', entryName))
         entry_text = self.get_element_text(tmp_entry_parent)
+        entryMetadata = re.search(entryName + "\n" + descripiton + "\n" + tags, entry_text)
+        # Check if entry details name, description and tags are displayed correctly
+        if entryMetadata == False:
+            writeToLog("INFO","FAILED to display correct entry details - Name, Description and tags")
+            return False 
+        
+        # Check if entry was watched a moment ago
+        entryWatchedTimeMoment = re.match("Watched a Moment ago on " + channelName, entry_text)
+        if entryWatchedTimeMoment is None:
+        # If entry waan't watched moment ago, check if it was watched less than 10 minutes ago
+            entryWatchedTimeMinutes = re.match("Watched (\d*) Minutes ago on " + channelName, entry_text)
+            if entryWatchedTimeMinutes.group(0) < 0 or entryWatchedTimeMinutes.group(0) > 30:
+                writeToLog("INFO","FAILED to display correct time when entry was watched")
+                return False 
+        
+
+        

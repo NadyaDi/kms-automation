@@ -112,13 +112,13 @@ class Test:
 #                 return  
              
             writeToLog("INFO","Step 10: Going to navigate to my history and check for entry")
-            if self.common.myHistory.waitTillLocatorExistsInMyHistory('CFEF9257_MyHistoryEntry') == False:
+            if self.common.myHistory.waitTillLocatorExistsInMyHistory('Test10') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED find entry in my history")
                 return  
              
             writeToLog("INFO","Step 11: Going to check that entry details displayed correctly")
-            if self.common.myHistory.checkEntryDetailsInMyHistory('CFEF9257_MyHistoryEntry') == False:
+            if self.common.myHistory.checkEntryDetailsInMyHistory('Test10', 'description', 'tag1', 'OpenChannelMyHistory') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED find entry in my history")
                 return   
