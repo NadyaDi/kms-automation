@@ -243,7 +243,7 @@ class Player(Base):
         self.get_element(self.PLAYER_SLIDE_SIDE_BAR_MENU).send_keys(Keys.PAGE_UP)
         sleep(3)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
-            writeToLog("INFO","FAILED to click on the slide side bar menu")
+            writeToLog("INFO","FAILED to click on the sides bar menu")
             return False
         
         sleep(2) 
