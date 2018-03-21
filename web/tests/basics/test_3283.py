@@ -64,12 +64,12 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
-            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09',
-                                            '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
-                                            '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
+            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09'}
+                                         
+                                            
            
             ##################### TEST STEPS - MAIN FLOW ##################### 
-       
+            
             writeToLog("INFO","Step 1: Going to upload first entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -125,36 +125,42 @@ class Test:
                 self.status = "Fail"
                 return
                             
-            sleep(3)     
+            sleep(6) 
             writeToLog("INFO","Step 10: Going to verify that all slides were uploaded and display in time line")
-            if self.common.player.verifySlidesInPlayerSideBar(self.slidesQrCodeAndTimeList) == False:
+            if self.common.editEntryPage.verifySlidesInTimeLine(self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 10: FAILED to verify slide change")
                 self.status = "Fail"
                 return    
-            self.common.base.switch_to_default_content()
-                  
+            
             writeToLog("INFO","Step 11: Going to navigate to entry page that upload slides")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to navigate to edit entry page: " + self.entryName)
                 return       
+            
+            writeToLog("INFO","Step 12: Going to verify that all slides display in player slides menu")
+            if self.common.player.verifySlidesInPlayerSideBar(self.slidesQrCodeAndTimeList) == False:
+                writeToLog("INFO","Step 12: FAILED to verify slide change")
+                self.status = "Fail"
+                return    
+            self.common.base.switch_to_default_content()
                               
             sleep(4)
-            writeToLog("INFO","Step 15: Going to switch the player view so that the player will be in the big window and the slides in the small window")
+            writeToLog("INFO","Step 13: Going to switch the player view so that the player will be in the big window and the slides in the small window")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to switch the player view")
+                writeToLog("INFO","Step 13: FAILED to switch the player view")
                 return  
 
             sleep(3)
             index = 0
-            writeToLog("INFO","Step 16: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
-            for i in range(4):
+            writeToLog("INFO","Step 14: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
+            for i in range(2):
                 sleep(2)
                 index = index + i + 4 
                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 16: FAILED to verify slide") 
+                    writeToLog("INFO","Step 14: FAILED to verify slide") 
                   
               
             #########################################################################

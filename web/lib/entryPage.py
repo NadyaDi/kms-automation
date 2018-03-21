@@ -161,8 +161,8 @@ class EntryPage(Base):
             sleep(3)
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
-                return False      
- 
+                return False   
+                
         elif deleteFrom == enums.Location.CATEGORY_PAGE:
             tmpCategoryName = (self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
             if self.wait_visible(tmpCategoryName, 20) == False:
@@ -175,7 +175,7 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False
 
-        writeToLog("INFO","FAILED to verify that entry deleted")
+        writeToLog("INFO","Verify that entry deleted")
         return True
         
         

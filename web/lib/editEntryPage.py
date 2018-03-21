@@ -603,6 +603,11 @@ class EditEntryPage(Base):
                 return False
             sleep(2)
             
+            # verify that slide display in timeline
+            if self.verifySlidesInTimeLine(self.mySlidesList) == False:
+                writeToLog("INFO","FAILED, Not all slides display in time line")
+                return False
+            
             # Verify cuepoint were added on the player
             if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
             #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
@@ -851,7 +856,7 @@ class EditEntryPage(Base):
             return False   
          
         if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime, multipleElements= True) == False:
-            writeToLog("INFO","FAILED insert new slide time")
+            writeToLog("INFO","FAILED insert new slide time: " + str(newSlideTime))
             return False             
             
         if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 30) == False:
@@ -865,7 +870,7 @@ class EditEntryPage(Base):
             return False  
         
         sleep(1)
-        writeToLog("INFO","Success, slide time was changed successfully")
+        writeToLog("INFO","Success, slide time '" + str(oldSlideTime) + "' was changed to '" + str(newSlideTime) + "' successfully")
         return True  
     
     
@@ -906,3 +911,22 @@ class EditEntryPage(Base):
         except:
             writeToLog("INFO","FAILED Disclaimer text wasn't found, Entry name: " + entryName)
             return False
+       
+    # Author: Michal Zomper
+    # The function go over all the the slide in time line and verify that the time is correct   
+    def verifySlidesInTimeLine(self, slidesList):
+        self.click(self.EDIT_ENTRY_TIMELINE_TAB, 15)
+        sleep(2)
+        for slide in slidesList:
+            slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(slidesList[slide])
+            locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+            if self.is_visible(locatorSlideTime) == False:
+                writeToLog("INFO","FAILED to find slide at time : '" + str(slidesList[slide]) + "' in time line")
+                return False
+            
+            writeToLog("INFO","Success, all slides display in time line")
+            return True
+            
+            
+            
+            
