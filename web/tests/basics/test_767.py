@@ -40,7 +40,7 @@ class Test:
     playlistDescription = "playlist description"
     playlistTag = "playlisttag,"
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audio\AudioU2_6.wma'
+    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\AudioU2_6.wma'
     filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     
@@ -63,7 +63,7 @@ class Test:
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('Audio', self.testNum)
-            self.entryName3 = clsTestService.addGuidToString('Video', self.testNum)
+            self.entryName3 = clsTestService.addGuidToString('Video2', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.playlisTitle = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.entriesNames = [self.entryName1, self.entryName2, self.entryName3]

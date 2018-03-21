@@ -148,18 +148,21 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to click on delete button")
             return False
         
-        if self.click(self.ENTRY_PAGE_CONFIRM_DELETE_BUTTON, 20) == False:
+        sleep(2)
+        if self.click(self.ENTRY_PAGE_CONFIRM_DELETE_BUTTON, 20, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click confirm delete button")
             # Click on the actions button to close the drop down list 
             self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON, 15)
             return False
         
+        sleep(5)
         # Verify entry was delete: after entry delete the page that will display is the page that we enter the entry from
-        if deleteFrom == enums.Location.MY_MEDIA:
+        if deleteFrom == enums.Location.MY_MEDIA or deleteFrom == enums.Location.ENTRY_PAGE:
+            sleep(3)
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
-                return False      
- 
+                return False   
+                
         elif deleteFrom == enums.Location.CATEGORY_PAGE:
             tmpCategoryName = (self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
             if self.wait_visible(tmpCategoryName, 20) == False:
@@ -172,7 +175,7 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False
 
-        writeToLog("INFO","FAILED to verify that entry deleted")
+        writeToLog("INFO","Verify that entry deleted")
         return True
         
         
@@ -204,6 +207,7 @@ class EntryPage(Base):
     def waitTillMediaIsBeingProcessed(self, timeout=150):
         sleep(3)
         self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
+        self.wait_visible(self.clsCommon.player.PLAYER_IFRAME, 60)
         return True
 
       

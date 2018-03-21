@@ -23,6 +23,9 @@ class MyPlaylists(Base):
     PLAYLIST_DELETE_BUTTON                   = ('xpath', "//i[contains(@class,'icon-trash')]")
     PLAYLIST_DELETE_BUTTON_CONFIRM           = ('xpath', "//a[@class='btn btn-danger']")
     PLAYLIST_ENTRY_NAME_IN_PLAYLIST          = ('xpath', "//a[contains(@href,'/media/') and contains(text(), 'ENTRY_NAME')]")
+    PLAYLIST_SAVE_BUTTON                     = ('xpath', "//button[@class='btn btn-primary saveBtn']")
+    PLAYLIST_SAVED_ALERT                     = ('xpath', "//div[@class='alert alert-success ']")
+    MY_PLAYLIST_TABLE_SIZE                      = ('xpath',"//table[@class='table sortable table-condensed table-hover']/tbody/tr")
     #============================================================================================================
 
     # TODO BOM add description and how to use (playlistName....)
@@ -129,7 +132,6 @@ class MyPlaylists(Base):
         # Check if we are already in my media page
         if forceNavigate == False:
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL, False, 1) == True:
-                writeToLog("INFO","Success Already in my playlists page")
                 return True
         
         # Click on User Menu Toggle Button
@@ -219,6 +221,45 @@ class MyPlaylists(Base):
                 writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
                 return False                
                 
+        except NoSuchElementException:
+            return False
+            
+        return True
+    
+    
+        #  @Author: Tzachi Guetta      
+    def shufflePlaylistEntries(self, playlistName, entriesList, indexEntryFrom, indexEntryTo):
+        try:
+            if playlistName != '':
+                if self.navigateToMyPlaylists() == False:
+                    writeToLog("INFO","FAILED to navigate to my Playlists")
+                    return False
+                 
+                tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
+                if self.click(tmp_playlist_name) == False:
+                    writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
+                    return False
+                
+                tmp_entry_name = (self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[0], self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[1].replace('ENTRY_NAME', entriesList[indexEntryFrom]))
+                source_element = self.get_element(tmp_entry_name)
+                
+
+                heightOfEntry = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
+                moveX = 0
+                moveY = int(heightOfEntry + (indexEntryTo * heightOfEntry))
+                if indexEntryFrom > indexEntryTo:
+                    moveY = int(heightOfEntry - (indexEntryTo * heightOfEntry))#to verify it
+                ActionChains(self.driver).drag_and_drop_by_offset(source_element, moveX, moveY).perform()
+                
+                sleep(2)
+                if self.click(self.PLAYLIST_SAVE_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on playlist 'Save' Button")
+                    return False
+                
+                if self.is_present(self.PLAYLIST_SAVED_ALERT, 10) == False:
+                    writeToLog("INFO","FAILED confirmation of save msg wasn't presented")
+                    return False
+                        
         except NoSuchElementException:
             return False
             

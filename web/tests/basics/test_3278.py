@@ -9,12 +9,15 @@ from utilityTestFunc import *
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
-    testNum     = "346"
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Main user add different user as a collaboration user on an entry.
+    # The collaboration permission is co edit
+    # The entry is published to category so the collaborator user can see the entry
+    # Login with the collaborator user - go to entry option tab and change entry options EnableComments / CloseDiscussion / EveryoneToCreateClip successfully. 
+    #================================================================================================================================
+    testNum     = "3278"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -54,7 +57,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,capture,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Collaboration", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Collaboration co edit -Options tab", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:

@@ -61,10 +61,6 @@ class MyMedia(Base):
             if el.size['width']!=0 and el.size['height']!=0:
                 return el
         return False        
-#         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[0]
-#         else:
-#             return self.get_elements(self.MY_MEDIA_SEARCH_BAR)[1]
     
     
     # This method, clicks on the menu and My Media
@@ -594,12 +590,16 @@ class MyMedia(Base):
             return False
     
         return False
-        
-        
-    # Author: Tzachi Guetta 
-    def getTop(self, entryName):
+
+        # Author: Tzachi Guetta 
+    def getTop(self, entryName, location):
         try: 
-            tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
+            if location == enums.Location.MY_MEDIA:
+                tmpEntry = self.replaceInLocator(self.clsCommon.myMedia.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
+                
+            elif location == enums.Location.MY_PLAYLISTS:
+                tmpEntry = self.replaceInLocator(self.clsCommon.myPlaylists.PLAYLIST_ENTRY_NAME_IN_PLAYLIST, "ENTRY_NAME", entryName)
+                
             entrytop = self.get_element_attributes(tmpEntry)['top']
             writeToLog("INFO","The top of: '" + entryName + "' is: " + str(entrytop))
             return entrytop
@@ -610,18 +610,23 @@ class MyMedia(Base):
     
     
     # Author: Tzachi Guetta 
-    def verifyEntriesOrder(self, expectedEntriesOrder):
+    def verifyEntriesOrder(self, expectedEntriesOrder, location = enums.Location.MY_MEDIA):
         try:         
-            if self.navigateToMyMedia() == False:
-                return False
+            if location == enums.Location.MY_MEDIA:
+                if self.clsCommon.myMedia.navigateToMyMedia() == False:
+                    return False
             
-            if self.scrollToBottom() == False:
-                writeToLog("INFO","FAILED to scroll to bottom in my-media")
-                return False                  
+                if self.scrollToBottom() == False:
+                    writeToLog("INFO","FAILED to scroll to bottom in my-media")
+                    return False
+                
+            elif location == enums.Location.MY_PLAYLISTS: 
+                if self.clsCommon.myPlaylists.navigateToMyPlaylists(True) == False:
+                    return False
             
             tmpTop = -9999
             for entry in expectedEntriesOrder:
-                currentEntryTop = self.getTop(entry)
+                currentEntryTop = self.getTop(entry, location)
                 if currentEntryTop != False:
                     if currentEntryTop < tmpTop:
                         writeToLog("INFO","FAILED, the location of: '" + entry + "' is not as expected. (the top is '" + str(currentEntryTop) + "' and it should be higher than: '" + str(tmpTop) + "')")
@@ -634,7 +639,8 @@ class MyMedia(Base):
             return False
     
         return True
-
+    
+    
     # Author: Tzachi Guetta 
     def isEntryPresented(self, entryName, isExpected):
         try:         

@@ -6,16 +6,22 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import enums
-
+import collections
 
 class Test:
     
-    #==============================================================================================================
-    # Test Description 
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    # Test Description Test Description Test Description Test Description Test Description Test Description
-    #==============================================================================================================
-    testNum     = "352"
+    #================================================================================================================================
+    #  @Author: Michal Zomper
+    # Test description:
+    # Slide Deck Upload - delete slides:
+    # Enter entry edit page and go to time line tab
+    # Upload a pdf file.
+    # All file slides will spread evenly in the entry time line
+    # In the player check that all the slides appear in the slides menu
+    # From the Time line delete several slides 
+    # In the player check that just the needed slides appear in the slides menu
+    #================================================================================================================================
+    testNum     = "3274"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -28,7 +34,7 @@ class Test:
     entryName = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4'
     slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
     slidesQrCodeAndTimeList = None
     deleteSlidesList = None
@@ -52,12 +58,14 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete slides", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
-            # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
+            # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2
+            self.slidesQrCodeAndTimeList = collections.OrderedDict() 
             self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09',
                                             '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
                                             '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
-            self.deleteSlidesList = {'5': '00:05', '11': '00:11','5': '00:05' ,'15': '00:15', '21': '00:21','24': '00:24','28': '00:28'}
+            self.deleteSlidesList = collections.OrderedDict()
+            self.deleteSlidesList = {'5': '00:05', '11': '00:11','15': '00:15', '21': '00:21','24': '00:24','28': '00:28'}
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry")
@@ -106,7 +114,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify only the correct slides display in the player")
                 return  
-
+             
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload -delete slide' was done successfully")            
         # if an exception happened we need to handle it and fail the test       

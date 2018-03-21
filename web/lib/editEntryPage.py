@@ -60,7 +60,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CAPTION_SAVE_BUTTON                              = ('xpath', "//a[@class='btn btn-primary captions-upload-modal-save-btn' and contains(text(), 'Save')]")
     EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE            = ('xpath', "//span[@data-type='label' and contains(text(), 'LABEL_NAME')]")# When using this locator, replace 'LABEL_NAME' string with your real label name
     EDIT_ENTRY_REMOVE_CAPTION_BUTTON                            = ('xpath', "//i[@class='icon-remove']")
-    EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete')]")
+    EDIT_ENTRY_CONFIRM_DELETE_BUTTON                            = ('xpath', "//a[@class='btn btn-danger' and contains(text(), 'Delete') and @href='javascript:;']")
     EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON              = ('xpath', "//a[@class='btn btn-large fulldeck btn-combo kmstooltip' and @aria-label='Upload Slides Deck (PPT, PPTX, PDF)']")
     EDIT_ENTRY_DOWNLOADS_FLAVOR                                 = ('xpath', "//label[@class='checkbox' and contains(.,'FLAVOR_NAME')]") #pay attention: this locator is relevant to SOURCE Flavor ONLY
     EDIT_ENTRY_UPLOAD_SLIDES_BUTTON                             = ('id', 'upload-fulldeck')
@@ -78,6 +78,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHAPTER_IN_TIME_LINE                             = ('xpath', "//div[@class='k-cuepoint chapter ui-draggable ui-draggable-handle' and @data-time='CHAPTER_TIME']")# When using this locator, replace 'CHAPTER_TIME' string with your real chapter time
     EDIT_ENTRY_DELETE_CHAPTER_BUTTON                            = ('xpath', "//a[@class='btn btn-link remove' and @role='button']")
     EDIT_ENTRY_DISCLAIMER_TEXT_BOX                              = ('xpath', "//div[@id='disclaimet-text']")
+    EDIT_ENTRY_BACK_TO_TIMELINE                                 = ('xpath', "//a[contains(text(), 'Back to Timeline')]" )
     #=============================================================================================================
     
     
@@ -569,45 +570,57 @@ class EditEntryPage(Base):
     
     # Author: Michal Zomper
     # NOT finish
-    def uploadSlidesDeck(self, filePath, mySlidesList):
+    def uploadSlidesDeck(self, filePath, mySlidesList, waitToFinish=True):
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
-         
+          
         # Click on the upload slides button in the time line bar 
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_DECK_TIME_LINE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides deck button in the time line bar")
             return False           
-         
+          
         # click on the upload button 
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides button")
             return False              
-         
+          
         if self.click(self.EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE, 20) == False:
             writeToLog("INFO","FAILED to click on choose a file to upload button")
             return False            
-         
+          
         self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
-         
+          
         # verify ptt start processing
         if self.wait_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 20) == False:
             writeToLog("INFO","FAILED, Can NOT find upload deck processing message")
             return False
-          
-        # Wait until the ptt will upload   
-        if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 300) == False:
-            writeToLog("INFO","FAILED, upload deck processing isn't done after 5 minutes")
-            return False
-        sleep(2)
         
-        # Verify cuepoint were added on the player
-        if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
-        #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
-            writeToLog("INFO","FAILED, Not all cuepoints were verify")
-            return False 
-        
-        writeToLog("INFO","Success presentation was upload and added to time line successfully")
+        if waitToFinish == True: 
+            # Wait until the ptt will upload   
+            if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 360) == False:
+                writeToLog("INFO","FAILED, upload deck processing isn't done after 6 minutes")
+                return False
+            sleep(2)
+            
+            # verify that slide display in timeline
+            if self.verifySlidesInTimeLine(self.mySlidesList) == False:
+                writeToLog("INFO","FAILED, Not all slides display in time line")
+                return False
+            
+            # Verify cuepoint were added on the player
+            if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
+            #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
+                writeToLog("INFO","FAILED, Not all cuepoints were verify")
+                return False
+             
+            writeToLog("INFO","Success presentation was upload and added to time line successfully")
+        else:
+            sleep(5)
+            if self.click(self.EDIT_ENTRY_BACK_TO_TIMELINE, 30) == False:
+                writeToLog("INFO","FAILED to click on 'back to timeline' button")
+                return False   
+             
         return True
       
     # Author: Tzachi Guetta
@@ -666,7 +679,7 @@ class EditEntryPage(Base):
         if self.wait_visible(tmp_entry_name, 15) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
             return False
-        
+        sleep(3)
         writeToLog("INFO","Success, entry page open")
         return True
      
@@ -677,17 +690,20 @@ class EditEntryPage(Base):
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(slideTime) + "' in time line")
             return False
-        
+        sleep(2)
+        self.hover_on_element(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE)
+        sleep(1)
         if self.click(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE, 20) == False:
             writeToLog("INFO","FAILED to click on delete slide button")
             return False
             
-        sleep(2)
+        sleep(3)
         deleteEl = self.driver.find_elements_by_xpath(self.EDIT_ENTRY_CONFIRM_DELETE_BUTTON[1])
         if self.clickElement(deleteEl, True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False   
         
+        sleep(1)
         if self.is_visible(locatorSlideTime) == True:
             writeToLog("INFO","FAILED, slide in time '" + str(slideTime) + "' was found although this slide was deleted")
             return False   
@@ -745,7 +761,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED click on save chapter button")
             return False               
         
-        sleep(3)
+        sleep(5)
         # Verify chapter saved 
         if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS) == False:
             writeToLog("INFO","FAILED to fined saved chapter success label")
@@ -840,11 +856,11 @@ class EditEntryPage(Base):
             return False   
          
         if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime, multipleElements= True) == False:
-            writeToLog("INFO","FAILED insert new slide time")
+            writeToLog("INFO","FAILED insert new slide time: " + str(newSlideTime))
             return False             
             
-        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 20) == False:
-            writeToLog("INFO","FAILED click on save button")
+        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 30) == False:
+            writeToLog("INFO","FAILED to click on save button")
             return False               
         
         sleep(3)
@@ -854,7 +870,7 @@ class EditEntryPage(Base):
             return False  
         
         sleep(1)
-        writeToLog("INFO","Success, slide time was changed successfully")
+        writeToLog("INFO","Success, slide time '" + str(oldSlideTime) + "' was changed to '" + str(newSlideTime) + "' successfully")
         return True  
     
     
@@ -895,3 +911,22 @@ class EditEntryPage(Base):
         except:
             writeToLog("INFO","FAILED Disclaimer text wasn't found, Entry name: " + entryName)
             return False
+       
+    # Author: Michal Zomper
+    # The function go over all the the slide in time line and verify that the time is correct   
+    def verifySlidesInTimeLine(self, slidesList):
+        self.click(self.EDIT_ENTRY_TIMELINE_TAB, 15)
+        sleep(2)
+        for slide in slidesList:
+            slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(slidesList[slide])
+            locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+            if self.is_visible(locatorSlideTime) == False:
+                writeToLog("INFO","FAILED to find slide at time : '" + str(slidesList[slide]) + "' in time line")
+                return False
+            
+            writeToLog("INFO","Success, all slides display in time line")
+            return True
+            
+            
+            
+            
