@@ -6,6 +6,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import enums
+import collections
 
 
 
@@ -63,12 +64,16 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
+            self.slidesQrCodeAndTimeList = collections.OrderedDict()
             self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09'}
+            self.slidesWithName = collections.OrderedDict()
+            self.slidesWithName = {'second slide': '00:02','fifth slide': '00:05', 'eighth slide': '00:08'}
                                          
                                             
            
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
+            self.common.player.searchSlideInSlidesBarMenu("second slide")
             writeToLog("INFO","Step 1: Going to upload first entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -88,69 +93,32 @@ class Test:
                 return
                           
             writeToLog("INFO","Step 4: Going add upload slide deck")
-            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList, waitToFinish=False) == False:
+            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add slides to entry time line")
                 return
+            
+            
+            writeToLog("INFO","Step 5: Going add name to several slides")
+            if self.common.editEntryPage.addNameToslides(self.slidesWithName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to add name to slides")
+                return
                                    
-            writeToLog("INFO","Step 5: Going to navigate to entry page")
+            writeToLog("INFO","Step 6: Going to navigate to entry page")
             if self.common.entryPage.navigateToEntry(self.entryName1, navigateFrom = enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName1)
+                writeToLog("INFO","Step 6: FAILED to navigate to entry page: " + self.entryName1)
                 return  
              
-            writeToLog("INFO","Step 6: Going to play/pause video")
-            if self.common.player.clickPlayAndPause(self.timeToStop) == False:
-                writeToLog("INFO","Step 6: FAILED to stop player at: " + self.timeToStop)
-                self.status = "Fail"
-                return               
-               
-            self.common.base.switch_to_default_content()  
-            writeToLog("INFO","Step 7: Going to delete entry")
-            if self.common.entryPage.deleteEntryFromEntryPage(self.entryName1, deleteFrom= enums.Location.ENTRY_PAGE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to delete entry '" + self.entryName1 + "' from entry page")
-                return
             
-            writeToLog("INFO","Step 8: Going to navigate to edit entry page that upload slides")
-            if self.common.editEntryPage.navigateToEditEntry(self.entryName, navigateFrom = enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to edit entry page: " + self.entryName)
-                return       
-                  
-            writeToLog("INFO","Step 9: Going to open time line tab in edit entry page")
-            if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
-                writeToLog("INFO","Step 9: FAILED to open time line tab")
-                self.status = "Fail"
-                return
-                            
-            sleep(6) 
-            writeToLog("INFO","Step 10: Going to verify that all slides were uploaded and display in time line")
-            if self.common.editEntryPage.verifySlidesInTimeLine(self.slidesQrCodeAndTimeList) == False:
-                writeToLog("INFO","Step 10: FAILED to verify slide change")
-                self.status = "Fail"
-                return    
             
-            writeToLog("INFO","Step 11: Going to navigate to entry page that upload slides")
-            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to navigate to edit entry page: " + self.entryName)
-                return       
             
-            writeToLog("INFO","Step 12: Going to verify that all slides display in player slides menu")
-            if self.common.player.verifySlidesInPlayerSideBar(self.slidesQrCodeAndTimeList) == False:
-                writeToLog("INFO","Step 12: FAILED to verify slide change")
-                self.status = "Fail"
-                return    
-            self.common.base.switch_to_default_content()
-                              
-            sleep(4)
-            writeToLog("INFO","Step 13: Going to switch the player view so that the player will be in the big window and the slides in the small window")
-            if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to switch the player view")
-                return  
-
+            
+            
+            
+            
+            
             sleep(3)
             index = 0
             writeToLog("INFO","Step 14: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
