@@ -72,13 +72,14 @@ class EditEntryPage(Base):
     EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('xpath',"//a[@id='refresh' and @class='btn btn-block']")
     EDIT_ENTRY_ADD_CHAPTER                                      = ('xpath', "//a[@class='btn btn-large chapter kmstooltip' and @aria-label='Create a new Chapter']")
     EDIT_ENTRY_INSERT_CHAPTER_TITLE                             = ('xpath',"//input[@id='k-title' and @placeholder='Enter Chapter Title']")
-    EDIT_ENTRY_INSERT_CHAPTER_TIME                              = ('xpath', "//input[@id='k-currentTime' and @name='chapters[time]']")
-    EDIT_ENTRY_SAVE_CHAPTER                                     = ('xpath', "//a[@id='save' and @class='btn btn-large btn-block btn-primary']")
-    EDIT_ENTRY_SAVED_CHAPTER_SUCCESS                            = ('xpath', "//a[@id='saved' and @class='btn btn-large btn-block btn-success']")
+    EDIT_ENTRY_INSERT_TIME_TO_SLIDE_OR_CHAPTER                  = ('xpath', "//input[@id='k-currentTime' and @name='chapters[time]']")
+    EDIT_ENTRY_SAVE_CHAPTER_OR_SLIDE                            = ('xpath', "//a[@id='save' and @class='btn btn-large btn-block btn-primary']")
+    EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG               = ('xpath', "//a[@id='saved' and @class='btn btn-large btn-block btn-success']")
     EDIT_ENTRY_CHAPTER_IN_TIME_LINE                             = ('xpath', "//div[@class='k-cuepoint chapter ui-draggable ui-draggable-handle' and @data-time='CHAPTER_TIME']")# When using this locator, replace 'CHAPTER_TIME' string with your real chapter time
     EDIT_ENTRY_DELETE_CHAPTER_BUTTON                            = ('xpath', "//a[@class='btn btn-link remove' and @role='button']")
     EDIT_ENTRY_DISCLAIMER_TEXT_BOX                              = ('xpath', "//div[@id='disclaimet-text']")
     EDIT_ENTRY_BACK_TO_TIMELINE                                 = ('xpath', "//a[contains(text(), 'Back to Timeline')]" )
+    EDIT_ENTRY_INSERT_SLIDE_TITLE                               = ('xpath',"//input[@id='k-title' and @placeholder='Enter Slide Title']")
     #=============================================================================================================
     
     
@@ -753,17 +754,17 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED insert chapter name")
             return False
         
-        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, chapterTime) == False:
+        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_TIME_TO_SLIDE_OR_CHAPTER, chapterTime) == False:
             writeToLog("INFO","FAILED insert chapter time")
             return False           
             
-        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 20) == False:
+        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER_OR_SLIDE, 20) == False:
             writeToLog("INFO","FAILED click on save chapter button")
             return False               
         
         sleep(5)
         # Verify chapter saved 
-        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS) == False:
+        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG) == False:
             writeToLog("INFO","FAILED to fined saved chapter success label")
             return False  
            
@@ -855,17 +856,17 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
             return False   
          
-        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_CHAPTER_TIME, newSlideTime, multipleElements= True) == False:
+        if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_TIME_TO_SLIDE_OR_CHAPTER, newSlideTime, multipleElements= True) == False:
             writeToLog("INFO","FAILED insert new slide time: " + str(newSlideTime))
             return False             
             
-        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER, 30) == False:
+        if self.click(self.EDIT_ENTRY_SAVE_CHAPTER_OR_SLIDE, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False               
         
         sleep(3)
         # Verify new time saved 
-        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_SUCCESS, multipleElements=True) == False:
+        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, multipleElements=True) == False:
             writeToLog("INFO","FAILED to fined saved success label")
             return False  
         
@@ -927,6 +928,36 @@ class EditEntryPage(Base):
             writeToLog("INFO","Success, all slides display in time line")
             return True
             
+    
+    # Author: Michal Zomper        
+    def addNameToslides(self,slidsWithNameList):
+        self.click(self.EDIT_ENTRY_TIMELINE_TAB, 15)
+        sleep(2)
+        for slide in slidsWithNameList:
+            slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(slidsWithNameList[slide])
+            locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+            if self.click(locatorSlideTime, 20) == False:
+                writeToLog("INFO","FAILED to find and click on slide at time : '" + str(slidsWithNameList[slide]) + "' in time line")
+                return False
             
+            sleep(1)
+            self.hover_on_element(self.EDIT_ENTRY_INSERT_SLIDE_TITLE)
+            if self.send_keys(self.EDIT_ENTRY_INSERT_SLIDE_TITLE, slide) == False:
+                writeToLog("INFO","FAILED insert slide name")
+                return False
             
+            if self.click(self.EDIT_ENTRY_SAVE_CHAPTER_OR_SLIDE, 20) == False:
+                writeToLog("INFO","FAILED click on save slide button")
+                return False 
             
+            sleep(5)
+            # Verify chapter saved 
+            if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to fined saved slide success label")
+                return False
+              
+        writeToLog("INFO","Success, name was added to all needed slides")
+        return True
+    
+   
+        

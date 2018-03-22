@@ -40,6 +40,7 @@ class Player(Base):
     PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS                         = ('xpath', "//span[@class='toggleAll icon-toggleAll']")
     PLAYER_QUIZ_CONTINUE_BUTTON                                 = ('xpath', "//div[@class='confirm-box' and text()='Continue']")
     PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON                             = ('xpath', "//div[@class='ftr-right' and text()='SKIP FOR NOW']")
+    PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU                    = ('xpath', "//input[@id='searchBox' and @placeholder='Search']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -478,4 +479,22 @@ class Player(Base):
             
         writeToLog("INFO","SUCCESS, verify all slides changes")
         return True
-                    
+      
+    # creator: Michal zomper       
+    def searchSlideInSlidesBarMenu(self, slideName, slideTime):   
+        self.switchToPlayerIframe() 
+        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+            writeToLog("INFO","FAILED to click and open slides bar menu")
+            return False
+        sleep(2)
+          
+        if self.send_keys(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU , slideName + Keys.ENTER) == False:
+            writeToLog("INFO","FAILED to find and click on search textbox in slides bar menu")
+            return False
+        
+        slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', slideTime))
+        if self.wait_visible(slide_time) == False:
+            writeToLog("INFO","FAILED to verify slide time ' " + str(slideTime) + "' in the slide menu bar")
+            return False
+        
+                
