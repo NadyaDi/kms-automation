@@ -429,10 +429,28 @@ class Channel(Base):
                 writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
                 return False
             
-
+    #  Author: Elad
+    #  Description:Verify multi entries in channel
+    def verifyIfMultipleEntriesInChannel(self, channelName, entriesList, isExpected=True):
+        try:                
+            for entry in entriesList:
+                if self.verifyIfSingleEntryInChannel(channelName, entry, isExpected=True) == False:
+                    writeToLog("INFO","FAILED to verify entry on channel " + entry)
+                    return False    
+        except NoSuchElementException:
+            if isExpected == False:
+                writeToLog("INFO","NOT Expected: Entry wasn't found in the channel as expected")
+                return True
+            else:
+                writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
+                return False
+            
+        return True
+    
+    
     #@Author: Elad Binyamin 
     #Description:Import entries channel to another channel
-    def importChannel (self, channelNameFrom, channelNameTo, entryName):
+    def importChannel(self, channelNameFrom, channelNameTo, entriesList, toVerify=False):
         try:
             if self.navigateToChannel(channelNameTo) == False:
                 writeToLog("INFO","FAILED to native to my channels page")
@@ -465,9 +483,10 @@ class Channel(Base):
                 return False
             sleep(3)
             
-            if self.verifyIfSingleEntryInChannel(channelNameTo, entryName, isExpected=True) == False:
-                writeToLog("INFO","FAILED to verify entry on channel ")
-                return False
+            if toVerify == True:
+                if self.verifyIfMultipleEntriesInChannel(channelNameTo, entriesList, isExpected = True) == False:
+                    writeToLog("INFO","FAILED to verify entries on channel ")
+                    return False
              
         except NoSuchElementException:
             return False
@@ -664,7 +683,7 @@ class Channel(Base):
     #  @Author: Tzachi Guetta    
     def addContentToChannel(self, channelName, entriesNames, isChannelModerate):
         try:                
-            if self.navigateToChannel(channelName, enums.Location.CHANNELS_PAGE) == False:
+            if self.navigateToChannel(channelName, enums.Location.MY_CHANNELS_PAGE) == False:
                 writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
                 return False
             

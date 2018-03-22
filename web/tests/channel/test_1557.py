@@ -33,7 +33,9 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName1 = None
+    entryName2 = None
+    entryName3 = None
     channelName1 = None
     channelName2 = None
     entryDescription = "Entry description"
@@ -64,14 +66,19 @@ class Test:
             ########################################################################
             self.channelName1 = clsTestService.addGuidToString('Channel name1', self.testNum)
             self.channelName2 = clsTestService.addGuidToString('Channel name2', self.testNum)
-            self.entryName = clsTestService.addGuidToString('ImportChannel', self.testNum)
+            self.entryName1 = clsTestService.addGuidToString('ImportChannel1', self.testNum)
+            self.entryName2 = clsTestService.addGuidToString('ImportChannel2', self.testNum)
+            self.entryName3 = clsTestService.addGuidToString('ImportChannel3', self.testNum)
             
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
-                return
+            
+            entriesList = [self.entryName1 ,self.entryName2 ,self.entryName3]
+            for entry in entriesList:
+                if self.common.upload.uploadEntry(self.filePath, entry, self.entryDescription, self.entryTags) == None:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                    return
             
             writeToLog("INFO","Step 2: Going to create Channel#1")
             if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
@@ -86,13 +93,13 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to publish single entry")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName1]) == False:
+            if self.common.channel.addContentToChannel(self.channelName1, entriesList, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry to Channel#1")
                 return
             
             writeToLog("INFO","Step 5: Going to import channel")
-            if self.common.channel.importChannel(self.channelName1, self.channelName2, self.entryName) == False:
+            if self.common.channel.importChannel(self.channelName1, self.channelName2, entriesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to import channel 1 to Channel#2")
                 return
