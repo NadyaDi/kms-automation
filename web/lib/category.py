@@ -42,7 +42,7 @@ class Category(Base):
         # Click on the category name in the nav bar
         tmpNavCategoryName = (self.CATEGORY_NAME_NAV_BAR[0], self.CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', categoryName))
         if self.click(tmpNavCategoryName, 30) == False:
-            writeToLog("INFO","FAILED to click on category name '" + tmpNavCategoryName + "' in the nav bar")
+            writeToLog("INFO","FAILED to click on category name '" + categoryName + "' in the nav bar")
             return False
         
         # Verify category page open
