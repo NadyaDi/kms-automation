@@ -56,7 +56,7 @@ class Test:
             self.entryName1 = clsTestService.addGuidToString('Audio-entry1')
             self.entryName2 = clsTestService.addGuidToString('Video-entry2')
             self.entryName3 = clsTestService.addGuidToString('Image-entry3')
-            self.categoryName = "KMS-Automation"
+            self.categoryName = "Apps Automation Category"
             
             self.audioEntry = UploadEntry(self.filePathAudio, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)
             self.videoEntry = UploadEntry(self.filePathVideo, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
