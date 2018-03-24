@@ -605,7 +605,7 @@ class EditEntryPage(Base):
             sleep(2)
             
             # verify that slide display in timeline
-            if self.verifySlidesInTimeLine(self.mySlidesList) == False:
+            if self.verifySlidesInTimeLine(mySlidesList) == False:
                 writeToLog("INFO","FAILED, Not all slides display in time line")
                 return False
             
