@@ -7,6 +7,7 @@ import clsTestService
 import enums
 from localSettings import *
 import localSettings
+from upload import UploadEntry
 from utilityTestFunc import *
 
 
@@ -60,10 +61,16 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('Playlist_entry3')
             self.entryName4 = clsTestService.addGuidToString('Playlist_entry4')
             self.entryName5 = clsTestService.addGuidToString('Playlist_entry5')
+            
+            self.entry1 = UploadEntry(self.filePath, self.entryName1, self.entryDescription, self.entryTags)
+            self.entry2 = UploadEntry(self.filePath, self.entryName2, self.entryDescription, self.entryTags)
+            self.entry3 = UploadEntry(self.filePath, self.entryName3, self.entryDescription, self.entryTags)
+            self.entry4 = UploadEntry(self.filePath, self.entryName4, self.entryDescription, self.entryTags)
+            self.entry5 = UploadEntry(self.filePath, self.entryName5, self.entryDescription, self.entryTags)
+            uploadEntriesList = [self.entry1, self.entry2, self.entry3, self.entry4, self.entry5]            
+            
             self.playlistName = clsTestService.addGuidToString('Playlist_reorder', self.testNum)
             self.entriesList = [self.entryName5, self.entryName4, self.entryName3, self.entryName2, self.entryName1]
-#           TO-DO: move the below line to "crate evn test"
-#           self.common.admin.adminDownloadMedia(True)
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -71,20 +78,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return             
-            
-            self.entriesToUpload = {
-                self.entryName1: self.filePath, 
-                self.entryName2: self.filePath,
-                self.entryName3: self.filePath,
-                self.entryName4: self.filePath,
-                self.entryName5: self.filePath }
-            
+
             writeToLog("INFO","Step 2: Going to upload 5 entries")
-            if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
+            if self.common.upload.uploadMulitple(uploadEntriesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
-            
+                        
             writeToLog("INFO","Step 2: Going to upload 5 entries")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, playlistName=self.playlistName, toCreateNewPlaylist=True) == False:
                 self.status = "Fail"

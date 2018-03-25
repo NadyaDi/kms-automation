@@ -234,6 +234,7 @@ class Upload(Base):
 #                     return entryID
                 writeToLog("INFO","Successfully uploaded entry: '" + entry.name + "'"", entry ID: '" + entryID + "'")
                 uploadboxCount += 1
+                sleep(1)
                 continue
             else:
                 writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
