@@ -103,7 +103,7 @@ class Common():
 
         elif navigateTo == enums.Location.CATEGORY_PAGE:
             if self.category.navigateToCategory(nameValue) == False:
-                raise Exception("INFO","FAILED navigate to Category: " + nameValue)
+                raise Exception("INFO","FAILED navigate to Category: " + str(nameValue))
 
         elif navigateTo == enums.Location.MY_HISTORY:
             if self.myHistory.navigateToMyHistory(forceNavigate) == False:
