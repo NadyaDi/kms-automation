@@ -1,6 +1,7 @@
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
+
 from base import *
 import clsTestService
 import enums
@@ -32,7 +33,9 @@ class Player(Base):
     PLAYER_SIDE_BAR_MENU_PARENT                                 = ('xpath',"//div[@class='nano-content']")   
     PLAYER_SLIDE_IN_SIDE_BAR_MENU                               = ('xpath',"//li[contains (@class,'mediaBox slideBox')]")
     PLAYER_SILDE_START_TIME                                     = ('xpath', "//span[contains(text(), 'SLIDE_TIME')]") # When using this locator, replace 'SLIDE_TIME' string with your real slide_time
+    PLAYER_SLIDE_RESULT_NO_MATCH                                = ('xpath', "//li[contains(@class,'resultNoMatch')]")
     PLAYER_SCROLLER_SIDE_BAR_MENU                               = ('xpath', "//div[@class='nano-slider']")
+    PLAYER_SLIDE_MENU_BAR_CANCEL_SEARCH_BUTTON                  = ('xpath', "//div[@id='searchBoxCancelIcon' and @class='searchIcon icon-clear tooltipBelow active']")
     PLAYER_SLIDE_DECK_CHAPTER_PARENT                            = ('xpath', "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']/ancestor::div[@class='boxInfo']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
     PLAYER_SLIDE_DECK_CHAPTER                                   = ("xpath", "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
     PLAYER_SLIDE_NUMBER                                         = ('xpath', "//div[@class='slideNumber' and @title='Slide number' and contains(text(),'SLIDE_NUMBER')]") # When using this locator, replace 'SLIDE_NUMBER' string with your real slide number
@@ -402,15 +405,17 @@ class Player(Base):
             return False
 
         chapterDetailsList = (details.text).split('\n')
-        
+        sleep(1)
         # check chapter details
         if chapterDetailsList[1] != chapterName:
             writeToLog("INFO","FAILED, chapter name is not correct")
             return False
-
+        
+        # Check chapter start time
         if chapterDetailsList[2] != slidesListInChapter[next(iter(slidesListInChapter))]:
             writeToLog("INFO","FAILED, chapter time is not correct")
             return False
+        
         sleep(2)
         if self.MoveToChapter(chapterName) == False:
             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
@@ -480,21 +485,39 @@ class Player(Base):
         writeToLog("INFO","SUCCESS, verify all slides changes")
         return True
       
-    # creator: Michal zomper       
-    def searchSlideInSlidesBarMenu(self, slideName, slideTime):   
+    # creator: Michal zomper   
+    # totalNumberOfslides - the total number of slides that were uploaded to the entry    
+    def searchSlideInSlidesBarMenu(self, slidesForSearchList, totalNumberOfslides):   
         self.switchToPlayerIframe() 
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click and open slides bar menu")
             return False
         sleep(2)
           
-        if self.send_keys(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU , slideName + Keys.ENTER) == False:
-            writeToLog("INFO","FAILED to find and click on search textbox in slides bar menu")
-            return False
-        
-        slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', slideTime))
-        if self.wait_visible(slide_time) == False:
-            writeToLog("INFO","FAILED to verify slide time ' " + str(slideTime) + "' in the slide menu bar")
-            return False
-        
+        for slide in slidesForSearchList:
+            self.click(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU)
+            searchEl = self.get_element(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU)
+            ActionChains(self.driver).click(searchEl).send_keys(slide + Keys.SPACE + Keys.ENTER).perform()
+            #ActionChains(self.driver).click(searchEl).send_keys(Keys.SPACE + Keys.ENTER).perform()
+            
+            
+            slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', slidesForSearchList[slide]))
+            if self.wait_visible(slide_time) == False:
+                writeToLog("INFO","FAILED to verify slide time ' " + str(slidesForSearchList[slide]) + "' in the slide menu bar")
+                return False
+            
+            # check that only one slide display
+            if totalNumberOfslides-1 != len(self.get_elements(self.PLAYER_SLIDE_RESULT_NO_MATCH)):
+                writeToLog("INFO","FAILED to verify  that only the slide '" + str(slide) + "' display in the search result")
+                return False
                 
+            if self.click(self.PLAYER_SLIDE_MENU_BAR_CANCEL_SEARCH_BUTTON , 20) == False:
+                writeToLog("INFO","FAILED to click on the search 'X' button in order to clean search textbox")
+                return False
+            
+            writeToLog("INFO","SUCCESS, slide '" + str(slide) +"' at time '" + str(slidesForSearchList[slide]) + "' was found in search")
+        
+        writeToLog("INFO","SUCCESS, All slides were found after search in the slides menu bar")
+        return True   
+
+            
