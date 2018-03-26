@@ -65,22 +65,24 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2
-            self.slidesQrCodeAndTimeList = collections.OrderedDict()  
-            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09',
-                                            '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
-                                            '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
-            self.chaptersList = collections.OrderedDict() 
-            self.chaptersList = {'First Chapter':'00:05', 'Second Chapter':'00:14'}
             
-            self.slidesWithoutChapter = collections.OrderedDict() 
-            self.slidesWithoutChapter = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04'}
+            self.slidesQrCodeAndTimeList = [('0','00:00'), ('1','00:01'),('2','00:02'), ('3','00:03'), ('4','00:04'), ('5','00:05'), ('6','00:06'), ('7','00:07'), ('8','00:08'), ('9','00:09'),
+                                            ('10','00:10'), ('11','00:11'), ('12','00:12'), ('13','00:13'), ('14','00:14'), ('15','00:15'), ('16','00:16'), ('17','00:17'), ('18','00:18'), ('19','00:19'),
+                                            ('20','00:20'), ('21','00:21'), ('22','00:22'), ('23','00:23'), ('24','00:24'), ('25','00:25'), ('26','00:26'), ('27','00:27'), ('28','00:28'), ('29','00:29')]
+            self.slidesQrCodeAndTimeList = collections.OrderedDict(self.slidesQrCodeAndTimeList)  
             
-            self.firstChapterSlidesList = collections.OrderedDict() 
-            self.firstChapterSlidesList = {'1.1': '00:05', '1.2': '00:06', '1.3': '00:07', '1.4': '00:08', '1.5': '00:09', '1.6': '00:10', '1.7': '00:11','1.8': '00:12', '1.9': '00:13'}
+            self.chaptersList = [('First Chapter','00:05'), ('Second Chapter','00:14')]
+            self.chaptersList = collections.OrderedDict(self.chaptersList) 
             
-            self.secondChapterSlidesList = collections.OrderedDict() 
-            self.secondChapterSlidesList = {'2.1': '00:14','2.2': '00:15', '2.3': '00:16', '2.4': '00:17', '2.5': '00:18', '2.6': '00:19','2.7': '00:20', '2.8': '00:21','2.9': '00:22',
-                                            '2.10': '00:23', '2.11': '00:24','2.12': '00:25', '2.13': '00:26', '2.14': '00:27', '2.15': '00:28', '2.16': '00:29'}
+            self.slidesWithoutChapter = [('0','00:00'), ('1','00:01'), ('2','00:02'), ('3','00:03'), ('4','00:04')]
+            self.slidesWithoutChapter = collections.OrderedDict(self.slidesWithoutChapter)
+            
+            self.firstChapterSlidesList = [('1.1','00:05'), ('1.2','00:06'), ('1.3','00:07'), ('1.4','00:08'), ('1.5','00:09'), ('1.6','00:10'), ('1.7','00:11'), ('1.8','00:12'), ('1.9','00:13')]
+            self.firstChapterSlidesList = collections.OrderedDict(self.firstChapterSlidesList)  
+            
+            self.secondChapterSlidesList = [('2.1','00:14'), ('2.2','00:15'), ('2.3','00:16'), ('2.4','00:17'), ('2.5','00:18'), ('2.6','00:19'), ('2.7','00:20'), ('2.8','00:21'), ('2.9','00:22'),
+                                            ('2.10','00:23'), ('2.11','00:24'), ('2.12','00:25'), ('2.13','00:26'), ('2.14','00:27'), ('2.15','00:28'), ('2.16','00:29')]
+            self.secondChapterSlidesList = collections.OrderedDict(self.secondChapterSlidesList)  
             ##################### TEST STEPS - MAIN FLOW ##################### 
 
             writeToLog("INFO","Step 1: Going to upload entry")

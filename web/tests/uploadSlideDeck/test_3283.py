@@ -64,8 +64,8 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
-            self.slidesQrCodeAndTimeList = collections.OrderedDict()
-            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09'}
+            self.slidesQrCodeAndTimeList = [('0','00:00'), ('1','00:01'), ('2','00:02'), ('3','00:03'), ('4','00:04'), ('5','00:05'), ('6','00:06'), ('7','00:07'), ('8','00:08'), ('9','00:09')]
+            self.slidesQrCodeAndTimeList = collections.OrderedDict(self.slidesQrCodeAndTimeList) 
                                          
                                             
            
