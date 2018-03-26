@@ -5,7 +5,6 @@ from logger import writeToLog
 from editEntryPage import EditEntryPage
 import enums
 import clsCommon
-import re
 
 
 class MyHistory(Base):
@@ -158,13 +157,20 @@ class MyHistory(Base):
             return False 
         
         # Check if entry was watched a moment ago
-        entryWatchedTimeMoment = re.match("Watched a Moment ago on " + channelName, entry_text)
-        if entryWatchedTimeMoment is None:
-        # If entry waan't watched moment ago, check if it was watched less than 10 minutes ago
-            entryWatchedTimeMinutes = re.match("Watched (\d*) Minutes ago on " + channelName, entry_text)
-            if entryWatchedTimeMinutes.group(0) < 0 or entryWatchedTimeMinutes.group(0) > 30:
-                writeToLog("INFO","FAILED to display correct time when entry was watched")
+        entryWatchedTimeMomentList = re.findall("(Watched A moment ago on " + channelName +")", entry_text)
+        if len(entryWatchedTimeMomentList) == 0:
+        # If entry wasn't watched moment ago, check if it was watched less than 10 minutes ago
+            entryWatchedTimeMinutesList = re.findall("Watched (\d*) Minutes ago on " + channelName, entry_text)
+            if len(entryWatchedTimeMinutesList) == 0:
+                writeToLog("INFO","FAILED to display correct text for watched entry")
                 return False 
+            
+            else:
+                if int(entryWatchedTimeMinutesList[0]) < 0 or int(entryWatchedTimeMinutesList[0]) > 10:
+                    writeToLog("INFO","FAILED to display correct time when entry was watched")
+                    return False 
+                       
+        return True    
         
 
         

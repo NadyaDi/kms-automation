@@ -9,7 +9,7 @@ class ChannelPrivacyType(Enum):
     PRIVATE            = "private"
     SHAREDREPOSITORY   = "sharedrepository"
     PUBLIC             = "public"
-    
+    UNLISTED           = "Unlisted"
     
 class DisclaimerDisplayArea(Enum):
     def __str__(self):
