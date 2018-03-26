@@ -29,8 +29,10 @@ class MyMedia(Base):
     MY_MEDIA_ACTIONS_BUTTON_DELETE_BUTTON                       = ('id', 'tab-Delete')
     MY_MEDIA_ACTIONS_BUTTON_ADDTOPLAYLIST_BUTTON                = ('id', 'Addtoplaylists')
     MY_MEDIA_PUBLISH_UNLISTED                                   = ('id', 'unlisted')
+    MY_MEDIA_PUBLISH_PRIVATE                                    = ('id', 'private')
     MY_MEDIA_PUBLISH_SAVE_BUTTON                                = ('xpath', "//button[@class='btn btn-primary pblSave' and text()='Save']")
     MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG                          = ('xpath', "//div[contains(.,'Media successfully set to Unlisted')]")
+    MY_MEDIA_PUBLISHED_AS_PRIVATE_MSG                           = ('xpath', "//div[contains(.,'Media successfully set to Private')]")
     MY_MEDIA_PAGE_TITLE                                         = ('xpath', "//h1[@class='inline' and contains(text(), 'My Media')]")
     MY_MEDIA_PUBLISHED_RADIO_BUTTON                             = ('id', 'published') #This refers to the publish radio button after clicking action > publish
     MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION                         = ('class_name', 'pblTabCategory')
@@ -53,6 +55,7 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_TOP                                          = ('xpath',"//span[@class='entry-name' and text()='ENTRY_NAME']")
     MY_MEDIA_END_OF_PAGE                                        = ('xpath',"//div[@class='alert alert-info endlessScrollAlert']")
     MY_MEDIA_TABLE_SIZE                                         = ('xpath',"//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
+    MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath',"//a[@class='btn btn-primary' and text()='OK']")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -674,4 +677,85 @@ class MyMedia(Base):
         except NoSuchElementException:
             return False
     
+        return True
+    
+    # @Author: Inbar Willman
+    def publishSingleEntryToUnlistedOrPrivate(self, entryName, privacy, alreadyPublished=False, publishFrom=enums.Location.MY_MEDIA): 
+        if publishFrom == enums.Location.MY_MEDIA:
+            if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
+                return False
+        
+            if self.clickActionsAndPublishFromMyMedia() == False:
+                writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
+                return False
+            sleep(3)
+            
+            if privacy == enums.ChannelPrivacyType.UNLISTED:
+                    if self.click(self.MY_MEDIA_PUBLISH_UNLISTED) == False:
+                        writeToLog("INFO","FAILED to click on Unlisted button")
+                        return False 
+                    
+                    if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON) == False:
+                        writeToLog("INFO","FAILED to click on Unlisted button")
+                        return False                        
+                    
+                    if alreadyPublished == True:
+                        #Click on confirm modal
+                        if self.click(self.MY_MEDIA_CONFIRM_CHANGING_STATUS) == False:
+                            writeToLog("INFO","FAILED to click on confirm button")
+                            return False 
+                    
+                    sleep(1)
+                    self.clsCommon.general.waitForLoaderToDisappear()
+        
+                    if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG, 20) == False:
+                        writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
+                        return False    
+
+            elif privacy == enums.ChannelPrivacyType.PRIVATE:
+                    if self.click(self.MY_MEDIA_PUBLISH_PRIVATE) == False:
+                        writeToLog("INFO","FAILED to click on Unlisted button")
+                        return False 
+                    
+                    if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON) == False:
+                        writeToLog("INFO","FAILED to click on Unlisted button")
+                        return False                        
+                    
+                    if alreadyPublished == True:                   
+                        #Click on confirm modal
+                        if self.click(self.MY_MEDIA_CONFIRM_CHANGING_STATUS) == False:
+                            writeToLog("INFO","FAILED to click on confirm button")
+                            return False 
+                    
+                    sleep(1)
+                    self.clsCommon.general.waitForLoaderToDisappear()
+        
+                    if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_AS_PRIVATE_MSG, 20) == False:
+                        writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
+                        return False                                       
+        
+            else:
+                writeToLog("INFO","FAILED to get valid privacy:" + str(privacy))
+                return False
+        
+        elif publishFrom == enums.Location.UPLOAD_PAGE: 
+            writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")       
+            sleep(2)            
+            if self.click(self.MY_MEDIA_PUBLISH_UNLISTED) == False:
+                writeToLog("INFO","FAILED to click on Unlisted button")
+                return False    
+            
+            if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                writeToLog("DEBUG","FAILED to click on 'Save' button")
+                return None
+            
+            sleep(2)
+            # Wait for loader to disappear
+            self.clsCommon.general.waitForLoaderToDisappear()            
+        
+            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG, 20) == False:
+                writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
+                return False                                       
+            
         return True
