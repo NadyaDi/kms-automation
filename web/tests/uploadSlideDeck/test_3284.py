@@ -64,70 +64,59 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
-            self.slidesQrCodeAndTimeList = collections.OrderedDict()
-            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09'}
-            self.slidesWithName = collections.OrderedDict()
-            self.slidesWithName = {'second slide': '00:02','fifth slide': '00:05', 'eighth slide': '00:08'}
+            self.slidesQrCodeAndTimeList = [('0': '00:00'), ('1': '00:01'), ('2': '00:02'), ('3': '00:03'),('4': '00:04'),('5': '00:05'), ('6': '00:06'), ('7': '00:07'), ('8': '00:08'), ('9': '00:09')]
+            self.slidesQrCodeAndTimeList = collections.OrderedDict(self.slidesQrCodeAndTimeList)
+            self.slidesWithName = [('second slide': '00:02'),('fifth slide': '00:05'), ('eighth slide': '00:08')]
+            self.slidesQrCodeAndTimeList = collections.OrderedDict(self.slidesWithName)
                                          
                                             
            
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.player.searchSlideInSlidesBarMenu("second slide")
             writeToLog("INFO","Step 1: Going to upload first entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry name: " + self.entryName)
                 return
-              
-            writeToLog("INFO","Step 2: Going to upload second entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry name: " + self.entryName1)
-                return
-                                    
-            writeToLog("INFO","Step 3: Going to navigate to edit Entry Page")
+                                     
+            writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to edit entry page")
+                writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                          
-            writeToLog("INFO","Step 4: Going add upload slide deck")
+                           
+            writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to add slides to entry time line")
+                writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-            
-            
-            writeToLog("INFO","Step 5: Going add name to several slides")
-            if self.common.editEntryPage.addNameToslides(self.slidesWithName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to add name to slides")
-                return
-                                   
-            writeToLog("INFO","Step 6: Going to navigate to entry page")
-            if self.common.entryPage.navigateToEntry(self.entryName1, navigateFrom = enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to entry page: " + self.entryName1)
-                return  
              
+            writeToLog("INFO","Step 4: Going to add names to slides")
+            if self.common.editEntryPage.addNameToslides(self.slidesWithName) == False:
+                writeToLog("INFO","Step 4: FAILED to add names to slides")
+                return
+             
+            writeToLog("INFO","Step 5: Going to navigate to entry page")
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName1)
+                return  
             
-            
-            
-            
-            
-            
-            
+            writeToLog("INFO","Step 6: Going to search slides in slides menu bar")
+            if self.common.player.searchSlideInSlidesBarMenu(self.slidesWithName, len(self.slidesQrCodeAndTimeList)) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to search slides in slides menu bar")
+                return            
             
             sleep(3)
             index = 0
-            writeToLog("INFO","Step 14: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
+            writeToLog("INFO","Step 7: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
             for i in range(2):
                 sleep(2)
                 index = index + i + 4 
                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 14: FAILED to verify slide") 
+                    writeToLog("INFO","Step 7: FAILED to verify slide") 
                   
               
             #########################################################################
