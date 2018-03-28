@@ -852,6 +852,7 @@ class EditEntryPage(Base):
     def changeSlideTimeInTimeLine(self, oldSlideTime, newSlideTime):
         slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(oldSlideTime)
         locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+        sleep(3)
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
             return False   
