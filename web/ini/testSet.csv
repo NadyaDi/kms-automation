@@ -18,8 +18,8 @@ test_2580,1,0,0,0,My history - Add entry (Published to channel-Restricted) to wa
 test_2581,1,0,0,0,My history - Add entry (Published to channel- Open) to watch list history
 test_2582,1,0,0,0,My history - Add entry (Published to Category - public) to watch list history
 test_2606,1,0,0,0,My history - Delete Entry from KMS
-test_2648,1,0,0,,My history - Entry appear in watch list history after change privacy
-test_2668,1,0,0,,My history - Entry Viewed in gallery
+test_2648,1,0,0,0,My history - Entry appear in watch list history after change privacy
+test_2668,1,0,0,0,My history - Entry Viewed in gallery
 test_2667,1,0,0,0,My history - Entry Viewed in channel
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
