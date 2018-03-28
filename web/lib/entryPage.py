@@ -158,7 +158,7 @@ class EntryPage(Base):
         sleep(5)
         # Verify entry was delete: after entry delete the page that will display is the page that we enter the entry from
         if deleteFrom == enums.Location.MY_MEDIA or deleteFrom == enums.Location.ENTRY_PAGE:
-            sleep(3)
+            sleep(5)
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False   

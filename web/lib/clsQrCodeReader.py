@@ -5,8 +5,10 @@
 #########################################################################
 from utilityTestFunc import *
 from clsTestService import *
+from selenium.webdriver.common.keys import Keys
 from PIL import Image
 import localSettings
+from time import sleep
 try:
     import zbarlight
 except:
@@ -65,6 +67,25 @@ class QrCodeReader(Base):
         
         return filePath
         
+        
+        
+        # Take screenshot of the upload,capture,auto-generate image in thumbnail tab and return the full file path of the screenshot 
+    def takeQrCodeTumbnailTabScreenshot(self):
+        self.get_element(self.clsCommon.editEntryPage.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA).send_keys(Keys.PAGE_DOWN)
+        sleep(1)
+        filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        if self.takeScreeshot(filePath) == True:
+            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+        else:
+            writeToLog("INFO","FAILED to take screenshot of the page")
+            return False       
+        pageElement = self.get_element_attributes(('xpath', '/html/body'))
+        # Crop the image
+        img = Image.open(filePath)
+        img2 = img.crop((pageElement['right'] /10, pageElement['bottom'] / 4.75, pageElement['right'] , pageElement['bottom']))
+        img2.save(filePath)
+        
+        return filePath
         
     #Take screenshot of the iframe (player), return the full file path of the screenshot
     def takeQrCodePlayerScreenshot(self, player, driver, fullScreen=False, live=True):
@@ -165,6 +186,21 @@ class QrCodeReader(Base):
             return result
     
     
+    # Take screenshot of the image in thumbnail tab and resolve QR code    
+    def getScreenshotAndResolveImageInThumbnailTabQrCode(self):
+        sc = self.takeQrCodeTumbnailTabScreenshot()
+        if sc == None:
+            writeToLog("DEBUG","Failed to get screenshot for QR code")
+            return None
+        result = self.resolveQrCode(sc)
+        if result == None:
+            writeToLog("DEBUG","Failed to resolve QR code")
+            return False
+        else:
+            writeToLog("DEBUG","QR code result is: " + result)
+            return result 
+        
+        
     #Return live timer in seconds, if function failed, return -1    
     def getTimerFromQrCodeInSeconds(self, player, driver, fullScreen=False, live=True):
         result = self.getAndResolvePlayerQrCode(player, driver, fullScreen, live)
