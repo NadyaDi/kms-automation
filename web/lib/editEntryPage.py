@@ -707,13 +707,14 @@ class EditEntryPage(Base):
     # Author: Michal Zomper   
     def deleteSingelSlideFromTimeLine(self, slideTime):
         slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(slideTime)
+        sleep(2)
         locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(slideTime) + "' in time line")
             return False
         sleep(2)
         self.hover_on_element(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE)
-        sleep(1)
+        sleep(2)
         if self.click(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE, 20) == False:
             writeToLog("INFO","FAILED to click on delete slide button")
             return False
@@ -724,7 +725,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False   
         
-        sleep(1)
+        sleep(2)
         if self.is_visible(locatorSlideTime) == True:
             writeToLog("INFO","FAILED, slide in time '" + str(slideTime) + "' was found although this slide was deleted")
             return False   
