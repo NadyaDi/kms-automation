@@ -877,18 +877,20 @@ class EditEntryPage(Base):
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
             return False   
-         
+        
+        sleep(1) 
         if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_TIME_TO_SLIDE_OR_CHAPTER, newSlideTime, multipleElements= True) == False:
             writeToLog("INFO","FAILED insert new slide time: " + str(newSlideTime))
             return False             
-            
+        
+        sleep(1)
         if self.click(self.EDIT_ENTRY_SAVE_CHAPTER_OR_SLIDE, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False               
         
         sleep(3)
         # Verify new time saved 
-        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, multipleElements=True) == False:
+        if self.wait_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to fined saved success label")
             return False  
         
