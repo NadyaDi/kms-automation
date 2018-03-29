@@ -159,19 +159,19 @@ class EntryPage(Base):
         # Verify entry was delete: after entry delete the page that will display is the page that we enter the entry from
         if deleteFrom == enums.Location.MY_MEDIA or deleteFrom == enums.Location.ENTRY_PAGE:
             sleep(5)
-            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == False:
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False   
                 
         elif deleteFrom == enums.Location.CATEGORY_PAGE:
             tmpCategoryName = (self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.clsCommon.category.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
-            if self.wait_visible(tmpCategoryName, 20) == False:
+            if self.wait_visible(tmpCategoryName, 30) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False
         
         elif deleteFrom == enums.Location.CHANNEL_PAGE:
             tmp_channel_title = (self.clsCommon.channel.CHANNEL_PAGE_TITLE[0], self.clsCommon.channel.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
-            if self.wait_visible(tmp_channel_title, 20) == False:
+            if self.wait_visible(tmp_channel_title, 30) == False:
                 writeToLog("INFO","FAILED to verify that entry deleted")
                 return False
 
