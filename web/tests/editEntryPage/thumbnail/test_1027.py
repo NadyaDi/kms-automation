@@ -33,6 +33,8 @@ class Test:
     uploadThumbnailExpectedResult = 5
     timeToStopPlayer = "0:03"
     captureThumbnailExpectedResult = 3
+    autoGenerateSliceNumber = 6
+    autoGenerateThumbnailExpectedResult = 6
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
     uploadThumbnailFliePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode (5).png'
     
@@ -55,8 +57,9 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Edit entry - thumbnail tab", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult)
-            
+#             self.common.editEntryPage.chooseAutoGthumbnail(self.autoGenerateSliceNumber, self.autoGenerateThumbnailExpectedResult)
+#             self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult)
+#             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -88,33 +91,58 @@ class Test:
                 writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
                                  
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-                                 
-            writeToLog("INFO","Step 6: Going to login with the user that was added as Collaborator")
-            if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
+            writeToLog("INFO","Step 6: Going to navigate to edit Entry Page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage()(self.entryName) == False:
+                writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to login with the user that was added as Collaborator")
+                return                  
+               
+            writeToLog("INFO","Step 7: Going to capture thumbnail")            
+            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to capture thumbnail")
+                return                                
+                                 
+            sleep(2)     
+            writeToLog("INFO","Step 8: Going to navigate to entry page")            
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED navigate to entry page '" + self.entryName + "'")
                 return
                
-            writeToLog("INFO","Step 7: Going to navigate to entry page from category page with the user that was added as Collaborator")
-            if self.common.entryPage.navigateToEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False:
+            writeToLog("INFO","Step 9: Going to check the entry thumbnail in the player")
+            if self.common.player.verifyThumbnailInPlayer(self.uploadThumbnailExpectedResult) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to navigate to entry page with the user that was added as Collaborator")
-                return                                  
-             
-            writeToLog("INFO","Step 8: Going to publish entry with added as Collaborator user")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelList, enums.Location.ENTRY_PAGE) == False:
+                writeToLog("INFO","Step 9: FAILED failed to logout from main user")
+                return                      
+                                 
+            writeToLog("INFO","Step 10: Going to navigate to edit Entry Page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage()(self.entryName) == False:
+                writeToLog("INFO","Step 10: FAILED to navigate to edit entry page")
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to publish entry '" + self.entryName + "' with Collaborator user")
+                return                  
+               
+            writeToLog("INFO","Step 11: Going to chose auto generate  thumbnail")            
+            if self.common.editEntryPage.chooseAutoGthumbnail(self.autoGenerateSliceNumber, self.autoGenerateThumbnailExpectedResult) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to choose auto generate thumbnail")
+                return                                
+                                 
+            sleep(2)     
+            writeToLog("INFO","Step 12: Going to navigate to entry page")            
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED navigate to entry page '" + self.entryName + "'")
                 return
-            
+               
+            writeToLog("INFO","Step 13: Going to check the entry thumbnail in the player")
+            if self.common.player.verifyThumbnailInPlayer(self.uploadThumbnailExpectedResult) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED failed to logout from main user")
+                return                                         
+                                 
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co publish' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Edit entry - thumbnail tab' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
