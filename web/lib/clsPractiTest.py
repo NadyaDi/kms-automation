@@ -120,7 +120,7 @@ class clsPractiTest:
         r = requests.post(practiTestUpdateTestInstanceResultsURL,
             data=data_json,
             auth=(LOCAL_SETTINGS_DEVELOPER_EMAIL, str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
-            headers={'Content-type': 'application/json'})        
+            headers={'Content-type': 'application/json', 'Connection':'close'})    
 
         if (r.status_code == 200):
             writeToLog("DEBUG","Updated test: " + testID + " as: " + testStatus) 
