@@ -22,7 +22,8 @@ class clsPractiTest:
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(prSessionID) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
         sessionInstancesDct = {}
         headers = { 
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Connection':'close'
         }
         
         r = requests.get(practiTestGetSessionsURL,headers = headers)
@@ -57,6 +58,7 @@ class clsPractiTest:
 
         headers = {
             'Content-Type': 'application/json',
+            'Connection':'close'
         }
         
         r = requests.get(practiTestGetSessionsURL,headers = headers)
@@ -148,7 +150,7 @@ class clsPractiTest:
             for plat in platformList:
                 if plat == platform:
                     testPlatformLine = testPlatformLine + ",1"
-                    writeToLog("DEBUG","Adding: " + "test_" + sTestID.rjust(4,"0") + " for platform: " + plat)
+                    writeToLog("DEBUG","Adding: " + "test_" + sTestID + " for platform: " + plat)
                 else:           
                     testPlatformLine = testPlatformLine + ",0"
             testPlatformLine = testPlatformLine + "," + testIDsDict[testID]
@@ -164,6 +166,7 @@ class clsPractiTest:
         
         headers = { 
             'Content-Type': 'application/json',
+            'Connection':'close'
         }
         data = {"data": { "type": "sets", "attributes": {"version": "1.5", "custom-fields": { "---f-30327": "Processed"}}  } }
        
