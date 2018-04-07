@@ -37,8 +37,10 @@ LOCAL_SETTINGS_SELENIUM_GRID_POOL           = "qaKmsFrontEnd"
     
 LOCAL_RUN_MODE                              = "LOCAL"
 REMOTE_RUN_MODE                             = "REMOTE"
-LOCAL_SETTINGS_RUN_MDOE                     = REMOTE_RUN_MODE
-
+if isAutomationEnv() == True:
+    LOCAL_SETTINGS_RUN_MDOE                     = REMOTE_RUN_MODE
+else:
+    LOCAL_SETTINGS_RUN_MDOE                     = LOCAL_RUN_MODE
 
 LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                  = 1328
 LOCAL_SETTINGS_PRACTITEST_AUTOMATED_SESSION_FILTER_ID = 259788 #PractiteTest Filter: Pending
@@ -53,17 +55,16 @@ if LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE:
     LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp', 'downloads'))
     LOCAL_QRCODE_TEMP_DIR                       = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'screenShots', 'qrCode'))
 else:
-    LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'media'))
     LOCAL_SETTINGS_TEMP_PATH                    = os.path.abspath(os.path.join(os.getenv('KMS_WEB'),'temp'))
-    LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))  
     LOCAL_QRCODE_TEMP_DIR                       = os.path.abspath(os.path.join(os.getenv('KMS_WEB'),'screenShots','qrCode'))
-    
-if isAutomationEnv() != True:
-    LOCAL_SETTINGS_RUN_MDOE                 = LOCAL_RUN_MODE
-else:
+    LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'media'))
+    LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))
+
+if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
     LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'C:\\selenium\\kms-automation\\web\\temp\\downloads'
-    
+
+        
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
 LOCAL_SETTINGS_TEST_BASE_URL                = LOCAL_SETTINGS_URL_PREFIX
