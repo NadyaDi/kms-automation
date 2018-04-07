@@ -1,10 +1,9 @@
 import pytest
 import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','lib')))
 from utilityTestFunc import *
 from clsPractiTest import clsPractiTest
 import clsTestService
-
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','lib')))
 
 class Test:
     
@@ -33,12 +32,15 @@ class Test:
                     if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
                         self.status = "Fail"
                         writeToLog("INFO","Unable to set test set as processed") 
+                        return
+                    # Set host variable with the name of the remote host, which we got from the Testset
+                    
+                        
                 else:
                     self.status = "Fail"
                     writeToLog("INFO","Unable to get test list")
          
         except Exception as inst:
-            print("DEBUG !!!!!! : " + str(inst))
             self.status = self.testService.handleException(self,inst,self.startTime)
                 
     def teardown_method(self,method):
