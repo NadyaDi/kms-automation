@@ -37,7 +37,7 @@ LOCAL_SETTINGS_SELENIUM_GRID_POOL           = "qaKmsFrontEnd"
     
 LOCAL_RUN_MODE                              = "LOCAL"
 REMOTE_RUN_MODE                             = "REMOTE"
-LOCAL_SETTINGS_RUN_MDOE                     = LOCAL_RUN_MODE
+LOCAL_SETTINGS_RUN_MDOE                     = REMOTE_RUN_MODE
 
 
 LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                  = 1328
@@ -58,10 +58,11 @@ else:
     LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))  
     LOCAL_QRCODE_TEMP_DIR                       = os.path.abspath(os.path.join(os.getenv('KMS_WEB'),'screenShots','qrCode'))
     
-if isAutomationEnv() == True:
+if isAutomationEnv() != True:
+    LOCAL_SETTINGS_RUN_MDOE                 = LOCAL_RUN_MODE
+else:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
     LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'C:\\selenium\\kms-automation\\web\\temp\\downloads'
-    LOCAL_SETTINGS_RUN_MDOE                 = REMOTE_RUN_MODE
     
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
