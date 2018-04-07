@@ -1,5 +1,7 @@
-from time import strftime
+import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','..','lib')))
 import pytest
+from time import strftime
 from clsCommon import Common
 import clsTestService
 import enums

@@ -1,5 +1,5 @@
-import time, pytest
-
+import time, pytest,sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from clsCommon import Common
 import clsTestService
 import enums
@@ -79,25 +79,25 @@ class Test:
                     self.status = "Fail"
                     writeToLog("INFO","Step 1: FAILED failed to upload entry")
                     return
-            
+             
             writeToLog("INFO","Step 2: Going to create Channel#1")
             if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
-            
+             
             writeToLog("INFO","Step 3: Going to create Channel#2")
             if self.common.channel.createChannel(self.channelName2, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create Channel#2")
                 return
-            
+             
             writeToLog("INFO","Step 4: Going to publish single entry")
             if self.common.channel.addContentToChannel(self.channelName1, entriesList, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry to Channel#1")
                 return
-            
+             
             writeToLog("INFO","Step 5: Going to import channel")
             if self.common.channel.importChannel(self.channelName1, self.channelName2, entriesList) == False:
                 self.status = "Fail"
