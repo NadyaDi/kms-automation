@@ -149,15 +149,10 @@ def wait_for_page_readyState(driver, timeout=30):
         return False   
 
 def isAutoEnvironment():
-    env = ""   
-    for arg in sys.argv[1:]:
-        if ("--env" in arg):
-            env = arg[6:]
-            break
-    if (env == "Auto"):
+    if os.getenv('ENV_AUTO') == 'Auto':
         return True
-    
-    return False
+    else:
+        return False
 
 
 # Delete old filed from the log folder
