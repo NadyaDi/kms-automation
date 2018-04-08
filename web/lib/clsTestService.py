@@ -146,11 +146,9 @@ def testTimedOut(testNum, startTime,reason):
 
 # Get from testPartners scv the test credentials by test id and env
 def updatePlatforms(test_num):
-    
     env = ""
-    for arg in sys.argv[1:]:
-        if "--env" in arg:
-            env = arg[6:]
+    if isAutomationEnv() == True:
+        env = "Auto"
             
     supported_platforms=[]
     case_str = "test_" + test_num
@@ -278,14 +276,7 @@ def basicTearDown(test):
 #===============================================================================   
     
 def isAutomationEnv():
-        
-        env = ""
-        
-        for arg in sys.argv[1:]:
-            if ("--env" in arg):
-                env = arg[6:]
-                break
-        if (env == "Auto"):
+        if os.getenv('ENV_AUTO') == 'Auto':
             return True
         else:
             return False

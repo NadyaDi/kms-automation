@@ -1,12 +1,15 @@
+import random
 import subprocess
-try:
-    import win32com.client
-except:
-    pass
 import enums
 from base import *
 import clsTestService
 from general import General
+
+
+try:
+    import win32com.client
+except:
+    pass
 
 
 # This class is for multiple upload
@@ -314,6 +317,9 @@ class Upload(Base):
         try:
             # If running on remote node
             if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.REMOTE_RUN_MODE:
+                # Because of miltiple run at same time, we apply random wait
+                timeDelay = random.uniform(1.1, 2.9)
+                sleep(timeDelay)               
                 self.clsCommon.instertPathInFileUploadWindows(filePath)
             else:
                 if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):

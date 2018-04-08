@@ -1,12 +1,7 @@
 import os,sys,enums
 
 def isAutomationEnv():
-        env = ""
-        for arg in sys.argv[1:]:
-            if ("--env" in arg):
-                env = arg[6:]
-                break
-        if (env == "Auto"):
+        if os.getenv('ENV_AUTO') == 'Auto':
             return True
         else:
             return False
