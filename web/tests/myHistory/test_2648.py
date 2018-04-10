@@ -166,7 +166,7 @@ class Test:
                 writeToLog("INFO","Step 18: FAILED to login as user")
                 return              
 
-            writeToLog("INFO","Step 19: Going to changed played entry privacy to unlisted")
+            writeToLog("INFO","Step 19: Going to changed played entry privacy to published")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to changed entry privacy")

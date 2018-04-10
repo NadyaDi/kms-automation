@@ -1,12 +1,18 @@
 import subprocess
+
+from base import *
+import clsTestService
+import enums
+from general import General
+
 try:
     import win32com.client
 except:
     pass
-import enums
-from base import *
-import clsTestService
-from general import General
+
+from selenium.webdriver.common.keys import Keys
+
+
 
 
 # This class is for multiple upload
@@ -56,7 +62,10 @@ class Upload(Base):
     UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@class='btn btn-link' and text() = 'Go To Media']")
     UPLOAD_ENABLE_SCHEDULING_RADIO              = ('id', 'schedulingRadioButtons_5a65e5d39199d-scheduled')
     DROP_DOWN_VIDEO_QUIZ_BUTTON                 = ('xpath', ".//span[text()='Video Quiz']")
+    DROP_DOWN_YOUTUBE_BUTTON                    = ('xpath', ".//span[text()='YouTube']")
     VIDEO_QUIZ_PAGE_TITLE                       = ('xpath', "//h1[@class='editorBreadcrumbs inline']")
+    YOUTUBE_PAGE_TITLE                          = ('xpath', "//h1[@class='uploadBoxHeading']")
+    YOUTUBE_PAGE_LINK_FIELD                     = ('id', 'externalContentId')
     # Elements for multiple upload
     UPLOAD_UPLOADBOX                            = ('xpath', "//div[@id='uploadbox[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
@@ -80,7 +89,17 @@ class Upload(Base):
             return True
         except NoSuchElementException:
             writeToLog("INFO","FAILED to click on Video Quiz from drop down menu")
-            return False    
+            return False   
+        
+    #  @Author: Inbar Willman  
+    def clickYoutube(self):
+        try:
+            parentElement = self.get_element(self.UPLOAD_MENU_DROP_DOWN_ELEMENT)
+            self.get_child_element(parentElement, self.DROP_DOWN_YOUTUBE_BUTTON).click()
+            return True
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to click on youtube from drop down menu")
+            return False   
     
         
     #  @Author: Tzachi Guetta
@@ -482,3 +501,71 @@ class Upload(Base):
             return False
         
         return True   
+    
+    
+    # @Author: Inbar Willman
+    def clickAddYoutube(self):
+        # Click Add New
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on 'Add New' button")
+            return False
+            
+        # Click youtube
+        if self.clickYoutube() == False:
+            writeToLog("DEBUG","FAILED to click on 'Yotube' button")
+            return False
+
+        if self.wait_visible(self.YOUTUBE_PAGE_TITLE, 30) == False:
+            writeToLog("DEBUG","FAILED to navigate to add new youtube page")
+            return False
+        
+        return True
+
+
+    # @Author: Inbar Willman
+    def addYoutubeEntry(self, youtubeLink, entryName):
+        youtubeField = self.get_element(self.YOUTUBE_PAGE_LINK_FIELD)    
+        
+        #Insert youtube link in field
+        if youtubeField.send_keys(youtubeLink) == False:
+            writeToLog("DEBUG","FAILED to insert youtube link")
+            return False       
+        
+        #Click enter in field in order to see entry's fields
+        if youtubeField.send_keys(Keys.ENTER) == False:
+            writeToLog("DEBUG","FAILED to click on youtube link field")
+            return False 
+        
+        # Wait for loader to disappear
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        #Wait until tag element is displayed
+        self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS, timeout=40)    
+        
+        #Insert new name for entry
+        self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME).clear()
+        if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, entryName) == False:
+            writeToLog("INFO","FAILED to fill a entry name:'" + entryName + "'")
+            return False
+        
+        # Click Save
+        if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on Save button")
+            return False 
+        
+        sleep(3)
+                 
+        # Wait for loader to disappear
+        self.clsCommon.general.waitForLoaderToDisappear()
+                 
+        # Wait for 'Your changes have been saved.' message
+        if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False:                
+            entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+            if entryID != None:
+                writeToLog("INFO","Successfully uploaded youtube entry")
+                return entryID
+            else:
+                writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
+                return False      
+            
+    

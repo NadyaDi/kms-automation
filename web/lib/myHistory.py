@@ -29,6 +29,8 @@ class MyHistory(Base):
     MY_HISTORY_ENTRY_LAST_WATCHED                                 = ('xpath', "//a[@class='watch-time']")
     MY_HISTORY_ENTRY_VIEWD_IN                                     = ('xpath', "//a[contains(@href, 'channel/')")
     MY_HISTORY_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::td[@class='dataTd entryDetails']") 
+    MY_HISTORY_PROGRESS_BAR_INCOMPLETE                            = ('xpath', "//div[@class='progress history-progress started']")
+    MY_HISTORY_PROGRESS_BAR_PRECENT                               = ('xpath', "//div[@class='bar' and @style='width: PERCENT']")
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -171,6 +173,33 @@ class MyHistory(Base):
                     return False 
                        
         return True    
+    
+    # @Author: Inbar Willman   
+    def checkEntryProgressBar(self, entryName, percent):
+        # Make a search in My History
+        if self.isEntryExistsInMyHistory(entryName) == False:
+            writeToLog("INFO","FAILED to find entry in My History")
+            return False             
         
+        # Check that correct percent is displayed in progress bar
+        if self.waitTillProgressBarIsDisplayed(entryName, percent) == False:
+            writeToLog("INFO","FAILED to find progress bar")
+            return False   
+        
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    def waitTillProgressBarIsDisplayed(self, entryName, percent, timeout=60):
+        tmp_percent = (self.MY_HISTORY_PROGRESS_BAR_PRECENT[0], self.MY_HISTORY_PROGRESS_BAR_PRECENT[1].replace('PERCENT', percent))
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
+        while wait_until > datetime.datetime.now(): 
+            if self.is_present(tmp_percent):
+                #Entry exist
+                return True
+            self.isEntryExistsInMyHistory(entryName)
+            
+        writeToLog("INFO","FAILED to find progress bar")
+        return False        
 
         
