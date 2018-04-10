@@ -213,7 +213,7 @@ class Base:
                     if el.size['width']!=0 and el.size['height']!=0:
                         if el.is_displayed() == True:
                             return True
-                        else:
+                        
                             return False
             
             else:
@@ -244,15 +244,7 @@ class Base:
         self.setImplicitlyWaitToDefault()    
         return False
            
-           
-#     # element present
-#     def is_present(self, locator):
-#         try:
-#             self.get_element(locator)
-#             return True
-#         except NoSuchElementException:
-#             return False
-    # waits
+
     def is_present(self, locator, timeout=10):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
@@ -274,21 +266,28 @@ class Base:
 
 
     # waits for the element to appear
-    def wait_visible(self, locator, timeout=10):
+    def wait_visible(self, locator, timeout=10, multipleElements=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
         while True:
             try:
-                if self.is_visible(locator) == True:
+                if self.is_visible(locator, multipleElements) == True:
                     self.setImplicitlyWaitToDefault()
-                    return self.get_element(locator)
+                    if multipleElements == True:
+                        elements = self.get_elements(locator)
+                        for el in elements:
+                            if el.size['width']!=0 and el.size['height']!=0:
+                                return el
+                        return False
+                    else:
+                        return self.get_element(locator)
                 if wait_until < datetime.datetime.now():
                     self.setImplicitlyWaitToDefault()
                     return False                
             except:
                 self.setImplicitlyWaitToDefault()
                 return False
-
+            
 
     # waits for the element child to appear
     def wait_visible_child(self, parent, locator, timeout=10):
@@ -488,6 +487,7 @@ class Base:
                     if el.size['width']!=0 and el.size['height']!=0:
                         el.send_keys(text)
                         return True
+                return False
             else:
                 element = self.get_element(locator)
                 element.send_keys(text)
@@ -506,6 +506,7 @@ class Base:
                     if el.size['width']!=0 and el.size['height']!=0:
                         el.send_keys(text)
                         return True
+                return False
             else:
                 element = self.get_child_element(parent, locator)
                 element.send_keys(text)
@@ -527,6 +528,7 @@ class Base:
                             return False                        
                         el.send_keys(text)
                         return True
+                return False
             else:
                 element = self.get_element(locator)
                 if element.click() == False:
@@ -549,6 +551,7 @@ class Base:
                         el.clear()                       
                         el.send_keys(text)
                         return True
+                return False
             else:
                 element = self.get_element(locator)
                 element.clear()

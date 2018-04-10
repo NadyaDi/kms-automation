@@ -1,23 +1,28 @@
-export PYTHONPATH=$WORKSPACE/playerV2/front-automation/lib
+export KMS_WEB=$WORKSPACE/web/
+export PYTHONPATH=$WORKSPACE/web/lib/
 export PYTHONIOENCODING=utf-8
 export SESSION_RUN_TIME=$(date '+%m-%d-%y_%H-%M-%S')
 
-testSets=$(curl --silent -H "Authorization: custom api_token=b4f9865d8bf732157d4ac3456b8dbd8967e35bfd" -H "Content-Type: application/json" "https://api.practitest.com/api/v1/sets.json?project_id=1596&filter_id=235076" )
-rc=$(echo $testSets | jq -r ".data[0].___f_23982.value")
-version=$(echo $testSets | jq -r ".data[0].version")
-MD_RELEASE=v$version.$rc
-MD_SUITE_NAME=$(echo $testSets | jq -r ".data[0].name")
-MD_PRACTITEST_SET_ID=$(echo $testSets | jq -r ".data[0].display_id")
+testSets=$(curl --silent -H "Content-Type: application/json" "https://api.practitest.com/api/v2/projects/1328/sets.json?filter-id=259788&api_token=deee12e1d8746561e1815d0430814c82c9dbb57d&developer_email=oleg.sigalov@kaltura.com")
+AutomationEnv=$(echo $testSets | jq -r ".data[0].attributes[\"custom-fields\"][\"---f-30772\"]")
+version=$(echo $testSets | jq -r ".data[0].attributes.version")
+MD_RELEASE=v$version
+AUTO_ENV=$AutomationEnv
+MD_SUITE_NAME=$(echo $testSets | jq -r ".data[0].attributes.name")
+MD_PRACTITEST_SET_ID=$(echo $testSets | jq -r ".data[0].attributes[\"display-id\"]")
 
-mv $WORKSPACE/playerV2/front-automation/ini/testSetAuto.csv $WORKSPACE/playerV2/front-automation/ini/bak/testSetAuto.csv
+if [ -f $WORKSPACE/web/ini/testSetAuto.csv ]; then
+   mv $WORKSPACE/web/ini/testSetAuto.csv $WORKSPACE/web/ini/bak/testSetAuto.csv 
+fi
 
-mkdir $WORKSPACE/playerV2/front-automation/logs/$BUILD_ID
+mkdir $WORKSPACE/logs/$BUILD_ID
 
-chmod +x $WORKSPACE/playerV2/front-automation/tools/jenkins/checkExistaneOfAutomationSets.sh
+chmod +x $WORKSPACE/web/tools/jenkins/checkExistaneOfAutomationSets.sh
 
-cd $WORKSPACE/playerV2/front-automation/tests_setup
-python3 -m py.test --tb=line --env=Auto
+cd $WORKSPACE/web/tests_setup
+python3 -m pytest --tb=line --env=Auto
 
-cd $WORKSPACE/playerV2/front-automation/tests
-python3 -m py.test --tb=line --env=Auto
+cd $WORKSPACE/web/tests
+python3 -m pytest --tb=line --env=Auto
 
+echo $MD_PRACTITEST_SET_ID

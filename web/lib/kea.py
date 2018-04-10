@@ -19,7 +19,7 @@ class Kea(Base):
     #=============================================================================================================
     #Upload locators:
     #=============================================================================================================
-    KEA_ADD_NEW_QUESTION_BUTTON                   = ('xpath', '//a[@class=" comp customButton "]')  
+    KEA_ADD_NEW_QUESTION_BUTTON                   = ('xpath', "//button[@class='question-type-button question-types-icon multiple-options-question-type active ng-star-inserted']")  
     KEA_SELECT_VIDEO_FOR_EDIT                     = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
     KEA_APP_DISPLAY                               = ('id', 'kea-anchor')
     KEA_IFRAME                                    = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame"]')
@@ -92,16 +92,14 @@ class Kea(Base):
     def addQuizQuestion(self, questionText, answerText, additionalAnswerList): 
         if self.startQuiz() == False:
             writeToLog("INFO","FAILED to click start quiz")
-            return False             
-            
-        self.switchToKeaQuizPlayer()    
+            return False 
+                    
+        self.switchToKeaIframe()    
+          
         # Click add new question button
         if self.click(self.KEA_ADD_NEW_QUESTION_BUTTON) == False:
-            writeToLog("INFO","FAILED to click start quiz")
+            writeToLog("INFO","FAILED to click add question button")
             return False 
-        
-        self.switch_to_default_content()
-        self.switchToKeaIframe()
 
         # Add question fields
         if self.fillQuizFields(questionText, answerText, additionalAnswerList) == False:

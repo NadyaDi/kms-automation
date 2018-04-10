@@ -1,6 +1,7 @@
+import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from enum import *
 import time, pytest
-
 from clsCommon import Common
 import clsTestService
 import enums
@@ -166,7 +167,7 @@ class Test:
                 writeToLog("INFO","Step 18: FAILED to login as user")
                 return              
 
-            writeToLog("INFO","Step 19: Going to changed played entry privacy to unlisted")
+            writeToLog("INFO","Step 19: Going to changed played entry privacy to published")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to changed entry privacy")

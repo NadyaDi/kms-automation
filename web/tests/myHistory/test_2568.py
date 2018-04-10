@@ -1,6 +1,7 @@
+import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from enum import *
 import time, pytest
-
 from clsCommon import Common
 import clsTestService
 import enums
@@ -89,7 +90,7 @@ class Test:
                 writeToLog("INFO", "Step " + str(step) + ": Going to Search " + entry + " in My History page")
                 if self.common.myHistory.waitTillLocatorExistsInMyHistory(entry) == True:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(step) + ": FAILED - New entry number 1 is displayed in my history page")
+                    writeToLog("INFO","Step " + str(step) + ": FAILED - New entry " + entry + " is displayed in my history page")
                     return 
                 writeToLog("INFO","Step " + str(step) + ": Previous Step Failed as Expected - The entry should not be displayed")      
                 
@@ -116,7 +117,7 @@ class Test:
                 writeToLog("INFO","Step " + str(step) + ": Going to navigate to My History and check for " + entry)
                 if self.common.myHistory.waitTillLocatorExistsInMyHistory(entry) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(step) + ": FAILED find " + entry+ " in My History")
+                    writeToLog("INFO","Step " + str(step) + ": FAILED find " + entry + " in My History")
                     return 
                 
                 step = step + 1   

@@ -657,8 +657,8 @@ class Channel(Base):
                                          
         return True
     
+
     def sortAndFilterInChannelPlaylist(self, sortBy='', mediaType=''):
-        
         if sortBy != '':
             if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
                 writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
@@ -669,7 +669,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to set filter: " + str(mediaType) + " in my media")
                 return False
             
-            return True
+        return True
     
     
     #@Author: Oded Berihon   

@@ -1,6 +1,7 @@
+import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from enum import *
 import time, pytest
-
 from clsCommon import Common
 import clsTestService
 import enums
@@ -52,7 +53,7 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('MyHistoryAudioEntry')
+            self.entryName = clsTestService.addGuidToString('MyHistoryAudioEntry', self.testNum)
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload audio entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
@@ -80,7 +81,7 @@ class Test:
             writeToLog("INFO","Step 4: Previous Step Failed as Expected - The entry should not be displayed")          
             
             writeToLog("INFO","Step 5: Going to play entry")
-            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:09', toVerify=False) == False:
+            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:09', toVerify=False, timeout=50) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate and play entry")
                 return  
