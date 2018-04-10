@@ -115,7 +115,7 @@ class Test:
                 return
            
             writeToLog("INFO","Step 9: Going to create channel playlist")                                     
-            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
+            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO, self.entriesNames) == False:    
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
                 return 

@@ -577,7 +577,7 @@ class Channel(Base):
       
    
     #@Author: Oded Berihon     
-    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, entriesNames): 
+    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, entriesNames, SortBy='', MediaType='',): 
         if self.navigateToChannelPlaylistTab(channelName) == False:
             writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
             return False 
@@ -613,6 +613,10 @@ class Channel(Base):
         
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
+            return False 
+         
+        if self.sortAndFilterInChannelPlaylist(SortBy ,MediaType)== False:
+            writeToLog("INFO","FAILED to click on search button")
             return False  
         
         if self.click(self.CHANNEL_SEARCH_BUTTON_CHANNEL_PLAYLIST) == False:
@@ -624,7 +628,7 @@ class Channel(Base):
             return False  
         sleep(1)
         
-        if len (entriesNames)== 0:
+        if len (entriesNames)!= 0:
             for entryName in entriesNames:
                 if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, Keys.CONTROL + 'a') == False:
                     writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
@@ -653,16 +657,16 @@ class Channel(Base):
                                          
         return True
     
-    def sortAndFilterInChannelPlaylist(self, sortBy='', filterMediaType=''):
+    def sortAndFilterInChannelPlaylist(self, sortBy='', mediaType=''):
         
         if sortBy != '':
             if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
                 writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
                 return False
 
-        if filterMediaType != '':
-            if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
-                writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
+        if mediaType != '':
+            if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, mediaType) == False:
+                writeToLog("INFO","FAILED to set filter: " + str(mediaType) + " in my media")
                 return False
             
             return True
