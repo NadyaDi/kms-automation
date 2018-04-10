@@ -152,6 +152,26 @@ class Player(Base):
         return True
     
     
+    # The method chack the qr code on the player thumbnail
+    def verifyThumbnailInPlayer(self, expecterQrCode):        
+        qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
+        if qrCodeSc == False:
+            writeToLog("INFO","FAILED to take qr screen shot")
+            return False
+        
+        result = self.clsCommon.qrcode.resolveQrCode(qrCodeSc)
+        if result == None:
+            writeToLog("INFO","FAILED to resolve qr code")
+            return False
+        
+        if str(expecterQrCode) != result:
+            writeToLog("INFO","FAILED to verify thumbnail, the image and in the tumbnail is '" + str(result) + "' but need to be '" + str(expecterQrCode) + "'")
+            return False
+        
+        writeToLog("INFO","Thumbnail was verified")
+        return True
+    
+    
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
     # tolerance - seconds: the deviation from the time and image.
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03')

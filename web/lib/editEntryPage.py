@@ -5,6 +5,7 @@ import enums
 import utilityTestFunc
 
 
+
 class EditEntryPage(Base):
     driver = None
     clsCommon = None
@@ -50,6 +51,11 @@ class EditEntryPage(Base):
     EDIT_ENTRY_GO_TO_MEDIA_BUTTON                               = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Go To Media')]")
     EDIT_ENTRY_SCHEDULING_START_TIME                            = ('xpath' ,"//input[@aria-label='Start Time Time']")
     EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON                         = ('xpath', "//button[@id='thumbnail-capture-button']")
+    EDIT_ENTRY_THUMBNAIL_PROGRESS_BAR                           = ('xpath', "//div[@id='thumbnailProgress' and @class='bar thumbnails-progressbar bar-success']")
+    EDIT_ENTRY_THUMBNAIL_CAPTURED_MES                           = ('xpath', "//button[@class='close' contains(text(), 'Thumbnail has been captured')']")
+    EDIT_ENTRY_UPLOAD_THUMBNAIL_BUTTON                          = ('xpath', "//label[@class='thumbnails_upload_button_label']")
+    EDIT_ENTRY_THUMBNAIL_AUTO_GENERATE_BUTTON                   = ('xpath', "//button[@id='thumbnail-generate-button' and @class='btn responsiveSize']")
+    EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL                   = ('xpath', "//a[@class='thumbnail' and contains(@href,'/slice/SLOCE_NUMBER/slices/')]") # When using this locator, replace 'SLOCE_NUMBER' string with your real slice number
     EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA             = ('xpath', "//img[@alt='Thumbnail for media']")
     EDIT_ENTRY_THUMBNAIL_ENTRY_IN_CATEGORY                      = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']") # When using this locator, replace 'ENTRY_NAME' string with your real entry name
     EDIT_ENTRY_UPLOAD_CAPTION_BUTTON                            = ('id', 'upload')   
@@ -454,25 +460,6 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
             return False
          
-    # Author: Michal Zomper 
-    # TODO : add stop player in the given time and verify that the image that was capture is correct   
-    def captureThumbnail(self, timeToStop="", qrCodeRedult=""): 
-        if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
-            writeToLog("INFO","FAILED to click on the thumbnail tab")
-            return False
-        
-        if timeToStop == "" or qrCodeRedult == "":
-            if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
-                writeToLog("INFO","FAILED to click on capture thumbnail button")
-                return False
-            
-            # verify image was add
-            if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
-                writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
-                return False
-        
-        return True       
-
     
     # Author: Michal Zomper
     def addCaptions(self, captionFilePath, captionLanguage, captionLabel):
@@ -608,7 +595,7 @@ class EditEntryPage(Base):
             if self.verifySlidesInTimeLine(mySlidesList) == False:
                 writeToLog("INFO","FAILED, Not all slides display in time line")
                 return False
-            
+            sleep(1)
             # Verify cuepoint were added on the player
             if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
             #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
@@ -687,13 +674,14 @@ class EditEntryPage(Base):
     # Author: Michal Zomper   
     def deleteSingelSlideFromTimeLine(self, slideTime):
         slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(slideTime)
+        sleep(2)
         locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(slideTime) + "' in time line")
             return False
         sleep(2)
         self.hover_on_element(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE)
-        sleep(1)
+        sleep(2)
         if self.click(self.EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE, 20) == False:
             writeToLog("INFO","FAILED to click on delete slide button")
             return False
@@ -704,7 +692,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False   
         
-        sleep(1)
+        sleep(2)
         if self.is_visible(locatorSlideTime) == True:
             writeToLog("INFO","FAILED, slide in time '" + str(slideTime) + "' was found although this slide was deleted")
             return False   
@@ -852,21 +840,24 @@ class EditEntryPage(Base):
     def changeSlideTimeInTimeLine(self, oldSlideTime, newSlideTime):
         slideTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(oldSlideTime)
         locatorSlideTime = (self.EDIT_ENTRY_SLIDE_IN_TIMELINE[0], self.EDIT_ENTRY_SLIDE_IN_TIMELINE[1].replace('SLIDE_TIME', str(slideTimeInSec * 1000)))
+        sleep(3)
         if self.click(locatorSlideTime, 20) == False:
             writeToLog("INFO","FAILED to find and click on slide at time : '" + str(oldSlideTime) + "' in time line")
             return False   
-         
+        
+        sleep(1) 
         if self.clear_and_send_keys(self.EDIT_ENTRY_INSERT_TIME_TO_SLIDE_OR_CHAPTER, newSlideTime, multipleElements= True) == False:
             writeToLog("INFO","FAILED insert new slide time: " + str(newSlideTime))
             return False             
-            
+        
+        sleep(1)
         if self.click(self.EDIT_ENTRY_SAVE_CHAPTER_OR_SLIDE, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False               
         
         sleep(3)
         # Verify new time saved 
-        if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, multipleElements=True) == False:
+        if self.wait_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to fined saved success label")
             return False  
         
@@ -959,5 +950,112 @@ class EditEntryPage(Base):
         writeToLog("INFO","Success, name was added to all needed slides")
         return True
     
-   
+    # Author: Michal Zomper     
+    def uploadThumbnail(self, filePath, ExpectedQRresult):  
+        if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
+            writeToLog("INFO","FAILED to click on the thumbnail tab")
+            return False
+        sleep(2)
         
+        if self.click(self.EDIT_ENTRY_UPLOAD_THUMBNAIL_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on upload thumbnail button")
+            return False
+        self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
+        
+        # verify that the upload progress bar disappear
+        if self.wait_while_not_visible(self.EDIT_ENTRY_THUMBNAIL_PROGRESS_BAR) == False:
+            writeToLog("INFO","FAILED to verify that thumbnail progress bar disappear")
+            return False
+        
+        # verify image was add
+        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
+            writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
+            return False
+            
+        thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
+        
+        if thumbnailResult != str(ExpectedQRresult):
+            writeToLog("INFO","FAILED to verify that the upload thumbnail is correct, expected qr code is '" + str(ExpectedQRresult)+ "' and the upload thumbnail qr code is '" + str(thumbnailResult) + "'")
+            return False
+        
+        writeToLog("INFO","Success, upload thumbnail was successfully")
+        return True
+    
+    
+    # Author: Michal Zomper 
+    def captureThumbnail(self, timeToStop, qrCodeRedult): 
+        if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
+            writeToLog("INFO","FAILED to click on the thumbnail tab")
+            return False
+        sleep(2)
+        
+        if self.clsCommon.player.clickPlayAndPause(timeToStop, 10) == False:
+            writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
+            return False
+        
+        self.clsCommon.base.switch_to_default_content()
+        if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on capture thumbnail button")
+            return False
+        
+        # verify that the capture message display
+        if self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES) == False:
+            writeToLog("INFO","FAILED to verify capture message")
+            return False
+        
+        # verify image was add
+        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
+            writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
+            return False
+            
+        thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
+        
+        if thumbnailResult != str(qrCodeRedult):
+            writeToLog("INFO","FAILED to verify that the capture thumbnail is correct, expected qr code is '" + str(qrCodeRedult)+ "' and the capture thumbnail qr code is '" + str(thumbnailResult) + "'")
+            return False
+        
+        writeToLog("INFO","Success, capture thumbnail was successfully")
+        return True       
+
+
+    # Author: Michal Zomper 
+    def chooseAutoGthumbnail(self, chosenThumbnailNumber, ExpectedQRresult):  
+        if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
+            writeToLog("INFO","FAILED to click on the thumbnail tab")
+            return False
+        sleep(2)
+        
+        if self.click(self.EDIT_ENTRY_THUMBNAIL_AUTO_GENERATE_BUTTON, 20) == False:
+            writeToLog("INFO","FAILED to click on thumbnail auto generate button")
+            return False
+        
+        sleep(2)
+        chosenThumbnail = (self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[0], self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[1].replace('SLOCE_NUMBER', str(chosenThumbnailNumber)))
+        if self.click(chosenThumbnail, timeout=20) == False:
+            writeToLog("INFO","FAILED to choose thumbnail number '" + str(chosenThumbnailNumber) + "' from auto generate")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        # verify that the capture message display
+        if self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES) == False:
+            writeToLog("INFO","FAILED to verify capture message")
+
+        # verify image was add
+        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
+            writeToLog("INFO","FAILED to verify auto generate thumbnail was added to thumbnail area")
+            return False
+         
+        sleep(1)   
+        thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
+        
+        if thumbnailResult != str(ExpectedQRresult):
+            writeToLog("INFO","FAILED to verify that the thumbnail that was choden from auto generate is correct, expected qr code is '" + str(ExpectedQRresult)+ "' and the auto generate thumbnail qr code is '" + str(thumbnailResult) + "'")
+            return False
+        
+        writeToLog("INFO","Success, capture thumbnail was successfully")
+        return True               
+        
+        
+        
+        
+            

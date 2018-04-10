@@ -1,7 +1,7 @@
+import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from time import strftime
-
 import pytest
-
 from clsCommon import Common
 import clsTestService
 import enums
@@ -118,7 +118,8 @@ class Test:
             if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
-                return      
+                return 
+            sleep(3)     
            
             writeToLog("INFO","Step 10: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    

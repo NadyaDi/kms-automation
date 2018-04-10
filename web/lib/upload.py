@@ -1,18 +1,14 @@
+import random
 import subprocess
-
 from base import *
 import clsTestService
 import enums
 from general import General
-
+from selenium.webdriver.common.keys import Keys
 try:
     import win32com.client
 except:
     pass
-
-from selenium.webdriver.common.keys import Keys
-
-
 
 
 # This class is for multiple upload
@@ -333,6 +329,9 @@ class Upload(Base):
         try:
             # If running on remote node
             if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.REMOTE_RUN_MODE:
+                # Because of miltiple run at same time, we apply random wait
+                timeDelay = random.uniform(1.1, 2.9)
+                sleep(timeDelay)               
                 self.clsCommon.instertPathInFileUploadWindows(filePath)
             else:
                 if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):

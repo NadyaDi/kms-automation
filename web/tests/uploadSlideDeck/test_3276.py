@@ -1,5 +1,6 @@
 import time, pytest
-
+import sys,os
+sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from clsCommon import Common
 import clsTestService
 from localSettings import *
@@ -63,61 +64,62 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2 
-            self.slidesQrCodeAndTimeList = collections.OrderedDict()
-            self.slidesQrCodeAndTimeList = {'0': '00:00', '1': '00:01','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '7': '00:07', '8': '00:08', '9': '00:09',
-                                            '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14','15': '00:15', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
-                                            '20': '00:20', '21': '00:21','22': '00:22', '23': '00:23','24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28', '29': '00:29'}
             
-            self.deleteSlidesList = collections.OrderedDict()
-            self.deleteSlidesList = { '15': '00:15', '21': '00:21'}
+            self.slidesQrCodeAndTimeList = [('0','00:00'), ('1','00:01'),('2','00:02'), ('3','00:03'), ('4','00:04'), ('5','00:05'), ('6','00:06'), ('7','00:07'), ('8','00:08'), ('9','00:09'),
+                                            ('10','00:10'), ('11','00:11'), ('12','00:12'), ('13','00:13'), ('14','00:14'), ('15','00:15'), ('16','00:16'), ('17','00:17'), ('18','00:18'), ('19','00:19'),
+                                            ('20','00:20'), ('21','00:21'), ('22','00:22'), ('23','00:23'), ('24','00:24'), ('25','00:25'), ('26','00:26'), ('27','00:27'), ('28','00:28'), ('29','00:29')]
+            self.slidesQrCodeAndTimeList = collections.OrderedDict(self.slidesQrCodeAndTimeList)  
+
+            self.deleteSlidesList = [('15','00:15'), ('21','00:21')]
+            self.deleteSlidesList = collections.OrderedDict(self.deleteSlidesList)  
             
-            self.changeTimeOfSlidesList = collections.OrderedDict()
-            self.changeTimeOfSlidesList = {'00:01':'00:15', '00:23':'00:21', '00:07':'00:23'}
             # in this list the key is the current time and the value is the new time
-            self.changeTimeOfSlidesList = {'00:01':'00:15', '00:23':'00:21', '00:07':'00:23'}
+            self.changeTimeOfSlidesList = [('00:01','00:15'), ('00:23','00:21'), ('00:07','00:23')]
+            self.changeTimeOfSlidesList = collections.OrderedDict(self.changeTimeOfSlidesList)
             
-            self.newSlidesQrCodeAndTimeList = collections.OrderedDict()
-            self.newSlidesQrCodeAndTimeList = {'0':'00:00','2': '00:02', '3': '00:03','4': '00:04','5': '00:05', '6': '00:06', '8': '00:08', '9': '00:09',
-                                            '10': '00:10', '11': '00:11','12': '00:12', '13': '00:13','14': '00:14', '15': '00:01', '16': '00:16', '17': '00:17', '18': '00:18', '19': '00:19',
-                                            '20': '00:20', '21': '00:23', '22': '00:22','23': '00:07', '24': '00:24','25': '00:25', '26': '00:26', '27': '00:27', '28': '00:28'}
+            self.newSlidesQrCodeAndTimeList = [('0','00:00'), ('2','00:02'), ('3','00:03'), ('4','00:04'), ('5','00:05'), ('6','00:06'), ('8','00:08'), ('9','00:09'),('10','00:10'), 
+                                            ('11','00:11'), ('12','00:12'), ('13','00:13'), ('14','00:14'), ('15','00:01'), ('16','00:16'), ('17','00:17'), ('18','00:18'), ('19','00:19'),
+                                            ('20','00:20'), ('21','00:23'), ('22','00:22'), ('23','00:07'), ('24','00:24'),('25','00:25'), ('26','00:26'), ('27','00:27'), ('28','00:28')]
+            self.newSlidesQrCodeAndTimeList = collections.OrderedDict(self.newSlidesQrCodeAndTimeList)
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                                  
+                                   
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                         
+                          
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-                  
+                   
             # remove slides from  slides list (slidesQrCodeAndTimeList) in order to move different slides location  
             writeToLog("INFO","Step 4: Going to remove slides from slides main list (slidesQrCodeAndTimeList)")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")  
                 self.status = "Fail"
                 return 
-                                   
+                                    
             writeToLog("INFO","Step 5: Going change slides time")
             if self.common.editEntryPage.changeSlidesTimeInTimeLine(self.entryName, self.changeTimeOfSlidesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to change slide time in time line")
                 return
-                      
+                       
             writeToLog("INFO","Step 6: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate to entry page: " + self.entryName)
                 return  
-               
+                
             sleep(3)
             writeToLog("INFO","Step 7: Going to change player view")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:

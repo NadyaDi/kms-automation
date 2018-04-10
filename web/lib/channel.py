@@ -575,7 +575,7 @@ class Channel(Base):
         return True
 
       
-    #TODO NOT FINISHED
+   
     #@Author: Oded Berihon     
     def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, entriesNames): 
         if self.navigateToChannelPlaylistTab(channelName) == False:
@@ -624,22 +624,23 @@ class Channel(Base):
             return False  
         sleep(1)
         
-        for entryName in entriesNames:
-            if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, Keys.CONTROL + 'a') == False:
-                writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
-                return False        
-                    
-            if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, entryName + Keys.ENTER) == False:
-                writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
-                return False
-            
-            # Wait for loader to disappear
-            self.clsCommon.general.waitForLoaderToDisappear()
-            
-            if self.click(self.CHANNEL_ADD_MEDIA_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on add button")
-                return False             
-            sleep(1)   
+        if len (entriesNames)== 0:
+            for entryName in entriesNames:
+                if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, Keys.CONTROL + 'a') == False:
+                    writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
+                    return False        
+                        
+                if self.send_keys(self.CHANNEL_SEARCH_BUTTON_FIELD, entryName + Keys.ENTER) == False:
+                    writeToLog("INFO","FAILED to enter entry name  :'" + entryName + "'")
+                    return False
+                
+                # Wait for loader to disappear
+                self.clsCommon.general.waitForLoaderToDisappear()
+                
+                if self.click(self.CHANNEL_ADD_MEDIA_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on add button")
+                    return False             
+                sleep(1)   
             
         if self.click(self.CHANNEL_SAVE_PLAYLIST_BUTTON) == False:
             writeToLog("INFO","FAILED to click on save")
@@ -654,6 +655,21 @@ class Channel(Base):
     
     
     #@Author: Oded Berihon  
+    def sortAndFilterInChannelPlaylist(self, sortBy='', filterMediaType=''):
+        if sortBy != '':
+            if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
+                writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
+                return False
+
+        if filterMediaType != '':
+            if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
+                writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
+                return False
+            
+        return True
+    
+    
+    #@Author: Oded Berihon   
     def deleteChannelPlaylist(self, channelName, playlisTitle):
         if self.navigateToChannelPlaylistTab(channelName) == False:
             writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
