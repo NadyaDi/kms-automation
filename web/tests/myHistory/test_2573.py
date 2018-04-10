@@ -67,19 +67,19 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload video entry")
                 return
-                 
+                  
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
-                 
+                  
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
-                        
+                         
             writeToLog("INFO","Step 4: Going to navigate to add new video quiz")
             if self.common.upload.addNewVideoQuiz() == False:
                 self.status = "Fail"
