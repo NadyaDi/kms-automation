@@ -17,6 +17,7 @@ from myMedia import MyMedia
 from myPlaylists import MyPlaylists
 from player import Player
 from upload import Upload
+from freeTrial import FreeTrial
 
 
     #============================================================================================================
@@ -44,6 +45,7 @@ class Common():
         self.myHistory          = MyHistory(self, driver)
         self.qrcode             = QrCodeReader(self, driver)
         self.kea                = Kea(self, driver)
+        self.freeTrail          = FreeTrial(self, driver)
 
         
     #=============================================================================================================
