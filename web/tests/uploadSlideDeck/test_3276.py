@@ -26,7 +26,6 @@ class Test:
     # In the player verify that the slides that was changed display now in the new time
     #================================================================================================================================
     testNum     = "3276"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -58,7 +57,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Slide Deck Upload - change slide location", self.testNum)
 

@@ -16,7 +16,6 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
     testNum     = "302"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -50,7 +49,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,captur,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             self.entryName1 = clsTestService.addGuidToString('entryName1')
             self.entryName2 = clsTestService.addGuidToString('entryName2')

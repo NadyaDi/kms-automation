@@ -19,7 +19,6 @@ class Test:
     # Login with the collaborator user and change the entry metadata (entry name / description / tags) successfully. 
     #================================================================================================================================
     testNum     = "3277"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -55,7 +54,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration - edit metadata", self.testNum)
             self.newEntryName = clsTestService.addGuidToString('Edit Collaboration', self.testNum)

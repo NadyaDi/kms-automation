@@ -22,7 +22,6 @@ class Test:
     # In entry page check some of the slides to see that the correct slide display in the correct time
     #================================================================================================================================
     testNum     = "3273"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -52,7 +51,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Slide Deck Upload", self.testNum)
 
