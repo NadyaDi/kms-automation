@@ -28,7 +28,7 @@ class Test:
             if (prSessionInfo["sessionSystemID"] != -1):
                 testIDsDct = self.practiTest.getPractiTestSessionInstances(prSessionInfo["sessionSystemID"])
                 if (len (testIDsDct) > 0):
-                    self.practiTest.createAutomationTestSetFile(prSessionInfo["environment"], prSessionInfo["setPlatform"], testIDsDct)
+                    self.practiTest.createAutomationTestSetFile(prSessionInfo["hostname"], prSessionInfo["environment"], prSessionInfo["setPlatform"], testIDsDct)
                     if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
                         self.status = "Fail"
                         writeToLog("INFO","Unable to set test set as processed") 

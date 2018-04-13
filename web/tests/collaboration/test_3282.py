@@ -21,7 +21,6 @@ class Test:
     # Go to collaborator tab and add user as collaborator.collaborator user doesn't have permission to add collaborator user
     #================================================================================================================================
     testNum     = "3282"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -56,7 +55,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration negative test", self.testNum)
             

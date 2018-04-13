@@ -18,7 +18,6 @@ class Test:
     # 
     #================================================================================================================================
     testNum     = "767"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -58,7 +57,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)

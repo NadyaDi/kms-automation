@@ -19,7 +19,6 @@ class Test:
     # under thumbnail tab change thumnbnail in 3 different ways : Upload, Capture, Auto-Generate
     #================================================================================================================================
     testNum     = "1027"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -54,7 +53,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Edit entry - thumbnail tab", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 

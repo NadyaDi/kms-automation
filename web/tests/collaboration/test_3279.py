@@ -19,7 +19,6 @@ class Test:
     # Login with the collaborator user - go to entry thumbnail tab  and change entry thumbnail using capture thumbnail. 
     #================================================================================================================================
     testNum     = "3279"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -53,7 +52,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration co editor-Thumbnail tab", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
