@@ -32,7 +32,8 @@ class Location(Enum):
     CHANNELS_PAGE          = 'channels page'
     MY_PLAYLISTS           = 'my playlists'
     EDIT_ENTRY_PAGE        = 'edit entry page'
-    MY_HISTORY             = 'my history'  
+    MY_HISTORY             = 'my history'
+    PENDING_TAB            = 'channel - Pending tab' 
     HOME                   = 'home'
 
 
