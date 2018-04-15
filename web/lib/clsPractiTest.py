@@ -65,16 +65,17 @@ class clsPractiTest:
         r = requests.get(practiTestGetSessionsURL,headers = headers)
         if (r.status_code == 200):
             dctSets = json.loads(r.text)
-            if (dctSets["data"][0]["attributes"]["instances-count"] > 0):
-                prSessionInfo["sessionSystemID"]  = dctSets["data"][0]["id"]
-                prSessionInfo["sessionDisplayID"] = dctSets["data"][0]["attributes"]["display-id"]
-                prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30772'] #PractiTest Field: Automation Platform
-                prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30761'] #PractiTest Field: Automation Env
-                prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"]['---f-34785'] #PractiTest Field: Run On Hostname
-                
-                writeToLog("DEBUG","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
-            else:
-                writeToLog("DEBUG","No automated sessions found.")
+            if len(dctSets["data"]) != 0:
+                if (dctSets["data"][0]["attributes"]["instances-count"] > 0):
+                    prSessionInfo["sessionSystemID"]  = dctSets["data"][0]["id"]
+                    prSessionInfo["sessionDisplayID"] = dctSets["data"][0]["attributes"]["display-id"]
+                    prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30772'] #PractiTest Field: Automation Platform
+                    prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30761'] #PractiTest Field: Automation Env
+                    prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"]['---f-34785'] #PractiTest Field: Run On Hostname
+                    
+                    writeToLog("DEBUG","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
+                else:
+                    writeToLog("DEBUG","No automated sessions found.")
         else:
             writeToLog("DEBUG","Bad response for get sessions. " + r.text) 
         

@@ -232,7 +232,8 @@ def createScreenshot(test, scName=''):
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
         pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs', runningTestNum, scName + '.png'))
-    test.driver.save_screenshot(pngPath)          
+    if test.driver != None:
+        test.driver.save_screenshot(pngPath)          
 
     
 def initializeDriver(test, driverFix):
