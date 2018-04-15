@@ -29,8 +29,9 @@ class MyHistory(Base):
     MY_HISTORY_ENTRY_LAST_WATCHED                                 = ('xpath', "//a[@class='watch-time']")
     MY_HISTORY_ENTRY_VIEWD_IN                                     = ('xpath', "//a[contains(@href, 'channel/')")
     MY_HISTORY_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::td[@class='dataTd entryDetails']") 
-    MY_HISTORY_PROGRESS_BAR_INCOMPLETE                            = ('xpath', "//div[@class='progress history-progress started']")
-    MY_HISTORY_PROGRESS_BAR_PRECENT                               = ('xpath', "//div[@class='bar' and @style='width: PERCENT']")
+    MY_HISTORY_PROGRESS_BAR_STARTED                               = ('xpath', "//div[@class='progress history-progress started']")
+    MY_HISTORY_PROGRESS_BAR_COMPLETE                              = ('xpath', "//div[@class='progress history-progress complete']")
+    MY_HISTORY_PROGRESS_BAR_PRECENT                               = ('xpath', "//div[@class='bar' and contains(@style, 'width:')]")
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -77,9 +78,14 @@ class MyHistory(Base):
     
     # @Author: Inbar Willman    
     # This method search if entry exists or not in My history page    
-    def isEntryExistsInMyHistory(self, entryName, timeout=30):    
-        if self.searchEntryMyHistory(entryName) == False:
-            return False
+    def isEntryExistsInMyHistory(self, entryName, description='', timeout=30):  
+        if description == '':
+            if self.searchEntryMyHistory(entryName) == False:
+                return False
+        else:
+            if self.searchEntryMyHistory(description) == False:
+                return False
+            
         tmpEntryName = (self.MY_HISTORY_RESULTS_ENTRY [0], self.MY_HISTORY_RESULTS_ENTRY [1].replace('ENTRY_NAME', entryName))
         if self.wait_visible(tmpEntryName, timeout) == False: 
             return False
@@ -88,10 +94,10 @@ class MyHistory(Base):
     
     
     # @Author: Inbar Willman
-    def waitTillLocatorExistsInMyHistory(self, entryName, timeout=30):
+    def waitTillLocatorExistsInMyHistory(self, entryName, description='', timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
         while wait_until > datetime.datetime.now(): 
-            if self.isEntryExistsInMyHistory(entryName, 5):
+            if self.isEntryExistsInMyHistory(entryName,description, 5):
                 #Entry exist
                 return True
         writeToLog("INFO","FAILED to find entry in My History")
@@ -173,33 +179,54 @@ class MyHistory(Base):
                     return False 
                        
         return True    
+     
     
-    # @Author: Inbar Willman   
-    def checkEntryProgressBar(self, entryName, percent):
+    # @Author: Inbar Willman
+    # Search entry in My History and check that the percent in progress bar is displayed in correct range
+    # The assumption is that there is just one entry in search results
+    def checkPercentInProgressBar(self, entryName, percent, timeout=60): 
         # Make a search in My History
         if self.isEntryExistsInMyHistory(entryName) == False:
             writeToLog("INFO","FAILED to find entry in My History")
-            return False             
+            return False  
         
-        # Check that correct percent is displayed in progress bar
-        if self.waitTillProgressBarIsDisplayed(entryName, percent) == False:
-            writeToLog("INFO","FAILED to find progress bar")
-            return False   
-        
-        return True  
-    
-    
-    # @Author: Inbar Willman
-    def waitTillProgressBarIsDisplayed(self, entryName, percent, timeout=60):
-        tmp_percent = (self.MY_HISTORY_PROGRESS_BAR_PRECENT[0], self.MY_HISTORY_PROGRESS_BAR_PRECENT[1].replace('PERCENT', percent))
+        # Check for percent display in progress bar   
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
         while wait_until > datetime.datetime.now(): 
-            if self.is_present(tmp_percent):
-                #Entry exist
+            element = self.get_element(self.MY_HISTORY_PROGRESS_BAR_PRECENT)
+            element_attribute_values = element.get_attribute("style").split()
+            element_percent = int(element_attribute_values[1][:-2])
+            if element_percent == percent:
                 return True
-            self.isEntryExistsInMyHistory(entryName)
+            else:
+                if element_percent > (percent - 4) and element_percent < (percent + 4):
+                    return True
+            self.isEntryExistsInMyHistory(entryName)  
             
-        writeToLog("INFO","FAILED to find progress bar")
-        return False        
-
-        
+        writeToLog("INFO","FAILED to display correct percent in progress bar")
+        return False  
+              
+              
+    # @Author: Inbar Willman
+    def checkProgressBarStatus(self, entryName, description='', status=enums.ProgressBarStatus.STARTED, timeout=60):
+        # Make a search in My History
+        if self.isEntryExistsInMyHistory(entryName, description='') == False:
+            writeToLog("INFO","FAILED to find entry in My History")
+            return False  
+             
+        # Check for progress bar status
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
+        while wait_until > datetime.datetime.now(): 
+            if status == enums.ProgressBarStatus.COMPLETE:
+                if self.is_visible(self.MY_HISTORY_PROGRESS_BAR_COMPLETE):
+                    return True
+            elif status == enums.ProgressBarStatus.STARTED:
+                if self.is_visible(self.MY_HISTORY_PROGRESS_BAR_STARTED):
+                    return True
+            else:
+                writeToLog("INFO","FAILED to get valid progress bar status")
+                return False         
+            self.isEntryExistsInMyHistory(entryName)     
+            
+        writeToLog("INFO","FAILED to display correct progress bar status")
+        return False     

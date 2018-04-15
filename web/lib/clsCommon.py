@@ -17,6 +17,7 @@ from myMedia import MyMedia
 from myPlaylists import MyPlaylists
 from player import Player
 from upload import Upload
+from home import Home
 
 
     #============================================================================================================
@@ -44,6 +45,7 @@ class Common():
         self.myHistory          = MyHistory(self, driver)
         self.qrcode             = QrCodeReader(self, driver)
         self.kea                = Kea(self, driver)
+        self.home               = Home(self, driver)
 
         
     #=============================================================================================================
@@ -109,5 +111,9 @@ class Common():
         elif navigateTo == enums.Location.MY_HISTORY:
             if self.myHistory.navigateToMyHistory(forceNavigate) == False:
                 raise Exception("INFO","FAILED navigate to my history")
+            
+        elif navigateTo == enums.Location.HOME:
+            if self.myHistory.navigateToHomePage(forceNavigate) == False:
+                raise Exception("INFO","FAILED navigate to home page")        
                                                             
         return True 

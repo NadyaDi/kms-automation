@@ -14,13 +14,13 @@ class Test:
     #================================================================================================================================
     #  @Author: Inbar Willman
     # Test description:
-    # Check that when resume playback is enabled progress bar is displayed in entry's thumbnail and shoe the correct time
+    # Search in My History page by entry's description
     # The test's Flow: 
-    # Login to KMS-> Upload audio entry-> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
-    # MY History page and make sure that entry exists in page and progress bar with the current progress is displayed
+    # Login to KMS-> Upload audio entry-> Go to entry page and play entry -> Go to
+    # MY History page and search entry by description
     # test cleanup: deleting the uploaded file
     #================================================================================================================================
-    testNum     = "2679"
+    testNum     = "2694"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -31,10 +31,9 @@ class Test:
     common = None
     # Test variables
     entryName= None
-    entryDescription = "description"
+    entryDescription = None
     entryTags = "tag1,"
-    progressBarPercent = 17
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -53,49 +52,37 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('MyHistoryAudioEntry', self.testNum)
+            self.entryName = clsTestService.addGuidToString('MyHistoryVideoEntry', self.testNum)
+            self.entryDescription = clsTestService.addGuidToString('MyHistoryEntryDescription', self.testNum)
             ######################### TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload audio entry")
+            writeToLog("INFO","Step 1: Going to upload video entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload audio entry")
                 return
-               
+                
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
-                return           
+                return            
                
-            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
-                return
-                
-            writeToLog("INFO","Step 4: Going to Search entry in My History page")
-            if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED - New entry is displayed in my history page")
-                return       
-            writeToLog("INFO","Step 4: Previous Step Failed as Expected - The entry should not be displayed")          
-              
-            writeToLog("INFO","Step 5: Going to play entry")
+            writeToLog("INFO","Step 3: Going to play entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05', toVerify=False, timeout=50) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to navigate and play entry")
+                writeToLog("INFO","Step 3: FAILED to navigate and play entry")
                 return  
-              
-            writeToLog("INFO","Step 6: Going to switch to default content")
+               
+            writeToLog("INFO","Step 4: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to switch to default content")
+                writeToLog("INFO","Step 4: FAILED to switch to default content")
                 return  
             
-            writeToLog("INFO","Step 7: Going to navigate to my history and check for percent in progress bar")
-            if self.common.myHistory.checkPercentInProgressBar(self.entryName, self.progressBarPercent) == False:
+            writeToLog("INFO"," Step 5: Going to navigate to my history and search entry by description")
+            if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName, self.entryDescription) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED display correct percent in progress bar")
+                writeToLog("INFO","Step 5: FAILED find entry in My History page")
                 return        
             #########################################################################
             writeToLog("INFO","TEST PASSED")
