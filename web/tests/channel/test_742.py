@@ -15,7 +15,7 @@ class Test:
     # Test Description Test Description Test Description Test Description Test Description Test Description
     # Test Description Test Description Test Description Test Description Test Description Test Description
     #==============================================================================================================
-    testNum     = "302"
+    testNum     = "742"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -65,47 +65,61 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as End-user")
                 return
-            
+              
             self.entriesToUpload = {
                 self.entryName1: self.filePath, 
                 self.entryName2: self.filePath,
                 self.entryName3: self.filePath, 
                 self.entryName4: self.filePath,
                 self.entryName5: self.filePath }            
-            
+              
             writeToLog("INFO","Step 2: Going to upload 5 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
- 
-              
+   
+                
             writeToLog("INFO","Step 6: Going to set entry #4 as Unlisted")
             if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to set entry #4 as Unlisted")
                 return     
-               
+                 
             writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
-            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True) == False:
+            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True, publishFrom = enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
                 return
-               
+                 
             writeToLog("INFO","Step 8: Going to logout from End-user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED failed to logout from End-user")
                 return  
-                                     
+                                      
             writeToLog("INFO","Step 9: Going to login to KMS with channel's owner")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to login with channel's owner")
                 return
+             
+            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
                
+            writeToLog("INFO","Step 6: Going to sort entries by Alphabetical & Image type")
+            if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, "KMS-Automation_Moderate_Channel") == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to sort entries by Alphabetical & Image type")
+                return
+               
+            writeToLog("INFO","Step 7: Going to verify entries order - by Alphabetical & Image type")
+            if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to verify entries order - by Alphabetical & Image type")
+                return
+                    
             writeToLog("INFO","Step 10: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
-            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", self.entryName1, self.entryName2) == False:
+            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", self.entryName1, self.entryName2, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to handle entries in Pending tab")
                 return
@@ -149,6 +163,9 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************")
+            if self.status == "Fail" : 
+                self.common.login.logOutOfKMS()
+                self.common.loginAsUser()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
