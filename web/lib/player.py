@@ -528,8 +528,11 @@ class Player(Base):
         for slide in slidesForSearchList:
             self.click(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU)
             searchEl = self.get_element(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU)
-            ActionChains(self.driver).click(searchEl).send_keys(slide + Keys.SPACE + Keys.ENTER).perform()
-            #ActionChains(self.driver).click(searchEl).send_keys(Keys.SPACE + Keys.ENTER).perform()
+            ActionChains(self.driver).click(searchEl).send_keys(slide).perform()
+            sleep(1)
+            ActionChains(self.driver).click(searchEl).send_keys(Keys.SPACE).perform()
+            sleep(1)
+            ActionChains(self.driver).send_keys(Keys.ENTER).perform()
             
             
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', slidesForSearchList[slide]))
