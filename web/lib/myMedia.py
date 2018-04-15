@@ -166,10 +166,10 @@ class MyMedia(Base):
         
     def searchEntryMyMedia(self, entryName, forceNavigate=True):
         # Check if my media page is already open
-        if self.MY_MEDIA_PAGE_TITLE == False:
-            # Navigate to My Media
-            if self.navigateToMyMedia(forceNavigate) == False:
-                return False
+        # Navigate to My Media
+        if self.navigateToMyMedia(forceNavigate) == False:
+            return False
+        
         sleep(2)
         # Search Entry     
         self.getSearchBarElement().click()
