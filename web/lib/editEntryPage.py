@@ -944,7 +944,7 @@ class EditEntryPage(Base):
             sleep(5)
             # Verify chapter saved 
             if self.is_visible(self.EDIT_ENTRY_SAVED_CHAPTER_OR_SLIDE_SUCCESS_MSG, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to fined saved slide success label")
+                writeToLog("INFO","FAILED to find saved slide success label")
                 return False
               
         writeToLog("INFO","Success, name was added to all needed slides")
