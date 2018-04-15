@@ -195,7 +195,7 @@ class Test:
             sleep(3)
             index = 0
             writeToLog("INFO","Step 17: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
-            for i in range(4):
+            for i in range(3):
                 sleep(2)
                 index = index + i + 4 
                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:

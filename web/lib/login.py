@@ -20,11 +20,11 @@ class Login(Base):
     USER_LOGOUT_BTN                     = ('xpath', "//i[@class='icon-signout']")
     USER_GUEST                          = ('xpath', "//span[@id='userMenuDisplayName' and contains(text(), 'Guest')]")
     #============================================================================================================
-    def loginToKMS(self, username, password):
+    def loginToKMS(self, username, password, url=''):
         try:
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Navigate to login page
-            self.navigateToLoginPage()
+            self.navigateToLoginPage(url)
             # Enter test partner username
             self.send_keys(self.LOGIN_USERNAME_FIELD, username)
             # Enter test partner password
@@ -48,9 +48,14 @@ class Login(Base):
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
             raise Exception(inst)
         
-    def navigateToLoginPage(self):
-        self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
-        self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)       
+    def navigateToLoginPage(self, url=''):
+        if url == '':
+            self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
+            self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)    
+        else:
+            self.navigate(url)
+            self.clsCommon.myMedia.verifyUrl(url, False)
+           
         
     def logOutOfKMS(self):
         # Click on the user menu button
