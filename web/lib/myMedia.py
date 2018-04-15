@@ -165,9 +165,11 @@ class MyMedia(Base):
      
         
     def searchEntryMyMedia(self, entryName, forceNavigate=True):
-        # Navigate to My Media
-        if self.navigateToMyMedia(forceNavigate) == False:
-            return False
+        # Check if my media page is already open
+        if self.MY_MEDIA_PAGE_TITLE == False:
+            # Navigate to My Media
+            if self.navigateToMyMedia(forceNavigate) == False:
+                return False
         sleep(2)
         # Search Entry     
         self.getSearchBarElement().click()
@@ -358,6 +360,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to navigate to my media")
                 return False
             
+            sleep(1)
             if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
                 return False

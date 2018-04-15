@@ -36,7 +36,10 @@ class Test:
     channelList = ""
     categoryName = None
     whereToPublishFrom = "Entry Page"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
+    timeToStop = "0:05"
+    qrCodeRedult = "5"
+    PlayFromBarline = False
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -112,7 +115,7 @@ class Test:
                 return 
              
             writeToLog("INFO","Step 10: Going to capture thumbnail")
-            if self.common.editEntryPage.captureThumbnail() == False:
+            if self.common.editEntryPage.captureThumbnail(self.timeToStop, self.qrCodeRedult, self.PlayFromBarline) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to capture thambnail")
                 return             

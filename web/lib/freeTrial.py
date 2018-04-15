@@ -58,7 +58,7 @@ class  FreeTrial(Base):
                 return False
         
         # wait until the creating process is done
-        if self.wait_visible(self.FREE_TRIAL_CONFIRM_INSTANCE_CREATION, 90) == False:
+        if self.wait_visible(self.FREE_TRIAL_CONFIRM_INSTANCE_CREATION, 120) == False:
                 writeToLog("INFO","FAILED to find create instance message confirm")
                 return False
             
