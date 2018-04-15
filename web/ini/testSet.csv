@@ -23,6 +23,8 @@ test_2668,1,0,0,0,My history - Entry Viewed in gallery
 test_2671,1,0,0,0,My History - Youtube Viewed in
 test_2679,1,0,0,0,My History - Check resume playback
 test_2667,1,0,0,0,My history - Entry Viewed in channel
+test_2694,1,0,0,0,My History - Search by description
+test_2728,1,0,0,0,My history - Check entry in Continue Watching playlist in home page 
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
 test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
