@@ -9,7 +9,6 @@ from openpyxl.styles import colors
 from selenium import webdriver
 
 from base import Base
-from clsBrowserMobCapture import clsBrowserMobCapture
 import clsCommon
 from clsPractiTest import clsPractiTest
 from localSettings import *
@@ -36,6 +35,7 @@ ANDROID_CHROME                  = "android_chrome"
 IMPLICITLY_WAIT_TIME_TO_WAIT    = 30
 TEST_TIMEOUT                    = 60 
     
+    
 #===============================================================================
 # function with all the redundant start functions 
 #===============================================================================
@@ -43,7 +43,7 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
         cleanTempDownloadFolder()
-    test, capture, driver = initialize(test, driverFix, duration)
+    test, driver = initialize(test, driverFix, duration)
     # Login
     common = clsCommon.Common(test.driver)
     if common.loginAsUser() == True:
@@ -51,7 +51,8 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
     else:
         writeToLog("INFO","Driver created, but unable to login")
         raise Exception("Driver created, but unable to login")
-    return (test, capture, driver)
+    return (test, driver)
+
 
 #===============================================================================
 # Load the driver
@@ -61,10 +62,11 @@ def initialize(test,driverFix,duration=60):
         cleanTempQrCodeFolder()
         cleanTempDownloadFolder()
     #setup the test, initialize self and capture
-    test,capture = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
+    test = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     # Strat driver - Open browser and navigate to base URL
     driver = initializeDriver(test,driverFix)
-    return (test, capture, driver)    
+    return (test, driver)    
+    
     
 #host and hostBrowser are optional.
 #if we want to run the tests locally the default browser is firefox, we can give a different browser value. 
@@ -82,38 +84,13 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
     
     if(LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE):
         if(hostBrowser == PC_BROWSER_FIREFOX):
-            if (myProxy != None): 
-                PROXY_HOST = myProxy.proxy[:myProxy.proxy.index(":")]
-                PROXY_PORT = myProxy.proxy[myProxy.proxy.index(":")+1:]                  
-                fp = webdriver.FirefoxProfile()
-                fp.set_preference("plugin.state.npctrl", 2)
-                fp.set_preference("network.proxy.type", 1)
-                fp.set_preference("network.proxy.http",PROXY_HOST)
-                fp.set_preference("network.proxy.http_port",int(PROXY_PORT))
-                fp.set_preference("network.proxy.https",PROXY_HOST)
-                fp.set_preference("network.proxy.https_port",int(PROXY_PORT))
-                fp.set_preference("network.proxy.ssl",PROXY_HOST)
-                fp.set_preference("network.proxy.ssl_port",int(PROXY_PORT))  
-                fp.set_preference("network.proxy.ftp",PROXY_HOST)
-                fp.set_preference("network.proxy.ftp_port",int(PROXY_PORT))   
-                fp.set_preference("network.proxy.socks",PROXY_HOST)
-                fp.set_preference("network.proxy.socks_port",int(PROXY_PORT))   
-                fp.update_preferences()
-                return webdriver.Firefox(firefox_profile=fp)
-            else:
-                return webdriver.Firefox(firefox_profile=fp)
-#                 return webdriver.Firefox()
+            return webdriver.Firefox(firefox_profile=fp)
         elif(hostBrowser == PC_BROWSER_CHROME):
-            if (myProxy != None): 
-                chrome_options = webdriver.ChromeOptions()
-                chrome_options.add_argument('--proxy-server=http://' + myProxy.proxy)
-                return webdriver.Chrome(LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH,chrome_options=chrome_options)
-            else:
-                chrome_options = webdriver.ChromeOptions()
-                chrome_options.add_argument("download.default_directory=" + localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
-                return webdriver.Chrome(LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH)
+            chrome_options = webdriver.ChromeOptions()
+            chrome_options.add_argument("download.default_directory=" + localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
+            return webdriver.Chrome(localSettings.LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH)
         elif(hostBrowser == PC_BROWSER_IE):
-            return webdriver.Ie(LOCAL_SETTINGS_WEBDRIVER_LOCAL_IE_PATH,capabilities={'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True})
+            return webdriver.Ie(localSettings.LOCAL_SETTINGS_WEBDRIVER_LOCAL_IE_PATH,capabilities={'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True})
         elif (hostBrowser == ANDROID_CHROME):
             capabilities = {
                 'chromeOptions': {
@@ -123,33 +100,28 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
             driver = webdriver.Remote('http://localhost:9515', capabilities)
             return driver 
     else: #remote, capture traffic using proxy
-        if (myProxy != None):
-            if (localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_IE):
-                return webdriver.Remote(command_executor=LOCAL_SETTINGS_SELENIUM_HUB_URL,proxy=myProxy, desired_capabilities={'unexpectedAlertBehaviour':'accept', 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
-            elif (localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_CHROME or localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_FIREFOX):
-                return webdriver.Remote(command_executor=LOCAL_SETTINGS_SELENIUM_HUB_URL,proxy=myProxy, desired_capabilities={'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
-        else:
-            if (localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_IE):
-                return webdriver.Remote(command_executor=LOCAL_SETTINGS_SELENIUM_HUB_URL,desired_capabilities={'unexpectedAlertBehaviour':'accept','browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
-            elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_FIREFOX):
-                return webdriver.Remote(browser_profile=fp,command_executor=LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': LOCAL_SETTINGS_SELENIUM_GRID_POOL})
+        if (localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_IE):
+            return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL,desired_capabilities={'unexpectedAlertBehaviour':'accept','browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
+        elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_FIREFOX):
+            return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
+        elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_CHROME):
+            return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'setNoProxy': '' , 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
 
-            elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_CHROME):
-                return webdriver.Remote(command_executor=LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'setNoProxy': '' , 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
 
-#the function checks if a time out happened and writes it to the log  
+# The function checks if a time out happened and writes it to the log  
 def testTimedOut(testNum, startTime,reason):
     if((time.time() - startTime) > TEST_TIMEOUT): # timer is set to each test differently
             writeToLog("INFO","test_" + testNum + " Timed-out. " + reason)
             return True
     return False    
 
+
 # Get from testPartners scv the test credentials by test id and env
 def updatePlatforms(test_num):
     env = ""
     if isAutomationEnv() == True:
         env = "Auto"
-            
+    
     supported_platforms=[]
     case_str = "test_" + test_num
     matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet' + env +  '.csv'))
@@ -167,6 +139,10 @@ def updatePlatforms(test_num):
                     supported_platforms.append(pytest.mark.ie('android_chrome'))
                     
                 if env == 'Auto': #If running from PractiTests (Trigger from Jenkins)
+                    # Set the node hostname to run
+                    localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL = row['hostname']
+                    
+                    # Set the environment
                     env = row['environment']
                     if 'Testing' in env:
                         # Update the localSetting run with running environment (prod/test)
@@ -185,44 +161,16 @@ def updatePlatforms(test_num):
 
 #===============================================================================
 # function to setup the following things:
-#  - capture traffic object
-#  - create client proxy
 #  - initialize driver and specific log
 #  - test url and status 
 #  - max running time until timeout, we ass +- 1 min more then avg result 
 #===============================================================================
 def basicSetUp(test,driverFix,estimatedDuration=600):
-    capture  = None
-    test.myProxy = None
     test.TEST_TIMEOUT = estimatedDuration
     localSettings.LOCAL_RUNNING_BROWSER = driverFix
     localSettings.LOCAL_SETTINGS_GUID = str(uuid.uuid4())[:8].upper()
     
-    if (test.enableProxy == True):
-        try:
-            capture = clsBrowserMobCapture(test.testNum,driverFix)
-            for attempt in range(2):
-                if (localSettings.LOCAL_RUNNING_BROWSER == ANDROID_CHROME):
-                    proxyUrl = LOCAL_SETTINGS_BROWSER_PROXY_MOBILES
-                else:
-                    proxyUrl = LOCAL_SETTINGS_BROWSER_PROXY
-                try:
-                    test.myProxy = capture.createProxyClient(proxyUrl)
-                    break
-                except Exception as inst:
-                    if (localSettings.LOCAL_RUNNING_BROWSER == ANDROID_CHROME):
-                        capture.shutDownProxy(LOCAL_SETTINGS_BROWSER_PROXY_MOBILES, LOCAL_SETTINGS_BROWSER_PROXY_MOBILES_PORT)
-            else:
-                if (test.myProxy is None):
-                    writeToLog("INFO","Unable to create proxy object")
-                    raise Exception("Unable to create proxy object")
-            test.driver = testWebDriverLocalOrRemote(driverFix,test.myProxy)
-            test.myProxy.new_har("externalTests",{"captureHeaders":True, "captureContent":True})
-        except Exception as inst:
-            handleException (test,inst,test.startTime)
-            raise
-    else:
-        test.driver = testWebDriverLocalOrRemote(driverFix)        
+    test.driver = testWebDriverLocalOrRemote(driverFix)        
         
     if ("version" in test.driver.capabilities):
         test.browserVersion = test.driver.capabilities['version']
@@ -236,7 +184,8 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
     test.verificationErrors = []    
     test.status = "Pass"
     test.timeout_accured = "False"
-    return test,capture                 
+    return test                 
+
 
 #===========================================================================================
 # the function handles exception inst, mark the test as fail and writes the error in the log 
@@ -247,54 +196,33 @@ def handleException(test,inst,startTime):
     test.status = "Fail"
     return test.status
 
+
 #===============================================================================
 # the function tears down the driver and the proxy. if a debug column was given we update the test resul in results matrix
 #===============================================================================
 def basicTearDown(test):
-    
     practiTest = clsPractiTest()
-    
     try:
         if (test.driver != None):
             test.driver.quit()
             writeToLog("DEBUG", "tearDown: closed web driver")
-        if (test.myProxy != None):
-            test.myProxy.close()
-            if (LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE):
-                disableLocalSystemProxyViaRegistry()
-            else:
-                pass
-                #disableRemoteSystemProxyViaRegistry()
         if (isAutomationEnv() == True):
             practiTest.setPractitestInstanceTestResults(test.status,str(test.testNum))            
         writeToLog("DEBUG", "Finished tearDown function")
     except Exception as inst:
             test.status = handleException(test,inst,test.startTime)
 
+
 #===============================================================================
 # the function that returns true if the environment variable env is set to Auto 
 #===============================================================================   
-    
 def isAutomationEnv():
         if os.getenv('ENV_AUTO') == 'Auto':
             return True
         else:
             return False
         
-#===============================================================================
-# the function that disables system proxy via windows registry
-#===============================================================================
-
-def disableLocalSystemProxyViaRegistry(self):
-    
-    import winreg
-    
-    keyVal = r'Software\Microsoft\Windows\CurrentVersion\Internet Settings'
-    key = winreg.OpenKey(winreg.HKEY_CURRENT_USER, keyVal, 0, winreg.KEY_ALL_ACCESS)
-    winreg.SetValueEx(key, "ProxyEnable", 0, winreg.REG_DWORD, 0)
-    winreg.SetValueEx(key, "ProxyHttp1.1", 0, winreg.REG_DWORD, 0)
-    winreg.CloseKey(key)
-
+        
 #===============================================================================
 # the function takes a screenshot of the test at the end of it, and save it
 #===============================================================================
@@ -304,7 +232,8 @@ def createScreenshot(test, scName=''):
     runningTestNum = os.getenv('RUNNING_TEST_ID',"")
     if (runningTestNum != ""):
         pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs', runningTestNum, scName + '.png'))
-    test.driver.save_screenshot(pngPath)          
+    if test.driver != None:
+        test.driver.save_screenshot(pngPath)          
 
     
 def initializeDriver(test, driverFix):
@@ -317,9 +246,6 @@ def initializeDriver(test, driverFix):
         if (driverFix != ANDROID_CHROME):
             driver.maximize_window()
     except Exception as inst:
-        #alert = driver.switch_to_alert()
-        #alert.accept();
-        #driver.maximize_window()
         raise
     return driver
 

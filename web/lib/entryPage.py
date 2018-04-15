@@ -36,7 +36,7 @@ class EntryPage(Base):
         #Check if we already in edit entry page
         if self.wait_visible(tmp_entry_name, 5) != False:
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
-            return True    
+            return True      
         
         self.clsCommon.myMedia.searchEntryMyMedia(entryName)
         self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName)

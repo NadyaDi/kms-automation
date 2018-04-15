@@ -18,7 +18,9 @@ class Player(Base):
     #                                                      Channel locators:                 
     #=====================================================================================================================
     PLAYER_IFRAME                                               = ('id', 'kplayer_ifp')
+    PLAYER_SCREEN                                               = ('id', 'kplayer')
     PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER                       = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-play')]")
+    PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder' and @aria-label='Play clip']")
     PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER                      = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-pause')]")
     PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER                     = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-replay')]")
     PLAYER_GENERIC_PLAY_REPLAY_PASUSE_BUTTON_CONTROLS_CONTAINER = ('xpath', "//button[@data-plugin-name='playPauseBtn']")
@@ -64,13 +66,17 @@ class Player(Base):
     
     
     # fromActionBar = True, to click play on the bar below the player
-    # fromActionBar = Flase, to click play on middle of the screen player
+    # fromActionBar = False, to click play on middle of the screen player
     def clickPlay(self, fromActionBar=True):
         self.switchToPlayerIframe()
         if fromActionBar == True:
             if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER) == False:
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
                 return False
+        elif fromActionBar == False:
+            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER) == False:
+                writeToLog("INFO","FAILED to click Play in the middle of the player; fromActionBar = " + str(fromActionBar))
+                return False   
             
         return True     
             
@@ -84,14 +90,19 @@ class Player(Base):
                 writeToLog("INFO","FAILED to click Pause; fromActionBar = " + str(fromActionBar))
                 return False
             
+        elif fromActionBar == False:
+            if self.click(self.PLAYER_SCREEN) == False:
+                writeToLog("INFO","FAILED to click Pause in the middle of the player; fromActionBar = " + str(fromActionBar))
+                return False
+             
         return True      
     
     
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     # additional = additional delay befor pause 
-    def clickPlayAndPause(self, delay, timeout=30, additional=0):
+    def clickPlayAndPause(self, delay, timeout=30, clickPlayFromBarline=True, additional=0):
         self.switchToPlayerIframe()
-        if self.clickPlay() == False:
+        if self.clickPlay(fromActionBar=clickPlayFromBarline) == False:
             return False
         
         # Wait for delay
@@ -99,7 +110,7 @@ class Player(Base):
             writeToLog("INFO","FAILED to seek timer to: '" + delay + "'")
             return False
         sleep(additional)
-        if self.clickPause() == False:
+        if self.clickPause(fromActionBar=clickPlayFromBarline) == False:
             return False
         
         return True
@@ -165,7 +176,7 @@ class Player(Base):
             return False
         
         if str(expecterQrCode) != result:
-            writeToLog("INFO","FAILED to verify thumbnail, the image and in the tumbnail is '" + str(result) + "' but need to be '" + str(expecterQrCode) + "'")
+            writeToLog("INFO","FAILED to verify thumbnail, the image in the tumbnail is '" + str(result) + "' but need to be '" + str(expecterQrCode) + "'")
             return False
         
         writeToLog("INFO","Thumbnail was verified")

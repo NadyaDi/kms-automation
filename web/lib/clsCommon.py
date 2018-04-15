@@ -17,6 +17,8 @@ from myMedia import MyMedia
 from myPlaylists import MyPlaylists
 from player import Player
 from upload import Upload
+from home import Home
+from freeTrial import FreeTrial
 
 
     #============================================================================================================
@@ -44,6 +46,8 @@ class Common():
         self.myHistory          = MyHistory(self, driver)
         self.qrcode             = QrCodeReader(self, driver)
         self.kea                = Kea(self, driver)
+        self.home               = Home(self, driver)
+        self.freeTrail          = FreeTrial(self, driver)
 
         
     #=============================================================================================================
@@ -55,14 +59,19 @@ class Common():
     # Common Methods
     #============================================================================================================
     def instertPathInFileUploadWindows(self, path):
+        if localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd":
+            autoitDr = self.autoit.autoitDriver
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd2":
+            autoitDr = self.autoit.autoitDriver2
+            
         if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
             # TODO IE not implemented yet
-            self.autoit.autoitDriver.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFile.exe', path)
+            autoitDr.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFile.exe', path)
         elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
-            self.autoit.autoitDriver.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFileFirefox.exe', path)
+            autoitDr.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFileFirefox.exe', path)
         elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
             # If running on chrome, use autoitDriver2 because it on another node
-            self.autoit.autoitDriver2.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFileChrome.exe', path)
+            autoitDr.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFileChrome.exe', path)
         else:
             writeToLog("INFO","FAILED to type into 'Choose File' window, unknown browser: '" + localSettings.LOCAL_RUNNING_BROWSER + "'")
         
@@ -109,5 +118,9 @@ class Common():
         elif navigateTo == enums.Location.MY_HISTORY:
             if self.myHistory.navigateToMyHistory(forceNavigate) == False:
                 raise Exception("INFO","FAILED navigate to my history")
+            
+        elif navigateTo == enums.Location.HOME:
+            if self.myHistory.navigateToHomePage(forceNavigate) == False:
+                raise Exception("INFO","FAILED navigate to home page")        
                                                             
         return True 

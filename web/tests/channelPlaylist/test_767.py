@@ -18,7 +18,6 @@ class Test:
     # 
     #================================================================================================================================
     testNum     = "767"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -58,7 +57,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
@@ -115,7 +114,7 @@ class Test:
                 return
            
             writeToLog("INFO","Step 9: Going to create channel playlist")                                     
-            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
+            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO, self.entriesNames) == False:    
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
                 return 

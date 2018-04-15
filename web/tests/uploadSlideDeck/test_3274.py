@@ -23,7 +23,6 @@ class Test:
     # In the player check that just the needed slides appear in the slides menu
     #================================================================================================================================
     testNum     = "3274"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -54,7 +53,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Slide Deck Upload-delete slides", self.testNum)
 

@@ -19,7 +19,6 @@ class Test:
     # under thumbnail tab change thumnbnail in 3 different ways : Upload, Capture, Auto-Generate
     #================================================================================================================================
     testNum     = "1027"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -32,10 +31,11 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     uploadThumbnailExpectedResult = 5
-    timeToStopPlayer = "0:03"
-    captureThumbnailExpectedResult = 3
+    timeToStopPlayer = "0:07"
+    captureThumbnailExpectedResult = 7
     autoGenerateSliceNumber = 6
     autoGenerateThumbnailExpectedResult = 6
+    PlayFromBarline = False
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
     uploadThumbnailFliePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode (5).png'
     
@@ -53,14 +53,11 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Edit entry - thumbnail tab", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-#             self.common.editEntryPage.chooseAutoGthumbnail(self.autoGenerateSliceNumber, self.autoGenerateThumbnailExpectedResult)
-#             self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult)
-#             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -93,13 +90,13 @@ class Test:
                 return  
                                  
             writeToLog("INFO","Step 6: Going to navigate to edit Entry Page")
-            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage()(self.entryName) == False:
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
                 self.status = "Fail"
                 return                  
                
             writeToLog("INFO","Step 7: Going to capture thumbnail")            
-            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult) == False:
+            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult, self.PlayFromBarline) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to capture thumbnail")
                 return                                
@@ -112,13 +109,13 @@ class Test:
                 return
                
             writeToLog("INFO","Step 9: Going to check the entry thumbnail in the player")
-            if self.common.player.verifyThumbnailInPlayer(self.uploadThumbnailExpectedResult) == False:
+            if self.common.player.verifyThumbnailInPlayer(self.captureThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to logout from main user")
                 return                      
                                  
             writeToLog("INFO","Step 10: Going to navigate to edit Entry Page")
-            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage()(self.entryName) == False:
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate to edit entry page")
                 self.status = "Fail"
                 return                  
@@ -137,7 +134,7 @@ class Test:
                 return
                
             writeToLog("INFO","Step 13: Going to check the entry thumbnail in the player")
-            if self.common.player.verifyThumbnailInPlayer(self.uploadThumbnailExpectedResult) == False:
+            if self.common.player.verifyThumbnailInPlayer(self.autoGenerateThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED failed to logout from main user")
                 return                                         

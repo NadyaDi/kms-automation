@@ -34,6 +34,7 @@ class Location(Enum):
     EDIT_ENTRY_PAGE        = 'edit entry page'
     MY_HISTORY             = 'my history'
     PENDING_TAB            = 'channel - Pending tab' 
+    HOME                   = 'home'
 
 
 class EditEntryPageTabName(Enum):
@@ -152,3 +153,11 @@ class PlayerPart(Enum):
 
     TOP                       = 'top'  
     BOTTOM                    = 'bottom'
+    
+
+class ProgressBarStatus(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    COMPLETE                  = 'Complete'  
+    STARTED                   = 'Started'

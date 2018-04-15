@@ -15,15 +15,14 @@ class Test:
     #================================================================================================================================
     #  @Author: Inbar Willman
     # Test description:
-    # Before entry is played, history page doesn't displayed the entry
-    # After entry was played, it displayed in history page
-    # After entry was deleted from watch list in my history page, it shouldn't displayed in my history anymore
+    # Check that entry that wasn't played until end has 'started' status and is displayed in continue watching list
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> Publish entry to channel-> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
-    # MY History page and make sure that entry exists in page -> Delete entry -> Make sure entry isn't displayed in My History page
+    # Login to KMS-> Upload entry -> Go to My history and check that entry isn't displayed -> Go to entry page and play entry -> Go to
+    # MY History page and make sure that entry's progress bar is started -> Go to home page and make sure entry displayed in continue watching list
     # test cleanup: deleting the uploaded file
     #================================================================================================================================
-    testNum     = "2567"
+    testNum     = "2728"
+    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -35,6 +34,7 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
+    playlist = 'Continue watching '
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
@@ -50,17 +50,17 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('MyHistoryEntry', self.testNum)
-            ######################### TEST STEPS - MAIN FLOW ####################### 
+            self.entryName = clsTestService.addGuidToString('MyHistoryContinueWatching', self.testNum)
+            ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
+                return  
              
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
@@ -99,19 +99,11 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED find entry in My History")
                 return   
             
-            writeToLog("INFO","Step 8: Going to delete entry from My History")
-            if self.common.myHistory.removeEntryFromWatchListMyHistory(self.entryName) == False:
+            writeToLog("INFO","Step 8: Going to navigate to home page and check entry in continue watching list")
+            if self.common.home.checkEntryInHomePlaylist(self.playlist, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to delete entry from My History")
+                writeToLog("INFO","Step 8: FAILED to find entry in continue watching list")
                 return               
-            
-            writeToLog("INFO","Step 9: Going to verify that entry isn't displayed in My History")
-            if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED - Deleted entry is displayed in My History page")
-                return
-            writeToLog("INFO","Step 9: Previous Step Failed as Expected - The entry should not be displayed")
-              
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
@@ -121,8 +113,9 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)            
+            self.common.base.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
+            self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
