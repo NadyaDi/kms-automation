@@ -697,9 +697,9 @@ class Channel(Base):
 
     
     #  @Author: Tzachi Guetta    
-    def addContentToChannel(self, channelName, entriesNames, isChannelModerate):
+    def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE):
         try:                
-            if self.navigateToChannel(channelName, enums.Location.MY_CHANNELS_PAGE) == False:
+            if self.navigateToChannel(channelName, publishFrom) == False:
                 writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
                 return False
             
@@ -762,15 +762,16 @@ class Channel(Base):
     
     
     #   @Author: Tzachi Guetta    
-    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames):
+    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
         try:                
-            if self.navigateToChannel(channelName) == False:
-                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
-                return False
-            
-            if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on channel's moderation tab")
-                return False        
+            if navigate == True:
+                if self.navigateToChannel(channelName) == False:
+                    writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                    return False
+                
+                if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on channel's moderation tab")
+                    return False        
             
             sleep(1)
             self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
@@ -816,3 +817,32 @@ class Channel(Base):
             return False                    
         
         writeToLog("INFO","The following entry was approved : " + approveEntry)
+        
+        
+        # Author: Tzachi Guetta 
+    def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate = True):
+        try:         
+            if navigate == True:
+                if self.navigateToChannel(channelName) == False:
+                    writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                    return False
+                
+                if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on channel's moderation tab")
+                    return False         
+            sleep(2)
+            
+            if sortBy != '':
+                if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
+                    writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
+                    return False
+                
+            if filterMediaType != '':
+                if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
+                    writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
+                    return False                                                   
+        
+        except NoSuchElementException:
+            return False
+    
+        return True        

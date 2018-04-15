@@ -25,7 +25,7 @@ class MyPlaylists(Base):
     PLAYLIST_ENTRY_NAME_IN_PLAYLIST          = ('xpath', "//a[contains(@href,'/media/') and contains(text(), 'ENTRY_NAME')]")
     PLAYLIST_SAVE_BUTTON                     = ('xpath', "//button[@class='btn btn-primary saveBtn']")
     PLAYLIST_SAVED_ALERT                     = ('xpath', "//div[@class='alert alert-success ']")
-    MY_PLAYLIST_TABLE_SIZE                      = ('xpath',"//table[@class='table sortable table-condensed table-hover']/tbody/tr")
+    MY_PLAYLIST_TABLE_SIZE                   = ('xpath',"//table[@class='table sortable table-condensed table-hover']/tbody/tr")
     #============================================================================================================
 
     # TODO BOM add description and how to use (playlistName....)

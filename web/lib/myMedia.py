@@ -515,7 +515,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED, drop-down-list name was not provided")
                 return False
                 
-            if self.click(tmplocator) == False:
+            if self.click(tmplocator, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
                 return False
             
@@ -600,10 +600,10 @@ class MyMedia(Base):
             if location == enums.Location.MY_MEDIA:
                 tmpEntry = self.replaceInLocator(self.clsCommon.myMedia.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
                 
-            elif location == enums.Location.MY_PLAYLISTS:
+            elif location == enums.Location.MY_PLAYLISTS or location == enums.Location.PENDING_TAB:
                 tmpEntry = self.replaceInLocator(self.clsCommon.myPlaylists.PLAYLIST_ENTRY_NAME_IN_PLAYLIST, "ENTRY_NAME", entryName)
                 
-            entrytop = self.get_element_attributes(tmpEntry)['top']
+            entrytop = self.get_element_attributes(tmpEntry, multipleElements=True)['top']
             writeToLog("INFO","The top of: '" + entryName + "' is: " + str(entrytop))
             return entrytop
         
@@ -626,12 +626,12 @@ class MyMedia(Base):
             elif location == enums.Location.MY_PLAYLISTS: 
                 if self.clsCommon.myPlaylists.navigateToMyPlaylists(True) == False:
                     return False
-            
+                
             tmpTop = -9999
             for entry in expectedEntriesOrder:
                 currentEntryTop = self.getTop(entry, location)
-                if currentEntryTop != False:
-                    if currentEntryTop < tmpTop:
+                if currentEntryTop != False and currentEntryTop!= 0:
+                    if currentEntryTop <= tmpTop:
                         writeToLog("INFO","FAILED, the location of: '" + entry + "' is not as expected. (the top is '" + str(currentEntryTop) + "' and it should be higher than: '" + str(tmpTop) + "')")
                         return False
                 else:

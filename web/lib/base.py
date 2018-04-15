@@ -572,18 +572,29 @@ class Base:
             return True     
 
 
-    def get_element_attributes(self, locator):
-        element = self.get_element(locator)
-        return {
-            'text': element.text,
-            'top': element.location['y'],
-            'bottom': element.location['y'] + element.size['height'],
-            'left': element.location['x'],
-            'right': element.location['x'] + element.size['width'],
-            'center_x': (element.size['width']/2) + element.location['x'],
-            'center_y': (element.size['height']/2) + element.location['y']
-        }
-        
+    def get_element_attributes(self, locator, multipleElements=False):
+        try:
+            if multipleElements == True:
+                elements = self.get_elements(locator)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!= 0:
+                        element = el
+                        break
+            else:
+                element = self.get_element(locator)
+                
+            return {
+                'text': element.text,
+                'top': element.location['y'],
+                'bottom': element.location['y'] + element.size['height'],
+                'left': element.location['x'],
+                'right': element.location['x'] + element.size['width'],
+                'center_x': (element.size['width']/2) + element.location['x'],
+                'center_y': (element.size['height']/2) + element.location['y']
+            }
+        except:
+            writeToLog("INFO", "FAILED to get element")
+            return False         
         
     def get_element_text(self, locator, timeout=30):
         if self.wait_visible(locator, timeout) == False:
