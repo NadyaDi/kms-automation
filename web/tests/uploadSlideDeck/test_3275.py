@@ -26,7 +26,6 @@ class Test:
     # In the player verify that the chapter doen't display any more and that all the slides are still display in the slides menu
     #================================================================================================================================
     testNum     = "3275"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -60,7 +59,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("SlideDeckUpload add-remove chapters", self.testNum)
 
@@ -196,7 +195,7 @@ class Test:
             sleep(3)
             index = 0
             writeToLog("INFO","Step 17: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
-            for i in range(4):
+            for i in range(3):
                 sleep(2)
                 index = index + i + 4 
                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:

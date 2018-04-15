@@ -19,7 +19,6 @@ class Test:
     # Login with the collaborator user - go to entry caption tab and added caption to the entry successfully.
     #================================================================================================================================
     testNum     = "3280"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -56,7 +55,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration Co Edit - Caption tab", self.testNum)
             self.captionLabel = clsTestService.addGuidToString("English", self.testNum)

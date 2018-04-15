@@ -53,7 +53,8 @@ class clsPractiTest:
             "sessionSystemID"   : -1,
             "sessionDisplayID"  : -1,
             "setPlatform"       : "",
-            "environment"       : ""
+            "environment"       : "",
+            "hostname"          : ""
         }
 
         headers = {
@@ -64,15 +65,17 @@ class clsPractiTest:
         r = requests.get(practiTestGetSessionsURL,headers = headers)
         if (r.status_code == 200):
             dctSets = json.loads(r.text)
-            if (dctSets["data"][0]["attributes"]["instances-count"] > 0):
-                prSessionInfo["sessionSystemID"]  = dctSets["data"][0]["id"]
-                prSessionInfo["sessionDisplayID"] = dctSets["data"][0]["attributes"]["display-id"]
-                prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30772'] #PractiTest Field: Automation Platform
-                prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30761'] #PractiTest Field: Automation Env
-                
-                writeToLog("DEBUG","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
-            else:
-                writeToLog("DEBUG","No automated sessions found.")
+            if len(dctSets["data"]) != 0:
+                if (dctSets["data"][0]["attributes"]["instances-count"] > 0):
+                    prSessionInfo["sessionSystemID"]  = dctSets["data"][0]["id"]
+                    prSessionInfo["sessionDisplayID"] = dctSets["data"][0]["attributes"]["display-id"]
+                    prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30772'] #PractiTest Field: Automation Platform
+                    prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30761'] #PractiTest Field: Automation Env
+                    prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"]['---f-34785'] #PractiTest Field: Run On Hostname
+                    
+                    writeToLog("DEBUG","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
+                else:
+                    writeToLog("DEBUG","No automated sessions found.")
         else:
             writeToLog("DEBUG","Bad response for get sessions. " + r.text) 
         
@@ -135,10 +138,10 @@ class clsPractiTest:
     #=============================================================================================================
     # Function that that creates the csv that contains the automation tests to be run
     #=============================================================================================================
-    def createAutomationTestSetFile(self, environment, platform, testIDsDict):
+    def createAutomationTestSetFile(self, hostname, environment, platform, testIDsDict):
         platformList = ["pc_firefox","pc_chrome","pc_internet explorer","android_chrome"]
         testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
-        automationTestSetFileHeader = "environment,case"
+        automationTestSetFileHeader = "hostname,environment,case"
         for plat in platformList:
             automationTestSetFileHeader = automationTestSetFileHeader + "," + plat
         automationTestSetFileHeader = automationTestSetFileHeader + ",instanceID\n"
@@ -146,7 +149,7 @@ class clsPractiTest:
         file.write (automationTestSetFileHeader)
         for testID in testIDsDict:
             sTestID = str(testID)
-            testPlatformLine = environment + ",test_" + sTestID
+            testPlatformLine = hostname + "," + environment + ",test_" + sTestID
             for plat in platformList:
                 if plat == platform:
                     testPlatformLine = testPlatformLine + ",1"

@@ -983,13 +983,13 @@ class EditEntryPage(Base):
     
     
     # Author: Michal Zomper 
-    def captureThumbnail(self, timeToStop, qrCodeRedult): 
+    def captureThumbnail(self, timeToStop, qrCodeRedult, PlayFromBarline): 
         if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
             writeToLog("INFO","FAILED to click on the thumbnail tab")
             return False
         sleep(2)
         
-        if self.clsCommon.player.clickPlayAndPause(timeToStop, 10) == False:
+        if self.clsCommon.player.clickPlayAndPause(timeToStop, timeout=10, clickPlayFromBarline=PlayFromBarline) == False:
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
@@ -998,10 +998,9 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on capture thumbnail button")
             return False
         
+        self.clsCommon.general.waitForLoaderToDisappear()
         # verify that the capture message display
-        if self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES) == False:
-            writeToLog("INFO","FAILED to verify capture message")
-            return False
+        self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES)
         
         # verify image was add
         if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
@@ -1023,7 +1022,7 @@ class EditEntryPage(Base):
         if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
             writeToLog("INFO","FAILED to click on the thumbnail tab")
             return False
-        sleep(2)
+        sleep(3)
         
         if self.click(self.EDIT_ENTRY_THUMBNAIL_AUTO_GENERATE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on thumbnail auto generate button")
@@ -1037,8 +1036,7 @@ class EditEntryPage(Base):
         
         self.clsCommon.general.waitForLoaderToDisappear()
         # verify that the capture message display
-        if self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES) == False:
-            writeToLog("INFO","FAILED to verify capture message")
+        self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES)
 
         # verify image was add
         if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:

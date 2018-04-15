@@ -19,7 +19,6 @@ class Test:
     # The following test will check that publish is prevented before disclaimer's check-box was checked.
     #================================================================================================================================
     testNum     = "1556"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -51,7 +50,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,captur,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             
             ########################################################################

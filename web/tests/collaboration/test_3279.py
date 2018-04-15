@@ -19,7 +19,6 @@ class Test:
     # Login with the collaborator user - go to entry thumbnail tab  and change entry thumbnail using capture thumbnail. 
     #================================================================================================================================
     testNum     = "3279"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -37,7 +36,10 @@ class Test:
     channelList = ""
     categoryName = None
     whereToPublishFrom = "Entry Page"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
+    timeToStop = "0:05"
+    qrCodeRedult = "5"
+    PlayFromBarline = False
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -53,7 +55,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,capture,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Collaboration co editor-Thumbnail tab", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
@@ -113,7 +115,7 @@ class Test:
                 return 
              
             writeToLog("INFO","Step 10: Going to capture thumbnail")
-            if self.common.editEntryPage.captureThumbnail() == False:
+            if self.common.editEntryPage.captureThumbnail(self.timeToStop, self.qrCodeRedult, self.PlayFromBarline) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to capture thambnail")
                 return             
