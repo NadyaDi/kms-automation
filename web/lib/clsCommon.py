@@ -124,3 +124,10 @@ class Common():
                 raise Exception("INFO","FAILED navigate to home page")        
                                                             
         return True 
+    
+    
+    # @Author: Inbar Willman
+    def writeToFile(self, path, text):
+        file1 = open(path,"w")
+        file1.write(text)
+        file1.close()

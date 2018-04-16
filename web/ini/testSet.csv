@@ -25,6 +25,10 @@ test_2679,1,0,0,0,My History - Check resume playback
 test_2667,1,0,0,0,My history - Entry Viewed in channel
 test_2694,1,0,0,0,My History - Search by description
 test_2728,1,0,0,0,My history - Check entry in Continue Watching playlist in home page 
+test_2750,1,0,0,0,My history - Check entry in recently watched playlist in home page 
+test_2755,1,0,0,0,My history - Check audio entry in recently watched playlist in home page 
+test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page 
+test_2673,1,0,0,0,My history - Entry Viewed in Embed
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
 test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
