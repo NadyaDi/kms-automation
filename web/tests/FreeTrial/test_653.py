@@ -14,9 +14,8 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-    # Login to KMS, and upload a media
-    # Navigate Edit Entry Page
-    # under thumbnail tab change thumnbnail in 3 different ways : Upload, Capture, Auto-Generate
+    # create new free trial instance
+    # In the new instance upload and publish media
     #================================================================================================================================
     testNum     = "653"
     
@@ -32,7 +31,7 @@ class Test:
     entryTags = "Tags,"
     SearchByInSaaSAdmin = "Hostname"
     PartnerID = "2178791"
-    instanceNumber = "2178791-21"
+    instanceNumber = None
     InstanceSuffix = ".qakmstest.dev.kaltura.com"
     AdminSecret = "a884f9a36523cc14e05f265ed9920999"
     InstanceId = "MediaSpace" 
@@ -42,6 +41,7 @@ class Test:
     Password = "Kaltura1!"
     categoryList = [("About Kaltura")]
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    instanceNumberFilePath = 'Q:\\QA-App\Automation\Free Trial\FreeTrial.txt'
 
     
     #run test as different instances on all the supported platforms
@@ -54,6 +54,7 @@ class Test:
         #write to log we started the test
         logStartTest(self,driverFix)
         try:
+            
             ########################### TEST SETUP ###########################
             #capture test start time
             self.startTime = time.time()
@@ -62,56 +63,63 @@ class Test:
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Free trial", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
+
+            writeToLog("INFO","Step 1: navigate to free trial url form")    
+            self.instanceNumber = self.common.freeTrail.setInstanceNumber(self.instanceNumberFilePath)
+            if self.instanceNumber == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to set instance number")
+                return
             
-            writeToLog("INFO","Step 1: navigate to free trial url form")
+            writeToLog("INFO","Step 2: navigate to free trial url form")
             if self.common.base.navigate("http://qakmstest.dev.kaltura.com/free-trial-test/") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED navigate to free trail url form: http://qakmstest.dev.kaltura.com/free-trial-test/")
+                writeToLog("INFO","Step 2: FAILED navigate to free trail url form: http://qakmstest.dev.kaltura.com/free-trial-test/")
                 return
                           
-            writeToLog("INFO","Step 2: create free trial instance")
+            writeToLog("INFO","Step 3: create free trial instance")
             if self.common.freeTrail.createFreeTrialInctance(self.PartnerID, self.AdminSecret, self.InstanceId, self.CompanyName, self.instanceNumber + self.InstanceSuffix, self.Application) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create free trial instance")
+                writeToLog("INFO","Step 3: FAILED to create free trial instance")
                 return
              
             localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL = "http://"+self.instanceNumber + self.InstanceSuffix
-            writeToLog("INFO","Step 3: navigate to new instance url")
+            writeToLog("INFO","Step 4: navigate to new instance url")
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to instance url: " + localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL)
+                writeToLog("INFO","Step 4: FAILED navigate to instance url: " + localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL)
                 return
             
-            writeToLog("INFO","Step 3: login to instance")
+            writeToLog("INFO","Step 5: login to instance")
             if self.common.login.loginToKMS(self.UserID, self.Password, localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL+"/user/login") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to login to new instance")
+                writeToLog("INFO","Step 5: FAILED to login to new instance")
                 return
             
-            writeToLog("INFO","Step 4: Going to upload entry")
+            writeToLog("INFO","Step 6: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED failed to upload entry: " + self.entryName)
+                writeToLog("INFO","Step 6: FAILED failed to upload entry: " + self.entryName)
                 return
              
             sleep(2)       
-            writeToLog("INFO","Step 5: Going navigate to my media")            
+            writeToLog("INFO","Step 7: Going navigate to my media")            
             if self.common.myMedia.navigateToMyMedia(forceNavigate=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED navigate to my media")
+                writeToLog("INFO","Step 7: FAILED navigate to my media")
                 return   
                            
-            writeToLog("INFO","Step 5: Going to navigate to entry page")            
+            writeToLog("INFO","Step 8: Going to navigate to entry page")            
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED navigate to entry page: '" + self.entryName + "'")
+                writeToLog("INFO","Step 8: FAILED navigate to entry page: '" + self.entryName + "'")
                 return     
             
             sleep(2)     
-            writeToLog("INFO","Step 5: Going to publish the entry ")            
+            writeToLog("INFO","Step 9: Going to publish the entry ")            
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "", publishFrom = enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "'")
+                writeToLog("INFO","Step 9: FAILED to publish entry '" + self.entryName + "'")
                 return             
             
             ##################################################################

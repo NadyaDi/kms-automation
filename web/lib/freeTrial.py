@@ -64,5 +64,26 @@ class  FreeTrial(Base):
             
         writeToLog("INFO","Success, instance " + instanceId + " was created successfully")
         return True
+    
+    
+    def setInstanceNumber(self, instanceNumberFilePath):
+        try:
+            # read the current instance number
+            instanceFile = open(instanceNumberFilePath,'r')
+            tempInstance = instanceFile.read()
+            instanceFile.close()
+              
+            #  raise the instance number be 1 and update the file  
+            instanceFile = open(instanceNumberFilePath,'w')
+            tmp = tempInstance.split('-')
+            number = int(tmp[1]) + 1
+            instanceNumber = tmp[0] + "-" + str(number)
+            instanceFile.write(instanceNumber)
+            instanceFile.close()
+            return instanceNumber
+             
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to read / write from the instance file")
+            return False
             
             
