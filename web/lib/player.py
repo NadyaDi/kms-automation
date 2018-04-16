@@ -18,6 +18,8 @@ class Player(Base):
     #                                                      Channel locators:                 
     #=====================================================================================================================
     PLAYER_IFRAME                                               = ('id', 'kplayer_ifp')
+    PLAYER_EMBED_IFRAME_1                                       = ('xpath', '//iframe[contains(@id,"kmsembed")]')
+    PLAYER_EMBED_IFRAME_2                                       = ('id', 'kaltura_player')
     PLAYER_SCREEN                                               = ('id', 'kplayer')
     PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER                       = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-play')]")
     PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder' and @aria-label='Play clip']")
@@ -55,20 +57,35 @@ class Player(Base):
     # because you need to switch to player iframe. And...!!! use 'self.switch_to_default_content' (Basic class) method to 
     # return to default iframe in the end of use of player methods or elements, meaning in the test or other classes.
     #======================================================================================================================
-    def switchToPlayerIframe(self):
-        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
-            return True
+    def switchToPlayerIframe(self, embed=False):
+        if embed == True:
+            if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.EMBED_PLAYER:
+                return True
+            else:
+                localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.EMBED_PLAYER
+                #Switch to first iframe
+                self.wait_visible(self.PLAYER_EMBED_IFRAME_1, 60)
+                self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_1)
+                
+                #Switch to second iframe
+                self.wait_visible(self.PLAYER_EMBED_IFRAME_2, 60)
+                self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_2)
+                return True
+
         else:
-            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
-            self.wait_visible(self.PLAYER_IFRAME, 60)
-            self.swith_to_iframe(self.PLAYER_IFRAME)
-            return True
+            if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
+                return True
+            else:
+                localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
+                self.wait_visible(self.PLAYER_IFRAME, 60)
+                self.swith_to_iframe(self.PLAYER_IFRAME)
+                return True
     
     
     # fromActionBar = True, to click play on the bar below the player
     # fromActionBar = False, to click play on middle of the screen player
-    def clickPlay(self, fromActionBar=True):
-        self.switchToPlayerIframe()
+    def clickPlay(self,embed=False, fromActionBar=True):
+        self.switchToPlayerIframe(embed)
         if fromActionBar == True:
             if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER) == False:
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
@@ -83,8 +100,8 @@ class Player(Base):
             
     # fromActionBar = True, to click pause on the bar below the player
     # fromActionBar = False, to click pause on middle of the screen player
-    def clickPause(self, fromActionBar=True):
-        self.switchToPlayerIframe()
+    def clickPause(self,  embed=False, fromActionBar=True):
+        self.switchToPlayerIframe(embed)
         if fromActionBar == True:
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER) == False:
                 writeToLog("INFO","FAILED to click Pause; fromActionBar = " + str(fromActionBar))
@@ -100,9 +117,9 @@ class Player(Base):
     
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     # additional = additional delay befor pause 
-    def clickPlayAndPause(self, delay, timeout=30, clickPlayFromBarline=True, additional=0):
-        self.switchToPlayerIframe()
-        if self.clickPlay(fromActionBar=clickPlayFromBarline) == False:
+    def clickPlayAndPause(self, delay, embed=False, timeout=30, clickPlayFromBarline=True, additional=0):
+        self.switchToPlayerIframe(embed)
+        if self.clickPlay(embed, fromActionBar=clickPlayFromBarline) == False:
             return False
         
         # Wait for delay
@@ -110,10 +127,10 @@ class Player(Base):
             writeToLog("INFO","FAILED to seek timer to: '" + delay + "'")
             return False
         sleep(additional)
-        if self.clickPause(fromActionBar=clickPlayFromBarline) == False:
+        if self.clickPause(embed, fromActionBar=clickPlayFromBarline) == False:
             return False
         
-        return True
+        return True   
     
     # Author: Inbar Willman
     # Click play for quiz entry until specific given question

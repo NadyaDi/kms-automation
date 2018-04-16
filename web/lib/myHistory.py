@@ -32,6 +32,7 @@ class MyHistory(Base):
     MY_HISTORY_PROGRESS_BAR_STARTED                               = ('xpath', "//div[@class='progress history-progress started']")
     MY_HISTORY_PROGRESS_BAR_COMPLETE                              = ('xpath', "//div[@class='progress history-progress complete']")
     MY_HISTORY_PROGRESS_BAR_PRECENT                               = ('xpath', "//div[@class='bar' and contains(@style, 'width:')]")
+    MY_HISTORY_NO_RESULTS_ALERT                                   = ('xpath', '//div[@class="alert alert-info no-results" and contains(text(), "No Entries Found")]')
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -229,4 +230,17 @@ class MyHistory(Base):
             self.isEntryExistsInMyHistory(entryName)     
             
         writeToLog("INFO","FAILED to display correct progress bar status")
-        return False     
+        return False    
+    
+    
+    # @Author: Inbar Willman 
+    def clickEntryAfterSearchInMyHistory(self, entryName):    
+        # Click on the Entry name
+        if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
+            # If entry not found, search for 'No Entries Found' alert
+            if self.wait_for_text(self.MY_HISTORY_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
+                writeToLog("INFO","No Entry: '" + entryName + "' was found")
+            else:
+                writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
+                
+        return True
