@@ -92,6 +92,29 @@ class QrCodeReader(Base):
         
         return filePath
         
+        
+        
+    # Take custom screenshot home page playlist thumbnail and return the full file path of the screenshot 
+    def takeCustomQrCodeScreenshot(self, left, top, right, buttom):
+        filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        if self.takeScreeshot(filePath) == True:
+            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+        else:
+            writeToLog("INFO","FAILED to take screenshot of the page")
+            return False       
+        pageElement = self.get_element_attributes(('xpath', '/html/body'))
+        # Crop the image
+        img = Image.open(filePath)
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / buttom)).save(filePath)
+            
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            img2 = img.crop(pageElement['right'] /10, pageElement['bottom'] / 2, pageElement['right'] , pageElement['bottom'])
+            
+        img2.save(filePath)
+        
+        return filePath
+    
     #Take screenshot of the iframe (player), return the full file path of the screenshot
     def takeQrCodePlayerScreenshot(self, player, driver, fullScreen=False, live=True):
         outTop = -1
