@@ -38,6 +38,7 @@ class Test:
     channelMemberPass = '123456'
     channelList = ['publicChannelMyHistory']
     embedLink = None
+    watchedAt = 'embed'
     embedLinkFilePath = 'C:\\xampp\\htdocs\\EmbedTest2673.html'
     embedUrl = 'http://localhost:8080/EmbedTest2673.html'
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
@@ -166,7 +167,25 @@ class Test:
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED find entry in my history")
-                return                                                                   
+                return   
+            
+            writeToLog("INFO","Step 19: Going to check that entry details displayed correctly")
+            if self.common.myHistory.checkEntryDetailsInMyHistory(self.entryName, self.entryDescription, self.entryTags, self.watchedAt) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 19: FAILED find entry in my history")
+                return              
+            
+            writeToLog("INFO","Step 20: Going to logout as user 2")
+            if self.common.login.logOutOfKMS() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 20: FAILED to logout from KMS")
+                return        
+              
+            writeToLog("INFO","Step 21: Going to perform login to KMS as user 1")
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 21: FAILED to login as user 1")
+                return                                                                              
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
