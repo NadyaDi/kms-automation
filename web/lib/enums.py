@@ -58,6 +58,7 @@ class IframeName(Enum):
     PLAYER                              = 'PLAYER'
     KEA                                 = 'KEA'
     KEA_QUIZ_PLAYER                     = 'KEA_QUIZ_PLAYER'
+    EMBED_PLAYER                        = 'EMBED_PLAYER'
     
     
 class PlayerView(Enum):
@@ -161,3 +162,11 @@ class ProgressBarStatus(Enum):
     
     COMPLETE                  = 'Complete'  
     STARTED                   = 'Started'
+
+class EntryPageShareOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    LINK_TO_MEDIA_PAGE      = 'Link to Media Page'  
+    EMBED                   = 'Embed'
+    EMAIL                   = 'Email'

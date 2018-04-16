@@ -29,6 +29,12 @@ class EntryPage(Base):
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
     ENTRY_PAGE_PLAYER_IFRAME2                              = ('id','kplayer_ifp')
     ENTRY_PAGE_CHAPTER_MENU_ON_THE_PLAYER                  = ('id', 'sideBarContainerReminderContainer') # This is the icon on the top left of the player that show all the slides that were added 
+    ENTRY_PAGE_SHARE_TAB                                   = ('xpath', '//a[@id="tab-share-tab" and @class="btn responsiveSizePhone tab-share-tab"]')
+    ENTRY_PAGE_SHARE_LINK_TO_MEDIA_OPTION                  = ('xpath', '//li[@id="directLink-tab" and @class="active"]')
+    ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'embedTextArea-pane-tab')
+    ENTRY_PAGE_SHARE_EMAIL_OPTION                          = ('id', 'emailLink-tab')
+    ENTRY_PAGE_LOADING                                     = ('xpath', '//div[@class="message" and text()="Loading..."]')
+    ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea') 
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -72,6 +78,24 @@ class EntryPage(Base):
             return False
            
         return True
+    
+    
+    # @Author: Inbar Willman
+    def navigateToEntryPageFromMyHistory(self, entryName):
+        tmp_entry_name = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        #Check if we already in edit entry page
+        if self.wait_visible(tmp_entry_name, 5) != False:
+            writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
+            return True      
+        
+        self.clsCommon.myHistory.searchEntryMyHistory(entryName)
+        self.clsCommon.myHistory.clickEntryAfterSearchInMyHistory(entryName)
+        # Wait page load - wait for entry title
+        if self.wait_visible(tmp_entry_name, 15) == False:
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            return False
+        
+        return True 
         
         
     # Author: Michal Zomper     
@@ -131,6 +155,11 @@ class EntryPage(Base):
         elif navigateFrom == enums.Location.UPLOAD_PAGE:
             if self.clsCommon.upload.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.UPLOAD_PAGE)
+                return False  
+            
+        elif navigateFrom == enums.Location.MY_HISTORY:
+            if self.navigateToEntryPageFromMyHistory(entryName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_HISTORY)
                 return False            
         sleep(2)
         return True
@@ -225,3 +254,47 @@ class EntryPage(Base):
         if self.is_visible(self.ENTRY_PAGE_CHAPTER_MENU_ON_THE_PLAYER) == False:
             writeToLog("INFO","FAILED to find chapter menu on the player")
             return False
+
+
+    # @Author: Inbar Willman    
+    def clickOnShareTab(self):
+        if self.click(self.ENTRY_PAGE_SHARE_TAB, 30) == False:
+            writeToLog("INFO","FAILED to click on download tab")
+            return False
+    
+    
+    # @Author: Inbar Willman     
+    def chooseShareOption(self, shareOption = enums.EntryPageShareOptions.EMBED):
+        if shareOption == enums.EntryPageShareOptions.EMBED:
+            embed_tab = self.get_elements(self.ENTRY_PAGE_SHARE_EMBED_OPTION)[1]
+            if embed_tab.click() == False:
+                writeToLog("INFO","FAILED to click on embed tab option")
+                return False
+        elif shareOption == enums.EntryPageShareOptions.LINK_TO_MEDIA_PAGE:
+            if self.click(self.ENTRY_PAGE_SHARE_LINK_TO_MEDIA_OPTION) == False:
+                writeToLog("INFO","FAILED to click on link to media tab option")
+                return False            
+        elif shareOption == enums.EntryPageShareOptions.EMAIL:
+            email_tab = self.get_elements(self.ENTRY_PAGE_SHARE_EMAIL_OPTION)[1]
+            if email_tab.click() == False:
+                writeToLog("INFO","FAILED to click on link to media tab option")
+                return False             
+        else:
+            writeToLog("INFO","FAILED to get valid share option")
+            return False   
+        
+        return True       
+    
+    
+    def getEmbedLink(self):
+        if self.clickOnShareTab() == False:
+            writeToLog("INFO","FAILED to click on share tab")
+            return False  
+        if self.chooseShareOption() == False:
+            writeToLog("INFO","FAILED to click on embed tab")
+            return False    
+        if self.wait_while_not_visible(self.ENTRY_PAGE_LOADING) == False:
+            writeToLog("INFO","FAILED - Loading message is still displayed")
+            return False   
+        embed_text = self.get_element_text(self.ENTRY_PAGE_EMBED_TEXT_AREA)
+        return embed_text
