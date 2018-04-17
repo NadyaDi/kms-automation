@@ -26,6 +26,7 @@ class MyPlaylists(Base):
     PLAYLIST_SAVE_BUTTON                     = ('xpath', "//button[@class='btn btn-primary saveBtn']")
     PLAYLIST_SAVED_ALERT                     = ('xpath', "//div[@class='alert alert-success ']")
     MY_PLAYLIST_TABLE_SIZE                   = ('xpath',"//table[@class='table sortable table-condensed table-hover']/tbody/tr")
+    
     #============================================================================================================
 
     # TODO BOM add description and how to use (playlistName....)
@@ -123,7 +124,8 @@ class MyPlaylists(Base):
                 
         except NoSuchElementException:
             return False
-            
+         
+        writeToLog("INFO","Success, playlist '" + playlistName + "' was created successfully") 
         return True
     
     
@@ -264,3 +266,27 @@ class MyPlaylists(Base):
             return False
             
         return True
+    
+    def getPlaylistID(self, playListName): 
+        if self.navigateToMyPlaylists() == False:
+            writeToLog("INFO","FAILED navigate to my playlist page")
+            return False 
+        
+        tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playListName))
+        if self.is_visible(tmp_playlist_name) == False:
+            writeToLog("INFO","FAILED to find playlist '" + playListName + "' in my playlist page")
+            return False 
+        try:
+            playlistID = self.get_element(tmp_playlist_name).get_attribute("id")
+        
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get playlist id")
+            return False
+        
+        tmp = playlistID.split('-')
+        
+        if tmp[1] == '':
+            writeToLog("INFO","FAILED to get playlist id")
+            return False
+        
+        return tmp[1]

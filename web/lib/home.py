@@ -21,6 +21,7 @@ class Home(Base):
     HOME_LINK                                           = ('id', 'menu-Home-btn')
     HOME_PLAYLIST                                       = ('xpath', '//a[@class="clickable-header" and text()="PLAYLIST"]')
     HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[@alt="ENTRY_NAME"]/ancestor::li[@class="span4"]')
+    
     #=============================================================================================================  
     # @Author: Inbar Willman
     # This method navigate to home page
@@ -57,6 +58,24 @@ class Home(Base):
 
         
         
+    # @Author: Michal Zomper
+    def verifyEntyNameAndThumbnailInHomePagePlaylist(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropButtom):  
+        tmp_entry = (self.HOME_PLAYLIST_ENTRY[0], self.HOME_PLAYLIST_ENTRY[1].replace('ENTRY_NAME', entryName))
+        if self.is_visible(tmp_entry) == False:
+            writeToLog("INFO","FAILED to find entry in " + entryName + " in playlist")
+            return False  
         
+        qrResult = self.clsCommon.qrcode.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropButtom)
         
+        if qrResult != expectedQrResult:
+            writeToLog("INFO","FAILED entry thumbnail is '" + qrResult + "' but need to be '" + expectedQrResult + "'")
+            return False  
+        
+        writeToLog("INFO","Success, entry'" + entryName + "' was verified")
+        return True  
+            
+        
+
+        
+              
    

@@ -30,9 +30,17 @@ class Test:
     entryName3 = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
-    filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
+    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (1).png'
+    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (2).png'
+    filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (3).png'
+    expectedQRCode1 = 1
+    expectedQRCode2 = 2
+    expectedQRCode3 = 3
+    playlistName = None
+    playlistID = None
+    
+    
+    
     categoryList = [("Apps Automation Category")]
     channelList = ""
     categoryName = None
@@ -58,13 +66,13 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString("Home Page Playlist 2", self.testNum)
             self.entryName3 = clsTestService.addGuidToString("Home Page Playlist 3", self.testNum)
             
+            self.entriesList = [self.entryName3, self.entryName2, self.entryName1]
+            
+            self.playlistName = clsTestService.addGuidToString("Home Page Playlist", self.testNum)
+            
             ##################### TEST STEPS - MAIN FLOW ##################### 
                 
-            #leftimage =img.crop((pageElement['right'] /9.6, pageElement['bottom'] / 1.81 , pageElement['right'] / 2.7 , pageElement['bottom'])).save(filePath)
-           # middle =  img.crop((pageElement['right'] /2.7, pageElement['bottom'] / 1.81 , pageElement['right'] / 1.57 , pageElement['bottom'])).save(filePath)
-           # rigth = img.crop((pageElement['right'] /1.58, pageElement['bottom'] / 1.81 , pageElement['right'] , pageElement['bottom'])).save(filePath)
-                
-            self.common.qrcode.takeCustomQrCodeScreenshot("", "", "", "")
+            playlistID = self.common.myPlaylists.getPlaylistID("9CED306A-1573-Home Page Playlist")
             
             writeToLog("INFO","Step 1: Going to upload entry number 1")
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
@@ -84,35 +92,43 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED failed to upload entry number 3")
                 return
                  
-                 
-                 
-                 
-                 
-                 
-                 
-                    
-            writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
-            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
+            writeToLog("INFO","Step 4: Going to create new playlist with entries")
+            if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, True) == False:
                 self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to create new playlist '" + self.playlistName + "'")
                 return
-                          
-            writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
-            if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
-                return
-                 
-            sleep(2)     
-            writeToLog("INFO","Step 4: Going to publish the entry so the add user as a collaborator can see it")            
-            if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
-                return
-                 
-
-
             
+            writeToLog("INFO","Step 5: Going to navigate to home page")
+            if self.common.home.navigateToHomePage() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED navigate to home page")
+                return
+            
+            writeToLog("INFO","Step 5: Going verify home page playlist name")
+            tmp_playlist_name = (self.common.myPlaylists.PLAYLIST_CHECKBOX[0], self.common.myPlaylists.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', self.playlistName)) 
+            if self.base.is_visible(tmp_playlist_name) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to find and verify playlist name in home page: " + self.playlistName)
+                return
+                 
+            writeToLog("INFO","Step 6: Going to verify the left entry in the playlist")
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 9.6, 1.81, 2.7, 1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify left entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
+                return
+                 
+            writeToLog("INFO","Step 7: Going to verify the middle entry in the playlist")
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.7, 1.81, 1.57, 1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to verify middle entry '" + self.entryName2 + "' in playlist '" + self.playlistName + "'")
+                return
+
+            writeToLog("INFO","Step 8: Going to verify the right entry in the playlist")
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 1.58, 1.81, 1, 1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to verify right entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
+                return                 
+                 
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Home Page Playlist' was done successfully")
         # if an exception happened we need to handle it and fail the test       
@@ -124,7 +140,10 @@ class Test:
         try:
             self.common.base.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                            
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName2)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName3)
+            self.common.myPlaylists.deletePlaylist(self.playlistName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
