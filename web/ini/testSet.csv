@@ -11,7 +11,7 @@ test_2566,1,0,0,0,My history - Add entry (Published to channel- public) to watch
 test_2567,1,0,0,0,My history - delete entry (Published to channel) from watch list history
 test_2568,1,0,0,0,My history - delete multiple entries from watch list history
 test_2569,1,0,0,0,My history - clear history
-test_2571,1,0,0,0,My history - Add entry audio (Private) to watch list history
+test_2571,0,1,0,0,My history - Add entry audio (Private) to watch list history
 test_2573,1,0,0,0,My history - Add entry quiz (Private) to watch list history
 test_2579,1,0,0,0,My history - Add entry (Published to channel- Private) to watch list history
 test_2580,1,0,0,0,My history - Add entry (Published to channel-Restricted) to watch list history
@@ -21,12 +21,12 @@ test_2606,1,0,0,0,My history - Delete Entry from KMS
 test_2648,1,0,0,0,My history - Entry appear in watch list history after change privacy
 test_2668,1,0,0,0,My history - Entry Viewed in gallery
 test_2671,1,0,0,0,My History - Youtube Viewed in
-test_2679,1,0,0,0,My History - Check resume playback
+test_2679,0,1,0,0,My History - Check resume playback
 test_2667,1,0,0,0,My history - Entry Viewed in channel
 test_2694,1,0,0,0,My History - Search by description
 test_2728,1,0,0,0,My history - Check entry in Continue Watching playlist in home page 
 test_2750,1,0,0,0,My history - Check entry in recently watched playlist in home page 
-test_2755,1,0,0,0,My history - Check audio entry in recently watched playlist in home page 
+test_2755,0,1,0,0,My history - Check audio entry in recently watched playlist in home page 
 test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page 
 test_2673,1,0,0,0,My history - Entry Viewed in Embed
 test_3273,1,0,0,0,Slide Deck Upload
@@ -37,7 +37,7 @@ test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
 test_3284,1,0,0,0,Slide Deck Upload- search slides
 test_675,1,0,0,0,Download Source File
 test_706,1,0,0,0,TODO
-test_767,1,0,0,0,Channel Playlist
+test_767,0,1,0,0,Channel Playlist
 test_869,1,0,0,0,add Publishing - playlist flow
 test_876,1,0,0,0,add Publishing Schedule during upload
 test_883,1,0,0,0,add Publishing Schedule via edit entry page

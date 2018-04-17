@@ -989,7 +989,7 @@ class EditEntryPage(Base):
             return False
         sleep(2)
         
-        if self.clsCommon.player.clickPlayAndPause(timeToStop, timeout=10, clickPlayFromBarline=PlayFromBarline) == False:
+        if self.clsCommon.player.clickPlayAndPause(timeToStop, timeout=45, clickPlayFromBarline=PlayFromBarline) == False:
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
@@ -1003,7 +1003,7 @@ class EditEntryPage(Base):
         self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES)
         
         # verify image was add
-        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
+        if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 30) == False:
             writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
             return False
             

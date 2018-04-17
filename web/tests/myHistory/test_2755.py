@@ -35,7 +35,7 @@ class Test:
     entryDescription = "description"
     entryTags = "tag1,"
     playlist = 'Recently Watched '
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\waves.mp3'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
