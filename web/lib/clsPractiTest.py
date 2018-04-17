@@ -33,7 +33,7 @@ class clsPractiTest:
                 for testInstance in dctSets["data"]:
                     # '---f-34162' = 'Execute Automated'
                     if testInstance['attributes']['custom-fields']['---f-34162'] == 'Yes':
-                        sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"]
+                        sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + testInstance['attributes']['custom-fields']['---f-30772']
                         writeToLog("DEBUG","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                         
             else:
                 writeToLog("DEBUG","No instances in set. " + r.text)        
@@ -80,7 +80,7 @@ class clsPractiTest:
             writeToLog("DEBUG","Bad response for get sessions. " + r.text) 
         
         return prSessionInfo
-
+    
     
     #=============================================================================================================
     # Function that retrievs the test Instance of a specific test in the csv file that contains the test list
@@ -104,10 +104,6 @@ class clsPractiTest:
     #============================================================================================================= 
     def setPractitestInstanceTestResults(self,testStatus,testID):
         runningTestNum    = os.getenv('RUNNING_TEST_ID',"")
-#         LOG_FOLDER_PREFIX = ""
-#         if (os.getenv('BUILD_ID',"") != ""):
-#             LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
-#         TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX + "/" + str(runningTestNum)))
         TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',str(runningTestNum)))
         
         practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
@@ -149,6 +145,9 @@ class clsPractiTest:
         file.write (automationTestSetFileHeader)
         for testID in testIDsDict:
             sTestID = str(testID)
+            sTestPlatform = str(testIDsDict[testID]).split(";")[1]
+            if sTestPlatform != '':
+                platform = sTestPlatform            
             testPlatformLine = hostname + "," + environment + ",test_" + sTestID
             for plat in platformList:
                 if plat == platform:
@@ -156,7 +155,7 @@ class clsPractiTest:
                     writeToLog("DEBUG","Adding: " + "test_" + sTestID + " for platform: " + plat)
                 else:           
                     testPlatformLine = testPlatformLine + ",0"
-            testPlatformLine = testPlatformLine + "," + testIDsDict[testID]
+            testPlatformLine = testPlatformLine + "," + str(testIDsDict[testID]).split(";")[0]
             file.write (testPlatformLine + "\n")
         file.close()
        
