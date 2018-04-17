@@ -39,7 +39,7 @@ class Test:
     playlistDescription = "playlist description"
     playlistTag = "playlisttag,"
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\AudioU2_6.wma'
+    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\waves.mp3'
     filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     

@@ -156,6 +156,11 @@ class Upload(Base):
                     
                 # Wait page load
                 self.wait_for_page_readyState()
+                # If running on remote node
+                if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.REMOTE_RUN_MODE:
+                    # Because of miltiple run at same time, we apply random wait
+                    timeDelay = random.uniform(1.1, 2.9)
+                    sleep(timeDelay)               
                 # Click Choose a file to upload
                 if self.click(self.CHOOSE_A_FILE_TO_UPLOAD_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
@@ -327,23 +332,16 @@ class Upload(Base):
         
     def typeIntoFileUploadDialog(self, filePath):
         try:
-            # If running on remote node
-            if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.REMOTE_RUN_MODE:
-                # Because of miltiple run at same time, we apply random wait
-                timeDelay = random.uniform(1.1, 2.9)
-                sleep(timeDelay)               
-                self.clsCommon.instertPathInFileUploadWindows(filePath)
+            if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
+                # TODO IE not implemented yet
+                subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFile.exe' ,filePath])
+            elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
+                subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFileFirefox.exe' ,filePath])
+            elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+                subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFileChrome.exe' ,filePath])
             else:
-                if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
-                    # TODO IE not implemented yet
-                    subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFile.exe' ,filePath])
-                elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
-                    subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFileFirefox.exe' ,filePath])
-                elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
-                    subprocess.call([localSettings.LOCAL_SETTINGS_AUTOIT_SCRIPTS + r'\openFileChrome.exe' ,filePath])
-                else:
-                    writeToLog("INFO","FAILED to type into 'Choose File' window, unknown browser: '" + localSettings.LOCAL_RUNNING_BROWSER + "'")
-                    return False 
+                writeToLog("INFO","FAILED to type into 'Choose File' window, unknown browser: '" + localSettings.LOCAL_RUNNING_BROWSER + "'")
+                return False 
             return True       
         except Exception:
             writeToLog("INFO","FAILED to type into 'Choose File' window")

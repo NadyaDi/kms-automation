@@ -28,8 +28,11 @@ class MyPlaylists(Base):
     MY_PLAYLIST_TABLE_SIZE                   = ('xpath',"//table[@class='table sortable table-condensed table-hover']/tbody/tr")
     #============================================================================================================
 
-    # TODO BOM add description and how to use (playlistName....)
     #  @Author: Tzachi Guetta      
+    # This method handles single and multiple add entry or entries to playlist.
+    # If 'entryName' is a list of entries names, it will check them in my media and then add to playlist at once. Better use 'addEntriesToPlaylist' method for multiple.
+    # If you want to create new playlist pass 'playlistName' and toCreateNewPlaylist = True
+    # If you want to add to existing playlist pass 'playlistName' and toCreateNewPlaylist = False
     def addSingleEntryToPlaylist(self, entryName, playlistName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
         try:
             if currentLocation == enums.Location.MY_MEDIA: 
@@ -118,8 +121,8 @@ class MyPlaylists(Base):
     def addEntriesToPlaylist(self, entriesName, playlistName, toCreateNewPlaylist):
         try:
             if self.addSingleEntryToPlaylist(entriesName, playlistName, toCreateNewPlaylist, currentLocation = enums.Location.MY_MEDIA) == False:
-                    writeToLog("INFO","FAILED to add the entries to play-list")
-                    return False
+                writeToLog("INFO","FAILED to add the entries to play-list")
+                return False
                 
         except NoSuchElementException:
             return False
