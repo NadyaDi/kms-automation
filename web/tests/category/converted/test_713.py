@@ -12,9 +12,9 @@ class Test:
     
     #==============================================================================================================
     # Test Description 
-    # Channel page - channel Moderated
+    # Category page - Category Moderated
     #==============================================================================================================
-    testNum     = "742"
+    testNum     = "713"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -65,10 +65,7 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login as End-user")
                 return
               
-            self.entriesToUpload = {
-                self.entryName1: self.filePath, 
-                self.entryName2: self.filePath,
-                self.entryName3: self.filePath, 
+            self.entriesToUpload = { 
                 self.entryName4: self.filePath,
                 self.entryName5: self.filePath }            
               
@@ -86,7 +83,7 @@ class Test:
                 return     
                  
             writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
-            if self.common.channel.addContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True, publishFrom = enums.Location.CHANNELS_PAGE) == False:
+            if self.common.category.addNewContentToCategory("KMS-Automation_Moderate_Category", [self.entryName1, self.entryName2, self.entryName3]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
                 return
