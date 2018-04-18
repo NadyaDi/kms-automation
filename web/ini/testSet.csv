@@ -1,5 +1,6 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_742,1,0,0,0,Channel moderation
+test_713,1,0,0,0,Channel moderation
 test_1555,1,0,0,0,Disclaimer - before upload
 test_1556,1,0,0,0,Disclaimer - before publish
 test_1557,1,0,0,0,importChannel
@@ -24,10 +25,10 @@ test_2671,1,0,0,0,My History - Youtube Viewed in
 test_2679,0,1,0,0,My History - Check resume playback
 test_2667,1,0,0,0,My history - Entry Viewed in channel
 test_2694,1,0,0,0,My History - Search by description
-test_2728,1,0,0,0,My history - Check entry in Continue Watching playlist in home page 
-test_2750,1,0,0,0,My history - Check entry in recently watched playlist in home page 
-test_2755,0,1,0,0,My history - Check audio entry in recently watched playlist in home page 
-test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page 
+test_2728,1,0,0,0,My history - Check entry in Continue Watching playlist in home page
+test_2750,1,0,0,0,My history - Check entry in recently watched playlist in home page
+test_2755,0,1,0,0,My history - Check audio entry in recently watched playlist in home page
+test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page
 test_2673,1,0,0,0,My history - Entry Viewed in Embed
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
