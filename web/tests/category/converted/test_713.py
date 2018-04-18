@@ -6,6 +6,7 @@ import clsTestService
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
+from upload import UploadEntry
 
 
 class Test:
@@ -34,6 +35,9 @@ class Test:
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
+    filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg' 
+    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3' 
+    filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4' 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -56,6 +60,10 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('entryName3')
             self.entryName4 = clsTestService.addGuidToString('entryName4')
             self.entryName5 = clsTestService.addGuidToString('entryName5')
+            self.audioEntry = UploadEntry(self.filePathAudio, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            self.videoEntry = UploadEntry(self.filePathVideo, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            self.imageEntry = UploadEntry(self.filePathImage, self.entryName3, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            uploadEntrieList = [self.audioEntry, self.videoEntry, self.imageEntry]
             self.newUserId = "pythonautomation1@mailinator.com"
             self.newUserPass = "Kaltura1!"
             ##################### TEST STEPS - MAIN FLOW #####################
@@ -83,7 +91,7 @@ class Test:
                 return     
                  
             writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
-            if self.common.category.addNewContentToCategory("KMS-Automation_Moderate_Category", [self.entryName1, self.entryName2, self.entryName3]) == False:
+            if self.common.category.addNewContentToCategory("KMS-Automation_Moderate_Category", uploadEntrieList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
                 return
