@@ -292,7 +292,7 @@ class Player(Base):
     def verifySlidesInPlayerSideBar(self, mySlidesList, checkSize=True):
         self.switchToPlayerIframe()
         sleep(2)
-        self.get_element(('xpath', '/html/body')).send_keys(Keys.PAGE_UP)
+        self.get_body_element().send_keys(Keys.PAGE_UP)
         sleep(3)
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click on the sides bar menu")

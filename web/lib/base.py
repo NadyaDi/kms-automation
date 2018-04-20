@@ -821,4 +821,8 @@ class Base:
             
             
     def replaceInLocator(self, locator, replaceWhat, replaceWith):
-        return (locator[0], locator[1].replace(replaceWhat, replaceWith))            
+        return (locator[0], locator[1].replace(replaceWhat, replaceWith))
+    
+    
+    def get_body_element(self):
+        return self.get_element(('xpath', '/html/body'))

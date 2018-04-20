@@ -71,7 +71,7 @@ class QrCodeReader(Base):
         
         # Take screenshot of the upload,capture,auto-generate image in thumbnail tab and return the full file path of the screenshot 
     def takeQrCodeTumbnailTabScreenshot(self):
-        self.get_element(self.clsCommon.editEntryPage.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA).send_keys(Keys.PAGE_DOWN)
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
         sleep(1)
         filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
         if self.takeScreeshot(filePath) == True:
