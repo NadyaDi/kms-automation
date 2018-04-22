@@ -19,23 +19,24 @@ class Home(Base):
     #Home page locators:
     #=============================================================================================================
     HOME_LINK                                           = ('id', 'menu-Home-btn')
-    HOME_PLAYLIST                                       = ('xpath', '//a[@class="clickable-header" and text()="PLAYLIST"]')
-    HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[@alt="ENTRY_NAME"]/ancestor::li[@class="span4"]')
+    HOME_PLAYLIST                                       = ('xpath', "//a[@class='clickable-header' and contains(text(),'PLAYLIST')]")
+    HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[@alt="ENTRY_NAME"]/ancestor::div[@class="photo-group featured_wrapper"]')
     
     #=============================================================================================================  
     # @Author: Inbar Willman
     # This method navigate to home page
     def navigateToHomePage(self, forceNavigate = False):
         # Check if we are already in home page
-#         if forceNavigate == False:
-#             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_HOME_URL , False, 1) == True:
-#                 return True
-        
+#       if forceNavigate == False:
+#          if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_HOME_URL , False, 1) == True:
+#              return True
+     
         # Click on name in header in order to navigate to home page
         if self.click(self.HOME_LINK) == False:
             writeToLog("INFO","FAILED to click on name in header")
             return False
-        
+            
+
         return True
     
     # @Author: Inbar Willman
@@ -62,10 +63,10 @@ class Home(Base):
     def verifyEntyNameAndThumbnailInHomePagePlaylist(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropButtom):  
         tmp_entry = (self.HOME_PLAYLIST_ENTRY[0], self.HOME_PLAYLIST_ENTRY[1].replace('ENTRY_NAME', entryName))
         if self.is_visible(tmp_entry) == False:
-            writeToLog("INFO","FAILED to find entry in " + entryName + " in playlist")
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' in playlist")
             return False  
         
-        qrResult = self.clsCommon.qrcode.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropButtom)
+        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveImageQrCodeInHomePagePlaylist(cropLeft, croTop, cropRight, cropButtom)
         
         if qrResult != expectedQrResult:
             writeToLog("INFO","FAILED entry thumbnail is '" + qrResult + "' but need to be '" + expectedQrResult + "'")

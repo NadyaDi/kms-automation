@@ -38,6 +38,7 @@ class Test:
     expectedQRCode3 = 3
     playlistName = None
     playlistID = None
+    playlistType = "Custom Playlist"
     
     
     
@@ -72,8 +73,6 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
                 
-            playlistID = self.common.myPlaylists.getPlaylistID("9CED306A-1573-Home Page Playlist")
-            
             writeToLog("INFO","Step 1: Going to upload entry number 1")
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -98,35 +97,47 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to create new playlist '" + self.playlistName + "'")
                 return
             
-            writeToLog("INFO","Step 5: Going to navigate to home page")
-            if self.common.home.navigateToHomePage() == False:
+            writeToLog("INFO","Step 5: Going to get playlist id")            
+            self.playlistID = self.common.myPlaylists.getPlaylistID(self.playlistName)
+            if self.playlistID == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED navigate to home page")
+                writeToLog("INFO","Step 5: FAILED to get playlist '" + self.playlistName + "' id")
+                return   
+            
+            writeToLog("INFO","Step 6: Going to set playlist in admin")  
+            if self.common.admin.setPlaylistToHomePage(self.playlistName, self.playlistID , self.playlistType) == False:
+                writeToLog("INFO","Step 6: FAILED add playlist in admin")
                 return
             
-            writeToLog("INFO","Step 5: Going verify home page playlist name")
-            tmp_playlist_name = (self.common.myPlaylists.PLAYLIST_CHECKBOX[0], self.common.myPlaylists.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', self.playlistName)) 
-            if self.base.is_visible(tmp_playlist_name) == False:
+            writeToLog("INFO","Step 7: Going to navigate to home page")
+            if self.common.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to find and verify playlist name in home page: " + self.playlistName)
-                return
-                 
-            writeToLog("INFO","Step 6: Going to verify the left entry in the playlist")
-            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 9.6, 1.81, 2.7, 1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify left entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
-                return
-                 
-            writeToLog("INFO","Step 7: Going to verify the middle entry in the playlist")
-            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.7, 1.81, 1.57, 1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify middle entry '" + self.entryName2 + "' in playlist '" + self.playlistName + "'")
+                writeToLog("INFO","Step 7: FAILED navigate to home page")
                 return
 
-            writeToLog("INFO","Step 8: Going to verify the right entry in the playlist")
-            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 1.58, 1.81, 1, 1) == False:
+            writeToLog("INFO","Step 8: Going verify home page playlist name")
+            tmp_playlist_name = (self.common.home.HOME_PLAYLIST[0], self.common.home.HOME_PLAYLIST[1].replace('PLAYLIST', self.playlistName)) 
+            if self.common.base.is_visible(tmp_playlist_name) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to verify right entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
+                writeToLog("INFO","Step 8: FAILED to find and verify playlist name in home page: " + self.playlistName)
+                return
+                 
+            writeToLog("INFO","Step 9: Going to verify the left entry in the playlist")
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode1, 9.6, 1.81, 2.7, 1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to verify left entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
+                return
+                 
+            writeToLog("INFO","Step 10: Going to verify the middle entry in the playlist")
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.7, 1.81, 1.57, 1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to verify middle entry '" + self.entryName2 + "' in playlist '" + self.playlistName + "'")
+                return
+
+            writeToLog("INFO","Step 11: Going to verify the right entry in the playlist")
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode3, 1.58, 1.81, 1, 1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to verify right entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
                 return                 
                  
             ##################################################################
