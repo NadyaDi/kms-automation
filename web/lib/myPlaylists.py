@@ -92,7 +92,7 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to create playlist, Playlist name: " + playlistName + "")
                     return False
                 
-                writeToLog("INFO","Playlist: " + playlistName + " successfully created")
+                writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
             
             else:
                 tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlistName))   
@@ -270,6 +270,8 @@ class MyPlaylists(Base):
             
         return True
     
+    # @author: Michal Zomper
+    # the function return the playlist id 
     def getPlaylistID(self, playListName): 
         if self.navigateToMyPlaylists() == False:
             writeToLog("INFO","FAILED navigate to my playlist page")

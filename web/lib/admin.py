@@ -28,6 +28,7 @@ class Admin(Base):
     ADMIN_DESCRIPTION_REQUIRED_ENABLE               = ('id', 'descriptionRequired')
     ADMIN_TAGS_REQUIRED_ENABLE                      = ('id', 'tagsRequired')
     ADMIN_DISCLAIMER_TEXT                           = ('xpath', "//textarea[@id='disclaimerText']")
+    ADMIN_ADD_PLAYLIST_BUTTON                       = ('xpath', "//a[@class='add' and contains(text(), '+ Add \"lists\"')]")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -251,3 +252,48 @@ class Admin(Base):
  
         return True    
     
+    
+    # @Autor: Michal zomper
+    # the function set playlist in mediaSpace home page
+    def setPlaylistToHomePage(self, playlistName, playlistId, listType):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED tologin to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/home') == False:
+            writeToLog("INFO","FAILED to load home module page in admin")
+            return False
+        
+        
+        if self.click(self.ADMIN_ADD_PLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on add list button")
+            return False
+                       
+        asteriskElement = self.driver.find_element_by_xpath(".//legend[@class='num' and contains(text(), '*')]")
+        parentAsteriskElement = asteriskElement.find_element_by_xpath("..")
+        comboboxElement = parentAsteriskElement.find_element_by_tag_name("select")
+        Select(comboboxElement).select_by_visible_text(listType)
+        
+        sleep(1)
+        playlistFildes = parentAsteriskElement.find_elements_by_tag_name("input")
+        # Set playlist name
+        if playlistFildes[0].send_keys(playlistName) == False:
+            writeToLog("INFO","FAILED to set playlist name")
+            return False
+        
+        sleep(1)
+        # Set playlist id
+        if playlistFildes[1].send_keys(playlistId) == False:
+            writeToLog("INFO","FAILED to set playlist id")
+            return False
+            
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in home page")
+            return False 
+        
+        writeToLog("INFO","Success, palylist '" + playlistName + "' was set to home page")
+        return True  
+        
