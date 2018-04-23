@@ -68,8 +68,8 @@ class Home(Base):
         
         qrResult = self.clsCommon.qrcode.getScreenshotAndResolveImageQrCodeInHomePagePlaylist(cropLeft, croTop, cropRight, cropButtom)
         
-        if qrResult != expectedQrResult:
-            writeToLog("INFO","FAILED entry thumbnail is '" + qrResult + "' but need to be '" + expectedQrResult + "'")
+        if qrResult != str(expectedQrResult):
+            writeToLog("INFO","FAILED entry thumbnail is '" + str(qrResult) + "' but need to be '" + str(expectedQrResult) + "'")
             return False  
         
         writeToLog("INFO","Success, entry'" + entryName + "' was verified")
