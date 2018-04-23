@@ -1,6 +1,6 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_742,1,0,0,0,Channel moderation
-test_713,1,0,0,0,Channel moderation
+test_713,1,0,0,0,Category moderation
 test_1555,1,0,0,0,Disclaimer - before upload
 test_1556,1,0,0,0,Disclaimer - before publish
 test_1557,1,0,0,0,importChannel

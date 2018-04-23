@@ -823,16 +823,26 @@ class Channel(Base):
         
         
         # Author: Tzachi Guetta 
-    def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate = True):
+    def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate = True, location = enums.Location.CHANNEL_PAGE):
         try:         
             if navigate == True:
-                if self.navigateToChannel(channelName) == False:
-                    writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
-                    return False
-                
-                if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on channel's moderation tab")
-                    return False         
+                if location == enums.Location.CHANNEL_PAGE:
+                    if self.navigateToChannel(channelName) == False:
+                        writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                        return False
+                    
+                    if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                        writeToLog("INFO","FAILED to click on channel's moderation tab")
+                        return False
+                    
+                elif location == enums.Location.CATEGORY_PAGE:
+                    if self.clsCommon.category.navigateToCategory(channelName) == False:
+                        writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
+                        return False
+                    
+                    if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
+                        writeToLog("INFO","FAILED to click on category's moderation tab")
+                        return False     
             sleep(2)
             
             if sortBy != '':
