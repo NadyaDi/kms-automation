@@ -30,6 +30,7 @@ test_2750,1,0,0,0,My history - Check entry in recently watched playlist in home 
 test_2755,0,1,0,0,My history - Check audio entry in recently watched playlist in home page
 test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page
 test_2673,1,0,0,0,My history - Entry Viewed in Embed
+test_2742,1,0,0,0,My history - Entry appear in both continue watch & recently watched playlists - Replay
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
 test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
@@ -52,3 +53,5 @@ test_3282,1,0,0,0,Collaboration negative test
 test_1027,1,0,0,0,Edir entry - thumbnail tab
 test_653,1,0,0,0,Free trial
 test_1573,1,0,0,0,Home page playlist
+test_687,1,0,0,0,Entry page - Embed Entry
+test_673,1,0,0,0,Playlists - Embed playlist
