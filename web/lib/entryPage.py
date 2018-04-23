@@ -96,7 +96,26 @@ class EntryPage(Base):
             return False
         
         return True 
+    
+    
+    # @Author: Inbar Willman
+    # Click on entry from home page playlist
+    def navigateToEntryPageFromHomePage(self, entryName):
+        tmp_entry_name = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        #Check if we already in edit entry page
+        if self.wait_visible(tmp_entry_name, 5) != False:
+            writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
+            return True 
         
+        tmp_home_entry_name = (self.clsCommon.home.HOME_PLAYLIST_ENTRY[0], self.clsCommon.home.HOME_PLAYLIST_ENTRY[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_home_entry_name) == False:
+            writeToLog("INFO","FAILED to click on entry")
+            return False
+        
+        if self.wait_visible(tmp_entry_name, 15) == False:
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            return False
+     
         
     # Author: Michal Zomper     
     def verifyEntryMetadata(self, entryName, entryDescription, entryTags):
@@ -160,7 +179,12 @@ class EntryPage(Base):
         elif navigateFrom == enums.Location.MY_HISTORY:
             if self.navigateToEntryPageFromMyHistory(entryName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_HISTORY)
-                return False            
+                return False   
+                
+        elif navigateFrom == enums.Location.HOME:
+            if self.navigateToEntryPageFromHomePage(entryName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_HISTORY)
+                return False               
         sleep(2)
         return True
         
