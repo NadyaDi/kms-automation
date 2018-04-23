@@ -14,7 +14,9 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-
+    # The function create playlist in kms.
+    # in admin page the playlist is added to the playlist list of home page.
+    # then in kms admin page we check that the playlist name and entries are correct  
     #================================================================================================================================
     testNum = "1573"
     
@@ -30,10 +32,10 @@ class Test:
     entryName3 = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (1).png'
+    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (4).png'
     filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (2).png'
     filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (3).png'
-    expectedQRCode1 = 1
+    expectedQRCode1 = 4
     expectedQRCode2 = 2
     expectedQRCode3 = 3
     playlistName = None
@@ -72,7 +74,7 @@ class Test:
             self.playlistName = clsTestService.addGuidToString("Home Page Playlist", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                
+            
             writeToLog("INFO","Step 1: Going to upload entry number 1")
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -123,19 +125,19 @@ class Test:
                 return
                  
             writeToLog("INFO","Step 9: Going to verify the left entry in the playlist")
-            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode1, 9.6, 1.81, 2.7, 1) == False:
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 5.81, 1.5, 3.6, 1.15) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify left entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
                 return
                  
             writeToLog("INFO","Step 10: Going to verify the middle entry in the playlist")
-            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.7, 1.81, 1.57, 1) == False:
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.7, 1.5, 1.79, 1.15) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to verify middle entry '" + self.entryName2 + "' in playlist '" + self.playlistName + "'")
                 return
 
             writeToLog("INFO","Step 11: Going to verify the right entry in the playlist")
-            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode3, 1.58, 1.81, 1, 1) == False:
+            if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 1.45, 1.5, 1.23, 1.15) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify right entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
                 return                 
@@ -150,11 +152,13 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.base.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")                            
+            writeToLog("INFO","**************** Starting: teardown_method ****************")   
+            sleep(2)                         
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName2)
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName3)
             self.common.myPlaylists.deletePlaylist(self.playlistName)
+            self.common.admin.deletePlaylistFromHomePage(self.playlistName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
