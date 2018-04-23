@@ -60,10 +60,10 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('entryName3')
             self.entryName4 = clsTestService.addGuidToString('entryName4')
             self.entryName5 = clsTestService.addGuidToString('entryName5')
-            self.audioEntry = UploadEntry(self.filePathAudio, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)
-            self.videoEntry = UploadEntry(self.filePathVideo, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
-            self.imageEntry = UploadEntry(self.filePathImage, self.entryName3, self.entryDescription, self.entryTags, timeout=60, retries=3)
-            uploadEntrieList = [self.audioEntry, self.videoEntry, self.imageEntry]
+            self.imageEntry1 = UploadEntry(self.filePathImage, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            self.imageEntry2 = UploadEntry(self.filePathImage, self.entryName3, self.entryDescription, self.entryTags, timeout=60, retries=3)
+            self.imageEntry3 = UploadEntry(self.filePathImage, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)            
+            uploadEntrieList = [self.imageEntry1, self.imageEntry2, self.imageEntry3]
             self.newUserId = "pythonautomation1@mailinator.com"
             self.newUserPass = "Kaltura1!"
             ##################### TEST STEPS - MAIN FLOW #####################
@@ -82,7 +82,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
-   
                 
             writeToLog("INFO","Step 6: Going to set entry #4 as Unlisted")
             if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
@@ -108,10 +107,10 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to login with channel's owner")
                 return
              
-            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
+            expectedEntriesList = [self.entryName1, self.entryName2]
                
             writeToLog("INFO","Step 6: Going to sort entries by Alphabetical & Image type")
-            if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, "KMS-Automation_Moderate_Channel") == False:
+            if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, "KMS-Automation_Moderate_Category", True, enums.Location.CATEGORY_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to sort entries by Alphabetical & Image type")
                 return

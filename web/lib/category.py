@@ -22,6 +22,7 @@ class Category(Base):
     CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL                          = ("//a[@href='javascript:;' and contains(text(),'...')]")
     CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='add-new-tab']")
     CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON                        = ('xpath', "//a[@class='MediaUpload-tab']")
+    CATEGORY_PENDING_TAB                                        = ('xpath', "//a[@id='categorymoderation-tab']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
@@ -41,7 +42,7 @@ class Category(Base):
         
         # Click on the category name in the nav bar
         tmpNavCategoryName = (self.CATEGORY_NAME_NAV_BAR[0], self.CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', categoryName))
-        if self.click(tmpNavCategoryName, 30) == False:
+        if self.click(tmpNavCategoryName, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on category name '" + categoryName + "' in the nav bar")
             return False
         
