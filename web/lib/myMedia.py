@@ -486,7 +486,7 @@ class MyMedia(Base):
                 
                 if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                     tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId))
-                tmpBtn = (tmpBtn[0], tmpBtn[1] + "/descendant::strong[@class='valign-top']")
+                tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
                 if str(expectedEntryPrivacy) in self.get_element_text(tmpBtn):
                     writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
                     return True                    
