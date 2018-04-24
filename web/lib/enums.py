@@ -77,6 +77,7 @@ class IframeName(Enum):
     KEA_QUIZ_PLAYER                     = 'KEA_QUIZ_PLAYER'
     EMBED_PLAYER                        = 'EMBED_PLAYER'
     KAF_BLACKBOARD                      = 'KAF_BLACKBOARD'
+    KAF_SHAREPOINT                      = 'KAF_SHAREPOINT'
     
     
 class PlayerView(Enum):

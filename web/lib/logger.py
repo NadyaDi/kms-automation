@@ -92,7 +92,7 @@ def logStartTest(test,browser):
     utilityTestFunc.clearFilesFromLogFolderPath('.log')    
     os.environ["RUNNING_TEST_ID"] = test.testNum
     writeToLog("INFO","************************************************************************************************************************")
-    writeToLog("INFO","test_" + test.testNum + " Start on browser " + browser)
+    writeToLog("INFO",str(localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST) + ": test_" + test.testNum + " Start on browser " + browser)
     writeToLog("INFO","NEW UI is " + str(localSettings.LOCAL_SETTINGS_IS_NEW_UI) + "; Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
      
 #===============================================================================

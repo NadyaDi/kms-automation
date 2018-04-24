@@ -48,13 +48,15 @@ class Login(Base):
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
             raise Exception(inst)
         
-    def navigateToLoginPage(self, url=''):
+    def navigateToLoginPage(self, url='', verifyUrl=True):
         if url == '':
             self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
-            self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)    
+            if verifyUrl == True:
+                self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)    
         else:
             self.navigate(url)
-            self.clsCommon.myMedia.verifyUrl(url, False)
+            if verifyUrl == True:
+                self.clsCommon.myMedia.verifyUrl(url, False)
            
         
     def logOutOfKMS(self):
