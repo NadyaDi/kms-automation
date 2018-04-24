@@ -556,6 +556,7 @@ class Player(Base):
             if self.wait_visible(slide_time) == False:
                 writeToLog("INFO","FAILED to verify slide time ' " + str(slidesForSearchList[slide]) + "' in the slide menu bar")
                 return False
+            sleep(2)
             
             # check that only one slide display
             if totalNumberOfslides-1 != len(self.get_elements(self.PLAYER_SLIDE_RESULT_NO_MATCH)):
@@ -567,7 +568,7 @@ class Player(Base):
                 return False
             
             writeToLog("INFO","SUCCESS, slide '" + str(slide) +"' at time '" + str(slidesForSearchList[slide]) + "' was found in search")
-        
+
         writeToLog("INFO","SUCCESS, All slides were found after search in the slides menu bar")
         return True   
 
