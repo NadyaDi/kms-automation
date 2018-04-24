@@ -486,15 +486,14 @@ class MyMedia(Base):
                 
                 if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                     tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId))
-                if str(expectedEntryPrivacy) in self.get_element(tmpBtn).find_element_by_xpath(self.MY_MEDIA_ENTRY_CHILD_POPUP[1]).text:
+                tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
+                if str(expectedEntryPrivacy) in self.get_element_text(tmpBtn):
                     writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
-                    return True
+                    return True                    
                     
         except NoSuchElementException:
             return False
     
-        return True
-          
         
     # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):

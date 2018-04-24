@@ -29,6 +29,8 @@ class Admin(Base):
     ADMIN_TAGS_REQUIRED_ENABLE                      = ('id', 'tagsRequired')
     ADMIN_DISCLAIMER_TEXT                           = ('xpath', "//textarea[@id='disclaimerText']")
     ADMIN_ADD_PLAYLIST_BUTTON                       = ('xpath', "//a[@class='add' and contains(text(), '+ Add \"lists\"')]")
+    ADMIN_PLAYLIST_NAME                             = ('xpath', "//input[@value='PLAYLIST_NAME']")
+    ADMIN_DELETE_PLAYLIST_BUTTON                    = ('xpath', "//a[@class='delete' and @data-setdelete='ID']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -294,6 +296,49 @@ class Admin(Base):
             writeToLog("INFO","FAILED to save changes in home page")
             return False 
         
-        writeToLog("INFO","Success, palylist '" + playlistName + "' was set to home page")
+        writeToLog("INFO","Success, playlist '" + playlistName + "' was set to home page")
         return True  
+    
+    # @Autor: Michal Zonper
+    # The function delete playlist from admin page 
+    def deletePlaylistFromHomePage(self, playlistName):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED tologin to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/home') == False:
+            writeToLog("INFO","FAILED to load home module page in admin")
+            return False
+        
+        tmp_playlist_name = (self.ADMIN_PLAYLIST_NAME[0], self.ADMIN_PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
+        try:
+            playlist = self.get_element(tmp_playlist_name).get_attribute("id")
+        
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get playlist attribute id")
+            return False
+        
+        tmp = playlist.split('-')
+        
+        if tmp[1] == '':
+            writeToLog("INFO","FAILED to get playlist attribute id")
+            return False
+        
+        tmpDeleteButon = (self.ADMIN_DELETE_PLAYLIST_BUTTON[0], self.ADMIN_DELETE_PLAYLIST_BUTTON[1].replace('ID', tmp[1]))
+        
+        if self.click(tmpDeleteButon, 20) == False:
+            writeToLog("INFO","FAILED to click on delete playlist button")
+            return False
+        
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in home page")
+            return False 
+        
+        writeToLog("INFO","Success, playlist '" + playlistName + "' was deleted from admin")
+        return True  
+        
+            
         

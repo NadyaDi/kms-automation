@@ -52,3 +52,6 @@ test_2750,My history - Check entry in recently watched playlist in home page,237
 test_2755,My history - Check audio entry in recently watched playlist in home page,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2757,My history - Check quiz entry in recently watched playlist in home page,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2673,My history - Entry Viewed in Embed,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2742,My history - Entry appear in both continue watch & recently watched playlists - Replay,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_687,Entry page - Embed Entry,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_673,Playlists - Embed playlist,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
