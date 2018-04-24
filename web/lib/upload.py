@@ -406,6 +406,10 @@ class Upload(Base):
             self.switch_to_default_content()
             if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
                 self.clsCommon.blackBoard.switchToBlackboardIframe()
+            elif self.getAppUnderTest() == enums.Application.SHARE_POINT:
+                self.clsCommon.sharePoint.switchToSharepointIframe()
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                sleep(1)
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
@@ -575,7 +579,7 @@ class Upload(Base):
         if application == enums.Application.BLACK_BOARD:
             self.clsCommon.blackBoard.navigateToUploadPageBlackBoard()
         elif application == enums.Application.SHARE_POINT:
-            self.clsCommon.blackBoard.navigateToUploadPageSharePoint()
+            self.clsCommon.sharePoint.navigateToUploadPageSharePoint()
                       
         # Click Add New
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:

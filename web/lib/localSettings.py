@@ -94,3 +94,4 @@ TEST_CURRENT_IFRAME_ENUM                    = enums.IframeName.DEFAULT
 
 # KAF Variables
 LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL      = 'https://qa-bb-16.dev.kaltura.com:8443'
+LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL      = 'https://kalturasp2013.sharepoint.com/sites/QA/QAtesting/automation/SitePages'
