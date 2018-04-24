@@ -60,7 +60,8 @@ if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
     LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'C:\\selenium\\kms-automation\\web\\temp\\downloads'
 
-        
+
+# Will updates in 'utilityTestFunc' class, 'updateTestCredentials' method:
 LOCAL_SETTINGS_GUID                         = None
 LOCAL_SETTINGS_URL_PREFIX                   = 'http://'
 LOCAL_SETTINGS_TEST_BASE_URL                = LOCAL_SETTINGS_URL_PREFIX
@@ -78,6 +79,7 @@ LOCAL_SETTINGS_PROD_ENVIRONMENT             = 'Prod'
 LOCAL_SETTINGS_TESTING_ENVIRONMENT          = 'Testing'
 LOCAL_SETTINGS_IS_NEW_UI                    = True
 LOCAL_SETTINGS_RUN_ENVIRONMENT              = LOCAL_SETTINGS_TESTING_ENVIRONMENT
+
 # Partner credentials
 LOCAL_SETTINGS_PARTNER                      = None
 LOCAL_SETTINGS_LOGIN_USERNAME               = None
@@ -85,14 +87,10 @@ LOCAL_SETTINGS_LOGIN_PASSWORD               = None
 LOCAL_SETTINGS_ADMIN_USERNAME               = None
 LOCAL_SETTINGS_ADMIN_PASSWORD               = None
 LOCAL_SETTINGS_USERNAME_AFTER_LOGIN         = None
+
 # Test run variables
+LOCAL_SETTINGS_APPLICATION_UNDER_TEST       = enums.Application.MEDIA_SPACE
 TEST_CURRENT_IFRAME_ENUM                    = enums.IframeName.DEFAULT
 
-
-
-#TO DELETE
-# LOCAL_SETTINGS_QA_BACKEND_API_URL           = "http://qa-apache-php7.dev.kaltura.com"
-# LOCAL_SETTINGS_BACKEND_API_URL              = LOCAL_SETTINGS_QA_BACKEND_API_URL
-# LOCAL_SETTINGS_PARTNER                      = '4783'
-# LOCAL_SETTINGS_PARTNER_SECRET               = '87e3c95b849a9cc4be5c14d7a130ccfc'
-# LOCAL_SETTINGS_KS_TYPE                      = '2'
+# KAF Variables
+LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL      = 'https://qa-bb-16.dev.kaltura.com:8443'

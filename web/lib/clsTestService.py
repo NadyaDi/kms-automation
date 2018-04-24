@@ -40,9 +40,6 @@ TEST_TIMEOUT                    = 60
 # function with all the redundant start functions 
 #===============================================================================
 def initializeAndLoginAsUser(test, driverFix, duration=60):
-    if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
-        cleanTempQrCodeFolder()
-        cleanTempDownloadFolder()
     test, driver = initialize(test, driverFix, duration)
     # Login
     common = clsCommon.Common(test.driver)
@@ -61,9 +58,9 @@ def initialize(test,driverFix,duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
         cleanTempDownloadFolder()
-    #setup the test, initialize self and capture
+    # Setup the test, initialize
     test = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
-    # Strat driver - Open browser and navigate to base URL
+    # Start driver - Open browser and navigate to base URL
     driver = initializeDriver(test,driverFix)
     return (test, driver)    
     
@@ -117,10 +114,14 @@ def testTimedOut(testNum, startTime,reason):
 
 
 # Get from testPartners scv the test credentials by test id and env
-def updatePlatforms(test_num):
+def updatePlatforms(test_num, application=enums.Application.MEDIA_SPACE):
     env = ""
     if isAutomationEnv() == True:
         env = "Auto"
+        
+    # Set the Application under test (KMS, BB, Moodle, Canvas...) - Default is Media Space
+    if application == enums.Application.BLACK_BOARD:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.BLACK_BOARD
     
     supported_platforms=[]
     case_str = "test_" + test_num
