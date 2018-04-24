@@ -138,14 +138,9 @@ class Upload(Base):
                 # Convert path for Windows
                 filePath = filePath.replace("/", "\\")     
                 
+                # Navigate to upload page
                 if uploadFrom == enums.Location.UPLOAD_PAGE:
-                    # Click Add New
-                    if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
-                        writeToLog("DEBUG","FAILED to click on 'Add New' button")
-                        continue
-                    # Click Media Upload
-                    if self.clickMediaUpload() == False:
-                        writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
+                    if self.navigateToUploadPage() == False:
                         continue
 
                 #checking if disclaimer is turned on for "Before upload"
@@ -356,7 +351,9 @@ class Upload(Base):
     def fillFileUploadEntryDetails(self, name="", description="", tags=""):
         if self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME) == False:
             return False
+        
         self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME).clear()
+        
         if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
             writeToLog("INFO","FAILED to fill a entry name:'" + name + "'")
             return False
@@ -407,6 +404,8 @@ class Upload(Base):
     def fillFileUploadEntryTags(self, tags, uploadboxId=-1):
         try:
             self.switch_to_default_content()
+            if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
+                self.clsCommon.blackBoard.switchToBlackboardIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
@@ -569,4 +568,21 @@ class Upload(Base):
                 writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
                 return False      
             
-    
+            
+    def navigateToUploadPage(self):
+        # Get the application under test and use each application right method
+        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+        if application == enums.Application.BLACK_BOARD:
+            self.clsCommon.blackBoard.navigateToUploadPageBlackBoard()
+        elif application == enums.Application.SHARE_POINT:
+            self.clsCommon.blackBoard.navigateToUploadPageSharePoint()
+                      
+        # Click Add New
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on 'Add New' button")
+            return False
+        # Click Media Upload
+        if self.clickMediaUpload() == False:
+            writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
+            return False            
+        return True     
