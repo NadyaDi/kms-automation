@@ -5,10 +5,8 @@ from selenium.common.exceptions import NoSuchElementException, WebDriverExceptio
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import InvalidElementStateException
-
 from logger import *
 from builtins import str
-
 
 class Base:
     
@@ -647,7 +645,7 @@ class Base:
         
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
-    def verifyUrl(self, expectedUrl, isRegex, timeout=30):
+    def verifyUrl(self, expectedUrl, isRegex=False, timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         while True:        
             currentUrl = self.driver.current_url
@@ -752,8 +750,6 @@ class Base:
         except Exception:
             writeToLog("INFO","FAILED to switch to default content")
             return False        
-
-        
         
     def setImplicitlyWaitToDefault(self):
         self.driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
@@ -826,3 +822,6 @@ class Base:
     
     def get_body_element(self):
         return self.get_element(('xpath', '/html/body'))
+    
+    def getAppUnderTest(self):
+        return localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
