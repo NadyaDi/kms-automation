@@ -65,9 +65,15 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName1 = clsTestService.addGuidToString("Home Page Playlist 1", self.testNum)
-            self.entryName2 = clsTestService.addGuidToString("Home Page Playlist 2", self.testNum)
-            self.entryName3 = clsTestService.addGuidToString("Home Page Playlist 3", self.testNum)
+            
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                self.entryName1 = clsTestService.addGuidToString("Home Page Playlist 1", self.testNum)
+                self.entryName2 = clsTestService.addGuidToString("Home Page Playlist 2", self.testNum)
+                self.entryName3 = clsTestService.addGuidToString("Home Page Playlist 3", self.testNum)
+            elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                self.entryName1 = clsTestService.addGuidToString("1", self.testNum)
+                self.entryName2 = clsTestService.addGuidToString("2", self.testNum)
+                self.entryName3 = clsTestService.addGuidToString("3", self.testNum)
             
             self.entriesList = [self.entryName3, self.entryName2, self.entryName1]
             
@@ -80,50 +86,50 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry number 1")
                 return
-             
+              
             writeToLog("INFO","Step 2: Going to upload entry number 2")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry number 2")
                 return
-             
+              
             writeToLog("INFO","Step 3: Going to upload entry number 3")
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry number 3")
                 return
-                  
+                   
             writeToLog("INFO","Step 4: Going to create new playlist with entries")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create new playlist '" + self.playlistName + "'")
                 return
-             
+              
             writeToLog("INFO","Step 5: Going to get playlist id")            
             self.playlistID = self.common.myPlaylists.getPlaylistID(self.playlistName)
             if self.playlistID == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to get playlist '" + self.playlistName + "' id")
                 return   
-             
+              
             writeToLog("INFO","Step 6: Going to set playlist in admin")  
             if self.common.admin.setPlaylistToHomePage(self.playlistName, self.playlistID , self.playlistType) == False:
                 writeToLog("INFO","Step 6: FAILED add playlist in admin")
                 return
-             
+              
             writeToLog("INFO","Step 7: Going to navigate to home page")
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED navigate to home page")
                 return
- 
+  
             writeToLog("INFO","Step 8: Going verify home page playlist name")
             tmp_playlist_name = (self.common.home.HOME_PLAYLIST[0], self.common.home.HOME_PLAYLIST[1].replace('PLAYLIST', self.playlistName)) 
             if self.common.base.is_visible(tmp_playlist_name) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to find and verify playlist name in home page: " + self.playlistName)
                 return
-                  
+                   
             writeToLog("INFO","Step 9: Going to verify the left entry in the playlist")
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
                 if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 5.81, 1.5, 3.6, 1.15) == False:
@@ -143,8 +149,8 @@ class Test:
                     writeToLog("INFO","Step 11: FAILED to verify right entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
                     return  
                  
-            elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:   
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 4.178, 1.85, 3, 1.40) == False:
+            elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:  
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 4.17, 1.80, 3.04, 1.39) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED to verify left entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
                     return

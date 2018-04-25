@@ -228,8 +228,8 @@ class QrCodeReader(Base):
             writeToLog("DEBUG","QR code result is: " + result)
             return result 
         
-    # Take screenshot of the image in home page playlist according to the coordinate  crop and resolve QR code  
-    def getScreenshotAndResolveImageQrCodeInHomePagePlaylist(self, cropLeft, croTop, cropRight, cropButtom):
+    # Take screenshot of the image according to the coordinate  crop and resolve QR code  
+    def getScreenshotAndResolveCustomImageQrCode(self, cropLeft, croTop, cropRight, cropButtom):
         sc = self.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropButtom)
         if sc == None:
             writeToLog("DEBUG","Failed to get screenshot for QR code")

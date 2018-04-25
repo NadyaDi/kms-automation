@@ -3,6 +3,7 @@ import clsTestService
 import enums
 from logger import writeToLog
 from selenium.webdriver.support.ui import Select
+from selenium.webdriver.common.keys import Keys
 
 
 class Admin(Base):
@@ -31,6 +32,8 @@ class Admin(Base):
     ADMIN_ADD_PLAYLIST_BUTTON                       = ('xpath', "//a[@class='add' and contains(text(), '+ Add \"lists\"')]")
     ADMIN_PLAYLIST_NAME                             = ('xpath', "//input[@value='PLAYLIST_NAME']")
     ADMIN_DELETE_PLAYLIST_BUTTON                    = ('xpath', "//a[@class='delete' and @data-setdelete='ID']")
+    ADMIN_CAROUSEL_TYPE                             = ('xpath', "//select[@id='carousel-type' and @name='carousel[type]']")
+    ADMIN_CAROUSEL_ID                               = ('xpath', "//input[@id='carousel-playlistId' and @name='carousel[playlistId]']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -268,7 +271,6 @@ class Admin(Base):
             writeToLog("INFO","FAILED to load home module page in admin")
             return False
         
-        
         if self.click(self.ADMIN_ADD_PLAYLIST_BUTTON) == False:
             writeToLog("INFO","FAILED to click on add list button")
             return False
@@ -299,7 +301,7 @@ class Admin(Base):
         writeToLog("INFO","Success, playlist '" + playlistName + "' was set to home page")
         return True  
     
-    # @Autor: Michal Zonper
+    # @Autor: Michal Zomper
     # The function delete playlist from admin page 
     def deletePlaylistFromHomePage(self, playlistName):
         # Login to Admin
@@ -332,6 +334,7 @@ class Admin(Base):
             writeToLog("INFO","FAILED to click on delete playlist button")
             return False
         
+        sleep(2)
         #Save changes
         if self.adminSave() == False:
             writeToLog("INFO","FAILED to save changes in home page")
@@ -340,5 +343,34 @@ class Admin(Base):
         writeToLog("INFO","Success, playlist '" + playlistName + "' was deleted from admin")
         return True  
         
+    # @Autor: Michal Zomper      
+    def setCarouselForHomePage(self, listType, playlistId=''):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/home') == False:
+            writeToLog("INFO","FAILED to load home module page in admin")
+            return False
+        
+        sleep(1)               
+        if self.select_from_combo_by_text(self.ADMIN_CAROUSEL_TYPE, listType) == False:
+            writeToLog("INFO","FAILED to change carousel type to: " + listType)
+            return False    
+        
+        if listType == "Custom Playlist":
+            if self.clear_and_send_keys(self.ADMIN_CAROUSEL_ID, playlistId) == False:
+                writeToLog("INFO","FAILED to insert playlist it to carousel info")
+                return False   
             
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in home page")
+            return False 
+        
+        writeToLog("INFO","Success, playlist was set to home page carousel")
+        return True  
+    
         
