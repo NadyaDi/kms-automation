@@ -68,24 +68,31 @@ class MyMedia(Base):
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self, forceNavigate = False):
-        # Check if we are already in my media page
-        if forceNavigate == False:
-            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
-                return True
+        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+        if application == enums.Application.BLACK_BOARD:
+            if self.clsCommon.blackBoard.navigateToMyMediaBlackBoard() == False:
+                writeToLog("INFO","FAILED navigate to my media in blackboard")
+                return False
         
-        # Click on User Menu Toggle Button
-        if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on User Menu Toggle Button")
-            return False
-        
-        # Click on My Media
-        if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on My Media from the user menu")
-            return False
-        
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
-            writeToLog("INFO","FAILED to navigate to My Media")
-            return False
+        else:    
+            # Check if we are already in my media page
+            if forceNavigate == False:
+                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
+                    return True
+            
+            # Click on User Menu Toggle Button
+            if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on User Menu Toggle Button")
+                return False
+            
+            # Click on My Media
+            if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on My Media from the user menu")
+                return False
+            
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
+                writeToLog("INFO","FAILED to navigate to My Media")
+                return False
         
         return True
         
@@ -170,7 +177,7 @@ class MyMedia(Base):
         if self.navigateToMyMedia(forceNavigate) == False:
             return False
         
-        sleep(2)
+        sleep(3)
         # Search Entry     
         self.getSearchBarElement().click()
         self.getSearchBarElement().send_keys(entryName)

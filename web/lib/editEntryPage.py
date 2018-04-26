@@ -28,7 +28,6 @@ class EditEntryPage(Base):
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
     EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON                          = ('id', "EntryOptions-submit")
     EDIT_ENTRY_SAVE_BUTTON_FLAVOR                               = ('id', "EditFlavors-submit")
-    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath', "//div[@class='alert alert-success ']")
     EDIT_ENTRY_DETAILS_TAB                                      = ('id', 'details-tab')
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
@@ -37,7 +36,6 @@ class EditEntryPage(Base):
     EDIT_ENTRY_TIMELINE_TAB                                     = ('id', 'chapters-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
-    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' , "//div[@class='alert alert-success ']")
     EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Time']")
     EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Date']")
     EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR                     = ('xpath' , "//input[@aria-label='End Time Date']")
@@ -658,6 +656,10 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on the details tab")
             return False
         
+        if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+            
         if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
