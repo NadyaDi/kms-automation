@@ -13,7 +13,7 @@ import ctypes
 
 class Test:
     #================================================================================================================================
-    # @Author: Oleg Sigalov
+    # @Author: Michal Zomper
     # Test description:
     # 
     # 
@@ -22,7 +22,7 @@ class Test:
     #  
     # 
     #================================================================================================================================
-    testNum     = "603"
+    testNum     = "594"
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum, application)
     
