@@ -263,7 +263,7 @@ class Base:
                     return False
 
 
-    # waits for the element to appear
+    # waits for the element to appear (self.is_visible)
     def wait_visible(self, locator, timeout=10, multipleElements=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
@@ -285,6 +285,28 @@ class Base:
             except:
                 self.setImplicitlyWaitToDefault()
                 return False
+            
+
+    # waits for the element to appear
+    def wait_element(self, locator, timeout=10, multipleElements=False):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                self.setImplicitlyWaitToDefault()
+                if multipleElements == True:
+                    elements = self.get_elements(locator)
+                    for el in elements:
+                        if el.size['width']!=0 and el.size['height']!=0:
+                            return el
+                    return False
+                else:
+                    return self.get_element(locator)
+            except:
+                if wait_until < datetime.datetime.now():
+                    self.setImplicitlyWaitToDefault()
+                    return False                 
+                pass      
             
 
     # waits for the element child to appear
