@@ -20,7 +20,7 @@ class BlackBoard(Base):
     LOGIN_SIGN_IN_BTN                   = ('id', 'entry-login')
     USER_MENU_TOGGLE_BTN                = ('id', 'global-nav-link')
     USER_LOGOUT_BTN                     = ('id', 'topframe.logout.label')
-    BB_MEDIA_SPACE_IFRAME               = ('xpath', "//iframe[@src='/webapps/osv-kaltura-BBLEARN/LtiMyMedia']")
+    BB_MEDIA_SPACE_IFRAME               = ('xpath', "//iframe[contains(@src,'/webapps/osv-kaltura-BBLEARN/')]")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -32,12 +32,18 @@ class BlackBoard(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     def switchToBlackboardIframe(self):
-        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.KAF_BLACKBOARD:
+        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
+            self.switch_to_default_content()
+            if self.swith_to_iframe(self.BB_MEDIA_SPACE_IFRAME) == False:
+                writeToLog("INFO","FAILED to switch to iframe")
+                return False
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD
+            return True
+                    
+        if self.wait_visible(self.BB_MEDIA_SPACE_IFRAME, 3) == False:
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD
             return True
         else:
-            if self.wait_visible(self.BB_MEDIA_SPACE_IFRAME, 60) == False:
-                writeToLog("INFO","FAILED to get iframe element")
-                return False
             if self.swith_to_iframe(self.BB_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
                 return False
