@@ -650,8 +650,9 @@ class EditEntryPage(Base):
           
         return True
     
+    
     # Author: Michal Zomper
-    def navigateToEntryPageFromEditEntryPage(self, entryName):
+    def navigateToEntryPageFromEditEntryPage(self, entryName, leavePage=False):
         if self.clickOnEditTab(enums.EditEntryPageTabName.DETAILS) == False:
             writeToLog("INFO","FAILED to click on the details tab")
             return False
@@ -664,6 +665,14 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
+        
+        # Click Leave Page if expected    
+        if leavePage == True:
+            sleep(2)
+            self.clsCommon.base.driver.switch_to.alert.accept()
+            if self.clsCommon.base.wait_for_page_readyState() == False:
+                writeToLog("INFO","FAILED to load entry page")
+                return False                
             
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
@@ -673,6 +682,7 @@ class EditEntryPage(Base):
         sleep(3)
         writeToLog("INFO","Success, entry page open")
         return True
+     
      
     # Author: Michal Zomper   
     def deleteSingelSlideFromTimeLine(self, slideTime):
@@ -996,7 +1006,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
-        self.clsCommon.base.switch_to_default_content()
+        self.clsCommon.switch_to_default_iframe_generic()
         if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on capture thumbnail button")
             return False
