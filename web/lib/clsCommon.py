@@ -137,3 +137,16 @@ class Common():
         file1 = open(path,"w")
         file1.write(text)
         file1.close()
+        
+        
+    # @Author: Oleg Sigalov
+    # Switch to default Media Space Iframe, if testing Media Space it will switch to default_content
+    # If testing KAF, it will switch to KAF Media Space Iframe
+    def switch_to_default_iframe_generic(self):
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MEDIA_SPACE:
+            return self.base.switch_to_default_content() 
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            return self.blackBoard.switchToBlackboardIframe()
+        else:
+            self.base.switch_to_default_content()      
+        

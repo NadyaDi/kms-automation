@@ -76,7 +76,6 @@ class Player(Base):
             if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
                 return True
             else:
-                self.switch_to_default_content()
                 localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
                 self.wait_visible(self.PLAYER_IFRAME, 60)
                 self.swith_to_iframe(self.PLAYER_IFRAME)

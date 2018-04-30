@@ -47,7 +47,7 @@ class EntryPage(Base):
         self.clsCommon.myMedia.searchEntryMyMedia(entryName)
         self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName)
         # Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 15) == False:
+        if self.wait_visible(tmp_entry_name, 30) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
             return False
         
