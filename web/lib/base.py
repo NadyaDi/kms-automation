@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import InvalidElementStateException
 from logger import *
 from builtins import str
+import win32clipboard
 
 class Base:
     
@@ -845,5 +846,14 @@ class Base:
     def get_body_element(self):
         return self.get_element(('xpath', '/html/body'))
     
+    
+    #Returns string of copy text 
+    def winGetClipboard(self):
+        win32clipboard.OpenClipboard()
+        data = win32clipboard.GetClipboardData()
+        win32clipboard.CloseClipboard()
+        return str(data)    
+
+      
     def getAppUnderTest(self):
         return localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST

@@ -2,6 +2,8 @@ import enums
 from base import *
 import clsTestService
 from general import General
+from selenium.webdriver.common.keys import Keys
+
 
 
 class MyPlaylists(Base):
@@ -26,7 +28,10 @@ class MyPlaylists(Base):
     PLAYLIST_SAVE_BUTTON                     = ('xpath', "//button[@class='btn btn-primary saveBtn']")
     PLAYLIST_SAVED_ALERT                     = ('xpath', "//div[@class='alert alert-success ']")
     MY_PLAYLIST_TABLE_SIZE                   = ('xpath',"//table[@class='table sortable table-condensed table-hover']/tbody/tr")
-    
+    GO_TO_PLAYLIST_BUTTON                    = ('id', 'manage_playlists')
+    PLAYLIST_EMBED_BUTTON                    = ('xpath', '//i[@class="v2ui-embedplaylistButton-PLAYLIST_ID icon-code"]')
+    PLAYLIST_EMBED_TEXTAREA                  = ('xpath', '//textarea[@id="embed_code-PLAYLIST_ID"]')
+    PLAYLIST_EMBED_PLAYER_SIZES              = ('xpath', '//iframe[@width="WIDTH_SIZE" and @height="HEIGHT_SIZE"]')
     #============================================================================================================
 
     #  @Author: Tzachi Guetta      
@@ -155,6 +160,7 @@ class MyPlaylists(Base):
         
         return True
     
+    
     #  @Author: Tzachi Guetta      
     def deletePlaylist(self, playlistName):
         try:
@@ -193,6 +199,7 @@ class MyPlaylists(Base):
             return False
             
         return True
+    
     
     #  @Author: Tzachi Guetta      
     def verifySingleEntryInPlaylist(self, playlistName, entryName, isExpected=True):
@@ -270,6 +277,7 @@ class MyPlaylists(Base):
             
         return True
     
+    
     # @author: Michal Zomper
     # the function return the playlist id 
     def getPlaylistID(self, playListName): 
@@ -295,3 +303,76 @@ class MyPlaylists(Base):
             return False
         
         return tmp[1]
+    
+    
+    # @ Author: Inbar Willman
+    # Click on embed playlist button and return the playlist embed code
+    def clickEmbedPlaylistAndGetEmbedCode(self, playListName):
+        #Get playlist id
+        playlist_id = self.getPlaylistID(playListName)
+        if playlist_id == False:
+            writeToLog("INFO","FAILED to get playlist id")
+            return False 
+        
+        #Click on playlist embed button
+        tmpPlaylistEmbedBtm = (self.PLAYLIST_EMBED_BUTTON[0], self.PLAYLIST_EMBED_BUTTON[1].replace('PLAYLIST_ID', playlist_id))
+        if self.click(tmpPlaylistEmbedBtm) == False:
+            writeToLog("INFO","FAILED to click on playlist embed button")
+            return False   
+        
+        #Wait until text section will be visible 
+        tmpEmbedTextArea = (self.PLAYLIST_EMBED_TEXTAREA [0], self.PLAYLIST_EMBED_TEXTAREA [1].replace('PLAYLIST_ID', playlist_id))
+        if self.wait_visible(tmpEmbedTextArea) == False:
+            writeToLog("INFO","FAILED to get embed text area")
+            return False  
+        
+        #Get embed code from embed text area 
+        embed_code =  self.getEmbedCode(tmpEmbedTextArea)
+        if embed_code:
+            return embed_code
+        
+        writeToLog("INFO","FAILED to get embed code")
+        return False  
+            
+            
+    # @ Author: Inbar Willman
+    # Return playlist embed code, if embed code doesn't contains matching phrase, return False
+    def getEmbedCode(self, embedTextArea, timeout=60):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
+        while wait_until > datetime.datetime.now(): 
+            #Click on embed text area section
+            if self.click(embedTextArea) == False:
+                writeToLog("INFO","FAILED to click on embed text area")
+                return False 
+               
+            #Select embed text area content
+            if self.send_keys(embedTextArea, Keys.CONTROL + "a") == False:
+                writeToLog("INFO","FAILED to select embed text area content")
+                return False 
+             
+            #Copy embed text area content
+            if self.send_keys(embedTextArea, Keys.CONTROL + "c") == False:
+                writeToLog("INFO","FAILED to copy embed text area content")
+                return False 
+            
+            #Get copied content
+            embed_text = self.winGetClipboard()
+            
+            #Check if text contains 'iframe'
+            if embed_text:
+                embedIframeText = "iframe"
+                if embedIframeText in embed_text:
+                    return embed_text
+            
+        writeToLog("INFO","FAILED to get embed code")
+        return False
+    
+    
+    # @Author: Inbar Willman
+    # Check player width and height (in order to check if we are in got the correct layout)
+    def getEmbedPlayerSizes(self, width, height):
+        tmp_playler_laylout = (self.PLAYLIST_EMBED_PLAYER_SIZES [0], self.PLAYLIST_EMBED_PLAYER_SIZES [1].replace('WIDTH_SIZE', width).replace('HEIGHT_SIZE', height))
+        if self.is_visible(tmp_playler_laylout) == False:
+            writeToLog("INFO","FAILED to get correct player sizes")
+            return False
+        return True
