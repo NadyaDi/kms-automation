@@ -29,18 +29,32 @@ def updateTestCredentials(case_str):
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = row['admin_password']
                 
                 # SET KMS URLS
-                localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
-                localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
-                localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'
-                localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
-                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
-                localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL        = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
-                localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL         = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
-                localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
-                localSettings.LOCAL_SETTINGS_KMS_MEDIA_SELECTION_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/quiz/entry/add-quiz/context/'  
+                setTestURLs(row)
                 found = True
                 break
     return found 
+
+
+def setTestURLs(row):
+    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MEDIA_SPACE:
+        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
+        localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
+        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'
+        localSettings.LOCAL_SETTINGS_KMS_MY_PLAYLISTS_URL       = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-playlists'
+        localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
+        localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL        = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-channels'  
+        localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL         = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
+        localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
+        localSettings.LOCAL_SETTINGS_KMS_MEDIA_SELECTION_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/quiz/entry/add-quiz/context/'
+    
+    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL
+        localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + ''
+        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/myMediaLTI.jsp'
+    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL
+        localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Home.aspx'
+        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/My%20Media.aspx'        
 
 #===============================================================================
 #Take screenshoot of whole screen.

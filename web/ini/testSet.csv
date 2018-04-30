@@ -1,6 +1,6 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_742,1,0,0,0,Channel moderation
-test_713,1,0,0,0,Channel moderation
+test_713,1,0,0,0,Category moderation
 test_1555,1,0,0,0,Disclaimer - before upload
 test_1556,1,0,0,0,Disclaimer - before publish
 test_1557,1,0,0,0,importChannel
@@ -55,3 +55,7 @@ test_653,1,0,0,0,Free trial
 test_1573,1,0,0,0,Home page playlist
 test_687,1,0,0,0,Entry page - Embed Entry
 test_673,1,0,0,0,Playlists - Embed playlist
+test_643,1,0,0,0,Home Page Carousel
+test_603,1,0,0,0,KAF BlackBoard view modes
+test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
+test_594,1,0,0,0,KAF BlackBoard entry thumbnail

@@ -1,22 +1,38 @@
 from enum import Enum
 
+
+class Application(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    MEDIA_SPACE         = 'Media Space'
+    BLACK_BOARD         = 'Black Board'       
+    CANVAS              = 'Canvas'
+    MOODLE              = 'Moodle'
+    D2L                 = 'D2L'
+    JIVE                = 'Jive'
+    SHARE_POINT         = 'Share Point'
+    SAKAI               = 'Sakai'
+
+
 class ChannelPrivacyType(Enum):
     def __str__(self):
         return str(self.value)
 
-    OPEN               = 'open'       
-    RESTRICTED         = "restricted"
-    PRIVATE            = "private"
-    SHAREDREPOSITORY   = "sharedrepository"
-    PUBLIC             = "public"
-    UNLISTED           = "Unlisted"
+    OPEN                = 'open'       
+    RESTRICTED          = "restricted"
+    PRIVATE             = "private"
+    SHAREDREPOSITORY    = "sharedrepository"
+    PUBLIC              = "public"
+    UNLISTED            = "Unlisted"
+    
     
 class DisclaimerDisplayArea(Enum):
     def __str__(self):
         return str(self.value)
 
-    BEFORE_UPLOAD          = 'Before Upload'       
-    BEFORE_PUBLISH         = 'Before Publish'
+    BEFORE_UPLOAD        = 'Before Upload'       
+    BEFORE_PUBLISH       = 'Before Publish'
 
 
 class Location(Enum):
@@ -50,6 +66,7 @@ class EditEntryPageTabName(Enum):
     DOWNLOADS              = 'downloads'
     TIMELINE               = 'timeline'
     
+    
 class IframeName(Enum):
     def __str__(self):
         return str(self.value)
@@ -59,6 +76,8 @@ class IframeName(Enum):
     KEA                                 = 'KEA'
     KEA_QUIZ_PLAYER                     = 'KEA_QUIZ_PLAYER'
     EMBED_PLAYER                        = 'EMBED_PLAYER'
+    KAF_BLACKBOARD                      = 'KAF_BLACKBOARD'
+    KAF_SHAREPOINT                      = 'KAF_SHAREPOINT'
     
     
 class PlayerView(Enum):
@@ -69,6 +88,7 @@ class PlayerView(Enum):
     SIDEBYSIDE         = 'sideBySide' 
     SINGLEVIEW         = 'singleView'
     SWITCHVIEW         = 'switchView'
+    
     
 class EntryPrivacyType(Enum):
     def __str__(self):
@@ -162,6 +182,7 @@ class ProgressBarStatus(Enum):
     
     COMPLETE                  = 'Complete'  
     STARTED                   = 'Started'
+
 
 class EntryPageShareOptions(Enum):
     def __str__(self):

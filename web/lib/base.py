@@ -5,11 +5,9 @@ from selenium.common.exceptions import NoSuchElementException, WebDriverExceptio
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import InvalidElementStateException
-
 from logger import *
 from builtins import str
 import win32clipboard
-
 
 class Base:
     
@@ -266,7 +264,7 @@ class Base:
                     return False
 
 
-    # waits for the element to appear
+    # waits for the element to appear (self.is_visible)
     def wait_visible(self, locator, timeout=10, multipleElements=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
@@ -288,6 +286,28 @@ class Base:
             except:
                 self.setImplicitlyWaitToDefault()
                 return False
+            
+
+    # waits for the element to appear
+    def wait_element(self, locator, timeout=10, multipleElements=False):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                self.setImplicitlyWaitToDefault()
+                if multipleElements == True:
+                    elements = self.get_elements(locator)
+                    for el in elements:
+                        if el.size['width']!=0 and el.size['height']!=0:
+                            return el
+                    return False
+                else:
+                    return self.get_element(locator)
+            except:
+                if wait_until < datetime.datetime.now():
+                    self.setImplicitlyWaitToDefault()
+                    return False                 
+                pass      
             
 
     # waits for the element child to appear
@@ -648,7 +668,7 @@ class Base:
         
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
-    def verifyUrl(self, expectedUrl, isRegex, timeout=30):
+    def verifyUrl(self, expectedUrl, isRegex=False, timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         while True:        
             currentUrl = self.driver.current_url
@@ -753,8 +773,6 @@ class Base:
         except Exception:
             writeToLog("INFO","FAILED to switch to default content")
             return False        
-
-        
         
     def setImplicitlyWaitToDefault(self):
         self.driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
@@ -835,3 +853,7 @@ class Base:
         data = win32clipboard.GetClipboardData()
         win32clipboard.CloseClipboard()
         return str(data)    
+
+      
+    def getAppUnderTest(self):
+        return localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST

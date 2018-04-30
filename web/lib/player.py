@@ -17,7 +17,7 @@ class Player(Base):
     #=====================================================================================================================
     #                                                      Channel locators:                 
     #=====================================================================================================================
-    PLAYER_IFRAME                                               = ('id', 'kplayer_ifp')
+    PLAYER_IFRAME                                               = ('xpath', "//iframe[@id='kplayer_ifp']")
     PLAYER_EMBED_IFRAME_1                                       = ('xpath', '//iframe[contains(@id,"kmsembed")]')
     PLAYER_EMBED_IFRAME_2                                       = ('id', 'kaltura_player')
     PLAYER_SCREEN                                               = ('id', 'kplayer')
@@ -76,6 +76,7 @@ class Player(Base):
             if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
                 return True
             else:
+                self.switch_to_default_content()
                 localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
                 self.wait_visible(self.PLAYER_IFRAME, 60)
                 self.swith_to_iframe(self.PLAYER_IFRAME)
@@ -181,7 +182,12 @@ class Player(Base):
     
     
     # The method chack the qr code on the player thumbnail
-    def verifyThumbnailInPlayer(self, expecterQrCode):        
+    def verifyThumbnailInPlayer(self, expecterQrCode):
+        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+        if application == enums.Application.BLACK_BOARD:
+            if self.clsCommon.blackBoard.switchToBlackboardIframe() == False:
+                return False
+        self.switchToPlayerIframe()     
         qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
         if qrCodeSc == False:
             writeToLog("INFO","FAILED to take qr screen shot")
@@ -556,6 +562,7 @@ class Player(Base):
             if self.wait_visible(slide_time) == False:
                 writeToLog("INFO","FAILED to verify slide time ' " + str(slidesForSearchList[slide]) + "' in the slide menu bar")
                 return False
+            sleep(2)
             
             # check that only one slide display
             if totalNumberOfslides-1 != len(self.get_elements(self.PLAYER_SLIDE_RESULT_NO_MATCH)):
@@ -567,7 +574,7 @@ class Player(Base):
                 return False
             
             writeToLog("INFO","SUCCESS, slide '" + str(slide) +"' at time '" + str(slidesForSearchList[slide]) + "' was found in search")
-        
+
         writeToLog("INFO","SUCCESS, All slides were found after search in the slides menu bar")
         return True   
 

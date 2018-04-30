@@ -68,24 +68,31 @@ class MyMedia(Base):
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self, forceNavigate = False):
-        # Check if we are already in my media page
-        if forceNavigate == False:
-            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
-                return True
+        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+        if application == enums.Application.BLACK_BOARD:
+            if self.clsCommon.blackBoard.navigateToMyMediaBlackBoard() == False:
+                writeToLog("INFO","FAILED navigate to my media in blackboard")
+                return False
         
-        # Click on User Menu Toggle Button
-        if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on User Menu Toggle Button")
-            return False
-        
-        # Click on My Media
-        if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on My Media from the user menu")
-            return False
-        
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
-            writeToLog("INFO","FAILED to navigate to My Media")
-            return False
+        else:    
+            # Check if we are already in my media page
+            if forceNavigate == False:
+                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
+                    return True
+            
+            # Click on User Menu Toggle Button
+            if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on User Menu Toggle Button")
+                return False
+            
+            # Click on My Media
+            if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on My Media from the user menu")
+                return False
+            
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False) == False:
+                writeToLog("INFO","FAILED to navigate to My Media")
+                return False
         
         return True
         
@@ -170,7 +177,7 @@ class MyMedia(Base):
         if self.navigateToMyMedia(forceNavigate) == False:
             return False
         
-        sleep(2)
+        sleep(3)
         # Search Entry     
         self.getSearchBarElement().click()
         self.getSearchBarElement().send_keys(entryName)
@@ -486,15 +493,14 @@ class MyMedia(Base):
                 
                 if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                     tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId))
-                if str(expectedEntryPrivacy) in self.get_element(tmpBtn).find_element_by_xpath(self.MY_MEDIA_ENTRY_CHILD_POPUP[1]).text:
+                tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
+                if str(expectedEntryPrivacy) in self.get_element_text(tmpBtn):
                     writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
-                    return True
+                    return True                    
                     
         except NoSuchElementException:
             return False
     
-        return True
-          
         
     # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):

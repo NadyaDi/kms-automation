@@ -19,7 +19,8 @@ from player import Player
 from upload import Upload
 from home import Home
 from freeTrial import FreeTrial
-
+from kafBB import BlackBoard
+from kafSharepoint import SharePoint
 
     #============================================================================================================
     # The class contains functions that relates to common actions
@@ -48,8 +49,9 @@ class Common():
         self.kea                = Kea(self, driver)
         self.home               = Home(self, driver)
         self.freeTrail          = FreeTrial(self, driver)
-
-        
+        ### KAF ###
+        self.blackBoard         = BlackBoard(self, driver)
+        self.sharePoint         = SharePoint(self, driver)
     #=============================================================================================================
     # Locators:
     #=============================================================================================================
@@ -77,8 +79,12 @@ class Common():
         
         
     def loginAsUser(self):
-        return self.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
-    
+        if self.base.getAppUnderTest() == enums.Application.MEDIA_SPACE:
+            return self.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+        elif self.base.getAppUnderTest() == enums.Application.BLACK_BOARD:
+            return self.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+        elif self.base.getAppUnderTest() == enums.Application.SHARE_POINT:
+            return self.sharePoint.loginToSharepoint(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)        
     
     # Author: Tzachi Guetta     
     def navigateTo(self, navigateTo, navigateFrom='', nameValue='', forceNavigate=False):

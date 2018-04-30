@@ -109,7 +109,7 @@ class QrCodeReader(Base):
             img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / buttom))
             
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            img2 = img.crop(pageElement['right'] /10, pageElement['bottom'] / 2, pageElement['right'] , pageElement['bottom'])
+            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / buttom))
             
         img2.save(filePath)
         
@@ -228,8 +228,8 @@ class QrCodeReader(Base):
             writeToLog("DEBUG","QR code result is: " + result)
             return result 
         
-    # Take screenshot of the image in home page playlist according to the coordinate  crop and resolve QR code  
-    def getScreenshotAndResolveImageQrCodeInHomePagePlaylist(self, cropLeft, croTop, cropRight, cropButtom):
+    # Take screenshot of the image according to the coordinate  crop and resolve QR code  
+    def getScreenshotAndResolveCustomImageQrCode(self, cropLeft, croTop, cropRight, cropButtom):
         sc = self.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropButtom)
         if sc == None:
             writeToLog("DEBUG","Failed to get screenshot for QR code")

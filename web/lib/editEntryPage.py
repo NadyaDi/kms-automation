@@ -28,7 +28,6 @@ class EditEntryPage(Base):
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
     EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON                          = ('id', "EntryOptions-submit")
     EDIT_ENTRY_SAVE_BUTTON_FLAVOR                               = ('id', "EditFlavors-submit")
-    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath', "//div[@class='alert alert-success ']")
     EDIT_ENTRY_DETAILS_TAB                                      = ('id', 'details-tab')
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
@@ -37,7 +36,6 @@ class EditEntryPage(Base):
     EDIT_ENTRY_TIMELINE_TAB                                     = ('id', 'chapters-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
-    EDIT_ENTRY_SAVE_MASSAGE                                     = ('xpath' , "//div[@class='alert alert-success ']")
     EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Time']")
     EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Date']")
     EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR                     = ('xpath' , "//input[@aria-label='End Time Date']")
@@ -586,8 +584,8 @@ class EditEntryPage(Base):
         
         if waitToFinish == True: 
             # Wait until the ptt will upload   
-            if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 360) == False:
-                writeToLog("INFO","FAILED, upload deck processing isn't done after 6 minutes")
+            if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 420) == False:
+                writeToLog("INFO","FAILED, upload deck processing isn't done after 7 minutes")
                 return False
             sleep(2)
             
@@ -657,6 +655,11 @@ class EditEntryPage(Base):
         if self.clickOnEditTab(enums.EditEntryPageTabName.DETAILS) == False:
             writeToLog("INFO","FAILED to click on the details tab")
             return False
+        
+        if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
         
         if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on go to media button")

@@ -21,7 +21,7 @@ class Home(Base):
     HOME_LINK                                           = ('id', 'menu-Home-btn')
     HOME_PLAYLIST                                       = ('xpath', "//a[@class='clickable-header' and contains(text(),'PLAYLIST')]")
     HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[@alt="ENTRY_NAME"]/ancestor::div[@class="photo-group featured_wrapper"]')
-    
+    HOME_CAROUSEL_ENTRY                                 = ('xpath', "//h1[@class='home__carousel-entry-title entryTitle tight' and contains(text(),'ENTRY_NAME')]")
     #=============================================================================================================  
     # @Author: Inbar Willman
     # This method navigate to home page
@@ -66,7 +66,7 @@ class Home(Base):
             writeToLog("INFO","FAILED to find entry '" + entryName + "' in playlist")
             return False  
         
-        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveImageQrCodeInHomePagePlaylist(cropLeft, croTop, cropRight, cropButtom)
+        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropButtom)
         
         if qrResult != str(expectedQrResult):
             writeToLog("INFO","FAILED entry thumbnail is '" + str(qrResult) + "' but need to be '" + str(expectedQrResult) + "'")
@@ -77,6 +77,21 @@ class Home(Base):
             
         
 
+    def verifyEntryInHomePageCarousel(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropButtom):  
+        tmpEntryName = (self.HOME_CAROUSEL_ENTRY[0], self.HOME_CAROUSEL_ENTRY[1].replace('ENTRY_NAME', entryName))
+         
+        if self.is_visible(tmpEntryName) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' in home page carousel playlist")
+            return False 
         
-              
+        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropButtom)
+        
+        if qrResult != str(expectedQrResult):
+            writeToLog("INFO","FAILED entry thumbnail is '" + str(qrResult) + "' but need to be '" + str(expectedQrResult) + "'")
+            return False  
+        
+        writeToLog("INFO","Success, entry'" + entryName + "' in  home page carousel  was verified")
+        return True  
+        
+        
    
