@@ -21,6 +21,8 @@ from home import Home
 from freeTrial import FreeTrial
 from kafBB import BlackBoard
 from kafSharepoint import SharePoint
+from selenium.webdriver.common.keys import Keys
+
 
     #============================================================================================================
     # The class contains functions that relates to common actions
@@ -148,5 +150,10 @@ class Common():
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
             return self.blackBoard.switchToBlackboardIframe()
         else:
-            self.base.switch_to_default_content()      
+            self.base.switch_to_default_content()
+            
+            
+    def sendKeysToBodyElement(self, keys):
+        self.base.send_keys_to_element(self.base.get_body_element(), keys)
+        return True
         

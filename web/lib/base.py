@@ -497,8 +497,29 @@ class Base:
         except:
             writeToLog("DEBUG","FAILED to click on element")
             return False        
+    
+    
+    # Send keys to given element.
+    # When you have more then one elemnet (= list of elements) found with your locator, use multipleElements = True
+    # it will search for element from the elements list, and find the one with size not 0       
+    def send_keys_to_element(self, element, text, multipleElements=False):
+        try:
+            if multipleElements == True:
+                for el in element:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        el.send_keys(text)
+                        return True
+                return False
+            if element == None:
+                return False
+            else:
+                element.send_keys(text)
+                return True
+        except:
+            writeToLog("DEBUG","FAILED to send text to element")
+            return False  
         
-        
+                
     # send keys
     def send_keys(self, locator, text, multipleElements=False):
         try:
