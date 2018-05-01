@@ -15,12 +15,9 @@ class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
     # Test description:
-    # 
-    # 
-    #  
-    # 
-    #  
-    # 
+    # Login to KMS, and upload a media
+    # Navigate Edit Entry Page
+    # under thumbnail tab change thumnbnail in 3 different ways : Upload, Capture, Auto-Generate
     #================================================================================================================================
     testNum     = "594"
     application = enums.Application.BLACK_BOARD
@@ -116,8 +113,9 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to logout from main user")
                 return                      
-                                 
+                                
             writeToLog("INFO","Step 10: Going to navigate to edit Entry Page")
+            self.common.switch_to_default_iframe_generic()
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate to edit entry page")
                 self.status = "Fail"
@@ -152,7 +150,8 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)            
+            self.common.base.handleTestFail(self.status)  
+            self.common.switch_to_default_iframe_generic()          
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")

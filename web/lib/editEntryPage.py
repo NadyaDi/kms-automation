@@ -979,12 +979,13 @@ class EditEntryPage(Base):
         if self.wait_while_not_visible(self.EDIT_ENTRY_THUMBNAIL_PROGRESS_BAR) == False:
             writeToLog("INFO","FAILED to verify that thumbnail progress bar disappear")
             return False
-        
+
         # verify image was add
         if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
             writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
             return False
-            
+        
+        sleep(3)    
         thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
         
         if thumbnailResult != str(ExpectedQRresult):
@@ -1006,7 +1007,14 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
-        self.clsCommon.switch_to_default_iframe_generic()
+        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+        if application == enums.Application.BLACK_BOARD:
+            if self.clsCommon.blackBoard.switchToBlackboardIframe() == False:
+                writeToLog("INFO","FAILED to load blackboard iframe")
+                return False
+        else:
+            self.clsCommon.switch_to_default_iframe_generic()
+            
         if self.click(self.EDIT_ENTRY_CAPTURE_THUMBNAIL_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on capture thumbnail button")
             return False
@@ -1014,7 +1022,7 @@ class EditEntryPage(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         # verify that the capture message display
         self.is_visible(self.EDIT_ENTRY_THUMBNAIL_CAPTURED_MES)
-        
+        sleep(5)
         # verify image was add
         if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 30) == False:
             writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
