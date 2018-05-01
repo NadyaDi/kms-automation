@@ -14,7 +14,9 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-
+    # Add 3 images and create playlist
+    # Add that play list to be in the home page carousel from Admin page
+    # in home page move between the entries and verify that the entries order are correct 
     #================================================================================================================================
     testNum = "643"
     
@@ -114,13 +116,13 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
                 return
             
-            sleep(5)
+            sleep(6)
             if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.51, 7.4, 1.23, 2.50)  == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
                 return
             
-            sleep(5)
+            sleep(4)
             if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.51, 7.4, 1.23, 2.50)  == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
