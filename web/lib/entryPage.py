@@ -1,6 +1,7 @@
 from base import *
 import clsTestService
 import enums
+from selenium.webdriver.common.keys import Keys
 
 
 
@@ -34,7 +35,8 @@ class EntryPage(Base):
     ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'embedTextArea-pane-tab')
     ENTRY_PAGE_SHARE_EMAIL_OPTION                          = ('id', 'emailLink-tab')
     ENTRY_PAGE_LOADING                                     = ('xpath', '//div[@class="message" and text()="Loading..."]')
-    ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea') 
+    ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea')
+    ENTRY_PAGE_COMMENT_TEXT_AREA                           = ('xpath', '//textarea[@id="commentsbox"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -322,3 +324,19 @@ class EntryPage(Base):
             return False   
         embed_text = self.get_element_text(self.ENTRY_PAGE_EMBED_TEXT_AREA)
         return embed_text
+    
+    
+    def addComment(self, comment):
+#         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        sleep(3)
+        self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5, multipleElements=True)
+        sleep(1)
+#         window_before = self.driver.window_handles[0]
+#         self.driver.switch_to_window(window_before)
+        self.send_keys(self.ENTRY_PAGE_COMMENT_TEXT_AREA, comment, multipleElements=True)        
+        return True
+        
+        
+        
+        
+        
