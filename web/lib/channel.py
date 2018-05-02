@@ -77,7 +77,12 @@ class Channel(Base):
     CHANNEL_CHANNEL_PLAYLIST_SAVED_MASSAGE          = ('xpath', "//div[@class='alert alert-success ']")  
     CHANNEL_PLAYLIST_DELETE_CONFIRMATION            = ('xpath', "//a[@class='btn btn-danger' and contains(text(),'Delete')]")
     CHANNEL_PLAYLIST_NAME_COLUMN                    = ('xpath', "//p[@class='playlistNameColumn' and text()= 'PLYLIST_TITLE']")
-    CHANNEL_PLAYLIST_DELETE_ICON_TABLE              = ('xpath', "//a[@onclick=\"channelPlaylistsjs.deletePlaylist('PLAYLIST_ID')\"]")                                                                      
+    CHANNEL_PLAYLIST_DELETE_ICON_TABLE              = ('xpath', "//a[@onclick=\"channelPlaylistsjs.deletePlaylist('PLAYLIST_ID')\"]")   
+    CHANNEL_MEMBERS_TAB                             = ('xpath', '//a[@id="channelmembers-tab"]')  
+    CHANNEL_ADD_MEMBER_BUTTON                       = ('xpath', '//a[@id="addmember"]') 
+    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD         = ('xpath', '//input[@id="addChannelMember-userId"]')   
+    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION         = ('xpath', '//select[@id="addChannelMember-permission"]')     
+    CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON             = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')                                                        
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -858,4 +863,27 @@ class Channel(Base):
         except NoSuchElementException:
             return False
     
-        return True        
+        return True      
+    
+    # @Author: Inbar Willman
+    # Go to members tab in edit channel pahe
+    def navigateToMembersTab(self):
+        if self.click(self.CHANNEL_MEMBERS_TAB) == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False     
+        return True
+    
+    
+    # @Author: Inbar Willman (TBD)
+    def addMembersToChannel(self, username, role):
+        # Navigate to members tab
+        if self.navigateToMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False   
+        
+        # Click on add member button
+        if self.click(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
+            writeToLog("INFO","Failed to click on add members button")
+            return False   
+                    
+        
