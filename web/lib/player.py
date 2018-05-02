@@ -48,6 +48,7 @@ class Player(Base):
     PLAYER_QUIZ_CONTINUE_BUTTON                                 = ('xpath', "//div[@class='confirm-box' and text()='Continue']")
     PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON                             = ('xpath', "//div[@class='ftr-right' and text()='SKIP FOR NOW']")
     PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU                    = ('xpath', "//input[@id='searchBox' and @placeholder='Search']")
+    PLAYER_CAPTIONS_SECTION                                     = ('xpath', '//span[@style="position: relative;" and contains(text(),"CAPTION_TEXT")]')
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -578,4 +579,12 @@ class Player(Base):
         writeToLog("INFO","SUCCESS, All slides were found after search in the slides menu bar")
         return True   
 
+    
+    # @ Author: Inbar Willman
+    def verifyCaptionText(self, captionText):
+        tmp_caption = (self.PLAYER_CAPTIONS_SECTION[0], self.PLAYER_CAPTIONS_SECTION[1].replace('CAPTION_TEXT', captionText))
+        if self.is_visible(tmp_caption) == False:
+            writeToLog("INFO","FAILED to display correct text")
+            return False  
+        return True          
             
