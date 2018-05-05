@@ -7,7 +7,6 @@ import enums
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
-import win32clipboard
 
 
 class Test:

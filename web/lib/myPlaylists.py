@@ -356,8 +356,9 @@ class MyPlaylists(Base):
                 return False 
             
             #Get copied content
-            embed_text = self.winGetClipboard()
-            
+            # TODO replace winGetClipboard
+            #embed_text = self.winGetClipboard()
+            embed_text= ''
             #Check if text contains 'iframe'
             if embed_text:
                 embedIframeText = "iframe"
