@@ -18,7 +18,7 @@ class clsPractiTest:
     #=============================================================================================================
     # Function that returns all instances of a specific session 
     #=============================================================================================================    
-    def getPractiTestSessionInstances(self,prSessionID):
+    def getPractiTestSessionInstances(self,prSessionID, defaultPlatform):
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(prSessionID) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
         sessionInstancesDct = {}
         headers = { 
@@ -32,8 +32,15 @@ class clsPractiTest:
             if (len(dctSets["data"]) > 0):
                 for testInstance in dctSets["data"]:
                     # '---f-34162' = 'Execute Automated'
+                    # testInstance['attributes']['custom-fields']['---f-30772'] - Platform(CH, FF..)
+                    # Check if test has specified platform, if not, use default platform
+                    try:
+                        platform = testInstance['attributes']['custom-fields']['---f-30772']  
+                    except Exception:
+                        platform = defaultPlatform
+                    
                     if testInstance['attributes']['custom-fields']['---f-34162'] == 'Yes':
-                        sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + testInstance['attributes']['custom-fields']['---f-30772']
+                        sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + platform
                         writeToLog("DEBUG","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                         
             else:
                 writeToLog("DEBUG","No instances in set. " + r.text)        
