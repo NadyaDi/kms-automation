@@ -22,9 +22,9 @@ class Test:
     #  
     # 
     #================================================================================================================================
-    testNum     = "594"
+    testNum     = "603"
     application = enums.Application.BLACK_BOARD
-    supported_platforms = clsTestService.updatePlatforms(testNum, application)
+    supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
     timeout_accured = "False"
@@ -42,7 +42,7 @@ class Test:
     def test_01(self,driverFix,env):
 
         try:
-            logStartTest(self,driverFix)
+            logStartTest(self,driverFix, self.application)
             ############################# TEST SETUP ###############################
             #capture test start time
             self.startTime = time.time()
