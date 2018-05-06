@@ -26,7 +26,7 @@ class Test:
             
             prSessionInfo = self.practiTest.getPractiTestAutomationSession()
             if (prSessionInfo["sessionSystemID"] != -1):
-                testIDsDct = self.practiTest.getPractiTestSessionInstances(prSessionInfo["sessionSystemID"])
+                testIDsDct = self.practiTest.getPractiTestSessionInstances(prSessionInfo["sessionSystemID"], prSessionInfo["setPlatform"])
                 if (len (testIDsDct) > 0):
                     self.practiTest.createAutomationTestSetFile(prSessionInfo["hostname"], prSessionInfo["environment"], prSessionInfo["setPlatform"], testIDsDct)
                     if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
