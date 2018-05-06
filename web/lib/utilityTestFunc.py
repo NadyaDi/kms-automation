@@ -55,6 +55,8 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Home.aspx'
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/My%20Media.aspx'        
+    return
+
 
 #===============================================================================
 #Take screenshoot of whole screen.

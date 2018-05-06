@@ -114,17 +114,11 @@ def testTimedOut(testNum, startTime,reason):
 
 
 # Get from testPartners scv the test credentials by test id and env
-def updatePlatforms(test_num, application=enums.Application.MEDIA_SPACE):
+def updatePlatforms(test_num):
     env = ""
     if isAutomationEnv() == True:
         env = "Auto"
-        
-    # Set the Application under test (KMS, BB, Moodle, Canvas...) - Default is Media Space
-    if application == enums.Application.BLACK_BOARD:
-        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.BLACK_BOARD
-    elif application == enums.Application.SHARE_POINT:
-        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.SHARE_POINT
-        
+    
     supported_platforms=[]
     case_str = "test_" + test_num
     matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet' + env +  '.csv'))

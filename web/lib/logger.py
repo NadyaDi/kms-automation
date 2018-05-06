@@ -25,7 +25,7 @@ def writeStatsToCSV(test):
         file.close()
 
     file = open(CSV_STATS_FILE, "a")
-    file.write (os.getenv('SESSION_RUN_TIME','') + "," + test.testNum + "," + test.browserName + "," + test.browserVersion + "," + str(test.startTime) + "," + test.duration + "," + test.status + "," + LOCAL_SETTINGS_TESTED_RELEASE + "," + str(test.enableProxy) + "," + practiTestSessionID + "\n")
+    file.write (os.getenv('SESSION_RUN_TIME','') + "," + test.testNum + "," + test.browserName + "," + test.browserVersion + "," + str(test.startTime) + "," + test.duration + "," + test.status + "," + LOCAL_SETTINGS_TESTED_RELEASE + "," + practiTestSessionID + "\n")
     file.close()
     
 def getLogFileFolderPath():
@@ -82,7 +82,15 @@ def writeToLog(logLevel, logLine):
 #===============================================================================
 # the function writes to the log that we started the test, on browser X and player version Y. we allso write the test url
 #===============================================================================
-def logStartTest(test,browser):
+def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
+    # Set the Application under test (KMS, BB, Moodle, Canvas...) - Default is Media Space
+    if application == enums.Application.BLACK_BOARD:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.BLACK_BOARD
+    elif application == enums.Application.SHARE_POINT:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.SHARE_POINT
+    else:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
+            
     # Update localSetting partner details(base URL, credentials, Practitest ID
     if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
         writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
