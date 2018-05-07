@@ -34,6 +34,7 @@ class Admin(Base):
     ADMIN_DELETE_PLAYLIST_BUTTON                    = ('xpath', "//a[@class='delete' and @data-setdelete='ID']")
     ADMIN_CAROUSEL_TYPE                             = ('xpath', "//select[@id='carousel-type' and @name='carousel[type]']")
     ADMIN_CAROUSEL_ID                               = ('xpath', "//input[@id='carousel-playlistId' and @name='carousel[playlistId]']")
+    ADMIN_CAROUSEL_INTERVAL                         = ('xpath', "//input[@id='carouselInterval' and @name='carouselInterval']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -370,7 +371,31 @@ class Admin(Base):
             writeToLog("INFO","FAILED to save changes in home page")
             return False 
         
-        writeToLog("INFO","Success, playlist was set to home page carousel")
+        writeToLog("INFO","Success, playlist was set to: " + listType)
         return True  
     
+    def setCarouselInterval(self, carouselInterval):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
         
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/home') == False:
+            writeToLog("INFO","FAILED to load home module page in admin")
+            return False
+        
+        sleep(1) 
+        tmp_carouselInterval = carouselInterval*1000
+        if self.clear_and_send_keys(self.ADMIN_CAROUSEL_INTERVAL, tmp_carouselInterval) == False:
+            writeToLog("INFO","FAILED to insert carousel interval" )
+            return False   
+        
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in home page")
+            return False 
+        
+        writeToLog("INFO","Success, update carousel interval to: " + str(tmp_carouselInterval))
+        return True  
+         

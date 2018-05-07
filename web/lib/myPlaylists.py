@@ -302,6 +302,7 @@ class MyPlaylists(Base):
             writeToLog("INFO","FAILED to get playlist id")
             return False
         
+        writeToLog("INFO","Success, successfully get playlist ID")
         return tmp[1]
     
     
