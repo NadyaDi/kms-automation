@@ -141,6 +141,15 @@ class Common():
         file1.close()
         
         
+    def handleTestFail(self, status):
+        self.switch_to_default_iframe_generic() 
+        if status == "Fail":
+            if self.base.takeScreeshotGeneric('LAST_SCRENNSHOT') == True:
+                return True
+            else:
+                return False
+                    
+                    
     # @Author: Oleg Sigalov
     # Switch to default Media Space Iframe, if testing Media Space it will switch to default_content
     # If testing KAF, it will switch to KAF Media Space Iframe
