@@ -32,9 +32,9 @@ class Test:
     entryName3 = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (4).png'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (2).png'
-    filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode middle (3).png'
+    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
+    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_2.png'
+    filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_3.png'
     expectedQRCode1 = 4
     expectedQRCode2 = 2
     expectedQRCode3 = 3

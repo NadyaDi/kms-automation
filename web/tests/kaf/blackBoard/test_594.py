@@ -35,7 +35,7 @@ class Test:
     autoGenerateSliceNumber = 6
     autoGenerateThumbnailExpectedResult = 6
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
-    uploadThumbnailFliePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode (5).png'
+    uploadThumbnailFliePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_5.png'
     
     
     #run test as different instances on all the supported platforms
