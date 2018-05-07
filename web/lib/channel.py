@@ -82,7 +82,17 @@ class Channel(Base):
     CHANNEL_ADD_MEMBER_BUTTON                       = ('xpath', '//a[@id="addmember"]') 
     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD         = ('xpath', '//input[@id="addChannelMember-userId"]')   
     CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION         = ('xpath', '//select[@id="addChannelMember-permission"]')     
-    CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON             = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')                                                        
+    CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON             = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
+    CHANNEL_SET_MEMBER_PERMISSION                   = ('xpath', '//option[@value="3" and text()="Member"]')        
+    CHANNEL_SET_CONTRIBUTOR_PERMISSION              = ('xpath', '//option[@value="2" and text()="Contributor"]') 
+    CHANNEL_SET_MODERATOR_PERMISSION                = ('xpath', '//option[@value="1" and text()="Moderator"]')
+    CHANNEL_SET_MANAGER_PERMISSION                  = ('xpath', '//option[@value="0" and text()="Manager"]')      
+    CHANNEL_MEMBERS_TAB_CONTENT                     = ('xpath', '//div[@id="channelmembers-pane"]') 
+    CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW              = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')      
+    CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON          = ('xpath', '//a[contains(@class, "editMemberBtn") and contains(@href,"MEMBER")]') 
+    CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON         = ('xpath', '//a[@class="setOwnerBtn " and contains(@href,"MEMBER")]')
+    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]') 
+    CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')                
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -864,9 +874,10 @@ class Channel(Base):
             return False
     
         return True      
+  
     
     # @Author: Inbar Willman
-    # Go to members tab in edit channel pahe
+    # Go to members tab in edit channel page
     def navigateToMembersTab(self):
         if self.click(self.CHANNEL_MEMBERS_TAB) == False:
             writeToLog("INFO","Failed to click on members tab")
@@ -874,16 +885,168 @@ class Channel(Base):
         return True
     
     
-    # @Author: Inbar Willman (TBD)
-    def addMembersToChannel(self, username, role):
+    # @Author: Inbar Willman 
+    def addMembersToChannel(self, username, permission = enums.ChannelMemberPermission.MEMBER):
         # Navigate to members tab
         if self.navigateToMembersTab() == False:
             writeToLog("INFO","Failed to click on members tab")
-            return False   
+            return False  
+        
+        # Wait until page contains add member button
+        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON, timeout=30) == False:
+            writeToLog("INFO","Failed to display add member tab content")
+            return False           
         
         # Click on add member button
         if self.click(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
             writeToLog("INFO","Failed to click on add members button")
             return False   
-                    
         
+        sleep(3)             
+        
+        #Click on username field
+        if self.click(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
+            writeToLog("INFO","Failed to click on username field")
+            return False             
+                    
+        # Insert username to field
+        if self.send_keys(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
+            writeToLog("INFO","Failed to insert username")
+            return False 
+        
+        # Set permission
+        if self.chooseMemberPermissionInChannel(permission) == False:
+            writeToLog("INFO","Failed to set permission")
+            return False   
+        
+        #Click add button
+        if self.click(self.CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON) == False:
+            writeToLog("INFO","Failed to click on add button")
+            return False  
+        
+        sleep(10)
+        
+        #Verify new member is added to member table
+        tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
+        if self.is_visible(tmp_member_row) == False:
+            writeToLog("INFO","Failed to add new member to table")
+            return False  
+        
+        return True                                         
+                           
+                                
+    # @Author: Inbar Willman 
+    # Choose permission from drop down list
+    def chooseMemberPermissionInChannel(self, permission = enums.ChannelMemberPermission.MEMBER):    
+        # If permission is member click on member option       
+        if permission ==  enums.ChannelMemberPermission.MEMBER:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Member') == False:
+                writeToLog("INFO","Failed to click on member option")
+                return False                    
+       
+        # If permission is contributor click on member option       
+        elif permission ==  enums.ChannelMemberPermission.CONTRIBUTOR:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Contributor') == False:
+                writeToLog("INFO","Failed to click on contributor option")
+                return False  
+            
+        # If permission is moderator click on member option       
+        elif permission ==  enums.ChannelMemberPermission.MODERATOR:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Moderator') == False:
+                writeToLog("INFO","Failed to click on moderator option")
+                return False 
+        
+        # If permission is manager click on member option       
+        elif permission ==  enums.ChannelMemberPermission.MANAGER:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Manager') == False:
+                writeToLog("INFO","Failed to click on manager option")
+                return False   
+            
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    # Edit member permission
+    def editChannlMemberPermission(self,username, permission = enums.ChannelMemberPermission.MODERATOR): 
+        #Click on edit button
+        tmp_edit_button = (self.CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON[0], self.CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON[1].replace('MEMBER', username))
+        if self.hover_on_element(tmp_edit_button) == False:
+            writeToLog("INFO","FAILED to Hover above edit member button")
+            return False
+        
+        if self.click(tmp_edit_button) == False:
+                writeToLog("INFO","Failed to click on edit button")
+                return False               
+                         
+        # Set new permission
+        if self.chooseMemberPermissionInChannel(permission) == False:
+            writeToLog("INFO","Failed to set new permission")
+            return False   
+        
+        # Save new permission
+        if self.click(tmp_edit_button) == False:
+                writeToLog("INFO","Failed to click on save button")
+                return False                  
+        
+        return True
+  
+    
+    # @Author: Inbar Willman
+    # Delete member from channel
+    def deleteChannlMember(self,username): 
+        #Click on delete button
+        tmp_delete_btn = (self.CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON[0], self.CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON[1].replace('MEMBER', username))
+        if self.hover_on_element(tmp_delete_btn) == False:
+            writeToLog("INFO","FAILED to Hover above delete member button")
+            return False
+                
+        if self.click(tmp_delete_btn) == False:
+                writeToLog("INFO","Failed to click on delete button")
+                return False 
+            
+        sleep(3)              
+   
+        # Click on 'Yes' in remove user modal
+        if self.click(self.CHANNEL_YES_MODAL_BUTTON) == False:
+                writeToLog("INFO","Failed to click on yes button")
+                return False  
+        
+        sleep(10)
+        
+        # Verify user isn't displayed in members table
+        tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
+        if self.is_visible(tmp_member_row) == True:
+            writeToLog("INFO","Failed to delete member")
+            return False  
+        
+        return True   
+    
+    
+    # Author: Inbar Willman
+    # Set channel member as owner
+    def setChannelMemberAsOwner(self, username):
+        # Click on set as owner button
+        tmp_set_as_owner = (self.CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON[0], self.CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON[1].replace("MEMBER", username)) 
+        if self.hover_on_element(tmp_set_as_owner) == False:
+            writeToLog("INFO","FAILED to Hover above set as owner button")
+            return False
+                
+        if self.click(tmp_set_as_owner) == False:
+            writeToLog("INFO","Failed to click on set as owner button")
+            return False 
+        
+        sleep(2)    
+        
+        # Click on 'Yes' in set owner modal
+        if self.click(self.CHANNEL_YES_MODAL_BUTTON) == False:
+            writeToLog("INFO","Failed to click on yes button")
+            return False  
+        
+        sleep(5)   
+         
+        #Verify that user don't have set as owner button
+        if self.hover_on_element(tmp_set_as_owner) == True:
+            writeToLog("INFO","Failed to set user as owner - set as owner button still displayed")
+            return False  
+        
+        return True
