@@ -7,8 +7,7 @@ from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import InvalidElementStateException
 from logger import *
 from builtins import str
-
-# import win32clipboard
+import pyperclip
 
 
 class Base:
@@ -432,17 +431,16 @@ class Base:
                 return False                       
 
 
-    # clicks and taps
-    # When you have more then one elemnet found with your locator, use multipleElements = True
-    # it will search for element from the elements list, and find the one with size not 0
+    # Clicks and taps
+    # When you have more then one element found with your locator, use multipleElements = True
+    # It will search for element from the elements list, and find the one with size not 0
     def click(self, locator, timeout=10, multipleElements=False):
         try:
             if multipleElements == True:
-                elements = self.get_elements(locator)
-                for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
-                        el.click()
-                        return True
+                el = self.wait_visible(locator, timeout, multipleElements=True)
+                if el != False:
+                    el.click()
+                    return True
                 return False
             element = self.wait_visible(locator, timeout)
             if element == False:
@@ -855,6 +853,7 @@ class Base:
         
     def handleTestFail(self, status):
         self.switch_to_default_content()
+        self.switch_to_default_iframe_generic() 
         if status == "Fail":
             if self.takeScreeshotGeneric('LAST_SCRENNSHOT') == True:
                 return True
@@ -870,12 +869,14 @@ class Base:
         return self.get_element(('xpath', '/html/body'))
     
     
-#     #Returns string of copy text 
-#     def winGetClipboard(self):
-#         win32clipboard.OpenClipboard()
-#         data = win32clipboard.GetClipboardData()
-#         win32clipboard.CloseClipboard()
-#         return str(data)    
+    #Copy selected text 
+    def copy_to_clipboard(self, textToCopy):
+        pyperclip.copy(textToCopy)
+    
+    
+    #Returns string of copy text 
+    def paste_from_clipboard(self):
+        return str(pyperclip.paste())    
 
       
     def getAppUnderTest(self):

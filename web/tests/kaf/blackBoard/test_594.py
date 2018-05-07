@@ -34,7 +34,6 @@ class Test:
     captureThumbnailExpectedResult = 7
     autoGenerateSliceNumber = 6
     autoGenerateThumbnailExpectedResult = 6
-    PlayFromBarline = False
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
     uploadThumbnailFliePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode (5).png'
     
@@ -96,7 +95,7 @@ class Test:
                 return                  
                
             writeToLog("INFO","Step 7: Going to capture thumbnail")            
-            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult, self.PlayFromBarline) == False:
+            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to capture thumbnail")
                 return                                
@@ -150,8 +149,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)  
-            self.common.switch_to_default_iframe_generic()          
+            self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")

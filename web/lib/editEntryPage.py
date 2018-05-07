@@ -666,14 +666,17 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on go to media button")
             return False
         
-        # Click Leave Page if expected    
-        if leavePage == True:
-            sleep(2)
-            self.clsCommon.base.driver.switch_to.alert.accept()
-            if self.clsCommon.base.wait_for_page_readyState() == False:
-                writeToLog("INFO","FAILED to load entry page")
-                return False                
-            
+        try:
+            # Click Leave Page if expected    
+            if leavePage == True:
+                sleep(2)
+                self.clsCommon.base.driver.switch_to.alert.accept()
+                if self.clsCommon.base.wait_for_page_readyState() == False:
+                    writeToLog("INFO","FAILED to load entry page")
+                    return False
+        except Exception:
+            pass
+                
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
         if self.wait_visible(tmp_entry_name, 15) == False:
@@ -997,13 +1000,13 @@ class EditEntryPage(Base):
     
     
     # Author: Michal Zomper 
-    def captureThumbnail(self, timeToStop, qrCodeRedult, PlayFromBarline): 
+    def captureThumbnail(self, timeToStop, qrCodeRedult, playFromBarline=True): 
         if self.clickOnEditTab(enums.EditEntryPageTabName.THUMBNAILS) == False:
             writeToLog("INFO","FAILED to click on the thumbnail tab")
             return False
         sleep(2)
         
-        if self.clsCommon.player.clickPlayAndPause(timeToStop, timeout=45, clickPlayFromBarline=PlayFromBarline) == False:
+        if self.clsCommon.player.clickPlayAndPause(timeToStop, timeout=45, clickPlayFromBarline=playFromBarline) == False:
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
