@@ -107,10 +107,10 @@ class MyMedia(Base):
         if self.click(tmp_entry_name) == False:
             writeToLog("INFO","FAILED to click on delete entry button")
             return False
-        sleep(2)
+        sleep(5)
         
         # Click on confirm delete
-        if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE) == False:
+        if self.click(self.MY_MEDIA_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
