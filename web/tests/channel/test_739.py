@@ -30,6 +30,7 @@ class Test:
     channelName = None
     channelDescription = "Channel description"
     channelTags = "Channeltags1,Channeltags2,"  
+    username = 'private'
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -49,17 +50,47 @@ class Test:
             ########################################################################
             self.channelName = clsTestService.addGuidToString('Add member to channel', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ######################   
-            writeToLog("INFO","Step 1: Going to create Channel#1")
+            writeToLog("INFO","Step 1: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return
-
+ 
             writeToLog("INFO","Step 2: Going to navigate to edit channel")
-            if self.common.channel.createChannel.navigateToEditChannelPage(self.channelName) == False:
+            if self.common.channel.navigateToEditChannelPage(self.channelName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit channel")
-                return    
+                return 
+              
+            writeToLog("INFO","Step 3: Going to add member to channel")
+            if self.common.channel.addMembersToChannel(self.username) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to add member to channel")
+                return  
+             
+            writeToLog("INFO","Step 4: Going to change member permission")
+            if self.common.channel.editChannlMemberPermission(self.username) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED change member permission")
+                return  
+             
+            writeToLog("INFO","Step 5: Going to delete member")
+            if self.common.channel.deleteChannlMember(self.username) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to delete member")
+                return     
+            
+            writeToLog("INFO","Step 6: Going to add member to channel")
+            if self.common.channel.addMembersToChannel(self.username) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to add member to channel")
+                return   
+             
+            writeToLog("INFO","Step 7: Going to set member as owner")
+            if self.common.channel.setChannelMemberAsOwner(self.username) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to set member as owner")
+                return                                                   
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
@@ -69,11 +100,9 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)            
+            self.common.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.channel.deleteChannel(self.channelName1)
-            self.common.channel.deleteChannel(self.channelName2)
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

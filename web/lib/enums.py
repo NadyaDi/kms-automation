@@ -191,3 +191,13 @@ class EntryPageShareOptions(Enum):
     LINK_TO_MEDIA_PAGE      = 'Link to Media Page'  
     EMBED                   = 'Embed'
     EMAIL                   = 'Email'
+    
+
+class ChannelMemberPermission(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MEMBER                  = 'Member'
+    CONTRIBUTOR             = 'Contributor'   
+    MODERATOR               = 'Moderator'
+    MANAGER                 = 'Manager'
