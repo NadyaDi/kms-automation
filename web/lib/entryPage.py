@@ -37,6 +37,10 @@ class EntryPage(Base):
     ENTRY_PAGE_LOADING                                     = ('xpath', '//div[@class="message" and text()="Loading..."]')
     ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea')
     ENTRY_PAGE_COMMENT_TEXT_AREA                           = ('xpath', '//textarea[@id="commentsbox"]')
+    ENTRY_PAGE_COMMENT_ADD_BUTTON                          = ('xpath', '//input[@id="add-comment"]')
+    ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and @class='btn responsiveSizePhone tabs-container__button tab-Details active']")
+    ENTRY_PAGE_LIKE_BUTTON                                 = ('xpath', "//span[@id='likes']")
+    
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -327,16 +331,72 @@ class EntryPage(Base):
     
     
     def addComment(self, comment):
-#         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-        sleep(3)
-        self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5, multipleElements=True)
         sleep(1)
-#         window_before = self.driver.window_handles[0]
-#         self.driver.switch_to_window(window_before)
-        self.send_keys(self.ENTRY_PAGE_COMMENT_TEXT_AREA, comment, multipleElements=True)        
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
+            writeToLog("INFO","FAILED to click in the comment text box area")
+            return False
+        
+        window_before = self.driver.window_handles[0]
+        self.driver.switch_to_window(window_before)
+
+        if self.send_keys(self.ENTRY_PAGE_COMMENT_TEXT_AREA, comment + Keys.SPACE, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to add comment")
+            return False
+
+        sleep(2)
+        
+        # Click on details button to get out of the comment text box
+        self.click(self.ENTRY_PAGE_DETAILS_BUTTON, 15)
+        
+        if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on add comment button")
+            return False
+        
+                
+        #return True
+        
+        
+        writeToLog("INFO","FAILED - Loading message is still displayed")
+        
+      
+    def LikeUnlikeEntry(self, isLike):
+        self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+        
+        # Check the amount of likes for the entry befor click the like\unlike button
+        prev_likeAmount = self.get_element_text(self.ENTRY_PAGE_LIKE_BUTTON)
+        prev_tmp = prev_likeAmount.split('\n')
+        
+        if prev_tmp[1] == '':
+            writeToLog("INFO","FAILED to get the number of likes for the entry")
+            return False
+         
+        if self.click(self.ENTRY_PAGE_LIKE_BUTTON, 10) == False:
+            writeToLog("INFO","FAILED to click on like button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Check the amount of likes for the entry after click the like\unlike button
+        after_likeAmount = self.get_element_text(self.ENTRY_PAGE_LIKE_BUTTON)
+        after_tmp = after_likeAmount.split('\n')
+        
+        if after_tmp[1] == '': 
+            writeToLog("INFO","FAILED to get the number of likes for the entry after clicking like/unlike")
+            return False
+        
+        # like the page
+        if isLike == True:
+            if int(prev_tmp[1]) >= int(after_tmp[1]):
+                writeToLog("INFO","FAILED to click on like button, the number of likes are: " + after_tmp[1] + " and need to be: " + prev_tmp[1])
+                return False
+        
+        # unlike the page
+        elif isLike == False:
+            if int(prev_tmp[1]) <= int(after_tmp[1]):
+                writeToLog("INFO","FAILED to click on unlike button, the number of likes are: " + after_tmp[1] + " and need to be: " + prev_tmp[1])
+                return False
+                
+        writeToLog("INFO","Success, entry was like/unlike successfully")
         return True
-        
-        
-        
-        
+          
         
