@@ -162,6 +162,7 @@ class Upload(Base):
                     writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
                     continue
                 
+                sleep(3)
                 # Type in a file path
                 if self.typeIntoFileUploadDialog(filePath) == False:
                     continue
