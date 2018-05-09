@@ -16,7 +16,7 @@ class Test:
     # Test description:
 
     #================================================================================================================================
-    testNum = "709"
+    testNum = "734"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -29,7 +29,7 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
-    categoryName = [("Apps Automation Category")]
+    channelName = [("Test1")]
     comments = ["Comment 1", "Comment 2"]
 
     
@@ -50,7 +50,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Category Entry Details", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Channel Entry Details", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
@@ -79,24 +79,29 @@ class Test:
                     return
                 
             writeToLog("INFO","Step 5: Going to publish entry to category")
-            if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, "", publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelName, publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED publish entry '" + self.entryName + "' to category: " + self.categoryName)
+                writeToLog("INFO","Step 5: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName)
                 return
              
-            writeToLog("INFO","Step 6: Going navigate to category")  
-            if self.common.category.navigateToCategory(self.categoryName[0]) == False:
-                writeToLog("INFO","Step 6: FAILED navigate to category: " + self.categoryName[0])
+            writeToLog("INFO","Step 6: Going navigate to my channels page")  
+            if self.common.channel.navigateToChannels() == False:
+                writeToLog("INFO","Step 6: FAILED navigate to category: " + self.channelName[0])
                 return
             
-            writeToLog("INFO","Step 7: Going to verify entry details in category")
+            writeToLog("INFO","Step 6: Going navigate to my channels page")  
+            if self.common.channel.navigateToChannels() == False:
+                writeToLog("INFO","Step 6: FAILED navigate to category: " + self.channelName[0])
+                return
+            
+            writeToLog("INFO","Step 7: Going to verify entry details in channel")
             if self.common.category.verifyEntryDetails(self.entryName, "1", "0", str(len(self.comments))) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify entry details in category page")
+                writeToLog("INFO","Step 7: FAILED to verify entry details in channel page")
                 return
              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Category Entry Details' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Channel Entry Details' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

@@ -23,6 +23,10 @@ class Category(Base):
     CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='add-new-tab']")
     CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON                        = ('xpath', "//a[@class='MediaUpload-tab']")
     CATEGORY_PENDING_TAB                                        = ('xpath', "//a[@id='categorymoderation-tab']")
+    CATEGORY_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY NAME']")
+    CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY                          = ('xpath', "//span[@class='screenreader-only' and contains(text(), 'NUMBER likes')]")
+    CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY                          = ('xpath', "//span[@class='screenreader-only' and contains(text(), 'NUMBER views')]")
+    CATEGORY_NUMBER_OF_COMMENTS_FOR_ENTRY                       = ('xpath', "//a[contains(@aria-label, 'NUMBER comment(s)')]")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
@@ -117,4 +121,32 @@ class Category(Base):
         except NoSuchElementException:
             return False
         
+        return True
+    
+    # Author: Michal Zomper 
+    def verifyEntryDetails(self, entryName, numberOfLiks, numberOfViews, numberOfComments):
+        tmp_entryName = (self.CATEGORY_ENTRY_THUMBNAIL[0], self.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
+        
+        if self.hover_on_element(tmp_entryName) == False:
+            writeToLog("INFO","FAILED to hover entry in order to see the entry details")
+            return False
+        
+        tmp_views = (self.CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY[0], self.CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY[1].replace('NUMBER', numberOfViews))
+        tmp_likes = (self.CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY[0], self.CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY[1].replace('NUMBER', numberOfLiks))
+        tmp_comments = (self.CATEGORY_NUMBER_OF_COMMENTS_FOR_ENTRY[0], self.CATEGORY_NUMBER_OF_COMMENTS_FOR_ENTRY[1].replace('NUMBER', numberOfComments))
+        
+        if self.is_visible(tmp_views, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to verify that the entry have " + numberOfViews + " views")
+            return False
+            
+        if self.is_visible(tmp_likes, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to verify that the entry have " + numberOfLiks + " likes")
+            return False
+        
+        
+        if self.is_visible(tmp_comments) == False:
+            writeToLog("INFO","FAILED to verify that the entry have " + numberOfComments + " comments")
+            return False
+        
+        writeToLog("INFO","Success, all entry details was verified successfully")
         return True
