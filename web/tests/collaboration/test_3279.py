@@ -130,7 +130,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)
+            self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                            
             self.common.login.logOutOfKMS()
             self.common.loginAsUser()
