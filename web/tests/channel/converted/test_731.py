@@ -14,10 +14,15 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-    # As the channel's owner:
-    # Choose one of your entries in the channel and check that all the entry details (views, likes, comments) are correct 
+    # Verify that the details that displayed on the channel's information are correct:
+    #    1. Entries' number
+    #    2. Member's number
+    #    3. Subscribers' number
+    #    4. Manager name
+    #    5. 'Appears in:" 
+    #    6. Channel's type
     #================================================================================================================================
-    testNum = "734"
+    testNum = "731"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -31,7 +36,7 @@ class Test:
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
     channelName = None
-    comments = ["Comment 1", "Comment 2"]
+    categoryName = "Apps Automation Category"
 
     
     
@@ -51,8 +56,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Channel Entry Details", self.testNum)
-            self.channelName = clsTestService.addGuidToString("Channel Entry Details", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Channel page information", self.testNum)
+            self.channelName = clsTestService.addGuidToString("Channel page information ", self.testNum)
             self.channelName= [(self.channelName)]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
@@ -65,33 +70,15 @@ class Test:
                 return
               
             writeToLog("INFO","Step 2: Going to create new channel")            
-            if self.common.channel.createChannel(self.channelName[0], self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, False) == False:
+            if self.common.channel.createChannel(self.channelName[0], self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, True, linkToCategoriesList=self.categoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED create new channel")
                 return
-              
-            writeToLog("INFO","Step 3: Going navigate to entry page")            
-            if self.common.entryPage.navigateToEntry(self.entryName, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to entry: " + self.entryName)
-                return 
-               
-            writeToLog("INFO","Step 4: Going to like the entry page")            
-            if self.common.entryPage.LikeUnlikeEntry(True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to like entry: " + self.entryName)
-                return   
-              
-            writeToLog("INFO","Step 5: Going to add comments to entry")  
-            for i in range(2):
-                if self.common.entryPage.addComment(self.comments[i]) == False:
-                    writeToLog("INFO","Step 5: FAILED to add comment '" + self.comments[i] + "' to entry: " + self.entryName)
-                    return
                 
-            writeToLog("INFO","Step 6: Going to publish entry to category")
+            writeToLog("INFO","Step 3: Going to publish entry to category")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelName, publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName)
+                writeToLog("INFO","Step 3: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName)
                 return
              
             writeToLog("INFO","Step 7: Going navigate to my channels page")  
@@ -106,7 +93,7 @@ class Test:
                 return
              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Channel Entry Details' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Channel page information' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

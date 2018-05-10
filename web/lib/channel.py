@@ -110,6 +110,11 @@ class Channel(Base):
     #  @Author: Tzachi Guetta        
     def deleteChannel(self, channelName):
         try:
+            if self.navigateToMyChannels() == False:
+                writeToLog("INFO","FAILED navigate to my channels")
+                return False
+                
+            
             if self.searchAChannelInMyChannels(channelName) == False:
                 writeToLog("INFO","FAILED to search in my channels")
                 return False
@@ -375,10 +380,19 @@ class Channel(Base):
     def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE):
         try:                
             if navigateFrom == enums.Location.MY_CHANNELS_PAGE:
+                if self.navigateToMyChannels() == False:
+                    writeToLog("INFO","FAILED navigate to my channels page")
+                    return False
+                    
                 if self.searchAChannelInMyChannels(channelName) == False:
                     writeToLog("INFO","FAILED to search in my channels")
                     return False
+                
             elif navigateFrom == enums.Location.CHANNELS_PAGE:
+                if self.navigateToChannels() == False:
+                    writeToLog("INFO","FAILED navigate to my channels page")
+                    return False
+                
                 if self.searchAChannelInChannels(channelName) == False:
                     writeToLog("INFO","FAILED to search in channels")
                     return False            
