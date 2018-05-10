@@ -106,7 +106,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)            
+            self.common.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)         
