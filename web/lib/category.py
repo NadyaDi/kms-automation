@@ -23,10 +23,12 @@ class Category(Base):
     CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='add-new-tab']")
     CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON                        = ('xpath', "//a[@class='MediaUpload-tab']")
     CATEGORY_PENDING_TAB                                        = ('xpath', "//a[@id='categorymoderation-tab']")
-    CATEGORY_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY NAME']")
+    CATEGORY_ENTRY_THUMBNAIL                                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
     CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY                          = ('xpath', "//span[@class='screenreader-only' and contains(text(), 'NUMBER likes')]")
     CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY                          = ('xpath', "//span[@class='screenreader-only' and contains(text(), 'NUMBER views')]")
     CATEGORY_NUMBER_OF_COMMENTS_FOR_ENTRY                       = ('xpath', "//a[contains(@aria-label, 'NUMBER comment(s)')]")
+    CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL                = ('xpath', "//i[@class='icon-plus-sign']")
+    CATEGORY_MINUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL               = ('xpath', "//i[@class='icon-minus-sign']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
@@ -127,9 +129,21 @@ class Category(Base):
     def verifyEntryDetails(self, entryName, numberOfLiks, numberOfViews, numberOfComments):
         tmp_entryName = (self.CATEGORY_ENTRY_THUMBNAIL[0], self.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
         
-        if self.hover_on_element(tmp_entryName) == False:
-            writeToLog("INFO","FAILED to hover entry in order to see the entry details")
-            return False
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.hover_on_element(tmp_entryName) == False:
+                writeToLog("INFO","FAILED to hover entry in order to see the entry details")
+                return False
+        
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            try:
+                parent_entry = self.get_element(tmp_entryName)
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
+                return False
+             
+            if self.click_child(parent_entry, self.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to click on the plus button in order to see entry details")
+                return False
         
         tmp_views = (self.CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY[0], self.CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY[1].replace('NUMBER', numberOfViews))
         tmp_likes = (self.CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY[0], self.CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY[1].replace('NUMBER', numberOfLiks))
@@ -148,5 +162,10 @@ class Category(Base):
             writeToLog("INFO","FAILED to verify that the entry have " + numberOfComments + " comments")
             return False
         
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if self.click_child(parent_entry, self.CATEGORY_MINUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to click on the minus button in order to close entry details")
+                return False
+            
         writeToLog("INFO","Success, all entry details was verified successfully")
         return True

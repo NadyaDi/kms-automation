@@ -63,4 +63,5 @@ test_695,1,0,0,0,Entry page - Add captions
 test_699,1,0,0,0,Entry page - Disable comments
 test_709,0,1,0,0,Category - Entries details
 test_734,0,1,0,0,Channel - Entries details
+test_731,1,0,0,0,Channel page Information
 test_739,1,0,0,0,Channel - Members tab

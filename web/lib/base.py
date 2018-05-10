@@ -851,15 +851,6 @@ class Base:
         return strExp
     
         
-    def handleTestFail(self, status):
-        self.switch_to_default_content()
-        self.switch_to_default_iframe_generic() 
-        if status == "Fail":
-            if self.takeScreeshotGeneric('LAST_SCRENNSHOT') == True:
-                return True
-            else:
-                return False
-            
             
     def replaceInLocator(self, locator, replaceWhat, replaceWith):
         return (locator[0], locator[1].replace(replaceWhat, replaceWith))
