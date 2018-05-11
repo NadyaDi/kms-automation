@@ -41,7 +41,10 @@ class Test:
     Password = "Kaltura1!"
     categoryList = [("About Kaltura")]
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
-    instanceNumberFilePath = 'Q:\\QA-App\Automation\Free Trial\FreeTrial.txt'
+    if clsTestService.isAutomationEnv() == True:
+        instanceNumberFilePath = '/home/local/KALTURA/oleg.sigalov/q/QA-App/Automation/Free\ Trial/FreeTrial.txt'
+    else:
+        instanceNumberFilePath = 'Q:\\QA-App\Automation\Free Trial\FreeTrial.txt'
 
     
     #run test as different instances on all the supported platforms
