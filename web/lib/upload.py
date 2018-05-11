@@ -180,6 +180,10 @@ class Upload(Base):
                 if self.fillFileUploadEntryDetails(name, description, tags) == False:
                     continue
                 
+                if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
+                    sleep(3)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)  
+                
                 # Click Save
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
