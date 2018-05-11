@@ -181,7 +181,7 @@ class Upload(Base):
                     continue
                 
                 if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
-                    sleep(3)
+                    self.get_body_element().send_keys(Keys.TAB) 
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                 
                 # Click Save
