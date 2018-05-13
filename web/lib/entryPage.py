@@ -16,8 +16,8 @@ class EntryPage(Base):
     #Entry Page locators:
     #=============================================================================================================
     ENTRY_PAGE_ENTRY_TITLE                                 = ('xpath', "//h3[@class='entryTitle' and contains(text(), 'ENTRY_NAME')]") # When using this locator, replace 'ENTRY_NAME' string with your real entry name
-    ENTRY_PAGE_ACTIONS_DROPDOWNLIST                        = ('id', "entryActionsMenuBtn")    
-    ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON            = ('id', "tabLabel-Edit")      
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST                        = ('xpath', "//button[@id='entryActionsMenuBtn']")    
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON            = ('xpath', "//span[@id='tabLabel-Edit']")      
     ENTRY_PAGE_DESCRIPTION                                 = ('xpath', "//div[@class='row-fluid normalWordBreak']")
     ENTRY_PAGE_TAGS                                        = ('class_name', "tagsWrapper")    
     ENTRY_PAGE_ADDTOPLAYLIST_BUTTON                        = ('id', "Addtoplaylists")  

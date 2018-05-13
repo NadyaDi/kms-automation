@@ -435,7 +435,7 @@ class MyMedia(Base):
             for channel in channelList:
                 tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
    
-                if self.click(tmpChannelName, 30) == False:
+                if self.click(tmpChannelName, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
         
