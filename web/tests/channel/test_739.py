@@ -56,40 +56,34 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return
  
-            writeToLog("INFO","Step 2: Going to navigate to edit channel")
-            if self.common.channel.navigateToEditChannelPage(self.channelName) == False:
+            writeToLog("INFO","Step 2: Going to add member to channel")
+            if self.common.channel.addMembersToChannel(self.channelName, self.username) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate to edit channel")
-                return 
-              
-            writeToLog("INFO","Step 3: Going to add member to channel")
-            if self.common.channel.addMembersToChannel(self.username) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to add member to channel")
+                writeToLog("INFO","Step 2: FAILED to add member to channel")
                 return  
              
-            writeToLog("INFO","Step 4: Going to change member permission")
+            writeToLog("INFO","Step 3: Going to change member permission")
             if self.common.channel.editChannlMemberPermission(self.username) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED change member permission")
+                writeToLog("INFO","Step 3: FAILED change member permission")
                 return  
              
-            writeToLog("INFO","Step 5: Going to delete member")
+            writeToLog("INFO","Step 4: Going to delete member")
             if self.common.channel.deleteChannlMember(self.username) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to delete member")
+                writeToLog("INFO","Step 4: FAILED to delete member")
                 return     
             
-            writeToLog("INFO","Step 6: Going to add member to channel")
-            if self.common.channel.addMembersToChannel(self.username) == False:
+            writeToLog("INFO","Step 5: Going to add member to channel")
+            if self.common.channel.addMembersToChannel(self.channelName, self.username) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to add member to channel")
+                writeToLog("INFO","Step 5: FAILED to add member to channel")
                 return   
              
-            writeToLog("INFO","Step 7: Going to set member as owner")
+            writeToLog("INFO","Step 6: Going to set member as owner")
             if self.common.channel.setChannelMemberAsOwner(self.username) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to set member as owner")
+                writeToLog("INFO","Step 6: FAILED to set member as owner")
                 return                                                   
             #########################################################################
             writeToLog("INFO","TEST PASSED")

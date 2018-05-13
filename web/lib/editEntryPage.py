@@ -120,10 +120,10 @@ class EditEntryPage(Base):
             return True  
         
         #Open "Actions" drop-down list 
-        if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+        if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on Actions button")
             return False
-         
+        
         #Click on Edit button
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Edit button")
