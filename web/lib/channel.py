@@ -660,19 +660,19 @@ class Channel(Base):
             writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
             return False   
       
-        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
-            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
-            return False     
+        if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+            # Remove the Mask over all the screen (over tags filed also)
+            maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
+            self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))          
+       
+            if self.send_keys(self.CHANNEL_PLAYLISTS_TAG_AFTER_CLICK, playlistTag, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+                return False      
+        else:    
+            if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
+                writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+                return False     
                
-#         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
-#             # Remove the Mask over all the screen (over tags filed also)
-#             maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
-#             self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))          
-#       
-#         if self.send_keys(self.CHANNEL_PLAYLISTS_TAG_AFTER_CLICK, playlistTag, multipleElements=True) == False:
-#             writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
-#             return False
-         
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
             return False 
