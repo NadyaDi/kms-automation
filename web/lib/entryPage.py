@@ -41,7 +41,10 @@ class EntryPage(Base):
     ENTRY_PAGE_COMMENTS_PANEL                              = ('xpath', "//div[@id='commentsWrapper']")
     ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and @class='btn responsiveSizePhone tabs-container__button tab-Details active']")
     ENTRY_PAGE_LIKE_BUTTON                                 = ('xpath', "//span[@id='likes']")
-    
+    ENTRY_PAGE_COMMENT_SECTION                             = ('xpath', '//div[@class="commentText"]/p[text()="COMMENT_TEXT"]')
+    ENTRY_PAGE_CLOSE_DISCUSSION_MSG                        = ('xpath', '//h4[@class="muted" and text()="Discussion is closed"]')
+    ENTRY_PAGE_COMMENT_ID                                  = ('xpath', '//div[@class="comment row-fluid "]')
+    ENTRY_PAGE_REPLAY_COMMENT                              = ('xpath', '//a[contains(@href, "/commentId/COMMENT_ID") and @data-track="Comment Reply"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -333,7 +336,7 @@ class EntryPage(Base):
     # Author: Michal Zomper 
     def addComment(self, comment):
         sleep(1)
-        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
             writeToLog("INFO","FAILED to click in the comment text box area")
             return False
@@ -416,5 +419,50 @@ class EntryPage(Base):
                     return False
         writeToLog("INFO","Success, entry was like/unlike successfully")
         return True
-          
+    
+    
+    # @Author: Inbar Willman
+    def checkEntryCommentsSection(self, comment, isCommentsDisabled, isDiscussionClose):
+        # Scroll down in page to comment section
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+         
+        comment_section = (self.ENTRY_PAGE_COMMENT_SECTION[0], self.ENTRY_PAGE_COMMENT_SECTION[1].replace('COMMENT_TEXT', comment))
+        # If disabled comments is enabled (includes if close discussion is enabled)
+        if isCommentsDisabled == True:
+            # Check that entry's comments isn't displayed
+            if self.is_visible(comment_section) == True:
+                writeToLog("INFO","FAILED - comments still displayed")
+                return False 
         
+        # If close discussion is enabled but disabled comments is disabled     
+        if isDiscussionClose == True and isCommentsDisabled == False:
+                # Wait until close discussion message is displayed 
+                if self.wait_visible(self.ENTRY_PAGE_CLOSE_DISCUSSION_MSG, timeout=20) == False:
+                    writeToLog("INFO","FAILED to displayed close discussion message")
+                    return False             
+            
+                # Check that entry's comments is displayed
+                if self.is_visible(comment_section) == False:
+                    writeToLog("INFO","FAILED - comments isn't displayed")
+                    return False           
+            
+        # Check that there is no option to add comments - relevant for both close discussion and disabled comments
+        if self.is_visible(self.ENTRY_PAGE_COMMENT_TEXT_AREA) == True:
+            writeToLog("INFO","FAILED - add new comment box is still displayed")
+            return False                  
+        
+        return True       
+    
+       
+    # @Author: Inbar Willman (TBD)
+    def replayToComment(self):  
+        # Get comment Id
+        tmp_comment_id = self.get_element(self.ENTRY_PAGE_COMMENT_ID)
+        comment_id = tmp_comment_id.get_attribute("data-comment-id")
+        
+        # Click on replay button
+        tmp_replay_btn = (self.ENTRY_PAGE_REPLAY_COMMENT[0], self.ENTRY_PAGE_REPLAY_COMMENT[1].replace('COMMENT_ID', comment_id))
+        if self.click(tmp_replay_btn) == False:
+            writeToLog("INFO","FAILED to click on replay button")
+            return False                  
+       
