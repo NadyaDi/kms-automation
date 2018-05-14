@@ -83,6 +83,7 @@ class Channel(Base):
     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD         = ('xpath', '//input[@id="addChannelMember-userId"]')   
     CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION         = ('xpath', '//select[@id="addChannelMember-permission"]')     
     CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON             = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
+    CHANNEL_ADD_MEMBER_MODAL_CONTENT                = ('xpath', '//p[@class="help-block" and contains(text(),"Please input at least 3")]')
     CHANNEL_SET_MEMBER_PERMISSION                   = ('xpath', '//option[@value="3" and text()="Member"]')        
     CHANNEL_SET_CONTRIBUTOR_PERMISSION              = ('xpath', '//option[@value="2" and text()="Contributor"]') 
     CHANNEL_SET_MODERATOR_PERMISSION                = ('xpath', '//option[@value="1" and text()="Moderator"]')
@@ -91,7 +92,9 @@ class Channel(Base):
     CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW              = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')      
     CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON          = ('xpath', '//a[contains(@class, "editMemberBtn") and contains(@href,"MEMBER")]') 
     CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON         = ('xpath', '//a[@class="setOwnerBtn " and contains(@href,"MEMBER")]')
-    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]') 
+    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]')  
+    CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
+    CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
     CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
     CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")
     CHANNEL_SUBSCRIBE_BUTTON_OLD_UI                 = ('xpath', "//span[@class='toggle-on ' and contains(text(),'Subscribed')]")    
@@ -99,11 +102,15 @@ class Channel(Base):
     CHANNEL_TYPE                                    = ('xpath', "//div[@id='membership']")
     CHANNEL_MEDIA_COUNT                             = ('xpath', "//div[@id='media_persons']")
     CHANNEL_CHANNEL_INFO_OLD_UI                     = ('xpath', "//div[@id='channelSidebarInner']")
+    CHANNEL_PLAYLISTS_TAG_AFTER_CLICK               = ('xpath', "//input[contains(@id, 's2id_autogen')]")
     CHANNEL_MEMBER_COUNT                            = ('xpath', "//div[@id='Channelmembers_persons']")
     CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[@class='btn-group right-sep']")
     CHANNEL_MANGER_NAME                             = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
     CHANNEL_APPEARS_IN_BUTTON                       = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
     CHANNEL_APPEARS_IN_CATEGORY_NAME                = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
+    CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME        = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
+    CHANNEL_PLAYLIST_VERIFICATION                   = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
+
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -621,10 +628,9 @@ class Channel(Base):
 
         return True
 
-      
-   
+         
     #@Author: Oded Berihon     
-    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, entriesNames, SortBy='', MediaType='',): 
+    def createChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, entriesNames): 
         if self.navigateToChannelPlaylistTab(channelName) == False:
             writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
             return False 
@@ -657,15 +663,20 @@ class Channel(Base):
         if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
             writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
             return False     
-        
+               
+#         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+#             # Remove the Mask over all the screen (over tags filed also)
+#             maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
+#             self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))          
+#       
+#         if self.send_keys(self.CHANNEL_PLAYLISTS_TAG_AFTER_CLICK, playlistTag, multipleElements=True) == False:
+#             writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+#             return False
+         
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
             return False 
-         
-        if self.sortAndFilterInChannelPlaylist(SortBy ,MediaType)== False:
-            writeToLog("INFO","FAILED to click on search button")
-            return False  
-        
+               
         if self.click(self.CHANNEL_SEARCH_BUTTON_CHANNEL_PLAYLIST) == False:
             writeToLog("INFO","FAILED to click on search button")
             return False   
@@ -701,22 +712,74 @@ class Channel(Base):
         if not playlisTitle in el.text:
             writeToLog("INFO","FAILED to LOCATE SUCCESS MASSAGE")
             return False
-                                         
+            
+        tmp_check = (self.CHANNEL_EDIT_CHANNNEL_PAGE[0], self.CHANNEL_EDIT_CHANNNEL_PAGE[1].replace('CHANNEL_NAME', channelName))
+        if self.click(tmp_check) == False:
+            writeToLog("INFO","FAILED to click on Channel name")
+            return False      
+        sleep(1) 
+       
+        tmp_channel_playlist = (self.CHANNEL_PLAYLIST_VERIFICATION[0], self.CHANNEL_PLAYLIST_VERIFICATION[1].replace('PLAYLIST_TITLE', playlisTitle))
+        if self.click(tmp_channel_playlist) == False:
+            writeToLog("INFO","FAILED to click on playlist name")
+            return False         
+                   
         return True
     
 
-    def sortAndFilterInChannelPlaylist(self, sortBy='', mediaType=''):
+    def sortAndFilterInChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, sortBy='', filterMediaType=''):
+        if self.navigateToChannelPlaylistTab(channelName) == False:
+            writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
+            return False 
+        
+        if self.click(self.CHANNEL_CREATE_NEW_PLAYLIST_DROP_DOWN) == False:
+            writeToLog("INFO","FAILED to Click on drop down play-lists tab button")
+            return False           
+
+        if self.click(self.CHANNEL_MANUAL_PLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to Click on play-lists tab button")
+            return False
+        
+        if self.wait_visible(self.CHANNEL_PLAYLISTS_HEADER) == False:
+            writeToLog("INFO","FAILED to open 'Create a Manual Playlist' window")
+            return False    
+        sleep(3)
+  
+        if self.send_keys(self.CHANNEL_ENTER_PLAYLIST_TITLE, playlisTitle) == False:
+            writeToLog("INFO","FAILED to fill a playlist title :'" + playlisTitle + "'")
+            return False
+        
+        if self.send_keys(self.CHANNEL_PLAYLISTS_DESCRIPTION, playlistDescription) == False:
+            writeToLog("INFO","FAILED to fill a playlistDescription title :'" + playlistDescription + "'")
+            return False    
+       
+        if self.click(self.CHANNEL_PLAYLISTS_TAG) == False:
+            writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
+            return False   
+      
+        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
+            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+            return False     
+        
+        if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
+            writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
+            return False        
+                       
         if sortBy != '':
             if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
                 writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
                 return False
 
-        if mediaType != '':
-            if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, mediaType) == False:
-                writeToLog("INFO","FAILED to set filter: " + str(mediaType) + " in my media")
-                return False
-            
-        return True
+        if filterMediaType != '':
+            if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
+                writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
+                return False       
+        
+        if self.click(self.CHANNEL_CANCEL_PLAYLIST_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on cancel")
+            return False 
+               
+        return True        
     
     
     #@Author: Oded Berihon   
@@ -930,7 +993,7 @@ class Channel(Base):
             return False  
         
         # Wait until page contains add member button
-        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON, timeout=30) == False:
+        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
             writeToLog("INFO","Failed to display add member tab content")
             return False           
         
@@ -939,7 +1002,8 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on add members button")
             return False   
         
-        sleep(3)             
+        # Wait until add member modal is displayed
+        sleep(3)
         
         #Click on username field
         if self.click(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
@@ -961,7 +1025,10 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on add button")
             return False  
         
-        sleep(10)
+        # Wait until add member modal isn't displayed
+        if self.wait_while_not_visible(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+            writeToLog("INFO","Failed to display add member modal")
+            return False    
         
         #Verify new member is added to member table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
@@ -1041,6 +1108,7 @@ class Channel(Base):
                 writeToLog("INFO","Failed to click on delete button")
                 return False 
             
+        # Wait until modal is displayed
         sleep(3)              
    
         # Click on 'Yes' in remove user modal
@@ -1048,12 +1116,17 @@ class Channel(Base):
                 writeToLog("INFO","Failed to click on yes button")
                 return False  
         
-        sleep(10)
+        # Wait until remove modal isn't displayed
+        if self.wait_while_not_visible(self.CHANNEL_REMOVE_USER_MODAL_CONTENT,timeout=30) == False:
+            writeToLog("INFO","Failed to wait until remove modal isn't visible")
+            return False  
         
+        sleep (2)
+            
         # Verify user isn't displayed in members table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
         if self.is_visible(tmp_member_row) == True:
-            writeToLog("INFO","Failed to delete member")
+            writeToLog("INFO","Failed to delete member - user still displayed in member table")
             return False  
         
         return True   
@@ -1072,14 +1145,18 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on set as owner button")
             return False 
         
-        sleep(2)    
+        # Wait until set owner modal is displayed
+        sleep(3)
         
         # Click on 'Yes' in set owner modal
         if self.click(self.CHANNEL_YES_MODAL_BUTTON) == False:
             writeToLog("INFO","Failed to click on yes button")
             return False  
         
-        sleep(5)   
+        # Wait until set owner modal isn't visible anymore
+        if self.wait_while_not_visible(self.CHANNEL_SET_OWNER_MODAL_CONTENT, timeout=30) == False:
+            writeToLog("INFO","Failed to wait until set owner modal isn't visible")
+            return False              
          
         #Verify that user don't have set as owner button
         if self.hover_on_element(tmp_set_as_owner) == True:
