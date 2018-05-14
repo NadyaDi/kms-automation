@@ -39,10 +39,7 @@ class Test:
     categoryName = [("Apps Automation Category")]
     userName = "Automation_User_1"
     UserPass = "Kaltura1!"
-    managerName = "QA Application"
 
-    
-    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -65,7 +62,6 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
         
-            
             writeToLog("INFO","Step 1: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName[0], self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, True, linkToCategoriesList=self.categoryName) == False:
                 self.status = "Fail"
@@ -108,6 +104,7 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to add user '" + self.userName + "' as subscriber to channel '" + self.channelName[0] + "'")
                 return
             
+            sleep(2)
             writeToLog("INFO","Step 8: Going to logout from new user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -127,10 +124,17 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 11: Going to verify channel page information")
-            if self.common.channel.verifyChannelInpormation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", self.managerName, self.categoryName[0]) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED navigate to channel: " + self.channelName[0])
-                return 
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "QA Application", self.categoryName[0]) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 11: FAILED navigate to channel: " + self.channelName[0])
+                    return 
+            elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "Qa application", self.categoryName[0]) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 11: FAILED navigate to channel: " + self.channelName[0])
+                    return 
+                
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Channel page information' was done successfully")
         # if an exception happened we need to handle it and fail the test       

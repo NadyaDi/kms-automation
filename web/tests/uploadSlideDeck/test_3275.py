@@ -178,13 +178,16 @@ class Test:
             # click on the EXPAND_COLLAPSE button in the slides menu bar in order to open all the chapters
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
             for chapter in self.chaptersList:
-                if self.common.player.MoveToChapter(chapter, timeOut=5) == True:
+                try:
+                    tmp_chapter = (self.common.player.PLAYER_SLIDE_DECK_CHAPTER[0], self.common.player.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapter))
+                    self.get_element(tmp_chapter)
                     writeToLog("INFO","Step 15:FAILED chapter '" + chapter + "' was found although he was deleted")
                     self.status = "Fail"
                     return
-                writeToLog("INFO","Step 15: Previous Step Failed as Expected - The chapter '" +  chapter + "' should not be displayed")
+                except:
+                    writeToLog("INFO","Step 15: The chapter '" +  chapter + "' was not found as expected")
                 
-                
+                #if self.common.player.MoveToChapter(chapter, timeOut=5) == True:
             sleep(4)
             writeToLog("INFO","Step 16: Going to switch the player view so that the player will be in the big window and the slides in the small window")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
