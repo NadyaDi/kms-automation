@@ -17,7 +17,8 @@ class Test:
     # Test description:
     # 
     #================================================================================================================================
-    testNum     = "767"
+    testNum     = "768"
+    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -39,8 +40,9 @@ class Test:
     playlistDescription = "playlist description"
     playlistTag = "playlisttag,"
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\waves.mp3'
+    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
+   
     
     
     #run test as different instances on all the supported platforms
@@ -60,9 +62,9 @@ class Test:
             self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
-            self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
-            self.entryName2 = clsTestService.addGuidToString('Audio', self.testNum)
-            self.entryName3 = clsTestService.addGuidToString('Video2', self.testNum)
+            self.entryName1 = clsTestService.addGuidToString('Video1', self.testNum)
+            self.entryName2 = clsTestService.addGuidToString('Video2', self.testNum)
+            self.entryName3 = clsTestService.addGuidToString('Video3', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.playlisTitle = clsTestService.addGuidToString('Channel playlist', self.testNum)
             self.entriesNames = [self.entryName1, self.entryName2, self.entryName3]
@@ -110,20 +112,28 @@ class Test:
             
             writeToLog("INFO","Step 8: Going to publish entry3")
             if self.common.myMedia.publishSingleEntry(self.entryName3, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 4: FAILED - could not publish video to channel")
+                writeToLog("INFO","Step 8: FAILED - could not publish video to channel")
                 return
+          
+            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
            
             writeToLog("INFO","Step 9: Going to create channel playlist")                                     
-            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
+            if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO) == False:    
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
                 return 
             sleep(3)     
+            
+            writeToLog("INFO","Step 10: Going to verify entries order - by Alphabetical & video type")
+            if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.CHANNEL_PLAYLIST) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to verify entries order - by Alphabetical & video type")
+                return
            
-            writeToLog("INFO","Step 10: Going to delete channel playlist")              
+            writeToLog("INFO","Step 11: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED failed to delete channel playlist")
+                writeToLog("INFO","Step 11: FAILED failed to delete channel playlist")
                 return      
             #########################################################################
             writeToLog("INFO","TEST PASSED")
