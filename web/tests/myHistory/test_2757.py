@@ -36,6 +36,7 @@ class Test:
     questionNumber = 1
     entryDescription = "description"
     entryTags = "tag1,"
+    playlist = 'Recently Watched '
     QuizQuestion1 = 'First question'
     QuizQuestion1Answer1 = 'First answer'
     QuizQuestion1AdditionalAnswers = ['Second answer', 'Third question', 'Fourth question']
@@ -55,8 +56,7 @@ class Test:
             self.startTime = time.time()
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
-            self.common = Common(self.driver)
-            
+            self.common = Common(self.driver)      
             ########################################################################
             self.entryName = clsTestService.addGuidToString('MyHistoryRecentlyWatchedAudio', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 

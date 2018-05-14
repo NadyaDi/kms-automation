@@ -83,6 +83,7 @@ class Channel(Base):
     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD         = ('xpath', '//input[@id="addChannelMember-userId"]')   
     CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION         = ('xpath', '//select[@id="addChannelMember-permission"]')     
     CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON             = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
+    CHANNEL_ADD_MEMBER_MODAL_CONTENT                = ('xpath', '//p[@class="help-block" and contains(text(),"Please input at least 3")]')
     CHANNEL_SET_MEMBER_PERMISSION                   = ('xpath', '//option[@value="3" and text()="Member"]')        
     CHANNEL_SET_CONTRIBUTOR_PERMISSION              = ('xpath', '//option[@value="2" and text()="Contributor"]') 
     CHANNEL_SET_MODERATOR_PERMISSION                = ('xpath', '//option[@value="1" and text()="Moderator"]')
@@ -91,7 +92,9 @@ class Channel(Base):
     CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW              = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')      
     CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON          = ('xpath', '//a[contains(@class, "editMemberBtn") and contains(@href,"MEMBER")]') 
     CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON         = ('xpath', '//a[@class="setOwnerBtn " and contains(@href,"MEMBER")]')
-    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]') 
+    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]')  
+    CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
+    CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
     CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
     CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")    
     CHANNEL_SUBSCRIBER_COUNT                        = ('xpath', "//div[@id='Channelsubscription_persons']")
@@ -927,7 +930,7 @@ class Channel(Base):
             return False  
         
         # Wait until page contains add member button
-        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON, timeout=30) == False:
+        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
             writeToLog("INFO","Failed to display add member tab content")
             return False           
         
@@ -936,7 +939,8 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on add members button")
             return False   
         
-        sleep(3)             
+        # Wait until add member modal is displayed
+        sleep(3)
         
         #Click on username field
         if self.click(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
@@ -958,7 +962,10 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on add button")
             return False  
         
-        sleep(10)
+        # Wait until add member modal isn't displayed
+        if self.wait_while_not_visible(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+            writeToLog("INFO","Failed to display add member modal")
+            return False    
         
         #Verify new member is added to member table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
@@ -1038,6 +1045,7 @@ class Channel(Base):
                 writeToLog("INFO","Failed to click on delete button")
                 return False 
             
+        # Wait until modal is displayed
         sleep(3)              
    
         # Click on 'Yes' in remove user modal
@@ -1045,12 +1053,17 @@ class Channel(Base):
                 writeToLog("INFO","Failed to click on yes button")
                 return False  
         
-        sleep(10)
+        # Wait until remove modal isn't displayed
+        if self.wait_while_not_visible(self.CHANNEL_REMOVE_USER_MODAL_CONTENT,timeout=30) == False:
+            writeToLog("INFO","Failed to wait until remove modal isn't visible")
+            return False  
         
+        sleep (2)
+            
         # Verify user isn't displayed in members table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
         if self.is_visible(tmp_member_row) == True:
-            writeToLog("INFO","Failed to delete member")
+            writeToLog("INFO","Failed to delete member - user still displayed in member table")
             return False  
         
         return True   
@@ -1069,14 +1082,18 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on set as owner button")
             return False 
         
-        sleep(2)    
+        # Wait until set owner modal is displayed
+        sleep(3)
         
         # Click on 'Yes' in set owner modal
         if self.click(self.CHANNEL_YES_MODAL_BUTTON) == False:
             writeToLog("INFO","Failed to click on yes button")
             return False  
         
-        sleep(5)   
+        # Wait until set owner modal isn't visible anymore
+        if self.wait_while_not_visible(self.CHANNEL_SET_OWNER_MODAL_CONTENT, timeout=30) == False:
+            writeToLog("INFO","Failed to wait until set owner modal isn't visible")
+            return False              
          
         #Verify that user don't have set as owner button
         if self.hover_on_element(tmp_set_as_owner) == True:

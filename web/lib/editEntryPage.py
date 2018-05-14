@@ -383,17 +383,17 @@ class EditEntryPage(Base):
             return False 
         
         # Verify Disable comments 
-        if self.is_element_checked(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX) == False:
+        if self.is_element_checked(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX) != isEnableComments:
             writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
             return False
                    
         # Verify Close Discussion 
-        if self.is_element_checked(self.EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX) == False:
+        if self.is_element_checked(self.EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX) != isEnableCloseDiscussion:
             writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
             return False
                    
         # Verify Enable Everyone To Create Clip
-        if self.is_element_checked(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX) == False:
+        if self.is_element_checked(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX) != isEnableEveryoneToCreateClip:
             writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
             return False
         

@@ -37,7 +37,7 @@ class Test:
     entryEmptyTags = "   ,"
     entryDescription = "description"
     entryTags = "tag1,"
-    channelName = "test required field"
+    channelName = None
     channelDescription = "test"
     channelTags = "test,"
     
@@ -63,7 +63,7 @@ class Test:
             ########################################################################
             self.entryName = clsTestService.addGuidToString('Requiredfields', self.testNum)
             self.common.admin.enableRequiredField(True, True, True, True)
-            
+            self.channelName = clsTestService.addGuidToString('"test required field"', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
