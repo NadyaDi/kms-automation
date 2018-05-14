@@ -140,15 +140,21 @@ class Common():
         file1.write(text)
         file1.close()
         
-        
-    def handleTestFail(self, status):
-        self.switch_to_default_iframe_generic() 
+    
+    # @Author: Oleg Sigalov
+    # leavePageExpected=True if the test may fail somewhere, and Leave Page may appear.
+    # we need to click leave page, because it will not continue to tearDown and other tests...
+    def handleTestFail(self, status, leavePageExpected=False):
+        self.switch_to_default_iframe_generic()
         if status == "Fail":
-            if self.base.takeScreeshotGeneric('LAST_SCRENNSHOT') == True:
-                return True
-            else:
-                return False
-                    
+            self.base.takeScreeshotGeneric('LAST_SCRENNSHOT')
+            if leavePageExpected==True:
+                # Try to navigate to any place to show leave page if it was not visible
+                self.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
+                # Try to click leave page if already present
+                self.base.click_leave_page()
+        return True
+    
                     
     # @Author: Oleg Sigalov
     # Switch to default Media Space Iframe, if testing Media Space it will switch to default_content
@@ -165,4 +171,3 @@ class Common():
     def sendKeysToBodyElement(self, keys):
         self.base.send_keys_to_element(self.base.get_body_element(), keys)
         return True
-        

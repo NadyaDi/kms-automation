@@ -666,16 +666,10 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on go to media button")
             return False
         
-        try:
-            # Click Leave Page if expected    
-            if leavePage == True:
-                sleep(2)
-                self.clsCommon.base.driver.switch_to.alert.accept()
-                if self.clsCommon.base.wait_for_page_readyState() == False:
-                    writeToLog("INFO","FAILED to load entry page")
-                    return False
-        except Exception:
-            pass
+        # Click Leave Page if expected    
+        if leavePage == True:
+            if self.click_leave_page() == False:
+                return False
                 
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
