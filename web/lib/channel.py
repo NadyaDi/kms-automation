@@ -96,17 +96,21 @@ class Channel(Base):
     CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
     CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
     CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
-    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")    
+    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")
+    CHANNEL_SUBSCRIBE_BUTTON_OLD_UI                 = ('xpath', "//span[@class='toggle-on ' and contains(text(),'Subscribed')]")    
     CHANNEL_SUBSCRIBER_COUNT                        = ('xpath', "//div[@id='Channelsubscription_persons']")
     CHANNEL_TYPE                                    = ('xpath', "//div[@id='membership']")
     CHANNEL_MEDIA_COUNT                             = ('xpath', "//div[@id='media_persons']")
+    CHANNEL_CHANNEL_INFO_OLD_UI                     = ('xpath', "//div[@id='channelSidebarInner']")
     CHANNEL_PLAYLISTS_TAG_AFTER_CLICK               = ('xpath', "//input[contains(@id, 's2id_autogen')]")
     CHANNEL_MEMBER_COUNT                            = ('xpath', "//div[@id='Channelmembers_persons']")
     CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[@class='btn-group right-sep']")
-    CHANNEL_CHANNEL_MANGER_NAME                     = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
+    CHANNEL_MANGER_NAME                             = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
     CHANNEL_APPEARS_IN_BUTTON                       = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
+    CHANNEL_APPEARS_IN_CATEGORY_NAME                = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME        = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     CHANNEL_PLAYLIST_VERIFICATION                   = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
+
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -981,7 +985,8 @@ class Channel(Base):
         if self.navigateToEditChannelPage(channelName) == False:
             writeToLog("INFO","Failed to navigate to edit channel page")
             return False  
-            
+        sleep(1)   
+        
         # Navigate to members tab
         if self.navigateToMembersTab() == False:
             writeToLog("INFO","Failed to click on members tab")
@@ -1166,65 +1171,110 @@ class Channel(Base):
         if self.navigateToChannel(channelName, navigateFrom) == False:
             writeToLog("INFO","Failed navigate to channel '" + channelName + "' page")
             return False  
-             
-        if self.click(self.CHANNEL_SUBSCRIBE_BUTTON, 20, multipleElements=True) == False:
-            writeToLog("INFO","Failed to click on subscribe button")
-            return False  
+        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.click(self.CHANNEL_SUBSCRIBE_BUTTON, 20, multipleElements=True) == False:
+                writeToLog("INFO","Failed to click on subscribe button")
+                return False  
+        
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if self.click(self.CHANNEL_SUBSCRIBE_BUTTON_OLD_UI, 20, multipleElements=True) == False:
+                writeToLog("INFO","Failed to click on subscribe button")
+                return False 
         
         sleep(2)
         self.driver.refresh()      
         sleep(4)   
-             
-        if countOfSubscribers + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
-            writeToLog("INFO","Failed to find subscriber count in channel page")
-            return False  
         
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:     
+            if countOfSubscribers + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
+                writeToLog("INFO","Failed to find subscriber count in channel page")
+                return False  
+            
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if countOfSubscribers+ "\nsubscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20).lower():
+                writeToLog("INFO","Failed to find subscriber count in channel page")
+                return False  
         writeToLog("INFO","Success, user was added as subscriber to channel")
         return True
             
                                
     # Author: Michal Zomper
-    def verifyChannelInpormation(self, channelType, entriesCount, memberCount, subscriberCount, managerName, appearsInCategoryName):  
+    def verifyChannelInformation(self, channelType, entriesCount, memberCount, subscriberCount, managerName, appearsInCategoryName):  
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True: 
+            if channelType in self.get_element_text(self.CHANNEL_TYPE, 20).lower() == False:
+                writeToLog("INFO","Failed to verify that channel type is : " + channelType)
+                return False  
+            
+            if entriesCount + " Media" != self.get_element_text(self.CHANNEL_MEDIA_COUNT, 20):
+                writeToLog("INFO","Failed to verify that channel media count is: " + entriesCount)
+                return False 
         
-        if channelType in self.get_element_text(self.CHANNEL_TYPE, 20).lower() == False:
-            writeToLog("INFO","Failed to verify that channel type is : " + channelType)
-            return False  
+            if memberCount + " Members" != self.get_element_text(self.CHANNEL_MEMBER_COUNT, 20):
+                writeToLog("INFO","Failed to verify that channel member count is: " + memberCount)
+                return False 
+            
+            if subscriberCount + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
+                writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
+                return False 
+            
+            tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME[0], self.CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
+            if self.click(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True) == False:
+                writeToLog("INFO","Failed to click on managers button")
+                return False
+            
+            if self.is_visible(tmp_chnnelManagerName) == False:
+                writeToLog("INFO","Failed to verify channel manager name: " + managerName)
+                return False 
+            
+            # close mangers list
+            if self.click(tmp_chnnelManagerName, 20, multipleElements=True) == False:
+                writeToLog("INFO","Failed to click on managers button")
+                return False
+            
+            tmp_chnnelAppearIn = (self.CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+            if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
+                writeToLog("INFO","Failed to click on appears in button")
+                return False
+            
+            if self.is_visible(tmp_chnnelAppearIn) == False:
+                writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+                return False 
         
-        if entriesCount + " Media" != self.get_element_text(self.CHANNEL_MEDIA_COUNT, 20):
-            writeToLog("INFO","Failed to verify that channel media count is: " + entriesCount)
-            return False 
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            try:
+                details= self.get_element_text(self.CHANNEL_CHANNEL_INFO_OLD_UI)
+            except NoSuchElementException:
+                writeToLog("INFO","Failed to get channel information element")
+                return False
+            
+            tmp_channelDetails = details.split('\n')
+            if tmp_channelDetails[0] == '':
+                writeToLog("INFO","FAILED to channel type")
+                return False
+                
+            if entriesCount + "\nmedia" != self.get_element_text(self.CHANNEL_MEDIA_COUNT, 20).lower():
+                writeToLog("INFO","Failed to verify that channel media count is: " + entriesCount)
+                return False 
     
-        if memberCount + " Members" != self.get_element_text(self.CHANNEL_MEMBER_COUNT, 20):
-            writeToLog("INFO","Failed to verify that channel member count is: " + memberCount)
-            return False 
-        
-        if subscriberCount + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
-            writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
-            return False 
-        
-        tmp_chnnelManagerName = (self.CHANNEL_CHANNEL_MANGER_NAME[0], self.CHANNEL_CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
-        if self.click(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True) == False:
-            writeToLog("INFO","Failed to click on managers button")
-            return False
-        
-        if self.is_visible(tmp_chnnelManagerName) == False:
-            writeToLog("INFO","Failed to verify channel manager name: " + managerName)
-            return False 
-        
-        # close mangers list
-        if self.click(tmp_chnnelManagerName, 20, multipleElements=True) == False:
-            writeToLog("INFO","Failed to click on managers button")
-            return False
-        
-        tmp_chnnelAppearIn = (self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
-        if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
-            writeToLog("INFO","Failed to click on appears in button")
-            return False
-        
-        if self.is_visible(tmp_chnnelAppearIn) == False:
-            writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
-            return False 
-        
+            if memberCount + "\nmembers" != self.get_element_text(self.CHANNEL_MEMBER_COUNT, 20).lower():
+                writeToLog("INFO","Failed to verify that channel member count is: " + memberCount)
+                return False 
+            
+            if subscriberCount + "\nsubscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20).lower():
+                writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
+                return False 
+            
+            tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME[0], self.CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
+            if self.is_visible(tmp_chnnelManagerName) == False:
+                writeToLog("INFO","Failed to verify channel manager name: " + managerName)
+                return False 
+            
+            tmp_chnnelAppearIn = (self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+            if self.is_visible(tmp_chnnelAppearIn) == False:
+                writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+                return False 
+            
         writeToLog("INFO","Success, All channel information was verified")
         return True
         

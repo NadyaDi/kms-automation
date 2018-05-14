@@ -471,13 +471,19 @@ class Player(Base):
             writeToLog("INFO","FAILED, chapter time is not correct")
             return False
         
-        sleep(2)
-        if self.MoveToChapter(chapterName) == False:
-            writeToLog("INFO","FAILED to hover chapter in slides menu bar")
+        try:
+            tmp_chapter = (self.PLAYER_SLIDE_DECK_CHAPTER[0], self.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapterName))
+            self.get_element(tmp_chapter)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to find chapter '" + chapterName + "' in slides menu bar")
             return False
         self.scrollInSlidesMenuBar(2)
+#         sleep(2)
+#         if self.MoveToChapter(chapterName) == False:
+#             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
+#             return False
+#         
         sleep(2)
-        
         if chapterIsclose == True:
             el = details.find_element_by_xpath("..")
             child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
@@ -504,7 +510,7 @@ class Player(Base):
         return True
     
     
-    # creator: Michal zomper
+        # creator: Michal zomper
     # The function move the scroller in the slides menu bar so that the needed chapter is now display
     def MoveToChapter(self, chapterName, timeOut=10):
         tmpLocator = (self.PLAYER_SLIDE_DECK_CHAPTER[0], self.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapterName))
