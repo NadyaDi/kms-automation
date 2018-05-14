@@ -14,11 +14,10 @@ class Test:
     #================================================================================================================================
     #  @Author: Inbar Willman
     # Test description:
-    # Add caption to entry
+    # Disable comments for entry
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> Go to entry page > Click on 'Actions'-->'Edit' -> Go to 'Captions' tab -> Upload a captions file
-    # -> Fill out the relevant fields-> Click 'Save' -> Set the uploaded captions file as default -> Go back to the entry page and play it
-    # Go to entry page and continue play entry (not to the end) -> 
+    # Login to KMS-> Upload entry -> Go to entry page > Add comments -> Click on 'Action' - 'Edit' -> Go to option tab
+    # -> disabled comments option-> Go to entry page -> Check that comment isn't displayed and there is no option to add new comments 
     # test cleanup: deleting the uploaded file
     #================================================================================================================================
     testNum     = "699"
@@ -72,35 +71,34 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
                         
-# For now there is no option to add comment           
-#             writeToLog("INFO","Step 4: Going to add new comment to entry")
-#             if self.common.entryPage.addCommentToEntry(self.commnetText) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to add new comment")
-#                 return            
+            writeToLog("INFO","Step 4: Going to add new comment to entry")
+            if self.common.entryPage.addComment(self.commnetText) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to add new comment")
+                return            
               
-            writeToLog("INFO","Step 4: Going to navigate to edit entry page")
+            writeToLog("INFO","Step 5: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
+                writeToLog("INFO","Step 5: FAILED to navigate to edit entry page")
                 return    
             
-            writeToLog("INFO","Step 5: Going to click on option tab and enable - disabled comment")
+            writeToLog("INFO","Step 6: Going to click on option tab and enable - disabled comment")
             if self.common.editEntryPage.changeEntryOptions(True, False, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to click on option tab and enable disabled comments option")
+                writeToLog("INFO","Step 6: FAILED to click on option tab and enable disabled comments option")
                 return    
             
-            writeToLog("INFO","Step 6: Going to navigate to entry page")
+            writeToLog("INFO","Step 7: Going to navigate to entry page")
             if self.common.entryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to entry page")
+                writeToLog("INFO","Step 7: FAILED to navigate to entry page")
                 return   
             
-            writeToLog("INFO","Step 7: Going to verify that comments section isn't displayed in entry page")
+            writeToLog("INFO","Step 8: Going to verify that comments section isn't displayed in entry page")
             if self.common.entryPage.verifyCommentsSectionIsDisabled() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED - Comments section still displayed in entry page")
+                writeToLog("INFO","Step 87: FAILED - Comments section still displayed in entry page")
                 return                                                                                       
             #########################################################################
             writeToLog("INFO","TEST PASSED")
