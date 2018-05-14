@@ -449,7 +449,7 @@ class Base:
                 element.click()
                 return True
             
-        except InvalidElementStateException:
+        except Exception:
             writeToLog("DEBUG","Element was found, but FAILED to click")
             return False
         
@@ -872,3 +872,16 @@ class Base:
       
     def getAppUnderTest(self):
         return localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+    
+    
+    def click_leave_page(self):
+        try:
+            sleep(2)
+            self.driver.switch_to.window(self.driver.current_window_handle)
+            self.driver.switch_to.alert.accept()
+            if self.wait_for_page_readyState() == False:
+                writeToLog("INFO","FAILED to load page after clicking Leave Page")
+                return False
+            return True
+        except Exception:
+            return True
