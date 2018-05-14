@@ -393,6 +393,10 @@ class MyMedia(Base):
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
+            
+            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
+                writeToLog("DEBUG","FAILED to click on publish button")
+                return False      
 
         elif publishFrom == enums.Location.UPLOAD_PAGE: 
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")       
@@ -431,7 +435,7 @@ class MyMedia(Base):
             for channel in channelList:
                 tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
    
-                if self.click(tmpChannelName, 30) == False:
+                if self.click(tmpChannelName, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
         
@@ -454,7 +458,7 @@ class MyMedia(Base):
             self.clsCommon.general.waitForLoaderToDisappear()            
         
         sleep(3)       
-        writeToLog("INFO","Success to publish entry '" + entryName + "'")
+        writeToLog("INFO","Success, publish entry '" + entryName + "' was successful")
         return True
     
     

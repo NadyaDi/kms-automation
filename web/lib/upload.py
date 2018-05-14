@@ -162,6 +162,7 @@ class Upload(Base):
                     writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
                     continue
                 
+                sleep(3)
                 # Type in a file path
                 if self.typeIntoFileUploadDialog(filePath) == False:
                     continue
@@ -178,6 +179,10 @@ class Upload(Base):
                 # Fill entry details: name, description, tags
                 if self.fillFileUploadEntryDetails(name, description, tags) == False:
                     continue
+                
+                if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
+                    self.get_body_element().send_keys(Keys.TAB) 
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                 
                 # Click Save
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:

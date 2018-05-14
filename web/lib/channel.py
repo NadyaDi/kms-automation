@@ -92,10 +92,19 @@ class Channel(Base):
     CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW              = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')      
     CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON          = ('xpath', '//a[contains(@class, "editMemberBtn") and contains(@href,"MEMBER")]') 
     CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON         = ('xpath', '//a[@class="setOwnerBtn " and contains(@href,"MEMBER")]')
-    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]') 
-    CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')    
+    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]')  
     CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
     CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
+    CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
+    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")    
+    CHANNEL_SUBSCRIBER_COUNT                        = ('xpath', "//div[@id='Channelsubscription_persons']")
+    CHANNEL_TYPE                                    = ('xpath', "//div[@id='membership']")
+    CHANNEL_MEDIA_COUNT                             = ('xpath', "//div[@id='media_persons']")
+    CHANNEL_MEMBER_COUNT                            = ('xpath', "//div[@id='Channelmembers_persons']")
+    CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[@class='btn-group right-sep']")
+    CHANNEL_CHANNEL_MANGER_NAME                     = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
+    CHANNEL_APPEARS_IN_BUTTON                       = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
+    CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME        = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -113,6 +122,11 @@ class Channel(Base):
     #  @Author: Tzachi Guetta        
     def deleteChannel(self, channelName):
         try:
+            if self.navigateToMyChannels() == False:
+                writeToLog("INFO","FAILED navigate to my channels")
+                return False
+                
+            
             if self.searchAChannelInMyChannels(channelName) == False:
                 writeToLog("INFO","FAILED to search in my channels")
                 return False
@@ -165,6 +179,7 @@ class Channel(Base):
             if self.navigateToMyChannels() == False:
                 writeToLog("INFO","FAILED to native to my channels page")
                 return False
+            
             if self.click(self.MY_CHANNELS_CREATE_CHANNEL_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on Create channel button")
                 return False
@@ -173,15 +188,19 @@ class Channel(Base):
             if self.click(self.CHANNEL_DETAILS_NAME_FIELD) == False:
                 writeToLog("INFO","FAILED to click on name text field")
                 return False
+            
             if self.send_keys(self.CHANNEL_DETAILS_NAME_FIELD, channelName) == False:
                 writeToLog("INFO","FAILED to type in 'name' text field")
                 return False
+            
             if self.clsCommon.upload.fillFileUploadEntryDescription(channelDescription) == False:
                 writeToLog("INFO","FAILED to type in 'description' text field")
                 return False
+            
             if self.fillChannelTags(channelTags) == False:
                 writeToLog("INFO","FAILED to type in 'Tags' field")
                 return False
+            
             if self.selectChannelPrivacy(privacyType) == False:
                 writeToLog("INFO","FAILED to Choose Channel privacy")
                 return False
@@ -378,14 +397,24 @@ class Channel(Base):
     def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE):
         try:                
             if navigateFrom == enums.Location.MY_CHANNELS_PAGE:
+                if self.navigateToMyChannels() == False:
+                    writeToLog("INFO","FAILED navigate to my channels page")
+                    return False
+                    
                 if self.searchAChannelInMyChannels(channelName) == False:
                     writeToLog("INFO","FAILED to search in my channels")
                     return False
+                
             elif navigateFrom == enums.Location.CHANNELS_PAGE:
+                if self.navigateToChannels() == False:
+                    writeToLog("INFO","FAILED navigate to my channels page")
+                    return False
+                
                 if self.searchAChannelInChannels(channelName) == False:
                     writeToLog("INFO","FAILED to search in channels")
-                    return False            
-            
+                    return False    
+                        
+            sleep(2)
             tmp_channel_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
             if self.click(tmp_channel_name) == False:
                 writeToLog("INFO","FAILED to click on Channel's thumbnail")
@@ -398,6 +427,7 @@ class Channel(Base):
 
         except NoSuchElementException:
             return False
+        
         sleep(2)
         return True
     
@@ -889,7 +919,11 @@ class Channel(Base):
     
     
     # @Author: Inbar Willman 
-    def addMembersToChannel(self, username, permission = enums.ChannelMemberPermission.MEMBER):
+    def addMembersToChannel(self, channelName, username, permission = enums.ChannelMemberPermission.MEMBER):
+        if self.navigateToEditChannelPage(channelName) == False:
+            writeToLog("INFO","Failed to navigate to edit channel page")
+            return False  
+            
         # Navigate to members tab
         if self.navigateToMembersTab() == False:
             writeToLog("INFO","Failed to click on members tab")
@@ -1067,3 +1101,72 @@ class Channel(Base):
             return False  
         
         return True
+    
+    
+    # Author: Michal Zomper                                                                     
+    def subscribeUserToChannel(self, channelName, countOfSubscribers, navigateFrom=enums.Location.CHANNELS_PAGE):
+        if self.navigateToChannel(channelName, navigateFrom) == False:
+            writeToLog("INFO","Failed navigate to channel '" + channelName + "' page")
+            return False  
+             
+        if self.click(self.CHANNEL_SUBSCRIBE_BUTTON, 20, multipleElements=True) == False:
+            writeToLog("INFO","Failed to click on subscribe button")
+            return False  
+        
+        sleep(2)
+        self.driver.refresh()      
+        sleep(4)   
+             
+        if countOfSubscribers + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
+            writeToLog("INFO","Failed to find subscriber count in channel page")
+            return False  
+        
+        writeToLog("INFO","Success, user was added as subscriber to channel")
+        return True
+            
+                               
+    # Author: Michal Zomper
+    def verifyChannelInpormation(self, channelType, entriesCount, memberCount, subscriberCount, managerName, appearsInCategoryName):  
+        
+        if channelType in self.get_element_text(self.CHANNEL_TYPE, 20).lower() == False:
+            writeToLog("INFO","Failed to verify that channel type is : " + channelType)
+            return False  
+        
+        if entriesCount + " Media" != self.get_element_text(self.CHANNEL_MEDIA_COUNT, 20):
+            writeToLog("INFO","Failed to verify that channel media count is: " + entriesCount)
+            return False 
+    
+        if memberCount + " Members" != self.get_element_text(self.CHANNEL_MEMBER_COUNT, 20):
+            writeToLog("INFO","Failed to verify that channel member count is: " + memberCount)
+            return False 
+        
+        if subscriberCount + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
+            writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
+            return False 
+        
+        tmp_chnnelManagerName = (self.CHANNEL_CHANNEL_MANGER_NAME[0], self.CHANNEL_CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
+        if self.click(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True) == False:
+            writeToLog("INFO","Failed to click on managers button")
+            return False
+        
+        if self.is_visible(tmp_chnnelManagerName) == False:
+            writeToLog("INFO","Failed to verify channel manager name: " + managerName)
+            return False 
+        
+        # close mangers list
+        if self.click(tmp_chnnelManagerName, 20, multipleElements=True) == False:
+            writeToLog("INFO","Failed to click on managers button")
+            return False
+        
+        tmp_chnnelAppearIn = (self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+        if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
+            writeToLog("INFO","Failed to click on appears in button")
+            return False
+        
+        if self.is_visible(tmp_chnnelAppearIn) == False:
+            writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+            return False 
+        
+        writeToLog("INFO","Success, All channel information was verified")
+        return True
+        

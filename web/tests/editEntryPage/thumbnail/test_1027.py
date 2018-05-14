@@ -88,7 +88,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
-                                 
+            
+            self.common.base.switch_to_default_content()                    
             writeToLog("INFO","Step 6: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
@@ -112,8 +113,9 @@ class Test:
             if self.common.player.verifyThumbnailInPlayer(self.captureThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to logout from main user")
-                return                      
-                                 
+                return         
+                         
+            self.common.base.switch_to_default_content()                     
             writeToLog("INFO","Step 10: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate to edit entry page")
@@ -148,7 +150,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.base.handleTestFail(self.status)
+            self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                    
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
