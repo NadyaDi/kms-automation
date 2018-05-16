@@ -14,10 +14,11 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-    # As the channel's owner:
-    # Choose one of your entries in the channel and check that all the entry details (views, likes, comments) are correct 
+    # upload entry
+    # from my media click on the entry's name and verify that entry page open successfully
+    # from my meedia click on the entry's thumbnail and verify that entry page open successfully
     #================================================================================================================================
-    testNum = "734"
+    testNum = "672"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -30,10 +31,6 @@ class Test:
     entryDescription = "Description"
     entryTags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
-    channelName = None
-    comments = ["Comment 1", "Comment 2"]
-
-    
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,64 +48,36 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Channel Entry Details", self.testNum)
-            self.channelName = clsTestService.addGuidToString("Channel Entry Details", self.testNum)
-            self.channelName= [(self.channelName)]
+            self.entryName = clsTestService.addGuidToString("Navigate to entry page form my media", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            #self.common.channel.createChannel(self.channelName[0], self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, False)
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-              
-            writeToLog("INFO","Step 2: Going to create new channel")            
-            if self.common.channel.createChannel(self.channelName[0], self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, False) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED create new channel")
-                return
-              
-            writeToLog("INFO","Step 3: Going navigate to entry page")            
+                
+            writeToLog("INFO","Step 2: Going navigate to entry page via entry name")            
             if self.common.entryPage.navigateToEntry(self.entryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to entry: " + self.entryName)
+                writeToLog("INFO","Step 2: FAILED navigate to entry ' " + self.entryName + "' via entry name")
                 return 
-               
-            writeToLog("INFO","Step 4: Going to like the entry page")            
-            if self.common.entryPage.LikeUnlikeEntry(True) == False:
+                 
+            writeToLog("INFO","Step 3: Going navigate to my media")            
+            if self.common.myMedia.navigateToMyMedia() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to like entry: " + self.entryName)
+                writeToLog("INFO","Step 3: FAILED navigate to my media")
                 return   
-              
-            writeToLog("INFO","Step 5: Going to add comments to entry")  
-            for i in range(2):
-                if self.common.entryPage.addComment(self.comments[i]) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 5: FAILED to add comment '" + self.comments[i] + "' to entry: " + self.entryName)
-                    return
                 
-            writeToLog("INFO","Step 6: Going to publish entry to category")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelName, publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
+            writeToLog("INFO","Step 4: Going navigate to entry page via entry thumbnail")  
+            if self.common.myMedia.navigateToEntryPageFromMyMediaViaThubnail(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName)
-                return
-             
-            writeToLog("INFO","Step 7: Going navigate to my channels page")  
-            if self.common.channel.navigateToChannel(self.channelName[0], navigateFrom=enums.Location.MY_CHANNELS_PAGE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED navigate to channel: " + self.channelName[0])
-                return
-            
-            writeToLog("INFO","Step 8: Going to verify entry details in channel")
-            if self.common.category.verifyEntryDetails(self.entryName, "1", "0", str(len(self.comments))) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to verify entry details in channel page")
+                writeToLog("INFO","Step 4: FAILED navigate to entry '" + self.entryName + "' via entry thumbnail")
                 return
              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Channel Entry Details' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Navigate to entry page form my media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -119,7 +88,6 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.channel.deleteChannel(self.channelName[0])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

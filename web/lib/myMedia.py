@@ -52,10 +52,11 @@ class MyMedia(Base):
     MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
     MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST                  = ('xpath', "//a[@id='sched-btn']")
     MY_MEDIA_DROPDOWNLIST_ITEM                                  = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
-    MY_MEDIA_ENTRY_TOP                                          = ('xpath',"//span[@class='entry-name' and text()='ENTRY_NAME']")
-    MY_MEDIA_END_OF_PAGE                                        = ('xpath',"//div[@class='alert alert-info endlessScrollAlert']")
-    MY_MEDIA_TABLE_SIZE                                         = ('xpath',"//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
-    MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath',"//a[@class='btn btn-primary' and text()='OK']")
+    MY_MEDIA_ENTRY_TOP                                          = ('xpath', "//span[@class='entry-name' and text()='ENTRY_NAME']")
+    MY_MEDIA_END_OF_PAGE                                        = ('xpath', "//div[@class='alert alert-info endlessScrollAlert']")
+    MY_MEDIA_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
+    MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath', "//a[@class='btn btn-primary' and text()='OK']")
+    MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -772,3 +773,37 @@ class MyMedia(Base):
                 return False                                       
             
         return True
+    
+    # @Author: Michal Zomper   
+    def navigateToEntryPageFromMyMediaViaThubnail(self, entryName):    
+        tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        #Check if we already in edit entry page
+        if self.wait_visible(tmp_entry_name, 5) != False:
+            writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
+            return True                 
+        
+        if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
+            writeToLog("INFO","FAILD to search entry name: '" + entryName + "' in my media")
+            return True 
+        
+        tmp_entryThumbnail = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_entryThumbnail, 20) == False:
+            writeToLog("INFO","FAILED to click on entry thumbnail: " + entryName)
+            
+        if self.wait_visible(tmp_entry_name, 30) == False:
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            return True 
+        
+        sleep(2)
+        writeToLog("INFO","Success, entry was open successfully")
+        return True
+       
+       
+    # @Author: Michal Zomper
+    def verifyEntryExistInMyMedia(self, entryName):
+        if self.searchEntryMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to search entry: '" + entryName + "' in my media")
+            return True 
+        
+        #self.driver.find_elements_by_xpath("//td[@class='thumbTd thumb-my-media']")
+        

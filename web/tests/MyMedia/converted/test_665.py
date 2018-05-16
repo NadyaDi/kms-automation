@@ -14,10 +14,9 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-    # As the categoy's owner:
-    # Choose one of your entries in the category and check that all the entry details (views, likes, comments) are correct 
+
     #================================================================================================================================
-    testNum = "709"
+    testNum = "665"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -26,14 +25,19 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName1 = None
+    entryName1 = None
+    entryName2 = None
+    entryName3 = None
+    entryName4 = None
+    entryName5 = None
+    entryDescription1 = "different description"
     entryDescription = "Description"
     entryTags = "Tags,"
+    entryTags1 = "different Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
-    categoryName = [("Apps Automation Category")]
-    comments = ["Comment 1", "Comment 2"]
-
-    
+    numberOfEntriesToUpload = 4
+    entriesList = []
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,54 +55,42 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Category Entry Details", self.testNum)
+            self.entryName1 = clsTestService.addGuidToString("Different Search in my media ", self.testNum)
+            self.entryName = clsTestService.addGuidToString("search in my media ", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.entryDescription1, self.entryTags1) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                
-            writeToLog("INFO","Step 2: Going navigate to entry page")            
-            if self.common.entryPage.navigateToEntry(self.entryName, enums.Location.MY_MEDIA) == False:
+            self.entriesList.append(self.entryName1)
+            
+            writeToLog("INFO","Step 2: Going to upload " + str(self.numberOfEntriesToUpload) + " entries")  
+            number = "1"
+            for i in range(self.numberOfEntriesToUpload):
+                if self.common.upload.uploadEntry(self.filePath, self.entryName+number, self.entryDescription, self.entryTags) == None:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 2: FAILED to upload entry' " + self.entryName+number + "'")
+                    return 
+                self.entriesList.append(self.entryName+number)
+                number = str(int(number) + 1)
+                                
+            writeToLog("INFO","Step 3: Going navigate to my media")            
+            if self.common.myMedia.navigateToMyMedia() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED navigate to entry: " + self.entryName)
-                return 
-                 
-            writeToLog("INFO","Step 3: Going to like the entry page")            
-            if self.common.entryPage.LikeUnlikeEntry(True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to like entry: " + self.entryName)
+                writeToLog("INFO","Step 3: FAILED navigate to my media")
                 return   
                 
-            writeToLog("INFO","Step 4: Going to add comments to entry")  
-            for i in range(2):
-                if self.common.entryPage.addComment(self.comments[i]) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 4: FAILED to add comment '" + self.comments[i] + "' to entry: " + self.entryName)
-                    return
-                  
-            writeToLog("INFO","Step 5: Going to publish entry to category")
-            if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, "", publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
+            writeToLog("INFO","Step 4: Going navigate to entry page via entry thumbnail")  
+            if self.common.myMedia.navigateToEntryPageFromMyMediaViaThubnail(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED publish entry '" + self.entryName + "' to category: " + self.categoryName)
-                return
-               
-            writeToLog("INFO","Step 6: Going navigate to category")  
-            if self.common.category.navigateToCategory(self.categoryName[0]) == False:
-                writeToLog("INFO","Step 6: FAILED navigate to category: " + self.categoryName[0])
-                return
-             
-            writeToLog("INFO","Step 7: Going to verify entry details in category")
-            if self.common.category.verifyEntryDetails(self.entryName, "1", "0", str(len(self.comments))) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify entry details in category page")
+                writeToLog("INFO","Step 4: FAILED navigate to entry '" + self.entryName + "' via entry thumbnail")
                 return
              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Category Entry Details' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Search in my media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
