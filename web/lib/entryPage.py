@@ -464,5 +464,9 @@ class EntryPage(Base):
         tmp_replay_btn = (self.ENTRY_PAGE_REPLAY_COMMENT[0], self.ENTRY_PAGE_REPLAY_COMMENT[1].replace('COMMENT_ID', comment_id))
         if self.click(tmp_replay_btn) == False:
             writeToLog("INFO","FAILED to click on replay button")
-            return False                  
-       
+            return False   
+     
+
+        
+        
+            
