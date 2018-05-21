@@ -57,6 +57,8 @@ class MyMedia(Base):
     MY_MEDIA_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
     MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath', "//a[@class='btn btn-primary' and text()='OK']")
     MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
+    MY_MEDIA_REMOVE_SEARCH_ICON                                 = ('xpath', "//i[@class='icon-remove']")
+    MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath' ,"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -78,7 +80,7 @@ class MyMedia(Base):
         else:    
             # Check if we are already in my media page
             if forceNavigate == False:
-                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 1) == True:
+                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 5) == True:
                     return True
             
             # Click on User Menu Toggle Button
@@ -800,10 +802,42 @@ class MyMedia(Base):
        
        
     # @Author: Michal Zomper
-    def verifyEntryExistInMyMedia(self, entryName):
-        if self.searchEntryMyMedia(entryName) == False:
-            writeToLog("INFO","FAILED to search entry: '" + entryName + "' in my media")
-            return True 
+    def verifyEntriesExistInMyMedia(self, searchKey, entriesList, entriesCount):
+        if self.searchEntryMyMedia(searchKey) == False:
+            writeToLog("INFO","FAILED to search entry: '" + searchKey + "' in my media")
+            return False 
         
-        #self.driver.find_elements_by_xpath("//td[@class='thumbTd thumb-my-media']")
+        try: 
+            searchedEntries = self.get_elements(self.MY_MEDIA_TABLE_SIZE)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list")
+            return False
+        
+        # Check that number of entries that display is correct 
+        if len(searchedEntries) != entriesCount:
+            writeToLog("INFO","FAILED, number of entries after search is '" + str(len(self.get_elements(self.MY_MEDIA_TABLE_SIZE))) + "' but need to be '" + str(entriesCount) + "'")
+            return False 
+        
+        if type(entriesList) is list:
+            i=1 
+            for entry in entriesList: 
+                if entry in searchedEntries[len(searchedEntries)-i].text == False:
+                    writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
+                    return False
+                i = i+1
+                
+        # only one entry 
+        else:
+            if entriesList in searchedEntries[0].text == False:
+                writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
+                return False
+            
+        if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON, 15, multipleElements=True) == False:
+            writeToLog("INFO","FAILED click on the remove search icon")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+             
+        sleep(1)
+        writeToLog("INFO","Success, All searched entries were found after search")
+        return True  
         
