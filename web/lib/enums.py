@@ -65,6 +65,7 @@ class EditEntryPageTabName(Enum):
     CAPTIONS               = 'captions'
     DOWNLOADS              = 'downloads'
     TIMELINE               = 'timeline'
+    REPLACE_VIDEO          = 'replace video'
     
     
 class IframeName(Enum):

@@ -33,13 +33,15 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    commnet1User1 = 'comment 1'
-    commnetReplay1User1 = 'Comment 1 replay 1'
-    commnet2User2 = 'Second comment'
-    commnetReplay2User21 = 'Comment 1 replay 2'
+    comment1User1 = 'comment 1'
+    commentReply1User1 = 'Comment 1 replay 1'
+    comment2User2 = 'Second comment'
+    commenReply2User2 = 'Comment 1 replay 2'
     channelMemberUserId = 'private'
     channelMemberPass = '123456'
-    channelName = 'Public Channel'
+    user1 = 'inbar.willman@kaltura.com'
+    user1Pass = 'Kaltura1!!'
+    channelList = ['Public Channel']
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -57,38 +59,95 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('disableComments', self.testNum)
+            self.entryName = clsTestService.addGuidToString('replyComments', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return          
-               
+                
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
-               
+                
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
-                        
+                         
             writeToLog("INFO","Step 4: Going to add new comment to entry as user 1")
-            if self.common.entryPage.addComment(self.commnet1User1) == False:
+            if self.common.entryPage.addComment(self.comment1User1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add new comment as user 1")
-                return            
+                return  
+#             writeToLog("INFO","Step 4: Going to naviagte to entry page")
+#             if self.common.entryPage.navigateToEntryPageFromMyMedia('DD700AA0-697-disableComments') == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 4: FAILED to replay the added comment")
+#                 return   
+          
               
             writeToLog("INFO","Step 5: Going to replay the added comment")
-            if self.common.entryPage.replayToComment() == False:
+            if self.common.entryPage.replyComment(self.commentReply1User1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to replay the added comment")
                 return    
-                                                                                          
+            
+            writeToLog("INFO","Step 6: Going to publish entry")
+            if self.common.myMedia.publishSingleEntry(self.entryName, '', self.channelList, publishFrom = enums.Location.ENTRY_PAGE)  == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to publish entry")
+                return  
+            
+            writeToLog("INFO","Step 7: Going to get entry page url")
+            self.entryPageURL = self.common.base.driver.current_url
+ 
+            
+            writeToLog("INFO","Step 8: Going to logout as user 1")
+            if self.common.login.logOutOfKMS() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to logout from KMS")
+                return        
+              
+            writeToLog("INFO","Step 9: Going to perform login to KMS site as user 2")
+            if self.common.login.loginToKMS(self.channelMemberUserId, self.channelMemberPass) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to login as user 2")
+                return   
+            
+            writeToLog("INFO","Step 10: Going to navigate to entry page (by link)")
+            if self.common.base.navigate(self.entryPageURL) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to navigate to entry page link")
+                return     
+            
+            writeToLog("INFO","Step 11: Going to reply user 1 comment")
+            if self.common.entryPage.replyComment(self.commenReply2User2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to replay user 1 comment")
+                return    
+            
+            writeToLog("INFO","Step 12: Going to add new comment to entry as user 2")
+            if  self.common.entryPage.addComment(self.comment2User2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to add new comment as user 2")
+                return  
+            
+            writeToLog("INFO","Step 13: Going to logout as user 2")
+            if self.common.login.logOutOfKMS() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to logout from KMS")
+                return        
+              
+            writeToLog("INFO","Step 14: Going to perform login to KMS site as user 1 in order to delete entry")
+            if self.common.login.loginToKMS(self.user1, self.user1Pass) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to login as user 1")
+                return                                                                                                                                                                 
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

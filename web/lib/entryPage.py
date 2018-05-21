@@ -44,7 +44,9 @@ class EntryPage(Base):
     ENTRY_PAGE_COMMENT_SECTION                             = ('xpath', '//div[@class="commentText"]/p[text()="COMMENT_TEXT"]')
     ENTRY_PAGE_CLOSE_DISCUSSION_MSG                        = ('xpath', '//h4[@class="muted" and text()="Discussion is closed"]')
     ENTRY_PAGE_COMMENT_ID                                  = ('xpath', '//div[@class="comment row-fluid "]')
-    ENTRY_PAGE_REPLAY_COMMENT                              = ('xpath', '//a[contains(@href, "/commentId/COMMENT_ID") and @data-track="Comment Reply"]')
+    ENTRY_PAGE_REPLY_COMMENT                               = ('xpath', '//a[contains(@href, "/commentId/COMMENT_ID") and @data-track="Comment Reply"]')
+    ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA                     = ('xpath', '//textarea[@id="commentsbox" and @title="Add a Reply"]')
+    ENTRY_PAGE_REPLY_COMMENT_ADD_BUTTON                    = ('xpath', '//form[@id="addComment_COMMENT_ID"]/div[@class="pull-right"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -162,8 +164,7 @@ class EntryPage(Base):
         
         writeToLog("INFO","Success, all entry '" + entryName + "' metadata are correct")
         return True  
-    
-    
+     
     
     def navigateToEntry(self, entryName="", navigateFrom = enums.Location.MY_MEDIA, categoryName ="", channelName= ""):
         if navigateFrom == enums.Location.MY_MEDIA:
@@ -335,7 +336,7 @@ class EntryPage(Base):
     
     # Author: Michal Zomper 
     def addComment(self, comment):
-        sleep(1)
+        sleep(2)
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
             writeToLog("INFO","FAILED to click in the comment text box area")
@@ -454,19 +455,47 @@ class EntryPage(Base):
         return True       
     
        
-    # @Author: Inbar Willman (TBD)
-    def replayToComment(self):  
+    # @Author: Inbar Willman
+    def replyComment(self, replyComment):  
         # Get comment Id
         tmp_comment_id = self.get_element(self.ENTRY_PAGE_COMMENT_ID)
         comment_id = tmp_comment_id.get_attribute("data-comment-id")
         
         # Click on replay button
-        tmp_replay_btn = (self.ENTRY_PAGE_REPLAY_COMMENT[0], self.ENTRY_PAGE_REPLAY_COMMENT[1].replace('COMMENT_ID', comment_id))
+        tmp_replay_btn = (self.ENTRY_PAGE_REPLY_COMMENT[0], self.ENTRY_PAGE_REPLY_COMMENT[1].replace('COMMENT_ID', comment_id))
         if self.click(tmp_replay_btn) == False:
             writeToLog("INFO","FAILED to click on replay button")
             return False   
-     
-
         
+        # Add new replay comment
+        # Click on replay comment area
+        if self.click(self. ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA, 5) == False:
+            writeToLog("INFO","FAILED to click in the comment text box area")
+            return False
         
-            
+        # Insert comment text
+        if self.send_keys(self. ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA, replyComment + Keys.SPACE, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to add comment")
+            return False
+        sleep(2)
+        
+        #Click on add button
+        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN)
+        tmp_add_btn = (self.ENTRY_PAGE_REPLY_COMMENT_ADD_BUTTON[0], self.ENTRY_PAGE_REPLY_COMMENT_ADD_BUTTON[1].replace('COMMENT_ID', comment_id))
+        if self.click(tmp_add_btn, 15) == False:
+            writeToLog("INFO","FAILED to click on add comment button")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        
+        # verify reply was added
+        tmp_comments = self.get_element_text(self.ENTRY_PAGE_COMMENTS_PANEL)
+        if replyComment in tmp_comments == False:
+            writeToLog("INFO","FAILED to find added comment")
+            return False
+           
+        writeToLog("INFO","Success, comment: '" + replyComment +"'  was added to entry")       
+        return True        
+        
+        return True             
