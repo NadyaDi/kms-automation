@@ -84,6 +84,11 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DISCLAIMER_TEXT_BOX                              = ('xpath', "//div[@id='disclaimet-text']")
     EDIT_ENTRY_BACK_TO_TIMELINE                                 = ('xpath', "//a[contains(text(), 'Back to Timeline')]" )
     EDIT_ENTRY_INSERT_SLIDE_TITLE                               = ('xpath',"//input[@id='k-title' and @placeholder='Enter Slide Title']")
+    EDIT_ENTRY_REPLACE_VIDEO_TAB                                = ('xpath', '//a[@id="replacemedia-tab"]')
+    EDIT_ENTRY_UPLOAD_NEW_FILE                                  = ('xpath', '//label[@for="replace_media_fileinput"]')
+    EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
+    EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and text()="Your media was successfully replaced."]') 
+    EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
     #=============================================================================================================
     
     
@@ -326,7 +331,13 @@ class EditEntryPage(Base):
         elif tabName == enums.EditEntryPageTabName.DOWNLOADS:
             if self.click(self.EDIT_ENTRY_DOWNLOADS_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on time-line tab")
-                return False            
+                return False  
+            
+        elif tabName == enums.EditEntryPageTabName.REPLACE_VIDEO:
+            if self.click(self.EDIT_ENTRY_REPLACE_VIDEO_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on replace video tab")
+                return False 
+                                  
         else:
             writeToLog("INFO","FAILED, Unknown tabName")
             return False
@@ -1073,6 +1084,39 @@ class EditEntryPage(Base):
         return True               
         
         
+    # @ Author: Inbar Willmna
+    # Replace entry's video
+    def replaceVideo(self, filePath,timeout=15):
+        #Choose replace video option
+        if self.clickOnEditTab(enums.EditEntryPageTabName.REPLACE_VIDEO) == False:
+            writeToLog("INFO","FAILED to click on replace video tab")
+            return True               
         
+        #Click on Choose a file to upload
+        if self.click(self.EDIT_ENTRY_UPLOAD_NEW_FILE) == False:
+            writeToLog("INFO","FAILED to click on 'Choose a file to upload' button")
+            return False 
+
+        sleep(3)
+        # Type in a file path
+        if self.clsCommon.upload.typeIntoFileUploadDialog(filePath) == False:
+            writeToLog("INFO","FAILED to choose file")
+            return False        
         
-            
+        # Wait for success message "Upload Completed"
+        startTime = datetime.datetime.now().replace(microsecond=0)
+        if self.clsCommon.upload.waitUploadCompleted(startTime, timeout) == False:
+            writeToLog("INFO","FAILED to displayed 'Upload complete' message")
+            return False                
+        
+        #Click on approve replacement button
+        if self.click(self.EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'approve replacement' button")
+            return False
+        
+        # wait until 'Your media was successfully replaced.' message is displayed
+        if self.wait_visible(self.EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG, timeout= 100) == False:
+            writeToLog("INFO","FAILED to display 'Your media was successfully replaced.' message")
+            return False
+        
+        return True                      

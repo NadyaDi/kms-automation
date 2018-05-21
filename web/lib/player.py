@@ -119,14 +119,14 @@ class Player(Base):
     
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     # additional = additional delay befor pause 
-    def clickPlayAndPause(self, delay, embed=False, timeout=30, clickPlayFromBarline=True, additional=0):
+    def clickPlayAndPause(self, delay, timeout=30, embed=False, clickPlayFromBarline=True, additional=0):
         self.switchToPlayerIframe(embed)
         if self.clickPlay(embed, fromActionBar=clickPlayFromBarline) == False:
             return False
         
         # Wait for delay
         if self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout) == False:
-            writeToLog("INFO","FAILED to seek timer to: '" + delay + "'")
+            writeToLog("INFO","FAILED to seek timer to: '" + str(delay) + "'")
             return False
         sleep(additional)
         if self.clickPause(embed, fromActionBar=clickPlayFromBarline) == False:
@@ -159,25 +159,30 @@ class Player(Base):
     # The method will play, pause after the delay and verify the synchronization the image (qr code) with the current time label
     # tolerance - seconds: the deviation from the time and image.
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03')
-    def clickPlayPauseAndVerify(self, delay, timeout=30, tolerance=1):
-        if self.clickPlayAndPause(delay, timeout) == False:
+    # compareToStr - if compareToStr not '' than compare the Player QR to the given string (compareToStr)
+    def clickPlayPauseAndVerify(self, delay, timeout=30, tolerance=1, clickPlayFromBarline=True, compareToStr=''):
+        if self.clickPlayAndPause(delay, timeout, False, clickPlayFromBarline) == False:
             return False
-        
+       
         qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
         if qrCodeSc == False:
             return False
-        
+       
         result = self.clsCommon.qrcode.resolveQrCode(qrCodeSc)
         if result == None:
             return False
-        
-        # Convert delay string to seconds
-        qrCodeResultInSeconds = utilityTestFunc.convertTimeToSecondsMSS(delay)
-        
-        if (qrCodeResultInSeconds > int(result) + tolerance) or (qrCodeResultInSeconds < int(result) - tolerance) == True:
-            writeToLog("INFO","FAILED to verify playing, the image and timer are not synchronized; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
-            return False
-        
+       
+        if compareToStr == '':
+            # Convert delay string to seconds
+            qrCodeResultInSeconds = utilityTestFunc.convertTimeToSecondsMSS(delay)
+            if (qrCodeResultInSeconds > int(result) + tolerance) or (qrCodeResultInSeconds < int(result) - tolerance) == True:
+                writeToLog("INFO","FAILED to verify playing, the image and timer are not synchronized; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
+                return False           
+        else:
+            if (int(result) > int(compareToStr) + tolerance) or (int(result) < int(compareToStr) - tolerance) == True:
+                writeToLog("INFO","FAILED to verify playing; compareToStr = " + str(compareToStr) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
+                return False
+       
         writeToLog("INFO","Playing verified; delay = " + str(delay) + "; tolerance = " + str(tolerance) + "; Player QrCode = " + str(result))
         return True
     
@@ -592,5 +597,4 @@ class Player(Base):
         if self.is_visible(tmp_caption) == False:
             writeToLog("INFO","FAILED to display correct text")
             return False  
-        return True          
-            
+        return True
