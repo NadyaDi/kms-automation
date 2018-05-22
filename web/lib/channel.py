@@ -110,7 +110,8 @@ class Channel(Base):
     CHANNEL_APPEARS_IN_CATEGORY_NAME                = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME        = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     CHANNEL_PLAYLIST_VERIFICATION                   = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
-
+    MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='type-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'VIEW_CHANNEL_FILTER')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -419,7 +420,8 @@ class Channel(Base):
                 if self.searchAChannelInChannels(channelName) == False:
                     writeToLog("INFO","FAILED to search in channels")
                     return False    
-                        
+                
+            self.clsCommon.general.waitForLoaderToDisappear()        
             sleep(2)
             tmp_channel_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
             if self.click(tmp_channel_name) == False:
@@ -1278,3 +1280,18 @@ class Channel(Base):
         writeToLog("INFO","Success, All channel information was verified")
         return True
         
+    # Author: Michal Zomper
+    # filter type name need to be without the word channels only tyhe like, for exp: filter type 'Channels I am subscribed to' the filter type will be 'I am subscribed to' 
+    def selectViewChannelFilterInMyChannelsPage(self, filterType):
+        if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on view channel filter button")
+            return False  
+        
+        tmp_filter = (self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[1].replace('VIEW_CHANNEL_FILTER', filterType))
+        if self.click(tmp_filter, 10, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to select filter type: channels " + filterType)
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        writeToLog("INFO","Success, filter 'channels " + filterType + "' was set")
+        return True
