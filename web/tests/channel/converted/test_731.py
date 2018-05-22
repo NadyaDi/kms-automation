@@ -86,6 +86,7 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to add user '" + self.userName + "' as member to channel '" + self.channelName[0] + "'")
                 return
              
+            sleep(3)
             writeToLog("INFO","Step 5: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -104,7 +105,7 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to add user '" + self.userName + "' as subscriber to channel '" + self.channelName[0] + "'")
                 return
             
-            sleep(2)
+            sleep(3)
             writeToLog("INFO","Step 8: Going to logout from new user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -145,7 +146,9 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")                     
+            writeToLog("INFO","**************** Starting: teardown_method ****************")  
+            self.common.login.logOutOfKMS()
+            self.common.loginAsUser()                   
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName[0])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            

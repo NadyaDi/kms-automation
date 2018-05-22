@@ -118,7 +118,7 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to search in my media")
                 return
              
-            writeToLog("INFO","Step 10: Going to verify that non existing word isn't found in my media")     
+            writeToLog("INFO","Step 10: Going to verify that non existing entry isn't found in my media")     
             if self.common.base.is_visible(self.common.myMedia.MY_MEDIA_NO_ENTRIES_FOUND) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED non existing entry was found in my media")
