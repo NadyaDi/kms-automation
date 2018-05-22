@@ -23,10 +23,11 @@ test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@ma
 test_869,Scheduling: add Publishing  - playlist flows,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_883,Scheduling: add Publishing Schedule via edit entry page,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_894,Sort in My-Media,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Scheduling,123456
-test_1555,Disclaimer – before Upload,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_1555,Disclaimer before Upload,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1558,Disclaimer - Before publish (agreeRequired = No),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_16,Download Source File,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_675,Playlist reorder,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_679,Remove Entry from one of playlist during to add same Entry to new,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1594,Entry required field,2373952-2,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
 test_767,Channel Playlist,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1557,Import Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!

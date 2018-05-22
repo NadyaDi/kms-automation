@@ -123,7 +123,7 @@ class MyPlaylists(Base):
             
         return True
 
-
+    #  @Author: Tzachi Guetta
     def addEntriesToPlaylist(self, entriesName, playlistName, toCreateNewPlaylist):
         try:
             if self.addSingleEntryToPlaylist(entriesName, playlistName, toCreateNewPlaylist, currentLocation = enums.Location.MY_MEDIA) == False:
