@@ -112,6 +112,9 @@ class Channel(Base):
     CHANNEL_PLAYLIST_VERIFICATION                   = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
     MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='type-btn' and @class='dropdown-toggle responsiveSize']")
     MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'VIEW_CHANNEL_FILTER')]")
+    CHANNEL_REMOVE_SEARCH_ICON                      = ('xpath', "//i[@class='icon-remove']")
+    CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
+    
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -173,6 +176,7 @@ class Channel(Base):
         except NoSuchElementException:
             return False
         
+        sleep(2)
         return True
 
  
@@ -359,7 +363,7 @@ class Channel(Base):
         return True
     
     # Author: Tzachi Guetta
-    def searchAChannelInMyChannels(self, channelName):
+    def searchAChannelInMyChannels(self, channelName, needToBeFound=True):
         try:                
             if self.navigateToMyChannels() == False:
                 writeToLog("INFO","FAILED to navigate to my channels page")
@@ -373,10 +377,35 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to type in 'name' text field")
                 return False
             
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if needToBeFound == True:
+                tmp_channelName = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
+                if self.is_visible(tmp_channelName) == False:
+                    writeToLog("INFO","FAILED to find channel '" + channelName + "' after search in my channels")
+                    return False
+            
+                writeToLog("INFO","Success, channel '" + channelName + "' was found after search")
+                return True
+            
+            elif needToBeFound == False:
+                try:
+                    tmp_alert = self.get_element(self.CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find alert element after search")
+                    return False   
+                
+                if 'Your search for \"' + channelName + '\" did not match any channels.' in tmp_alert.text == False:
+                    writeToLog("INFO","FAILED to find alert message  that channel is not found after search")
+                    return False 
+                
+                writeToLog("INFO","Success, channel '" + channelName + "' was not found after search as expected")
+                return True 
+                    
         except NoSuchElementException:
             return False
         
-        return True
+
     
 
     #  @Author: Tzachi Guetta  
@@ -983,7 +1012,7 @@ class Channel(Base):
     
     
     # @Author: Inbar Willman 
-    def addMembersToChannel(self, channelName, username, permission = enums.ChannelMemberPermission.MEMBER):
+    def addMembersToChannel(self, channelName, username, permission=enums.ChannelMemberPermission.MEMBER):
         if self.navigateToEditChannelPage(channelName) == False:
             writeToLog("INFO","Failed to navigate to edit channel page")
             return False  
