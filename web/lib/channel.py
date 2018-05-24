@@ -258,11 +258,12 @@ class Channel(Base):
         
 
     #  @Author: Tzachi Guetta        
-    def navigateToMyChannels(self):
-        # Check if we are already in my Channels page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 3) == True:
-            writeToLog("INFO","Already in my Channels page")
-            return True     
+    def navigateToMyChannels(self, forceNavigate=False):
+        if forceNavigate == False:
+            # Check if we are already in my Channels page
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_CHANNELS_URL, False, 3) == True:
+                writeToLog("INFO","Already in my Channels page")
+                return True     
            
         # Click on User Menu Toggle Button
         if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
@@ -281,11 +282,12 @@ class Channel(Base):
         return True
     
     #  @Author: Tzachi Guetta        
-    def navigateToChannels(self):
-        # Check if we are already in my Channels page
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL, False, 3) == True:
-            writeToLog("INFO","Already in my Channels page")
-            return True     
+    def navigateToChannels(self, forceNavigate=False):
+        if forceNavigate == False:
+            # Check if we are already in my Channels page
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL, False, 3) == True:
+                writeToLog("INFO","Already in my Channels page")
+                return True     
         
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL) == False:
             writeToLog("INFO","FAILED to navigate to Channels")
@@ -405,9 +407,7 @@ class Channel(Base):
         except NoSuchElementException:
             return False
         
-
     
-
     #  @Author: Tzachi Guetta  
     def searchAChannelInChannels(self, channelName):
         try:                
@@ -1324,3 +1324,5 @@ class Channel(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         writeToLog("INFO","Success, filter 'channels " + filterType + "' was set")
         return True
+    
+    
