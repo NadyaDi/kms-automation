@@ -41,38 +41,38 @@ test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@k
 test_767,Create Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_768,Filter in Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_1557,Import Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_2565,My history - Add Add entry (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2566,My history - Add entry (Published to channel- public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2567,My history - delete entry (Published to channel) from watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2568,My history - delete multiple entries from watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2569,My history - clear history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2571,My history - Add entry audio (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2573,My history - Add entry quiz (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2579,My history - Add entry (Published to channel- Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2580,My history - Add entry (Published to channel- Restricted) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2581,My history - Add entry (Published to Category - public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2582,My history - Add entry (Published to Category - public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2667,My history - Entry Viewed in channel,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2668,My history - Entry Viewed in gallery,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2648,My history - Entry appear in watch list history after change privacy,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2606,My history - Add entry (Published to Category - public) to watch list  history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2671,My history - Youtube Viewed in,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2679,My history -Check resume playback,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2694,My history - Search by description,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2728,My history - Check entry in Continue Watching playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2750,My history - Check entry in recently watched playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2755,My history - Check audio entry in recently watched playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2757,My history - Check quiz entry in recently watched playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2673,My history - Entry Viewed in Embed,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_2742,My history - Entry appear in both continue watch & recently watched playlists - Replay,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_687,Entry page - Embed Entry,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_673,Playlists - Embed playlist,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
+test_2565,My history - Add Add entry (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2566,My history - Add entry (Published to channel- public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2567,My history - delete entry (Published to channel) from watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2568,My history - delete multiple entries from watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2569,My history - clear history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2571,My history - Add entry audio (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2573,My history - Add entry quiz (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2579,My history - Add entry (Published to channel- Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2580,My history - Add entry (Published to channel- Restricted) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2581,My history - Add entry (Published to Category - public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2582,My history - Add entry (Published to Category - public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2667,My history - Entry Viewed in channel,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2668,My history - Entry Viewed in gallery,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2648,My history - Entry appear in watch list history after change privacy,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2606,My history - Add entry (Published to Category - public) to watch list  history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2671,My history - Youtube Viewed in,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2679,My history -Check resume playback,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2694,My history - Search by description,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2728,My history - Check entry in Continue Watching playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2750,My history - Check entry in recently watched playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2755,My history - Check audio entry in recently watched playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2757,My history - Check quiz entry in recently watched playlist in home page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2673,My history - Entry Viewed in Embed,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2742,My history - Entry appear in both continue watch & recently watched playlists - Replay,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_687,Entry page - Embed Entry,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_673,Playlists - Embed playlist,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_603,KAF BlackBoard view modes,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_594,KAF BlackBoard Entry Thumbnail,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2882,KAF Sharepoint Upload media from desktop,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,Kaltura1!
-test_699,Entry page - Disable comments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_698,Entry page - Close discussion,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_695,Entry page - Add captions,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_697,Entry page - Add comment,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_739,Channel - Members tab,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
-test_703,Entry page - Replace video,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!!,inbar.willman@kaltura.com,Kaltura1!!
+test_699,Entry page - Disable comments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_698,Entry page - Close discussion,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_695,Entry page - Add captions,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_697,Entry page - Add comment,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_739,Channel - Members tab,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_703,Entry page - Replace video,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
