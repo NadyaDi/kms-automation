@@ -14,15 +14,9 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
-    # create several channel (with different users) and add them member / subscriber/ managers
-    # go to my channel page and filter the channel :
-    # 1. In the View field, choose 'View Channels I Mannage' - Only channels you manage should be dusplayed. Each channel should have 'Edit' link
-    # 2. In the View field, choose 'View Channels I am member of' -  Only Channels you are member of should be displayed
-    # 3. In the View field, choose 'View Channels I am subscribed to' - Only Channels you are subscribed to should be displayed
-    # 4. In the View field, choose 'View Shared Repositories I am member of' 
 
     #================================================================================================================================
-    testNum = "726"
+    testNum = "724"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -35,7 +29,7 @@ class Test:
     channelName2 = None
     channelName3 = None
     channelName4 = None
-    channelName5 = None
+    channelName = None
     channelDescription = "Description"
     channelTags = "Tags,"
     userName1 = "Automation_User_1"
@@ -67,48 +61,38 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
-            self.channelName1 = clsTestService.addGuidToString("My Channels - Filter view 1", self.testNum)
-            self.channelName2 = clsTestService.addGuidToString("My Channels - Filter view 2", self.testNum)
-            self.channelName3 = clsTestService.addGuidToString("My Channels - Filter view 3", self.testNum)
-            self.channelName4 = clsTestService.addGuidToString("My Channels - Filter view 4", self.testNum)
-            self.channelName5 = clsTestService.addGuidToString("My Channels - Filter view 5", self.testNum)
+            self.channelName1 = clsTestService.addGuidToString("My Channels - Sort Channels A", self.testNum)
+            self.channelName2 = clsTestService.addGuidToString("My Channels - Sort Channels B", self.testNum)
+            self.channelName3 = clsTestService.addGuidToString("My Channels - Sort Channels C", self.testNum)
+            self.channelName4 = clsTestService.addGuidToString("My Channels - Sort Channels D", self.testNum)
             
             # each dictionary  get a list of channels and bool parameter that indicate if the channel need to be display in the list filter or not
-            self.channelsIManage = [(self.channelName1, False), (self.channelName2, True), (self.channelName3, True), (self.channelName4, False), (self.channelName5, False)]
-            self.channelsIAmAMemberOf = [(self.channelName1, False), (self.channelName2, True), (self.channelName3, True), (self.channelName4, False), (self.channelName5, True)]
-            self.channelsIAmSubscribedTo = [(self.channelName1, True), (self.channelName2, False), (self.channelName3, False), (self.channelName4, True), (self.channelName5, True)]
-            self.ChannelsSharedRepositoriesIAmAMemberOf = [(self.channelName1, False), (self.channelName2, True), (self.channelName3, False), (self.channelName4, False), (self.channelName5, True)]
-            
+#             self.channelsIManage = [(self.channelName1, False), (self.channelName2, True), (self.channelName3, True), (self.channelName4, False), (self.channelName5, False)]
+#             self.channelsIAmAMemberOf = [(self.channelName1, False), (self.channelName2, True), (self.channelName3, True), (self.channelName4, False), (self.channelName5, True)]
+#             self.channelsIAmSubscribedTo = [(self.channelName1, True), (self.channelName2, False), (self.channelName3, False), (self.channelName4, True), (self.channelName5, True)]
+#             self.ChannelsSharedRepositoriesIAmAMemberOf = [(self.channelName1, False), (self.channelName2, True), (self.channelName3, False), (self.channelName4, False), (self.channelName5, True)]
+#             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.get_element(self.common.channel.CHANNELS_PAGE_ALL_CHANNELS_LIST).text
-            writeToLog("INFO","Step 1: Going to create new channel")            
-            if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
+#             self.get_element(self.common.channel.CHANNELS_PAGE_ALL_CHANNELS_LIST).text
+         
+         
+            writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
+            if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED create new channel: " + self.channelName1)
+                writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
                 return
+            
+            for i in range(1,5):
+                writeToLog("INFO","Step i" + str(i+1) + ": Going to create new channel '" + eval('self.channelName'+str(i)))            
+                if self.common.channel.createChannel(eval('self.channelName'+str(i)), self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 2: FAILED create new channel: " + self.channelName1)
+                    return
              
             sleep(3)
-            writeToLog("INFO","Step 2: Going to logout from " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " user")
-            if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to logout from " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " user")
-                return  
-                                  
-            writeToLog("INFO","Step 3: Going to login with user " + self.userName2)
-            if self.common.login.loginToKMS(self.userName2, self.userPass2) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to login with " + self.userName2)
-                return
-               
-            writeToLog("INFO","Step 4: Going to create new channel")            
-            if self.common.channel.createChannel(self.channelName3, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED create new channel: " + self.channelName3)
-                return
-              
             writeToLog("INFO","Step 5: Going to add user '" + self.userName1 +"' as manager to channel '" + self.channelName3 + "'")
             if self.common.channel.addMembersToChannel(self.channelName3, self.userName1, permission=enums.ChannelMemberPermission.MANAGER) == False:
                 self.status = "Fail"
