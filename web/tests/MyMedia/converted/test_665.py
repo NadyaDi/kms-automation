@@ -14,6 +14,10 @@ class Test:
     #================================================================================================================================
     #  @Author: Michal Zomper
     # Test description:
+    # upload several entries, some with the same description / tags / part of the same entry name and some with different entry name / tags/ description
+    # 1. In the search textbox insert entry name  which does not exist in my media - 'No entries found' message should be received.
+    # 2. In the search textbox insert existing entry name / tags / description - The compatible results should be displayed in the page
+
 
     #================================================================================================================================
     testNum = "665"
