@@ -65,11 +65,10 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-                self.entryName1 = clsTestService.addGuidToString("Home Page Playlist 1", self.testNum)
-                self.entryName2 = clsTestService.addGuidToString("Home Page Playlist 2", self.testNum)
-                self.entryName3 = clsTestService.addGuidToString("Home Page Playlist 3", self.testNum)
+                self.entryName1 = clsTestService.addGuidToString("Playlist 1", self.testNum)
+                self.entryName2 = clsTestService.addGuidToString("Playlist 2", self.testNum)
+                self.entryName3 = clsTestService.addGuidToString("Playlist 3", self.testNum)
             elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                 self.entryName1 = clsTestService.addGuidToString("1", self.testNum)
                 self.entryName2 = clsTestService.addGuidToString("2", self.testNum)
@@ -80,8 +79,6 @@ class Test:
             self.playlistName = clsTestService.addGuidToString("Home Page Playlist", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
-    
             writeToLog("INFO","Step 1: Going to upload entry number 1")
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
@@ -133,38 +130,38 @@ class Test:
                    
             writeToLog("INFO","Step 9: Going to verify the left entry in the playlist")
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 5.81, 1.6, 3.6, 1.2) == False:
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 3.78, 11, 1.4, 1.3) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED to verify left entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
                     return
                   
                 writeToLog("INFO","Step 10: Going to verify the middle entry in the playlist")
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.7, 1.6, 1.79, 1.2) == False:
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 3.78, 11, 1.4, 1.3) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 10: FAILED to verify middle entry '" + self.entryName2 + "' in playlist '" + self.playlistName + "'")
                     return
      
                 writeToLog("INFO","Step 11: Going to verify the right entry in the playlist")
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 1.45, 1.6, 1.23, 1.2) == False:
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 3.78, 11, 1.4, 1.3) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 11: FAILED to verify right entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
                     return  
                  
             elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                 sleep(3)  
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 4.17, 1.80, 3.04, 1.39) == False:
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName3, self.expectedQRCode3, 3.78, 11, 1.4, 1.3) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED to verify left entry '" + self.entryName3 + "' in playlist '" + self.playlistName + "'")
                     return
                 sleep(2)
                 writeToLog("INFO","Step 10: Going to verify the middle entry in the playlist")
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 2.4, 1.85, 2.14, 1.60) == False:
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName2, self.expectedQRCode2, 3.78, 11, 1.4, 1.3) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 10: FAILED to verify middle entry '" + self.entryName2 + "' in playlist '" + self.playlistName + "'")
                     return
                 sleep(2)
                 writeToLog("INFO","Step 11: Going to verify the right entry in the playlist")
-                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 1.9, 1.85, 1.73, 1.60) == False:
+                if self.common.home.verifyEntyNameAndThumbnailInHomePagePlaylist(self.entryName1, self.expectedQRCode1, 3.78, 11, 1.4, 1.3) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 11: FAILED to verify right entry '" + self.entryName1 + "' in playlist '" + self.playlistName + "'")
                     return           

@@ -61,9 +61,9 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName1 = clsTestService.addGuidToString("Home Page carousel Playlist 1", self.testNum)
-            self.entryName2 = clsTestService.addGuidToString("Home Page carousel Playlist 2", self.testNum)
-            self.entryName3 = clsTestService.addGuidToString("Home Page carousel Playlist 3", self.testNum)
+            self.entryName1 = clsTestService.addGuidToString("Playlist 1", self.testNum)
+            self.entryName2 = clsTestService.addGuidToString("Playlist 2", self.testNum)
+            self.entryName3 = clsTestService.addGuidToString("Playlist 3", self.testNum)
             
             self.entriesList = [self.entryName3, self.entryName2, self.entryName1]
             
@@ -119,38 +119,38 @@ class Test:
              
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
                 writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.51, 7.4, 1.23, 2.50)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.8, 5.56, 1.23, 1.39)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval + 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.51, 7.4, 1.23, 2.50)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.8, 5.56, 1.23, 1.39)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval - 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.51, 7.4, 1.23, 2.50)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.8, 5.56, 1.23, 1.39)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
                     return
              
             elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                 writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 2.60, 7.40, 1.60, 2.40)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.8, 5.56, 1.23, 1.39)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval + 1) 
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 2.60, 7.40, 1.60, 2.40)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.8, 5.56, 1.23, 1.39)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval - 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 2.60, 7.40, 1.60, 2.40)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.8, 5.56, 1.23, 1.39)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
                     return

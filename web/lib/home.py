@@ -7,7 +7,6 @@ import enums
 from selenium.webdriver.common.keys import Keys
 
 
-
 class Home(Base):
     driver = None
     clsCommon = None
@@ -56,17 +55,16 @@ class Home(Base):
         
         writeToLog("INFO","FAILED to find " + playlist + " List")
         return False 
-
         
-        
+            
     # @Author: Michal Zomper
-    def verifyEntyNameAndThumbnailInHomePagePlaylist(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropButtom):  
+    def verifyEntyNameAndThumbnailInHomePagePlaylist(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropBottom):  
         tmp_entry = (self.HOME_PLAYLIST_ENTRY[0], self.HOME_PLAYLIST_ENTRY[1].replace('ENTRY_NAME', entryName))
         if self.is_visible(tmp_entry) == False:
             writeToLog("INFO","FAILED to find entry '" + entryName + "' in playlist")
-            return False  
+            return False
         
-        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropButtom)
+        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropBottom, tmp_entry)
         
         if qrResult != str(expectedQrResult):
             writeToLog("INFO","FAILED entry thumbnail is '" + str(qrResult) + "' but need to be '" + str(expectedQrResult) + "'")
@@ -74,24 +72,20 @@ class Home(Base):
         
         writeToLog("INFO","Success, entry'" + entryName + "' was verified")
         return True  
-            
         
 
-    def verifyEntryInHomePageCarousel(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropButtom):  
-        tmpEntryName = (self.HOME_CAROUSEL_ENTRY[0], self.HOME_CAROUSEL_ENTRY[1].replace('ENTRY_NAME', entryName))
+    def verifyEntryInHomePageCarousel(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropBottom):  
+        tmpEntryName = (self.HOME_CAROUSEL_ENTRY[0], self.HOME_CAROUSEL_ENTRY[1].replace('ENTRY_NAME', entryName) + "/ancestor::div[@class='thumbnail-info__container']")
          
         if self.is_visible(tmpEntryName) == False:
             writeToLog("INFO","FAILED to find entry '" + entryName + "' in home page carousel playlist")
             return False 
         
-        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropButtom)
+        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropBottom, tmpEntryName)
         
         if qrResult != str(expectedQrResult):
             writeToLog("INFO","FAILED entry thumbnail is '" + str(qrResult) + "' but need to be '" + str(expectedQrResult) + "'")
             return False  
         
         writeToLog("INFO","Success, entry'" + entryName + "' in  home page carousel  was verified")
-        return True  
-        
-        
-   
+        return True
