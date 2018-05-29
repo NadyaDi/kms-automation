@@ -32,6 +32,7 @@ class MyPlaylists(Base):
     PLAYLIST_EMBED_BUTTON                    = ('xpath', '//i[@class="v2ui-embedplaylistButton-PLAYLIST_ID icon-code"]')
     PLAYLIST_EMBED_TEXTAREA                  = ('xpath', '//textarea[@id="embed_code-PLAYLIST_ID"]')
     PLAYLIST_EMBED_PLAYER_SIZES              = ('xpath', '//iframe[@width="WIDTH_SIZE" and @height="HEIGHT_SIZE"]')
+    PLAYLIST_TABLE                           = ('xpath', '//table[@id="playlist-table"]')
     #============================================================================================================
 
     #  @Author: Tzachi Guetta      
@@ -214,20 +215,27 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
 
-                tmp_entry_name = (self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[0], self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[1].replace('ENTRY_NAME', entryName))
-                if self.wait_visible(tmp_entry_name, 5) != False:
+                # Get playlist list text
+                playlist_text= self.get_element_text(self.PLAYLIST_TABLE)
+                
+                # Split playlist text
+                playlist_entries_list = playlist_text.split()
+                
+                # Check that entry displayed just once in playlist
+                numberOfDisplay = playlist_entries_list.count(entryName)
+                if numberOfDisplay == 1:
                     if isExpected == True:
                         writeToLog("INFO","As Expected: Entry was found in the Playlists")
                         return True
                     else:
-                        writeToLog("INFO","NOT Expected: Entry was found in the Playlists")
+                        writeToLog("INFO","NOT Expected: Entry was found " + str(numberOfDisplay) + " in the Playlists")
                         return False
                 else:
                     if isExpected == False:
                         writeToLog("INFO","As Expected: Entry was not found in the Playlists")
                         return True
                     else:
-                        writeToLog("INFO","NOT Expected: Entry wasn't found in the Playlists")
+                        writeToLog("INFO","NOT Expected: Entry was " + str(numberOfDisplay) + " found in the Playlists")
                         return False                    
             else:
                 writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
@@ -370,7 +378,7 @@ class MyPlaylists(Base):
     
     # @Author: Inbar Willman
     # Check player width and height (in order to check if we are in got the correct layout)
-    def getEmbedPlayerSizes(self, width, height):
+    def verifyEmbedPlayerSizes(self, width, height):
         tmp_playler_laylout = (self.PLAYLIST_EMBED_PLAYER_SIZES [0], self.PLAYLIST_EMBED_PLAYER_SIZES [1].replace('WIDTH_SIZE', width).replace('HEIGHT_SIZE', height))
         if self.is_visible(tmp_playler_laylout) == False:
             writeToLog("INFO","FAILED to get correct player sizes")

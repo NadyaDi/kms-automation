@@ -105,7 +105,7 @@ class Test:
                 return  
             
             writeToLog("INFO","Step 7: Going to check player layout")
-            if self.common.myPlaylists.getEmbedPlayerSizes(self.playerWidth, self.playerHeight) == False:
+            if self.common.myPlaylists.verifyEmbedPlayerSizes(self.playerWidth, self.playerHeight) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to get correct player layout")
                 return              
