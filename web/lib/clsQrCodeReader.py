@@ -7,6 +7,7 @@ from utilityTestFunc import *
 from clsTestService import *
 from selenium.webdriver.common.keys import Keys
 from PIL import Image
+import io
 import localSettings
 from time import sleep
 try:
@@ -93,9 +94,8 @@ class QrCodeReader(Base):
         return filePath
         
         
-        
     # Take custom screenshot home page playlist thumbnail and return the full file path of the screenshot 
-    def takeCustomQrCodeScreenshot(self, left, top, right, buttom):
+    def takeCustomQrCodeScreenshot(self, left, top, right, bottom):
         filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
         if self.takeScreeshot(filePath) == True:
             writeToLog("INFO","Screenshot of the page save to: " + filePath)
@@ -106,14 +106,43 @@ class QrCodeReader(Base):
         # Crop the image
         img = Image.open(filePath)
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / buttom))
+            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / bottom))
             
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / buttom))
+            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / bottom))
             
         img2.save(filePath)
         
         return filePath
+    
+    
+    # @Author: Oleg Sigalov
+    # Take custom screenshot of given element (locator) and crop
+    def takeElementQrCodeScreenshot(self, locator, left, top, right, bottom, timeout=30, multipleElements=False):
+        try: 
+            element = self.wait_visible(locator, timeout, multipleElements)
+            if element == False:
+                writeToLog("INFO","FAILED to take screenshot of the element")
+                return False
+            
+            image_data = element.screenshot_as_png
+            image = Image.open(io.BytesIO(image_data))
+            filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+            image.save(filePath)
+            writeToLog("INFO","Screenshot of the element saved to: " + filePath)        
+
+            # Get image size: Height and Width
+            elementHeight = element.size['height']
+            elementWidth = element.size['width']
+            # Crop the image
+            img = Image.open(filePath)
+            img2 = img.crop((elementWidth / left , elementHeight / top, elementWidth / right , elementHeight / bottom))
+            img2.save(filePath)
+            return filePath
+        
+        except Exception:
+            writeToLog("INFO","FAILED to take screenshot of the element")
+            return False
     
     #Take screenshot of the iframe (player), return the full file path of the screenshot
     def takeQrCodePlayerScreenshot(self, player, driver, fullScreen=False, live=True):
@@ -228,9 +257,14 @@ class QrCodeReader(Base):
             writeToLog("DEBUG","QR code result is: " + result)
             return result 
         
-    # Take screenshot of the image according to the coordinate  crop and resolve QR code  
-    def getScreenshotAndResolveCustomImageQrCode(self, cropLeft, croTop, cropRight, cropButtom):
-        sc = self.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropButtom)
+        
+    # Take screenshot of the visible page according to the coordinate crop and resolve QR code
+    # If given locator, it will take screen shot of the element and crop according to the coordinates. 
+    def getScreenshotAndResolveCustomImageQrCode(self, cropLeft, croTop, cropRight, cropBottom, locator=None):
+        if locator == None:
+            sc = self.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropBottom)
+        else:
+            sc = self.takeElementQrCodeScreenshot(locator, cropLeft, croTop, cropRight, cropBottom)
         if sc == None:
             writeToLog("DEBUG","Failed to get screenshot for QR code")
             return None
@@ -241,6 +275,7 @@ class QrCodeReader(Base):
         else:
             writeToLog("DEBUG","QR code result is: " + result)
             return result 
+        
         
     #Return live timer in seconds, if function failed, return -1    
     def getTimerFromQrCodeInSeconds(self, player, driver, fullScreen=False, live=True):
