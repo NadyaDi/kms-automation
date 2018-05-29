@@ -114,6 +114,7 @@ class Channel(Base):
     MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'VIEW_CHANNEL_FILTER')]")
     CHANNEL_REMOVE_SEARCH_ICON                      = ('xpath', "//i[@class='icon-remove']")
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
+    CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
     
     #============================================================================================================
     
@@ -1325,4 +1326,32 @@ class Channel(Base):
         writeToLog("INFO","Success, filter 'channels " + filterType + "' was set")
         return True
     
+    
+    # Author: Michal Zomper
+    def verifyChannelsViaFilter(self, filterBy, channelList):
+        if self.selectViewChannelFilterInMyChannelsPage(filterBy) == False:
+            writeToLog("INFO","FAILED to filter view channels by: " + filterBy)
+            return False
+        
+        try:
+            channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get channels list in galley")
+            return False
+        
+        for channel in channelList:
+            if channel[1] == True:
+                if channel[0].lower() in channelsInGalley == False:
+                    writeToLog("INFO","FAILED, channel '" + channel[0] + "' wasn't found in channels galley although he need to be found")
+                    return False
+                
+            elif channel[1] == False:
+                if channel[0].lower() in channelsInGalley == True:
+                    writeToLog("INFO","FAILED, channel '" + channel[0] + "' was found in channels galley although he doesn't need to be found")
+                    return False
+                
+        writeToLog("INFO","Success, filter and verify view channels by 'channels " + filterBy + "' was successful")
+        return True
+                    
+        
     
