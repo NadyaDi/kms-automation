@@ -403,7 +403,13 @@ class MyMedia(Base):
 
         elif publishFrom == enums.Location.UPLOAD_PAGE: 
             writeToLog("INFO","Publishing from Upload page, Entry name: '" + entryName + "'")       
-            sleep(2)            
+            sleep(2)
+            # When the radio is disabled, it still clickable, self.click() wont return false
+            # The solution is to check button attribute "disabled" == "disabled"
+            if self.wait_visible(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45).get_attribute("disabled") == 'true':
+                writeToLog("DEBUG","FAILED to click on publish button - button is disabled")
+                return False
+            
             if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
                 return False        

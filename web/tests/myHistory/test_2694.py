@@ -53,7 +53,7 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('MyHistoryVideoEntry', self.testNum)
-            self.entryDescription = clsTestService.addGuidToString('MyHistoryEntryDescription', self.testNum)
+            self.entryDescription = clsTestService.addGuidToString('MyHistoryEntryDescription').replace('-','')
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload video entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
@@ -79,7 +79,7 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to switch to default content")
                 return  
             
-            writeToLog("INFO"," Step 5: Going to navigate to my history and search entry by description")
+            writeToLog("INFO","Step 5: Going to navigate to my history and search entry by description")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName, self.entryDescription) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED find entry in My History page")
