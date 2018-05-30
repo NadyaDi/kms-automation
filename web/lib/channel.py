@@ -115,7 +115,8 @@ class Channel(Base):
     CHANNEL_REMOVE_SEARCH_ICON                      = ('xpath', "//i[@class='icon-remove']")
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
-    
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -209,6 +210,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to type in 'description' text field")
                 return False
             
+            sleep(1)
             if self.fillChannelTags(channelTags) == False:
                 writeToLog("INFO","FAILED to type in 'Tags' field")
                 return False
@@ -1311,7 +1313,7 @@ class Channel(Base):
         return True
         
     # Author: Michal Zomper
-    # filter type name need to be without the word channels only tyhe like, for exp: filter type 'Channels I am subscribed to' the filter type will be 'I am subscribed to' 
+    # filter type name need to be without the word channels only type like, for exp: filter type 'Channels I am subscribed to' the filter type will be 'I am subscribed to' 
     def selectViewChannelFilterInMyChannelsPage(self, filterType):
         if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on view channel filter button")
@@ -1353,5 +1355,42 @@ class Channel(Base):
         writeToLog("INFO","Success, filter and verify view channels by 'channels " + filterBy + "' was successful")
         return True
                     
-        
     
+    # Author: Michal Zomper
+    def selectSortChannelOptionInMyChannelsPage(self, sortType):
+        if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on sort channel filter button")
+            return False  
+        
+        tmpSort = (self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[1].replace('SORT_CHANNEL_FILTER', sortType))
+        if self.click(tmpSort, 10, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to select sort type: channels " + sortType)
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        writeToLog("INFO","Success, sort channels by '" + sortType + "' was set")
+        return True    
+    
+    
+    def verifySortInMyChannels(self, sortBy, channelsList):
+        if self.selectSortChannelOptionInMyChannelsPage(sortBy) == False:
+            writeToLog("INFO","FAILED to sort channels by: " + sortBy)
+            return False
+                
+        try:
+            channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get channels list in galley")
+            return False
+        channelsInGalley = channelsInGalley.split("\n")
+        prevChannelIndex = -1
+        
+        for channel in channelsList:
+            channelCurrentIndex = channelsInGalley.index(channel.lower())
+            if prevChannelIndex > channelCurrentIndex:
+                writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct" )
+                return False
+            prevChannelIndex = channelCurrentIndex
+                
+        writeToLog("INFO","Success, sort channels by '" + sortBy + "' was successful")
+        return True   
