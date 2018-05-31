@@ -1388,9 +1388,9 @@ class Channel(Base):
         for channel in channelsList:
             channelCurrentIndex = channelsInGalley.index(channel.lower())
             if prevChannelIndex > channelCurrentIndex:
-                writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct" )
+                writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. channel '" + channel + "' isn't in the right place" )
                 return False
             prevChannelIndex = channelCurrentIndex
                 
-        writeToLog("INFO","Success, sort channels by '" + sortBy + "' was successful")
+        writeToLog("INFO","Success, verify sort channels by '" + sortBy + "' was successful")
         return True   

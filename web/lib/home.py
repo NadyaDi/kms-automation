@@ -22,20 +22,22 @@ class Home(Base):
     HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[@alt="ENTRY_NAME"]/ancestor::div[@class="photo-group featured_wrapper"]')
     HOME_CAROUSEL_ENTRY                                 = ('xpath', "//h1[@class='home__carousel-entry-title entryTitle tight' and contains(text(),'ENTRY_NAME')]")
     #=============================================================================================================  
-    # @Author: Inbar Willman
+    # @Author: Inbar Willman / Michal Zomper
     # This method navigate to home page
-    def navigateToHomePage(self, forceNavigate = False):
-        # Check if we are already in home page
-#       if forceNavigate == False:
-#          if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_HOME_URL , False, 1) == True:
-#              return True
-     
-        # Click on name in header in order to navigate to home page
-        if self.click(self.HOME_LINK) == False:
-            writeToLog("INFO","FAILED to click on name in header")
+    def navigateToHomePage(self, forceNavigate=False):
+        if forceNavigate == False:
+            # Check if we are already in home page
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_TEST_BASE_URL , False, 3) == True:
+                return True
+         
+        # navigate to home page
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL) == False:
+            writeToLog("INFO","FAILED navigate to home page")
             return False
             
-
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_TEST_BASE_URL , False, 5) == False:
+            writeToLog("INFO","FAILED verify that home page display")
+            return False
         return True
     
     # @Author: Inbar Willman
