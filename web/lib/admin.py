@@ -35,6 +35,7 @@ class Admin(Base):
     ADMIN_CAROUSEL_TYPE                             = ('xpath', "//select[@id='carousel-type' and @name='carousel[type]']")
     ADMIN_CAROUSEL_ID                               = ('xpath', "//input[@id='carousel-playlistId' and @name='carousel[playlistId]']")
     ADMIN_CAROUSEL_INTERVAL                         = ('xpath', "//input[@id='carouselInterval' and @name='carouselInterval']")
+    ADMIN_LIKE_MODULE                               = ('xpath', "//select[@id='enableLike' and @name='enableLike']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -302,6 +303,7 @@ class Admin(Base):
         writeToLog("INFO","Success, playlist '" + playlistName + "' was set to home page")
         return True  
     
+    
     # @Autor: Michal Zomper
     # The function delete playlist from admin page 
     def deletePlaylistFromHomePage(self, playlistName):
@@ -344,6 +346,7 @@ class Admin(Base):
         writeToLog("INFO","Success, playlist '" + playlistName + "' was deleted from admin")
         return True  
         
+        
     # @Autor: Michal Zomper      
     def setCarouselForHomePage(self, listType, playlistId=''):
         # Login to Admin
@@ -374,6 +377,8 @@ class Admin(Base):
         writeToLog("INFO","Success, playlist was set to: " + listType)
         return True  
     
+    
+    # @Autor: Michal Zomper 
     def setCarouselInterval(self, carouselInterval):
         # Login to Admin
         if self.loginToAdminPage() == False:
@@ -399,3 +404,84 @@ class Admin(Base):
         writeToLog("INFO","Success, update carousel interval to: " + str(tmp_carouselInterval))
         return True  
          
+         
+    # @Autor: Michal Zomper      
+    def enablelike(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/application') == False:
+            writeToLog("INFO","FAILED to load application page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable like field
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_LIKE_MODULE, selection) == False:
+            writeToLog("INFO","FAILED to set like as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, Like module was set to '" +  str(selection) + "'")
+        return True  
+    
+    
+    # @Autor: Michal Zomper      
+    def enableChannelCatrgories(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/channelcategories') == False:
+            writeToLog("INFO","FAILED to load application page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable channelcategories field
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set channelcategories as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, channelcategories module was set to '" + str(selection) + "'")
+        return True
+    
+    
+    # @Autor: Michal Zomper      
+    def enableThumbnail(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/thumbnails') == False:
+            writeToLog("INFO","FAILED to load thumbnails page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable thumbnails field
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set thumbnails as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, thumbnails module was set to '" + str(selection) + "'")
+        return True
+        

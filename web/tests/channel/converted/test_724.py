@@ -86,6 +86,8 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
+            self.common.admin.enableChannelCatrgories(True)
+            
             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"
@@ -231,7 +233,7 @@ class Test:
                 return 
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'My Channels - Search as subscriber' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'My Channels - Sort Channels' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
