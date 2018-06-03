@@ -19,7 +19,7 @@ class Home(Base):
     #=============================================================================================================
     HOME_LINK                                           = ('id', 'menu-Home-btn')
     HOME_PLAYLIST                                       = ('xpath', "//a[@class='clickable-header' and contains(text(),'PLAYLIST')]")
-    HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[@alt="ENTRY_NAME"]/ancestor::div[@class="photo-group featured_wrapper"]')
+    HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[contains(@alt,"ENTRY_NAME")]/ancestor::div[@class="photo-group featured_wrapper"]')
     HOME_CAROUSEL_ENTRY                                 = ('xpath', "//h1[@class='home__carousel-entry-title entryTitle tight' and contains(text(),'ENTRY_NAME')]")
     #=============================================================================================================  
     # @Author: Inbar Willman
