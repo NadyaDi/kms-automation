@@ -130,7 +130,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED find entry in my history")
                 return   
-            
+            sleep(5)
             writeToLog("INFO","Step 12: Going to navigate to home page and check entry in recently watched list")
             if self.common.home.checkEntryInHomePlaylist(self.playlist, self.entryName) == False:
                 self.status = "Fail"
