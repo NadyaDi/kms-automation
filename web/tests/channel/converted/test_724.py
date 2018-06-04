@@ -13,8 +13,14 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : My Channels - sort
     # Test description:
-
+    # create several channel and add them member / subscriber/ media
+    # go to my channel page and sort the channel :
+    #    1. Most Recent -  The channels' order should be from the last uploaded video to the first one.
+    #    2. Alphabetical - The channels' order should be alphabetical
+    #    3. Members & Subscribers - The channels' order should be descending by members number
+    #    4. Media Count - The channels' order should be the channel with most media first
     #================================================================================================================================
     testNum = "724"
     
@@ -85,8 +91,6 @@ class Test:
             
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
-            self.common.admin.enableChannelCatrgories(True)
             
             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:

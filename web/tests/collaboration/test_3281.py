@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Collaboration co publish
     # Test description:
     # Main user add different user as a collaboration user on an entry.
     # The collaboration permission is co publish

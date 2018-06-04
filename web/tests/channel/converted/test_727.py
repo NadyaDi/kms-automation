@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : My Channels - Search as manager
     # Test description:
     # create several channel (with different users) and add one user (different one that those how created channel) and add him as manager member
     # login with the user that was added as MANAGER -> go to my channels page and  Filter by 'Channels I Manage'

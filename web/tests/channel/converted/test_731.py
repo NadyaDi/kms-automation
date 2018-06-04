@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Channel page information
     # Test description:
     # Verify that the details that displayed on the channel's information are correct:
     #    1. Entries' number

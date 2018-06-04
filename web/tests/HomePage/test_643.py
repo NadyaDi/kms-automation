@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Home Page carousel Playlist
     # Test description:
     # Add 3 images and create playlist
     # Add that playlist to be in the home page carousel from Admin page

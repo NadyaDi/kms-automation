@@ -1,4 +1,84 @@
-case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title,
+case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
+test_742,1,0,0,0,Channel moderation
+test_713,1,0,0,0,Category moderation
+test_1555,1,0,0,0,Disclaimer - before upload
+test_1556,1,0,0,0,Disclaimer - before publish
+test_1557,1,0,0,0,importChannel
+test_1558,1,0,0,0,Disclaimer - before upload
+test_1594,1,0,0,0,Entry required field
+test_16,1,0,0,0,Download Source File
+test_2565,1,0,0,0,My history - Add entry (Private) to watch list history
+test_2566,1,0,0,0,My history - Add entry (Published to channel- public) to watch list history
+test_2567,1,0,0,0,My history - delete entry (Published to channel) from watch list history
+test_2568,1,0,0,0,My history - delete multiple entries from watch list history
+test_2569,1,0,0,0,My history - clear history
+test_2571,0,1,0,0,My history - Add entry audio (Private) to watch list history
+test_2573,1,0,0,0,My history - Add entry quiz (Private) to watch list history
+test_2579,1,0,0,0,My history - Add entry (Published to channel- Private) to watch list history
+test_2580,1,0,0,0,My history - Add entry (Published to channel-Restricted) to watch list history
+test_2581,1,0,0,0,My history - Add entry (Published to channel- Open) to watch list history
+test_2582,1,0,0,0,My history - Add entry (Published to Category - public) to watch list history
+test_2606,1,0,0,0,My history - Delete Entry from KMS
+test_2648,1,0,0,0,My history - Entry appear in watch list history after change privacy
+test_2668,1,0,0,0,My history - Entry Viewed in gallery
+test_2671,1,0,0,0,My History - Youtube Viewed in
+test_2679,0,1,0,0,My History - Check resume playback
+test_2667,1,0,0,0,My history - Entry Viewed in channel
+test_2694,1,0,0,0,My History - Search by description
+test_2728,1,0,0,0,My history - Check entry in Continue Watching playlist in home page
+test_2750,1,0,0,0,My history - Check entry in recently watched playlist in home page
+test_2755,0,1,0,0,My history - Check audio entry in recently watched playlist in home page
+test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page
+test_2673,1,0,0,0,My history - Entry Viewed in Embed
+test_2742,1,0,0,0,My history - Entry appear in both continue watch & recently watched playlists - Replay
+test_3273,1,0,0,0,Slide Deck Upload
+test_3274,1,0,0,0,Slide Deck Upload-delete slides
+test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
+test_3276,1,0,0,0,Slide Deck Upload - change slide location
+test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
+test_3284,1,0,0,0,Slide Deck Upload- search slides
+test_675,1,0,0,0,Download Source File
+test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new
+test_706,1,0,0,0,TODO
+test_767,1,0,0,0,Create Channel Playlist
+test_768,1,0,0,0,Filter in Channel Playlist
+test_869,1,0,0,0,add Publishing - playlist flow
+test_876,1,0,0,0,add Publishing Schedule during upload
+test_883,1,0,0,0,add Publishing Schedule via edit entry page
+test_894,1,0,0,0,sort in my media
+test_3277,1,0,0,0,Collaboration - edit metadata
+test_3278,1,0,0,0,Collaboration co editor - Options tab
+test_3279,1,0,0,0,Collaboration co editor - Thumbnail tab
+test_3280,1,0,0,0,Collaboration co editor - Caption tab
+test_3281,1,0,0,0,Collaboration co publish
+test_3282,1,0,0,0,Collaboration negative test
+test_1027,1,0,0,0,Edir entry - thumbnail tab
+test_653,1,0,0,0,Free trial
+test_1573,1,0,0,0,Home page playlist
+test_687,1,0,0,0,Entry page - Embed Entry
+test_673,1,0,0,0,Playlists - Embed playlist
+test_643,1,0,0,0,Home Page Carousel
+test_603,1,0,0,0,KAF BlackBoard view modes
+test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
+test_594,1,0,0,0,KAF BlackBoard entry thumbnail
+test_695,1,0,0,0,Entry page - Add captions
+test_699,0,1,0,0,Entry page - Disable comments
+test_709,0,1,0,0,Category - Entries details
+test_734,0,1,0,0,Channel - Entries details
+test_731,1,0,0,0,Channel page Information
+test_739,1,0,0,0,Channel - Members tab
+test_698,0,1,0,0,Entry page - Close discussion
+test_697,0,1,0,0,Entry page - Add comment
+test_672,1,0,0,0,My media - Navigate to entry page from my media
+test_665,1,0,0,0,My media - Search in my media
+test_703,1,0,0,0,Entry page - Replace Media
+test_728,1,0,0,0,My Channels - Search as member
+test_727,1,0,0,0,My Channels - Search as manager
+test_729,1,0,0,0,My Channels - Search as subscriber
+test_726,1,0,0,0,My Channels - Filter view
+test_676,1,0,0,0,Playlists - Add to playlist Entry,already existing inside
+test_724,1,0,0,0,My Channels - Sort Channels
+test_668,0,1,0,0,My Media - Sort media
 test_742,1,0,0,0,Channel moderation,
 test_713,1,0,0,0,Category moderation,
 test_1555,1,0,0,0,Disclaimer - before upload,

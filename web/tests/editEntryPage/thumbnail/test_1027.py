@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Edit entry page - thumbnail tab
     # Test description:
     # Login to KMS, and upload a media
     # Navigate Edit Entry Page
