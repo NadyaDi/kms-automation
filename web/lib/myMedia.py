@@ -59,6 +59,7 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     MY_MEDIA_REMOVE_SEARCH_ICON                                 = ('xpath', "//i[@class='icon-remove']")
     MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath' ,"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
+    MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -847,3 +848,121 @@ class MyMedia(Base):
         writeToLog("INFO","Success, All searched entries were found after search")
         return True  
         
+        
+    #  @Author: Michal Zomper      
+    # The following method can handle list of entries and a single entry:
+    #    in order to publish list of entries pass a List[] of entries name, for single entry - just pass the entry name
+    #    also: the method will navigate to My media
+    #    in categoryList / channelList will have all the names of the categories / channels to publish to
+    # Known limitation: entries MUST be presented on the first page of my media
+    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList, disclaimer=False):
+        if self.navigateToMyMedia(forceNavigate = True) == False:
+            writeToLog("INFO","FAILED Navigate to my media page")
+            return False
+        
+        # Checking if entriesNames list type
+        if type(entriesName) is list:
+            if disclaimer == True:
+                for entryName in entriesName: 
+                    if self.handleDisclaimerBeforePublish(entryName) == False:
+                        writeToLog("INFO","FAILED, Handle disclaimer before Publish failed for entry:" + entryName)
+                        return False
+                    
+            for entryName in entriesName: 
+                if self.checkSingleEntryInMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry in my-media page")
+                    return False
+        else:
+            if disclaimer == True:
+                if self.handleDisclaimerBeforePublish(entriesName) == False:
+                    writeToLog("INFO","FAILED, Handle disclaimer before Publish failed")
+                    return False 
+                
+            if self.checkSingleEntryInMyMedia(entriesName) == False:
+                writeToLog("INFO","FAILED to CHECK the entry in my-media page")
+                return False
+                
+        if self.clickActionsAndPublishFromMyMedia() == False:
+            writeToLog("INFO","FAILED to click on action button")
+            return False
+        sleep(2)
+        
+        if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on publish button")
+            return False  
+        
+        sleep(2)    
+        # Click if category list is empty
+        if len(categoryList) != 0:
+            # Click on Publish in Category
+            if self.click(self.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
+                writeToLog("INFO","FAILED to click on Publish in Category")
+                return False
+            
+            # choose all the  categories to publish to
+            for category in categoryList: 
+                tmoCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+ 
+                if self.click(tmoCategoryName, 30) == False:
+                    writeToLog("INFO","FAILED to select published category '" + category + "'")
+                    return False
+                
+        sleep(2)
+        # Click if channel list is empty
+        if len(channelList) != 0:
+            # Click on Publish in Channel
+            if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
+                writeToLog("INFO","FAILED to click on Publish in channel")
+                return False 
+            sleep(2)
+            
+            # choose all the  channels to publish to
+            for channel in channelList:
+                tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
+   
+                if self.click(tmpChannelName, 20, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to select published channel '" + channel + "'")
+                    return False
+        
+        sleep(1) 
+        if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False                
+                
+        if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 45) == False:
+            writeToLog("INFO","FAILED to find confirm save message")
+            return False
+        
+        sleep(3)       
+        if type(entriesName) is list: 
+            entries = ", ".join(entriesName)
+            writeToLog("INFO","Success, The entries '" + entries + "' were published successfully")
+        else:
+            writeToLog("INFO","Success, The entry '" + entriesName + "' was publish  successfully")
+        return True
+                     
+
+    def verifySortInMyMedia(self, sortBy, entriesList):
+        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
+            return False
+                
+        try:
+            entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        
+        entriesInMyMedia = entriesInMyMedia.split("\n")
+        prevEntryIndex = -1
+        
+        for entry in entriesList:
+            currentEntryIndex = entriesInMyMedia.index(entry.lower())
+            if prevEntryIndex > currentEntryIndex:
+                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                return False
+            prevEntryIndex = currentEntryIndex
+                
+        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+        return True   
+    

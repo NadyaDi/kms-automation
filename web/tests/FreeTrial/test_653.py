@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Free trial
     # Test description:
     # create new free trial instance
     # In the new instance upload and publish media

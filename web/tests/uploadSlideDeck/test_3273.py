@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Slide Deck Upload
     # Test description:
     # Slide Deck Upload :
     # Enter entry edit page and go to time line tab

@@ -334,10 +334,12 @@ class EntryPage(Base):
         embed_text = self.get_element_text(self.ENTRY_PAGE_EMBED_TEXT_AREA)
         return embed_text
     
+    
     # Author: Michal Zomper 
     def addComment(self, comment):
         sleep(2)
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        sleep(1)
         if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
             writeToLog("INFO","FAILED to click in the comment text box area")
             return False
@@ -364,6 +366,18 @@ class EntryPage(Base):
            
         writeToLog("INFO","Success, comment: '" + comment +"'  was added to entry")       
         return True
+    
+    
+    # Author: Michal Zomper 
+    def addComments(self, commentsList):
+        for comment in commentsList:
+            if self.addComment(comment) == False:
+                writeToLog("INFO","FAILED to add comment")
+                return False
+                
+        writeToLog("INFO","Success, All comments were added successfully to entry")       
+        return True
+        
         
     # Author: Michal Zomper   
     def LikeUnlikeEntry(self, isLike):
@@ -406,6 +420,8 @@ class EntryPage(Base):
                 if int(prev_likeAmount) >= int(after_likeAmount):
                     writeToLog("INFO","FAILED to click on like button, the number of likes are: " + after_likeAmount + " and need to be: " + prev_likeAmount)
                     return False
+            writeToLog("INFO","Success, entry was liked successfully")
+            return True
                 
         # unlike the page
         elif isLike == False:
@@ -418,8 +434,8 @@ class EntryPage(Base):
                 if int(prev_tmp) <= int(after_tmp):
                     writeToLog("INFO","FAILED to click on unlike button, the number of likes are: " + after_tmp + " and need to be: " + prev_tmp)
                     return False
-        writeToLog("INFO","Success, entry was like/unlike successfully")
-        return True
+            writeToLog("INFO","Success, entry was unlike successfully")
+            return True
     
     
     # @Author: Inbar Willman

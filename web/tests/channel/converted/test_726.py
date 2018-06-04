@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : My Channels - Filter view
     # Test description:
     # create several channel (with different users) and add them member / subscriber/ managers
     # go to my channel page and filter the channel :

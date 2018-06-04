@@ -76,6 +76,6 @@ test_728,1,0,0,0,My Channels - Search as member
 test_727,1,0,0,0,My Channels - Search as manager
 test_729,1,0,0,0,My Channels - Search as subscriber
 test_726,1,0,0,0,My Channels - Filter view
-test_676,1,0,0,0,Playlists - Add to playlist Entry, already existing inside
+test_676,1,0,0,0,Playlists - Add to playlist Entry,already existing inside
 test_724,1,0,0,0,My Channels - Sort Channels
-
+test_668,0,1,0,0,My Media - Sort media

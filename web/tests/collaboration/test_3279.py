@@ -12,6 +12,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Collaboration co editor - Thumbnail tab
     # Test description:
     # Main user add different user as a collaboration user on an entry.
     # The collaboration permission is co edit

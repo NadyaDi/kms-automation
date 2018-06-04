@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : SlideDeckUpload  add-remove chapters
     # Test description:
     # Slide Deck Upload add/remove chapters:
     # Enter entry edit page and go to time line tab

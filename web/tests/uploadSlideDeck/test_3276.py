@@ -15,6 +15,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Slide Deck Upload - change slide location
     # Test description:
     # Slide Deck Upload - - change slide location:
     # Enter entry edit page and go to time line tab

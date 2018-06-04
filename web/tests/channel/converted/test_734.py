@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Channel - Entries details
     # Test description:
     # As the channel's owner:
     # Choose one of your entries in the channel and check that all the entry details (views, likes, comments) are correct 
