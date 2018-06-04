@@ -105,7 +105,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to save quiz and navigate to media page")
                 return 
-              
+            sleep(5)  
             writeToLog("INFO","Step 8: Going to Search quiz entry in My History page")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryNameQuiz) == True:
                 self.status = "Fail"

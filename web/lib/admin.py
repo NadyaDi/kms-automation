@@ -36,6 +36,7 @@ class Admin(Base):
     ADMIN_CAROUSEL_ID                               = ('xpath', "//input[@id='carousel-playlistId' and @name='carousel[playlistId]']")
     ADMIN_CAROUSEL_INTERVAL                         = ('xpath', "//input[@id='carouselInterval' and @name='carouselInterval']")
     ADMIN_LIKE_MODULE                               = ('xpath', "//select[@id='enableLike' and @name='enableLike']")
+    ADMIN_SIDEMYMEDIA_MODULE                        = ('xpath', '//select[@id="enabled"]')    
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -484,4 +485,26 @@ class Admin(Base):
         
         writeToLog("INFO","Success, thumbnails module was set to '" + str(selection) + "'")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # isEnable = True to enable module, isEnable = False to disabled module
+    def enableSideMyMedia(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
         
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/sidemymedia') == False:
+            writeToLog("INFO","FAILED to load SideMyMedia page in admin")
+            return False
+        sleep(1)    
+        
+        #Enable/Disable module
+        selection_description = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
+            writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
+            return False 
+        
+        return True            

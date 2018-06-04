@@ -705,10 +705,13 @@ class Base:
                 # remove the http/https from the current and expected URL and compare
                 newCurrentUrl = currentUrl.replace('https://', '')
                 newCurrentUrl = newCurrentUrl.replace('http://', '')
+                # Remove the last '/' if exists
+                newCurrentUrl = newCurrentUrl.rstrip('/')
                 newExpectedUrl = expectedUrl.replace('https://', '')
                 newExpectedUrl = newExpectedUrl.replace('http://', '')
+                newExpectedUrl = newExpectedUrl.rstrip('/')
                 # Compare the URLs
-                if newExpectedUrl in newCurrentUrl:
+                if newExpectedUrl == newCurrentUrl:
                     return True
                 else:
                     if wait_until < datetime.datetime.now():
