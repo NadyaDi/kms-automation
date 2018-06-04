@@ -47,6 +47,10 @@ class EntryPage(Base):
     ENTRY_PAGE_REPLY_COMMENT                               = ('xpath', '//a[contains(@href, "/commentId/COMMENT_ID") and @data-track="Comment Reply"]')
     ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA                     = ('xpath', '//textarea[@id="commentsbox" and @title="Add a Reply"]')
     ENTRY_PAGE_REPLY_COMMENT_ADD_BUTTON                    = ('xpath', '//form[@id="addComment_COMMENT_ID"]/div[@class="pull-right"]')
+    ENTRY_PAGE_RELATED_MEDIA                               = ('xpath', '//div[@id="sideSelectWrap"]')
+    ENTRY_PAGE_MY_MEDIA_OPTION                             = ('xpath', '//a[@id="tab-entrySideBarPane-Sidemymedia-3"]')
+    ENTRY_PAGE_ELATED_MEDIA_OPTION                         = ('xpath', '//a[@id="tab-entrySideBarPane-Sidemymedia-2"]')
+    ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES                   = ('xpath', '//div[@class="photo-group thumb_wrapper" and @title="ENTRY_NAME"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -498,4 +502,43 @@ class EntryPage(Base):
         writeToLog("INFO","Success, comment: '" + replyComment +"'  was added to entry")       
         return True        
         
-        return True             
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    # Choose option in related media drop down in media side bar
+    # Related media (default) or My Media
+    def selectRelatedMediaOption(self, relatedMediaOption=enums.ReleatedMedia.MY_MEDIA):
+        # Click on related media drop down
+        if self.click(self.ENTRY_PAGE_RELATED_MEDIA) == False:
+            writeToLog("INFO","FAILED to click on related media drop down menu")       
+            return False
+        
+        # Choose related media option
+        if relatedMediaOption == enums.ReleatedMedia.MY_MEDIA:
+            if self.click(self.ENTRY_PAGE_MY_MEDIA_OPTION) == False:
+                writeToLog("INFO","FAILED to click on My media option")       
+                return False
+            
+        elif relatedMediaOption == enums.ReleatedMedia.RELATED_MEDIA:
+            if self.click(self.ENTRY_PAGE_MY_MEDIA_OPTION) == False:
+                writeToLog("INFO","FAILED to click on Related media option")       
+                return False      
+        else: 
+            writeToLog("INFO","FAILED to click on Related media drop down options - No valid option was given")       
+            return False          
+        
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    # Verify that My Media entry are displayed in My Media side bar
+    def checkMyMediaSideBarEntries(self, entrisList):
+        #Check uploaded entries in My Media Side bar
+        for entry in entrisList:
+            tmp_entry = (self.ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES[0], self.ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES[1].replace('ENTRY_NAME', entry))
+            if self.is_visible(tmp_entry) == False:
+                writeToLog("INFO","FAILED to displayed My Media entry:" + entry)       
+                return False                 
+                
+        return True                     
