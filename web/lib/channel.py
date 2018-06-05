@@ -117,6 +117,8 @@ class Channel(Base):
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
     MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
+    CHANNELS_NO_MORE_CHANNELS_ALERT                 = ('xpath', "//div[@id='channels_scroller_alert' and contains(text(),'There are no more channels.')]")
+    CHANNELS_TABLE_SIZE                             = ('xpath', "//li[contains(@class,'span3 hidden-phone visible-v2ui')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1206,6 +1208,7 @@ class Channel(Base):
             writeToLog("INFO","Failed navigate to channel '" + channelName + "' page")
             return False  
         
+        sleep(4)
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             if self.click(self.CHANNEL_SUBSCRIBE_BUTTON, 20, multipleElements=True) == False:
                 writeToLog("INFO","Failed to click on subscribe button")
@@ -1335,6 +1338,9 @@ class Channel(Base):
             writeToLog("INFO","FAILED to filter view channels by: " + filterBy)
             return False
         
+        if self.showAllChannels() == False:
+            writeToLog("INFO","FAILED to show all channels")
+            return False
         try:
             channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
         except NoSuchElementException:
@@ -1361,7 +1367,7 @@ class Channel(Base):
         if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on sort channel filter button")
             return False  
-        
+            
         tmpSort = (self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[1].replace('SORT_CHANNEL_FILTER', sortType))
         if self.click(tmpSort, 10, multipleElements=True) == False:
             writeToLog("INFO","FAILED to select sort type: channels " + sortType)
@@ -1394,3 +1400,28 @@ class Channel(Base):
                 
         writeToLog("INFO","Success, verify sort channels by '" + sortBy + "' was successful")
         return True   
+    
+    
+    #  @Author: Michal Zomper    
+    def showAllChannels(self, timeOut=60):
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if len(self.get_elements(self.CHANNELS_TABLE_SIZE)) < 9:
+                    writeToLog("INFO","Success, All channels are display")
+                    return True 
+                
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:  
+            if len(self.get_elements(self.CHANNELS_TABLE_SIZE)) < 3:
+                writeToLog("INFO","Success, All channels are display")
+                return True 
+                  
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
+        while wait_until > datetime.datetime.now():
+            if self.is_present(self.CHANNELS_NO_MORE_CHANNELS_ALERT, 2) == True:
+                writeToLog("INFO","Success, All channels are display")
+                return True 
+             
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+             
+        writeToLog("INFO","FAILED to show all channels")
+        return False  

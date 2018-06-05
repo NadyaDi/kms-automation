@@ -941,12 +941,18 @@ class MyMedia(Base):
             writeToLog("INFO","Success, The entry '" + entriesName + "' was publish  successfully")
         return True
                      
-
+                     
+    #  @Author: Michal Zomper    
+    # The function check the the entries sort in my media is correct
     def verifySortInMyMedia(self, sortBy, entriesList):
         if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
             writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
             return False
                 
+        if self.showAllEntriesInMyMedia() == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+            
         try:
             entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
         except NoSuchElementException:
@@ -966,3 +972,22 @@ class MyMedia(Base):
         writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
         return True   
     
+    
+    #  @Author: Michal Zomper    
+    def showAllEntriesInMyMedia(self, timeOut=60):
+        if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
+                writeToLog("INFO","Success, All media in my media is display")
+                return True 
+             
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
+        while wait_until > datetime.datetime.now():
+            if self.is_present(self.MY_MEDIA_NO_RESULTS_ALERT, 2) == True:
+                writeToLog("INFO","Success, All media in my media is display")
+                return True 
+            
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+            
+        writeToLog("INFO","FAILED to show all media in my media")
+        return False    
+        
