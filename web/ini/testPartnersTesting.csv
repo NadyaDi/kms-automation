@@ -28,6 +28,7 @@ test_729,My Channels - Search as subscriber,2370151-1,qakmstest.dev.kaltura.com,
 test_726,My Channels - Filter view,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_724,My Channels - Sort Channels,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_668,My Media - Sort media,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_667,My Media - Filter by media Type,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_706,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
@@ -78,4 +79,3 @@ test_739,Channel - Members tab,2373952,qakmstest.dev.kaltura.com,inbar.willman@k
 test_703,Entry page - Replace media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_692,Entry page - Side My Media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-

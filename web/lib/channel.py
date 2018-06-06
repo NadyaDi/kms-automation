@@ -96,7 +96,7 @@ class Channel(Base):
     CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
     CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
     CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
-    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")
+    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//label[@id='v2uiSubscribeSwitch' and @class='checkbox span12 toggle off']")
     CHANNEL_SUBSCRIBE_BUTTON_OLD_UI                 = ('xpath', "//span[@class='toggle-on ' and contains(text(),'Subscribed')]")    
     CHANNEL_SUBSCRIBER_COUNT                        = ('xpath', "//div[@id='Channelsubscription_persons']")
     CHANNEL_TYPE                                    = ('xpath', "//div[@id='membership']")
@@ -1208,7 +1208,7 @@ class Channel(Base):
             writeToLog("INFO","Failed navigate to channel '" + channelName + "' page")
             return False  
         
-        sleep(4)
+        sleep(2)
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             if self.click(self.CHANNEL_SUBSCRIBE_BUTTON, 20, multipleElements=True) == False:
                 writeToLog("INFO","Failed to click on subscribe button")
@@ -1341,6 +1341,7 @@ class Channel(Base):
         if self.showAllChannels() == False:
             writeToLog("INFO","FAILED to show all channels")
             return False
+        
         try:
             channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
         except NoSuchElementException:
@@ -1382,7 +1383,11 @@ class Channel(Base):
         if self.selectSortChannelOptionInMyChannelsPage(sortBy) == False:
             writeToLog("INFO","FAILED to sort channels by: " + sortBy)
             return False
-                
+        
+        if self.showAllChannels() == False:
+            writeToLog("INFO","FAILED to show all channels")
+            return False
+            
         try:
             channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
         except NoSuchElementException:
@@ -1410,7 +1415,7 @@ class Channel(Base):
                     return True 
                 
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:  
-            if len(self.get_elements(self.CHANNELS_TABLE_SIZE)) < 3:
+            if len(self.get_elements(self.CHANNELS_TABLE_SIZE)) < 5:
                 writeToLog("INFO","Success, All channels are display")
                 return True 
                   

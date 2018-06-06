@@ -58,8 +58,10 @@ class MyMedia(Base):
     MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath', "//a[@class='btn btn-primary' and text()='OK']")
     MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     MY_MEDIA_REMOVE_SEARCH_ICON                                 = ('xpath', "//i[@class='icon-remove']")
-    MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath' ,"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
+    MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath',"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
+    MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
+    MY_MEDIA_AUDIO_ICON                                         = ('xpath', "//i[@class='icon-music icon-white']")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -990,4 +992,36 @@ class MyMedia(Base):
             
         writeToLog("INFO","FAILED to show all media in my media")
         return False    
+    
+    
+    
+    #  @Author: Michal Zomper    
+    # The function check the the entries in my media are filter correctly
+    def verifyFiltersInMyMedia(self, filterBy, entriesList):
+        if self.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE,filterBy) == False:
+            writeToLog("INFO","FAILED to filter entries by: " + filterBy.value)
+            return False
+                
+        if self.showAllEntriesInMyMedia() == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+            
+        try:
+            entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
         
+        for entry in entriesList:
+            if entry[1] == True:
+                if entry[0].lower() in entriesInMyMedia == False:
+                    writeToLog("INFO","FAILED, entry '" + entry[0] + "' wasn't found in my media although he need to be found")
+                    return False
+                
+            elif entry[1] == False:
+                if entry[0].lower() in entriesInMyMedia == True:
+                    writeToLog("INFO","FAILED, entry '" + entry[0] + "' was found in my media although he doesn't need to be found")
+                    return False
+                
+        writeToLog("INFO","Success, filter" + filterBy.value + "' in my media was successful")
+        return True
