@@ -15,7 +15,12 @@ class Test:
     #  @Author: Michal Zomper
     # Test Name : My Media - Sort media
     # Test description:
-
+    # upload sevaral entries and add them likes / comments.
+    # Sort My Media by:
+    #    1. Most Recent - The entries' order should be from the last uploaded video to the first one.
+    #    2. Alphabetical - The entries' order should be alphabetical
+    #    3. Likes (enable via the Admin page) - The entries' order should be descending by likes' number
+    #    4. Comments - The entries' order should be descending by comments' number
     #================================================================================================================================
     testNum = "668"
     
@@ -63,23 +68,23 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-#             writeToLog("INFO","Step 1: Going to enable like module")            
-#             if self.common.admin.enablelike(True) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to enable like module")
-#                 return
-#             
-#             writeToLog("INFO","Step 2: Going navigate to home page")            
-#             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED navigate to home page")
-#                 return
+            writeToLog("INFO","Step 1: Going to enable like module")            
+            if self.common.admin.enablelike(True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to enable like module")
+                return
+             
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
             
             for i in range(3,7):
                 writeToLog("INFO","Step " + str(i) + ": Going to upload new entry '" + eval('self.entryName'+str(i-2)))            
                 if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i-2)), self.description, self.tags) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to upload new entry " + eval('self.channelName'+str(i-2)))
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to upload new entry " + eval('self.entryName'+str(i-2)))
                     return
               
             writeToLog("INFO","Step 7: Going to publish entries")    
