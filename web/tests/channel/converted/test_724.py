@@ -13,8 +13,14 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : My Channels - sort
     # Test description:
-
+    # create several channel and add them member / subscriber/ media
+    # go to my channel page and sort the channel :
+    #    1. Most Recent -  The channels' order should be from the last uploaded video to the first one.
+    #    2. Alphabetical - The channels' order should be alphabetical
+    #    3. Members & Subscribers - The channels' order should be descending by members number
+    #    4. Media Count - The channels' order should be the channel with most media first
     #================================================================================================================================
     testNum = "724"
     
@@ -85,8 +91,6 @@ class Test:
             
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
-            self.common.admin.enableChannelCatrgories(True)
             
             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
@@ -227,7 +231,7 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 28: Going verify sort channels by 'Members & Subscribers'")
-            if self.common.channel.verifySortInMyChannels("Members & Subscribers", ("AED7F26C-724-MY CHANNELS - SORT CHANNELS C", "AED7F26C-724-MY CHANNELS - SORT CHANNELS B", "AED7F26C-724-MY CHANNELS - SORT CHANNELS A", "AED7F26C-724-MY CHANNELS - SORT CHANNELS D")) == False:
+            if self.common.channel.verifySortInMyChannels("Members & Subscribers", self.sortByMembersAndSubscribers) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 28: FAILED sort channels by 'Members & Subscribers'")
                 return 
@@ -248,9 +252,8 @@ class Test:
             self.common.login.loginToKMS(self.userName1, self.userPass1)                   
             for i in range(1,5):
                 self.common.channel.deleteChannel(eval('self.channelName'+str(i)))
-             
-            for i in range(1,4):
-                self.common.myMedia.deleteSingleEntryFromMyMedia( eval('self.entryName'+str(i)))   
+     
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])   
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

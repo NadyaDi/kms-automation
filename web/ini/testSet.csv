@@ -31,12 +31,6 @@ test_2755,0,1,0,0,My history - Check audio entry in recently watched playlist in
 test_2757,1,0,0,0,My history - Check quiz entry in recently watched playlist in home page
 test_2673,1,0,0,0,My history - Entry Viewed in Embed
 test_2742,1,0,0,0,My history - Entry appear in both continue watch & recently watched playlists - Replay
-test_3273,1,0,0,0,Slide Deck Upload
-test_3274,1,0,0,0,Slide Deck Upload-delete slides
-test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
-test_3276,1,0,0,0,Slide Deck Upload - change slide location
-test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
-test_3284,1,0,0,0,Slide Deck Upload- search slides
 test_675,1,0,0,0,Download Source File
 test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new
 test_706,1,0,0,0,TODO
@@ -47,15 +41,6 @@ test_869,1,0,0,0,add Publishing - playlist flow
 test_876,1,0,0,0,add Publishing Schedule during upload
 test_883,1,0,0,0,add Publishing Schedule via edit entry page
 test_894,1,0,0,0,sort in my media
-test_3277,1,0,0,0,Collaboration - edit metadata
-test_3278,1,0,0,0,Collaboration co editor - Options tab
-test_3279,1,0,0,0,Collaboration co editor - Thumbnail tab
-test_3280,1,0,0,0,Collaboration co editor - Caption tab
-test_3281,1,0,0,0,Collaboration co publish
-test_3282,1,0,0,0,Collaboration negative test
-test_1027,1,0,0,0,Edir entry - thumbnail tab
-test_653,1,0,0,0,Free trial
-test_1573,1,0,0,0,Home page playlist
 test_687,1,0,0,0,Entry page - Embed Entry
 test_673,1,0,0,0,Playlists - Embed playlist
 test_643,1,0,0,0,Home Page Carousel
@@ -77,6 +62,30 @@ test_728,1,0,0,0,My Channels - Search as member
 test_727,1,0,0,0,My Channels - Search as manager
 test_729,1,0,0,0,My Channels - Search as subscriber
 test_726,1,0,0,0,My Channels - Filter view
-test_676,1,0,0,0,Playlists - Add to playlist Entry, already existing inside
+test_676,1,0,0,0,Playlists - Add to playlist Entry,already existing inside
 test_724,1,0,0,0,My Channels - Sort Channels
-
+test_668,0,1,0,0,My Media - Sort media
+test_3273,1,0,0,0,Slide Deck Upload,
+test_3274,1,0,0,0,Slide Deck Upload-delete slides,
+test_3275,1,0,0,0,SlideDeckUpload add-remove chapters,
+test_3276,1,0,0,0,Slide Deck Upload - change slide location,
+test_3283,1,0,0,0,Slide Deck Upload- A-sync upload,
+test_3284,1,0,0,0,Slide Deck Upload- search slides,
+test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new,
+test_767,1,0,0,0,Create Channel Playlist,
+test_3277,1,0,0,0,Collaboration - edit metadata,
+test_3278,1,0,0,0,Collaboration co editor - Options tab,
+test_3279,1,0,0,0,Collaboration co editor - Thumbnail tab,
+test_3280,1,0,0,0,Collaboration co editor - Caption tab,
+test_3281,1,0,0,0,Collaboration co publish,
+test_3282,1,0,0,0,Collaboration negative test,
+test_1027,1,0,0,0,Edir entry - thumbnail tab,
+test_653,1,0,0,0,Free trial,
+test_1573,1,0,0,0,Home page playlist,
+test_687,1,0,0,0,Entry page - Embed Entry,
+test_673,1,0,0,0,Playlists - Embed playlist,
+test_676,1,0,0,0,Playlists - Add to playlist Entry already existing inside
+test_692,1,0,0,0,Entry page - Side My Media,
+test_702,1,0,0,0,Entry page - Attachments,
+test_667,1,0,0,0,My Media - Filter by media Type,
+test_666,1,0,0,0,My Media - Filter by media Type,

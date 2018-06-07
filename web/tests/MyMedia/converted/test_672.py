@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : my media - navigate to entry page
     # Test description:
     # upload entry
     # from my media click on the entry's name and verify that entry page open successfully

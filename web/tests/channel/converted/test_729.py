@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : My Channels - Search as subscriber
     # Test description:
     # create several channel (with different users) and add one user (different one that those how created channel) as a channel subscriber
     # login with the user that was added as subscriber -> go to my channels page and  Filter by 'Channels I am subscribed to'

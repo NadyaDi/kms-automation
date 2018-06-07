@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Category - Entries details
     # Test description:
     # As the categoy's owner:
     # Choose one of your entries in the category and check that all the entry details (views, likes, comments) are correct 

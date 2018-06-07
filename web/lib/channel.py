@@ -96,7 +96,7 @@ class Channel(Base):
     CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
     CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
     CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
-    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//a[@class='toggle-off  btn btn-inverse ' and contains(text(),'Subscribe')]")
+    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//label[@id='v2uiSubscribeSwitch' and @class='checkbox span12 toggle off']")
     CHANNEL_SUBSCRIBE_BUTTON_OLD_UI                 = ('xpath', "//span[@class='toggle-on ' and contains(text(),'Subscribed')]")    
     CHANNEL_SUBSCRIBER_COUNT                        = ('xpath', "//div[@id='Channelsubscription_persons']")
     CHANNEL_TYPE                                    = ('xpath', "//div[@id='membership']")
@@ -120,6 +120,8 @@ class Channel(Base):
     CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
     CHANNEL_PLAYLIST_NAME                           = ('xpath', "//p[@data-lorem='3w' and text() ='PLAYLIST_TITLE']/ancestor::tr[contains(@data-playlistid, '')]")
     CHANNEL_PLAYLIST_EMBED_TEXT_AREA                = ('xpath', '//textarea[@id="embed_code-CHANNEL_PLAYLIST_ID" and @class="span11 embedCodeText"]')
+    CHANNELS_NO_MORE_CHANNELS_ALERT                 = ('xpath', "//div[@id='channels_scroller_alert' and contains(text(),'There are no more channels.')]")
+    CHANNELS_TABLE_SIZE                             = ('xpath', "//li[contains(@class,'span3 hidden-phone visible-v2ui')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1255,6 +1257,7 @@ class Channel(Base):
             writeToLog("INFO","Failed navigate to channel '" + channelName + "' page")
             return False  
         
+        sleep(2)
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             if self.click(self.CHANNEL_SUBSCRIBE_BUTTON, 20, multipleElements=True) == False:
                 writeToLog("INFO","Failed to click on subscribe button")
@@ -1384,6 +1387,10 @@ class Channel(Base):
             writeToLog("INFO","FAILED to filter view channels by: " + filterBy)
             return False
         
+        if self.showAllChannels() == False:
+            writeToLog("INFO","FAILED to show all channels")
+            return False
+        
         try:
             channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
         except NoSuchElementException:
@@ -1410,7 +1417,7 @@ class Channel(Base):
         if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on sort channel filter button")
             return False  
-        
+            
         tmpSort = (self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[1].replace('SORT_CHANNEL_FILTER', sortType))
         if self.click(tmpSort, 10, multipleElements=True) == False:
             writeToLog("INFO","FAILED to select sort type: channels " + sortType)
@@ -1425,7 +1432,11 @@ class Channel(Base):
         if self.selectSortChannelOptionInMyChannelsPage(sortBy) == False:
             writeToLog("INFO","FAILED to sort channels by: " + sortBy)
             return False
-                
+        
+        if self.showAllChannels() == False:
+            writeToLog("INFO","FAILED to show all channels")
+            return False
+            
         try:
             channelsInGalley = self.get_element(self.CHANNELS_PAGE_ALL_CHANNELS_LIST).text.lower()
         except NoSuchElementException:
@@ -1443,3 +1454,28 @@ class Channel(Base):
                 
         writeToLog("INFO","Success, verify sort channels by '" + sortBy + "' was successful")
         return True   
+    
+    
+    #  @Author: Michal Zomper    
+    def showAllChannels(self, timeOut=60):
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if len(self.get_elements(self.CHANNELS_TABLE_SIZE)) < 9:
+                    writeToLog("INFO","Success, All channels are display")
+                    return True 
+                
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:  
+            if len(self.get_elements(self.CHANNELS_TABLE_SIZE)) < 5:
+                writeToLog("INFO","Success, All channels are display")
+                return True 
+                  
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
+        while wait_until > datetime.datetime.now():
+            if self.is_present(self.CHANNELS_NO_MORE_CHANNELS_ALERT, 2) == True:
+                writeToLog("INFO","Success, All channels are display")
+                return True 
+             
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+             
+        writeToLog("INFO","FAILED to show all channels")
+        return False  

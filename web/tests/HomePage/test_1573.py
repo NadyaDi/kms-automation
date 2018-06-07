@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : Home page playlist
     # Test description:
     # The function create playlist in kms.
     # in admin page the playlist is added to the playlist list of home page.

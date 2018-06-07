@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
+    # Test Name : My Channels - Filter view
     # Test description:
     # create several channel (with different users) and add them member / subscriber/ managers
     # go to my channel page and filter the channel :
@@ -83,7 +84,6 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.get_element(self.common.channel.CHANNELS_PAGE_ALL_CHANNELS_LIST).text
             writeToLog("INFO","Step 1: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"

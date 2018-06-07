@@ -66,6 +66,7 @@ class EditEntryPageTabName(Enum):
     DOWNLOADS              = 'downloads'
     TIMELINE               = 'timeline'
     REPLACE_VIDEO          = 'replace video'
+    ATTACHMENTS            = 'Attachments'
     
     
 class IframeName(Enum):
@@ -202,3 +203,11 @@ class ChannelMemberPermission(Enum):
     CONTRIBUTOR             = 'Contributor'   
     MODERATOR               = 'Moderator'
     MANAGER                 = 'Manager'
+    
+
+class ReleatedMedia(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MY_MEDIA               = 'My Media'
+    RELATED_MEDIA          = 'Related Media'    

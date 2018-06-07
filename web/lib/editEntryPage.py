@@ -89,6 +89,15 @@ class EditEntryPage(Base):
     EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
     EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and text()="Your media was successfully replaced."]') 
     EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
+    EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[@id="attachments-tab-tab"]')
+    EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
+    EDIT_ENTRY_ATTACHMENTS_SELECT_FILE                          = ('xpath', '//label[@for="attachments_fileinput"]')
+    EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE                         = ('xpath', '//input[@id="title"]')
+    EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION                   = ('xpath', '//textarea[@id="description" and @class="noresize"]')
+    EDIT_ENTRY_UPLOAD_ATTACHMENTS_SAVE_BUTTON                   = ('xpath', '//a[@data-handler="1" and text()="Save"]')
+    EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS                       = ('xpath', '//span[@title="ENTRY_FIELD"]')
+    EDIT_ENTRY_UPLOAD_ATTACHMENT_SUCCESS_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="The information was saved successfully"]')
+    EDIT_ENTRY_UPLOAD_ATTACHMENT_COMPLETED_SUCCESS_MSG          = ('xpath', '//div[@id="successmsg" and @class="alert alert-success text-center"]')
     #=============================================================================================================
     
     
@@ -337,6 +346,11 @@ class EditEntryPage(Base):
             if self.click(self.EDIT_ENTRY_REPLACE_VIDEO_TAB, 30) == False:
                 writeToLog("INFO","FAILED to click on replace video tab")
                 return False 
+            
+        elif tabName == enums.EditEntryPageTabName.ATTACHMENTS:
+            if self.click(self.EDIT_ENTRY_ATTACHMENTS_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on attachment tab")
+                return False             
                                   
         else:
             writeToLog("INFO","FAILED, Unknown tabName")
@@ -1119,4 +1133,115 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to display 'Your media was successfully replaced.' message")
             return False
         
-        return True                      
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def addAttachments(self, filePath, attachmentName, attachmentsTitle, attachmentsDescription):    
+        # Choose attachments tab
+        if self.clickOnEditTab(enums.EditEntryPageTabName.ATTACHMENTS) == False:
+            writeToLog("INFO","FAILED to click on attachments tab")
+            return False        
+        
+        # Upload attachment file
+        if self.uploadAttachment(filePath) == False:
+            writeToLog("INFO","Failed to upload attachment file")
+            return False              
+       
+        #Insert attachment fields and save inforamtion
+        if self.insertAttachmentFields(attachmentsTitle, attachmentsDescription) == False:
+            writeToLog("INFO","Failed to insert attachment fields - title and description")
+            return False                            
+        
+        #Verify that attachment fields are displayed
+        if self.verifyAttachmentFields(attachmentName, attachmentsTitle, attachmentsDescription) == False:
+            writeToLog("INFO","Failed to displayed correct attachment field")
+            return False              
+    
+        return True
+    
+    
+    # @Author: Inbar Willman
+    #Upload file in attachment tab
+    def uploadAttachment(self, filePath):
+        # Click on Upload file
+        if self.click(self.EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE) == False:
+            writeToLog("INFO","FAILED to click on upload file button")
+            return False 
+        
+        sleep(3)
+        # Click on select file
+        if self.click(self.EDIT_ENTRY_ATTACHMENTS_SELECT_FILE) == False:
+            writeToLog("INFO","FAILED to click select file button")
+            return False                  
+        
+        # Type in a file path
+        if self.clsCommon.upload.typeIntoFileUploadDialog(filePath) == False:
+            writeToLog("INFO","FAILED to choose file")
+            return False  
+        
+        # Wait for file to upload
+        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_ATTACHMENT_COMPLETED_SUCCESS_MSG,timeout=30) == False:
+            writeToLog("INFO","FAILED to complete upload")
+            return False  
+        
+        return True
+        
+    
+    # @Author: Inbar Willman
+    # Insert attachment title and description
+    def insertAttachmentFields(self, attachmentsTitle, attachmentsDescription):
+        # Click on title field
+        if self.click(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE) == False:
+            writeToLog("INFO","FAILED to click on title field")
+            return False        
+        
+        # Insert content to field
+        if self.send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE, attachmentsTitle) == False:
+            writeToLog("INFO","Failed to insert title")
+            return False 
+             
+        # Click on description field
+        if self.click(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION) == False:
+            writeToLog("INFO","FAILED to click on description field")
+            return False        
+        
+        # Insert content to field
+        if self.send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION, attachmentsDescription) == False:
+            writeToLog("INFO","Failed to insert description")
+            return False              
+        
+        # Save fields
+        if self.click(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_SAVE_BUTTON) == False:
+            writeToLog("INFO","Failed to click save button")
+            return False
+        
+        # Check that success message is displayed
+        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_ATTACHMENT_SUCCESS_MSG) == False:
+            writeToLog("INFO","Failed to displayed success message")
+            return False
+        
+        return True
+    
+    
+    # @Author: Inbar WIllman
+    # Check that correct attachment fields are displayed
+    def verifyAttachmentFields(self, attachmentName, attachmentsTitle, attachmentsDescription):
+        # Check that correct fields are displayed - Name, Title and description
+        tmp_name = (self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[0], self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[1].replace('ENTRY_FIELD', attachmentName))
+        tmp_title = (self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[0], self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[1].replace('ENTRY_FIELD', attachmentsTitle))
+        tmp_descrition = (self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[0], self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[1].replace('ENTRY_FIELD', attachmentsDescription))
+        
+        if self.is_visible(tmp_name) == False:
+            writeToLog("INFO","Failed to displayed correct name")
+            return False 
+        
+        if self.is_visible(tmp_title) == False:
+            writeToLog("INFO","Failed to displayed correct title")
+            return False 
+        
+        if self.is_visible(tmp_descrition) == False:
+            writeToLog("INFO","Failed to displayed correct description")
+            return False       
+        
+        return True                   
