@@ -42,6 +42,7 @@ test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add sam
 test_706,1,0,0,0,TODO
 test_767,1,0,0,0,Create Channel Playlist
 test_768,1,0,0,0,Filter in Channel Playlist
+test_769,1,0,0,0,Embed Channel Playlist
 test_869,1,0,0,0,add Publishing - playlist flow
 test_876,1,0,0,0,add Publishing Schedule during upload
 test_883,1,0,0,0,add Publishing Schedule via edit entry page

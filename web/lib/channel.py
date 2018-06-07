@@ -117,6 +117,9 @@ class Channel(Base):
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
     MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
+    CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
+    CHANNEL_PLAYLIST_NAME                           = ('xpath', "//p[@data-lorem='3w' and text() ='PLAYLIST_TITLE']/ancestor::tr[contains(@data-playlistid, '')]")
+    CHANNEL_PLAYLIST_EMBED_TEXT_AREA                = ('xpath', '//textarea[@id="embed_code-CHANNEL_PLAYLIST_ID" and @class="span11 embedCodeText"]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -746,12 +749,13 @@ class Channel(Base):
         if not playlisTitle in el.text:
             writeToLog("INFO","FAILED to LOCATE SUCCESS MASSAGE")
             return False
-            
+        sleep(4)    
+        
         tmp_check = (self.CHANNEL_EDIT_CHANNNEL_PAGE[0], self.CHANNEL_EDIT_CHANNNEL_PAGE[1].replace('CHANNEL_NAME', channelName))
         if self.click(tmp_check) == False:
             writeToLog("INFO","FAILED to click on Channel name")
             return False      
-        sleep(1) 
+        sleep(4) 
        
         tmp_channel_playlist = (self.CHANNEL_PLAYLIST_VERIFICATION[0], self.CHANNEL_PLAYLIST_VERIFICATION[1].replace('PLAYLIST_TITLE', playlisTitle))
         if self.click(tmp_channel_playlist) == False:
@@ -813,7 +817,52 @@ class Channel(Base):
             writeToLog("INFO","FAILED to click on cancel")
             return False 
                
-        return True        
+        return True  
+    
+    
+    def getChannelPlaylistID(self, playlisTitle):
+            
+        tmp_channelplaylist_name = (self.CHANNEL_PLAYLIST_NAME[0], self.CHANNEL_PLAYLIST_NAME[1].replace('PLAYLIST_TITLE', playlisTitle))
+        if self.is_visible(tmp_channelplaylist_name) == False:
+            writeToLog("INFO","FAILED to find playlist '" + playlisTitle + "' in my playlist page")
+            return False 
+        try:
+            channelPlaylistID = self.get_element(tmp_channelplaylist_name).get_attribute("data-playlistid")
+        
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get playlist id")
+            return False
+        
+        writeToLog("INFO","Success, successfully get playlist ID")
+        return channelPlaylistID
+
+
+    def clickEmbedChannelPlaylistAndGetEmbedCode(self, playlisTitle):
+        
+        channelPlaylist_id = self.getChannelPlaylistID(playlisTitle)
+        if channelPlaylist_id == False:
+            writeToLog("INFO","FAILED to get playlist id")
+            return False 
+        
+        if self.click(self.CHANNEL_PLAYLIST_EMBED_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on cancel")
+            return False 
+        sleep(3) 
+                
+        tmpEmbedTextArea = (self.CHANNEL_PLAYLIST_EMBED_TEXT_AREA[0], self.CHANNEL_PLAYLIST_EMBED_TEXT_AREA[1].replace('CHANNEL_PLAYLIST_ID', channelPlaylist_id))
+        if self.wait_visible(tmpEmbedTextArea) == False:
+            writeToLog("INFO","FAILED to get embed text area")
+            return False  
+        
+        #Get embed code from embed text area 
+        embed_code =  self.clsCommon.myPlaylists.getEmbedCode(tmpEmbedTextArea)
+        if embed_code:
+            return embed_code
+                
+#         embed_text = self.is_element_checked(self.CHANNEL_PLAYLIST_EMBED_TEXT_AREA)
+#         return embed_text
+                  
+        return True      
     
     
     #@Author: Oded Berihon   
