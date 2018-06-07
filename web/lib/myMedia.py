@@ -62,6 +62,7 @@ class MyMedia(Base):
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
     MY_MEDIA_AUDIO_ICON                                         = ('xpath', "//i[@class='icon-music icon-white']")
+    MY_MEDIA_VIDEO_ICON_OLD_UI                                  = ('xpath', "//i[@class='icon-film icon-white']")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -1023,5 +1024,73 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED, entry '" + entry[0] + "' was found in my media although he doesn't need to be found")
                     return False
                 
-        writeToLog("INFO","Success, filter" + filterBy.value + "' in my media was successful")
+        writeToLog("INFO","Success, filter by '" + filterBy.value + "' in my media was successful")
         return True
+    
+    
+    #@Author: Michal Zomper 
+    # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter
+    def verifyEntryTypeIcon(self, entriesList, entryType):
+        for entry in entriesList:
+            tmpEntry = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entry))
+            try:
+                entryThumbnail = self.get_element(tmpEntry)
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find entry '" + entry + "' element")
+                return False
+
+            if entryType == enums.MediaType.IMAGE:
+                try: 
+                    self.get_child_element(entryThumbnail, self.MY_MEDIA_IMAGE_ICON)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' Image icon")
+                    return False
+                 
+            if entryType == enums.MediaType.AUDIO:
+                try:
+                    self.get_child_element(entryThumbnail, self.MY_MEDIA_AUDIO_ICON)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' Audio icon")
+                    return False
+            
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                if entryType == enums.MediaType.VIDEO:
+                    try:
+                        self.get_child_element(entryThumbnail, self.MY_MEDIA_VIDEO_ICON_OLD_UI)
+                    except NoSuchElementException:
+                        writeToLog("INFO","FAILED to find entry '" + entry + "' Video icon")
+                        return False
+            
+        if self.verifyFilterUniqueIconType(entryType) == False:
+            writeToLog("INFO","FAILED entries from different types display although the filter set to " + entryType.value)
+            return False
+                
+        writeToLog("INFO","Success, All entry '" + entry + "' " + entryType.value + "  icon was verify")
+        return True       
+    
+    
+    #@Author: Michal Zomper 
+    # The function check that only the entries type with that match the 'iconType' parameter display in the list in my media
+    def verifyFilterUniqueIconType(self, iconType):
+        if self.showAllEntriesInMyMedia() == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+                  
+        if iconType != enums.MediaType.IMAGE:
+            if self.wait_elements(self.MY_MEDIA_IMAGE_ICON) != False:
+                writeToLog("INFO","FAILED, Image icon display in the list although only " + iconType.value + "need to be display")
+                return False
+                
+        if iconType != enums.MediaType.AUDIO:
+            if self.wait_elements(self.MY_MEDIA_AUDIO_ICON) != False:
+                writeToLog("INFO","FAILED, Audio icon display in the list although only " + iconType.value + "need to be display")
+                return False
+            
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:     
+            if iconType != enums.MediaType.VIDEO:
+                if self.wait_elements(self.MY_MEDIA_VIDEO_ICON_OLD_UI) != False:
+                    writeToLog("INFO","FAILED, Video icon display in the list although only " + iconType.value + "need to be display")
+                    return False
+            
+        writeToLog("INFO","Success, only " + iconType.value + " type entries display")
+        return True   

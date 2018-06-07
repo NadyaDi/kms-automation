@@ -13,17 +13,20 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : My Media - Filter by media Type
+    # Test Name : My Media - Filter by status
     # Test description:
-    # upload sevearl entries from all types: image / audio / video
-    # In the Media Type filter:
-    #    1. Filter by 'Videos' - Only Video entries should be displayed 
-    #    2. Filter by 'Audios' - Only Audio entries should be displayed
-    #    3. Filter by 'Images' - Only Image entries should be displayed
-    #    4. Filter by 'All Media' - All the user's entries should be displayed - from any media type..
-    # *The compatible icon should be displayed on top of the entry's thumbnail - according to the media type.
+    # upload 5 entries from all types: image / audio / video
+    # some of the entries live as private /publish /Unlisted /Pending / Rejected
+    # In the Status filter:
+    #    1. Filter by 'Private' -  Only Private entries should be displayed 
+    #    2. Filter by 'Published' - Only Published entries should be displayed
+    #    3. Filter by 'Pending' - Only Pending entries should be displayed
+    #    4. Filter by 'Rejected' - Only Rejected entries should be displayed
+    #    5. Filter by 'Unlisted' - Only Unlisted entries should be displayed
+    #    6. Filter by 'All Media' - All the user's entries should be displayed - in any status..
+    # *A compatible label should be displayed on top of the entry's thumbnail.
     #================================================================================================================================
-    testNum = "667"
+    testNum = "666"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

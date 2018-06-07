@@ -311,6 +311,25 @@ class Base:
                 pass      
             
 
+
+
+    # waits for the elements to appear (self.is_visible)
+    def wait_elements(self, locator, timeout=10):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                if self.is_visible(locator) == True:
+                    self.setImplicitlyWaitToDefault()
+                    return self.get_elements(locator)
+                if wait_until < datetime.datetime.now():
+                    self.setImplicitlyWaitToDefault()
+                    return False               
+            except:
+                self.setImplicitlyWaitToDefault()
+                return False
+                
+                
     # waits for the element child to appear
     def wait_visible_child(self, parent, locator, timeout=10):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
