@@ -977,16 +977,20 @@ class Channel(Base):
             if type(toRejectEntriesNames) is list:
                 for rejectEntry in toRejectEntriesNames:
                     self.method_helper_rejectEntry(rejectEntry)
+                    self.clsCommon.general.waitForLoaderToDisappear()
             else:
-                self.method_helper_rejectEntry(toRejectEntriesNames)                
-                
+                if toRejectEntriesNames != '':
+                    self.method_helper_rejectEntry(toRejectEntriesNames) 
+                    self.clsCommon.general.waitForLoaderToDisappear()               
             
             if type(toApproveEntriesNames) is list:
                 for approveEntry in toApproveEntriesNames:
                     self.method_helper_approveEntry(approveEntry)
-                    
+                    self.clsCommon.general.waitForLoaderToDisappear()
             else:
-                self.method_helper_approveEntry(toApproveEntriesNames)
+                if toApproveEntriesNames != '':
+                    self.method_helper_approveEntry(toApproveEntriesNames)
+                    self.clsCommon.general.waitForLoaderToDisappear()
         
         except NoSuchElementException:
             return False
