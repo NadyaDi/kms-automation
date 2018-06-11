@@ -107,50 +107,74 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED navigate to my media")
                 return  
              
-            writeToLog("INFO","Step 9: Going to filter and verify my media entries by: " + enums.MediaType.IMAGE.value)  
-            if self.common.myMedia.verifyFiltersInMyMedia(enums.MediaType.IMAGE, self.filterByImage) == False:
+            writeToLog("INFO","Step 9: Going to filter my media entries by: " + enums.MediaType.IMAGE.value) 
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.IMAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to filter and verify my media entries  by '" + enums.MediaType.IMAGE.value + "'")
+                writeToLog("INFO","Step 9: FAILED to filter my media entries  by '" + enums.MediaType.IMAGE.value + "'")
+                return
+        
+            writeToLog("INFO","Step 10: Going to verify my media entries filter by: " + enums.MediaType.IMAGE.value)  
+            if self.common.myMedia.verifyFiltersInMyMedia(self.filterByImage) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to verify my media entries  by '" + enums.MediaType.IMAGE.value + "'")
                 return 
             
-            writeToLog("INFO","Step 10: Going to verify that only entries with " + enums.MediaType.IMAGE.value + " icon display")  
+            writeToLog("INFO","Step 11: Going to verify that only entries with " + enums.MediaType.IMAGE.value + " icon display")  
             if self.common.myMedia.verifyEntryTypeIcon((self.entryName1, self.entryName2), enums.MediaType.IMAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to filter and verify my media entries  by '" + enums.MediaType.IMAGE.value + "'")
+                writeToLog("INFO","Step 11: FAILED to filter and verify my media entries  by '" + enums.MediaType.IMAGE.value + "'")
                 return 
             
             sleep(1)
-            writeToLog("INFO","Step 11: Going to filter and verify my media entries by: " + enums.MediaType.AUDIO.value)  
-            if self.common.myMedia.verifyFiltersInMyMedia(enums.MediaType.AUDIO, self.filterByAudio) == False:
+            writeToLog("INFO","Step 12: Going to filter my media entries by: " + enums.MediaType.AUDIO.value) 
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.AUDIO) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to filter and verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
+                writeToLog("INFO","Step 12: FAILED to filter my media entries  by '" + enums.MediaType.AUDIO.value + "'")
+                return
+            
+            writeToLog("INFO","Step 13: Going to verify my media entries by: " + enums.MediaType.AUDIO.value)  
+            if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAudio) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
                 return 
             
-            writeToLog("INFO","Step 12: Going to verify that only entries with " + enums.MediaType.AUDIO.value + " icon display")  
+            writeToLog("INFO","Step 14: Going to verify that only entries with " + enums.MediaType.AUDIO.value + " icon display")  
             if self.common.myMedia.verifyEntryTypeIcon((self.entryName3, self.entryName4), enums.MediaType.AUDIO) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to filter and verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
+                writeToLog("INFO","Step 14: FAILED to filter and verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
                 return 
             
             sleep(1)
-            writeToLog("INFO","Step 13: Going to filter and verify my media entries by: " + enums.MediaType.VIDEO.value)  
-            if self.common.myMedia.verifyFiltersInMyMedia(enums.MediaType.VIDEO, self.filterByVideo) == False:
+            writeToLog("INFO","Step 15: Going to filter my media entries by: " + enums.MediaType.VIDEO.value) 
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.VIDEO) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to filter and verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
+                writeToLog("INFO","Step 15: FAILED to filter my media entries  by '" + enums.MediaType.VIDEO.value + "'")
+                return
+            
+            writeToLog("INFO","Step 16: Going to verify my media entries by: " + enums.MediaType.VIDEO.value)  
+            if self.common.myMedia.verifyFiltersInMyMedia(self.filterByVideo) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 16: FAILED to verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
                 return 
             
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-                writeToLog("INFO","Step 12: Going to verify that only entries with " + enums.MediaType.VIDEO.value + " icon display")  
+                writeToLog("INFO","Step 17: Going to verify that only entries with " + enums.MediaType.VIDEO.value + " icon display")  
                 if self.common.myMedia.verifyEntryTypeIcon((self.entryName5, self.entryName6), enums.MediaType.VIDEO) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 12: FAILED to filter and verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
+                    writeToLog("INFO","Step 17: FAILED to filter and verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
                     return 
             
             sleep(1)
-            writeToLog("INFO","Step 14: Going to filter and verify my media entries by: " + enums.MediaType.IMAGE.value)  
-            if self.common.myMedia.verifyFiltersInMyMedia(enums.MediaType.ALL_MEDIA, self.filterByAllMedia) == False:
+            writeToLog("INFO","Step 18: Going to filter my media entries by: " + enums.MediaType.ALL_MEDIA.value) 
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.ALL_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to filter and verify my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
+                writeToLog("INFO","Step 18: FAILED to filter my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
+                return
+            
+            writeToLog("INFO","Step 19: Going to verify my media entries by: " + enums.MediaType.ALL_MEDIA.value)  
+            if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAllMedia) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 19: FAILED to filter and verify my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
                 return 
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'My Media - Filter by media Type' was done successfully")
