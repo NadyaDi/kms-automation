@@ -321,6 +321,7 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
             return False
         
+        writeToLog("INFO","Success, Entry '" + entryName + "' was set to unlisted successfully")
         return True 
     
     
@@ -476,11 +477,12 @@ class MyMedia(Base):
     
     
     # Author: Tzachi Guetta 
-    def verifyEntryPrivacyInMyMedia(self, entryName, expectedEntryPrivacy):
-        try:                
-            if self.navigateToMyMedia() == False:
-                writeToLog("INFO","FAILED to navigate to  my media")
-                return False
+    def verifyEntryPrivacyInMyMedia(self, entryName, expectedEntryPrivacy, forceNavigate=True):
+        try:    
+            if forceNavigate == True:           
+                if self.navigateToMyMedia() == False:
+                    writeToLog("INFO","FAILED to navigate to  my media")
+                    return False
             
             if expectedEntryPrivacy == enums.EntryPrivacyType.UNLISTED:
             
@@ -516,8 +518,20 @@ class MyMedia(Base):
                     return True                    
                     
         except NoSuchElementException:
+            writeToLog("INFO","FAILED to verify that entry '" + entryName + "' label is " + expectedEntryPrivacy.value) 
             return False
     
+        
+    # Author: Michal Zomper  
+    def verifyEntriesPrivacyInMyMedia(self, entriesList):
+        for entry in entriesList:
+            if self.verifyEntryPrivacyInMyMedia(entry, entriesList[entry], forceNavigate=False) == False:
+                writeToLog("INFO","FAILED to verify entry '" + entry + "' label")
+                return False
+                
+        writeToLog("INFO","Success, All entries label were verified")
+        return True 
+        
         
     # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
@@ -554,7 +568,8 @@ class MyMedia(Base):
         
         except NoSuchElementException:
             return False
-    
+        
+        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
         return True
     
     
@@ -998,11 +1013,7 @@ class MyMedia(Base):
     
     #  @Author: Michal Zomper    
     # The function check the the entries in my media are filter correctly
-    def verifyFiltersInMyMedia(self, filterBy, entriesList):
-        if self.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE,filterBy) == False:
-            writeToLog("INFO","FAILED to filter entries by: " + filterBy.value)
-            return False
-                
+    def verifyFiltersInMyMedia(self, entriesList):
         if self.showAllEntriesInMyMedia() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
@@ -1024,7 +1035,7 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED, entry '" + entry[0] + "' was found in my media although he doesn't need to be found")
                     return False
                 
-        writeToLog("INFO","Success, filter by '" + filterBy.value + "' in my media was successful")
+        writeToLog("INFO","Success, Only the correct media display in my media")
         return True
     
     
