@@ -73,10 +73,15 @@ class Test:
             
             
             # each dictionary get a list of entries and bool parameter that indicate if the entry need to be display in the list filter or not
-            self.filterByImage = [(self.entryName1, True), (self.entryName2, True), (self.entryName3, False), (self.entryName4, False), (self.entryName5, False), (self.entryName6, False)]
-            self.filterByAudio = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, True), (self.entryName4, True), (self.entryName5, False), (self.entryName6, False)]
-            self.filterByVideo = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, False), (self.entryName4, False), (self.entryName5, True), (self.entryName6, True)]
-            self.filterByAllMedia = [(self.entryName1, True), (self.entryName2, True), (self.entryName3, True), (self.entryName4, True), (self.entryName5, True), (self.entryName6, True)]            
+#             self.filterByImage = [(self.entryName1, True), (self.entryName2, True), (self.entryName3, False), (self.entryName4, False), (self.entryName5, False), (self.entryName6, False)]
+#             self.filterByAudio = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, True), (self.entryName4, True), (self.entryName5, False), (self.entryName6, False)]
+#             self.filterByVideo = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, False), (self.entryName4, False), (self.entryName5, True), (self.entryName6, True)]
+#             self.filterByAllMedia = [(self.entryName1, True), (self.entryName2, True), (self.entryName3, True), (self.entryName4, True), (self.entryName5, True), (self.entryName6, True)] 
+
+            self.filterByImage = {self.entryName1: True, self.entryName2: True, self.entryName3: False, self.entryName4: False, self.entryName5: False, self.entryName6: False}
+            self.filterByAudio = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryName4: True, self.entryName5: False, self.entryName6: False}
+            self.filterByVideo = {self.entryName1: False, self.entryName2: False, self.entryName3: False, self.entryName4: False, self.entryName5: True, self.entryName6: True}
+            self.filterByAllMedia = {self.entryName1: True, self.entryName2: True, self.entryName3: True, self.entryName4: True, self.entryName5: True, self.entryName6: True}          
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             

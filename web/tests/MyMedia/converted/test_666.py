@@ -78,163 +78,169 @@ class Test:
             self.channelName = clsTestService.addGuidToString(self.channelName, self.testNum)
             
             # each dictionary get a list of entries and bool parameter that indicate if the entry need to be display in the list filter or not
-            self.filterByPrivate = [(self.entryName1, True), (self.entryName2, False), (self.entryName3, False), (self.entryName4, False), (self.entryName5, False)]
-            self.filterByUnlisted = [(self.entryName1, False), (self.entryName2, True), (self.entryName3, False), (self.entryName4, False), (self.entryName5, False)]
-            self.filterByPublished = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, True), (self.entryName4, False), (self.entryName5, False)]
-            self.filterByRejected = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, False), (self.entryName4, True), (self.entryName5, False)]
-            self.filterByPending = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, False), (self.entryName4, False), (self.entryName5, True)]
-            self.filterByAllMedia = [(self.entryName1, enums.EntryPrivacyType.PRIVATE), (self.entryName2, enums.EntryPrivacyType.UNLISTED), (self.entryName3, enums.EntryPrivacyType.PUBLISHED), (self.entryName4, enums.EntryPrivacyType.REJECTED), (self.entryName5, enums.EntryPrivacyType.PENDING)]
-                        
+#             self.filterByPrivate = {(self.entryName1, True), (self.entryName2, False), (self.entryName3, False), (self.entryName4, False), (self.entryName5, False)}
+#             self.filterByUnlisted = [(self.entryName1, False), (self.entryName2, True), (self.entryName3, False), (self.entryName4, False), (self.entryName5, False)]
+#             self.filterByPublished = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, True), (self.entryName4, False), (self.entryName5, False)]
+#             self.filterByRejected = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, False), (self.entryName4, True), (self.entryName5, False)]
+#             self.filterByPending = [(self.entryName1, False), (self.entryName2, False), (self.entryName3, False), (self.entryName4, False), (self.entryName5, True)]
+#             self.filterByAllMedia = [(self.entryName1, enums.EntryPrivacyType.PRIVATE), (self.entryName2, enums.EntryPrivacyType.UNLISTED), (self.entryName3, enums.EntryPrivacyType.PUBLISHED), (self.entryName4, enums.EntryPrivacyType.REJECTED), (self.entryName5, enums.EntryPrivacyType.PENDING)]
+
+            self.filterByPrivate = {self.entryName1: True, self.entryName2: False, self.entryName3: False, self.entryName4: False, self.entryName5: False}
+            self.filterByUnlisted = {self.entryName1: False, self.entryName2: True, self.entryName3: False, self.entryName4: False, self.entryName5: False}
+            self.filterByPublished = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryName4: False, self.entryName5: False}
+            self.filterByRejected = {self.entryName1: False, self.entryName2: False, self.entryName3: False, self.entryName4: True, self.entryName5: False}
+            self.filterByPending = {self.entryName1: False, self.entryName2: False, self.entryName3: False, self.entryName4: False, self.entryName5: True}
+            self.filterByAllMedia = {self.entryName1: enums.EntryPrivacyType.PRIVATE, self.entryName2: enums.EntryPrivacyType.UNLISTED, self.entryName3: enums.EntryPrivacyType.PUBLISHED, self.entryName4: enums.EntryPrivacyType.REJECTED, self.entryName5: enums.EntryPrivacyType.PENDING}
+
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
             for i in range(1,6):
                 writeToLog("INFO","Step " + str(i) + ": Going to upload new images entries")            
                 if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.description, self.tags) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(i) + ": FAILED to upload new entry " + eval('self.entryName'+str(i)))
                     return
-             
+               
             writeToLog("INFO","Step 6: Going navigate to my media")  
             if self.common.myMedia.navigateToMyMedia() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED navigate to my media")
                 return  
- 
+   
             writeToLog("INFO","Step 7: Going to set one entry as unlisted")  
             if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName2) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to set entry '" + self.entryName2 + "' as unlisted")
                 return 
-             
+               
             writeToLog("INFO","Step 8: Going navigate to my media")  
             if self.common.myMedia.navigateToMyMedia() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to my media")
                 return  
-             
+              
             writeToLog("INFO","Step 9: Going to set one entry as published")  
             if self.common.myMedia.publishEntriesFromMyMedia(self.entryName3, self.categoryName, "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to publish entry '" + self.entryName2 + "'")
                 return 
-             
-            sleep(3)
+              
+#             sleep(3)
             writeToLog("INFO","Step 10: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to logout from main user")
                 return  
-                               
+                                 
             writeToLog("INFO","Step 11: Going to login with : " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to login with " + self.userName1)
                 return
-            
+              
             writeToLog("INFO","Step 12: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to create Channel")
                 return
-            
+              
             sleep(3)
             writeToLog("INFO","Step 13: Going to logout from " + self.userName1)
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to logout from " + self.userName1)
                 return  
-                               
+                                 
             writeToLog("INFO","Step 14: Going to login with main user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to login with main user")
                 return
-            
+              
             writeToLog("INFO","Step 15: Going to publish entries to moderated channel")  
             if self.common.channel.addContentToChannel(self.channelName, [self.entryName4, self.entryName5], isChannelModerate=True, publishFrom = enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to publish entries to moderated channel")
                 return 
-            
+              
             sleep(3)
             writeToLog("INFO","Step 16: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to logout from main user")
                 return  
-                               
+                                 
             writeToLog("INFO","Step 17: Going to login with : " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to login with " + self.userName1)
                 return
-            
+              
             writeToLog("INFO","Step 18: Going to reject entry form channel")  
             if self.common.channel.handlePendingEntriesInChannel(self.channelName, self.entryName4, "" , navigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to reject entry '" + self.entryName4 + "' from channel '" + self.channelName + "'")
                 return 
-            
+              
             sleep(3)
             writeToLog("INFO","Step 19: Going to logout from " + self.userName1)
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to logout from " + self.userName1)
                 return  
-                               
+                                 
             writeToLog("INFO","Step 20: Going to login with main user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED to login with main user")
                 return
-            
+              
             writeToLog("INFO","Step 21: Going navigate to my media")  
             if self.common.myMedia.navigateToMyMedia() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 21: FAILED navigate to my media")
                 return  
-            
+              
             sleep(1)
             writeToLog("INFO","Step 22: Going to verify that only entries with " + enums.EntryPrivacyType.PRIVATE.value + " icon display")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE.value) == False:
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 22: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
                 return
-             
+              
             writeToLog("INFO","Step 23: Going to verify my media entries by: " + enums.EntryPrivacyType.PRIVATE.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByPrivate) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 23: FAILED to verify my media entries  by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
                 return 
-           
+            
             writeToLog("INFO","Step 24: Going to verify entry privacy label: " + enums.EntryPrivacyType.PRIVATE.value)  
             if self.common.myMedia.verifyEntryPrivacyInMyMedia(self.entryName1, enums.EntryPrivacyType.PRIVATE, forceNavigate=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 24: FAILED to verify that entry '" + self.entryName1 + "' label is '" + enums.EntryPrivacyType.PRIVATE.value + "'")
                 return 
-           
+            
             sleep(1)
             writeToLog("INFO","Step 25: Going to verify that only entries with " + enums.EntryPrivacyType.UNLISTED.value + " icon display")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.UNLISTED.value) == False:
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.UNLISTED) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 25: FAILED to filter my media entries by '" + enums.EntryPrivacyType.UNLISTED.value + "'")
                 return
-             
+              
             writeToLog("INFO","Step 26: Going to verify my media entries by: " + enums.EntryPrivacyType.UNLISTED.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByUnlisted) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 26: FAILED to verify my media entries  by '" + enums.EntryPrivacyType.UNLISTED.value + "'")
                 return 
-           
+            
             writeToLog("INFO","Step 27: Going to verify entry privacy label: " + enums.EntryPrivacyType.UNLISTED.value)  
             if self.common.myMedia.verifyEntryPrivacyInMyMedia(self.entryName2, enums.EntryPrivacyType.UNLISTED, forceNavigate=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 27: FAILED to verify that entry '" + self.entryName2 + "' label is '" + enums.EntryPrivacyType.UNLISTED.value + "'")
                 return
-            
+             
             sleep(1)
             writeToLog("INFO","Step 28: Going to verify that only entries with " + enums.EntryPrivacyType.PUBLISHED.value + " icon display")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED.value) == False:
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 28: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
                 return
@@ -253,7 +259,7 @@ class Test:
             
             sleep(1)
             writeToLog("INFO","Step 31: Going to verify that only entries with " + enums.EntryPrivacyType.REJECTED.value + " icon display")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED.value) == False:
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 31: FAILED to filter my media entries by '" + enums.EntryPrivacyType.REJECTED.value + "'")
                 return
@@ -272,7 +278,7 @@ class Test:
      
             sleep(1)
             writeToLog("INFO","Step 34: Going to verify that only entries with " + enums.EntryPrivacyType.PENDING.value + " icon display")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING.value) == False:
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 34: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PENDING.value + "'")
                 return
@@ -291,7 +297,7 @@ class Test:
             
             sleep(1)
             writeToLog("INFO","Step 37: Going to verify that only entries with " + enums.EntryPrivacyType.ALL_STATUSSES.value + " icon display")
-            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES.value) == False:
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 37: FAILED to filter my media entries by '" + enums.EntryPrivacyType.ALL_STATUSSES.value + "'")
                 return
@@ -319,7 +325,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")     
-            if localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN != "QA APPLICATION":
+            if localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN != "QA APPLICATION" or localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN != "QA Application":
                 self.common.login.logOutOfKMS()
                 self.common.loginAsUser() 
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5])

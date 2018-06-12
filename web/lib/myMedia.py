@@ -43,8 +43,9 @@ class MyMedia(Base):
     #MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")
     MY_MEDIA_ENTRY_CHILD                                        = ('xpath', "//p[@class='status_content' and contains(text(), 'ENTRY_PRIVACY')]")
     MY_MEDIA_ENTRY_PARNET                                       = ('xpath', "//span[@class='entry-name' and text() ='ENTRY_NAME']/ancestor::a[@class='entryTitle tight']")                                   
-    MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI                         = ('xpath', "//a[@id = 'accordion-ENTRY_ID']")
-    MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id = 'accordion-ENTRY_ID']/i[@class='icon-plus-sign kmstooltip']")
+    #MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI                         = ('xpath', "//a[@id ='accordion-ENTRY_ID']")
+    MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI                         = ('xpath', "//div[@id ='accordion_ENTRY_ID']")
+    MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id ='accordion-ENTRY_ID']/i[@class='icon-plus-sign kmstooltip']")
     MY_MEDIA_ENTRY_CHILD_POPUP                                  = ('xpath', "//strong[@class='valign-top']")
     MY_MEDIA_SORT_BY_DROPDOWNLIST                               = ('xpath', "//a[@id='sort-btn']")
     MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST                      = ('xpath', "//a[@id='status-btn']")
@@ -512,7 +513,8 @@ class MyMedia(Base):
                 
                 if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                     tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId))
-                tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
+                else:
+                    tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
                 if str(expectedEntryPrivacy) in self.get_element_text(tmpBtn):
                     writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
                     return True                    
@@ -569,7 +571,7 @@ class MyMedia(Base):
         except NoSuchElementException:
             return False
         
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
+        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
     
@@ -1025,14 +1027,18 @@ class MyMedia(Base):
             return False
         
         for entry in entriesList:
-            if entry[1] == True:
-                if entry[0].lower() in entriesInMyMedia == False:
-                    writeToLog("INFO","FAILED, entry '" + entry[0] + "' wasn't found in my media although he need to be found")
+            #if entry[1] == True:
+            if entriesList[entry] == True:
+                #if entry[0].lower() in entriesInMyMedia == False:
+                if entry.lower() in entriesInMyMedia == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in my media although he need to be found")
                     return False
                 
-            elif entry[1] == False:
-                if entry[0].lower() in entriesInMyMedia == True:
-                    writeToLog("INFO","FAILED, entry '" + entry[0] + "' was found in my media although he doesn't need to be found")
+            #elif entry[1] == False:
+            if entriesList[entry] == False:
+                # if entry[0].lower() in entriesInMyMedia == True:
+                if entry.lower() in entriesInMyMedia == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in my media although he doesn't need to be found")
                     return False
                 
         writeToLog("INFO","Success, Only the correct media display in my media")
