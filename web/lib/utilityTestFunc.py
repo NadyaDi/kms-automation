@@ -35,6 +35,16 @@ def updateTestCredentials(case_str):
     return found 
 
 
+def getPartnerDetails(partner):
+    testPartnerDetailsPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','partnerDetails.csv'))
+    with open(testPartnerDetailsPath, 'r') as csv_mat:
+        partnerDetails = csv.DictReader(csv_mat)
+        for row in partnerDetails:
+            if (row['partnerId'] == partner):
+                return row['serverUrl'], row['adminSecret']
+    return None,None     
+
+
 def setTestURLs(row):
     if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MEDIA_SPACE:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_URL_PREFIX + row['partner'] + '.' + row['base_url']
