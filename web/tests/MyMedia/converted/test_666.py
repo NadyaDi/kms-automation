@@ -121,7 +121,7 @@ class Test:
             writeToLog("INFO","Step 9: Going to set one entry as published")  
             if self.common.myMedia.publishEntriesFromMyMedia(self.entryName3, self.categoryName, "") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to publish entry '" + self.entryName2 + "'")
+                writeToLog("INFO","Step 9: FAILED to publish entry '" + self.entryName3 + "'")
                 return 
               
 #             sleep(3)
