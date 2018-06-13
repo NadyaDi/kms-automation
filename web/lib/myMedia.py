@@ -1111,3 +1111,6 @@ class MyMedia(Base):
             
         writeToLog("INFO","Success, only " + iconType.value + " type entries display")
         return True   
+    
+    
+#     def expendAndVerifyPublishedEntriesDetails(self, entriesList):
