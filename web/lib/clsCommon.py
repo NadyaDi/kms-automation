@@ -22,6 +22,7 @@ from freeTrial import FreeTrial
 from kafBB import BlackBoard
 from kafSharepoint import SharePoint
 from selenium.webdriver.common.keys import Keys
+from api import ApiClientSession
 
 
     #============================================================================================================
@@ -51,6 +52,7 @@ class Common():
         self.kea                = Kea(self, driver)
         self.home               = Home(self, driver)
         self.freeTrail          = FreeTrial(self, driver)
+        self.apiClientSession   = ApiClientSession(self, driver)
         ### KAF ###
         self.blackBoard         = BlackBoard(self, driver)
         self.sharePoint         = SharePoint(self, driver)
