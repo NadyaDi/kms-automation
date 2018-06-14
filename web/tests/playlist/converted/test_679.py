@@ -58,6 +58,15 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('EmbedPlaylist2', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('EmbedPlaylist3', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
+            
+            
+#             addEntries    = [[self.entryName1, True, "playlistname"],[self.entryName1, False, "playlistname"],[self.entryName1, True, "playlistname"]]
+#             removeEntries = [[self.entryName1, "playlistname"],[self.entryName1, False, "playlistname"],[self.entryName1, True, "playlistname"]]
+#             
+#             addRemoveEntries[0][0]
+            
+            
+            
             ########################## TEST STEPS - MAIN FLOW ####################### 
             self.entriesToUpload = {
                 self.entryName1: self.filePath, 
