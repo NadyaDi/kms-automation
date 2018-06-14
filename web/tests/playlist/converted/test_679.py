@@ -60,10 +60,10 @@ class Test:
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
             
             
-            addEntries    = [[self.entryName1, True, "playlistname"],[self.entryName1, False, "playlistname"],[self.entryName1, True, "playlistname"]]
-            removeEntries = [[self.entryName1, "playlistname"],[self.entryName1, False, "playlistname"],[self.entryName1, True, "playlistname"]]
-            
-            addRemoveEntries[0][0]
+#             addEntries    = [[self.entryName1, True, "playlistname"],[self.entryName1, False, "playlistname"],[self.entryName1, True, "playlistname"]]
+#             removeEntries = [[self.entryName1, "playlistname"],[self.entryName1, False, "playlistname"],[self.entryName1, True, "playlistname"]]
+#             
+#             addRemoveEntries[0][0]
             
             
             
