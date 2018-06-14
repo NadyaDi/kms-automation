@@ -84,4 +84,4 @@ test_692,1,0,0,0,Entry page - Side My Media
 test_702,1,0,0,0,Entry page - Attachments
 test_667,1,0,0,0,My Media - Filter by media Type
 test_666,1,0,0,0,My Media - Filter by status
-test_670,1,0,0,0,My Media - Expand media details ‘+’
+test_670,1,0,0,0,My Media - Expand media details
