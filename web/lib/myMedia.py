@@ -64,6 +64,8 @@ class MyMedia(Base):
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
     MY_MEDIA_AUDIO_ICON                                         = ('xpath', "//i[@class='icon-music icon-white']")
     MY_MEDIA_VIDEO_ICON_OLD_UI                                  = ('xpath', "//i[@class='icon-film icon-white']")
+    MY_MEDIA_EXPEND_MEDIA_DETAILS                               = ('xpath', "//div[@class='accordion-body in collapse contentLoaded' and @id='collapse_ENTRY_ID']")
+    
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -1113,4 +1115,74 @@ class MyMedia(Base):
         return True   
     
     
-#     def expendAndVerifyPublishedEntriesDetails(self, entriesList):
+    #@Author: Michal Zomper 
+    def expendAndVerifyPublishedEntriesDetails(self, entryName, categoris, channels):
+        if self.verifyEntryPrivacyInMyMedia(entryName, enums.EntryPrivacyType.PUBLISHED, forceNavigate=False) == False:
+                writeToLog("INFO","FAILED to verify entry '" + entryName + "' privacy")
+                return False
+        
+        if self.verifyPublishedInExpendEntryDeatails(entryName, categoris, len(categoris), channels, len(channels)) == False:
+            writeToLog("INFO","FAILED to verify entry '" + entryName + "' published categories/channels")
+            return False
+                
+        writeToLog("INFO","Success, Entry published details were verified successfully")
+        return True  
+                
+                
+    #@Author: Michal Zomper 
+    # pre condition to this function : need to open the publish option (the '+' button) in order to see all the publish details
+    # the function verifyEntryPrivacyInMyMedia have the option to open the details     
+    def verifyPublishedInExpendEntryDeatails(self, entryName, categories="", categoryCount="",  channels="", channelCount=""):
+        tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_PARNET, "ENTRY_NAME", entryName) 
+        entryId = self.clsCommon.upload.extractEntryID(tmpEntry)       
+        detailsBody = (self.MY_MEDIA_EXPEND_MEDIA_DETAILS[0], self.MY_MEDIA_EXPEND_MEDIA_DETAILS[1].replace('ENTRY_ID', entryId))
+        
+        tmpDetails = self.get_element(detailsBody).text
+        tmpDetails = tmpDetails.split("\n")
+        
+        if len(categories) > 0:
+            # verify number of published categories
+            if len(categories) == 1:
+                if (str(categoryCount) + " Category:") in tmpDetails == False:
+                    writeToLog("INFO","FAILED to verify entry '" + entryName + "' have " + str(categoryCount) + " categories")
+                    return False
+            else:
+                if (str(categoryCount) + " Categories:") in tmpDetails == False:
+                    writeToLog("INFO","FAILED to verify entry '" + entryName + "' have " + str(categoryCount) + " categories")
+                    return False
+                    
+            # Verify categories names
+            listOfCategories =""  
+            for category in categories:
+                listOfCategories = listOfCategories + category + " "
+            listOfCategories = listOfCategories.strip()
+                
+            if listOfCategories in tmpDetails == False:
+                writeToLog("INFO","FAILED to find category '" + category + "' under the entry '" + entryName + "' published in option")
+                return False
+         
+        if len(channels) > 0:
+            # verify number of published categories
+            if len(channels) == 1:
+                if (str(channelCount) + " Channel:") in tmpDetails == False:
+                    writeToLog("INFO","FAILED to verify entry '" + entryName + "' have " + str(channelCount) + " channels")
+                    return False
+            else:
+                if (str(channelCount) + " Channels:") in tmpDetails == False:
+                    writeToLog("INFO","FAILED to verify entry '" + entryName + "' have " + str(channelCount) + " channels")
+                    return False
+            
+            # Verify channels names
+            listOfChannels =""   
+            for channel in channels:
+                listOfChannels = listOfChannels + channel + " "
+            listOfChannels = listOfChannels.strip()
+                
+            if listOfChannels in tmpDetails == False:
+                writeToLog("INFO","FAILED to find channel '" + channel + "' under the entry '" + entryName + "' published in option")
+                return False
+                 
+        writeToLog("INFO","Success, All entry '" + entryName + "' categories/channels display under published in option")
+        return True      
+            
+            
