@@ -48,6 +48,7 @@ class Login(Base):
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
             raise Exception(inst)
         
+        
     def navigateToLoginPage(self, url='', verifyUrl=True):
         if url == '':
             self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
@@ -84,3 +85,33 @@ class Login(Base):
     def clickOnLogOutButton(self):
         el = self.get_elements(self.USER_LOGOUT_BTN)[1]
         return el.click()
+    
+    
+    # This method works for sites with user(userLocator), password(passLocator) and submit(submitLocator) button
+    # It verifies any object (objAfterLoginLocator) after login, to make sure login was successful
+    def genericLogin(self, username, password, loginUrl, userLocator, passLocator, submitLocator, objAfterLoginLocator):
+        # Navigate to Login Page
+        if self.navigate(loginUrl) == False:
+            writeToLog("INFO","FAILED to navigate to Login Page: " + loginUrl)   
+            return False
+        
+        # Enter username
+        if self.send_keys(userLocator, username, True) == False:
+            writeToLog("INFO","FAILED to enter username: " + username)
+            return False
+        
+        # Enter password
+        if self.send_keys(passLocator, password, True) == False:
+            writeToLog("INFO","FAILED to enter password: " + password)
+            return False
+             
+        # Click login/submit
+        if self.click(submitLocator, 30, True) == False:
+            writeToLog("INFO","FAILED to click login/submit button")
+            return False
+        
+        # Verify login successfully - wait for object which appear only after successful login
+        if self.wait_visible(objAfterLoginLocator, 60, True) == False:
+            writeToLog("INFO","FAILED to click login/submit button")
+            return False         
+        return True
