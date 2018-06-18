@@ -31,6 +31,8 @@ test_668,My Media - Sort media,2370151-1,qakmstest.dev.kaltura.com,pythonautomat
 test_667,My Media - Filter by media Type,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_666,My Media - Filter by status,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_670,My Media - Expand media details,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_669,My Media - View: Collapsed,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_747,Channel page - Shared Repository,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_706,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456

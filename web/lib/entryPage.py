@@ -388,8 +388,12 @@ class EntryPage(Base):
         self.clsCommon.sendKeysToBodyElement(Keys.HOME)
         
         # Check the amount of likes for the entry befor click the like\unlike button
-        prev_likeAmount = self.get_element_text(self.ENTRY_PAGE_LIKE_BUTTON)
+        prev_likeAmount = self.wait_visible(self.ENTRY_PAGE_LIKE_BUTTON, timeout=15)
+        if prev_likeAmount == False:
+            writeToLog("INFO","FAILED to find like button")
+            return False
         
+        prev_likeAmount = prev_likeAmount.text
         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
             prev_tmp = prev_likeAmount.split('\n')
         
@@ -404,11 +408,16 @@ class EntryPage(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         
         # Check the amount of likes for the entry after click the like\unlike button
-        after_likeAmount = self.get_element_text(self.ENTRY_PAGE_LIKE_BUTTON)
+        after_likeAmount = self.wait_visible(self.ENTRY_PAGE_LIKE_BUTTON, timeout=15)
+        if after_likeAmount == False:
+            writeToLog("INFO","FAILED to find like button")
+            return False
         
+        after_likeAmount = after_likeAmount.text
         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
             after_tmp = after_likeAmount.split('\n')
-        
+            
+            sleep(1)
             if after_tmp[1] == '': 
                 writeToLog("INFO","FAILED to get the number of likes for the entry after clicking like/unlike")
                 return False
