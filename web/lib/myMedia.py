@@ -65,7 +65,8 @@ class MyMedia(Base):
     MY_MEDIA_AUDIO_ICON                                         = ('xpath', "//i[@class='icon-music icon-white']")
     MY_MEDIA_VIDEO_ICON_OLD_UI                                  = ('xpath', "//i[@class='icon-film icon-white']")
     MY_MEDIA_EXPEND_MEDIA_DETAILS                               = ('xpath', "//div[@class='accordion-body in collapse contentLoaded' and @id='collapse_ENTRY_ID']")
-    
+    MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
+    MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
@@ -1184,5 +1185,54 @@ class MyMedia(Base):
                  
         writeToLog("INFO","Success, All entry '" + entryName + "' categories/channels display under published in option")
         return True      
+       
             
+    #@Author: Michal Zomper 
+    def verifyMyMediaView(self, entryName, view=enums.MyMediaView.DETAILED):
+        tmpEntryCheckBox = (self.MY_MEDIA_ENTRY_CHECKBOX[0], self.MY_MEDIA_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
+        if self.is_visible(tmpEntryCheckBox) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' checkbox")
+            return False
+            
+        tmpEntryName = (self.MY_MEDIA_ENTRY_TOP[0], self.MY_MEDIA_ENTRY_TOP[1].replace('ENTRY_NAME', entryName))
+        if self.is_visible(tmpEntryName) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' title")
+            return False   
+        
+        tmpEntryEditButton = (self.MY_MEDIA_ENRTY_EDIT_BUTTON[0], self.MY_MEDIA_ENRTY_EDIT_BUTTON[1].replace('ENTRY_NAME', entryName))
+        if self.is_visible(tmpEntryEditButton) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' edit Button")
+            return False  
+        
+        tmpEntryDeleteButton = (self.MY_MEDIA_ENRTY_DELETE_BUTTON[0], self.MY_MEDIA_ENRTY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))
+        if self.is_visible(tmpEntryDeleteButton) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' delete button")
+            return False  
+        
+        if view == enums.MyMediaView.DETAILED:
+            tmpEntryThmbnail = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName))
+            if self.is_visible(tmpEntryThmbnail) == False:
+                writeToLog("INFO","FAILED to find entry '" + entryName + "' thumbnail")
+                return False 
+            
+        writeToLog("INFO","Success, my media '" + view.value + " view' was verify for entry '" + entryName + "'")
+        return True   
+    
+    
+    #@Author: Michal Zomper 
+    def verifyMyMediaViewForEntris(self, entrisList, viewType):
+        # Checking if entriesNames list type
+        if type(entrisList) is list:
+            for entry in entrisList:
+                if self.verifyMyMediaView(entry, viewType) == False:
+                    writeToLog("INFO","FAILED to verify my media view '" + viewType.value + "' for entry" + entry + "'")
+                    return False 
+                    
+        else:
+            if self.verifyMyMediaView(entrisList) == False:
+                writeToLog("INFO","FAILED to verify my media view '" + viewType.value + "' for entry" + entrisList + "'")
+                return False 
+            
+        writeToLog("INFO","Success, my media '" + viewType.value + " view' was verified")
+        return True        
             

@@ -210,4 +210,12 @@ class ReleatedMedia(Enum):
         return str(self.value)
     
     MY_MEDIA               = 'My Media'
-    RELATED_MEDIA          = 'Related Media'    
+    RELATED_MEDIA          = 'Related Media'  
+    
+    
+class MyMediaView(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    COLLAPSED               = 'collapsed'
+    DETAILED                = 'detailed'   
