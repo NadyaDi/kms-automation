@@ -122,6 +122,8 @@ class Channel(Base):
     CHANNEL_PLAYLIST_EMBED_TEXT_AREA                = ('xpath', '//textarea[@id="embed_code-CHANNEL_PLAYLIST_ID" and @class="span11 embedCodeText"]')
     CHANNELS_NO_MORE_CHANNELS_ALERT                 = ('xpath', "//div[@id='channels_scroller_alert' and contains(text(),'There are no more channels.')]")
     CHANNELS_TABLE_SIZE                             = ('xpath', "//li[contains(@class,'span3 hidden-phone visible-v2ui')]")
+    CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY        = ('xpath', "//a[@id='addcontent-repositories-tab' and @class='dropdown-toggle addcontent-repositories-tab']")
+    CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL         = ('xpath', "//a[@data-original-title='CHANNEL_NAME' and @role='menuitem']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -895,7 +897,7 @@ class Channel(Base):
 
     
     #  @Author: Tzachi Guetta    
-    def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE):
+    def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):
         try:                
             if self.navigateToChannel(channelName, publishFrom) == False:
                 writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
@@ -908,6 +910,19 @@ class Channel(Base):
             sleep(1)
             self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
             
+            if channelType == enums.ChannelPrivacyType.SHAREDREPOSITORY:
+                # open shared repository list
+                if self.click(self.CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY) == False:
+                    writeToLog("INFO","FAILED to open shared repository channels list")
+                    return False
+                
+                #chose shared repository channel 
+                tmpSharedRepositoryChannel = (self.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[0], self.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[1].replace('CHANNEL_NAME', sharedReposiytyChannel))
+                if self.click(tmpSharedRepositoryChannel) == False:
+                    writeToLog("INFO","FAILED to select channel '" + sharedReposiytyChannel + "' as the shared repository channel to add content from")
+                    return False
+                self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
+                
             # Checking if entriesNames list type
             if type(entriesNames) is list: 
                 for entryName in entriesNames: 
@@ -1483,3 +1498,7 @@ class Channel(Base):
              
         writeToLog("INFO","FAILED to show all channels")
         return False  
+    
+    
+        
+        
