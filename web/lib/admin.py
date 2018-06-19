@@ -37,6 +37,7 @@ class Admin(Base):
     ADMIN_CAROUSEL_INTERVAL                         = ('xpath', "//input[@id='carouselInterval' and @name='carouselInterval']")
     ADMIN_LIKE_MODULE                               = ('xpath', "//select[@id='enableLike' and @name='enableLike']")
     ADMIN_SIDEMYMEDIA_MODULE                        = ('xpath', '//select[@id="enabled"]')    
+    ADMIN_CLEAR_CACHE_BUTTON                        = ('xpath', "//a[@href='/admin/clear-cache' and contains(text(),'CLEAR THE CACHE')]")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -507,4 +508,23 @@ class Admin(Base):
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
         
-        return True            
+        return True         
+    
+    
+    # @Author: Michal Zomper
+    def clearCache(self):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        if self.click(self.ADMIN_CLEAR_CACHE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on clear cache button")
+            return False
+            
+        if self.click(self.ADMIN_CONFIRMATION_MSG_OK_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on confirm clear cache button")
+            return False
+            
+        writeToLog("INFO","Success, cache was clear")
+        return True
