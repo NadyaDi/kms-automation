@@ -29,6 +29,7 @@ class Category(Base):
     CATEGORY_NUMBER_OF_COMMENTS_FOR_ENTRY                       = ('xpath', "//a[contains(@aria-label, 'NUMBER comment(s)')]")
     CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL                = ('xpath', "//i[@class='icon-plus-sign']")
     CATEGORY_MINUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL               = ('xpath', "//i[@class='icon-minus-sign']")
+    CATEGORY_BROWSE_CHANNELS_BUTTON                             = ('xpath', "//a[@id='channelcategories-tab']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))

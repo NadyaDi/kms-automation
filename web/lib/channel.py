@@ -124,6 +124,7 @@ class Channel(Base):
     CHANNELS_TABLE_SIZE                             = ('xpath', "//li[contains(@class,'span3 hidden-phone visible-v2ui')]")
     CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY        = ('xpath', "//a[@id='addcontent-repositories-tab' and @class='dropdown-toggle addcontent-repositories-tab']")
     CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL         = ('xpath', "//a[@data-original-title='CHANNEL_NAME' and @role='menuitem']")
+    CHANNEL_DETAILS_ON_THUMBNAIL                    = ('xpath', "//img[@alt='Thumbnail for channel CHANNEL_NAME']/ancestor::div[contains (@class,'wrapper')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -639,15 +640,17 @@ class Channel(Base):
         if self.click(tmpChannelName) == False:
             writeToLog("INFO","FAILED to Click on Channel name: '" + channelName + "'")
             return False   
+        sleep(1)
         
         if self.click(self.CHANNEL_EDIT_DROP_DOWN_MENU) == False:
             writeToLog("INFO","FAILED to Click on edit drop down menu")
             return False  
-        sleep(1)
+        sleep(2)
         
         if self.click(self.CHANNEL_EDIT_BUTTON) == False:
             writeToLog("INFO","FAILED to Click on edit drop down menu")
             return False  
+        sleep(2)
         
         tmpChannelName = (self.CHANNEL_EDIT_CHANNNEL_PAGE[0], self.CHANNEL_EDIT_CHANNNEL_PAGE[1].replace('CHANNEL_NAME', channelName))
         if self.wait_visible(tmpChannelName, 30) == False:
@@ -1500,5 +1503,32 @@ class Channel(Base):
         return False  
     
     
+    #@Author: Michal Zomper     
+    def verifyChannelDetailsOnThumbnail(self, channelName, mediaCount, memberCount, subscriberCount):
         
+        tmpChannelDetails = (self.CHANNEL_DETAILS_ON_THUMBNAIL[0], self.CHANNEL_DETAILS_ON_THUMBNAIL[1].replace('CHANNEL_NAME', channelName))
+        try:
+            channelDetails = self.get_element(tmpChannelDetails).text
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to find channel details on thumbnail element ")
+            return False
         
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            details = mediaCount + " Media  " + memberCount + " Members" + subscriberCount + " Subscribers"
+            if details in channelDetails == False:
+                writeToLog("INFO","FAILED to find channel details on thumbnail element ")
+                return False
+            
+        else:
+            mediaDetails = mediaCount + " Media  "
+            if mediaDetails in channelDetails == False:
+                writeToLog("INFO","FAILED to find entries details on thumbnail element")
+                return False
+            
+            memberAndSubscriberDetails = memberCount + " Members" + subscriberCount + " Subscribers"
+            if memberAndSubscriberDetails in channelDetails == False:
+                writeToLog("INFO","FAILED to find members and subscribers details on thumbnail element")
+                return False
+            
+        writeToLog("INFO","Success, All channel details that appear on the thmbnail was verified")
+        return True  
