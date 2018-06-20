@@ -38,6 +38,7 @@ class Admin(Base):
     ADMIN_LIKE_MODULE                               = ('xpath', "//select[@id='enableLike' and @name='enableLike']")
     ADMIN_SIDEMYMEDIA_MODULE                        = ('xpath', '//select[@id="enabled"]')    
     ADMIN_CLEAR_CACHE_BUTTON                        = ('xpath', "//a[@href='/admin/clear-cache' and contains(text(),'CLEAR THE CACHE')]")
+    ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON       = ('xpath', "//button[contains (@class, 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only')]")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -521,8 +522,9 @@ class Admin(Base):
         if self.click(self.ADMIN_CLEAR_CACHE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on clear cache button")
             return False
-            
-        if self.click(self.ADMIN_CONFIRMATION_MSG_OK_BUTTON) == False:
+        
+        sleep(2)  
+        if self.click(self.ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON, 10, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm clear cache button")
             return False
             
