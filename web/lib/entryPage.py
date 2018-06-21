@@ -331,11 +331,14 @@ class EntryPage(Base):
             return False  
         if self.chooseShareOption() == False:
             writeToLog("INFO","FAILED to click on embed tab")
-            return False    
+            return False
+        sleep(3)
         if self.wait_while_not_visible(self.ENTRY_PAGE_LOADING) == False:
             writeToLog("INFO","FAILED - Loading message is still displayed")
             return False   
         embed_text = self.get_element_text(self.ENTRY_PAGE_EMBED_TEXT_AREA)
+        if embed_text == None:
+            return False
         return embed_text
     
     
