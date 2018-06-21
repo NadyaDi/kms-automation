@@ -41,8 +41,8 @@ class Test:
     playerWidth = "740"
     playerHeight = "330"
     embedLink = None
-    embedLinkFilePath = 'C:\\xampp\\htdocs\\testPlaylistEmbed673.html'
-    embedUrl = 'http://localhost:8080/testPlaylistEmbed673.html'
+    embedLinkFilePath = localSettings.LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER
+    embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'  
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -64,6 +64,8 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('EmbedPlaylist2', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('EmbedPlaylist3', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
+            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('.html', self.testNum)
+            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('.html', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             self.entriesToUpload = {
                 self.entryName1: self.filePath, 

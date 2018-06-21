@@ -39,8 +39,8 @@ class Test:
     channelList = ['publicChannelMyHistory']
     embedLink = None
     watchedAt = 'embed'
-    embedLinkFilePath = 'C:\\xampp\\htdocs\\EmbedTest2673.html'
-    embedUrl = 'http://localhost:8080/EmbedTest2673.html'
+    embedLinkFilePath = localSettings.LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER
+    embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
@@ -61,6 +61,8 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('MyHistoryEmbed', self.testNum)
+            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('.html', self.testNum)
+            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('.html', self.testNum)            
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user - Channel admin")
             if self.common.loginAsUser() == False:
