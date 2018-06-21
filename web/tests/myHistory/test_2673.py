@@ -133,7 +133,10 @@ class Test:
                 return  
              
             writeToLog("INFO","Step 12: Going to write embed code in file")
-            self.common.writeToFile(self.embedLinkFilePath, self.embedLink)
+            if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to write embed code in file")
+                return     
              
             writeToLog("INFO","Step 13: Going to logout as user 1")
             if self.common.login.logOutOfKMS() == False:
@@ -200,6 +203,7 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.deleteFile(self.embedLinkFilePath)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

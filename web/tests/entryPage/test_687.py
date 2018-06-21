@@ -86,7 +86,10 @@ class Test:
                 return  
              
             writeToLog("INFO","Step 5: Going to write embed code in file")
-            self.common.writeToFile(self.embedLinkFilePath, self.embedLink)
+            if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to write embed code in file")
+                return                 
              
             writeToLog("INFO","Step 6: Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
@@ -105,6 +108,7 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.deleteFile(self.embedLinkFilePath)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -1,3 +1,4 @@
+import os
 from admin import Admin
 from autoit import Autoit
 from base import Base
@@ -138,11 +139,26 @@ class Common():
     
     # @Author: Inbar Willman
     def writeToFile(self, path, text):
-        file1 = open(path,"w")
-        file1.write(text)
-        file1.close()
-        
+        try:
+            file1 = open(path,"w")
+            file1.write(text)
+            file1.close()
+        except:
+            writeToLog("INFO","FAILED to write file: " + path + "; Text: " + text)
+            return False
+        return True
     
+    
+    # @Author: Oleg Sigalov
+    def deleteFile(self, path):
+        try:
+            os.remove(path)
+        except:
+            writeToLog("INFO","FAILED to delete file: " + path)
+            return False
+        return True        
+        
+        
     # @Author: Oleg Sigalov
     # leavePageExpected=True if the test may fail somewhere, and Leave Page may appear.
     # we need to click leave page, because it will not continue to tearDown and other tests...
