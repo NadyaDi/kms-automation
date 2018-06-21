@@ -35,8 +35,8 @@ class Test:
     entryDescription = "description"
     entryTags = "tag1,"
     embedLink = None
-    embedLinkFilePath = 'C:\\xampp\\htdocs\\testEmbed687.html'
-    embedUrl = 'http://localhost:8080/testEmbed687.html'
+    embedLinkFilePath = localSettings.LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER
+    embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
@@ -57,6 +57,8 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('Embed', self.testNum)
+            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('.html', self.testNum)
+            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('.html', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
