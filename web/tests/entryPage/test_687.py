@@ -57,8 +57,8 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('Embed', self.testNum)
-            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('.html', self.testNum)
-            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('.html', self.testNum)
+            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
+            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
