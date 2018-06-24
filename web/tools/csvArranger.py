@@ -12,47 +12,75 @@ def getDuplicatedTestIds(csvPath):
     for test in listTestId:
         newList.append(test.split(',')[0])
     
-    newList = [item for item, count in collections.Counter(newList).items() if count > 1]
-    print('Found duplicated test: ' + str(newList))      
-    return newList
+    dupList = [item for item, count in collections.Counter(newList).items() if count > 1]
+    print('Found duplicated test: ' + str(dupList))
     
-    
-    # Example for listRemoveId: ['test_687', 'test_673', 'test_676', 'test_767', 'test_679']
-#     def removeDuplicatesLines(self, csvPath, listRemoveId):    
-        
-        
+    return dupList
 
-if __name__ == '__main__':
-    csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet.csv'))
-    listDuplicates = getDuplicatedTestIds(csvPath)
+
+def createListOfDuplicatedLines(csvPath, dupList):
+    listTestId = open(csvPath).readlines() 
+    newList = []
+    for test in listTestId:
+        for dupId in dupList:
+            if dupId in test:
+                if dupId not in newList:
+                    newList.append(test)
+                  
+    return [item for item, count in collections.Counter(newList).items() if count > 1]
+
+
+def removeDuplicatesFromFile(csvPath, listDuplicatedLines):
     f = open(csvPath,"r") 
     lines = f.readlines()
     f.close()
     i = 0
     f = open(csvPath,"w")
     for line in lines:
-        for dup in reversed(listDuplicates):
-            if not dup in line:
+        if not line in listDuplicatedLines:
+            f.write(line)
+        else:
+            print(str(i) + ': Duplicated line was removed')
+            
+    if listDuplicatedLines:
+        print('Adding duplicated lines at the end of file')
+        for line in listDuplicatedLines:
+            f.write(line)         
+    f.close()    
+    pass    
+    
+    
+def getSortedListOfTestIdOnly(csvPath):    
+    listTestId = open(csvPath).readlines() 
+    newList = []
+    for test in listTestId:
+        if 'case' not in test: #not a first line
+            newList.append(test.split(',')[0].split('_')[1])
+    
+    newList.sort(key=int)
+    return newList
+
+
+def createNewSortedCsv(csvPath, csvPathReady, idsList):
+    f = open(csvPathReady, 'w')
+    listTestId = open(csvPath).readlines()
+    f.write(listTestId[0])
+    for id in idsList:
+        for line in listTestId[1:]:
+            if id == line.split(',')[0].split('_')[1]:
                 f.write(line)
                 break
-            else:
-                listDuplicates.remove(dup)
-                i +=1
-                print(str(i))
-                break 
-            
-    f.close()    
-    pass
-
-
-
-
     
-#         for line in lines:
-#         for dup in reversed(listDuplicates):
-#             if not dup in line:
-#                 f.write(line)
-#                 break
-#             else:
-#                 listDuplicates.remove(dup)
-#                 break
+    f.close    
+
+
+if __name__ == '__main__':
+    csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet.csv'))
+    csvPathReady = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetReady.csv'))
+    
+    listDuplicates = getDuplicatedTestIds(csvPath)
+    listDuplicatedLines = createListOfDuplicatedLines(csvPath, listDuplicates)
+    removeDuplicatesFromFile(csvPath, listDuplicatedLines)
+    idsList = getSortedListOfTestIdOnly(csvPath)
+    createNewSortedCsv(csvPath, csvPathReady, idsList)
+    pass
