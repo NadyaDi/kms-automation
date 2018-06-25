@@ -18,7 +18,8 @@ class MyMedia(Base):
     #=============================================================================================================
     #My Media locators:
     #=============================================================================================================
-    MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
+    MY_MEDIA_SEARCH_BAR_OLD_UI                                  = ('id', 'searchBar')
+    MY_MEDIA_SEARCH_BAR                                         = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search My Media']")
     MY_MEDIA_NO_RESULTS_ALERT                                   = ('xpath', "//div[@id='myMedia_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_ENRTY_EDIT_BUTTON                                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
@@ -70,7 +71,10 @@ class MyMedia(Base):
     #=============================================================================================================
     def getSearchBarElement(self):
         # We got multiple elements, search for element which is not size = 0
-        elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR)
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR)
+        else:
+            elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
         for el in elements:
             if el.size['width']!=0 and el.size['height']!=0:
                 return el
@@ -191,7 +195,7 @@ class MyMedia(Base):
         sleep(3)
         # Search Entry     
         self.getSearchBarElement().click()
-        self.getSearchBarElement().send_keys(entryName)
+        self.getSearchBarElement().send_keys(entryName+Keys.ENTER)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
         

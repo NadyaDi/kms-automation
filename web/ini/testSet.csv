@@ -25,6 +25,7 @@ test_702,1,0,0,0,Entry page - Attachments
 test_703,1,0,0,0,Entry page - Replace Media
 test_706,1,0,0,0,TODO
 test_709,0,1,0,0,Category - Entries details
+test_711,0,1,0,0,Categories - Edit metadata
 test_713,1,0,0,0,Category moderation
 test_722,1,0,0,0,Categories - Browse channels
 test_724,1,0,0,0,My Channels - Sort Channels
@@ -35,6 +36,7 @@ test_729,1,0,0,0,My Channels - Search as subscriber
 test_731,1,0,0,0,Channel page Information
 test_734,0,1,0,0,Channel - Entries details
 test_739,1,0,0,0,Channel - Members tab
+test_741,1,0,0,0,Channel page - Enable subscription in channel
 test_742,1,0,0,0,Channel moderation
 test_747,1,0,0,0,Channel page - Shared Repository
 test_767,1,0,0,0,Create Channel Playlist

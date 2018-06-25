@@ -56,7 +56,6 @@ class Test:
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Channel page Enable subscription in channel", self.testNum)
             self.channelName = clsTestService.addGuidToString("Channel page Enable subscription in channel", self.testNum)
-            #self.channelName= [(self.channelName)]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
         
@@ -148,7 +147,7 @@ class Test:
                 writeToLog("INFO","Step 14: FAILED failed to upload entry")
                 return
             
-            writeToLog("INFO","Step 14: Going to add entry to channel: " + self.channelName)
+            writeToLog("INFO","Step 15: Going to add entry to channel: " + self.channelName)
             if self.common.channel.addContentToChannel(self.channelName, self.entryName, False, publishFrom=enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add entry '" + self.entryName + "' to channel '" + self.channelName + "'")
@@ -167,6 +166,7 @@ class Test:
                 writeToLog("INFO","Step 17: FAILED to login with user: " + self.userName2)
                 return
             
+            sleep(2)
             writeToLog("INFO","Step 18: Going to add member user as subscriber to channel")
             if self.common.channel.subscribeUserToChannel(self.channelName, "2", enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
@@ -184,14 +184,15 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            sleep(2)  
+            sleep(3)  
             self.common.login.logOutOfKMS()
+            sleep(1)
             self.common.login.loginToKMS(self.userName1, self.userPass1)
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            sleep(2)
+            sleep(3)
             self.common.login.logOutOfKMS()   
             self.common.loginAsUser()                
-            self.common.channel.deleteChannel(self.channelName[0])
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
