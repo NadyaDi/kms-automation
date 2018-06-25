@@ -530,3 +530,30 @@ class Admin(Base):
             
         writeToLog("INFO","Success, cache was clear")
         return True
+    
+    
+    # @Autor: Michal Zomper      
+    def enableChannelSubscription(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/channelsubscription') == False:
+            writeToLog("INFO","FAILED to load channel subscription page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable thumbnails field
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set channel subscription as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, channel subscription module was set to '" + str(selection) + "'")
+        return True
