@@ -30,6 +30,8 @@ class Category(Base):
     CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL                = ('xpath', "//i[@class='icon-plus-sign']")
     CATEGORY_MINUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL               = ('xpath', "//i[@class='icon-minus-sign']")
     CATEGORY_BROWSE_CHANNELS_BUTTON                             = ('xpath', "//a[@id='channelcategories-tab']")
+    CATEGORY_ACTION_BUTTON                                      = ('xpath', "//button[@id='galleryActionsDropdownButton']")
+    CATEGORY_EDIT_BUTTON                                        = ('xpath', "//i[@class='icon-wrench']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
@@ -168,5 +170,23 @@ class Category(Base):
                 writeToLog("INFO","FAILED to click on the minus button in order to close entry details")
                 return False
             
+        writeToLog("INFO","Success, all entry details was verified successfully")
+        return True
+    
+    
+    # Author: Michal Zomper 
+    def navigateToEditCategoryPage(self, categoryName):
+        if self.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED navigate to category")
+            return False
+        
+        if self.click(self.CATEGORY_ACTION_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on action button")
+            return False 
+        
+        if self.click(self.CATEGORY_EDIT_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on edit button")
+            return False 
+        
         writeToLog("INFO","Success, all entry details was verified successfully")
         return True

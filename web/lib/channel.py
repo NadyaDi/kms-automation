@@ -31,7 +31,8 @@ class Channel(Base):
     CHANNEL_DETAILS_OPTION_SUBSCRIPTION             = ('id', 'Category-options-enableChannelSubscription')
     CHANNEL_SAVE_BUTTON                             = ('id', 'Category-submit')
     CHANNEL_CREATION_DONE                           = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'The information was saved successfully')]")
-    MY_CHANNELS_SERACH_FIELD                        = ('xpath', "//input[@id='searchBar']")
+    MY_CHANNELS_SERACH_FIELD_OLD_UI                 = ('xpath', "//input[@id='searchBar']")
+    MY_CHANNELS_SERACH_FIELD                        = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search For Channels']")
     MY_CHANNELS_EDIT_BUTTON                         = ('xpath', "//a[contains(@class,'edit')]")
     MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
@@ -382,15 +383,26 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
             
-            if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on name text field")
-                return False
-            
-            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to type in 'name' text field")
-                return False
-            
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on name text field")
+                    return False
+                sleep(1)
+                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName + Keys.ENTER, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to type in 'name' text field")
+                    return False
+            else:
+                if self.click(self.MY_CHANNELS_SERACH_FIELD_OLD_UI, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on name text field")
+                    return False
+                sleep(1)
+                
+                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD_OLD_UI, channelName, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to type in 'name' text field")
+                    return False
+                
             self.clsCommon.general.waitForLoaderToDisappear()
+            sleep(3)
             
             if needToBeFound == True:
                 tmp_channelName = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
@@ -426,13 +438,24 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
             
-            if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on name text field")
-                return False
-            
-            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to type in 'name' text field")
-                return False
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on name text field")
+                    return False
+                sleep(1)
+                
+                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName + Keys.ENTER, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to type in 'name' text field")
+                    return False
+            else:
+                if self.click(self.MY_CHANNELS_SERACH_FIELD_OLD_UI, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on name text field")
+                    return False
+                sleep(1)
+                
+                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD_OLD_UI, channelName, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to type in 'name' text field")
+                    return False
             
         except NoSuchElementException:
             return False
@@ -468,6 +491,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to click on Channel's thumbnail")
                 return False
             
+            sleep(3)
             tmp_channel_title = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
             if self.wait_visible(tmp_channel_title, 30) == False:
                 writeToLog("INFO","FAILED to navigate to Channel page")
@@ -1503,7 +1527,7 @@ class Channel(Base):
         return False  
     
     
-    #@Author: Michal Zomper     
+      
     def verifyChannelDetailsOnThumbnail(self, channelName, mediaCount, memberCount, subscriberCount):
         
         tmpChannelDetails = (self.CHANNEL_DETAILS_ON_THUMBNAIL[0], self.CHANNEL_DETAILS_ON_THUMBNAIL[1].replace('CHANNEL_NAME', channelName))
@@ -1532,3 +1556,25 @@ class Channel(Base):
             
         writeToLog("INFO","Success, All channel details that appear on the thmbnail was verified")
         return True  
+    
+    
+    #@Author: Michal Zomper   
+    def enableDisableSubscriptionOptionToChannel(self, channelName):
+        if self.navigateToEditChannelPage(channelName) == False:
+            writeToLog("INFO","FAILED navigate to edit channel page: " + channelName)
+            return False
+        
+        if self.click(self.CHANNEL_DETAILS_OPTION_SUBSCRIPTION, 30) == False:
+            writeToLog("INFO","FAILED to click on subscription checkbox")
+            return False  
+        
+        if self.click(self.CHANNEL_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Save button")
+            return False 
+        
+        if self.wait_visible(self.CHANNEL_CREATION_DONE, 45) == False:
+            writeToLog("INFO","FAILED to create a Channel")
+            return False 
+        
+        writeToLog("INFO","Success, Channel subscription option was changed successfully")
+        return True 

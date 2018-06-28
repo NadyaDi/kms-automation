@@ -20,6 +20,7 @@ class MyMedia(Base):
     #My Media locators:
     #=============================================================================================================
     MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
+    MY_MEDIA_SEARCH_BAR_OLD_UI                                  = ('id', 'searchBar')
     MY_MEDIA_ELASTIC_SEARCH_BAR                                 = ('xpath', "//input[@class='searchForm__text']")
     MY_MEDIA_NO_RESULTS_ALERT                                   = ('xpath', "//div[@id='myMedia_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
@@ -74,16 +75,19 @@ class MyMedia(Base):
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
-            # Check which search bar do we have: old or new (elastic)
-            # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
-            if self.clsCommon.isElasticSearchOnPage():
-                return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                # Check which search bar do we have: old or new (elastic)
+                # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
+                if self.clsCommon.isElasticSearchOnPage():
+                    return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
+                else:
+                    return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
             else:
-                return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
-                
+                return self.wait_visible(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
         except:
             writeToLog("INFO","FAILED get Search Bar element")
             return False
+
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self, forceNavigate = False):
@@ -199,8 +203,8 @@ class MyMedia(Base):
         sleep(3)
         # Search Entry     
         self.getSearchBarElement().click()
-        self.getSearchBarElement().send_keys('"' + entryName + '"')
-        sleep(3) if self.clsCommon.isElasticSearchOnPage() else sleep(1)
+        self.getSearchBarElement().send_keys('"' + entryName + '"' + Keys.ENTER)
+        sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
         
