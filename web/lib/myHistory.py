@@ -72,7 +72,7 @@ class MyHistory(Base):
         
         #If search field is displayed make a search
         self.clsCommon.myMedia.getSearchBarElement().click()
-        self.clsCommon.myMedia.getSearchBarElement().send_keys(entryName)
+        self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
      
