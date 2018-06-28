@@ -71,7 +71,7 @@ class Category(Base):
         sleep(2)
         # Search Entry     
         self.clsCommon.myMedia.getSearchBarElement().click()
-        self.clsCommon.myMedia.getSearchBarElement().send_keys(entryName)
+        self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
 

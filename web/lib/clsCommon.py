@@ -189,3 +189,16 @@ class Common():
     def sendKeysToBodyElement(self, keys):
         self.base.send_keys_to_element(self.base.get_body_element(), keys)
         return True
+    
+    
+    # Check which search bar do we have: old or new (elastic)
+    # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)    
+    def isElasticSearchOnPage(self):
+        try:
+            countSearchEl = len(self.base.get_elements(self.myMedia.MY_MEDIA_ELASTIC_SEARCH_BAR))
+            if countSearchEl > 1:
+                return True
+            else:
+                return False
+        except:
+            return False       

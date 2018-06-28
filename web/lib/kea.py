@@ -55,7 +55,7 @@ class Kea(Base):
         
         # Click on search bar and search for entry
         self.clsCommon.myMedia.getSearchBarElement().click()
-        self.clsCommon.myMedia.getSearchBarElement().send_keys(entryName)
+        self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
         self.clsCommon.general.waitForLoaderToDisappear()
         
         # Click on select button in order to open KEA

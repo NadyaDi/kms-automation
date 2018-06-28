@@ -5,6 +5,7 @@ from logger import writeToLog
 from editEntryPage import EditEntryPage
 import enums
 from selenium.webdriver.common.keys import Keys
+import re
 
 
 
@@ -18,8 +19,9 @@ class MyMedia(Base):
     #=============================================================================================================
     #My Media locators:
     #=============================================================================================================
+    MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
     MY_MEDIA_SEARCH_BAR_OLD_UI                                  = ('id', 'searchBar')
-    MY_MEDIA_SEARCH_BAR                                         = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search My Media']")
+    MY_MEDIA_ELASTIC_SEARCH_BAR                                 = ('xpath', "//input[@class='searchForm__text']")
     MY_MEDIA_NO_RESULTS_ALERT                                   = ('xpath', "//div[@id='myMedia_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_ENRTY_EDIT_BUTTON                                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
@@ -68,18 +70,24 @@ class MyMedia(Base):
     MY_MEDIA_EXPEND_MEDIA_DETAILS                               = ('xpath', "//div[@class='accordion-body in collapse contentLoaded' and @id='collapse_ENTRY_ID']")
     MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
+    MY_MEIDA_ENTRY_NAME_ELASTIC_SEARCH_RESULT                   = ('xpath', "//em[text()='ENTRY_NAME']]")
+    
     #=============================================================================================================
     def getSearchBarElement(self):
-        # We got multiple elements, search for element which is not size = 0
-        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR)
-        else:
-            elements = self.get_elements(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
-        for el in elements:
-            if el.size['width']!=0 and el.size['height']!=0:
-                return el
-        return False        
-    
+        try:
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                # Check which search bar do we have: old or new (elastic)
+                # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
+                if self.clsCommon.isElasticSearchOnPage():
+                    return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
+                else:
+                    return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
+            else:
+                return self.wait_visible(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
+        except:
+            writeToLog("INFO","FAILED get Search Bar element")
+            return False
+
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self, forceNavigate = False):
@@ -195,22 +203,27 @@ class MyMedia(Base):
         sleep(3)
         # Search Entry     
         self.getSearchBarElement().click()
-        self.getSearchBarElement().send_keys(entryName+Keys.ENTER)
+        self.getSearchBarElement().send_keys('"' + entryName + '"' + Keys.ENTER)
+        sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
         
         
-    def clickEntryAfterSearchInMyMedia(self, entryName):    
+    def clickEntryAfterSearchInMyMedia(self, entryName):
         # Click on the Entry name
-        if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            tempLocator = ('xpath', "//em[text()='" + entryName + "']")
+        else:
+            tempLocator = ('xpath', "//span[@class='entry-name' and text()='" + entryName + "']")
+            
+        if self.click(tempLocator, 10) == False:
             # If entry not found, search for 'No Entries Found' alert
             if self.wait_for_text(self.MY_MEDIA_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
                 writeToLog("INFO","No Entry: '" + entryName + "' was found")
             else:
                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
-                
-        return True
-    
+            return False
+        return True    
     
     # Author: Michal Zomper    
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
