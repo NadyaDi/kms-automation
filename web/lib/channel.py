@@ -377,7 +377,7 @@ class Channel(Base):
         return True
     
     # Author: Tzachi Guetta
-    def searchAChannelInMyChannels(self, channelName, needToBeFound=True):
+    def searchAChannelInMyChannels(self, channelName, needToBeFound=True, exactName=True):
         try:                
             if self.navigateToMyChannels() == False:
                 writeToLog("INFO","FAILED to navigate to my channels page")
@@ -388,7 +388,11 @@ class Channel(Base):
                     writeToLog("INFO","FAILED to click on name text field")
                     return False
                 sleep(1)
-                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName + Keys.ENTER, multipleElements=True) == False:
+                if exactName == True: 
+                    searchString = '"' + channelName + '"'
+                else:
+                    searchString = channelName
+                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, searchString + Keys.ENTER, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to type in 'name' text field")
                     return False
             else:
