@@ -13,7 +13,7 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : My Media - Expand media details 
+    # Test Name : My Media - Expand media details (ONLY OLD UI - OLD SEARCH)
     # Test description:
     # upload entry and publish it to channel / category
     # in my media go to the published entry and click on its '+' button:
@@ -42,13 +42,16 @@ class Test:
         return request.param
     
     def test_01(self,driverFix,env):
-
         #write to log we started the test
         logStartTest(self,driverFix)
         try:
             ########################### TEST SETUP ###########################
             #capture test start time
             self.startTime = time.time()
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                writeToLog("INFO","This test ONLY for old search (OLD UI)")
+                return
+                          
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
@@ -108,14 +111,17 @@ class Test:
             
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
-        try:
-            self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")     
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.channel.deleteChannel(self.channelName)
-            writeToLog("INFO","**************** Ended: teardown_method *******************")            
-        except:
-            pass            
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            writeToLog("INFO","Skipping teardown")
+        else:    
+            try:
+                self.common.handleTestFail(self.status)
+                writeToLog("INFO","**************** Starting: teardown_method ****************")     
+                self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+                self.common.channel.deleteChannel(self.channelName)
+                writeToLog("INFO","**************** Ended: teardown_method *******************")            
+            except:
+                pass            
         clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)

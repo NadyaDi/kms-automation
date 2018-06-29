@@ -32,8 +32,6 @@ class Category(Base):
     CATEGORY_BROWSE_CHANNELS_BUTTON                             = ('xpath', "//a[@id='channelcategories-tab']")
     CATEGORY_ACTION_BUTTON                                      = ('xpath', "//button[@id='galleryActionsDropdownButton']")
     CATEGORY_EDIT_BUTTON                                        = ('xpath', "//i[@class='icon-wrench']")
-    CATEGORY_RESULTS_ENTRY_NAME                                 = ('xpath', "//span[@class='results-entry__name']")
-    
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -45,7 +43,7 @@ class Category(Base):
             except:
                 return False
         else:
-            return self.click(self.CATEGORY_RESULTS_ENTRY_NAME, multipleElements=True)
+            return self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True)
             
             
     def navigateToCategory(self, categoryName):
@@ -95,7 +93,7 @@ class Category(Base):
                 writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
                 return False
         else:
-            elText = self.wait_visible(self.CATEGORY_RESULTS_ENTRY_NAME).text
+            elText = self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME).text
             if not elText == entryName:
                 writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
                 return False                
