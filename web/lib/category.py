@@ -32,16 +32,22 @@ class Category(Base):
     CATEGORY_BROWSE_CHANNELS_BUTTON                             = ('xpath', "//a[@id='channelcategories-tab']")
     CATEGORY_ACTION_BUTTON                                      = ('xpath', "//button[@id='galleryActionsDropdownButton']")
     CATEGORY_EDIT_BUTTON                                        = ('xpath', "//i[@class='icon-wrench']")
+    CATEGORY_RESULTS_ENTRY_NAME                                 = ('xpath', "//span[@class='results-entry__name']")
+    
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
-        tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
-        try:
-            self.get_elements(tmpEntrySearchName)[2].click()
-            sleep(3)
-            return True
-        except:
-            return False
-        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
+            try:
+                self.get_elements(tmpEntrySearchName)[2].click()
+                sleep(3)
+                return True
+            except:
+                return False
+        else:
+            return self.click(self.CATEGORY_RESULTS_ENTRY_NAME, multipleElements=True)
+            
+            
     def navigateToCategory(self, categoryName):
         # Check if we are already in category page
         tmpCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
@@ -63,24 +69,36 @@ class Category(Base):
         return True
     
     
-    def searchEntryInCategory(self, entryName): 
-        # Click on the magnafine glass
-        if self.click(self.CATEGORY_SEARCH_MAGNAFINE_GLASS, 30) == False:
-            writeToLog("INFO","FAILED to click on magnafine glass in category page")
-            return False
-        sleep(2)
-        # Search Entry     
-        self.clsCommon.myMedia.getSearchBarElement().click()
-        self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
+    def searchEntryInCategory(self, entryName, exactSearch=True):
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            # Click on the magnafine glass
+            if self.click(self.CATEGORY_SEARCH_MAGNAFINE_GLASS, 30) == False:
+                writeToLog("INFO","FAILED to click on magnafine glass in category page")
+                return False
+            sleep(2)
+            # Search Entry     
+            self.clsCommon.myMedia.getSearchBarElement().click()
+            
+        if exactSearch == True:
+            searchLine = '"' + entryName + '"'
+        else:
+            searchLine = entryName        
+        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
 
-        # Verify that the entry was found  
-        tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
-        if self.get_element(tmpEntrySearchName) == None:
-            writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
-            return False
-        
+
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:    
+            # Verify that the entry was found  
+            tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
+            if self.get_element(tmpEntrySearchName) == None:
+                writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
+                return False
+        else:
+            elText = self.wait_visible(self.CATEGORY_RESULTS_ENTRY_NAME).text
+            if not elText == entryName:
+                writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
+                return False                
         writeToLog("INFO","Success entry '" + entryName + "' was found")
         return True
         

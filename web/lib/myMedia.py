@@ -73,20 +73,31 @@ class MyMedia(Base):
     MY_MEIDA_ENTRY_NAME_ELASTIC_SEARCH_RESULT                   = ('xpath', "//em[text()='ENTRY_NAME']]")
     
     #=============================================================================================================
+#     def getSearchBarElementOld(self):
+#         try:
+#             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+#                 # Check which search bar do we have: old or new (elastic)
+#                 # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
+#                 if self.clsCommon.isElasticSearchOnPage():
+#                     return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
+#                 else:
+#                     return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
+#             else:
+#                 return self.wait_visible(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
+#         except:
+#             writeToLog("INFO","FAILED get Search Bar element")
+#             return False
     def getSearchBarElement(self):
         try:
-            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-                # Check which search bar do we have: old or new (elastic)
-                # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
-                if self.clsCommon.isElasticSearchOnPage():
-                    return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
-                else:
-                    return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
+            # Check which search bar do we have: old or new (elastic)
+            # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
+            if self.clsCommon.isElasticSearchOnPage():
+                return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
             else:
-                return self.wait_visible(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
+                return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 30, True)
         except:
             writeToLog("INFO","FAILED get Search Bar element")
-            return False
+            return False        
 
     
     # This method, clicks on the menu and My Media
@@ -118,6 +129,7 @@ class MyMedia(Base):
                 return False
         
         return True
+    
         
     # Author: Michal Zomper   
     def deleteSingleEntryFromMyMedia(self, entryName):
@@ -194,7 +206,7 @@ class MyMedia(Base):
         return success
      
         
-    def searchEntryMyMedia(self, entryName, forceNavigate=True):
+    def searchEntryMyMedia(self, entryName, forceNavigate=True, exactSearch=True):
         # Check if my media page is already open
         # Navigate to My Media
         if self.navigateToMyMedia(forceNavigate) == False:
@@ -203,7 +215,11 @@ class MyMedia(Base):
         sleep(3)
         # Search Entry     
         self.getSearchBarElement().click()
-        self.getSearchBarElement().send_keys('"' + entryName + '"' + Keys.ENTER)
+        if exactSearch == True:
+            searchLine = '"' + entryName + '"'
+        else:
+            searchLine = entryName
+        self.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
