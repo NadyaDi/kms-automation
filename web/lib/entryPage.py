@@ -173,32 +173,32 @@ class EntryPage(Base):
     def navigateToEntry(self, entryName="", navigateFrom = enums.Location.MY_MEDIA, categoryName ="", channelName= ""):
         if navigateFrom == enums.Location.MY_MEDIA:
             if self.navigateToEntryPageFromMyMedia(entryName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_MEDIA)
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.MY_MEDIA))
                 return False  
             
         elif navigateFrom == enums.Location.CATEGORY_PAGE:
             if self.navigateToEntryPageFromCategoryPage(entryName, categoryName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.CATEGORY_PAGE)
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.CATEGORY_PAGE))
                 return False  
                 
         elif navigateFrom == enums.Location.CHANNEL_PAGE:
             if self.clsCommon.channel.naviagteToEntryFromChannelPage(entryName, channelName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.CHANNEL_PAGE)
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.CHANNEL_PAGE))
                 return False
             
         elif navigateFrom == enums.Location.UPLOAD_PAGE:
             if self.clsCommon.upload.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.UPLOAD_PAGE)
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.UPLOAD_PAGE))
                 return False  
             
         elif navigateFrom == enums.Location.MY_HISTORY:
             if self.navigateToEntryPageFromMyHistory(entryName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_HISTORY)
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.MY_HISTORY))
                 return False   
                 
         elif navigateFrom == enums.Location.HOME:
             if self.navigateToEntryPageFromHomePage(entryName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + enums.Location.MY_HISTORY)
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.MY_HISTORY))
                 return False               
         sleep(2)
         return True

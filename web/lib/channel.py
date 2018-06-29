@@ -618,7 +618,7 @@ class Channel(Base):
         return True    
 
             
-    def naviagteToEntryFromChannelPage(self, entryName, channelName):
+    def naviagteToEntryFromChannelPage(self, entryName, channelName, exactSearch=True):
         # Check if we are already in channel page
         tmp_channel_title = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
         if self.wait_visible(tmp_channel_title, 5) != False:
@@ -629,24 +629,32 @@ class Channel(Base):
             writeToLog("INFO","FAILED to navigate to Channel page '" + channelName + "'")
             return False
         
-        if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
-            writeToLog("INFO","FAILED to click on Channel's search Tab icon")
-            return False
+        if self.clsCommon.isElasticSearchOnPage() == False:
+            if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
+                writeToLog("INFO","FAILED to click on Channel's search Tab icon")
+                return False
+            sleep(2)
+            # Search Entry     
+            self.clsCommon.myMedia.getSearchBarElement().click()
             
-        if self.click(self.CHANNEL_PAGE_SEARCH_BAR) == False:
-            writeToLog("INFO","FAILED to click on Channel's search bar text box")
-            return False
-            
-        if self.send_keys(self.CHANNEL_PAGE_SEARCH_BAR, entryName) == False:
-            writeToLog("INFO","FAILED to type in channel search bar")
-            return False
+        if exactSearch == True:
+            searchLine = '"' + entryName + '"'
+        else:
+            searchLine = entryName        
+        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
+        sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
         
-        tmpEntry = self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)
-        if self.click(tmpEntry, 20, True) == False:
-            writeToLog("INFO","FAILED to click on entry thumbnail")
-            return False
-        
+        if self.clsCommon.isElasticSearchOnPage() == False:
+            tmpEntry = self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)
+            if self.click(tmpEntry, 20, True) == False:
+                writeToLog("INFO","FAILED to click on entry")
+                return False
+        else:
+            if self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on entry")
+                return False
+    
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         if self.wait_visible(tmp_entry_name, 20) == False:
             writeToLog("INFO","FAILED to verify entry page display")

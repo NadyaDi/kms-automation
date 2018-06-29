@@ -61,6 +61,7 @@ class MyMedia(Base):
     MY_MEDIA_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
     MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath', "//a[@class='btn btn-primary' and text()='OK']")
     MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
+    MY_MEDIA_ENTRY_THUMBNAIL_ELASTIC_SEARCH                     = ("xpath", "//img[@class='entryThumbnail__img']")
     MY_MEDIA_REMOVE_SEARCH_ICON                                 = ('xpath', "//i[@class='icon-remove']")
     MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath',"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
@@ -70,7 +71,7 @@ class MyMedia(Base):
     MY_MEDIA_EXPEND_MEDIA_DETAILS                               = ('xpath', "//div[@class='accordion-body in collapse contentLoaded' and @id='collapse_ENTRY_ID']")
     MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
-    MY_MEIDA_ENTRY_NAME_ELASTIC_SEARCH_RESULT                   = ('xpath', "//em[text()='ENTRY_NAME']]")
+    SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     
     #=============================================================================================================
 #     def getSearchBarElementOld(self):
@@ -153,6 +154,7 @@ class MyMedia(Base):
         writeToLog("INFO","Entry: '" + entryName + "' Was Deleted")
         return True
     
+    
     #  @Author: Tzachi Guetta      
     # The following method can handle list of entries and a single entry:
     #    in order to delete list of entries pass a List[] of entries name, for single entry - just pass the entry name
@@ -224,22 +226,34 @@ class MyMedia(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
         
-        
+#     def clickEntryAfterSearchInMyMediaOld(self, entryName):
+#         # Click on the Entry name
+#         if self.clsCommon.isElasticSearchOnPage() == True:
+#             tempLocator = ('xpath', "//em[text()='" + entryName + "']")
+#         else:
+#             tempLocator = ('xpath', "//span[@class='entry-name' and text()='" + entryName + "']")
+#             
+#         if self.click(tempLocator, 10) == False:
+#             # If entry not found, search for 'No Entries Found' alert
+#             if self.wait_for_text(self.MY_MEDIA_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
+#                 writeToLog("INFO","No Entry: '" + entryName + "' was found")
+#             else:
+#                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
+#             return False
+#         return True
+    
+           
     def clickEntryAfterSearchInMyMedia(self, entryName):
-        # Click on the Entry name
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            tempLocator = ('xpath', "//em[text()='" + entryName + "']")
-        else:
-            tempLocator = ('xpath', "//span[@class='entry-name' and text()='" + entryName + "']")
-            
-        if self.click(tempLocator, 10) == False:
-            # If entry not found, search for 'No Entries Found' alert
-            if self.wait_for_text(self.MY_MEDIA_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
-                writeToLog("INFO","No Entry: '" + entryName + "' was found")
-            else:
-                writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
-            return False
-        return True    
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:            
+                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
+                return False
+        else:    
+            if self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
+                return False                    
+        return True
+             
     
     # Author: Michal Zomper    
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
@@ -849,15 +863,21 @@ class MyMedia(Base):
         
         if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
             writeToLog("INFO","FAILD to search entry name: '" + entryName + "' in my media")
-            return True 
+            return False 
         
-        tmp_entryThumbnail = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName))
-        if self.click(tmp_entryThumbnail, 20) == False:
-            writeToLog("INFO","FAILED to click on entry thumbnail: " + entryName)
-            
+        if self.clsCommon.isElasticSearchOnPage() == False:
+            tmp_entryThumbnail = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName))
+            if self.click(tmp_entryThumbnail, 20) == False:
+                writeToLog("INFO","FAILED to click on entry thumbnail: " + entryName)
+                return False
+        else:
+            if self.click(self.MY_MEDIA_ENTRY_THUMBNAIL_ELASTIC_SEARCH, 20) == False:
+                writeToLog("INFO","FAILED to click on entry thumbnail: " + entryName)
+                return False
+                            
         if self.wait_visible(tmp_entry_name, 30) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
-            return True 
+            return False
         
         sleep(2)
         writeToLog("INFO","Success, entry was open successfully")
