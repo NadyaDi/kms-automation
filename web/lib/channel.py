@@ -40,7 +40,8 @@ class Channel(Base):
     CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@id='channel_title' and contains(text(), 'CHANNEL_TITLE')]")
     CHANNEL_PAGE_SEARCH_TAB                         = ('id', 'channelSearch-tab')
     CHANNEL_PAGE_SEARCH_BAR                         = ('id', 'searchBar')
-    CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
+#     CHANNEL_PAGE_NO_RESULT_ALERT_OLD                = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
+    CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[@class='no-results_body' and contains(text(),'No Media results were found')]")
     CHANNEL_PAGE_ENTRY_THUMBNAIL                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and contains(@title,'ENTRY_NAME')]")
     CHANNEL_DELETE_ALERT                            = ('xpath', "//div[@class='alert alert-success ']")
     CHANNEL_ACTION_BUTTON                           = ('id', 'channelActionsDropdown')
@@ -508,35 +509,45 @@ class Channel(Base):
         return True
     
     #  Author: Tzachi Guetta
-    def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
+    def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True, exactSearch=True):
         try:                
             if self.navigateToChannel(channelName) == False:
                 writeToLog("INFO","FAILED to navigate to Channel page")
                 return False
 
-            if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
-                writeToLog("INFO","FAILED to click on Channel's search Tab")
-                return False
-            
-            if self.click(self.CHANNEL_PAGE_SEARCH_BAR) == False:
-                writeToLog("INFO","FAILED to click on Channel's search bar")
-                return False
-            
-            if self.send_keys(self.CHANNEL_PAGE_SEARCH_BAR, entryName) == False:
-                writeToLog("INFO","FAILED to type in channel search bar")
-                return False
-            
+            if self.clsCommon.isElasticSearchOnPage() == False:
+                if self.click(self.CHANNEL_PAGE_SEARCH_TAB) == False:
+                    writeToLog("INFO","FAILED to click on Channel's search Tab icon")
+                    return False
+                sleep(2)
+                # Search Entry     
+                self.clsCommon.myMedia.getSearchBarElement().click()
+                
+            if exactSearch == True:
+                searchLine = '"' + entryName + '"'
+            else:
+                searchLine = entryName        
+            self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
+            sleep(2)
             self.clsCommon.general.waitForLoaderToDisappear()
             
             if self.wait_visible(self.CHANNEL_PAGE_NO_RESULT_ALERT, 5) == False:
                 if isExpected == True:
-                    self.get_element((self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)))
-                    writeToLog("INFO","As Expected: Entry was found in the channel")
-                    return True
+                    if self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, 30, multipleElements=True) == False:
+                        writeToLog("INFO","NOT Expected: Entry was not found in the channel")
+                        return False                        
+                        writeToLog("INFO","As Expected: Entry was found in the channel")
+                        return True
+                    else:
+                        writeToLog("INFO","As Expected: Entry was found in the channel")
+                        return True
                 else:
-                    self.get_element((self.CHANNEL_PAGE_ENTRY_THUMBNAIL[0], self.CHANNEL_PAGE_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName)))
-                    writeToLog("INFO","NOT Expected: Entry was found in the channel")
-                    return False
+                    if self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, 30, multipleElements=True) == False:
+                        writeToLog("INFO","As Expected: Entry was not found in the channel")
+                        return True                         
+                    else:
+                        writeToLog("INFO","NOT Expected: Entry was found in the channel")
+                        return False                  
             else:
                 if isExpected == False:
                     writeToLog("INFO","As Expected: Entry wasn't found in the channel")
@@ -552,6 +563,7 @@ class Channel(Base):
             else:
                 writeToLog("INFO","NOT Expected: Entry wasn't found in the channel")
                 return False
+            
             
     #  Author: Elad
     #  Description:Verify multi entries in channel
