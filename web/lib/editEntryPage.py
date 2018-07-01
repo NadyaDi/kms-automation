@@ -259,7 +259,7 @@ class EditEntryPage(Base):
             # else = use the default value
             
             if len(startTime) != 0:
-                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, startTime)
+                self.setScheduleTime(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, startTime)
                 sleep(2) 
             # else = use the default value
             
@@ -270,7 +270,7 @@ class EditEntryPage(Base):
             # else = use the default value
             
             if len(endTime) != 0:
-                self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, endTime)
+                self.setScheduleTime(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, endTime)
                 sleep(2)
             # else = use the default value
             
@@ -280,7 +280,6 @@ class EditEntryPage(Base):
                 if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
                     writeToLog("INFO","FAILED to click on save button ")
                     return False
-            
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
                 sleep(2) 
@@ -302,6 +301,34 @@ class EditEntryPage(Base):
             return False
           
         return True
+
+
+    # This is work around method for set Schedule Time, instead of using "self.clear_and_send_keys(self.EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR, startTime)"
+    # self.clear_and_send_keys() stopped to work with the schedule filed, it wont clear the filed
+    def setScheduleTime(self, locator, text, multipleElements=False):
+        try:
+            element = self.wait_visible(locator, 15, multipleElements)
+            if element == False:
+                writeToLog("INFO", "FAILED to get schedule time filed")
+                return False
+            
+            ActionChains(self.driver).click(element).perform()
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            element.send_keys(Keys.BACK_SPACE)
+            sleep(2)
+            element.send_keys(text)
+            return True
+        except:
+            writeToLog("INFO", "FAILED to type text: " + str(text))
+            return False    
 
       
     # Author: Michal Zomper    
@@ -437,9 +464,9 @@ class EditEntryPage(Base):
        
     def setScheduleDate(self, dateStr, startOrEnd):
         if startOrEnd.lower() == 'start':
-            locator = self.EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR
+            locator = (self.EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR[0], self.EDIT_ENTRY_SCHEDULING_START_DATE_CALENDAR[1] + "/following-sibling::span")
         elif startOrEnd.lower() == 'end':
-            locator = self.EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR
+            locator = (self.EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR[0], self.EDIT_ENTRY_SCHEDULING_END_DATE_CALENDAR[1] + "/following-sibling::span")
         else:
             writeToLog("INFO","FAILED, unknown Schedule start/stop type: '" + startOrEnd + "'")
             return False            
