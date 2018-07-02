@@ -614,6 +614,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to get the import alert message")
                 return False
             
+            sleep(3)
             if self.click(self.CHANNEL_CLICKHERE_REFRESH_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on click here ")
                 return False
