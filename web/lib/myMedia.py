@@ -249,12 +249,44 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
                 return False
         else:    
-            if self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True) == False:
+            result = self.getResultAfterSearch(entryName)
+            if result == False:
+                return False
+
+            if self.clickElement(result) == False:
                 writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
-                return False                    
+                return False
         return True
-             
     
+    
+    # This method for Elastic Search (new UI), returns the result element.         
+    def getResultAfterSearch(self, searchString):
+        results = self.wait_elements(self.SEARCH_RESULTS_ENTRY_NAME, 30)
+        if results == False:
+            writeToLog("INFO","No entries found")
+            return False
+        
+        for result in results:
+            if result.text == searchString:
+                return result        
+    
+        writeToLog("INFO","No entries found after search entry: '" + searchString + "'") 
+        return False        
+        
+        
+    # This method for Elastic Search (new UI), clicks on the returned result element.         
+    def clickResultEntryAfterSearch(self, entryName):
+        result = self.getResultAfterSearch(entryName)
+        if result == False:
+            writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
+            return False
+        else:
+            if self.clickElement(result) == False:
+                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
+                return False
+        return True
+            
+            
     # Author: Michal Zomper    
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
         # Click on the Edit Entry button
@@ -281,6 +313,7 @@ class MyMedia(Base):
     
         return True
     
+    
     #  @Author: Tzachi Guetta     
     def checkSingleEntryInMyMedia(self, entryName):
         # Click on the Entry's check-box in MyMedia page
@@ -291,6 +324,7 @@ class MyMedia(Base):
             return False
         
         return True
+    
     
     #  @Author: Tzachi Guetta     
     def checkEntriesInMyMedia(self, entriesNames):
