@@ -533,7 +533,7 @@ class Channel(Base):
             
             if self.wait_visible(self.CHANNEL_PAGE_NO_RESULT_ALERT, 5) == False:
                 if isExpected == True:
-                    if self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, 30, multipleElements=True) == False:
+                    if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
                         writeToLog("INFO","NOT Expected: Entry was not found in the channel")
                         return False                        
                         writeToLog("INFO","As Expected: Entry was found in the channel")
@@ -542,7 +542,7 @@ class Channel(Base):
                         writeToLog("INFO","As Expected: Entry was found in the channel")
                         return True
                 else:
-                    if self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, 30, multipleElements=True) == False:
+                    if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
                         writeToLog("INFO","As Expected: Entry was not found in the channel")
                         return True                         
                     else:
@@ -664,8 +664,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to click on entry")
                 return False
         else:
-            if self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on entry")
+            if self.clsCommon.myMedia.clickResultEntryAfterSearch(entryName) == False:
                 return False
     
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
