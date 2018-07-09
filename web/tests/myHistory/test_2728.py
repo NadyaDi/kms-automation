@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Continue Watching playlist in home page
     # Test description:
     # Check that entry that wasn't played until end has 'started' status and is displayed in continue watching list
     # The test's Flow: 

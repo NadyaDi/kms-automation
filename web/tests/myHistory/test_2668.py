@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     # @Author: Inbar Willman
+    # Test Name: Watch History - Entry "Viewed in" gallery
     # Test description:
     # Check that entry that was played in context of galley is displayed in My History.
     # The test's Flow: 
@@ -34,7 +35,7 @@ class Test:
     categoryList = [categorylName]
     entryDescription = "description"
     entryTags = "tag1,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
