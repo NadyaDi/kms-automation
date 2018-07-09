@@ -74,24 +74,9 @@ class MyMedia(Base):
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     
     #=============================================================================================================
-#     def getSearchBarElementOld(self):
-#         try:
-#             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-#                 # Check which search bar do we have: old or new (elastic)
-#                 # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
-#                 if self.clsCommon.isElasticSearchOnPage():
-#                     return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
-#                 else:
-#                     return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
-#             else:
-#                 return self.wait_visible(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
-#         except:
-#             writeToLog("INFO","FAILED get Search Bar element")
-#             return False
     def getSearchBarElement(self):
         try:
             # Check which search bar do we have: old or new (elastic)
-            # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
             if self.clsCommon.isElasticSearchOnPage():
                 return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
             else:
