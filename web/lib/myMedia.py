@@ -201,7 +201,11 @@ class MyMedia(Base):
         
         sleep(3)
         # Search Entry     
-        self.getSearchBarElement().click()
+        searchBarElement = self.getSearchBarElement()
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get saerch bar element")
+            return False
+        searchBarElement.click()
         if exactSearch == True:
             searchLine = '"' + entryName + '"'
         else:
