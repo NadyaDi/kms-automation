@@ -91,9 +91,9 @@ class Common():
         elif self.base.getAppUnderTest() == enums.Application.SHARE_POINT:
             return self.sharePoint.loginToSharepoint(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)        
     
+    
     # Author: Tzachi Guetta     
     def navigateTo(self, navigateTo, navigateFrom='', nameValue='', forceNavigate=False):
-        
         if navigateTo == enums.Location.ENTRY_PAGE:
             if self.entryPage.navigateToEntry(nameValue, navigateFrom) == False:
                 raise Exception("INFO","FAILED navigate to entry: '" + nameValue)
@@ -192,13 +192,8 @@ class Common():
     
     
     # Check which search bar do we have: old or new (elastic)
-    # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)    
     def isElasticSearchOnPage(self):
-        try:
-            countSearchEl = len(self.base.get_elements(self.myMedia.MY_MEDIA_ELASTIC_SEARCH_BAR))
-            if countSearchEl > 1:
-                return True
-            else:
-                return False
-        except:
-            return False       
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            return True
+        else:
+            return False
