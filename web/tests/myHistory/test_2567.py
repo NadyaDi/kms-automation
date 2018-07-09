@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - delete entry (Published to channel) from watch list history
     # Test description:
     # Before entry is played, history page doesn't displayed the entry
     # After entry was played, it displayed in history page

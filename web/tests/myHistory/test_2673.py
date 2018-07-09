@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Entry "Viewed in" Embed
     # Test description:
     # Check that entry that viewed in embed link is displayed in My History
     # The test's Flow: 

@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Entry appear in both continue watch & recently watched playlists - Replay
     # Test description:
     # Check that entry that wasn't played until end has 'started' status and is displayed in continue watching list
     # The test's Flow: 
