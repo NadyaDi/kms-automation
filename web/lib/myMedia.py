@@ -50,7 +50,8 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI                         = ('xpath', "//div[@id ='accordion_ENTRY_ID']")
     MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id ='accordion-ENTRY_ID']/i[@class='icon-plus-sign kmstooltip']")
     MY_MEDIA_ENTRY_CHILD_POPUP                                  = ('xpath', "//strong[@class='valign-top']")
-    MY_MEDIA_SORT_BY_DROPDOWNLIST                               = ('xpath', "//a[@id='sort-btn']")
+    MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI                        = ('xpath', "//a[@id='sort-btn']")
+    MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI                        = ('xpath', "//a[@id='sortBy-menu-toggle']")
     MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST                      = ('xpath', "//a[@id='status-btn']")
     MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST                        = ('xpath', "//a[@id='type-btn']")
     MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
@@ -610,9 +611,12 @@ class MyMedia(Base):
         
     # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
-        try:                
+        try: 
             if dropDownListName == enums.SortAndFilter.SORT_BY:
-                tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST
+                if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+                    tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
+                else:
+                    tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
             
             elif dropDownListName == enums.SortAndFilter.PRIVACY:
                 tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
@@ -647,6 +651,7 @@ class MyMedia(Base):
         writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
+
     
         # Author: Tzachi Guetta 
     def sortAndFilterInMyMedia(self, sortBy='', filterPrivacy='', filterMediaType='', filterCollaboration='', filterScheduling='', resetFields=False):
@@ -1043,7 +1048,7 @@ class MyMedia(Base):
                      
     #  @Author: Michal Zomper    
     # The function check the the entries sort in my media is correct
-    def verifySortInMyMedia(self, sortBy, entriesList):
+    def verifySortInMyMediaOldUi(self, sortBy, entriesList):
         if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
             writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
             return False
@@ -1071,6 +1076,36 @@ class MyMedia(Base):
         writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
         return True   
     
+    
+    
+    
+    def verifySortInMyMedia(self, sortBy, entriesList):
+        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
+            return False
+                
+        if self.showAllEntriesInMyMedia() == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+            
+        try:
+            entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        
+        entriesInMyMedia = entriesInMyMedia.split("\n")
+        prevEntryIndex = -1
+        
+        for entry in entriesList:
+            currentEntryIndex = entriesInMyMedia.index(entry.lower())
+            if prevEntryIndex > currentEntryIndex:
+                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                return False
+            prevEntryIndex = currentEntryIndex
+                
+        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+        return True   
     
     #  @Author: Michal Zomper    
     def showAllEntriesInMyMedia(self, timeOut=60):
