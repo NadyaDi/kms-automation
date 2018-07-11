@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test name: Entry page - Close discussion
     # Test description:
     # Close discussion
     # The test's Flow: 

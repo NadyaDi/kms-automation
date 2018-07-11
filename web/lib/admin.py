@@ -509,6 +509,12 @@ class Admin(Base):
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
         
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        
         return True         
     
     

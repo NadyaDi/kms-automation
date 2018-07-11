@@ -51,6 +51,8 @@ class EntryPage(Base):
     ENTRY_PAGE_MY_MEDIA_OPTION                             = ('xpath', '//a[@id="tab-entrySideBarPane-Sidemymedia-3"]')
     ENTRY_PAGE_ELATED_MEDIA_OPTION                         = ('xpath', '//a[@id="tab-entrySideBarPane-Sidemymedia-2"]')
     ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES                   = ('xpath', '//div[@class="photo-group thumb_wrapper" and @title="ENTRY_NAME"]')
+    ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab" and @class="btn responsiveSizePhone tab-attachments-tab"]')
+    ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON                   = ('xpath', '//i[@class="icon-download icon-large"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -569,4 +571,34 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to displayed My Media entry:" + entry)       
                 return False                 
                 
-        return True                     
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    # Click on attachments tab
+    def clickOnAttachmentTab(self):        
+        # Click on attachment tab   
+        if self.click(self.ENTRY_PAGE_ATTACHMENTS_TAB) == False:
+            writeToLog("INFO","FAILED to click on attachments tab")       
+            return False              
+    
+    
+    # @Author: Inbar Willman 
+    # Download attachments file
+    def downloadAttachmentFromEntryPage(self, originalPath, downloadPath):
+        # Click on download tab
+        if self.clickOnAttachmentTab() == False:
+            writeToLog("INFO","FAILED to click on attachments tab")       
+            return False   
+        
+        # Click on download icon   
+        if self.click(self.ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON) == False:
+            writeToLog("INFO","FAILED to click on download attachments icon")       
+            return False   
+        
+        # Compare between uploaded file and download file 
+        if self.clsCommon.compareBetweenTwoFilesBinary(originalPath, downloadPath) == False:
+            writeToLog("INFO","Failed to click on to download file correctly")
+            return False    
+                
+        return True                      
