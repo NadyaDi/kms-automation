@@ -24,6 +24,7 @@ from kafBB import BlackBoard
 from kafSharepoint import SharePoint
 from selenium.webdriver.common.keys import Keys
 from api import ApiClientSession
+import filecmp
 
 
     #============================================================================================================
@@ -200,3 +201,14 @@ class Common():
                 return False
         else:
             return False
+        
+        
+    # @Author: Inbar Willman
+    # Compare between two files binary
+    def compareBetweenTwoFilesBinary(self, path1, path2): 
+        # Compare between two files
+        if filecmp.cmp(path1, path2) == False:
+            writeToLog("INFO","FAILED to find match between two files")
+            return False      
+        
+        return True      
