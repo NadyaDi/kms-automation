@@ -56,7 +56,8 @@ class MyMedia(Base):
     MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST                        = ('xpath', "//a[@id='type-btn']")
     MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
     MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST                  = ('xpath', "//a[@id='sched-btn']")
-    MY_MEDIA_DROPDOWNLIST_ITEM                                  = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
+    MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI                           = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
+    MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI                           = ('xpath', "//span[@class='filter-checkbox__label' and contains(text(), 'DROPDOWNLIST_ITEM')]")
     MY_MEDIA_ENTRY_TOP                                          = ('xpath', "//span[@class='entry-name' and text()='ENTRY_NAME']")
     MY_MEDIA_END_OF_PAGE                                        = ('xpath', "//div[@class='alert alert-info endlessScrollAlert']")
     MY_MEDIA_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
@@ -73,7 +74,7 @@ class MyMedia(Base):
     MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
-    
+    MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -607,51 +608,62 @@ class MyMedia(Base):
                 
         writeToLog("INFO","Success, All entries label were verified")
         return True 
-        
-        
-    # Author: Tzachi Guetta 
+
+
+        # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
         try: 
-            if dropDownListName == enums.SortAndFilter.SORT_BY:
-                if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.clsCommon.isElasticSearchOnPage() == True:
+                if dropDownListName == enums.SortAndFilter.SORT_BY:
                     tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
-                else:
-                    tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
-            
-            elif dropDownListName == enums.SortAndFilter.PRIVACY:
-                tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
                 
-            elif dropDownListName == enums.SortAndFilter.MEDIA_TYPE:
-                tmplocator = self.MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST
-            
-            elif dropDownListName == enums.SortAndFilter.COLLABORATION:
-                tmplocator = self.MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST
                 
-            elif dropDownListName == enums.SortAndFilter.SCHEDULING:
-                tmplocator = self.MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST
+                elif self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                    writeToLog("INFO","FAILED to click on filters button in my media")
+                    return False
+                sleep(2)
                 
+                tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI, "DROPDOWNLIST_ITEM", dropDownListItem) 
+                if self.click(tmpEntry, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem)
+                    return False
             else:
-                writeToLog("INFO","FAILED, drop-down-list name was not provided")
-                return False
+                if dropDownListName == enums.SortAndFilter.SORT_BY:
+                    tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
                 
-            if self.click(tmplocator, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
-                return False
-            
-            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
-            if self.click(tmpEntry, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
-                return False
+                elif dropDownListName == enums.SortAndFilter.PRIVACY:
+                    tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
+                    
+                elif dropDownListName == enums.SortAndFilter.MEDIA_TYPE:
+                    tmplocator = self.MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST
+                
+                elif dropDownListName == enums.SortAndFilter.COLLABORATION:
+                    tmplocator = self.MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST
+                    
+                elif dropDownListName == enums.SortAndFilter.SCHEDULING:
+                    tmplocator = self.MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST
+                    
+                else:
+                    writeToLog("INFO","FAILED, drop-down-list name was not provided")
+                    return False
+                    
+                if self.click(tmplocator, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
+                    return False
+                
+                tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
+                if self.click(tmpEntry, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
+                    return False
 
             self.clsCommon.general.waitForLoaderToDisappear()    
         
         except NoSuchElementException:
             return False
         
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
         return True
     
-
     
         # Author: Tzachi Guetta 
     def sortAndFilterInMyMedia(self, sortBy='', filterPrivacy='', filterMediaType='', filterCollaboration='', filterScheduling='', resetFields=False):
@@ -1144,14 +1156,14 @@ class MyMedia(Base):
             #if entry[1] == True:
             if entriesList[entry] == True:
                 #if entry[0].lower() in entriesInMyMedia == False:
-                if entry.lower() in entriesInMyMedia == False:
+                if (entry.lower() in entriesInMyMedia) == False:
                     writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in my media although he need to be found")
                     return False
                 
             #elif entry[1] == False:
             if entriesList[entry] == False:
                 # if entry[0].lower() in entriesInMyMedia == True:
-                if entry.lower() in entriesInMyMedia == True:
+                if (entry.lower() in entriesInMyMedia) == True:
                     writeToLog("INFO","FAILED, entry '" + entry + "' was found in my media although he doesn't need to be found")
                     return False
                 
