@@ -64,7 +64,8 @@ class MyMedia(Base):
     MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath', "//a[@class='btn btn-primary' and text()='OK']")
     MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     MY_MEDIA_ENTRY_THUMBNAIL_ELASTIC_SEARCH                     = ("xpath", "//img[@class='entryThumbnail__img']")
-    MY_MEDIA_REMOVE_SEARCH_ICON                                 = ('xpath', "//i[@class='icon-remove']")
+    MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI                          = ('xpath', "//i[@class='icon-remove']")
+    MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI                          = ('xpath', "//a[@class='clear searchForm_icon']")
     MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath',"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
@@ -651,7 +652,7 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
                     return False
                 
-                tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
+                tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
                 if self.click(tmpEntry, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
                     return False
@@ -661,7 +662,7 @@ class MyMedia(Base):
         except NoSuchElementException:
             return False
         
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
+        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + str(dropDownListItem) + " was set successfully")
         return True
     
     
@@ -944,20 +945,31 @@ class MyMedia(Base):
         if type(entriesList) is list:
             i=1 
             for entry in entriesList: 
-                if entry in searchedEntries[len(searchedEntries)-i].text == False:
+                if (entry in searchedEntries[len(searchedEntries)-i].text) == False:
                     writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
                     return False
                 i = i+1
                 
         # only one entry 
         else:
-            if entriesList in searchedEntries[0].text == False:
+            if (entriesList in searchedEntries[0].text) == False:
                 writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
                 return False
             
-        if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON, 15, multipleElements=True) == False:
-            writeToLog("INFO","FAILED click on the remove search icon")
-            return False
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            try:
+                clear_button =self.get_elements(self.MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI)
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find clear search icon")
+                return False
+            
+            if self.clickElement(clear_button[1]) == False:
+                writeToLog("INFO","FAILED click on the remove search icon")
+                return False
+        else:
+            if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI, 15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED click on the remove search icon")
+                return False
         self.clsCommon.general.waitForLoaderToDisappear()
              
         sleep(1)
@@ -1279,7 +1291,7 @@ class MyMedia(Base):
             listOfCategories =""  
             for category in categories:
                 listOfCategories = listOfCategories + category + " "
-            listOfCategories = listOfCategories.strip()
+            listOfCategories = (listOfCategories.strip())
                 
             if listOfCategories in tmpDetails == False:
                 writeToLog("INFO","FAILED to find category '" + category + "' under the entry '" + entryName + "' published in option")
@@ -1300,7 +1312,7 @@ class MyMedia(Base):
             listOfChannels =""   
             for channel in channels:
                 listOfChannels = listOfChannels + channel + " "
-            listOfChannels = listOfChannels.strip()
+            listOfChannels = (listOfChannels.strip())
                 
             if listOfChannels in tmpDetails == False:
                 writeToLog("INFO","FAILED to find channel '" + channel + "' under the entry '" + entryName + "' published in option")
