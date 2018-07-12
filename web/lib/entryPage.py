@@ -398,6 +398,7 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to find like button")
             return False
         
+        sleep(2)
         prev_likeAmount = prev_likeAmount.text
         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
             prev_tmp = prev_likeAmount.split('\n')
