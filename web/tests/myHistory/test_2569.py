@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - clear history
     # Test description:
     # All played entries are displayed in My History page
     # When clicking 'Clear All' - all entries are removed from My history

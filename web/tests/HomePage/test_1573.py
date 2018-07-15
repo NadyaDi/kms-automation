@@ -121,7 +121,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED navigate to home page")
                 return
-  
+            
+            sleep(5)
             writeToLog("INFO","Step 8: Going verify home page playlist name")
             tmp_playlist_name = (self.common.home.HOME_PLAYLIST[0], self.common.home.HOME_PLAYLIST[1].replace('PLAYLIST', self.playlistName)) 
             if self.common.base.is_visible(tmp_playlist_name) == False:

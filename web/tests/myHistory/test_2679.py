@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Resume playback
     # Test description:
     # Check that when resume playback is enabled progress bar is displayed in entry's thumbnail and shoe the correct time
     # The test's Flow: 

@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Search by Description
     # Test description:
     # Search in My History page by entry's description
     # The test's Flow: 

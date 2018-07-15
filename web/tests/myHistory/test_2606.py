@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Delete Entry from KMS
     # Test description:
     # After entry is deleted from KMS, he shouldn't displayed in My History
     # The test's Flow: 
