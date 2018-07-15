@@ -846,15 +846,19 @@ class Channel(Base):
         if self.send_keys(self.CHANNEL_PLAYLISTS_DESCRIPTION, playlistDescription) == False:
             writeToLog("INFO","FAILED to fill a playlistDescription title :'" + playlistDescription + "'")
             return False    
-       
+
         if self.click(self.CHANNEL_PLAYLISTS_TAG) == False:
             writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
-            return False   
-      
-        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
-            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
-            return False     
+            return False 
         
+        # Remove the Mask over all the screen (over tags filed also)
+        maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
+        self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))          
+   
+        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG_AFTER_CLICK, playlistTag, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+            return False 
+             
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
             return False        
@@ -879,7 +883,6 @@ class Channel(Base):
     
     
     def getChannelPlaylistID(self, playlisTitle):
-            
         tmp_channelplaylist_name = (self.CHANNEL_PLAYLIST_NAME[0], self.CHANNEL_PLAYLIST_NAME[1].replace('PLAYLIST_TITLE', playlisTitle))
         if self.is_visible(tmp_channelplaylist_name) == False:
             writeToLog("INFO","FAILED to find playlist '" + playlisTitle + "' in my playlist page")
@@ -896,7 +899,6 @@ class Channel(Base):
 
 
     def clickEmbedChannelPlaylistAndGetEmbedCode(self, playlisTitle):
-        
         channelPlaylist_id = self.getChannelPlaylistID(playlisTitle)
         if channelPlaylist_id == False:
             writeToLog("INFO","FAILED to get playlist id")
