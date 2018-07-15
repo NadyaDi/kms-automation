@@ -86,19 +86,23 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create free trial instance")
                 return
+            sleep(2)
              
-            localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL = "http://"+self.instanceNumber + self.InstanceSuffix
+            localSettings.LOCAL_SETTINGS_TEST_BASE_URL = "http://"+self.instanceNumber + self.InstanceSuffix
+            localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/user/login'
+            localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media'                
             writeToLog("INFO","Step 4: navigate to new instance url")
-            if self.common.base.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
+            if self.common.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED navigate to instance url: " + localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL)
+                writeToLog("INFO","Step 4: FAILED navigate to instance url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
                 return
             
             writeToLog("INFO","Step 5: login to instance")
-            if self.common.login.loginToKMS(self.UserID, self.Password, localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL+"/user/login") == False:
+            if self.common.login.loginToKMS(self.UserID, self.Password, localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to login to new instance")
                 return
+            sleep(2)
             
             writeToLog("INFO","Step 6: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:

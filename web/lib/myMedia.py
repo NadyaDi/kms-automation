@@ -924,7 +924,7 @@ class MyMedia(Base):
         writeToLog("INFO","Success, entry was open successfully")
         return True
        
-       
+   
     # @Author: Michal Zomper
     def verifyEntriesExistInMyMedia(self, searchKey, entriesList, entriesCount):
         if self.searchEntryMyMedia(searchKey) == False:
@@ -941,24 +941,46 @@ class MyMedia(Base):
         if len(searchedEntries) != entriesCount:
             writeToLog("INFO","FAILED, number of entries after search is '" + str(len(self.get_elements(self.MY_MEDIA_TABLE_SIZE))) + "' but need to be '" + str(entriesCount) + "'")
             return False 
-        
-        if type(entriesList) is list:
-            i=1 
-            for entry in entriesList: 
-                if (entry in searchedEntries[len(searchedEntries)-i].text) == False:
-                    writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
-                    return False
-                i = i+1
-                
-        # only one entry 
-        else:
-            if (entriesList in searchedEntries[0].text) == False:
-                writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
-                return False
             
+        if self.clsCommon.isElasticSearchOnPage() == False:
+            if type(entriesList) is list:
+                i=1 
+                for entry in entriesList: 
+                    if (entry in searchedEntries[len(searchedEntries)-i].text) == False:
+                        writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
+                        return False
+                    i = i+1
+            # only one entry 
+            else:
+                if (entriesList in searchedEntries[0].text) == False:
+                    writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
+                    return False
+        else:
+            if type(entriesList) is list:
+                for entry in entriesList: 
+                    if (self.getResultAfterSearch(entry)) == False:
+                        writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
+                        return False
+            # only one entry 
+            else:
+                if (self.getResultAfterSearch(entriesList)) == False:
+                    writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
+                    return False
+                
+        if self.clearSearch() == False:
+            writeToLog("INFO","FAILED to clear search textbox")
+            return False
+            
+        sleep(1)
+        writeToLog("INFO","Success, All searched entries were found after search")
+        return True  
+        
+        
+    # Author: Michal Zomper 
+    def clearSearch(self):
         if self.clsCommon.isElasticSearchOnPage() == True:
             try:
-                clear_button =self.get_elements(self.MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI)
+                clear_button = self.get_elements(self.MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI)
             except NoSuchElementException:
                 writeToLog("INFO","FAILED to find clear search icon")
                 return False
@@ -972,11 +994,10 @@ class MyMedia(Base):
                 return False
         self.clsCommon.general.waitForLoaderToDisappear()
              
-        sleep(1)
-        writeToLog("INFO","Success, All searched entries were found after search")
-        return True  
-        
-        
+        writeToLog("INFO","Success, search was clear from search textbox")
+        return True
+    
+    
     #  @Author: Michal Zomper      
     # The following method can handle list of entries and a single entry:
     #    in order to publish list of entries pass a List[] of entries name, for single entry - just pass the entry name

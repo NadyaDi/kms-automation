@@ -74,7 +74,7 @@ class  FreeTrial(Base):
             instanceFile.close()
               
             #  raise the instance number be 1 and update the file  
-            instanceFile = open(instanceNumberFilePath,'w')
+            instanceFile = open(instanceNumberFilePath,'w', encoding='utf8')
             tmp = tempInstance.split('-')
             number = int(tmp[1]) + 1
             instanceNumber = tmp[0] + "-" + str(number)

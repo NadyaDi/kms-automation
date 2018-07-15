@@ -78,7 +78,8 @@ class Test:
                     writeToLog("INFO","Step 2: FAILED to upload entry' " + self.entryName+str(i) + "'")
                     return 
                 self.entriesList.append(self.entryName+str(i))
-                                  
+            
+            sleep(2)                      
             writeToLog("INFO","Step 3: Going to search the different entry by entry name and verify that only this entry display after search in my media")  
             if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryName1, self.entryName1, 1) == False:
                 self.status = "Fail"
