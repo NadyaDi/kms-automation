@@ -51,6 +51,7 @@ class Location(Enum):
     MY_HISTORY             = 'my history'
     PENDING_TAB            = 'channel - Pending tab' 
     HOME                   = 'home'
+    CHANNEL_PLAYLIST       = 'channel playlist'
 
 
 class EditEntryPageTabName(Enum):

@@ -118,6 +118,7 @@ class Channel(Base):
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    CHANNEL_CANCEL_PLAYLIST_BUTTON                  = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
     MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
     CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
     CHANNEL_PLAYLIST_NAME                           = ('xpath', "//p[@data-lorem='3w' and text() ='PLAYLIST_TITLE']/ancestor::tr[contains(@data-playlistid, '')]")
@@ -867,7 +868,9 @@ class Channel(Base):
             if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
                 writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
                 return False       
+        sleep(3)
         
+       
         if self.click(self.CHANNEL_CANCEL_PLAYLIST_BUTTON) == False:
             writeToLog("INFO","FAILED to click on cancel")
             return False 

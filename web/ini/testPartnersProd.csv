@@ -3,3 +3,6 @@ test_742,Channel moderation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.
 test_713,category moderation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_346,Add collaborator co edit - options tab,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_0168,Publish to channel multiple,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_767,Create Channel Playlist,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_768,Filter in Channel Playlist,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_769,Embed Channel Playlist,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
