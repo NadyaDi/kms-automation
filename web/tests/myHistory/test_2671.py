@@ -12,6 +12,7 @@ class Test:
     
     #================================================================================================================================
     # @Author: Inbar Willman
+    # Test Name: Watch History - Youtube "Viewed in"
     # Test description:
     # Check that entry that youtube entry is displayed in My History.
     # The test's Flow: 

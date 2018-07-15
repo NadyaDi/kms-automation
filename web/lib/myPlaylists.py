@@ -175,7 +175,7 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
     
-
+                sleep(5)
                 if self.click(self.PLAYLIST_DELETE_BUTTON, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on playlist delete button (at my playlist page)")
                     return False
@@ -383,4 +383,153 @@ class MyPlaylists(Base):
         if self.is_visible(tmp_playler_laylout) == False:
             writeToLog("INFO","FAILED to get correct player sizes")
             return False
+        return True
+    
+    
+    # @Author: Ori Flchtman
+    # Create new Empty Playlist
+    def createEmptyPlaylist(self, entryName, playlistName):
+        if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
+            return False
+        
+        if self.clsCommon.myMedia.clickActionsAndAddToPlaylistFromMyMedia() == False:
+            writeToLog("INFO","FAILED to click on action button")
+            return False
+        
+        if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName) == False:
+            writeToLog("INFO","FAILED to type playlist name")
+            return False
+        sleep(1)
+    
+        if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on create playlist Button")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(1)
+        return True
+    
+        
+    def verifyEmptyPlaylistInMyPlaylists(self, playlistName):
+        if self.navigateToMyPlaylists() == False:
+            writeToLog("INFO","FAILED to navigate to my Playlists")
+            return False
+         
+        tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
+        if self.click(tmp_playlist_name) == False:
+            writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
+            return False        
+        
+        return True
+    
+    
+    # @Author: Ori Flchtman
+    # Add Entry from My Media to Several Playlists
+    # ! TODO: toCreateNewPlaylist - need to implement create new playlist if needed.
+    def addSingleEntryToMultiplePlaylists(self, entryName, playlistsName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
+        try:
+            if currentLocation == enums.Location.MY_MEDIA: 
+                if self.clsCommon.myMedia.navigateToMyMedia() == False:
+                    writeToLog("INFO","FAILED to navigate to my media")
+                    return False
+                
+                if type(entryName) is list: 
+                    if self.clsCommon.myMedia.checkEntriesInMyMedia(entryName) == False:
+                        writeToLog("INFO","FAILED to check entries in My-Media")
+                        return False
+                else: 
+                    if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entryName) == False:
+                        writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
+                        return False
+             
+                if self.clsCommon.myMedia.clickActionsAndAddToPlaylistFromMyMedia() == False:
+                    writeToLog("INFO","FAILED to click on action button")
+                    return False
+                    sleep(7)  
+                      
+            elif currentLocation == enums.Location.ENTRY_PAGE: 
+                sleep(1)
+                # Click on action tab
+                if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
+                    writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
+                    return False  
+                
+                sleep(1)
+                # Click on publish button
+                if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ADDTOPLAYLIST_BUTTON, 30) == False:
+                    writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
+                    return False
+            
+            else:
+                writeToLog("INFO","FAILED, Add entry to playlist: the provided ""currentLocation"" Value is not accepted ")
+                return False
+            
+            for playlist in playlistsName:
+                tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlist))   
+                if self.click(tmp_playlist_name) == False:
+                    writeToLog("INFO","FAILED to Check for playlists, something went wrong")
+                    return False
+            
+            if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on create playlist Button")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            sleep(1)
+            
+            if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                return False
+            
+            writeToLog("INFO","Entry: '" + entryName + "' added to Playlists")
+                                       
+        except NoSuchElementException:
+            return False
+            
+        return True
+    
+    
+    # Verify entry is in given playlists, isExpected is for all playlists
+    def verifySingleEntryInMultiplePlaylists(self, entryName, playlistsName='', isExpected=True):
+        try:                
+            if playlistsName != '':
+                if self.navigateToMyPlaylists() == False:
+                    writeToLog("INFO","FAILED to navigate to my Playlists")
+                    return False
+            else:
+                writeToLog("INFO","FAILED, Not provided acceptable value playlists name")
+                return False 
+                             
+            for playlist in playlistsName:    
+                tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlist))
+                if self.click(tmp_playlist_name) == False:
+                    writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
+                    return False
+
+                # Get playlist list text
+                playlist_text = self.wait_element(self.PLAYLIST_TABLE, multipleElements=True).text
+                
+                # Split playlist text
+                playlist_entries_list = playlist_text.split()
+                
+                # Check that entry displayed just once in playlist
+                numberOfDisplay = playlist_entries_list.count(entryName)
+                if numberOfDisplay == 1:
+                    if isExpected == True:
+                        writeToLog("INFO","As Expected: Entry was found in the Playlists")
+                    else:
+                        writeToLog("INFO","NOT Expected: Entry was found " + str(numberOfDisplay) + " in the Playlists")
+                        return False
+                else:
+                    if isExpected == False:
+                        writeToLog("INFO","As Expected: Entry was not found in the Playlists")
+                    else:
+                        writeToLog("INFO","NOT Expected: Entry was " + str(numberOfDisplay) + " found in the Playlists")
+                        return False                    
+               
+            return True   
+        except NoSuchElementException:
+            return False
+            
         return True

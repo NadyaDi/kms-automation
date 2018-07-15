@@ -12,6 +12,7 @@ class Test:
     
     #================================================================================================================================
     # @Author: Inbar Willman
+    # Test Name: Channel - Members tab
     # Test description:
     # Add members to channel
     # The test's Flow: 

@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Entry page - Disable comments
     # Test description:
     # Disable comments for entry
     # The test's Flow: 

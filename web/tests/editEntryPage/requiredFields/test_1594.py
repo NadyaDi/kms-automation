@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    #Test Name: Entry required fields
     # Test description:
     # In case required fields are set to an entry, need to check that those entry must be filled before publishing.
     # The following test will check that there is no option to publish entry if required fields aren't filled,

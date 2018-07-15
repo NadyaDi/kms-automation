@@ -1,9 +1,10 @@
+from selenium.webdriver.common.keys import Keys
+
 from base import *
-import clsTestService
 import clsCommon
+import clsTestService
 import enums
 import utilityTestFunc
-
 
 
 class EditEntryPage(Base):
@@ -93,11 +94,20 @@ class EditEntryPage(Base):
     EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
     EDIT_ENTRY_ATTACHMENTS_SELECT_FILE                          = ('xpath', '//label[@for="attachments_fileinput"]')
     EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE                         = ('xpath', '//input[@id="title"]')
-    EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION                   = ('xpath', '//textarea[@id="description" and @class="noresize"]')
+    EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION                   = ('xpath', '//textarea[contains(@id, "description") and @class="noresize"]')
     EDIT_ENTRY_UPLOAD_ATTACHMENTS_SAVE_BUTTON                   = ('xpath', '//a[@data-handler="1" and text()="Save"]')
     EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS                       = ('xpath', '//span[@title="ENTRY_FIELD"]')
     EDIT_ENTRY_UPLOAD_ATTACHMENT_SUCCESS_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="The information was saved successfully"]')
     EDIT_ENTRY_UPLOAD_ATTACHMENT_COMPLETED_SUCCESS_MSG          = ('xpath', '//div[@id="successmsg" and @class="alert alert-success text-center"]')
+    EDIT_ENTRY_EDIT_ATTACHMENT_ICON                             = ('xpath', '//i[@class="icon-pencil icon-large"]')
+    EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON                         = ('xpath', '//i[@class="icon-download icon-large offset1"]')
+    EDIT_ENTRY_REMOVE_ATTACHMENT_ICON                           = ('xpath', '//i[@class="icon-remove-sign icon-large offset1"]')
+    EDIT_ENTRY_DELETE_CONFIRMATION_BTN                          = ('xpath', '//a[@class="btn btn-danger" and text()="Delete"]')
+    EDIT_ENTRY_DELETE_CONFIRMATION_MSG                          = ('xpath', '//div[@class="alert alert-success " and text()="Attachment was deleted successfully"]')
+    EDIT_ENTRY_UPLOAD_SUCCESS_MSG                               = ('xpath', '//div[@class="alert alert-success " and text()="The information was saved successfully"]')
+    EDIT_ENTRY_EDIT_ATTACHMENT_MODAL_BODY                       = ('xpath', '//form[@id="changeAttachment"]')
+    EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty" and text()="No Attachments have been added to media"]')
+    EDIT_ENTRY_DELETE_ATTACHMENT_MODAL                          = ('xpath', '//a[@class="close" and text()="Delete Confirmation"]')
     #=============================================================================================================
     
     
@@ -1175,7 +1185,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","Failed to upload attachment file")
             return False              
        
-        #Insert attachment fields and save inforamtion
+        #Insert attachment fields and save information
         if self.insertAttachmentFields(attachmentsTitle, attachmentsDescription) == False:
             writeToLog("INFO","Failed to insert attachment fields - title and description")
             return False                            
@@ -1197,6 +1207,7 @@ class EditEntryPage(Base):
             return False 
         
         sleep(3)
+        
         # Click on select file
         if self.click(self.EDIT_ENTRY_ATTACHMENTS_SELECT_FILE) == False:
             writeToLog("INFO","FAILED to click select file button")
@@ -1217,14 +1228,29 @@ class EditEntryPage(Base):
     
     # @Author: Inbar Willman
     # Insert attachment title and description
-    def insertAttachmentFields(self, attachmentsTitle, attachmentsDescription):
+    def insertAttachmentFields(self, attachmentsTitle, attachmentsDescription, isNewAttachment=True):
+        #If uploading new attachment file
+        if isNewAttachment == True:
+            # Click on title field
+            if self.click(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE) == False:
+                writeToLog("INFO","FAILED to click on title field")
+                return False  
+        
+        else:    
+            # Wait to modal to be displayed
+            if self.wait_visible(self.EDIT_ENTRY_EDIT_ATTACHMENT_MODAL_BODY) == False:
+                writeToLog("INFO","FAILED to displayed edit attachments modal")
+                return False 
+        
+        sleep(2)                     
+            
         # Click on title field
         if self.click(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE) == False:
-            writeToLog("INFO","FAILED to click on title field")
-            return False        
-        
+            writeToLog("INFO","FAILED to click on description field")
+            return False              
+
         # Insert content to field
-        if self.send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE, attachmentsTitle) == False:
+        if self.clear_and_send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE, attachmentsTitle) == False:
             writeToLog("INFO","Failed to insert title")
             return False 
              
@@ -1234,7 +1260,7 @@ class EditEntryPage(Base):
             return False        
         
         # Insert content to field
-        if self.send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION, attachmentsDescription) == False:
+        if self.clear_and_send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION, attachmentsDescription) == False:
             writeToLog("INFO","Failed to insert description")
             return False              
         
@@ -1259,16 +1285,111 @@ class EditEntryPage(Base):
         tmp_title = (self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[0], self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[1].replace('ENTRY_FIELD', attachmentsTitle))
         tmp_descrition = (self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[0], self.EDIT_ENTRY_UPLOADED_ATTACHMENT_FIELDS[1].replace('ENTRY_FIELD', attachmentsDescription))
         
+        # Check that success message is displayed
+        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_SUCCESS_MSG) == False:
+            writeToLog("INFO","Failed to success message")
+            return False             
+        
+        # Check that correct file name is displayed
         if self.is_visible(tmp_name) == False:
             writeToLog("INFO","Failed to displayed correct name")
             return False 
         
+        # Check that correct file title is displayed
         if self.is_visible(tmp_title) == False:
             writeToLog("INFO","Failed to displayed correct title")
             return False 
         
+        # Check that correct file description is displayed
         if self.is_visible(tmp_descrition) == False:
             writeToLog("INFO","Failed to displayed correct description")
             return False       
         
-        return True                   
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Edit attachment title and description
+    def editAttachmentFields(self, attachmentName, newAttachmentsTitle, newAttachmentsDescription, isNewAttachment=False): 
+        # Hover over edit icon
+        if self.hover_on_element(self.EDIT_ENTRY_EDIT_ATTACHMENT_ICON) == False:
+            writeToLog("INFO","Failed to hover over attachment icon")
+            return False  
+        
+        #Click on edit icon   
+        if self.click(self.EDIT_ENTRY_EDIT_ATTACHMENT_ICON) == False:
+            writeToLog("INFO","Failed to click on edit attachment icon")
+            return False       
+       
+        #Insert attachment fields and save inforamtion
+        if self.insertAttachmentFields(newAttachmentsTitle, newAttachmentsDescription,isNewAttachment) == False:
+            writeToLog("INFO","Failed to insert attachment fields - title and description")
+            return False                            
+        
+        #Verify that attachment fields are displayed
+        if self.verifyAttachmentFields(attachmentName, newAttachmentsTitle, newAttachmentsDescription) == False:
+            writeToLog("INFO","Failed to displayed correct attachment field")
+            return False              
+    
+        return True      
+    
+    
+    # @Author: Inbar Willman 
+    # Download attachment file
+    def downloadAttachmentFileFromEditPage(self, originalPath, downloadPath):     
+        # Hover over download icon
+        if self.hover_on_element(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
+            writeToLog("INFO","Failed to hover over download attachment icon")
+            return False             
+        
+        #Click on download icon   
+        if self.click(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
+            writeToLog("INFO","Failed to click on download attachment icon")
+            return False   
+        
+        # Compare between uploaded file and download file    
+        if self.clsCommon.compareBetweenTwoFilesBinary(originalPath, downloadPath) == False:
+            writeToLog("INFO","Failed to click on to download file correctly")
+            return False              
+          
+        return True
+    
+    
+    # @Author: Inbar Willman 
+    # remove attachment file
+    def removeAttachmentFile(self):  
+        # Choose attachments tab
+        if self.clickOnEditTab(enums.EditEntryPageTabName.ATTACHMENTS) == False:
+            writeToLog("INFO","FAILED to click on attachments tab")
+            return False 
+        
+        sleep(2) 
+                   
+        # Hover over remove icon
+        if self.hover_on_element(self.EDIT_ENTRY_REMOVE_ATTACHMENT_ICON) == False:
+            writeToLog("INFO","Failed to hover over download attachment icon")
+            return False             
+        
+        # Click on remove icon   
+        if self.click(self.EDIT_ENTRY_REMOVE_ATTACHMENT_ICON) == False:
+            writeToLog("INFO","Failed to click on download attachment icon")
+            return False 
+        
+        sleep(2)
+          
+        # Click on delete in delete confirmation modal
+        if self.click(self.EDIT_ENTRY_DELETE_CONFIRMATION_BTN) == False:
+            writeToLog("INFO","Failed to click on delete confirmation button")
+            return False 
+        
+        # Wait until confirmation delete message is displayed
+        if self.wait_visible(self.EDIT_ENTRY_DELETE_CONFIRMATION_MSG) == False:
+            writeToLog("INFO","Failed to displayed delete success message")
+            return False   
+        
+        # Check that 'No attachments' message is displayed
+#         if self.is_visible(self.EDIT_ENTRY_NO_ATTACHMENT_MSG) == False:
+#             writeToLog("INFO","Failed to displayed 'No attachments' message")
+#             return False                         
+        
+        return True    

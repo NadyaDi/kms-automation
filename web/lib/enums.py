@@ -112,10 +112,13 @@ class SortBy(Enum):
     MOST_RECENT             = 'Most Recent'  
     VIEWS                   = 'Views'
     LIKES                   = 'Likes'
-    ALPHABETICAL            = "Alphabetical"
+    ALPHABETICAL            = "Alphabetically - A to Z"
     COMMENTS                = "Comments"
     SCHEDULING_ASC          = "Scheduling Ascending"
     SCHEDULING_DESC         = "Scheduling Descending" 
+    CREATION_DATE_DESC      = "Creation Date - Descending"
+    CREATION_DATE_ASC       = "Creation Date - Ascending"
+    PLAYS                   = "Plays"
     
     
 class MediaType(Enum):

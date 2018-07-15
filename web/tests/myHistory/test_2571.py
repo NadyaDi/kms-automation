@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Add entry audio (Private) to watch list history
     # Test description:
     # Check that audio entry is displayed in My History page after it was played
     # The test's Flow: 
