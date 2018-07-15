@@ -3,3 +3,5 @@ test_742,Channel moderation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.
 test_713,category moderation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_346,Add collaborator co edit - options tab,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_0168,Publish to channel multiple,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_683,Create Empty Playlist,2362001-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
+test_677,Add Entry from My Media to Several Playlists,2362001-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
