@@ -13,12 +13,12 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded
+    # @Author: Oded.berihon @Test name Embed Channel Playlist
     # Test description:
-    # 
+    # Upload entries - create Channel - publish the entries to channel and create channel playlist while adding the new entries to it .
+    # Go back to edit channel playlist page grab the embed code and play it as stand alone page.
     #================================================================================================================================
     testNum     = "769"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -46,8 +46,6 @@ class Test:
     filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
    
-    
-    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):

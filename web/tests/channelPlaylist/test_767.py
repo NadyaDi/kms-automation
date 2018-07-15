@@ -13,9 +13,11 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded
+    # @Author: Oded.berihon @Test name : Create Channel Playlist
+
     # Test description:
-    # 
+    # Upload entries - create Channel - publish the entries to channel and create channel playlist.
+    # Adding the new entries to it using search. 
     #================================================================================================================================
     testNum     = "767"
     
