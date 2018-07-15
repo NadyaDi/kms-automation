@@ -39,3 +39,5 @@ test_703,Entry page - Replace video,2373952-1,mediaspace.kaltura.com,inbar.willm
 test_676,Playlists - Add to playlist Entry already existing inside,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_692,Entry page - Side My Media,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_683,Create Empty Playlist,2362001-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
+test_677,Add Entry from My Media to Several Playlists,2362001-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
