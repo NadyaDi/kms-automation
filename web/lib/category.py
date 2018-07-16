@@ -205,3 +205,23 @@ class Category(Base):
         
         writeToLog("INFO","Success, all entry details was verified successfully")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # Search entries in category
+    def searchEntriesInCategory(self, entriesList, categoryName):
+        # Navigate to category
+        if self.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED to navigate to category")
+            return False 
+        
+        # Search each entry in category
+        for entry in entriesList:
+            if self.searchEntryInCategory(entry) == False:
+                writeToLog("INFO","FAILED to find entry in category")
+                return False  
+            
+            # Clear search content  
+            self.clsCommon.myMedia.clearSearch()
+            
+        return True               
