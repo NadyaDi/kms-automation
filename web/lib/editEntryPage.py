@@ -106,7 +106,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DELETE_CONFIRMATION_MSG                          = ('xpath', '//div[@class="alert alert-success " and text()="Attachment was deleted successfully"]')
     EDIT_ENTRY_UPLOAD_SUCCESS_MSG                               = ('xpath', '//div[@class="alert alert-success " and text()="The information was saved successfully"]')
     EDIT_ENTRY_EDIT_ATTACHMENT_MODAL_BODY                       = ('xpath', '//form[@id="changeAttachment"]')
-    EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty" and text()="No Attachments have been added to media"]')
+    EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty"]')
     EDIT_ENTRY_DELETE_ATTACHMENT_MODAL                          = ('xpath', '//a[@class="close" and text()="Delete Confirmation"]')
     #=============================================================================================================
     
@@ -1178,7 +1178,10 @@ class EditEntryPage(Base):
         # Choose attachments tab
         if self.clickOnEditTab(enums.EditEntryPageTabName.ATTACHMENTS) == False:
             writeToLog("INFO","FAILED to click on attachments tab")
-            return False        
+            return False   
+        
+        # wait for loading to disappeared
+        self.clsCommon.general.waitForLoaderToDisappear()       
         
         # Upload attachment file
         if self.uploadAttachment(filePath) == False:
@@ -1188,7 +1191,10 @@ class EditEntryPage(Base):
         #Insert attachment fields and save information
         if self.insertAttachmentFields(attachmentsTitle, attachmentsDescription) == False:
             writeToLog("INFO","Failed to insert attachment fields - title and description")
-            return False                            
+            return False      
+        
+        # wait for loading to disappeared
+        self.clsCommon.general.waitForLoaderToDisappear()              
         
         #Verify that attachment fields are displayed
         if self.verifyAttachmentFields(attachmentName, attachmentsTitle, attachmentsDescription) == False:
@@ -1311,6 +1317,11 @@ class EditEntryPage(Base):
     # @Author: Inbar Willman
     # Edit attachment title and description
     def editAttachmentFields(self, attachmentName, newAttachmentsTitle, newAttachmentsDescription, isNewAttachment=False): 
+        # Scroll down in page
+        self.clsCommon.sendKeysToBodyElement(Keys.END) 
+        
+        sleep(2)   
+        
         # Hover over edit icon
         if self.hover_on_element(self.EDIT_ENTRY_EDIT_ATTACHMENT_ICON) == False:
             writeToLog("INFO","Failed to hover over attachment icon")
@@ -1324,7 +1335,10 @@ class EditEntryPage(Base):
         #Insert attachment fields and save inforamtion
         if self.insertAttachmentFields(newAttachmentsTitle, newAttachmentsDescription,isNewAttachment) == False:
             writeToLog("INFO","Failed to insert attachment fields - title and description")
-            return False                            
+            return False   
+        
+        # wait for loading to disappeared
+        self.clsCommon.general.waitForLoaderToDisappear()                          
         
         #Verify that attachment fields are displayed
         if self.verifyAttachmentFields(attachmentName, newAttachmentsTitle, newAttachmentsDescription) == False:
@@ -1337,6 +1351,11 @@ class EditEntryPage(Base):
     # @Author: Inbar Willman 
     # Download attachment file
     def downloadAttachmentFileFromEditPage(self, originalPath, downloadPath):     
+        # Scroll down in page
+        self.clsCommon.sendKeysToBodyElement(Keys.END)  
+        
+        sleep(2) 
+        
         # Hover over download icon
         if self.hover_on_element(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
             writeToLog("INFO","Failed to hover over download attachment icon")
@@ -1357,13 +1376,19 @@ class EditEntryPage(Base):
     
     # @Author: Inbar Willman 
     # remove attachment file
-    def removeAttachmentFile(self):  
+    def removeAttachmentFile(self):        
         # Choose attachments tab
         if self.clickOnEditTab(enums.EditEntryPageTabName.ATTACHMENTS) == False:
             writeToLog("INFO","FAILED to click on attachments tab")
             return False 
         
-        sleep(2) 
+        # wait for loading to disappeared
+        self.clsCommon.general.waitForLoaderToDisappear()  
+        
+        # Scroll down in page
+        self.clsCommon.sendKeysToBodyElement(Keys.END) 
+        
+        sleep(2)
                    
         # Hover over remove icon
         if self.hover_on_element(self.EDIT_ENTRY_REMOVE_ATTACHMENT_ICON) == False:
@@ -1388,8 +1413,8 @@ class EditEntryPage(Base):
             return False   
         
         # Check that 'No attachments' message is displayed
-#         if self.is_visible(self.EDIT_ENTRY_NO_ATTACHMENT_MSG) == False:
-#             writeToLog("INFO","Failed to displayed 'No attachments' message")
-#             return False                         
+        if self.is_visible(self.EDIT_ENTRY_NO_ATTACHMENT_MSG) == False:
+            writeToLog("INFO","Failed to displayed 'No attachments' message")
+            return False                         
         
         return True    
