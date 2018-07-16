@@ -613,55 +613,63 @@ class MyMedia(Base):
 
         # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
-        try: 
-            if self.clsCommon.isElasticSearchOnPage() == True:
-                if dropDownListName == enums.SortAndFilter.SORT_BY:
-                    tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            if dropDownListName == enums.SortAndFilter.SORT_BY:
+                tmpSortlocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
                 
+                if self.click(tmpSortlocator, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on :" + dropDownListItem + " filter in my media")
+                    return False
                 
-                elif self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                # only sort filter use the locater of the dropdownlist_item_old_ui
+                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
+                if self.click(tmpSortBy, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem + " filter in my media")
+                    return False
+            else:
+                if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
                     writeToLog("INFO","FAILED to click on filters button in my media")
                     return False
                 sleep(2)
                 
-                tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI, "DROPDOWNLIST_ITEM", dropDownListItem) 
+                tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
                 if self.click(tmpEntry, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem)
                     return False
-            else:
-                if dropDownListName == enums.SortAndFilter.SORT_BY:
-                    tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
                 
-                elif dropDownListName == enums.SortAndFilter.PRIVACY:
-                    tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
-                    
-                elif dropDownListName == enums.SortAndFilter.MEDIA_TYPE:
-                    tmplocator = self.MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST
-                
-                elif dropDownListName == enums.SortAndFilter.COLLABORATION:
-                    tmplocator = self.MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST
-                    
-                elif dropDownListName == enums.SortAndFilter.SCHEDULING:
-                    tmplocator = self.MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST
-                    
-                else:
-                    writeToLog("INFO","FAILED, drop-down-list name was not provided")
-                    return False
-                    
-                if self.click(tmplocator, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
-                    return False
-                
-                tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
-                if self.click(tmpEntry, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
-                    return False
-
             self.clsCommon.general.waitForLoaderToDisappear()    
-        
-        except NoSuchElementException:
-            return False
-        
+            writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
+            return True
+        else:
+            if dropDownListName == enums.SortAndFilter.SORT_BY:
+                tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
+            
+            elif dropDownListName == enums.SortAndFilter.PRIVACY:
+                tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
+                
+            elif dropDownListName == enums.SortAndFilter.MEDIA_TYPE:
+                tmplocator = self.MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST
+            
+            elif dropDownListName == enums.SortAndFilter.COLLABORATION:
+                tmplocator = self.MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST
+                
+            elif dropDownListName == enums.SortAndFilter.SCHEDULING:
+                tmplocator = self.MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST
+                
+            else:
+                writeToLog("INFO","FAILED, drop-down-list name was not provided")
+                return False
+                
+            if self.click(tmplocator, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
+                return False
+            
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
+            if self.click(tmpEntry, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
+                return False
+
+        self.clsCommon.general.waitForLoaderToDisappear()    
         writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + str(dropDownListItem) + " was set successfully")
         return True
     
@@ -1125,32 +1133,53 @@ class MyMedia(Base):
     
     
     def verifySortInMyMedia(self, sortBy, entriesList):
+        if self.common.isElasticSearchOnPage() == True:
+            sortBy = sortBy.value
+            
         if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
-            writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
+            writeToLog("INFO","FAILED to sort entries")
             return False
                 
         if self.showAllEntriesInMyMedia() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
-            
+        sleep(10)
+        
         try:
-            entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
+            entriesInMyMedia = self.wait_visible(self.MY_MEDIA_TABLE).text.lower()
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list in galley")
             return False
         
+        
         entriesInMyMedia = entriesInMyMedia.split("\n")
         prevEntryIndex = -1
         
-        for entry in entriesList:
-            currentEntryIndex = entriesInMyMedia.index(entry.lower())
-            if prevEntryIndex > currentEntryIndex:
-                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
-                return False
-            prevEntryIndex = currentEntryIndex
-                
-        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-        return True   
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            for entry in entriesList:
+                try:
+                    currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                except:
+                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found in my media" )
+                    return False             
+                       
+                if prevEntryIndex > currentEntryIndex:
+                    writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    return False
+                prevEntryIndex = currentEntryIndex
+                    
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True   
+        else:
+            for entry in entriesList:
+                currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                if prevEntryIndex > currentEntryIndex:
+                    writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    return False
+                prevEntryIndex = currentEntryIndex
+                    
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True   
     
     #  @Author: Michal Zomper    
     def showAllEntriesInMyMedia(self, timeOut=60):
@@ -1163,6 +1192,9 @@ class MyMedia(Base):
         while wait_until > datetime.datetime.now():
             if self.is_present(self.MY_MEDIA_NO_RESULTS_ALERT, 2) == True:
                 writeToLog("INFO","Success, All media in my media is display")
+                sleep(1)
+                # go back to the top of the page
+                self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
             
             self.clsCommon.sendKeysToBodyElement(Keys.END)
