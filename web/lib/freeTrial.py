@@ -69,7 +69,7 @@ class  FreeTrial(Base):
     def setInstanceNumber(self, instanceNumberFilePath):
         try:
             # read the current instance number
-            instanceFile = open(instanceNumberFilePath,'r')
+            instanceFile = open(instanceNumberFilePath,'r',encoding='utf8')
             tempInstance = instanceFile.read()
             instanceFile.close()
               

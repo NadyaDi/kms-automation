@@ -1133,7 +1133,7 @@ class MyMedia(Base):
     
     
     def verifySortInMyMedia(self, sortBy, entriesList):
-        if self.common.isElasticSearchOnPage() == True:
+        if self.clsCommon.isElasticSearchOnPage() == True:
             sortBy = sortBy.value
             
         if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
