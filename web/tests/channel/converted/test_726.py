@@ -208,32 +208,75 @@ class Test:
                 writeToLog("INFO","Step 20: FAILED navigate to my channels page")
                 return 
             
-            writeToLog("INFO","Step 21: Going to filter view channel by 'Channels I Manage' and verify that only the correct channels display")
-            if self.common.channel.verifyChannelsViaFilter("I Manage", self.channelsIManage) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 22: FAILED to filter  and verify view channels by: channels I Manage")
-                return 
-            
-            writeToLog("INFO","Step 22: Going to filter view channel by 'Channels I am a member of' and verify that only the correct channels display")
-            if self.common.channel.verifyChannelsViaFilter("I am a member of", self.channelsIAmAMemberOf) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 22: FAILED to filter and verify view channels by: Channels I am a member of")
-                return 
-            
-            writeToLog("INFO","Step 23: Going to filter view channel by 'Channels I am subscribed to' and verify that only the correct channels display")
-            if self.common.channel.verifyChannelsViaFilter("I am subscribed to", self.channelsIAmSubscribedTo) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 23: FAILED to filter and verify  view channels by: Channels I am subscribed to")
-                return 
-            
-            writeToLog("INFO","Step 24: Going to filter view channel by 'Shared Repositories I am a member of' and verify that only the correct channels display")
-            if self.common.channel.verifyChannelsViaFilter("Shared Repositories I am a member of", self.ChannelsSharedRepositoriesIAmAMemberOf) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 24: FAILED to filter and verify view channels by: Shared Repositories I am a member of")
-                return 
+            if self.common.isElasticSearchOnPage() == True:
+                writeToLog("INFO","Step 21: Going to filter view channel by 'Channels I Manage' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MANAGER_NEWUI, self.channelsIManage) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 21: FAILED to filter  and verify view channels by: channels I Manage")
+                    return 
+                
+                writeToLog("INFO","Step 22: Going to close filter button")
+                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 22: FAILED to close filters button in my channels page")
+                    return 
+                
+                writeToLog("INFO","Step 23: Going to filter view channel by 'Channels I am a member of' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MEMBER_NEWUI, self.channelsIAmAMemberOf) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 23: FAILED to filter and verify view channels by: Channels I am a member of")
+                    return 
+                
+                writeToLog("INFO","Step 24: Going to close filter button")
+                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 24: FAILED to close filters button in my channels page")
+                    return 
+                
+                writeToLog("INFO","Step 25: Going to filter view channel by 'Channels I am subscribed to' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SUBSCRIBER_NEWUI, self.channelsIAmSubscribedTo) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 25: FAILED to filter and verify  view channels by: Channels I am subscribed to")
+                    return 
+                
+                writeToLog("INFO","Step 26: Going to close filter button")
+                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 26: FAILED to close filters button in my channels page")
+                    return 
+                
+                writeToLog("INFO","Step 27: Going to filter view channel by 'Shared Repositories I am a member of' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SHAREDREPOSITORIES_NEWUI, self.ChannelsSharedRepositoriesIAmAMemberOf) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 27: FAILED to filter and verify view channels by: Shared Repositories I am a member of")
+                    return
+            else:
+                writeToLog("INFO","Step 21: Going to filter view channel by 'Channels I Manage' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MANAGER_OLDUI, self.channelsIManage) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 22: FAILED to filter  and verify view channels by: channels I Manage")
+                    return 
+                
+                writeToLog("INFO","Step 22: Going to filter view channel by 'Channels I am a member of' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MEMBER_OLDUI, self.channelsIAmAMemberOf) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 22: FAILED to filter and verify view channels by: Channels I am a member of")
+                    return 
+                
+                writeToLog("INFO","Step 23: Going to filter view channel by 'Channels I am subscribed to' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SUBSCRIBER_OLDUI, self.channelsIAmSubscribedTo) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 23: FAILED to filter and verify  view channels by: Channels I am subscribed to")
+                    return 
+                
+                writeToLog("INFO","Step 24: Going to filter view channel by 'Shared Repositories I am a member of' and verify that only the correct channels display")
+                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SHAREDREPOSITORIES_OLDUI, self.ChannelsSharedRepositoriesIAmAMemberOf) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 24: FAILED to filter and verify view channels by: Shared Repositories I am a member of")
+                    return  
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'My Channels - Search as subscriber' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'My Channels - Filter view' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

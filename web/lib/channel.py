@@ -1345,7 +1345,7 @@ class Channel(Base):
         
         sleep(2)
         self.driver.refresh()      
-        sleep(4)   
+        sleep(6)   
         
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:     
             if countOfSubscribers + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
@@ -1442,24 +1442,36 @@ class Channel(Base):
     # Author: Michal Zomper
     # filter type name need to be without the word channels only type like, for exp: filter type 'Channels I am subscribed to' the filter type will be 'I am subscribed to' 
     def selectViewChannelFilterInMyChannelsPage(self, filterType):
-        if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
-            writeToLog("INFO","FAILED to click on view channel filter button")
-            return False  
-        
-        tmp_filter = (self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[1].replace('VIEW_CHANNEL_FILTER', filterType))
-        if self.click(tmp_filter, 10, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to select filter type: channels " + filterType)
-            return False
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            if self.click(self.clsCommon.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click on filters button in my channels page")
+                return False
+            sleep(2)
+                
+            tmp_filter = (self.clsCommon.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.clsCommon.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', filterType.value)) 
+            if self.click(tmp_filter, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on filter type: channels " + filterType.value)
+                return False
+                
+        else:
+            if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
+                writeToLog("INFO","FAILED to click on view channel filter button")
+                return False  
+            
+            tmp_filter = (self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[1].replace('VIEW_CHANNEL_FILTER', filterType.value))
+            if self.click(tmp_filter, 10, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to select filter type: channels " + filterType.value)
+                return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
-        writeToLog("INFO","Success, filter 'channels " + filterType + "' was set")
+        writeToLog("INFO","Success, filter 'channels " + filterType.value + "' was set")
         return True
     
     
     # Author: Michal Zomper
     def verifyChannelsViaFilter(self, filterBy, channelList):
         if self.selectViewChannelFilterInMyChannelsPage(filterBy) == False:
-            writeToLog("INFO","FAILED to filter view channels by: " + filterBy)
+            writeToLog("INFO","FAILED to filter view channels by: " + filterBy.value)
             return False
         
         if self.showAllChannels() == False:
@@ -1474,16 +1486,16 @@ class Channel(Base):
         
         for channel in channelList:
             if channel[1] == True:
-                if channel[0].lower() in channelsInGalley == False:
+                if (channel[0].lower() in channelsInGalley) == False:
                     writeToLog("INFO","FAILED, channel '" + channel[0] + "' wasn't found in channels galley although he need to be found")
                     return False
                 
             elif channel[1] == False:
-                if channel[0].lower() in channelsInGalley == True:
+                if (channel[0].lower() in channelsInGalley) == True:
                     writeToLog("INFO","FAILED, channel '" + channel[0] + "' was found in channels galley although he doesn't need to be found")
                     return False
                 
-        writeToLog("INFO","Success, filter and verify view channels by 'channels " + filterBy + "' was successful")
+        writeToLog("INFO","Success, filter and verify view channels by 'channels " + filterBy.value + "' was successful")
         return True
                     
     

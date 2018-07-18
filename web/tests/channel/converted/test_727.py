@@ -39,7 +39,7 @@ class Test:
     userPass1 = "Kaltura1!"
     userName2 = "Automation_User_2"
     userPass2 = "Kaltura1!"
-    filterBy = "I Manage"
+#     filterBy = "I Manage"
 
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -131,24 +131,30 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED navigate to my channels page")
                 return 
             
-            writeToLog("INFO","Step 12: Going to filter view channel by 'Channels '" + self.filterBy + "'")
-            if self.common.channel.selectViewChannelFilterInMyChannelsPage(self.filterBy) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to filter view channels by: " + self.filterBy)
-                return 
+            writeToLog("INFO","Step 12: Going to filter view channel by 'Channels i'm " + enums.ChannelsSortByMembership.MANAGER_NEWUI.value + "'")
+            if self.common.isElasticSearchOnPage() == True:
+                if self.common.channel.selectViewChannelFilterInMyChannelsPage(enums.ChannelsSortByMembership.MANAGER_NEWUI) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 12: FAILED to filter view channels by: Channels i'm " + enums.ChannelsSortByMembership.MANAGER_NEWUI)
+                    return 
+            else:
+                if self.common.channel.selectViewChannelFilterInMyChannelsPage(enums.ChannelsSortByMembership.MANAGER_OLDUI) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 12: FAILED to filter view channels by: channels " + enums.ChannelsSortByMembership.MANAGER_OLDUI.value)
+                    return 
                 
-            writeToLog("INFO","Step 13: Going to search for channel that i'm manager by using filter 'channels" + self.filterBy +"'")
+            writeToLog("INFO","Step 13: Going to search for channel that i'm manager by using filter 'channels i'm " + enums.ChannelsSortByMembership.MANAGER_NEWUI.value +"'")
             if self.common.channel.searchAChannelInMyChannels(self.channelName1) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to find channel '" + self.channelName1 + "' using filter 'channels " + self.filterBy + "'")
+                writeToLog("INFO","Step 13: FAILED to find channel '" + self.channelName1 + "' using filter 'channels i'm " + enums.ChannelsSortByMembership.MANAGER_NEWUI.value + "'")
                 return
             self.common.base.click(self.common.channel.CHANNEL_REMOVE_SEARCH_ICON , multipleElements=True)
             self.common.general.waitForLoaderToDisappear()
             
-            writeToLog("INFO","Step 14: Going to search for channel that i'm NOT manager by using filter 'channels" + self.filterBy +"'")
+            writeToLog("INFO","Step 14: Going to search for channel that i'm NOT manager by using filter 'channels i'm " + enums.ChannelsSortByMembership.MANAGER_NEWUI.value +"'")
             if self.common.channel.searchAChannelInMyChannels(self.channelName3, needToBeFound=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED,channel '" + self.channelName3 + "'was found in search using filter 'channels " + self.filterBy + "' although i'm not the manager of this channel")
+                writeToLog("INFO","Step 14: FAILED,channel '" + self.channelName3 + "'was found in search using filter 'channels i'm " + enums.ChannelsSortByMembership.MANAGER_NEWUI.value + "' although i'm not the manager of this channel")
                 return
             
             ##################################################################
