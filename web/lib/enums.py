@@ -223,3 +223,27 @@ class MyMediaView(Enum):
     
     COLLAPSED               = 'collapsed'
     DETAILED                = 'detailed'   
+    
+    
+class ChannelsSortByMembership(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MANAGER_NEWUI               = 'Manager'
+    MEMBER_NEWUI                = 'Member' 
+    SUBSCRIBER_NEWUI            = 'Subscriber'
+    SHAREDREPOSITORIES_NEWUI    = 'Shared Repositories'
+    MANAGER_OLDUI               = ' I Manage'
+    MEMBER_OLDUI                = ' I am a member of' 
+    SUBSCRIBER_OLDUI            = ' I am subscribed to'
+    SHAREDREPOSITORIES_OLDUI    = 'Shared Repositories I am a member of'  
+    
+class ChannelsSortBy(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    MOST_RECENT               = 'Most Recent'  
+    ALPHABETICAL_NEWUI        = "Alphabetically - A to Z"
+    ALPHABETICAL_OLDUI        = "Alphabetical"
+    MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
+    MEDIA_COUNT               = "Media count"
