@@ -118,6 +118,7 @@ class Channel(Base):
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='dropdown-toggle DropdownFilter__toggle']")
     CHANNEL_CANCEL_PLAYLIST_BUTTON                  = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
     MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
     CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
@@ -1452,6 +1453,12 @@ class Channel(Base):
             if self.click(tmp_filter, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on filter type: channels " + filterType.value)
                 return False
+            
+            # close filters
+            if self.click(self.clsCommon.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click on filters button in my channels page")
+                return False
+            sleep(2)
                 
         else:
             if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
@@ -1501,13 +1508,18 @@ class Channel(Base):
     
     # Author: Michal Zomper
     def selectSortChannelOptionInMyChannelsPage(self, sortType):
-        if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
-            writeToLog("INFO","FAILED to click on sort channel filter button")
-            return False  
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI, 15) == False:
+                writeToLog("INFO","FAILED to click on sort channel filter button")
+                return False  
+        else:
+            if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
+                writeToLog("INFO","FAILED to click on sort channel filter button")
+                return False  
             
         tmpSort = (self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[1].replace('SORT_CHANNEL_FILTER', sortType))
         if self.click(tmpSort, 10, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to select sort type: channels " + sortType)
+            writeToLog("INFO","FAILED to select sort type: " + sortType)
             return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
@@ -1516,8 +1528,8 @@ class Channel(Base):
     
     
     def verifySortInMyChannels(self, sortBy, channelsList):
-        if self.selectSortChannelOptionInMyChannelsPage(sortBy) == False:
-            writeToLog("INFO","FAILED to sort channels by: " + sortBy)
+        if self.selectSortChannelOptionInMyChannelsPage(sortBy.value) == False:
+            writeToLog("INFO","FAILED to sort channels by: " + sortBy.value)
             return False
         
         if self.showAllChannels() == False:
@@ -1535,11 +1547,11 @@ class Channel(Base):
         for channel in channelsList:
             channelCurrentIndex = channelsInGalley.index(channel.lower())
             if prevChannelIndex > channelCurrentIndex:
-                writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. channel '" + channel + "' isn't in the right place" )
+                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. channel '" + channel + "' isn't in the right place" )
                 return False
             prevChannelIndex = channelCurrentIndex
                 
-        writeToLog("INFO","Success, verify sort channels by '" + sortBy + "' was successful")
+        writeToLog("INFO","Success, verify sort channels by '" + sortBy.value + "' was successful")
         return True   
     
     
