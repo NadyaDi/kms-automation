@@ -243,7 +243,8 @@ class ChannelsSortBy(Enum):
         return str(self.value)
 
     MOST_RECENT               = 'Most Recent'  
-    ALPHABETICAL_NEWUI        = "Alphabetically - A to Z"
+    ALPHABETICAL_NEWUI        = "Alphabetical A-Z"
     ALPHABETICAL_OLDUI        = "Alphabetical"
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
-    MEDIA_COUNT               = "Media count"
+    MEDIA_COUNT_NEWUI         = "Media count"
+    MEDIA_COUNT_OLDUI         = "Media Count"
