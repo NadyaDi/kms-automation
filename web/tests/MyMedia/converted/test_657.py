@@ -13,14 +13,12 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test description:
-    # Add entry to playlist when entry is already exist in playlist
+    # Test Name: My Media - Add to an existing playlist - Single
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> add entry to playlist -> Go to my playlist -> Click on playlist -> Check that entry is added to playlist
-    # -> Go to my media -> add same entry to same playlist -> go to playlist -> Check that entry displayed just once
-    # test cleanup: deleting the uploaded file
+    # Login to KMS-> Upload entry -> -> Create empty playlist -> add entry to existing playlist from My Media > Go to my playlist -> Check that entries added to the playlist
+    # test cleanup: deleting the uploaded and playlist
     #================================================================================================================================
-    testNum     = "676"
+    testNum     = "657"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -33,7 +31,7 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName = None
+    playlistName  = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'  
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,58 +49,34 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)        
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('entryInPlaylist', self.testNum)
-            self.playlistName = clsTestService.addGuidToString('testPlaylist', self.testNum)
-            ########################## TEST STEPS - MAIN FLOW #######################        
+            self.entryName = clsTestService.addGuidToString('addToExistingPlaylist', self.testNum)
+            self.playlistName = clsTestService.addGuidToString('existingPlaylist', self.testNum)
+            ########################## TEST STEPS - MAIN FLOW #######################      
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-
-            writeToLog("INFO","Step 2: Going to navigate to My Media")
-            if self.common.myMedia.navigateToMyMedia() == False:
+            
+            writeToLog("INFO","Step 2: Going to create empty playlist")
+            if self.common.myPlaylists.createEmptyPlaylist(self.entryName, self.playlistName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate to My Media")
+                writeToLog("INFO","Step 2: FAILED to create empty playlist")
                 return            
-                 
+               
             writeToLog("INFO","Step 3: Going to add  entry to playlist")
-            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName, True, currentLocation = enums.Location.MY_MEDIA) == False:
+            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add entry to playlist")
                 return
-                 
-            writeToLog("INFO","Step 4: Click on 'Go to my playlist")
-            if self.common.base.click(self.common.myPlaylists.GO_TO_PLAYLIST_BUTTON) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to navigate to my playlist")
-                return        
-              
-            writeToLog("INFO","Step 5: Go to verify that entry is displayed in playlist")
+               
+            writeToLog("INFO","Step 4: Going to verify that entry was added to playlist")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to found entry in playlist")
-                return                 
-            
-            writeToLog("INFO","Step 6: Going add again the entry to the same playlist")
-            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to add entry to playlist")
-                return
-             
-            writeToLog("INFO","Step 7: Click on 'Go to my playlist")
-            if self.common.base.click(self.common.myPlaylists.GO_TO_PLAYLIST_BUTTON) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to navigate to my playlist")
-                return  
-            
-            writeToLog("INFO","Step 7: Check that entry display just once in playlist")
-            if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to to display entry just once in playlist")
-                return                                                                                          
+                writeToLog("INFO","Step 4: FAILED to find entry in playlist")
+                return                           
             #########################################################################
-            writeToLog("INFO","TEST PASSED")
+            writeToLog("INFO","TEST PASSED: 'Add single entry to existing playlist' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -112,7 +86,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.myPlaylists.deletePlaylist(self.playlistName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:

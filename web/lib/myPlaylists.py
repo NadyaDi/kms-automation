@@ -533,3 +533,47 @@ class MyPlaylists(Base):
             return False
             
         return True
+    
+    # @Author: Inbar Willman
+    # Verify multiple entries in single playlist
+    def verifyMultipleEntriesInPlaylist(self, playlistName, entriesList, isExpected=True):
+        try:                
+            if playlistName != '':
+                if self.navigateToMyPlaylists() == False:
+                    writeToLog("INFO","FAILED to navigate to my Playlists")
+                    return False
+                 
+                tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
+                if self.click(tmp_playlist_name) == False:
+                    writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
+                    return False
+
+                # Get playlist list text
+                playlist_text= self.get_element_text(self.PLAYLIST_TABLE)
+                
+                # Split playlist text
+                playlist_entries_list = playlist_text.split()
+                
+                # Check that each entry displayed in playlist and just once
+                for entry in entriesList:
+                    numberOfDisplay = playlist_entries_list.count(entry)
+                    if numberOfDisplay == 1:
+                        if isExpected == True:
+                            writeToLog("INFO","As Expected: Entry " + entry + " was found in the Playlists")
+                        else:
+                            writeToLog("INFO","NOT Expected: Entry " + entry + "  was found " + str(numberOfDisplay) + " in the Playlists")
+                            return False
+                    else:
+                        if isExpected == False:
+                            writeToLog("INFO","As Expected: Entry " + entry + "  was not found in the Playlists")
+                        else:
+                            writeToLog("INFO","NOT Expected: Entry " + entry + "  was " + str(numberOfDisplay) + " found in the Playlists")
+                            return False                    
+            else:
+                writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
+                return False                
+                
+        except NoSuchElementException:
+            return False
+            
+        return True
