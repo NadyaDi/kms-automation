@@ -202,10 +202,10 @@ def basicTearDown(test):
     try:
         if (test.driver != None):
             test.driver.quit()
-            writeToLog("DEBUG", "tearDown: closed web driver")
+            writeToLog("INFO", "tearDown: closed web driver")
         if (isAutomationEnv() == True):
             practiTest.setPractitestInstanceTestResults(test.status,str(test.testNum))            
-        writeToLog("DEBUG", "Finished tearDown function")
+        writeToLog("INFO", "Finished tearDown function")
     except Exception as inst:
             test.status = handleException(test,inst,test.startTime)
 
