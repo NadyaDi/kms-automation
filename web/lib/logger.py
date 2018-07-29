@@ -11,12 +11,11 @@ import utilityTestFunc
 def writeStatsToCSV(test):
     
     timeSuffix = ""
-    LOG_FOLDER_PREFIX = ""
-    if (os.getenv('BUILD_ID',"") != ""):
-        LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
     if (os.getenv('SESSION_RUN_TIME',"") != ""):
         timeSuffix = '_' + os.getenv('SESSION_RUN_TIME',"")
-    CSV_STATS_FILE            = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.csv'))
+    
+    CSV_STATS_FILE            = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs', LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.csv'))
+    
     practiTestSessionID = os.getenv('MD_PRACTITEST_SET_ID',"") 
     
     if (os.path.isfile(CSV_STATS_FILE) == False):
