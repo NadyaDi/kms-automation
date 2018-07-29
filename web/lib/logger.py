@@ -136,17 +136,4 @@ def logFinishedTest(test,startTime):
     
 def log_exception(inst):
     var = traceback.format_exc()
-    writeToLog("INFO","Exception : " + str(var))    
-#     exc_type, exc_value, exc_traceback = sys.exc_info() 
-#     traceback_details = {
-#                              'filename': exc_traceback.tb_frame.f_code.co_filename,
-#                              'lineno'  : exc_traceback.tb_lineno,
-#                              'name'    : exc_traceback.tb_frame.f_code.co_name,
-#                              'type'    : exc_type.__name__
-#                             }
-#     
-#     writeToLog("INFO","Exception at file     : " + traceback_details["filename"])
-#     writeToLog("INFO","Exception at line     : " + str(traceback_details["lineno"]))
-#     writeToLog("INFO","Exception at function : " + traceback_details["name"])
-#     writeToLog("INFO","Exception type        : " + traceback_details["type"])
-#     writeToLog("INFO","Value                 : " + str(exc_value))
+    writeToLog("INFO","Exception : " + str(var))
