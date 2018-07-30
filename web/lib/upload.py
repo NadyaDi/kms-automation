@@ -595,3 +595,15 @@ class Upload(Base):
             writeToLog("DEBUG","FAILED to click on 'Media Upload' button")
             return False            
         return True     
+    
+    
+    # @Author: Inbar Willman
+    # Upload multiple entries with same filePath
+    def uploadMultipleEntries(self, filePath, entriesList, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE):
+        for entry in entriesList:
+            if self.uploadEntry(filePath, entry, description, tags, timeout, disclaimer, retries, uploadFrom) == False:
+                writeToLog("DEBUG","FAILED to upload entry as part of multiple upload")
+                return False
+            
+        return True
+                

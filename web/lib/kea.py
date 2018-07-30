@@ -22,7 +22,7 @@ class Kea(Base):
     KEA_ADD_NEW_QUESTION_BUTTON                   = ('xpath', "//button[@class='question-type-button question-types-icon multiple-options-question-type active ng-star-inserted']")  
     KEA_SELECT_VIDEO_FOR_EDIT                     = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
     KEA_APP_DISPLAY                               = ('id', 'kea-anchor')
-    KEA_IFRAME                                    = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame"]')
+    KEA_IFRAME                                    = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
     KEA_QUIZ_PLAYER                               = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                           = ('class_name', 'spinner')
     KEA_QUIZ_QUESTION_FIELD                       = ('id', 'questionTxt')

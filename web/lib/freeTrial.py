@@ -69,12 +69,12 @@ class  FreeTrial(Base):
     def setInstanceNumber(self, instanceNumberFilePath):
         try:
             # read the current instance number
-            instanceFile = open(instanceNumberFilePath,'r')
+            instanceFile = open(instanceNumberFilePath,'r',encoding='utf8')
             tempInstance = instanceFile.read()
             instanceFile.close()
               
             #  raise the instance number be 1 and update the file  
-            instanceFile = open(instanceNumberFilePath,'w')
+            instanceFile = open(instanceNumberFilePath,'w', encoding='utf8')
             tmp = tempInstance.split('-')
             number = int(tmp[1]) + 1
             instanceNumber = tmp[0] + "-" + str(number)

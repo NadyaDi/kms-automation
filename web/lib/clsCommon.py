@@ -24,6 +24,7 @@ from kafBB import BlackBoard
 from kafSharepoint import SharePoint
 from selenium.webdriver.common.keys import Keys
 from api import ApiClientSession
+import filecmp
 
 
     #============================================================================================================
@@ -70,6 +71,12 @@ class Common():
             autoitDr = self.autoit.autoitDriver
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd2":
             autoitDr = self.autoit.autoitDriver2
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd3":
+            autoitDr = self.autoit.autoitDriver3
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd4":
+            autoitDr = self.autoit.autoitDriver4
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd5":
+            autoitDr = self.autoit.autoitDriver5                        
             
         if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
             # TODO IE not implemented yet
@@ -91,9 +98,9 @@ class Common():
         elif self.base.getAppUnderTest() == enums.Application.SHARE_POINT:
             return self.sharePoint.loginToSharepoint(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)        
     
+    
     # Author: Tzachi Guetta     
     def navigateTo(self, navigateTo, navigateFrom='', nameValue='', forceNavigate=False):
-        
         if navigateTo == enums.Location.ENTRY_PAGE:
             if self.entryPage.navigateToEntry(nameValue, navigateFrom) == False:
                 raise Exception("INFO","FAILED navigate to entry: '" + nameValue)
@@ -192,13 +199,22 @@ class Common():
     
     
     # Check which search bar do we have: old or new (elastic)
-    # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)    
     def isElasticSearchOnPage(self):
-        try:
-            countSearchEl = len(self.base.get_elements(self.myMedia.MY_MEDIA_ELASTIC_SEARCH_BAR))
-            if countSearchEl > 1:
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if len(self.base.get_elements(self.myMedia.MY_MEDIA_ELASTIC_SEARCH_BAR)) > 1:
                 return True
             else:
                 return False
-        except:
-            return False       
+        else:
+            return False
+        
+        
+    # @Author: Inbar Willman
+    # Compare between two files binary
+    def compareBetweenTwoFilesBinary(self, path1, path2): 
+        # Compare between two files
+        if filecmp.cmp(path1, path2) == False:
+            writeToLog("INFO","FAILED to find match between two files")
+            return False      
+        
+        return True      

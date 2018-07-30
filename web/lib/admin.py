@@ -50,10 +50,12 @@ class Admin(Base):
             writeToLog("INFO","FAILED to load Admin page")
             return False
                     
-        if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False) == False:
-            return False
-        else:
-            return True
+#         if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False)  == False:
+#             return False
+#         else:
+#             return True
+        return True
+
               
               
     # @Author: Oleg Sigalov           
@@ -312,7 +314,7 @@ class Admin(Base):
     def deletePlaylistFromHomePage(self, playlistName):
         # Login to Admin
         if self.loginToAdminPage() == False:
-            writeToLog("INFO","FAILED tologin to admin page")
+            writeToLog("INFO","FAILED to login to admin page")
             return False
         
         #Navigate to home module
@@ -508,6 +510,12 @@ class Admin(Base):
         if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
+        
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
         
         return True         
     

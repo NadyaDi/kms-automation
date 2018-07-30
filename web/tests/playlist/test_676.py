@@ -16,7 +16,7 @@ class Test:
     # Test description:
     # Add entry to playlist when entry is already exist in playlist
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> add entry to playlist -> Go to my playlist -> Click on playlist -> Check taht entry ia dded to playlist
+    # Login to KMS-> Upload entry -> add entry to playlist -> Go to my playlist -> Click on playlist -> Check that entry is added to playlist
     # -> Go to my media -> add same entry to same playlist -> go to playlist -> Check that entry displayed just once
     # test cleanup: deleting the uploaded file
     #================================================================================================================================
@@ -33,7 +33,7 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName = 'testPlaylist'
+    playlistName = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'  
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -52,41 +52,48 @@ class Test:
             self.common = Common(self.driver)        
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryInPlaylist', self.testNum)
+            self.playlistName = clsTestService.addGuidToString('testPlaylist', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################        
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
+
+            writeToLog("INFO","Step 2: Going to navigate to My Media")
+            if self.common.myMedia.navigateToMyMedia() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate to My Media")
+                return            
                  
-            writeToLog("INFO","Step 2: Going to add  entry to playlist")
+            writeToLog("INFO","Step 3: Going to add  entry to playlist")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName, True, currentLocation = enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to add entry to playlist")
+                writeToLog("INFO","Step 3: FAILED to add entry to playlist")
                 return
                  
-            writeToLog("INFO","Step 3: Click on 'Go to my playlist")
+            writeToLog("INFO","Step 4: Click on 'Go to my playlist")
             if self.common.base.click(self.common.myPlaylists.GO_TO_PLAYLIST_BUTTON) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to my playlist")
+                writeToLog("INFO","Step 4: FAILED to navigate to my playlist")
                 return        
               
-            writeToLog("INFO","Step 4: Go to verify that entry is displayed in playlist")
+            writeToLog("INFO","Step 5: Go to verify that entry is displayed in playlist")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to found entry in playlist")
+                writeToLog("INFO","Step 5: FAILED to found entry in playlist")
                 return                 
             
-            writeToLog("INFO","Step 5: Going add again the entry to the same playlist")
+            writeToLog("INFO","Step 6: Going add again the entry to the same playlist")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to add entry to playlist")
+                writeToLog("INFO","Step 6: FAILED to add entry to playlist")
                 return
              
-            writeToLog("INFO","Step 6: Click on 'Go to my playlist")
+            writeToLog("INFO","Step 7: Click on 'Go to my playlist")
             if self.common.base.click(self.common.myPlaylists.GO_TO_PLAYLIST_BUTTON) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to my playlist")
+                writeToLog("INFO","Step 7: FAILED to navigate to my playlist")
                 return  
             
             writeToLog("INFO","Step 7: Check that entry display just once in playlist")

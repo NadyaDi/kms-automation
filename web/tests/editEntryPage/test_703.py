@@ -99,7 +99,7 @@ class Test:
                 return             
             
             writeToLog("INFO","Step 8: Verify that video was replaced")
-            if self.common.player.clickPauseAndVerify('0:08',clickPlayFromBarline=False, compareToStr='106') == False:
+            if self.common.player.clickPauseAndVerify('0:08',clickPlayFromBarline=False, compareToStr='108') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to replace video")
                 return                                                                                    

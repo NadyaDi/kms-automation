@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # test Name: Playlists - Embed playlist
     # Test description:
     # Check embed playlist
     # The test's Flow: 

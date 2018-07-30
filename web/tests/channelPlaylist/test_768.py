@@ -13,12 +13,13 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded
+    # @Author: Oded.berihon @Test name: Filter in Channel Playlist
+
     # Test description:
-    # 
+    # Upload entries - create Channel - publish the entries to the channel and create channel playlist. 
+    # Adding entries to it using the filters.
     #================================================================================================================================
     testNum     = "768"
-    enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -144,7 +145,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################
     def teardown_method(self,method):
         try:
-            self.common.handleTestFail(self.status)
+            self.common.handleTestFail(self.status, leavePageExpected=True)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])                 
             self.common.channel.deleteChannel(self.channelName) 

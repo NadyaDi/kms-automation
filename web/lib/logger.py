@@ -11,12 +11,11 @@ import utilityTestFunc
 def writeStatsToCSV(test):
     
     timeSuffix = ""
-    LOG_FOLDER_PREFIX = ""
-    if (os.getenv('BUILD_ID',"") != ""):
-        LOG_FOLDER_PREFIX = '/' + os.getenv('BUILD_ID',"") + '/'
     if (os.getenv('SESSION_RUN_TIME',"") != ""):
         timeSuffix = '_' + os.getenv('SESSION_RUN_TIME',"")
-    CSV_STATS_FILE            = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs' + LOG_FOLDER_PREFIX,LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.csv'))
+    
+    CSV_STATS_FILE            = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs', LOCAL_SETTINGS_TESTED_RELEASE + timeSuffix + '.csv'))
+    
     practiTestSessionID = os.getenv('MD_PRACTITEST_SET_ID',"") 
     
     if (os.path.isfile(CSV_STATS_FILE) == False):
@@ -136,17 +135,4 @@ def logFinishedTest(test,startTime):
     
 def log_exception(inst):
     var = traceback.format_exc()
-    writeToLog("INFO","Exception : " + str(var))    
-#     exc_type, exc_value, exc_traceback = sys.exc_info() 
-#     traceback_details = {
-#                              'filename': exc_traceback.tb_frame.f_code.co_filename,
-#                              'lineno'  : exc_traceback.tb_lineno,
-#                              'name'    : exc_traceback.tb_frame.f_code.co_name,
-#                              'type'    : exc_type.__name__
-#                             }
-#     
-#     writeToLog("INFO","Exception at file     : " + traceback_details["filename"])
-#     writeToLog("INFO","Exception at line     : " + str(traceback_details["lineno"]))
-#     writeToLog("INFO","Exception at function : " + traceback_details["name"])
-#     writeToLog("INFO","Exception type        : " + traceback_details["type"])
-#     writeToLog("INFO","Value                 : " + str(exc_value))
+    writeToLog("INFO","Exception : " + str(var))

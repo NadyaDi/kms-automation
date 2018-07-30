@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # Test Name: Watch History - Add entry (Published to Category - public) to watch list history
     # Test description:
     # Entry that is published to public category shouldn't be displayed in My History before it was played.
     # After entry was played, it should be displayed in history page

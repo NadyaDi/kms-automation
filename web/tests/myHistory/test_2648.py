@@ -15,6 +15,7 @@ class Test:
     #================================================================================================================================
     # TBD
     # @Author: Inbar Willman
+    # Test Name: Watch History - Entry appear in watch list history after change privacy
     # Test description:
     # Entry that is published to channel and was played by member in channel, should be displayed in My History after channel's admin change entry privacy
     # The test's Flow: 

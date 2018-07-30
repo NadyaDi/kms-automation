@@ -43,7 +43,7 @@ class Category(Base):
             except:
                 return False
         else:
-            return self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True)
+            return self.clsCommon.myMedia.clickResultEntryAfterSearch(entryName)
             
             
     def navigateToCategory(self, categoryName):
@@ -93,8 +93,7 @@ class Category(Base):
                 writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
                 return False
         else:
-            elText = self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME).text
-            if not elText == entryName:
+            if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
                 writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
                 return False                
         writeToLog("INFO","Success entry '" + entryName + "' was found")
@@ -206,3 +205,23 @@ class Category(Base):
         
         writeToLog("INFO","Success, all entry details was verified successfully")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # Search entries in category
+    def searchEntriesInCategory(self, entriesList, categoryName):
+        # Navigate to category
+        if self.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED to navigate to category")
+            return False 
+        
+        # Search each entry in category
+        for entry in entriesList:
+            if self.searchEntryInCategory(entry) == False:
+                writeToLog("INFO","FAILED to find entry in category")
+                return False  
+            
+            # Clear search content  
+            self.clsCommon.myMedia.clearSearch()
+            
+        return True               

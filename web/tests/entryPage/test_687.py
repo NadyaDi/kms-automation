@@ -13,6 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # test Name: Entry page - Embed Entry
     # Test description:
     # Check embed entry 
     # The test's Flow: 

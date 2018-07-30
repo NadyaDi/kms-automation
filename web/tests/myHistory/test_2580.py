@@ -14,6 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
+    # test Name: Watch History - Add entry (Published to channel- Restricted) to watch list history
     # Test description:
     # Entry that is published to restricted channel shouldn't be displayed in My History before it was played.
     # After entry was played, it should be displayed in history page

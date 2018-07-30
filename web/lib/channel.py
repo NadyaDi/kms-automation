@@ -118,6 +118,8 @@ class Channel(Base):
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='dropdown-toggle DropdownFilter__toggle']")
+    CHANNEL_CANCEL_PLAYLIST_BUTTON                  = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
     MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
     CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
     CHANNEL_PLAYLIST_NAME                           = ('xpath', "//p[@data-lorem='3w' and text() ='PLAYLIST_TITLE']/ancestor::tr[contains(@data-playlistid, '')]")
@@ -533,7 +535,7 @@ class Channel(Base):
             
             if self.wait_visible(self.CHANNEL_PAGE_NO_RESULT_ALERT, 5) == False:
                 if isExpected == True:
-                    if self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, 30, multipleElements=True) == False:
+                    if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
                         writeToLog("INFO","NOT Expected: Entry was not found in the channel")
                         return False                        
                         writeToLog("INFO","As Expected: Entry was found in the channel")
@@ -542,7 +544,7 @@ class Channel(Base):
                         writeToLog("INFO","As Expected: Entry was found in the channel")
                         return True
                 else:
-                    if self.wait_visible(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, 30, multipleElements=True) == False:
+                    if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
                         writeToLog("INFO","As Expected: Entry was not found in the channel")
                         return True                         
                     else:
@@ -664,8 +666,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to click on entry")
                 return False
         else:
-            if self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on entry")
+            if self.clsCommon.myMedia.clickResultEntryAfterSearch(entryName) == False:
                 return False
     
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
@@ -846,15 +847,19 @@ class Channel(Base):
         if self.send_keys(self.CHANNEL_PLAYLISTS_DESCRIPTION, playlistDescription) == False:
             writeToLog("INFO","FAILED to fill a playlistDescription title :'" + playlistDescription + "'")
             return False    
-       
+
         if self.click(self.CHANNEL_PLAYLISTS_TAG) == False:
             writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
-            return False   
-      
-        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
-            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
-            return False     
+            return False 
         
+        # Remove the Mask over all the screen (over tags filed also)
+        maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
+        self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))          
+   
+        if self.send_keys(self.CHANNEL_PLAYLISTS_TAG_AFTER_CLICK, playlistTag, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
+            return False 
+             
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
             return False        
@@ -868,7 +873,9 @@ class Channel(Base):
             if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
                 writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
                 return False       
+        sleep(3)
         
+       
         if self.click(self.CHANNEL_CANCEL_PLAYLIST_BUTTON) == False:
             writeToLog("INFO","FAILED to click on cancel")
             return False 
@@ -877,7 +884,6 @@ class Channel(Base):
     
     
     def getChannelPlaylistID(self, playlisTitle):
-            
         tmp_channelplaylist_name = (self.CHANNEL_PLAYLIST_NAME[0], self.CHANNEL_PLAYLIST_NAME[1].replace('PLAYLIST_TITLE', playlisTitle))
         if self.is_visible(tmp_channelplaylist_name) == False:
             writeToLog("INFO","FAILED to find playlist '" + playlisTitle + "' in my playlist page")
@@ -894,7 +900,6 @@ class Channel(Base):
 
 
     def clickEmbedChannelPlaylistAndGetEmbedCode(self, playlisTitle):
-        
         channelPlaylist_id = self.getChannelPlaylistID(playlisTitle)
         if channelPlaylist_id == False:
             writeToLog("INFO","FAILED to get playlist id")
@@ -1341,7 +1346,7 @@ class Channel(Base):
         
         sleep(2)
         self.driver.refresh()      
-        sleep(4)   
+        sleep(6)   
         
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:     
             if countOfSubscribers + " Subscribers" != self.get_element_text(self.CHANNEL_SUBSCRIBER_COUNT, timeout=20):
@@ -1438,24 +1443,42 @@ class Channel(Base):
     # Author: Michal Zomper
     # filter type name need to be without the word channels only type like, for exp: filter type 'Channels I am subscribed to' the filter type will be 'I am subscribed to' 
     def selectViewChannelFilterInMyChannelsPage(self, filterType):
-        if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
-            writeToLog("INFO","FAILED to click on view channel filter button")
-            return False  
-        
-        tmp_filter = (self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[1].replace('VIEW_CHANNEL_FILTER', filterType))
-        if self.click(tmp_filter, 10, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to select filter type: channels " + filterType)
-            return False
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            if self.click(self.clsCommon.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click on filters button in my channels page")
+                return False
+            sleep(2)
+                
+            tmp_filter = (self.clsCommon.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.clsCommon.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', filterType.value)) 
+            if self.click(tmp_filter, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on filter type: channels " + filterType.value)
+                return False
+            
+            # close filters
+            if self.click(self.clsCommon.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click on filters button in my channels page")
+                return False
+            sleep(2)
+                
+        else:
+            if self.click(self.MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON, 15) == False:
+                writeToLog("INFO","FAILED to click on view channel filter button")
+                return False  
+            
+            tmp_filter = (self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER[1].replace('VIEW_CHANNEL_FILTER', filterType.value))
+            if self.click(tmp_filter, 10, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to select filter type: channels " + filterType.value)
+                return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
-        writeToLog("INFO","Success, filter 'channels " + filterType + "' was set")
+        writeToLog("INFO","Success, filter 'channels " + filterType.value + "' was set")
         return True
     
     
     # Author: Michal Zomper
     def verifyChannelsViaFilter(self, filterBy, channelList):
         if self.selectViewChannelFilterInMyChannelsPage(filterBy) == False:
-            writeToLog("INFO","FAILED to filter view channels by: " + filterBy)
+            writeToLog("INFO","FAILED to filter view channels by: " + filterBy.value)
             return False
         
         if self.showAllChannels() == False:
@@ -1470,28 +1493,33 @@ class Channel(Base):
         
         for channel in channelList:
             if channel[1] == True:
-                if channel[0].lower() in channelsInGalley == False:
+                if (channel[0].lower() in channelsInGalley) == False:
                     writeToLog("INFO","FAILED, channel '" + channel[0] + "' wasn't found in channels galley although he need to be found")
                     return False
                 
             elif channel[1] == False:
-                if channel[0].lower() in channelsInGalley == True:
+                if (channel[0].lower() in channelsInGalley) == True:
                     writeToLog("INFO","FAILED, channel '" + channel[0] + "' was found in channels galley although he doesn't need to be found")
                     return False
                 
-        writeToLog("INFO","Success, filter and verify view channels by 'channels " + filterBy + "' was successful")
+        writeToLog("INFO","Success, filter and verify view channels by 'channels " + filterBy.value + "' was successful")
         return True
                     
     
     # Author: Michal Zomper
     def selectSortChannelOptionInMyChannelsPage(self, sortType):
-        if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
-            writeToLog("INFO","FAILED to click on sort channel filter button")
-            return False  
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI, 15) == False:
+                writeToLog("INFO","FAILED to click on sort channel filter button")
+                return False  
+        else:
+            if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
+                writeToLog("INFO","FAILED to click on sort channel filter button")
+                return False  
             
         tmpSort = (self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[0], self.MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER[1].replace('SORT_CHANNEL_FILTER', sortType))
         if self.click(tmpSort, 10, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to select sort type: channels " + sortType)
+            writeToLog("INFO","FAILED to select sort type: " + sortType)
             return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
@@ -1500,8 +1528,8 @@ class Channel(Base):
     
     
     def verifySortInMyChannels(self, sortBy, channelsList):
-        if self.selectSortChannelOptionInMyChannelsPage(sortBy) == False:
-            writeToLog("INFO","FAILED to sort channels by: " + sortBy)
+        if self.selectSortChannelOptionInMyChannelsPage(sortBy.value) == False:
+            writeToLog("INFO","FAILED to sort channels by: " + sortBy.value)
             return False
         
         if self.showAllChannels() == False:
@@ -1519,11 +1547,11 @@ class Channel(Base):
         for channel in channelsList:
             channelCurrentIndex = channelsInGalley.index(channel.lower())
             if prevChannelIndex > channelCurrentIndex:
-                writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. channel '" + channel + "' isn't in the right place" )
+                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. channel '" + channel + "' isn't in the right place" )
                 return False
             prevChannelIndex = channelCurrentIndex
                 
-        writeToLog("INFO","Success, verify sort channels by '" + sortBy + "' was successful")
+        writeToLog("INFO","Success, verify sort channels by '" + sortBy.value + "' was successful")
         return True   
     
     

@@ -50,19 +50,22 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI                         = ('xpath', "//div[@id ='accordion_ENTRY_ID']")
     MY_MEDIA_ENTRY_PUBLISHED_BTN                                = ('xpath', "//a[@id ='accordion-ENTRY_ID']/i[@class='icon-plus-sign kmstooltip']")
     MY_MEDIA_ENTRY_CHILD_POPUP                                  = ('xpath', "//strong[@class='valign-top']")
-    MY_MEDIA_SORT_BY_DROPDOWNLIST                               = ('xpath', "//a[@id='sort-btn']")
+    MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI                        = ('xpath', "//a[@id='sort-btn']")
+    MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI                        = ('xpath', "//a[@id='sortBy-menu-toggle']")
     MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST                      = ('xpath', "//a[@id='status-btn']")
     MY_MEDIA_FILTER_BY_TYPE_DROPDOWNLIST                        = ('xpath', "//a[@id='type-btn']")
     MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
     MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST                  = ('xpath', "//a[@id='sched-btn']")
-    MY_MEDIA_DROPDOWNLIST_ITEM                                  = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
+    MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI                           = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
+    MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI                           = ('xpath', "//span[@class='filter-checkbox__label' and contains(text(), 'DROPDOWNLIST_ITEM')]")
     MY_MEDIA_ENTRY_TOP                                          = ('xpath', "//span[@class='entry-name' and text()='ENTRY_NAME']")
     MY_MEDIA_END_OF_PAGE                                        = ('xpath', "//div[@class='alert alert-info endlessScrollAlert']")
     MY_MEDIA_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
     MY_MEDIA_CONFIRM_CHANGING_STATUS                            = ('xpath', "//a[@class='btn btn-primary' and text()='OK']")
     MY_MEDIA_ENTRY_THUMBNAIL                                    = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     MY_MEDIA_ENTRY_THUMBNAIL_ELASTIC_SEARCH                     = ("xpath", "//img[@class='entryThumbnail__img']")
-    MY_MEDIA_REMOVE_SEARCH_ICON                                 = ('xpath', "//i[@class='icon-remove']")
+    MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI                          = ('xpath', "//i[@class='icon-remove']")
+    MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI                          = ('xpath', "//a[@class='clear searchForm_icon']")
     MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath',"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
@@ -72,26 +75,11 @@ class MyMedia(Base):
     MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
-    
+    MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
     #=============================================================================================================
-#     def getSearchBarElementOld(self):
-#         try:
-#             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-#                 # Check which search bar do we have: old or new (elastic)
-#                 # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
-#                 if self.clsCommon.isElasticSearchOnPage():
-#                     return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
-#                 else:
-#                     return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 15, True)
-#             else:
-#                 return self.wait_visible(self.MY_MEDIA_SEARCH_BAR_OLD_UI)
-#         except:
-#             writeToLog("INFO","FAILED get Search Bar element")
-#             return False
     def getSearchBarElement(self):
         try:
             # Check which search bar do we have: old or new (elastic)
-            # If have more then one MY_MEDIA_ELASTIC_SEARCH_BAR (besides at the top of the page - general search)
             if self.clsCommon.isElasticSearchOnPage():
                 return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
             else:
@@ -216,7 +204,11 @@ class MyMedia(Base):
         
         sleep(3)
         # Search Entry     
-        self.getSearchBarElement().click()
+        searchBarElement = self.getSearchBarElement()
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get search bar element")
+            return False
+        searchBarElement.click()
         if exactSearch == True:
             searchLine = '"' + entryName + '"'
         else:
@@ -249,12 +241,44 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
                 return False
         else:    
-            if self.click(self.clsCommon.myMedia.SEARCH_RESULTS_ENTRY_NAME, multipleElements=True) == False:
+            result = self.getResultAfterSearch(entryName)
+            if result == False:
+                return False
+
+            if self.clickElement(result) == False:
                 writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
-                return False                    
+                return False
         return True
-             
     
+    
+    # This method for Elastic Search (new UI), returns the result element.         
+    def getResultAfterSearch(self, searchString):
+        results = self.wait_elements(self.SEARCH_RESULTS_ENTRY_NAME, 30)
+        if results == False:
+            writeToLog("INFO","No entries found")
+            return False
+        
+        for result in results:
+            if result.text == searchString:
+                return result        
+    
+        writeToLog("INFO","No entries found after search entry: '" + searchString + "'") 
+        return False        
+        
+        
+    # This method for Elastic Search (new UI), clicks on the returned result element.         
+    def clickResultEntryAfterSearch(self, entryName):
+        result = self.getResultAfterSearch(entryName)
+        if result == False:
+            writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
+            return False
+        else:
+            if self.clickElement(result) == False:
+                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
+                return False
+        return True
+            
+            
     # Author: Michal Zomper    
     def clickEditEntryAfterSearchInMyMedia(self, entryName):    
         # Click on the Edit Entry button
@@ -281,6 +305,7 @@ class MyMedia(Base):
     
         return True
     
+    
     #  @Author: Tzachi Guetta     
     def checkSingleEntryInMyMedia(self, entryName):
         # Click on the Entry's check-box in MyMedia page
@@ -291,6 +316,7 @@ class MyMedia(Base):
             return False
         
         return True
+    
     
     #  @Author: Tzachi Guetta     
     def checkEntriesInMyMedia(self, entriesNames):
@@ -583,13 +609,40 @@ class MyMedia(Base):
                 
         writeToLog("INFO","Success, All entries label were verified")
         return True 
-        
-        
-    # Author: Tzachi Guetta 
+
+
+        # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
-        try:                
+        if self.clsCommon.isElasticSearchOnPage() == True:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
-                tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST
+                tmpSortlocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
+                
+                if self.click(tmpSortlocator, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on :" + dropDownListItem + " filter in my media")
+                    return False
+                
+                # only sort filter use the locater of the dropdownlist_item_old_ui
+                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
+                if self.click(tmpSortBy, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem + " filter in my media")
+                    return False
+            else:
+                if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                    writeToLog("INFO","FAILED to click on filters button in my media")
+                    return False
+                sleep(2)
+                
+                tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
+                if self.click(tmpEntry, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem)
+                    return False
+                
+            self.clsCommon.general.waitForLoaderToDisappear()    
+            writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
+            return True
+        else:
+            if dropDownListName == enums.SortAndFilter.SORT_BY:
+                tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
             
             elif dropDownListName == enums.SortAndFilter.PRIVACY:
                 tmplocator = self.MY_MEDIA_FILTER_BY_STATUS_DROPDOWNLIST
@@ -611,17 +664,13 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
                 return False
             
-            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
             if self.click(tmpEntry, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
                 return False
 
-            self.clsCommon.general.waitForLoaderToDisappear()    
-        
-        except NoSuchElementException:
-            return False
-        
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+        self.clsCommon.general.waitForLoaderToDisappear()    
+        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + str(dropDownListItem) + " was set successfully")
         return True
     
     
@@ -883,7 +932,7 @@ class MyMedia(Base):
         writeToLog("INFO","Success, entry was open successfully")
         return True
        
-       
+   
     # @Author: Michal Zomper
     def verifyEntriesExistInMyMedia(self, searchKey, entriesList, entriesCount):
         if self.searchEntryMyMedia(searchKey) == False:
@@ -900,31 +949,63 @@ class MyMedia(Base):
         if len(searchedEntries) != entriesCount:
             writeToLog("INFO","FAILED, number of entries after search is '" + str(len(self.get_elements(self.MY_MEDIA_TABLE_SIZE))) + "' but need to be '" + str(entriesCount) + "'")
             return False 
-        
-        if type(entriesList) is list:
-            i=1 
-            for entry in entriesList: 
-                if entry in searchedEntries[len(searchedEntries)-i].text == False:
-                    writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
-                    return False
-                i = i+1
-                
-        # only one entry 
-        else:
-            if entriesList in searchedEntries[0].text == False:
-                writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
-                return False
             
-        if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON, 15, multipleElements=True) == False:
-            writeToLog("INFO","FAILED click on the remove search icon")
+        if self.clsCommon.isElasticSearchOnPage() == False:
+            if type(entriesList) is list:
+                i=1 
+                for entry in entriesList: 
+                    if (entry in searchedEntries[len(searchedEntries)-i].text) == False:
+                        writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
+                        return False
+                    i = i+1
+            # only one entry 
+            else:
+                if (entriesList in searchedEntries[0].text) == False:
+                    writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
+                    return False
+        else:
+            if type(entriesList) is list:
+                for entry in entriesList: 
+                    if (self.getResultAfterSearch(entry)) == False:
+                        writeToLog("INFO","FAILED to find entry: '" + entry + "'  after search in my media") 
+                        return False
+            # only one entry 
+            else:
+                if (self.getResultAfterSearch(entriesList)) == False:
+                    writeToLog("INFO","FAILED to find entry: '" + entriesList + "' after search in my media")
+                    return False
+                
+        if self.clearSearch() == False:
+            writeToLog("INFO","FAILED to clear search textbox")
             return False
-        self.clsCommon.general.waitForLoaderToDisappear()
-             
+            
         sleep(1)
         writeToLog("INFO","Success, All searched entries were found after search")
         return True  
         
         
+    # Author: Michal Zomper 
+    def clearSearch(self):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            try:
+                clear_button = self.get_elements(self.MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI)
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find clear search icon")
+                return False
+            
+            if self.clickElement(clear_button[1]) == False:
+                writeToLog("INFO","FAILED click on the remove search icon")
+                return False
+        else:
+            if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI, 15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED click on the remove search icon")
+                return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+             
+        writeToLog("INFO","Success, search was clear from search textbox")
+        return True
+    
+    
     #  @Author: Michal Zomper      
     # The following method can handle list of entries and a single entry:
     #    in order to publish list of entries pass a List[] of entries name, for single entry - just pass the entry name
@@ -1020,7 +1101,7 @@ class MyMedia(Base):
                      
     #  @Author: Michal Zomper    
     # The function check the the entries sort in my media is correct
-    def verifySortInMyMedia(self, sortBy, entriesList):
+    def verifySortInMyMediaOldUi(self, sortBy, entriesList):
         if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
             writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
             return False
@@ -1049,6 +1130,57 @@ class MyMedia(Base):
         return True   
     
     
+    
+    
+    def verifySortInMyMedia(self, sortBy, entriesList):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            sortBy = sortBy.value
+            
+        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries")
+            return False
+                
+        if self.showAllEntriesInMyMedia() == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+        sleep(10)
+        
+        try:
+            entriesInMyMedia = self.wait_visible(self.MY_MEDIA_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        
+        
+        entriesInMyMedia = entriesInMyMedia.split("\n")
+        prevEntryIndex = -1
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            for entry in entriesList:
+                try:
+                    currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                except:
+                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found in my media" )
+                    return False             
+                       
+                if prevEntryIndex > currentEntryIndex:
+                    writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    return False
+                prevEntryIndex = currentEntryIndex
+                    
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True   
+        else:
+            for entry in entriesList:
+                currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                if prevEntryIndex > currentEntryIndex:
+                    writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    return False
+                prevEntryIndex = currentEntryIndex
+                    
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True   
+    
     #  @Author: Michal Zomper    
     def showAllEntriesInMyMedia(self, timeOut=60):
         if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
@@ -1060,6 +1192,9 @@ class MyMedia(Base):
         while wait_until > datetime.datetime.now():
             if self.is_present(self.MY_MEDIA_NO_RESULTS_ALERT, 2) == True:
                 writeToLog("INFO","Success, All media in my media is display")
+                sleep(1)
+                # go back to the top of the page
+                self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
             
             self.clsCommon.sendKeysToBodyElement(Keys.END)
@@ -1086,14 +1221,14 @@ class MyMedia(Base):
             #if entry[1] == True:
             if entriesList[entry] == True:
                 #if entry[0].lower() in entriesInMyMedia == False:
-                if entry.lower() in entriesInMyMedia == False:
+                if (entry.lower() in entriesInMyMedia) == False:
                     writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in my media although he need to be found")
                     return False
                 
             #elif entry[1] == False:
             if entriesList[entry] == False:
                 # if entry[0].lower() in entriesInMyMedia == True:
-                if entry.lower() in entriesInMyMedia == True:
+                if (entry.lower() in entriesInMyMedia) == True:
                     writeToLog("INFO","FAILED, entry '" + entry + "' was found in my media although he doesn't need to be found")
                     return False
                 
@@ -1209,7 +1344,7 @@ class MyMedia(Base):
             listOfCategories =""  
             for category in categories:
                 listOfCategories = listOfCategories + category + " "
-            listOfCategories = listOfCategories.strip()
+            listOfCategories = (listOfCategories.strip())
                 
             if listOfCategories in tmpDetails == False:
                 writeToLog("INFO","FAILED to find category '" + category + "' under the entry '" + entryName + "' published in option")
@@ -1230,7 +1365,7 @@ class MyMedia(Base):
             listOfChannels =""   
             for channel in channels:
                 listOfChannels = listOfChannels + channel + " "
-            listOfChannels = listOfChannels.strip()
+            listOfChannels = (listOfChannels.strip())
                 
             if listOfChannels in tmpDetails == False:
                 writeToLog("INFO","FAILED to find channel '" + channel + "' under the entry '" + entryName + "' published in option")

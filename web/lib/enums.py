@@ -51,6 +51,7 @@ class Location(Enum):
     MY_HISTORY             = 'my history'
     PENDING_TAB            = 'channel - Pending tab' 
     HOME                   = 'home'
+    CHANNEL_PLAYLIST       = 'channel playlist'
 
 
 class EditEntryPageTabName(Enum):
@@ -111,10 +112,13 @@ class SortBy(Enum):
     MOST_RECENT             = 'Most Recent'  
     VIEWS                   = 'Views'
     LIKES                   = 'Likes'
-    ALPHABETICAL            = "Alphabetical"
+    ALPHABETICAL            = "Alphabetically - A to Z"
     COMMENTS                = "Comments"
     SCHEDULING_ASC          = "Scheduling Ascending"
     SCHEDULING_DESC         = "Scheduling Descending" 
+    CREATION_DATE_DESC      = "Creation Date - Descending"
+    CREATION_DATE_ASC       = "Creation Date - Ascending"
+    PLAYS                   = "Plays"
     
     
 class MediaType(Enum):
@@ -219,3 +223,28 @@ class MyMediaView(Enum):
     
     COLLAPSED               = 'collapsed'
     DETAILED                = 'detailed'   
+    
+    
+class ChannelsSortByMembership(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MANAGER_NEWUI               = 'Manager'
+    MEMBER_NEWUI                = 'Member' 
+    SUBSCRIBER_NEWUI            = 'Subscriber'
+    SHAREDREPOSITORIES_NEWUI    = 'Shared Repositories'
+    MANAGER_OLDUI               = ' I Manage'
+    MEMBER_OLDUI                = ' I am a member of' 
+    SUBSCRIBER_OLDUI            = ' I am subscribed to'
+    SHAREDREPOSITORIES_OLDUI    = 'Shared Repositories I am a member of'  
+    
+class ChannelsSortBy(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    MOST_RECENT               = 'Most Recent'  
+    ALPHABETICAL_NEWUI        = "Alphabetical A-Z"
+    ALPHABETICAL_OLDUI        = "Alphabetical"
+    MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
+    MEDIA_COUNT_NEWUI         = "Media count"
+    MEDIA_COUNT_OLDUI         = "Media Count"
