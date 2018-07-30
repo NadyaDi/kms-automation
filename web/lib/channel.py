@@ -511,7 +511,7 @@ class Channel(Base):
         return True
     
     #  Author: Tzachi Guetta
-    def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True, exactSearch=True):
+    def verifyIfSingleEntryInChannel(self, channelName, entryName, isExpected=True):
         try:                
             if self.navigateToChannel(channelName) == False:
                 writeToLog("INFO","FAILED to navigate to Channel page")
@@ -525,7 +525,7 @@ class Channel(Base):
                 # Search Entry     
                 self.clsCommon.myMedia.getSearchBarElement().click()
                 
-            if exactSearch == True:
+            if self.clsCommon.isElasticSearchOnPage() == True:
                 searchLine = '"' + entryName + '"'
             else:
                 searchLine = entryName        

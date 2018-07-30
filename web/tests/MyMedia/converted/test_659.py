@@ -13,12 +13,12 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name: My Media - Add to existing playlist - multiple
+    # Test Name: My Media - Delete - multiple
+    #test description: Delete multiple entries
     # The test's Flow: 
-    # Login to KMS-> Upload entries -> Create Empty playlist -> add entries to existing playlist  from My Media > Go to my playlist -> Check that entries added to new playlist
-    # test cleanup: deleting the uploaded files and playlist
+    # Login to KMS-> Upload entries -> Go to My Media -> Delete uploaded entries
     #================================================================================================================================
-    testNum     = "655"
+    testNum     = "659"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -34,7 +34,6 @@ class Test:
     entriesList = []
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName  = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'  
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -52,43 +51,24 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)        
             ########################################################################
-            self.entryName1 = clsTestService.addGuidToString('addMultipleToPlaylist1', self.testNum)
-            self.entryName2 = clsTestService.addGuidToString('addMultipleToPlaylist2', self.testNum)
-            self.entryName3 = clsTestService.addGuidToString('addMultipleToPlaylist3', self.testNum)
+            self.entryName1 = clsTestService.addGuidToString('deleteMultiple1', self.testNum)
+            self.entryName2 = clsTestService.addGuidToString('deleteMultiple2', self.testNum)
+            self.entryName3 = clsTestService.addGuidToString('deleteMultiple3', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
-            self.playlistName = clsTestService.addGuidToString('MultipleToExistingPlaylist', self.testNum)
-            ########################## TEST STEPS - MAIN FLOW #######################    
+            ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload 3 entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesList, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
-             
-            writeToLog("INFO","Step 2: Going to create empty playlist")
-            if self.common.myPlaylists.createEmptyPlaylist(self.entryName1, self.playlistName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create empty playlist")
-                return   
-             
-            writeToLog("INFO","Step 3: Going to navigate to My Media page")
-            if self.common.myMedia.navigateToMyMedia(forceNavigate = True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to My Media")
-                return                             
                
-            writeToLog("INFO","Step 4: Going to add  entries to playlist")
-            if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, False) == False:
+            writeToLog("INFO","Step 2: Going to delete uploaded entries")
+            if self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to add entries to playlist")
+                writeToLog("INFO","Step 2: FAILED delete entries")
                 return
-               
-            writeToLog("INFO","Step 5: Going to verify that all entries were added to playlist")
-            if self.common.myPlaylists.verifyMultipleEntriesInPlaylist(self.playlistName, self.entriesList) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to find all entries in playlist")
-                return                            
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Add multiple entries to existing playlist' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Delete multiple entries' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -98,8 +78,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
-            self.common.myPlaylists.deletePlaylist(self.playlistName)
+            
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

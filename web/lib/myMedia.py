@@ -76,6 +76,7 @@ class MyMedia(Base):
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
+    SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -253,10 +254,18 @@ class MyMedia(Base):
     
     # This method for Elastic Search (new UI), returns the result element.         
     def getResultAfterSearch(self, searchString):
-        results = self.wait_elements(self.SEARCH_RESULTS_ENTRY_NAME, 30)
+        #If we are in new UI with Elastic search
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            results = self.wait_elements(self.SEARCH_RESULTS_ENTRY_NAME, 30)
+        
+        #If we are in old UI
+        else:
+            tmp_results = (self.SEARCH_RESULTS_ENTRY_NAME_OLD_UI[0], self.SEARCH_RESULTS_ENTRY_NAME_OLD_UI[1].replace('ENTRY_NAME', searchString))
+            results = self.wait_elements(tmp_results, 30) 
+            
         if results == False:
-            writeToLog("INFO","No entries found")
-            return False
+                writeToLog("INFO","No entries found")
+                return False        
         
         for result in results:
             if result.text == searchString:
