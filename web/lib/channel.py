@@ -129,6 +129,10 @@ class Channel(Base):
     CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY        = ('xpath', "//a[@id='addcontent-repositories-tab' and @class='dropdown-toggle addcontent-repositories-tab']")
     CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL         = ('xpath', "//a[@data-original-title='CHANNEL_NAME' and @role='menuitem']")
     CHANNEL_DETAILS_ON_THUMBNAIL                    = ('xpath', "//img[@alt='Thumbnail for channel CHANNEL_NAME']/ancestor::div[contains (@class,'wrapper')]")
+    CHANNEL_SEARCH_ENTRY                            = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search this channel']")
+    CHANNEL_EDIT_BUTTON_AFTER_SEARCH                = ('xpath', '//*[@aria-label= "Edit ENTRY_NAME"]')
+    CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE             = ('xpath', "//a[@id='deleteMediaBtnForm' and contains(@href,'/entry/delete/')]")
+    CHANNEL_CONFIRM_ENTRY_DELETE                    = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -386,7 +390,7 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
             
-            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.clsCommon.isElasticSearchOnPage() == True:
                 if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on name text field")
                     return False
@@ -953,6 +957,40 @@ class Channel(Base):
         return True 
 
     
+    #@Author: Oded Berihon
+    def removeEntryFromChannel(self, channelName, entryName):
+        if self.searchAChannelInMyChannels(channelName) == False:
+            writeToLog("INFO","FAILED to find to  channel: " +  channelName)
+            return False 
+            
+        tmpChannelName = (self.CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH[0], self.CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH[1].replace('CHANNEL_NAME', channelName))
+        if self.click(tmpChannelName) == False:
+            writeToLog("INFO","FAILED to Click on Channel name: '" + channelName + "'")
+            return False   
+        sleep(5)
+        
+        if self.send_keys(self.CHANNEL_SEARCH_ENTRY, entryName) == False:
+            writeToLog("INFO","FAILED to find to  channel: " +  entryName)
+            return False  
+        sleep(5)
+         
+        tmp_entry_name = (self.CHANNEL_EDIT_BUTTON_AFTER_SEARCH[0], self.CHANNEL_EDIT_BUTTON_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_entry_name) == False:  
+            writeToLog("INFO","FAILED to click on edit icon: ")
+            return False  
+        sleep(5)
+        
+        if self.click(self.CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE) == False:
+            writeToLog("INFO","FAILED to find to  channel: " +  entryName)
+            return False  
+        
+        if self.click(self.CHANNEL_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False
+        
+        return True
+
+
     #  @Author: Tzachi Guetta    
     def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):
         try:                
