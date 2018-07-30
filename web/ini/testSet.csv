@@ -26,6 +26,7 @@ test_673,1,0,0,0,Playlists - Embed playlist
 test_675,1,0,0,0,Download Source File
 test_676,1,0,0,0,Playlists - Add to playlist Entry already existing inside
 test_677,1,0,0,0,Playlists - Add Entry from My Media to Several Playlists
+test_678,1,0,0,0,Playlists - Add entry from Entry Page to several playlists together,
 test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new
 test_683,1,0,0,0,Create Empty Playlist
 test_686,1,0,0,0,Entry page - Like Unlike
@@ -109,3 +110,4 @@ test_3282,1,0,0,0,Collaboration negative test
 test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
 test_3284,1,0,0,0,Slide Deck Upload- search slides
 test_3881,1,0,0,0,SAML Login
+
