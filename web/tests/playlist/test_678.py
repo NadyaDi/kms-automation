@@ -37,10 +37,10 @@ class Test:
     entryTags = "tag1,"
     playlistName1  = 'emptyPlaylistTest#1'
     playlistName2  = 'PlaylistTest#2'
-    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
+    filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\automation2.jpg'
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4' 
-    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4' 
-    filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'   
+    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3' 
+    filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'   
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -61,7 +61,9 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('EntryVideo', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('EntryAudio', self.testNum)
             self.entryName4 = clsTestService.addGuidToString('EntryImage', self.testNum)             
-            self.entriesList = [self.entryName2, self.entryName3, self.entryName4]
+            self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4]
+            self.playlistName1 = clsTestService.addGuidToString('emptyPlaylistTest#1', self.testNum)
+            self.playlistName2 = clsTestService.addGuidToString('PlaylistTest#2', self.testNum)
             self.listOfPlaylists = [self.playlistName1, self.playlistName2]
             ########################## TEST STEPS - MAIN FLOW ####################### 
             self.entriesToUpload = {
@@ -81,7 +83,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Empty playlist")
                 return
-
+            self.common.myMedia.navigateToMyMedia(forceNavigate=True)
             writeToLog("INFO","Step 3: Going to create playlist with 1 Entry")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName1, self.playlistName2, toCreateNewPlaylist=True) == False:
                 self.status = "Fail"
@@ -89,16 +91,58 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to navigate to MyMedia")
-            if self.common.myMedia.navigateToMyMedia(self, forceNavigate = False) == False:
+            if self.common.myMedia.navigateToMyMedia(forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED going to navigate to MyMedia ")
+                return
+            
+            writeToLog("INFO","Step 5: Going to navigate to Video Entry Page")
+            if self.common.entryPage.navigateToEntry(self.entryName2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to navigate to video entry page")
+                return
+            
+            writeToLog("INFO","Step 6: Going to add Video Entry to Multiple Playlists") 
+            if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName2, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to add Video Entry to Multiple Playlists")
+                return
+            
+            writeToLog("INFO","Step 7: Going to navigate to MyMedia")
+            if self.common.myMedia.navigateToMyMedia() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED going to navigate to MyMedia ")
+                return
+            
+            writeToLog("INFO","Step 8: Going to navigate to Audio Entry Page")
+            if self.common.entryPage.navigateToEntry(self.entryName3) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to navigate to Audio entry page")
                 return            
             
-#             writeToLog("INFO","Step 4: Going to Video Entry Page from MyMedia") 
-#             if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entriesList, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to add Entry to Multiple Playlists via Entry Page")
-#                 return
+            writeToLog("INFO","Step 9: Going to add Audio Entry to Multiple Playlists") 
+            if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName3, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to add Audio Entry to Multiple Playlists")
+                return
+            
+            writeToLog("INFO","Step 10: Going to navigate to MyMedia")
+            if self.common.myMedia.navigateToMyMedia() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED going to navigate to MyMedia ")
+                return
+            
+            writeToLog("INFO","Step 11: Going to navigate to Image Entry Page")
+            if self.common.entryPage.navigateToEntry(self.entryName4) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to navigate to Image entry page")
+                return             
+            
+            writeToLog("INFO","Step 12: Going to add Image Entry to Multiple Playlists") 
+            if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName4, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to add Image Entry to Multiple Playlists")
+                return                              
 #             
 #             writeToLog("INFO","Step 5: Going to verify Entry in Playlist1")
 #             if self.common.myPlaylists.verifySingleEntryInMultiplePlaylists(self.entryName1, self.listOfPlaylists) == False:
