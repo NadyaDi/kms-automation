@@ -20,6 +20,7 @@ class MyPlaylists(Base):
     CREATE_PLAYLIST_CREATE_BUTTON            = ('xpath', "//button[@id='playlistAddButton']")
     CREATE_PLAYLIST_SAVE_BUTTON              = ('xpath', "//button[@id='playlists-submit']")
     CREATE_PLAYLIST_CONFIRM_MSG              = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Now your selected media is part of the selected playlist(s).')]")
+    CREATE_PLAYLIST_CONFIRM_MSG_MULTIPLE     = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Media added to selected playlist(s):')]")
     PLAYLIST_CHECKBOX                        = ('xpath', "//span[text() = 'PLAYLIST_NAME']")
     PLAYLIST_NAME                            = ('xpath', "//a[contains(@data-original-title,'PLAYLIST_NAME')]")
     PLAYLIST_DELETE_BUTTON                   = ('xpath', "//i[contains(@class,'icon-trash')]")
@@ -478,9 +479,14 @@ class MyPlaylists(Base):
             self.clsCommon.general.waitForLoaderToDisappear()
             sleep(1)
             
-            if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
-                return False
+            if type(playlistsName) is list:
+                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG_MULTIPLE, 10) == False:
+                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                    return False
+            else:
+                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                    return False
             
             writeToLog("INFO","Entry: '" + entryName + "' added to Playlists")
                                        

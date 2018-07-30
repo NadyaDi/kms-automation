@@ -15,6 +15,7 @@ test_673,1,0,0,0,Playlists - Embed playlist,
 test_675,1,0,0,0,Download Source File,
 test_676,1,0,0,0,Playlists - Add to playlist Entry,already existing inside
 test_677,1,0,0,0,Playlists - Add Entry from My Media to Several Playlists,
+test_678,1,0,0,0,Playlists - Add entry from Entry Page to several playlists together,
 test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new,
 test_683,1,0,0,0,Create Empty Playlist,
 test_687,1,0,0,0,Entry page - Embed Entry,
