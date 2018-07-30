@@ -218,7 +218,7 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to click on delete button")
             return False
         
-        sleep(2)
+        sleep(3)
         if self.click(self.ENTRY_PAGE_CONFIRM_DELETE_BUTTON, 20, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click confirm delete button")
             # Click on the actions button to close the drop down list 
@@ -602,4 +602,4 @@ class EntryPage(Base):
             writeToLog("INFO","Failed to click on to download file correctly")
             return False    
                 
-        return True                      
+        return True    

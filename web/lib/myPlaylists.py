@@ -115,10 +115,10 @@ class MyPlaylists(Base):
                 sleep(1)
                 
                 if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlist: " + playlistName )
+                    writeToLog("INFO","FAILED to add entry: " + str(entryName) + " to Playlist: " + playlistName )
                     return False
                 
-                writeToLog("INFO","Entry: """ + entryName + """ added to Playlist: """ + playlistName + "")
+                writeToLog("INFO","Entry: """ + str(entryName) + """ added to Playlist: """ + playlistName + "")
                                        
         except NoSuchElementException:
             return False

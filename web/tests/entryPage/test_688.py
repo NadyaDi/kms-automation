@@ -13,12 +13,14 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name: My Media - Add to an existing playlist - Single
+    # test Name: Entry page - Delete media from entry page
+    # Test description: Deelete entry from entry page
     # The test's Flow: 
-    # Login to KMS-> Upload entry -> -> Create empty playlist -> add entry to existing playlist from My Media > Go to my playlist -> Check that entries added to the playlist
-    # test cleanup: deleting the uploaded and playlist
+    # Login to KMS-> Upload entry -> Go to entry page > Click on 'Actions' - Delete -> Click on Delete in pop up message
+    # -> Check that entry was deleted
+    # test cleanup: deleting the uploaded file
     #================================================================================================================================
-    testNum     = "657"
+    testNum     = "688"
     enableProxy = False
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
@@ -31,12 +33,12 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName  = None
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'  
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
+    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
-        return request.param  
+        return request.param
     
     def test_01(self,driverFix,env):
 
@@ -47,36 +49,30 @@ class Test:
             self.startTime = time.time()
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
-            self.common = Common(self.driver)        
+            self.common = Common(self.driver)
+            
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('addToExistingPlaylist', self.testNum)
-            self.playlistName = clsTestService.addGuidToString('existingPlaylist', self.testNum)
-            ########################## TEST STEPS - MAIN FLOW #######################      
+            self.entryName = clsTestService.addGuidToString('deleteEntryFromEntryPage', self.testNum)
+            ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
+                return  
             
-            writeToLog("INFO","Step 2: Going to create empty playlist")
-            if self.common.myPlaylists.createEmptyPlaylist(self.entryName, self.playlistName) == False:
+            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create empty playlist")
-                return            
-               
-            writeToLog("INFO","Step 3: Going to add entry to playlist")
-            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName, False) == False:
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return                      
+                  
+            writeToLog("INFO","Step 3: Going to delete from entry page")
+            if self.common.entryPage.deleteEntryFromEntryPage(self.entryName, deleteFrom= enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to add entry to playlist")
-                return
-               
-            writeToLog("INFO","Step 4: Going to verify that entry was added to playlist")
-            if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to find entry in playlist")
-                return                           
+                writeToLog("INFO","Step 3: FAILED to delete entry from entry page")
+                return                                                                                                 
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Add single entry to existing playlist' was done successfully")
+            writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -86,8 +82,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.myPlaylists.deletePlaylist(self.playlistName)
+            
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

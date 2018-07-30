@@ -8,6 +8,8 @@ test_655,1,0,0,0,My Media - Add to existing playlist - multiple
 test_656,1,0,0,0,My Media - Add to a new playlist- multiple
 test_657,1,0,0,0,My Media - Add to an existing playlist - Single
 test_658,1,0,0,0,My Media - Add to a new playlist - Single
+test_659,1,0,0,0,My Media - Delete - multiple
+test_660,1,0,0,0,My Media - Delete - single
 test_661,1,0,0,0,My Media - Publish to channel - single
 test_662,1,0,0,0,My Media - Publish to category - single
 test_663,1,0,0,0,My Media - Publish to channel - single
@@ -27,8 +29,13 @@ test_677,1,0,0,0,Playlists - Add Entry from My Media to Several Playlists
 test_678,1,0,0,0,Playlists - Add entry from Entry Page to several playlists together,
 test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new
 test_683,1,0,0,0,Create Empty Playlist
+test_686,1,0,0,0,Entry page - Like Unlike
 test_687,1,0,0,0,Entry page - Embed Entry
+test_688,1,0,0,0,Entry page - Delete media from entry page
+test_689,1,0,0,0,Entry page - Add to playlist from entry page
 test_692,1,0,0,0,Entry page - Side My Media
+test_693,1,0,0,0,Entry page - Publish to hannel from entry page
+test_694,1,0,0,0,Entry page - Publish to category from entry page
 test_695,1,0,0,0,Entry page - Add captions
 test_697,0,1,0,0,Entry page - Add comment
 test_698,0,1,0,0,Entry page - Close discussion

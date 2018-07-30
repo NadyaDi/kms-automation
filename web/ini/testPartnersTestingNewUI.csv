@@ -104,4 +104,10 @@ test_658,My Media - Add to a new playlist - Single,2373952,qakmstest.dev.kaltura
 test_656,My Media - Add to a new playlist- multiple,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_657,My Media - Add to an existing playlist - Single,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_655,My Media - Add to existing playlist - multiple,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-
+test_659,My Media - Delete - multiple,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_660,My Media - Delete - single,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_694,Entry page - Publish to category from entry page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_693,Entry page - Publish to channel from entry page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_686,Entry page - Like Unlike,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_688,Entry page - Delete media from entry page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_689,Entry page - Add to playlist from entry page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
