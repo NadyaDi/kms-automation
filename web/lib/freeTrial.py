@@ -1,3 +1,4 @@
+from openpyxl.compat.strings import unicode
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
@@ -78,6 +79,7 @@ class  FreeTrial(Base):
             tmp = tempInstance.split('-')
             number = int(tmp[1]) + 1
             instanceNumber = tmp[0] + "-" + str(number)
+            instanceNumber = instanceNumber.encode('ascii', 'ignore').decode('utf-8', 'ignore')
             instanceFile.write(instanceNumber)
             instanceFile.close()
             return instanceNumber
