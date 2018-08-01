@@ -723,10 +723,11 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on save button")
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
-        
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
         if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
+        sleep(3)
         
         # Click Leave Page if expected    
         if leavePage == True:
