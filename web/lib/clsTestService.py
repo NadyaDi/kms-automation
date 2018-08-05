@@ -96,7 +96,7 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
             }
             driver = webdriver.Remote('http://localhost:9515', capabilities)
             return driver 
-    else: #remote, capture traffic using proxy
+    else: #Remote
         if (localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_IE):
             return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL,desired_capabilities={'unexpectedAlertBehaviour':'accept','browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
         elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_FIREFOX):
