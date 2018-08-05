@@ -2,6 +2,7 @@ case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_16,1,0,0,0,Download Source File
 test_594,1,0,0,0,KAF BlackBoard entry thumbnail
 test_603,1,0,0,0,KAF BlackBoard view modes
+test_638,1,0,0,0,General - Search Media
 test_643,1,0,0,0,Home Page Carousel
 test_653,1,0,0,0,Free trial
 test_655,1,0,0,0,My Media - Add to existing playlist - multiple
@@ -73,6 +74,7 @@ test_1557,1,0,0,0,importChannel
 test_1558,1,0,0,0,Disclaimer - before upload
 test_1573,1,0,0,0,Home page playlist
 test_1594,1,0,0,0,Entry required field
+test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history
@@ -111,4 +113,3 @@ test_3282,1,0,0,0,Collaboration negative test
 test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
 test_3284,1,0,0,0,Slide Deck Upload- search slides
 test_3881,1,0,0,0,SAML Login
-

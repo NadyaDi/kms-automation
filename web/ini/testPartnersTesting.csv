@@ -37,6 +37,7 @@ test_722,Categories - Browse channels,2370151-1,qakmstest.dev.kaltura.com,python
 test_741,Channel page - Enable subscription in channel,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_711,Categories - Edit metadata,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_638,General - Search Media,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_2510,General - Global Search for Category,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_706,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
