@@ -13,9 +13,9 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : General - Search Media
+    # Test Name : General - Global Search for Category
     # Test description:
-    # upload and publish new entry 
+    # Create category  
     # In the header - global search enter an existing word to the text box and click on search: 
     #     Search results page should be opened successfully.
     #     The title should be "Search for: "
@@ -25,7 +25,7 @@ class Test:
     #     The word you have searched for should be marked in the results. 
 
     #================================================================================================================================
-    testNum = "638"
+    testNum = "2510"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -43,7 +43,6 @@ class Test:
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
     categoryName = [("Apps Automation Category")]
-    thumbnailQrCodeResult = "4"
 
     
     #run test as different instances on all the supported platforms
@@ -71,29 +70,22 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload new entry: " + self.entryName)
                 return
-       
+     
             writeToLog("INFO","Step 2: Going to published entry")  
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entry '" + self.entryName + "'")
                 return 
-  
+
             writeToLog("INFO","Step 3: Going to search entry in global search")
             if self.common.general.serchAndVerifyInGlobalSearch(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to search entry'" + self.entryName + "' in global search")
                 return 
-               
-            writeToLog("INFO","Step 4: Going to verify entry metadata after global search") 
-            if self.common.general.VerifyEntryMetadataAfterGlobalSearch(self.entryName, self.thumbnailQrCodeResult, self.description) == False:
-            #if self.common.general.VerifyEntryMetadataAfterGlobalSearch("92F7D4B1-638-Global search - Search Media", self.thumbnailQrCodeResult, self.description) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to verify entry'" + self.entryName + "' metadata after global search")
-                return 
-            
-                
+             
+            writeToLog("INFO","Step 3: Going to search entry in global search")   
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Global search - Search Media' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Global search - Global Search for Category' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

@@ -118,7 +118,7 @@ class QrCodeReader(Base):
     
     # @Author: Oleg Sigalov
     # Take custom screenshot of given element (locator) and crop
-    def takeElementQrCodeScreenshot(self, locator, left, top, right, bottom, timeout=30, multipleElements=False):
+    def takeElementLocatorQrCodeScreenshotAndCrop(self, locator, left, top, right, bottom, timeout=30, multipleElements=False):
         try: 
             element = self.wait_visible(locator, timeout, multipleElements)
             if element == False:
@@ -143,6 +143,26 @@ class QrCodeReader(Base):
         except Exception:
             writeToLog("INFO","FAILED to take screenshot of the element")
             return False
+
+
+    # @Author: Oleg Sigalov
+    # Take custom screenshot of given element
+    def takeAndResolveElementQrCodeScreenshot(self, element):
+        try: 
+            image_data = element.screenshot_as_png
+            image = Image.open(io.BytesIO(image_data))
+            filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+            image.save(filePath)
+            writeToLog("INFO","Screenshot of the element saved to: " + filePath)        
+            
+
+            # Resolve QR code
+            return self.resolveQrCode(filePath)
+         
+        except Exception:
+            writeToLog("INFO","FAILED to take screenshot of the element")
+            return False
+                
     
     #Take screenshot of the iframe (player), return the full file path of the screenshot
     def takeQrCodePlayerScreenshot(self, player, driver, fullScreen=False, live=True):
@@ -264,7 +284,7 @@ class QrCodeReader(Base):
         if locator == None:
             sc = self.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropBottom)
         else:
-            sc = self.takeElementQrCodeScreenshot(locator, cropLeft, croTop, cropRight, cropBottom)
+            sc = self.takeElementLocatorQrCodeScreenshotAndCrop(locator, cropLeft, croTop, cropRight, cropBottom)
         if sc == None:
             writeToLog("DEBUG","Failed to get screenshot for QR code")
             return None
