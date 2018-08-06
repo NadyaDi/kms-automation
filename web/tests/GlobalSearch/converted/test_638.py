@@ -34,11 +34,7 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName1 = None
-    entryName2 = None
-    entryName3 = None
-    entryName4 = None
-    entryName5 = None
+    entryName = None
     description = "Description" 
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
@@ -79,13 +75,13 @@ class Test:
                 return 
   
             writeToLog("INFO","Step 3: Going to search entry in global search")
-            if self.common.general.serchAndVerifyInGlobalSearch(self.entryName) == False:
+            if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to search entry'" + self.entryName + "' in global search")
                 return 
                
             writeToLog("INFO","Step 4: Going to verify entry metadata after global search") 
-            if self.common.general.VerifyEntryMetadataAfterGlobalSearch(self.entryName, self.thumbnailQrCodeResult, self.description) == False:
+            if self.common.globalSearch.VerifyEntryMetadataAfterGlobalSearch(self.entryName, self.thumbnailQrCodeResult, self.description) == False:
             #if self.common.general.VerifyEntryMetadataAfterGlobalSearch("92F7D4B1-638-Global search - Search Media", self.thumbnailQrCodeResult, self.description) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify entry'" + self.entryName + "' metadata after global search")

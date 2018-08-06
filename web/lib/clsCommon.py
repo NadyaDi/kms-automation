@@ -24,6 +24,7 @@ from kafBB import BlackBoard
 from kafSharepoint import SharePoint
 from selenium.webdriver.common.keys import Keys
 from api import ApiClientSession
+from globalSearch import GlobalSearch
 import filecmp
 
 
@@ -58,6 +59,7 @@ class Common():
         ### KAF ###
         self.blackBoard         = BlackBoard(self, driver)
         self.sharePoint         = SharePoint(self, driver)
+        self.globalSearch       = GlobalSearch(self, driver)
     #=============================================================================================================
     # Locators:
     #=============================================================================================================
