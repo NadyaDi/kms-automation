@@ -34,6 +34,7 @@ class MyPlaylists(Base):
     PLAYLIST_EMBED_TEXTAREA                  = ('xpath', '//textarea[@id="embed_code-PLAYLIST_ID"]')
     PLAYLIST_EMBED_PLAYER_SIZES              = ('xpath', '//iframe[@width="WIDTH_SIZE" and @height="HEIGHT_SIZE"]')
     PLAYLIST_TABLE                           = ('xpath', '//table[@id="playlist-table"]')
+    CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE   = ('xpath', '//div[contains(@class, "alert alert-success ") and contains(text(),"Media added to selected playlist(s): PLAYLIST_NAME.")]')
     #============================================================================================================
 
     #  @Author: Tzachi Guetta      
@@ -95,9 +96,16 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on create playlist Button")
                     return False
                 
-                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                    writeToLog("INFO","FAILED to create playlist, Playlist name: " + playlistName + "")
-                    return False
+                if currentLocation == enums.Location.MY_MEDIA:
+                    if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        return False
+                
+                else:
+                    tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', playlistName))
+                    if self.wait_visible(tmp_success_msg, 10) == False:
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        return False
                 
                 writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
             
@@ -114,9 +122,16 @@ class MyPlaylists(Base):
                 self.clsCommon.general.waitForLoaderToDisappear()
                 sleep(1)
                 
-                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                    writeToLog("INFO","FAILED to add entry: " + str(entryName) + " to Playlist: " + playlistName )
-                    return False
+                if currentLocation == enums.Location.MY_MEDIA:
+                    if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        return False
+                
+                else:
+                    tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', playlistName))
+                    if self.wait_visible(tmp_success_msg, 10) == False:
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        return False
                 
                 writeToLog("INFO","Entry: """ + str(entryName) + """ added to Playlist: """ + playlistName + "")
                                        
@@ -203,7 +218,8 @@ class MyPlaylists(Base):
         return True
     
     
-    #  @Author: Tzachi Guetta      
+    #  @Author: Tzachi Guetta
+    # Verify that there is only one entry displayed with the same name in the playlist     
     def verifySingleEntryInPlaylist(self, playlistName, entryName, isExpected=True):
         try:                
             if playlistName != '':
@@ -216,14 +232,16 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
 
-                # Get playlist list text
-                playlist_text= self.get_element_text(self.PLAYLIST_TABLE)
+                # Get entry element
+                tmp_entry = (self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[0], self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[1].replace('ENTRY_NAME', entryName))
                 
-                # Split playlist text
-                playlist_entries_list = playlist_text.split()
+                # Check if entry is displayed more than once
+                tmp_entry_display_list = self.get_elements(tmp_entry)
                 
-                # Check that entry displayed just once in playlist
-                numberOfDisplay = playlist_entries_list.count(entryName)
+                # Get the number of displayed of the entry
+                numberOfDisplay = len(tmp_entry_display_list)
+                
+                # Check that entry is displayed just once
                 if numberOfDisplay == 1:
                     if isExpected == True:
                         writeToLog("INFO","As Expected: Entry was found in the Playlists")
@@ -245,8 +263,7 @@ class MyPlaylists(Base):
         except NoSuchElementException:
             return False
             
-        return True
-    
+        return True    
     
         #  @Author: Tzachi Guetta      
     def shufflePlaylistEntries(self, playlistName, entriesList, indexEntryFrom, indexEntryTo):
@@ -401,7 +418,7 @@ class MyPlaylists(Base):
         if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName) == False:
             writeToLog("INFO","FAILED to type playlist name")
             return False
-        sleep(1)
+        sleep(2)
     
         if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on create playlist Button")
@@ -583,3 +600,14 @@ class MyPlaylists(Base):
             return False
             
         return True
+    
+    
+    # @Author:Inbar Willman
+    # Delete nultiple playlist
+    def deleteMultiplePlaylists(self, playlistList):
+        for playlist in playlistList:
+            if self.deletePlaylist(playlist) == False:
+                writeToLog("INFO","FAILED to delete:" + playlist)
+                return False  
+               
+        return True          

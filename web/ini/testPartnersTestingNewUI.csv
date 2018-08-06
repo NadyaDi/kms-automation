@@ -1,5 +1,5 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456,
+test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,5447-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_713,Category moderation,5447-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_706,Publish to channel multiple,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -112,3 +112,6 @@ test_693,Entry page - Publish to channel from entry page,2373952,qakmstest.dev.k
 test_686,Entry page - Like Unlike,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_688,Entry page - Delete media from entry page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_689,Entry page - Add to playlist from entry page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_691,Entry page - Related Media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_684,Entry page - Navigate to Edit Entry Page from Entry Page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_685,Entry page - Edit Metadata,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
