@@ -57,7 +57,6 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.category.navigateToEditCategoryPage("Apps Automation Category")
             
             writeToLog("INFO","Step 1: Going to create new category") 
             self.common.apiClientSession.startCurrentApiClientSession()
