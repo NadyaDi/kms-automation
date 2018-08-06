@@ -38,8 +38,13 @@ class clsPractiTest:
                         platform = testInstance['attributes']['custom-fields']['---f-30772']  
                     except Exception:
                         platform = defaultPlatform
+                        
+                    try:
+                        executeAutomated = testInstance['attributes']['custom-fields']['---f-34162']  
+                    except Exception:
+                        executeAutomated = 'No'                        
                     
-                    if testInstance['attributes']['custom-fields']['---f-34162'] == 'Yes':
+                    if executeAutomated == 'Yes':
                         sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + platform
                         writeToLog("DEBUG","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                         
             else:
@@ -54,7 +59,7 @@ class clsPractiTest:
     # Function that returns all sessions that are located under the filter "pending for automation"  
     #=============================================================================================================
     def getPractiTestAutomationSession(self):
-        filterId = os.getenv('PRACTITEST_FILTER_ID',"") 
+        filterId = "326139" 
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
         
         prSessionInfo = {
