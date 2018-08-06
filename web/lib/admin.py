@@ -565,3 +565,31 @@ class Admin(Base):
         
         writeToLog("INFO","Success, channel subscription module was set to '" + str(selection) + "'")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # isEnable = True to enable module, isEnable = False to disabled module
+    def enableRelatedMedia(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/related') == False:
+            writeToLog("INFO","FAILED to load Related page in admin")
+            return False
+        sleep(1)    
+        
+        #Enable/Disable module
+        selection_description = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
+            writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
+            return False 
+        
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        return True        

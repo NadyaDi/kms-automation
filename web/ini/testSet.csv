@@ -27,13 +27,16 @@ test_673,1,0,0,0,Playlists - Embed playlist
 test_675,1,0,0,0,Download Source File
 test_676,1,0,0,0,Playlists - Add to playlist Entry already existing inside
 test_677,1,0,0,0,Playlists - Add Entry from My Media to Several Playlists
-test_678,1,0,0,0,Playlists - Add entry from Entry Page to several playlists together,
+test_678,1,0,0,0,Playlists - Add entry from Entry Page to several playlists together
 test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new
 test_683,1,0,0,0,Create Empty Playlist
+test_684,1,0,0,0,Entry page - Navigate to Edit Entry Page from Entry Page
+test_685,1,0,0,0,Entry page - Edit Metadata
 test_686,1,0,0,0,Entry page - Like Unlike
 test_687,1,0,0,0,Entry page - Embed Entry
 test_688,1,0,0,0,Entry page - Delete media from entry page
 test_689,1,0,0,0,Entry page - Add to playlist from entry page
+test_691,1,0,0,0,Entry page - Related Media
 test_692,1,0,0,0,Entry page - Side My Media
 test_693,1,0,0,0,Entry page - Publish to hannel from entry page
 test_694,1,0,0,0,Entry page - Publish to category from entry page

@@ -53,6 +53,7 @@ class EntryPage(Base):
     ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES                   = ('xpath', '//div[@class="photo-group thumb_wrapper" and @title="ENTRY_NAME"]')
     ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab" and @class="btn responsiveSizePhone tab-attachments-tab"]')
     ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON                   = ('xpath', '//i[@class="icon-download icon-large"]')
+    ENTRY_PAGE_RELATED_MEDIA_TABLE                         = ('xpath', '//table[@class="table table-hover table-bordered thumbnails table-condensed"]/tbody/tr')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -603,3 +604,16 @@ class EntryPage(Base):
             return False    
                 
         return True    
+    
+    
+    # @Author: Inbar Willman
+    # Verify that correc tnumber of related media is displayed
+    # By default = 10
+    def verifyRelatedMediaCount(self):
+        # get related media table length
+        related_media_length = len(self.get_elements(self.ENTRY_PAGE_RELATED_MEDIA_TABLE))
+        if related_media_length != 10:
+            writeToLog("INFO","Failed to displayed correct number of media in Related section")
+            return False   
+        
+        return True 
