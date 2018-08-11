@@ -45,7 +45,7 @@ class Test:
     filePathImageDownload = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + r'\TestingAutomation.png'
     #filePathPpt = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\10SlidestimelineQRCode.pptx'
     #filePathPptDownload = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + r'\10SlidestimelineQRCode.pptx'
-    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3'
+    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3'
     filePathAudioDownload = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + r'\audio.mp3'
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
     filePathVideoDownload = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + r'\QR_Code_10sec.mp4'
