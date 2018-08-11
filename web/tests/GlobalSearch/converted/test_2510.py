@@ -68,7 +68,7 @@ class Test:
      
 
             writeToLog("INFO","Step 3: Going to search entry in global search")
-            if self.common.general.serchAndVerifyInGlobalSearch(self.categoryName) == False:
+            if self.common.globalSearch.serchAndVerifyCategoryInGlobalSearch(self.categoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to search category'" + self.entryName + "' in global search")
                 return 
@@ -84,7 +84,8 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")     
+            writeToLog("INFO","**************** Starting: teardown_method ****************")
+            self.common.apiClientSession.deleteCategory(self.categoryName)  
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
