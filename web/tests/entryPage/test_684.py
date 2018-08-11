@@ -38,7 +38,7 @@ class Test:
     entriesToUpload = []
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
-    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\Audios\audio.mp3'
+    filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3'
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -59,7 +59,7 @@ class Test:
             self.entryName1 = clsTestService.addGuidToString('goToVideoEditPageFromEntryPage', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('goToImageEditPageFromEntryPage', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('goToAudioEditPageFromEntryPage', self.testNum)
-            self.entriesList = [self.entryName1. self.entryName2, self.entryName3]
+            self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
             self.entriesToUpload = {
                 self.entryName1: self.filePathVideo, 
                 self.entryName2: self.filePathImage,
