@@ -155,11 +155,12 @@ class Category(Base):
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             try:
                 parent_entry = self.get_element(tmp_entryName)
+                parent_entry = parent_entry.find_element_by_xpath("..")
             except NoSuchElementException:
                 writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
                 return False
              
-            if self.click_child(parent_entry, self.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=False) == False:
+            if self.click_child(parent_entry, self.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on the plus button in order to see entry details")
                 return False
         
@@ -181,7 +182,7 @@ class Category(Base):
             return False
         
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            if self.click_child(parent_entry, self.CATEGORY_MINUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=False) == False:
+            if self.click_child(parent_entry, self.CATEGORY_MINUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on the minus button in order to close entry details")
                 return False
             

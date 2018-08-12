@@ -64,44 +64,45 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to enable thumbnail module")
                 return
-            
+              
             writeToLog("INFO","Step 2: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to home page")
                 return
-            
+              
             writeToLog("INFO","Step 3: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
-                     
+              
+            sleep(5)       
             writeToLog("INFO","Step 4: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 self.status = "Fail"
                 return
-            
+             
             writeToLog("INFO","Step 5: Going to upload thumbnail in edit Entry Page")
             if self.common.editEntryPage.uploadThumbnail(self.uploadThumbnailFliePath, self.uploadThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to upload thumbnail")
                 return
-               
+                
             sleep(2)     
             writeToLog("INFO","Step 6: Going to navigate to entry page")            
-            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName, leavePage=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED navigate to entry page '" + self.entryName + "'")
                 return
-               
+                
             writeToLog("INFO","Step 7: Going to check the entry thumbnail in the player")
             if self.common.player.verifyThumbnailInPlayer(self.uploadThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED failed to logout from main user")
                 return  
-            
+             
             self.common.base.switch_to_default_content()                    
             writeToLog("INFO","Step 8: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:

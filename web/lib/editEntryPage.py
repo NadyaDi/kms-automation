@@ -860,7 +860,7 @@ class EditEntryPage(Base):
     def deleteChapter (self, chapterTime):
         chapterTimeInSec = utilityTestFunc.convertTimeToSecondsMSS(chapterTime)
         ChapterTime = (self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[0], self.EDIT_ENTRY_CHAPTER_IN_TIME_LINE[1].replace('CHAPTER_TIME', str(chapterTimeInSec * 1000)))
-        
+        sleep(3)
         if self.click(ChapterTime) == False:
             writeToLog("INFO","FAILED to click on chapter icon in time line")
             return False          
