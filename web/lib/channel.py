@@ -107,7 +107,8 @@ class Channel(Base):
     CHANNEL_PLAYLISTS_TAG_AFTER_CLICK               = ('xpath', "//input[contains(@id, 's2id_autogen')]")
     CHANNEL_MEMBER_COUNT                            = ('xpath', "//div[@id='Channelmembers_persons']")
     CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[@class='btn-group right-sep']")
-    CHANNEL_MANGER_NAME                             = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
+    CHANNEL_MANGER_NAME_NEW_UI                      = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
+    CHANNEL_MANGER_NAME_OLD_UI                      = ('xpath', "//dd[@id='functionaries-Managers']")
     CHANNEL_APPEARS_IN_BUTTON                       = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
     CHANNEL_APPEARS_IN_CATEGORY_NAME                = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME        = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
@@ -1418,7 +1419,7 @@ class Channel(Base):
                 writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
                 return False 
             
-            tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME[0], self.CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
+            tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME_NEW_UI[0], self.CHANNEL_MANGER_NAME_NEW_UI[1].replace('MANAGER_NAME', managerName))
             if self.click(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True) == False:
                 writeToLog("INFO","Failed to click on managers button")
                 return False
@@ -1449,8 +1450,8 @@ class Channel(Base):
                 return False
             
             tmp_channelDetails = details.split('\n')
-            if tmp_channelDetails[0] == '':
-                writeToLog("INFO","FAILED to channel type")
+            if channelType in tmp_channelDetails[0].lower() == False:
+                writeToLog("INFO","FAILED to verify that channel type is: " + channelType)
                 return False
                 
             if entriesCount + "\nmedia" != self.get_element_text(self.CHANNEL_MEDIA_COUNT, 20).lower():
@@ -1465,8 +1466,9 @@ class Channel(Base):
                 writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
                 return False 
             
-            tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME[0], self.CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
-            if self.is_visible(tmp_chnnelManagerName) == False:
+            #tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME[0], self.CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
+            if managerName in self.get_element_text(self.CHANNEL_MANGER_NAME_OLD_UI, timeout=20).lower() == False:
+#             if self.is_visible(tmp_chnnelManagerName, multipleElements= True) == False:
                 writeToLog("INFO","Failed to verify channel manager name: " + managerName)
                 return False 
             

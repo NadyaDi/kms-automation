@@ -138,17 +138,17 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 13: Going to verify channel page information")
-            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-                if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "QA Application", self.categoryName[0]) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED navigate to channel: " + self.channelName[0])
-                    return 
+#             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "QA Application", self.categoryName[0]) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED navigate to channel: " + self.channelName[0])
+                return 
                 
-            elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-                if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "Qa application", self.categoryName[0]) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED navigate to channel: " + self.channelName[0])
-                    return 
+#             elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+#                 if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "Qa application", self.categoryName[0]) == False:
+#                     self.status = "Fail"
+#                     writeToLog("INFO","Step 13: FAILED navigate to channel: " + self.channelName[0])
+#                     return 
                 
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Channel page information' was done successfully")
