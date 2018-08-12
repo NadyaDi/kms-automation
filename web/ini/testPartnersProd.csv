@@ -26,7 +26,7 @@ test_728,My Channels - Search as member,1756201,mediaspace.kaltura.com,oleg.siga
 test_729,My Channels - Search as subscriber,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_731,Channel page Information,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_741,Channel page - Enable subscription in channel,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
-test_747,Channel page - Shared Repository,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_747,Channel page - Shared Repository,1850231,mediaspace.kaltura.com,michal11@mailinator.com,Kaltura1!,michal_automation,Kaltura1!
 test_709,Category - Entries details,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_711,Categories - Edit metadata,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1027,Edit entry - thumbnail tab,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
