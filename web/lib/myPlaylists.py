@@ -496,14 +496,9 @@ class MyPlaylists(Base):
             self.clsCommon.general.waitForLoaderToDisappear()
             sleep(1)
             
-            if type(playlistsName) is list:
-                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG_MULTIPLE, 10) == False:
-                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
-                    return False
-            else:
-                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
-                    return False
+            if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                return False
             
             writeToLog("INFO","Entry: '" + entryName + "' added to Playlists")
                                        
@@ -530,6 +525,8 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
 
+                sleep(3)# DO NOT REMOVE
+                
                 # Get playlist list text
                 playlist_text = self.wait_element(self.PLAYLIST_TABLE, multipleElements=True).text
                 
