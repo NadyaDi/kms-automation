@@ -46,7 +46,9 @@ test_698,0,1,0,0,Entry page - Close discussion
 test_699,0,1,0,0,Entry page - Disable comments
 test_702,1,0,0,0,Entry page - Attachments
 test_703,1,0,0,0,Entry page - Replace Media
+test_705,1,0,0,0,Categories - Search in category
 test_706,1,0,0,0,TODO
+test_707,1,0,0,0,Categories - Add new media from my media to category
 test_709,0,1,0,0,Category - Entries details
 test_711,0,1,0,0,Categories - Edit metadata
 test_713,1,0,0,0,Category moderation

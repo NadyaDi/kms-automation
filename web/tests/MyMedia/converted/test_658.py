@@ -59,17 +59,29 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
+            
+            writeToLog("INFO","Step 2: Going to navigate to entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+              
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return               
                
-            writeToLog("INFO","Step 2: Going to add entry to new playlist from My Media")
+            writeToLog("INFO","Step 4: Going to add entry to new playlist from My Media")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName, toCreateNewPlaylist = True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to add entry to new playlist from My Media")
+                writeToLog("INFO","Step 4: FAILED to add entry to new playlist from My Media")
                 return    
             
-            writeToLog("INFO","Step 3: Going to verify that entry is added to the new playlist")
+            writeToLog("INFO","Step 5: Going to verify that entry is added to the new playlist")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to find entry in new playlist")
+                writeToLog("INFO","Step 5: FAILED to find entry in new playlist")
                 return                          
             #########################################################################
             writeToLog("INFO","TEST PASSED")

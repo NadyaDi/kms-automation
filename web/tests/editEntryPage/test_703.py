@@ -75,7 +75,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 4: Going to play and verify entry")
-            if self.common.player.clickPlayPauseAndVerify('0:05') == False:
+            if self.common.player.clickPlayPauseAndVerify('0:05', clickPlayFromBarline=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to play and verify entry")
                 return       

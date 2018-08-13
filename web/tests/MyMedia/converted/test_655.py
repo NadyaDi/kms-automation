@@ -63,29 +63,47 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
-             
-            writeToLog("INFO","Step 2: Going to create empty playlist")
-            if self.common.myPlaylists.createEmptyPlaylist(self.entryName1, self.playlistName) == False:
+            
+            writeToLog("INFO","Step 2: Going to navigate to last uploaded entry, entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create empty playlist")
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+              
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return       
+             
+            writeToLog("INFO","Step 4: Going to navigate to My media page")
+            if self.common.myMedia.navigateToMyMedia(True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED navigate to My media page")
+                return 
+                         
+            writeToLog("INFO","Step 4: Going to create empty playlist")
+            if self.common.myPlaylists.createEmptyPlaylist(self.entryName3, self.playlistName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to create empty playlist")
                 return   
              
-            writeToLog("INFO","Step 3: Going to navigate to My Media page")
+            writeToLog("INFO","Step 5: Going to navigate to My Media page")
             if self.common.myMedia.navigateToMyMedia(forceNavigate = True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to My Media")
+                writeToLog("INFO","Step 5: FAILED to navigate to My Media")
                 return                             
                
-            writeToLog("INFO","Step 4: Going to add  entries to playlist")
+            writeToLog("INFO","Step 6: Going to add  entries to playlist")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to add entries to playlist")
+                writeToLog("INFO","Step 6: FAILED to add entries to playlist")
                 return
                
-            writeToLog("INFO","Step 5: Going to verify that all entries were added to playlist")
+            writeToLog("INFO","Step 7: Going to verify that all entries were added to playlist")
             if self.common.myPlaylists.verifyMultipleEntriesInPlaylist(self.playlistName, self.entriesList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to find all entries in playlist")
+                writeToLog("INFO","Step 7: FAILED to find all entries in playlist")
                 return                            
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Add multiple entries to existing playlist' was done successfully")

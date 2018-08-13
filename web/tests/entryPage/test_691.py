@@ -81,7 +81,7 @@ class Test:
                 return                         
             
             writeToLog("INFO","Step 4: Going to to check number of entries in related section")
-            if self.common.entryPage.checkRelatedMediaNumber() == False:
+            if self.common.entryPage.verifyRelatedMediaCount() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED displayed correct number od entries in related section")
                 return                                                                                                  
