@@ -349,13 +349,16 @@ class EntryPage(Base):
     def addComment(self, comment):
         sleep(2)
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
+        # Wait for comments module to load - wait for 'Add' button
+        if self.wait_visible(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 30, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to load Comments module")
+            return False  
+          
         sleep(1)
         if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
             writeToLog("INFO","FAILED to click in the comment text box area")
             return False
-        
-#         window_before = self.driver.window_handles[0]
-#         self.driver.switch_to_window(window_before)
 
         if self.send_keys(self.ENTRY_PAGE_COMMENT_TEXT_AREA, comment + Keys.SPACE, multipleElements=True) == False:
             writeToLog("INFO","FAILED to add comment")
