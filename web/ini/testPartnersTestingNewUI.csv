@@ -116,3 +116,5 @@ test_689,Entry page - Add to playlist from entry page,2373952,qakmstest.dev.kalt
 test_691,Entry page - Related Media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_684,Entry page - Navigate to Edit Entry Page from Entry Page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_685,Entry page - Edit Metadata,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_707,Categories - Add new media from my media to category,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_705,Categories - Search in category,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

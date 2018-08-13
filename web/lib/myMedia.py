@@ -219,22 +219,6 @@ class MyMedia(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         return True
         
-#     def clickEntryAfterSearchInMyMediaOld(self, entryName):
-#         # Click on the Entry name
-#         if self.clsCommon.isElasticSearchOnPage() == True:
-#             tempLocator = ('xpath', "//em[text()='" + entryName + "']")
-#         else:
-#             tempLocator = ('xpath', "//span[@class='entry-name' and text()='" + entryName + "']")
-#             
-#         if self.click(tempLocator, 10) == False:
-#             # If entry not found, search for 'No Entries Found' alert
-#             if self.wait_for_text(self.MY_MEDIA_NO_RESULTS_ALERT, 'No Entries Found', 5) == True:
-#                 writeToLog("INFO","No Entry: '" + entryName + "' was found")
-#             else:
-#                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
-#             return False
-#         return True
-    
            
     def clickEntryAfterSearchInMyMedia(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -346,6 +330,8 @@ class MyMedia(Base):
         if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Action button")
             return False 
+        
+        sleep(2)
         
         if self.click(self.MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Publish button")
@@ -1051,7 +1037,8 @@ class MyMedia(Base):
         if self.clickActionsAndPublishFromMyMedia() == False:
             writeToLog("INFO","FAILED to click on action button")
             return False
-        sleep(2)
+        
+        sleep(10)
         
         if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on publish button")
@@ -1115,7 +1102,7 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
             return False
                 
-        if self.showAllEntriesInMyMedia() == False:
+        if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
             
@@ -1149,7 +1136,7 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to sort entries")
             return False
                 
-        if self.showAllEntriesInMyMedia() == False:
+        if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
         sleep(10)
@@ -1189,34 +1176,70 @@ class MyMedia(Base):
                     
             writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
             return True   
-    
+
+
+#TODO remove next block    
     #  @Author: Michal Zomper    
-    def showAllEntriesInMyMedia(self, timeOut=60):
-        if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
-                writeToLog("INFO","Success, All media in my media is display")
+#     def showAllEntriesInMyMedia(self, timeOut=60):
+#         if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
+#                 writeToLog("INFO","Success, All media in my media is display")
+#                 return True 
+#              
+#         self.clsCommon.sendKeysToBodyElement(Keys.END)
+#         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
+#         while wait_until > datetime.datetime.now():
+#             if self.is_present(self.MY_MEDIA_NO_RESULTS_ALERT, 2) == True:
+#                 writeToLog("INFO","Success, All media in my media is display")
+#                 sleep(1)
+#                 # go back to the top of the page
+#                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+#                 return True 
+#             
+#             self.clsCommon.sendKeysToBodyElement(Keys.END)
+#             
+#         writeToLog("INFO","FAILED to show all media in my media")
+#         return False  
+
+
+    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=60):
+        # Check if we are in My Media page  
+        if searchIn == enums.Location.MY_MEDIA:
+            tmp_table_size = self.MY_MEDIA_TABLE_SIZE
+            no_entries_page_msg = self.MY_MEDIA_NO_RESULTS_ALERT
+        
+        # Check if we are in category page    
+        elif searchIn == enums.Location.CATEGORY_PAGE:
+            tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE
+            no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_FOUND_MSG
+        
+        else:
+            writeToLog("INFO","Failed to get valid location page")
+            return False
+         
+        if len(self.get_elements(tmp_table_size)) < 4:
+                writeToLog("INFO","Success, All media is display")
                 return True 
-             
+              
         self.clsCommon.sendKeysToBodyElement(Keys.END)
-        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
-        while wait_until > datetime.datetime.now():
-            if self.is_present(self.MY_MEDIA_NO_RESULTS_ALERT, 2) == True:
-                writeToLog("INFO","Success, All media in my media is display")
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
+        while wait_until > datetime.datetime.now():                       
+            if self.is_present(no_entries_page_msg, 2) == True:
+                writeToLog("INFO","Success, All media is display")
                 sleep(1)
                 # go back to the top of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
-            
+             
             self.clsCommon.sendKeysToBodyElement(Keys.END)
-            
-        writeToLog("INFO","FAILED to show all media in my media")
-        return False    
-    
-    
+             
+        writeToLog("INFO","FAILED to show all media")
+        return False  
+     
     
     #  @Author: Michal Zomper    
     # The function check the the entries in my media are filter correctly
     def verifyFiltersInMyMedia(self, entriesList):
-        if self.showAllEntriesInMyMedia() == False:
+        if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
             
@@ -1289,7 +1312,7 @@ class MyMedia(Base):
     #@Author: Michal Zomper 
     # The function check that only the entries type with that match the 'iconType' parameter display in the list in my media
     def verifyFilterUniqueIconType(self, iconType):
-        if self.showAllEntriesInMyMedia() == False:
+        if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
                   

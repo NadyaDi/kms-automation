@@ -2,6 +2,7 @@ from base import *
 import clsTestService
 from general import General
 from logger import writeToLog
+from selenium.webdriver.common.keys import Keys
 
 
 class Category(Base):
@@ -32,6 +33,11 @@ class Category(Base):
     CATEGORY_BROWSE_CHANNELS_BUTTON                             = ('xpath', "//a[@id='channelcategories-tab']")
     CATEGORY_ACTION_BUTTON                                      = ('xpath', "//button[@id='galleryActionsDropdownButton']")
     CATEGORY_EDIT_BUTTON                                        = ('xpath', "//i[@class='icon-wrench']")
+    CATEGORY_NO_RESULTS_MSG_NEW_UI                              = ('xpath', '//div[@class="no-results_body" and text()="No media results were found. Try to adjust your search terms."]')
+    CATEGORY_NO_RESULTS_MSG_OLD_UI                              = ('xpath','//div[@class="alert alert-info" and text() = "No Search Results..."]') 
+    CATEGORY_TABLE_SIZE                                         = ('xpath', '//table[@class="table table-hover mediaTable"]/tbody/tr')
+    CATEGORY_TITLE                                              = ('xpath', '//span[@id="gallery_title"]')
+    CATEGORY_NO_MORE_MEDIA_FOUND_MSG                            = ('xpath' , '//div[@id="entries_scroller_alert" and text()="No more Entries found."]')
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -67,7 +73,28 @@ class Category(Base):
         return True
     
     
-    def searchEntryInCategory(self, entryName, exactSearch=True):
+    def searchEntryInCategory(self, entryName):
+        if self.searchInCategoryWithoutVerifyResults(entryName) == False:
+            writeToLog("INFO","FAILED to make a search")
+            return False              
+# TODO remove next block
+#         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:    
+#             # Verify that the entry was found  
+#             tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
+#             if self.get_element(tmpEntrySearchName) == None:
+#                 writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
+#                 return False
+#         else:
+        if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
+            return False                
+        writeToLog("INFO","Success entry '" + entryName + "' was found")
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Search in category without verify results
+    def searchInCategoryWithoutVerifyResults(self, searchText):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             # Click on the magnafine glass
             if self.click(self.CATEGORY_SEARCH_MAGNAFINE_GLASS, 30) == False:
@@ -77,26 +104,14 @@ class Category(Base):
             # Search Entry     
             self.clsCommon.myMedia.getSearchBarElement().click()
             
-        if exactSearch == True:
-            searchLine = '"' + entryName + '"'
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            searchLine = '"' + searchText + '"'
         else:
-            searchLine = entryName        
+            searchLine = searchText        
         self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
-
-
-        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:    
-            # Verify that the entry was found  
-            tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
-            if self.get_element(tmpEntrySearchName) == None:
-                writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
-                return False
-        else:
-            if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
-                writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
-                return False                
-        writeToLog("INFO","Success entry '" + entryName + "' was found")
+        
         return True
         
     
@@ -225,4 +240,61 @@ class Category(Base):
             # Clear search content  
             self.clsCommon.myMedia.clearSearch()
             
-        return True               
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    # Search in category when there are no results
+    def searchInCategoryNoResults(self, search, categoryName):
+        # Navigate to category
+        if self.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED to navigate to category")
+            return False 
+        
+        # Make a search that won't return any results
+        if self.searchInCategoryWithoutVerifyResults(search) == False:
+            writeToLog("INFO","FAILED to make a search in category page")
+            return False  
+        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            no_results_msg = self.CATEGORY_NO_RESULTS_MSG_NEW_UI
+        else:
+            no_results_msg = self.CATEGORY_NO_RESULTS_MSG_OLD_UI
+        
+        # Verify that correct message is displayed  
+        if self.is_visible(no_results_msg) == False:
+            writeToLog("INFO","FAILED to displayed correct message")
+            return False              
+            
+        # Clear search content  
+        self.clsCommon.myMedia.clearSearch()
+            
+        return True 
+    
+    # @Author: Inbar Willman
+    # Verify category table results before scrolling down in page and after scrolling down in page - After scrolling down number of table should be bigger
+    def verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self, search, pageSizeBeforeScrolling, pageSizeAfterScrolling):
+        # Make a search in page that will return results that are bigger than the page side
+        if self.searchInCategoryWithoutVerifyResults(search) == False:
+            writeToLog("INFO","FAILED to make a search in category")
+            return False         
+                  
+        # Check page size before scrolling
+        category_table_size = len(self.get_elements(self.CATEGORY_TABLE_SIZE))
+        if category_table_size != pageSizeBeforeScrolling:
+            writeToLog("INFO","FAILED to display correct number of entries in results - Before scrolling down in page")
+            return False   
+        
+        # Click outside search field
+        self.click(self.CATEGORY_TITLE)
+        
+        # Scroll down in page in order get all entries in results for the search
+        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.CATEGORY_PAGE) == False:
+            writeToLog("INFO","FAILED to scroll down in page")
+            return False      
+                           
+        # Check page size after scrolling
+        category_table_size = len(self.get_elements(self.CATEGORY_TABLE_SIZE))
+        if category_table_size != pageSizeAfterScrolling:
+            writeToLog("INFO","FAILED to display correct number of entries in results - after scrolling down in page")
+            return False                              

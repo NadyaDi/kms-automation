@@ -34,7 +34,7 @@ class Test:
     entryName3 = None
     entryDescription = "description"
     entryTags = "tag1,"
-    entriesList= []
+    entriesList = []
     entriesToUpload = []
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'

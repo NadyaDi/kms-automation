@@ -94,7 +94,7 @@ class Player(Base):
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
                 return False
         elif fromActionBar == False:
-            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER) == False:
+            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 20, True) == False:
                 writeToLog("INFO","FAILED to click Play in the middle of the player; fromActionBar = " + str(fromActionBar))
                 return False   
             
