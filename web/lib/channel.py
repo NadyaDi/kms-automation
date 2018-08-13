@@ -991,6 +991,81 @@ class Channel(Base):
         
         return True
 
+    #@Author: Oded Berihon
+    def addCommentToEntryFromChannel(self, channelName, entryName, comment):
+        if self.navigateToEntryFromChannel(channelName, entryName) == False:
+            writeToLog("INFO","FAILED to find entry in channel")
+            return False
+         
+        if self.clsCommon.entryPage.addComment(comment) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False    
+
+        return True
+    
+   
+    #@Author: Oded Berihon
+    def enableDisableCommentsInChannel(self, channelName, isCommentsEnabled):
+        if self.navigateToEditChannelPage(channelName) == False: 
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False
+        
+        if isCommentsEnabled == True:
+            if self.is_element_checked(self.CHANNEL_DETAILS_OPTION_COMMENT)==True:
+                return True
+            else:
+                if self.click(self.CHANNEL_DETAILS_OPTION_COMMENT, 30) == False:
+                    writeToLog("INFO","FAILED to click on comments checkbox")
+                    return False
+        else:#Disable comments
+            if self.is_element_checked(self.CHANNEL_DETAILS_OPTION_COMMENT)==False:
+                return True
+            else:
+                if self.click(self.CHANNEL_DETAILS_OPTION_COMMENT, 30) == False:
+                    writeToLog("INFO","FAILED to click on comments checkbox")
+                    return False            
+          
+        if self.click(self.CHANNEL_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Save button")
+            return False     
+         
+        return True
+
+    
+    #  @Author: Oded berihon
+    def navigateToEntryFromChannel(self, channelName, entryName): 
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED to navigate to Channel page")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == False:
+            if self.click(self.CHANNEL_SEARCH_ENTRY) == False:
+                writeToLog("INFO","FAILED to click on Channel's search Tab icon")
+                return False
+            sleep(2)
+            # Search Entry     
+            self.clsCommon.myMedia.getSearchBarElement().click()
+            
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            searchLine = '"' + entryName + '"'
+        else:
+            searchLine = entryName    
+        
+        sleep(2)
+        
+        if self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine) == False:
+            writeToLog("INFO","FAILED to find entry name in channel: " +  entryName)
+            return False  
+            sleep(5)   
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to click on Channel's search Tab icon")
+            return False 
+
+        return True
+
 
     #  @Author: Tzachi Guetta    
     def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):
