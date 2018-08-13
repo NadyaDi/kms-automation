@@ -83,6 +83,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Empty playlist")
                 return
+            
             self.common.myMedia.navigateToMyMedia(forceNavigate=True)
             writeToLog("INFO","Step 3: Going to create playlist with 1 Entry")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName1, self.playlistName2, toCreateNewPlaylist=True) == False:
@@ -90,17 +91,17 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to create playlist with 1 Entry ")
                 return
             
-            writeToLog("INFO","Step 4: Going to navigate to MyMedia")
-            if self.common.myMedia.navigateToMyMedia(forceNavigate=True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED going to navigate to MyMedia ")
-                return
-            
-            writeToLog("INFO","Step 5: Going to navigate to Video Entry Page")
-            if self.common.entryPage.navigateToEntry(self.entryName2) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to navigate to video entry page")
-                return
+#             writeToLog("INFO","Step 4: Going to navigate to MyMedia")
+#             if self.common.myMedia.navigateToMyMedia(forceNavigate=True) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 4: FAILED going to navigate to MyMedia ")
+#                 return
+#             
+#             writeToLog("INFO","Step 5: Going to navigate to Video Entry Page")
+#             if self.common.entryPage.navigateToEntry(self.entryName2) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 5: FAILED to navigate to video entry page")
+#                 return
             
             writeToLog("INFO","Step 6: Going to add Video Entry to Multiple Playlists") 
             if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName2, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
@@ -108,17 +109,17 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to add Video Entry to Multiple Playlists")
                 return
             
-            writeToLog("INFO","Step 7: Going to navigate to MyMedia")
-            if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED going to navigate to MyMedia ")
-                return
-            
-            writeToLog("INFO","Step 8: Going to navigate to Audio Entry Page")
-            if self.common.entryPage.navigateToEntry(self.entryName3) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to Audio entry page")
-                return            
+#             writeToLog("INFO","Step 7: Going to navigate to MyMedia")
+#             if self.common.myMedia.navigateToMyMedia() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 7: FAILED going to navigate to MyMedia ")
+#                 return
+#             
+#             writeToLog("INFO","Step 8: Going to navigate to Audio Entry Page")
+#             if self.common.entryPage.navigateToEntry(self.entryName3) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 8: FAILED to navigate to Audio entry page")
+#                 return            
             
             writeToLog("INFO","Step 9: Going to add Audio Entry to Multiple Playlists") 
             if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName3, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
@@ -126,17 +127,17 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to add Audio Entry to Multiple Playlists")
                 return
             
-            writeToLog("INFO","Step 10: Going to navigate to MyMedia")
-            if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED going to navigate to MyMedia ")
-                return
-            
-            writeToLog("INFO","Step 11: Going to navigate to Image Entry Page")
-            if self.common.entryPage.navigateToEntry(self.entryName4) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to navigate to Image entry page")
-                return             
+#             writeToLog("INFO","Step 10: Going to navigate to MyMedia")
+#             if self.common.myMedia.navigateToMyMedia() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 10: FAILED going to navigate to MyMedia ")
+#                 return
+#             
+#             writeToLog("INFO","Step 11: Going to navigate to Image Entry Page")
+#             if self.common.entryPage.navigateToEntry(self.entryName4) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 11: FAILED to navigate to Image entry page")
+#                 return             
             
             writeToLog("INFO","Step 12: Going to add Image Entry to Multiple Playlists") 
             if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName4, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
