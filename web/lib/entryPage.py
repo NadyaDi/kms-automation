@@ -396,7 +396,7 @@ class EntryPage(Base):
     def LikeUnlikeEntry(self, isLike):
         self.clsCommon.sendKeysToBodyElement(Keys.HOME)
         
-        # Check the amount of likes for the entry befor click the like\unlike button
+        # Check the amount of likes for the entry before click the like\unlike button
         prev_likeAmount = self.wait_visible(self.ENTRY_PAGE_LIKE_BUTTON, timeout=15)
         if prev_likeAmount == False:
             writeToLog("INFO","FAILED to find like button")
@@ -404,13 +404,6 @@ class EntryPage(Base):
         
         sleep(2)
         prev_likeAmount = prev_likeAmount.text
-        if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
-            prev_tmp = prev_likeAmount.split('\n')
-        
-            if prev_tmp[1] == '':
-                writeToLog("INFO","FAILED to get the number of likes for the entry")
-                return False
-            
         
         if self.click(self.ENTRY_PAGE_LIKE_BUTTON, 10) == False:
             writeToLog("INFO","FAILED to click on like button")
@@ -424,39 +417,20 @@ class EntryPage(Base):
             return False
         
         after_likeAmount = after_likeAmount.text
-        if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
-            after_tmp = after_likeAmount.split('\n')
-            
-            sleep(1)
-            if after_tmp[1] == '': 
-                writeToLog("INFO","FAILED to get the number of likes for the entry after clicking like/unlike")
-                return False
-        
+
         # like the page
         if isLike == True:
-            if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
-                if int(prev_tmp[1]) >= int(after_tmp[1]):
-                    writeToLog("INFO","FAILED to click on like button, the number of likes are: " + after_tmp[1] + " and need to be: " + prev_tmp[1])
-                    return False
-            
-            elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
-                if int(prev_likeAmount) >= int(after_likeAmount):
-                    writeToLog("INFO","FAILED to click on like button, the number of likes are: " + after_likeAmount + " and need to be: " + prev_likeAmount)
-                    return False
+            if int(prev_likeAmount) >= int(after_likeAmount):
+                writeToLog("INFO","FAILED to click on like button, the number of likes are: " + int(after_likeAmount) + " and need to be: " + int(prev_likeAmount))
+                return False
             writeToLog("INFO","Success, entry was liked successfully")
             return True
-                
+                 
         # unlike the page
         elif isLike == False:
-            if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_FIREFOX):
-                if int(prev_tmp[1]) <= int(after_tmp[1]):
-                    writeToLog("INFO","FAILED to click on unlike button, the number of likes are: " + after_tmp[1] + " and need to be: " + prev_tmp[1])
-                    return False
-                
-            elif(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
-                if int(prev_tmp) <= int(after_tmp):
-                    writeToLog("INFO","FAILED to click on unlike button, the number of likes are: " + after_tmp + " and need to be: " + prev_tmp)
-                    return False
+            if int(prev_likeAmount) <= int(after_likeAmount):
+                writeToLog("INFO","FAILED to click on unlike button, the number of likes are: " + int(after_likeAmount) + " and need to be: " + int(prev_likeAmount))
+                return False
             writeToLog("INFO","Success, entry was unlike successfully")
             return True
     
