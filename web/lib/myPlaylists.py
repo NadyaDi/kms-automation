@@ -265,7 +265,9 @@ class MyPlaylists(Base):
             
         return True    
     
-        #  @Author: Tzachi Guetta      
+    #  @Author: Tzachi Guetta
+    # indexEntryFrom - index of entry from entriesList we wish to move
+    # indexEntryTo - The index of wished place to move in playlist, for example: 1 will move to the top of the list
     def shufflePlaylistEntries(self, playlistName, entriesList, indexEntryFrom, indexEntryTo):
         try:
             if playlistName != '':
@@ -281,10 +283,11 @@ class MyPlaylists(Base):
                 tmp_entry_name = (self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[0], self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[1].replace('ENTRY_NAME', entriesList[indexEntryFrom]))
                 source_element = self.get_element(tmp_entry_name)
                 
-
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
                 heightOfEntry = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
                 moveX = 0
-                moveY = int(heightOfEntry + (indexEntryTo * heightOfEntry))
+                #moveY = int(heightOfEntry + (indexEntryTo * heightOfEntry)) #15-08-18
+                moveY = int(indexEntryTo * heightOfEntry)
                 if indexEntryFrom > indexEntryTo:
                     moveY = int(heightOfEntry - (indexEntryTo * heightOfEntry))#to verify it
                 ActionChains(self.driver).drag_and_drop_by_offset(source_element, moveX, moveY).perform()
@@ -354,7 +357,7 @@ class MyPlaylists(Base):
             return False  
         
         #Get embed code from embed text area 
-        embed_code =  self.getEmbedCode(tmpEmbedTextArea)
+        embed_code = self.getEmbedCode(tmpEmbedTextArea)
         if embed_code:
             return embed_code
         
