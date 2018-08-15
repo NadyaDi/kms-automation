@@ -18,7 +18,11 @@ class clsPractiTest:
     #=============================================================================================================
     # Function that returns all instances of a specific session 
     #=============================================================================================================    
-    def getPractiTestSessionInstances(self,prSessionID, defaultPlatform):
+    def getPractiTestSessionInstances(self, prSessionInfo):
+        prSessionID = prSessionInfo["sessionSystemID"]
+        defaultPlatform = prSessionInfo["setPlatform"]
+        runOnlyFailed = prSessionInfo["runOnlyFailed"].lower()
+        
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(prSessionID) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
         sessionInstancesDct = {}
         headers = { 
@@ -44,9 +48,15 @@ class clsPractiTest:
                     except Exception:
                         executeAutomated = 'No'                        
                     
-                    if executeAutomated == 'Yes':
+                    # Run only FAILED tests:
+                    toRun = True
+                    if runOnlyFailed == 'yes':
+                        if not testInstance['attributes']['run-status'].lower() == 'failed':
+                            toRun = False
+                            
+                    if executeAutomated == 'Yes' and toRun == True:
                         sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + platform
-                        writeToLog("DEBUG","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                         
+                        writeToLog("DEBUG","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                                   
             else:
                 writeToLog("DEBUG","No instances in set. " + r.text)        
         else:
@@ -59,15 +69,19 @@ class clsPractiTest:
     # Function that returns all sessions that are located under the filter "pending for automation"  
     #=============================================================================================================
     def getPractiTestAutomationSession(self):
-        filterId = os.getenv('PRACTITEST_FILTER_ID',"")
+        #FOR DEBUG, DON'T REMOVE
+        # PractiTest filter ID:
+        # qaKmsFrontEnd = 326139
+        filterId = 326139#os.getenv('PRACTITEST_FILTER_ID',"")
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
         
         prSessionInfo = {
-            "sessionSystemID"   : -1,
-            "sessionDisplayID"  : -1,
-            "setPlatform"       : "",
-            "environment"       : "",
-            "hostname"          : ""
+            "sessionSystemID"       : -1,
+            "sessionDisplayID"      : -1,
+            "setPlatform"           : "",
+            "environment"           : "",
+            "hostname"              : "",
+            "runOnlyFailed"         : ""
         }
 
         headers = {
@@ -85,6 +99,7 @@ class clsPractiTest:
                     prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30772'] #PractiTest Field: Automation Platform
                     prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30761'] #PractiTest Field: Automation Env
                     prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"]['---f-34785'] #PractiTest Field: Run On Hostname
+                    prSessionInfo["runOnlyFailed"]    = dctSets["data"][0]["attributes"]["custom-fields"]['---f-38033'] #PractiTest Field: Automation Run Only FAILED
                     
                     writeToLog("DEBUG","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
                 else:
