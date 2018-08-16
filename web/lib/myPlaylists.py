@@ -4,8 +4,6 @@ import clsTestService
 from general import General
 from selenium.webdriver.common.keys import Keys
 
-
-
 class MyPlaylists(Base):
     driver = None
     clsCommon = None
@@ -285,11 +283,8 @@ class MyPlaylists(Base):
                 
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
                 heightOfEntry = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
-                moveX = 0
-                #moveY = int(heightOfEntry + (indexEntryTo * heightOfEntry)) #15-08-18
+                moveX = 800
                 moveY = int(indexEntryTo * heightOfEntry)
-                if indexEntryFrom > indexEntryTo:
-                    moveY = int(heightOfEntry - (indexEntryTo * heightOfEntry))#to verify it
                 ActionChains(self.driver).drag_and_drop_by_offset(source_element, moveX, moveY).perform()
                 
                 sleep(2)
