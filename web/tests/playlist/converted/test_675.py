@@ -98,7 +98,6 @@ class Test:
                 writeToLog("INFO","Step 5: FAILED to Shuffle entries inside the playlist")
                 return
             
-#             entriesListAfter = [self.entryName4, self.entryName3, self.entryName5, self.entryName2, self.entryName1]
             entriesListAfter = [self.entryName5, self.entryName4, self.entryName1, self.entryName3, self.entryName2]
             writeToLog("INFO","Step 6: Going to verify entries order before reorder")
             if self.common.myMedia.verifyEntriesOrder(entriesListAfter, location = enums.Location.MY_PLAYLISTS) == False:
