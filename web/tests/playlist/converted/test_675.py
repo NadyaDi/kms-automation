@@ -64,7 +64,6 @@ class Test:
             
             self.playlistName = clsTestService.addGuidToString('Playlist_reorder', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5]
-#             self.entriesList = [self.entryName5, self.entryName4, self.entryName3, self.entryName2, self.entryName1]
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -78,13 +77,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
-                                    
+                                     
             writeToLog("INFO","Step 3: Going to add entries to playlist")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, playlistName=self.playlistName, toCreateNewPlaylist=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add entries to playlist")
                 return
-            
+             
             entriesListBefore = [self.entryName5, self.entryName4, self.entryName3, self.entryName2, self.entryName1]
             writeToLog("INFO","Step 4: Going to verify entries order before reorder")
             if self.common.myMedia.verifyEntriesOrder(entriesListBefore, location = enums.Location.MY_PLAYLISTS) == False:

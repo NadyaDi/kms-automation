@@ -284,7 +284,8 @@ class MyPlaylists(Base):
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
                 heightOfEntry = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
                 moveX = 800
-                moveY = int(indexEntryTo * heightOfEntry)
+                moveY = int((indexEntryTo * heightOfEntry) +  heightOfEntry)
+                writeToLog("INFO","FOR DEBUG: X = " + str(moveX) + "; Y = " + str(moveY))
                 ActionChains(self.driver).drag_and_drop_by_offset(source_element, moveX, moveY).perform()
                 
                 sleep(2)
