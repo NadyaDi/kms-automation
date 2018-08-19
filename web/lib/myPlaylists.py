@@ -361,34 +361,22 @@ class MyPlaylists(Base):
         return False  
             
             
-    # @ Author: Inbar Willman
+    # @ Author: Inbar Willman.
+    # @ Refactor: Oleg Sigalov.
     # Return playlist embed code, if embed code doesn't contains matching phrase, return False
     def getEmbedCode(self, embedTextArea, timeout=60):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
-        while wait_until > datetime.datetime.now(): 
-            #Click on embed text area section
-            if self.click(embedTextArea) == False:
-                writeToLog("INFO","FAILED to click on embed text area")
-                return False 
-               
-            #Select embed text area content
-            if self.send_keys(embedTextArea, Keys.CONTROL + "a") == False:
-                writeToLog("INFO","FAILED to select embed text area content")
-                return False 
-             
-            #Copy embed text area content
-            if self.send_keys(embedTextArea, Keys.CONTROL + "c") == False:
-                writeToLog("INFO","FAILED to copy embed text area content")
-                return False 
-            
-            #Get copied content
-            embed_text = self.paste_from_clipboard()
-            #Check if text contains 'iframe'
-            if embed_text:
-                embedIframeText = "iframe"
-                if embedIframeText in embed_text:
-                    return embed_text
-            
+        while wait_until > datetime.datetime.now():
+            try:
+                #Get embed code
+                embed_text = self.wait_element(embedTextArea).get_attribute('value')
+                #Check if text contains 'iframe'
+                if embed_text:
+                    embedIframeText = "iframe"
+                    if embedIframeText in embed_text:
+                        return embed_text
+            except:
+                pass
         writeToLog("INFO","FAILED to get embed code")
         return False
     
