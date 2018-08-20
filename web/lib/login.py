@@ -83,9 +83,11 @@ class Login(Base):
     
     
     def clickOnLogOutButton(self):
-        el = self.get_elements(self.USER_LOGOUT_BTN)[1]
-        return el.click()
-    
+#         el = self.get_elements(self.USER_LOGOUT_BTN)[1]
+#         return el.click()
+        if self.click(self.USER_LOGOUT_BTN, multipleElements = True) == False:
+            writeToLog("INFO","FAILED to click on logout option")   
+            return False            
     
     # This method works for sites with user(userLocator), password(passLocator) and submit(submitLocator) button
     # It verifies any object (objAfterLoginLocator) after login, to make sure login was successful

@@ -67,6 +67,9 @@ class Test:
             self.entryName11 = clsTestService.addGuidToString('searchCategory 11', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5,
                                 self.entryName6, self.entryName7, self.entryName8, self.entryName9, self.entryName10, self.entryName11]
+            self.entriesList2 = ['C3B78592-705-searchCategory 1', 'C3B78592-705-searchCategory 2', 'C3B78592-705-searchCategory 3', 'C3B78592-705-searchCategory 4',
+                                 'C3B78592-705-searchCategory 5', 'C3B78592-705-searchCategory 6', 'C3B78592-705-searchCategory 7', 'C3B78592-705-searchCategory 8',
+                                 'C3B78592-705-searchCategory 9', 'C3B78592-705-searchCategory 10', 'C3B78592-705-searchCategory 11']
             self.entriesToUpload = {
                 self.entryName1: self.filePathVideo, 
                 self.entryName2: self.filePathVideo,
@@ -80,28 +83,34 @@ class Test:
                 self.entryName10: self.filePathVideo,
                 self.entryName11: self.filePathVideo}
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to upload 11 entries")            
-            if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
+#             writeToLog("INFO","Step 1: Going to upload 11 entries")            
+#             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 1: FAILED to upload entries")
+#                 return
+            
+            writeToLog("INFO","Step 2: Going to show all entries")            
+            if self.common.myMedia.showAllEntries() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entries")
-                return
+                writeToLog("INFO","Step 2: FAILED to show all entries")
+                return            
   
-            writeToLog("INFO","Step 2: Going to publish entries to category from my media")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.categoryName], "") == False:
+            writeToLog("INFO","Step 3: Going to publish entries to category from my media")
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList2, [self.categoryName], "") == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to publish entries to category from my media")
+                writeToLog("INFO","Step 3: FAILED to publish entries to category from my media")
                 return 
             
-            writeToLog("INFO","Step 3: Going to make a search in category - no results should be displayed")
+            writeToLog("INFO","Step 4: Going to make a search in category - no results should be displayed")
             if self.common.category.searchInCategoryNoResults(self.searchWithNoResults, self.categoryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to make a search and display correct message")
+                writeToLog("INFO","Step 4: FAILED to make a search and display correct message")
                 return   
             
-            writeToLog("INFO","Step 4: Going to check that additional entries are displayed after loading")
+            writeToLog("INFO","Step 5: Going to check that additional entries are displayed after loading")
             if self.common.category.verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self.searchWithResults, self.pageBeforeScrolling, self.pageAfterScrolling) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to display additional entries after loading")
+                writeToLog("INFO","Step 5: FAILED to display additional entries after loading")
                 return                     
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'search in category' was done successfully")
