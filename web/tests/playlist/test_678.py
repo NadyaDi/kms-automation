@@ -35,8 +35,8 @@ class Test:
     entriesList = []
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName1  = 'emptyPlaylistTest#1'
-    playlistName2  = 'PlaylistTest#2'
+    playlistName1  = None
+    playlistName2  = None
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\automation2.jpg'
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4' 
     filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3' 
