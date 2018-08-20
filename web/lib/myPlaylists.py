@@ -190,7 +190,7 @@ class MyPlaylists(Base):
                     return False
     
                 sleep(5)
-                if self.click(self.PLAYLIST_DELETE_BUTTON, multipleElements=True) == False:
+                if self.click(self.PLAYLIST_DELETE_BUTTON, timeout=20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on playlist delete button (at my playlist page)")
                     return False
                 
