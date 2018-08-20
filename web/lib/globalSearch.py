@@ -16,9 +16,9 @@ class  GlobalSearch(Base):
         self.driver = driver
         self.clsCommon = clsCommon
     #=============================================================================================================
-    #                                  Global Search locators:                                                        #
+    #                                  Global Search locators:                                                   #
     #=============================================================================================================
-    GLOBAL_SEARCH_BUTTON_NEWUI                          = ('xpath', "//span[@class='hidden-tablet' and contains(text(),'search')]")
+    GLOBAL_SEARCH_BUTTON_NEWUI                          = ('xpath', "//span[@class='hidden-tablet' and contains(text(),'Search')]")
     GLOBAL_SEARCH_TEXTBOX                               = ('xpath', "//input[@placeholder='Search all media' and @type='text']")
     ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI           = ('xpath', "//a[@class='entryThumbnail  ' and @href='/media/ENTRY_ID']")
     ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_OLDUI           = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
@@ -27,7 +27,7 @@ class  GlobalSearch(Base):
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
                                                                    
-    #============================================================================================================
+    #============================================================================================================#
     
     # Author: Michal Zomper
     # the function only insert and search word in global search , NO VERIFICATION in this function for the result
