@@ -38,6 +38,8 @@ class Category(Base):
     CATEGORY_TABLE_SIZE                                         = ('xpath', '//table[@class="table table-hover mediaTable"]/tbody/tr')
     CATEGORY_TITLE                                              = ('xpath', '//span[@id="gallery_title"]')
     CATEGORY_NO_MORE_MEDIA_FOUND_MSG                            = ('xpath' , '//div[@id="entries_scroller_alert" and text()="No more Entries found."]')
+    CATEGORY_EDIT_ENTRY_BTN_OLD_UI                              = ('xpath', '//a[@title="Edit ENTRY_NAME"]')          
+    CATEGORY_EDIT_ENTRY_BTN_NEW_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')  
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -297,4 +299,51 @@ class Category(Base):
         category_table_size = len(self.get_elements(self.CATEGORY_TABLE_SIZE))
         if category_table_size != pageSizeAfterScrolling:
             writeToLog("INFO","FAILED to display correct number of entries in results - after scrolling down in page")
-            return False                              
+            return False    
+        
+        
+    # @Author: Inbar Willman
+    # Navigate to edit entry page from category page without making a search in category page
+    def navigateToEditEntryPageFromCategoryWhenNoSearchIsMade(self, entryName):
+        # "+" icon on thunail
+        tmp_entry_thumbnail = (self.CATEGORY_ENTRY_THUMBNAIL[0], self.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
+        
+        # Edit entry icon
+        tmp_entry_edit_btn = None
+        
+        # If we are in new UI - hover over edit button before clicking
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            #Set edit button
+            tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[0], self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[1].replace('ENTRY_NAME', entryName))
+            if self.hover_on_element(tmp_entry_edit_btn) == False:
+                writeToLog("INFO","FAILED to hover edit entry button")
+                return False
+    
+        # If we are in old UI we need to click first on "+" icon on entry's thumbnail
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            try:
+                parent_entry = self.get_element(tmp_entry_thumbnail)
+                parent_entry = parent_entry.find_element_by_xpath("..")
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
+                return False
+            
+            if self.click_child(parent_entry, self.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on the plus button in order to see entry details")
+                return False 
+            
+            #set edit button for old UI
+            tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[0], self.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[1].replace('ENTRY_NAME', entryName))   
+        
+        # Click on edit button
+        if self.click(tmp_entry_edit_btn) == False:
+            writeToLog("INFO","FAILED to click on edit button")
+            return False   
+        
+        # Verify that we are in edit entry page - wait until you see edit entry page title
+        tmp_entry_title = (self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
+        if self.wait_visible(tmp_entry_title) == False:
+            writeToLog("INFO","FAILED to displayed edit entry page title")
+            return False   
+        
+        return True                                
