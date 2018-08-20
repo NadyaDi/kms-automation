@@ -159,7 +159,7 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 16: Going to play entry")
-            if self.common.player.clickPlayAndPause('0:05', True) == False:
+            if self.common.player.clickPlayAndPause('0:05', embed=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to play entry")
                 return   
