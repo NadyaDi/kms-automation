@@ -1,4 +1,5 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
+test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_713,category moderation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_734,Channel - Entries details,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234

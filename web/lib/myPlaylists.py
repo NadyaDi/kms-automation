@@ -45,7 +45,7 @@ class MyPlaylists(Base):
     def addSingleEntryToPlaylist(self, entryName, playlistName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
         try:
             if currentLocation == enums.Location.MY_MEDIA: 
-                if self.clsCommon.myMedia.navigateToMyMedia() == False:
+                if self.clsCommon.myMedia.navigateToMyMedia(forceNavigate=True) == False:
                     writeToLog("INFO","FAILED to navigate to my media")
                     return False
                 
@@ -443,7 +443,7 @@ class MyPlaylists(Base):
     
     
     # @Author: Ori Flchtman
-    # Add Entry from My Media to Several Playlists
+    # Add Entry from My Media or Entry Page to Several Playlists
     # ! TODO: toCreateNewPlaylist - need to implement create new playlist if needed.
     def addSingleEntryToMultiplePlaylists(self, entryName, playlistsName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
         try:
@@ -466,8 +466,12 @@ class MyPlaylists(Base):
                     return False
                     sleep(7)  
                       
-            elif currentLocation == enums.Location.ENTRY_PAGE: 
-                sleep(1)
+                      
+            elif currentLocation == enums.Location.ENTRY_PAGE:
+                if self.clsCommon.entryPage.navigateToEntry(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to Entry Page '" + entryName)
+                    return False
+                sleep(3)
                 # Click on action tab
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
                     writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
