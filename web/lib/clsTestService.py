@@ -187,9 +187,9 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
 #===========================================================================================
 # the function handles exception inst, mark the test as fail and writes the error in the log 
 #===========================================================================================
-def handleException(test,inst,startTime):
-    createScreenshot(test, 'EXCEPTION')
+def handleException(test, inst, startTime=''):
     log_exception(inst)
+    #createScreenshot(test, 'EXCEPTION') #20-08-18, Not sure need this, because we have screenshot in tearDown method
     test.status = "Fail"
     return test.status
 

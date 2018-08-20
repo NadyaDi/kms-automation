@@ -137,5 +137,6 @@ def logFinishedTest(test,startTime):
 #===========================================================================================    
     
 def log_exception(inst):
+    writeToLog("INFO",str(inst))
     var = traceback.format_exc()
     writeToLog("INFO","Exception : " + str(var))
