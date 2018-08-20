@@ -28,13 +28,9 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName1 = None
-    entryName2 = None
     entriesList = []
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName1  = 'emptyPlaylistTest#1'
-    playlistName2  = 'PlaylistTest#2'
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'  
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -53,7 +49,9 @@ class Test:
             self.common = Common(self.driver)        
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Entry1', self.testNum)
-            self.entryName2 = clsTestService.addGuidToString('Entry2', self.testNum)            
+            self.entryName2 = clsTestService.addGuidToString('Entry2', self.testNum)         
+            self.playlistName1  = clsTestService.addGuidToString('emptyPlaylistTest#1', self.testNum)
+            self.playlistName2  = clsTestService.addGuidToString('PlaylistTest#2', self.testNum)   
             self.entriesList = [self.entryName1, self.entryName2]
             self.listOfPlaylists = [self.playlistName1, self.playlistName2]
             ########################## TEST STEPS - MAIN FLOW ####################### 
