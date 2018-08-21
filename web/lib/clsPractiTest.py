@@ -198,8 +198,7 @@ class clsPractiTest:
             'Content-Type': 'application/json',
             'Connection':'close'
         }
-        data = {"data": { "type": "sets", "attributes": {"version": "1.5", "custom-fields": { "---f-30327": "Processed"}}  } }
-       
+        data = {"data": { "type": "sets", "attributes": {"custom-fields": { "---f-30327": "Processed"}}  } }
         
         r = requests.put(practiTestSetAutomationStatusAsProcessedUrl,headers = headers, data = json.dumps(data))
         if (r.status_code == 200):
