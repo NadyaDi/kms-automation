@@ -82,7 +82,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
-            self.common.myMedia.deleteEntryFromEntryPage(self.entryName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
