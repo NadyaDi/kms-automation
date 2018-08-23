@@ -390,7 +390,7 @@ class Channel(Base):
             if self.navigateToMyChannels() == False:
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
-            
+            sleep(3)
             if self.clsCommon.isElasticSearchOnPage() == True:
                 if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on name text field")
