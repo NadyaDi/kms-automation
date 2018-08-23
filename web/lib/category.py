@@ -39,7 +39,20 @@ class Category(Base):
     CATEGORY_TITLE                                              = ('xpath', '//span[@id="gallery_title"]')
     CATEGORY_NO_MORE_MEDIA_FOUND_MSG                            = ('xpath' , '//div[@id="entries_scroller_alert" and text()="No more Entries found."]')
     CATEGORY_EDIT_ENTRY_BTN_OLD_UI                              = ('xpath', '//a[@title="Edit ENTRY_NAME"]')          
-    CATEGORY_EDIT_ENTRY_BTN_NEW_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')  
+    CATEGORY_EDIT_ENTRY_BTN_NEW_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')
+    EDIT_CATEGORY_NAME_TEXTBOX                                  = ('xpath', '//input[@id="Category-name"]')
+    EDIT_CATEGORY_DESCRIPTION_IFRAME                            = ('class_name', "wysihtml5-sandbox")
+    EDIT_CATEGORY_DESCRIPTION_TEXT_BOX                          = ('xpath', "//div[@class='content']")
+    EDIT_CATEGORY_DETAILS_DESCRIPTION                           = ('tag_name', 'body') #before using need to switch frame and click on the description box
+    EDIT_CATEGORY_DETAILS_TAGS                                  = ('id', 's2id_tags')
+    EDIT_CATEGORY_DETAILS_TAGS_INPUT                            = ('xpath', "//input[contains(@id,'s2id_autogen') and contains(@class, 'focused')]")
+    EDIT_CATEGORY_TAGS_RESULT                                   = ('xpath', "//span[@class='select2-match' and contains(text(),'TAGS')]")
+    EDIT_CATEGORY_CLEAR_TAGS_RESULT                             = ('xpath', "//a[@class='select2-search-choice-close']")
+    EDIT_CATEGORY_SAVE_BUTTON                                   = ('xpath', "//button[@id='Category-submit']")
+    EDIT_CATEGORY_SUCCESS_MESSAGE                               = ('xpath', "//div[contains(.,'The information was saved successfully')]")
+    EDIT_CATEGORY_BACK_TO_CATEGORY_BUTTON                       = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Back to Category')]")
+    CATEGORY_DESCRIPTION                                        = ('xpath', "//div[@class='js-description' and contains(text(), 'CATEGORY_DESCRIPTION')]")
+    CATEGORY_TAGS                                               = ('xpath', "//a[@class='badge badge-info' and contains(text(), 'CATEGORY_TAGS')]")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -346,4 +359,155 @@ class Category(Base):
             writeToLog("INFO","FAILED to displayed edit entry page title")
             return False   
         
-        return True                                
+        return True           
+    
+    # Author: Michal Zomper
+    def editCategoryMatedate(self, newCategoryName="", newCategorydescription="", newCategoryTags=""):
+        if newCategoryName != "":
+            if self.clear_and_send_keys(self.EDIT_CATEGORY_NAME_TEXTBOX, newCategoryName) == False:
+                writeToLog("INFO","FAILED to replace category name to:'" + newCategoryName + "'")
+                return False
+        
+        if newCategorydescription != "":
+            if self.fillCategoryDescription(newCategorydescription, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace category description to:'" + newCategoryName + "'")    
+                return False
+        
+        if newCategoryTags != "":
+            if self.fillCategoryTags(newCategoryTags, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace category tags to:'" + newCategoryTags + "'")    
+                return False  
+            
+        # Click Save
+        if self.click(self.EDIT_CATEGORY_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False
+        sleep(3)
+        
+        # Wait for loader to disappear
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Wait for 'Your changes have been saved.' message
+        if self.wait_visible(self.EDIT_CATEGORY_SUCCESS_MESSAGE, 45) == False:                
+            writeToLog("INFO","FAILED to find success message")
+            return False
+
+        return True
+    
+    
+    # Author: Michal Zomper       
+    # The method supports BOTH single and multiple upload    
+    def fillCategoryDescription(self, text, uploadboxId=-1):
+        if uploadboxId != -1:
+            # Get the uploadbox element
+            uploadBoxElement = self.get_element(self.replaceInLocator(self.UPLOAD_UPLOADBOX, '[ID]', str(uploadboxId)))
+            
+            # Switch to Description iFrame
+            descpriptionIframe = self.get_child_element(uploadBoxElement, self.EDIT_CATEGORY_DESCRIPTION_IFRAME)
+        else:
+            # Switch to Description iFrame
+            descpriptionIframe = self.get_element(self.EDIT_CATEGORY_DESCRIPTION_IFRAME)
+        
+        # Switch to iframe which is contains the description text box    
+        self.driver.switch_to.frame(descpriptionIframe)
+        
+        # Click on Description text box
+        el = self.get_element(self.EDIT_CATEGORY_DESCRIPTION_TEXT_BOX)
+        if el.click() == False:
+            writeToLog("INFO","FAILED to click on Description filed")
+            return False               
+        sleep(2)
+        
+        # Enter text Description
+        if self.clear_and_send_keys(self.EDIT_CATEGORY_DETAILS_DESCRIPTION, text) == True:
+            return True
+        else:
+            writeToLog("INFO","FAILED to type in Description")
+            return False
+        self.switch_to_default_content()
+                             
+     
+    # Author: Michal Zomper                        
+    # The method supports BOTH single and multiple upload
+    # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
+    #        for example 'tags1,tags2,'
+    def fillCategoryTags(self, tags, uploadboxId=-1):
+        try:
+            self.switch_to_default_content()
+            if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
+                self.clsCommon.blackBoard.switchToBlackboardIframe()
+            elif self.getAppUnderTest() == enums.Application.SHARE_POINT:
+                self.clsCommon.sharePoint.switchToSharepointIframe()
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                sleep(1)
+            # If upload single (method: uploadEntry)
+            if uploadboxId == -1:
+                tagsElement = self.get_element(self.EDIT_CATEGORY_DETAILS_TAGS)
+            else:
+                # Get the uploadbox element
+                uploadBoxElement = self.get_element(self.replaceInLocator(self.UPLOAD_UPLOADBOX, '[ID]', str(uploadboxId)))            
+                tagsElement = self.get_child_element(uploadBoxElement, self.EDIT_CATEGORY_DETAILS_TAGS)
+                
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get Tags filed element")
+            return False
+                
+        self.click(self.EDIT_CATEGORY_CLEAR_TAGS_RESULT, timeout=10, multipleElements=False)
+        if self.clickElement(tagsElement) == False:
+            writeToLog("INFO","FAILED to click on Tags filed")
+            return False            
+        sleep(1)
+
+        if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+            # Remove the Mask over all the screen (over tags filed also)
+            maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
+            self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))     
+            
+            if self.clickElement(tagsElement) == False:
+                writeToLog("INFO","FAILED to click on Tags filed")
+                return False    
+             
+        if uploadboxId == -1: # -1 stands for single
+            if self.send_keys(self.EDIT_CATEGORY_DETAILS_TAGS_INPUT, tags) == False:
+                writeToLog("INFO","FAILED to add new tags")
+                return False
+        else:
+            if self.send_keys_to_child(uploadBoxElement, self.EDIT_CATEGORY_DETAILS_TAGS_INPUT, tags) == True:
+                return True
+            
+        return True  
+
+
+    # Author: Michal Zomper   
+    def navigateToCategoryPageFronEditCategoryPage(self, categoryName):
+        if self.click(self.EDIT_CATEGORY_BACK_TO_CATEGORY_BUTTON, timeout=15) == False:
+            writeToLog("INFO","FAILED to click on back to category button")
+            return False
+        
+        sleep(4)
+        tmpCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
+        if self.wait_visible(tmpCategoryName, 30) == False:
+            writeToLog("INFO","FAILED to verify category page is display")
+            return False
+        
+        return True
+    
+    
+    # Author: Michal Zomper   
+    def varifyCategoryMatedate(self, categoryName, categoryDescription, categoryTags):
+        tmpCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
+        if self.wait_visible(tmpCategoryName, 30) == False:
+            writeToLog("INFO","FAILED to verify category name")
+            return False
+        
+        tmpCategoryDescription = (self.CATEGORY_DESCRIPTION[0], self.CATEGORY_DESCRIPTION[1].replace('CATEGORY_DESCRIPTION', categoryDescription))
+        if self.wait_visible(tmpCategoryDescription, 30) == False:
+            writeToLog("INFO","FAILED to verify category description")
+            return False
+        
+        tmpCategoryTags = (self.CATEGORY_TAGS[0], self.CATEGORY_TAGS[1].replace('CATEGORY_TAGS', categoryTags[:-1]))
+        if self.wait_visible(tmpCategoryTags, 30) == False:
+            writeToLog("INFO","FAILED to verify category tags")
+            return False
+        
+        return True
