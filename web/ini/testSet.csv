@@ -51,7 +51,7 @@ test_706,1,0,0,0,TODO
 test_707,1,0,0,0,Categories - Add new media from my media to category
 test_709,0,1,0,0,Category - Entries details
 test_710,1,0,0,0,Categories - Edit Entry link
-test_711,0,1,0,0,Categories - Edit metadata
+test_711,1,0,0,0,Categories - Edit metadata
 test_713,1,0,0,0,Category moderation
 test_722,1,0,0,0,Categories - Browse channels
 test_724,1,0,0,0,My Channels - Sort Channels

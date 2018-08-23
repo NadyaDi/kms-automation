@@ -28,12 +28,12 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
     description = "Description"
+    NewDescription = "New Description"
     tags = "Tags,"
-    userName1 = "Automation_User_1"
-    userPass1 = "Kaltura1!"
+    NewTags = "New Tags,"
     categoryName = None
+    newCategoryName = None
 
     
     
@@ -54,9 +54,9 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.categoryName = clsTestService.addGuidToString("Categories - Edit metadata", self.testNum)
+            self.newCategoryName = clsTestService.addGuidToString("New Category Name", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
             
             writeToLog("INFO","Step 1: Going to create new category") 
             self.common.apiClientSession.startCurrentApiClientSession()
@@ -78,8 +78,29 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
 
-            writeToLog("INFO","Step 4: Going to edit category metadata") 
-
+            writeToLog("INFO","Step 4: Going  navigate to edit category page")
+            if self.common.category.navigateToEditCategoryPage(self.categoryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED navigate to category edit page")
+                return
+            
+            writeToLog("INFO","Step 5: Going to edit category metadata")
+            if self.common.category.editCategoryMatedate(self.newCategoryName, self.NewDescription, self.NewTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to change category metadata")
+                return
+            
+            writeToLog("INFO","Step 6: Going navigate to category page")
+            if self.common.category.navigateToCategoryPageFronEditCategoryPage(self.newCategoryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED navigate to category page")
+                return
+                
+            writeToLog("INFO","Step 7: Going to verify metadata change in category page")
+            if self.common.category.varifyCategoryMatedate(self.newCategoryName, self.NewDescription, self.NewTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to change category metadata")
+                return
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Categories - Edit metadata' was done successfully")
         # if an exception happened we need to handle it and fail the test       
@@ -91,7 +112,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
-            self.common.apiClientSession.deleteCategory(self.categoryName)
+            self.common.apiClientSession.deleteCategory(self.newCategoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
