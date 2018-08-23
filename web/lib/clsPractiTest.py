@@ -11,7 +11,7 @@ from utilityTestFunc import *
 
 
 #=============================================================================================================
-#the class contains functions that manage practitest integration with automation framework 
+# The class contains functions that manage PraciTest integration with automation framework 
 #=============================================================================================================
 class clsPractiTest:
 
@@ -22,47 +22,53 @@ class clsPractiTest:
         prSessionID = prSessionInfo["sessionSystemID"]
         defaultPlatform = prSessionInfo["setPlatform"]
         runOnlyFailed = prSessionInfo["runOnlyFailed"].lower()
-        
-        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(prSessionID) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
         sessionInstancesDct = {}
-        headers = { 
-            'Content-Type': 'application/json',
-            'Connection':'close'
-        }
-        
-        r = requests.get(practiTestGetSessionsURL,headers = headers)
-        if (r.status_code == 200):
-            dctSets = json.loads(r.text)
-            if (len(dctSets["data"]) > 0):
-                for testInstance in dctSets["data"]:
-                    # '---f-34162' = 'Execute Automated'
-                    # testInstance['attributes']['custom-fields']['---f-30772'] - Platform(CH, FF..)
-                    # Check if test has specified platform, if not, use default platform
-                    try:
-                        platform = testInstance['attributes']['custom-fields']['---f-30772']  
-                    except Exception:
-                        platform = defaultPlatform
-                        
-                    try:
-                        executeAutomated = testInstance['attributes']['custom-fields']['---f-34162']  
-                    except Exception:
-                        executeAutomated = 'No'                        
-                    
-                    # Run only FAILED tests:
-                    toRun = True
-                    if runOnlyFailed == 'yes':
-                        if not testInstance['attributes']['run-status'].lower() == 'failed':
-                            toRun = False
-                            
-                    if executeAutomated == 'Yes' and toRun == True:
-                        sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + platform
-                        writeToLog("DEBUG","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                                   
+        page = 1
+         
+        while True:
+            headers = { 
+                'Content-Type': 'application/json',
+                'Connection':'close'
+            }
+                         
+            practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(prSessionID) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&page[number]=" + str(page) + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
+            # For next iteration
+            page = page + 1
+             
+            r = requests.get(practiTestGetSessionsURL,headers = headers)
+            if (r.status_code == 200):
+                dctSets = json.loads(r.text)
+                if (len(dctSets["data"]) > 0):
+                    for testInstance in dctSets["data"]:
+                        # '---f-34162' = 'Execute Automated'
+                        # testInstance['attributes']['custom-fields']['---f-30772'] - Platform(CH, FF..)
+                        # Check if test has specified platform, if not, use default platform
+                        try:
+                            platform = testInstance['attributes']['custom-fields']['---f-30772']  
+                        except Exception:
+                            platform = defaultPlatform
+                             
+                        try:
+                            executeAutomated = testInstance['attributes']['custom-fields']['---f-34162']  
+                        except Exception:
+                            executeAutomated = 'No'                        
+                         
+                        # Run only FAILED tests:
+                        toRun = True
+                        if runOnlyFailed == 'yes':
+                            if not testInstance['attributes']['run-status'].lower() == 'failed':
+                                toRun = False
+                                 
+                        if executeAutomated == 'Yes' and toRun == True:
+                            sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + platform
+                            writeToLog("INFO","Found test with id: " + str(testInstance["attributes"]["test-display-id"]))                                   
+                else:
+                    writeToLog("INFO","No instances in set. " + r.text)
+                    break    
             else:
-                writeToLog("DEBUG","No instances in set. " + r.text)        
-        else:
-            writeToLog("DEBUG","Bad response for get sessions. " + r.text) 
-        
-        return sessionInstancesDct
+                writeToLog("INFO","Bad response for get sessions. " + r.text) 
+                break
+        return sessionInstancesDct    
     
     
     #=============================================================================================================
@@ -72,7 +78,7 @@ class clsPractiTest:
         #FOR DEBUG, DON'T REMOVE
         # PractiTest filter ID:
         # qaKmsFrontEnd = 326139
-        filterId = os.getenv('PRACTITEST_FILTER_ID',"")
+        filterId = 326139#os.getenv('PRACTITEST_FILTER_ID',"")
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
         
         prSessionInfo = {
