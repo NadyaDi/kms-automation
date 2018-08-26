@@ -13,7 +13,7 @@ class General(Base):
     #General locators: 
     #=============================================================================================================
     KMS_LOADER                                          = ('id', 'loader')#loaderWrap
-    ADD_NEW_DROP_DOWN_BUTTON                            = ('id', 'a11y-addNewDropDown')#14-08-18 To Rollback :addNewDropDown
+    ADD_NEW_DROP_DOWN_BUTTON                            = ('xpath', "//button[contains(@id, 'addNewDropDown')]")
     USER_MENU_TOGGLE_BUTTON                             = ('id', 'userMenuToggleBtn')
     USER_MENU_MY_MEDIA_BUTTON                           = ('xpath', "//a[@href='/my-media' and @role='menuitem']")
     USER_MENU_MY_CHANNELS_BUTTON                        = ('xpath', "//a[@href='/my-channels' and @role='menuitem']")
