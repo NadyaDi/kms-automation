@@ -38,7 +38,6 @@ class Test:
     entriesList = []
     entryDescription = "description"
     entryTags = "tag1,"
-    playlistName  = 'embedPlaylistTest'
     playerWidth = "740"
     playerHeight = "330"
     embedLink = None
@@ -65,6 +64,7 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('EmbedPlaylist2', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('EmbedPlaylist3', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
+            self.playlistName = clsTestService.addGuidToString('embedPlaylistTest', self.testNum)
             self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
             self.embedUrl = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 

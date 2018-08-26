@@ -29,6 +29,8 @@ class MyPlaylists(Base):
     MY_PLAYLIST_TABLE_SIZE                   = ('xpath',"//table[@id='playlist-table']/tbody/tr")
     GO_TO_PLAYLIST_BUTTON                    = ('id', 'manage_playlists')
     PLAYLIST_EMBED_BUTTON                    = ('xpath', '//i[@class="v2ui-embedplaylistButton-PLAYLIST_ID icon-code"]')
+    PLAYLIST_EMBED_BUTTON_OLD_UI             = ('xpath', '//a[@id="embedplaylist-PLAYLIST_ID-tab"]')
+    PLAYLIST_EMBED_CONFIRM_MSG_OLD_UI        = ('xpath', '//a[@class="btn btn-primary" and text()="OK"]')
     PLAYLIST_EMBED_TEXTAREA                  = ('xpath', '//textarea[@id="embed_code-PLAYLIST_ID"]')
     PLAYLIST_EMBED_PLAYER_SIZES              = ('xpath', '//iframe[@width="WIDTH_SIZE" and @height="HEIGHT_SIZE"]')
     PLAYLIST_TABLE                           = ('xpath', '//table[@id="playlist-table"]')
@@ -341,11 +343,21 @@ class MyPlaylists(Base):
             return False 
         
         #Click on playlist embed button
-        tmpPlaylistEmbedBtm = (self.PLAYLIST_EMBED_BUTTON[0], self.PLAYLIST_EMBED_BUTTON[1].replace('PLAYLIST_ID', playlist_id))
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            tmpPlaylistEmbedBtm = (self.PLAYLIST_EMBED_BUTTON_OLD_UI[0], self.PLAYLIST_EMBED_BUTTON_OLD_UI[1].replace('PLAYLIST_ID', playlist_id))
+        else:         
+            tmpPlaylistEmbedBtm = (self.PLAYLIST_EMBED_BUTTON[0], self.PLAYLIST_EMBED_BUTTON[1].replace('PLAYLIST_ID', playlist_id))
+        
         if self.click(tmpPlaylistEmbedBtm) == False:
             writeToLog("INFO","FAILED to click on playlist embed button")
-            return False   
+            return False
         
+        # Click OK - "Note that the embedded playlist will not display any media that is private or restricted. Are you sure you want to continue?"
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if self.click(self.PLAYLIST_EMBED_CONFIRM_MSG_OLD_UI) == False:
+                writeToLog("INFO","FAILED to click OK")
+                return False
+            
         #Wait until text section will be visible 
         tmpEmbedTextArea = (self.PLAYLIST_EMBED_TEXTAREA [0], self.PLAYLIST_EMBED_TEXTAREA [1].replace('PLAYLIST_ID', playlist_id))
         if self.wait_visible(tmpEmbedTextArea) == False:
