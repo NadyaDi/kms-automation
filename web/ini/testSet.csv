@@ -100,7 +100,10 @@ test_2668,1,0,0,0,Watch History - Entry Viewed in gallery
 test_2671,1,0,0,0,Watch History - Youtube Viewed in
 test_2673,1,0,0,0,Watch History - Entry Viewed in Embed
 test_2679,0,1,0,0,Watch History - Resume playback
+test_2693,1,0,0,0,Watch History - Search by name
 test_2694,1,0,0,0,Watch History - Search by Description
+test_2697,0,1,0,0,Watch History - Filter – media type - video
+test_2702,1,0,0,0,Watch History - Filter by watch status
 test_2728,1,0,0,0,Watch History - Continue Watching playlist in home page
 test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recently watched playlists - Replay
 test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page

@@ -248,3 +248,28 @@ class ChannelsSortBy(Enum):
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
     MEDIA_COUNT_NEWUI         = "Media count"
     MEDIA_COUNT_OLDUI         = "Media Count"
+
+class MyHistoryFilters(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MEDIA_TYPE                = "type-menu"
+    WATCH_STATUS_MENU         = "watch-status-menu"
+    TIME_MENU                 = "time-menu"
+    
+class MyHistoryWatcheStatusItems(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    ALL_HISTORY                = "All History"
+    COMPLETED_WATCHING         = "Completed Watching"
+    STARTED_WATCHING           = "Started Watching"
+    
+class MyHistoryTimeItems(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    ALL_TIME                   = "All Time"
+    LAST_7_DAYS                = "Last 7 Days"
+    LAST_30_DAYS               = "Last 30 Days"
+    CUSTOM                     = "Custom"    

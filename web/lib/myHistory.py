@@ -33,6 +33,11 @@ class MyHistory(Base):
     MY_HISTORY_PROGRESS_BAR_COMPLETE                              = ('xpath', "//div[@class='progress history-progress complete']")
     MY_HISTORY_PROGRESS_BAR_PRECENT                               = ('xpath', "//div[@class='bar' and contains(@style, 'width:')]")
     MY_HISTORY_NO_RESULTS_ALERT                                   = ('xpath', '//div[@class="alert alert-info no-results" and contains(text(), "No Entries Found")]')
+    MY_HISTORY_DROP_DOWN_LIST_NAME                                = ('xpath', '//a[@class="dropdown-toggle responsiveSize" and @aria-controls="DROPDOWN_LIST_NAME"]')
+    MY_HISTORY_DROP_DOWN_ITEM                                     = ('xpath' , '//a[@role="menuitem" and text()="MENU_ITEM"]')
+    MY_HISTORY_TABLE                                              = ('xpath', '//table[@class="table table-condensed table-hover mediaTable myHistoryTable full"]')
+    MY_HISTORY_NO_MORE_RESULTS_ALERT                              = ('xpath', "//div[@id='myHistory_scroller_alert' and contains(text(),'There are no more media items.')]")
+    MY_HISTORY_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover mediaTable myHistoryTable full']/tbody/tr") 
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -244,3 +249,75 @@ class MyHistory(Base):
                 writeToLog("INFO","FAILED search for Entry: '" + entryName + "' something went wrong")
                 
         return True
+    
+    
+    # @Author: Inbar Willman
+    # Filter entries in My History Page: By media type, watch status and time
+    def filterInMyHistory(self, dropDownListName='' ,dropDownListItem=''):
+        # Click on relevant filter
+        tmpDropDown = (self.MY_HISTORY_DROP_DOWN_LIST_NAME[0], self.MY_HISTORY_DROP_DOWN_LIST_NAME[1].replace('DROPDOWN_LIST_NAME', dropDownListName.value)) 
+        if self.click(tmpDropDown) == False:
+            writeToLog("INFO","FAILED to click on filter " + dropDownListName.value)
+            return False  
+        
+        sleep(2)   
+        
+        # Click on relevant filter item
+        tmpFilterItem = (self.MY_HISTORY_DROP_DOWN_ITEM[0], self.MY_HISTORY_DROP_DOWN_ITEM[1].replace('MENU_ITEM', dropDownListItem.value))      
+        if self.click(tmpFilterItem) == False:
+            writeToLog("INFO","FAILED to click on item " + dropDownListItem.value)
+            return False 
+           
+        self.clsCommon.general.waitForLoaderToDisappear()    
+        writeToLog("INFO","Success, filter " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+        
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Verify entries in my history page after filtering
+    def verifyFiltersInMyHistory(self, entriesDict):
+        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.MY_HISTORY) == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+            
+        try:
+            entriesInMyHistory = self.get_element(self.MY_HISTORY_TABLE).text.lower()
+        except NoSuchElementException:
+                writeToLog("INFO","FAILED to get entries list in galley")
+                return False
+        
+        for entry in entriesDict:
+            if entriesDict[entry] == True:
+                if (entry.lower() in entriesInMyHistory) == False:
+                        writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in my media although he need to be found")
+                        return False
+                
+            if entriesDict[entry] == False:
+                if (entry.lower() in entriesInMyHistory) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in my media although he doesn't need to be found")
+                    return False
+                
+        writeToLog("INFO","Success, Only the correct media display in my media")
+        return True
+    
+    
+    # @Author: Inbar Willman 
+    # The function check that only the entries with watch status that matches the 'watchStatus' parameter display in the list in my history
+    def verifyFilterWatchStatus(self, watchStatus):
+        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.MY_HISTORY) == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+                  
+        if watchStatus != enums.MyHistoryWatcheStatusItems.STARTED_WATCHING:
+            if self.wait_elements(self.MY_HISTORY_PROGRESS_BAR_STARTED) != False:
+                writeToLog("INFO","FAILED, entries with completed watching status are displayed in the list although only " + watchStatus.value + " need to be display")
+                return False
+                
+        if watchStatus != enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING:
+            if self.wait_elements(self.MY_HISTORY_PROGRESS_BAR_COMPLETE) != False:
+                writeToLog("INFO","FAILED, entries with start watching status are displayed in the list although only " + watchStatus.value + " need to be display")
+                return False
+    
+        writeToLog("INFO","Success, only " + watchStatus.value + " type entries display")
+        return True   
