@@ -134,6 +134,9 @@ class Channel(Base):
     CHANNEL_EDIT_BUTTON_AFTER_SEARCH                = ('xpath', '//*[@aria-label= "Edit ENTRY_NAME"]')
     CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE             = ('xpath', "//a[@id='deleteMediaBtnForm' and contains(@href,'/entry/delete/')]")
     CHANNEL_CONFIRM_ENTRY_DELETE                    = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
+    CHANNEL_ENTRY_THUMBNAIL                         = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
+    CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON           = ('xpath', "//div[@class='hidden buttons-expand']")
+    CHANNEL_EDIT_BUTTON_NO_SEARCH                   = ('xpath', "//i[@class='icon-pencil']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1066,6 +1069,56 @@ class Channel(Base):
 
         return True
 
+   
+    def navigateToEditEntryPageFromChannelWhenNoSearchIsMade(self, entryName):
+        # "+" icon on thumnail
+        tmp_entry_thumbnail = (self.clsCommon.category.CATEGORY_ENTRY_THUMBNAIL[0], self.clsCommon.category.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
+        
+        tmp_entry_edit_btn = None
+        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+        
+            tmp_entry_thumbnail = (self.CHANNEL_ENTRY_THUMBNAIL[0], self.CHANNEL_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
+            parent_entry = self.get_element(tmp_entry_thumbnail)
+        
+            if self.click_child(parent_entry, self.CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON, timeout=20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on expand button")
+                return False 
+        
+            sleep(1)
+            if self.click_child(parent_entry, self.CHANNEL_EDIT_BUTTON_NO_SEARCH, timeout=20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on the edit icon")
+                return False        # Edit entry icon
+            
+        # If we are in old UI we need to click first on "+" icon on entry's thumbnail
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            try:
+                parent_entry = self.get_element(tmp_entry_thumbnail)
+                parent_entry = parent_entry.find_element_by_xpath("..")
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
+                return False
+            
+            if self.click_child(parent_entry, self.clsCommon.category.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on the plus button in order to see entry details")
+                return False 
+            
+            #set edit button for old UI
+            tmp_entry_edit_btn = (self.clsCommon.category.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[0], self.clsCommon.category.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[1].replace('ENTRY_NAME', entryName))   
+
+            sleep(3)
+            if self.click(tmp_entry_edit_btn) == False:
+                writeToLog("INFO","FAILED to click on edit button")
+                return False   
+        
+        # Verify that we are in edit entry page - wait until you see edit entry page title
+        tmp_entry_title = (self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
+        if self.wait_visible(tmp_entry_title) == False:
+            writeToLog("INFO","FAILED to displayed edit entry page title")
+            return False          
+               
+        return True           
+    
 
     #  @Author: Tzachi Guetta    
     def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):

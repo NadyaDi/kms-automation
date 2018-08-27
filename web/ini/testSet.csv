@@ -61,9 +61,10 @@ test_728,1,0,0,0,My Channels - Search as member
 test_729,1,0,0,0,My Channels - Search as subscriber
 test_731,1,0,0,0,Channel page Information
 test_734,0,1,0,0,Channel - Entries details
+test_737,1,0,0,0,Edit entry link in channel
 test_736,1,0,0,0,Channel - Remove entry from channel
 test_739,1,0,0,0,Channel - Members tab
-test_740,0,1,0,0,Channel page - Enable/Disable comments in channel
+test_740,1,0,0,0,Channel page - Enable/Disable comments in channel
 test_741,1,0,0,0,Channel page - Enable subscription in channel
 test_742,1,0,0,0,Channel moderation
 test_747,1,0,0,0,Channel page - Shared Repository

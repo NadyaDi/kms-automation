@@ -74,6 +74,7 @@ test_692,Entry page - Side My Media,2373952-1,mediaspace.kaltura.com,inbar.willm
 test_702,Entry page - Attachments,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_683,Create Empty Playlist,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_677,Add Entry from My Media to Several Playlists,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_737,Edit entry link in channel,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_736,Remove entry from Channel,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_767,Create Channel Playlist,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_768,Filter in Channel Playlist,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
