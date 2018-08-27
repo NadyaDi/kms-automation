@@ -38,7 +38,7 @@ class Category(Base):
     CATEGORY_TABLE_SIZE                                         = ('xpath', '//table[@class="table table-hover mediaTable"]/tbody/tr')
     CATEGORY_TITLE                                              = ('xpath', '//span[@id="gallery_title"]')
     CATEGORY_NO_MORE_MEDIA_FOUND_MSG                            = ('xpath' , '//div[@id="entries_scroller_alert" and text()="No more Entries found."]')
-    CATEGORY_EDIT_ENTRY_BTN_OLD_UI                              = ('xpath', '//a[@title="Edit ENTRY_NAME"]')          
+    CATEGORY_EDIT_ENTRY_BTN_OLD_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')          
     CATEGORY_EDIT_ENTRY_BTN_NEW_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')
     EDIT_CATEGORY_NAME_TEXTBOX                                  = ('xpath', '//input[@id="Category-name"]')
     EDIT_CATEGORY_DESCRIPTION_IFRAME                            = ('class_name', "wysihtml5-sandbox")
