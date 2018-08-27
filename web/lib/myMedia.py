@@ -70,6 +70,7 @@ class MyMedia(Base):
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
     MY_MEDIA_AUDIO_ICON                                         = ('xpath', "//i[@class='icon-music icon-white']")
+    MY_MEDIA_QUIZ_ICON                                          = ('xpath', "//i[@class='icomoon-quiz icon-white']")
     MY_MEDIA_VIDEO_ICON_OLD_UI                                  = ('xpath', "//i[@class='icon-film icon-white']")
     MY_MEDIA_EXPEND_MEDIA_DETAILS                               = ('xpath', "//div[@class='accordion-body in collapse contentLoaded' and @id='collapse_ENTRY_ID']")
     MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
@@ -1211,6 +1212,10 @@ class MyMedia(Base):
         elif searchIn == enums.Location.CATEGORY_PAGE:
             tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE
             no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_FOUND_MSG
+            
+        elif searchIn == enums.Location.MY_HISTORY: 
+            tmp_table_size = self.clsCommon.myHistory.MY_HISTORY_TABLE_SIZE
+            no_entries_page_msg = self.clsCommon.myHistory.MY_HISTORY_NO_MORE_RESULTS_ALERT       
         
         else:
             writeToLog("INFO","Failed to get valid location page")
@@ -1238,32 +1243,32 @@ class MyMedia(Base):
     
     #  @Author: Michal Zomper    
     # The function check the the entries in my media are filter correctly
-    def verifyFiltersInMyMedia(self, entriesList):
+    def verifyFiltersInMyMedia(self, entriesDict):
         if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
-            
+             
         try:
             entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list in galley")
             return False
-        
-        for entry in entriesList:
+         
+        for entry in entriesDict:
             #if entry[1] == True:
-            if entriesList[entry] == True:
+            if entriesDict[entry] == True:
                 #if entry[0].lower() in entriesInMyMedia == False:
                 if (entry.lower() in entriesInMyMedia) == False:
                     writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in my media although he need to be found")
                     return False
-                
+                 
             #elif entry[1] == False:
-            if entriesList[entry] == False:
+            if entriesDict[entry] == False:
                 # if entry[0].lower() in entriesInMyMedia == True:
                 if (entry.lower() in entriesInMyMedia) == True:
                     writeToLog("INFO","FAILED, entry '" + entry + "' was found in my media although he doesn't need to be found")
                     return False
-                
+                 
         writeToLog("INFO","Success, Only the correct media display in my media")
         return True
     
@@ -1292,6 +1297,13 @@ class MyMedia(Base):
                 except NoSuchElementException:
                     writeToLog("INFO","FAILED to find entry '" + entry + "' Audio icon")
                     return False
+                
+            if entryType == enums.MediaType.QUIZ:
+                try:
+                    self.get_child_element(entryThumbnail, self.MY_MEDIA_QUIZ_ICON)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' Quiz icon")
+                    return False                
             
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                 if entryType == enums.MediaType.VIDEO:
