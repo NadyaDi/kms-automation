@@ -26,7 +26,8 @@ class  GlobalSearch(Base):
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_NEWUI         = ('xpath', "//div[@class='results-entry__description hidden-phone']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
-                                                                   
+    GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS                 = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Gallery Results')]")
+                                                           
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -138,13 +139,16 @@ class  GlobalSearch(Base):
         return True
     
     # Author: Michal Zomper
-    # The function search and verify the entry that was searched in global search
+    # The function search and verify the CATEGORY that was searched in global search
     def serchAndVerifyCategoryInGlobalSearch(self, searchWord):
         if self.searchInGlobalsearch(searchWord) == False:
             writeToLog("INFO","FAILED to search in global search ")
             return False
         
-        
+        if self.click(self.GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS, timeout=20, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on go to gallery results button")
+            return False
+            
         result =  self.clsCommon.myMedia.getResultAfterSearch(searchWord)
         if result == False:
             writeToLog("INFO","FAILED to find search word in global search")
