@@ -21,6 +21,8 @@ class Home(Base):
     HOME_PLAYLIST                                       = ('xpath', "//a[@class='clickable-header' and contains(text(),'PLAYLIST')]")
     HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[contains(@alt,"ENTRY_NAME")]/ancestor::div[@class="photo-group featured_wrapper"]')
     HOME_CAROUSEL_ENTRY                                 = ('xpath', "//h1[@class='home__carousel-entry-title entryTitle tight' and contains(text(),'ENTRY_NAME')]")
+    HOME_CAROUSEL_ENTRY_OLD_UI                          = ('xpath', "//img[@alt='ENTRY_NAME']")
+    
     #=============================================================================================================  
     # @Author: Inbar Willman / Michal Zomper
     # This method navigate to home page
@@ -77,7 +79,10 @@ class Home(Base):
         
 
     def verifyEntryInHomePageCarousel(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropBottom):  
-        tmpEntryName = (self.HOME_CAROUSEL_ENTRY[0], self.HOME_CAROUSEL_ENTRY[1].replace('ENTRY_NAME', entryName) + "/ancestor::div[@class='thumbnail-info__container']")
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            tmpEntryName = (self.HOME_CAROUSEL_ENTRY_OLD_UI[0], self.HOME_CAROUSEL_ENTRY_OLD_UI[1].replace('ENTRY_NAME', entryName))
+        else:
+            tmpEntryName = (self.HOME_CAROUSEL_ENTRY[0], self.HOME_CAROUSEL_ENTRY[1].replace('ENTRY_NAME', entryName) + "/ancestor::div[@class='thumbnail-info__container']")
          
         if self.is_visible(tmpEntryName) == False:
             writeToLog("INFO","FAILED to find entry '" + entryName + "' in home page carousel playlist")
