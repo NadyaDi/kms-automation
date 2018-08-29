@@ -13,18 +13,18 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : General - Global Search for Category
+    # Test Name : General - Global Search for Channel
     # Test description:
-    # Create category new category  
-    # In the header - global search enter the category name to the text box and click on search: 
+    # Create new channel  
+    # In the header - global search enter the channel name to the text box and click on search: 
     #     Search results page should be opened successfully.
     #     The title should be "Search for: "
     #     the searched word- 
-    #     move to categories tab 
-    #     search category should be display
+    #     move to channels tab 
+    #     search channel should be display
 
     #================================================================================================================================
-    testNum = "2510"
+    testNum = "637"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -35,7 +35,7 @@ class Test:
     # Test variables
     description = "Description" 
     tags = "Tags,"
-    categoryName = None
+    channelName = None
 
     
     #run test as different instances on all the supported platforms
@@ -54,38 +54,23 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.categoryName = clsTestService.addGuidToString("Categories - Global Search for Category", self.testNum)
+            self.channelName = clsTestService.addGuidToString("Channels - Global Search for channel", self.testNum)
 
             ##################### TEST STEPS - MAIN FLOW ##################### 
-
-            writeToLog("INFO","Step 1: Going to create new category") 
-            self.common.apiClientSession.startCurrentApiClientSession()
-            parentId = self.common.apiClientSession.getParentId('galleries') 
-            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.description, self.tags) == False:
+            writeToLog("INFO","Step 1: Going to create new channel")            
+            if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to create category")
+                writeToLog("INFO","Step 1: FAILED create new channel: " + self.channelName)
                 return
             
-            writeToLog("INFO","Step 2: Going to clear cache")
-            if self.common.admin.clearCache() == False:
+            writeToLog("INFO","Step 2: Going to search and verify channel in global search")
+            if self.common.globalSearch.serchAndVerifyChannelInGlobalSearch(self.channelName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to clear cache in admin page")
-                return 
-            
-            writeToLog("INFO","Step 3: Going navigate to home page")            
-            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to home page")
-                return
-            
-            writeToLog("INFO","Step 4: Going to search and verify category in global search")
-            if self.common.globalSearch.serchAndVerifyCategoryInGlobalSearch(self.categoryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to search category'" + self.categoryName + "' in global search")
+                writeToLog("INFO","Step 2: FAILED to search category'" + self.channelName + "' in global search")
                 return 
              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Global search - Global Search for Category' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Global search - Global Search for Channel' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -95,7 +80,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.apiClientSession.deleteCategory(self.categoryName)  
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

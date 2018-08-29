@@ -26,8 +26,11 @@ class  GlobalSearch(Base):
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_NEWUI         = ('xpath', "//div[@class='results-entry__description hidden-phone']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
-    GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS                 = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Gallery Results')]")
-                                                           
+    GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS_NEWUI           = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Gallery Results')]")
+    GLOBAL_SEARCH_GO_TO_CHANNEL_RESULTS_NEWUI           = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Channel Results')]")
+    GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI                  = ('xpath', "//a[@id='galleries-tab']")
+    GLOBAL_SEARCH_RESULT_CATEGORY_NAME                  = ('xpath', "//span[@aria-label='CTEGORY_NAME']")
+    GLOBAL_SEARCH_RESULT_CATEGORY_TABLE_OLDUI            = ('xpath', "//table[@id='galleryResultsTable']")
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -38,10 +41,10 @@ class  GlobalSearch(Base):
                 writeToLog("INFO","FAILED to click on global search button")
                 return False
             
-        if self.click(self.GLOBAL_SEARCH_TEXTBOX, timeout=10, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on global search textbox")
-            return False
-        
+            if self.click(self.GLOBAL_SEARCH_TEXTBOX, timeout=10, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on global search textbox")
+                return False
+                
         if self.clear_and_send_keys(self.GLOBAL_SEARCH_TEXTBOX, searchWord + Keys.ENTER, multipleElements=True) == False:
             writeToLog("INFO","FAILED to insert search word to global search textbox")
             return False
@@ -145,19 +148,74 @@ class  GlobalSearch(Base):
             writeToLog("INFO","FAILED to search in global search ")
             return False
         
-        if self.click(self.GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS, timeout=20, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on go to gallery results button")
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.click(self.GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS_NEWUI, timeout=15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on go to gallery results button")
+                return False
+        else:
+            if self.click(self.GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI, timeout=15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on categories tab")
+                return False
+        sleep(3)
+        if self.getAndVerifyCategoryResultAfterGlobalSearch(searchWord) == False:
+            writeToLog("INFO","FAILED, the search category was NOT found")
             return False
             
-        result =  self.clsCommon.myMedia.getResultAfterSearch(searchWord)
-        if result == False:
-            writeToLog("INFO","FAILED to find search word in global search")
-            return False
-        
-        if result.text != searchWord:
-            writeToLog("INFO","FAILED, the search word that was found is not the correct one. search word is: " + searchWord + " and what was found is: " + result.text)
-            return False
-            
-        writeToLog("INFO","Success, search word was found and verify")    
+        writeToLog("INFO","Success, searched category was found and verify")    
         return True
    
+   
+   
+    # This method for Elastic Search (new UI), returns the result element.         
+    def getAndVerifyCategoryResultAfterGlobalSearch(self, searchString):
+        #If we are in new UI with Elastic search
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            tmpCategory = (self.GLOBAL_SEARCH_RESULT_CATEGORY_NAME[0], self.GLOBAL_SEARCH_RESULT_CATEGORY_NAME[1].replace('CTEGORY_NAME', searchString))
+            results = self.wait_elements(tmpCategory, 30)
+        
+            if results == False:
+                writeToLog("INFO","No categories found")
+                return False 
+            for result in results:
+                
+                if result.text == searchString:
+                    return True
+        #If we are in old UI
+        else:
+            results = self.wait_elements(self.GLOBAL_SEARCH_RESULT_CATEGORY_TABLE_OLDUI, 30) 
+            
+            if results == False:
+                    writeToLog("INFO","No categories found")
+                    return False        
+            
+            for result in results:
+                if searchString in result.text:
+                    return True 
+        
+        writeToLog("INFO","No categories found after search entry: '" + searchString + "'") 
+        return False 
+       
+    
+    # Author: Michal Zomper
+    # The function search and verify the channel that was searched in global search
+    def serchAndVerifyChannelInGlobalSearch(self, searchWord):
+        if self.searchInGlobalsearch(searchWord) == False:
+            writeToLog("INFO","FAILED to search in global search ")
+            return False
+        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.click(self.GLOBAL_SEARCH_GO_TO_CHANNEL_RESULTS_NEWUI, timeout=15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on go to channel results button")
+                return False
+        else:
+            if self.click(self.GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI, timeout=15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on categories tab")
+                return False
+        sleep(3)
+        tmpChannelName = (self.clsCommon.channel.MY_CHANNELS_HOVER[0], self.clsCommon.channel.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', searchWord))
+        if self.wait_visible(tmpChannelName, timeout=15, multipleElements=False) == False:
+            writeToLog("INFO","FAILED, searched channel was NOT found")
+            return False
+            
+        writeToLog("INFO","Success, searched channel was found and verify")    
+        return True
