@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : General - Global Search for Category
+    # Test Name : Global Search for Category
     # Test description:
     # Create category new category  
     # In the header - global search enter the category name to the text box and click on search: 

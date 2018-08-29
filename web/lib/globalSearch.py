@@ -30,7 +30,14 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_GO_TO_CHANNEL_RESULTS_NEWUI           = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Channel Results')]")
     GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI                  = ('xpath', "//a[@id='galleries-tab']")
     GLOBAL_SEARCH_RESULT_CATEGORY_NAME                  = ('xpath', "//span[@aria-label='CTEGORY_NAME']")
-    GLOBAL_SEARCH_RESULT_CATEGORY_TABLE_OLDUI            = ('xpath', "//table[@id='galleryResultsTable']")
+    GLOBAL_SEARCH_RESULT_CATEGORY_TABLE_OLDUI           = ('xpath', "//table[@id='galleryResultsTable']")
+    GLOBAL_SEARCH_CHANNEL_TAB_OLDUI                     = ('xpath', "//a[@id='channels-tab']")
+    GLOBAL_SEARCH_RESULT_CHANNELY_TABLE_OLDUI           = ('xpath', "//table[@id='channelResultsTable']")
+    GLOBAL_SEARCH_IN_CAPTION_TAB_OLDUI                  = ('xpath', "//a[@id='captions-tab']")
+    GLOBAL_SEARCH_CAPTION_TIME_RESULT_OLDUI             = ('xpath', "//a[@class='captions_search_result' and  contains(text(),'CAPTION_TIME')]")
+    GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI      = ('xpath', "//span[@class='searchTerm' and  contains(text(),'CAPTION_WORD')]")
+    GLOBAL_SEARCH_CAPTION_ICON_NEWUI                    = ('xpath', "//i[@class='v2ui-cc-icon icon icon--vertical-align-middle search-results-icon']")
+    GLOBAL_SEARCH_CAPTION_RESULT_NEWUI                  = ('xpath', "//div[@class='results__result-item']")
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -165,7 +172,6 @@ class  GlobalSearch(Base):
         return True
    
    
-   
     # This method for Elastic Search (new UI), returns the result element.         
     def getAndVerifyCategoryResultAfterGlobalSearch(self, searchString):
         #If we are in new UI with Elastic search
@@ -183,7 +189,6 @@ class  GlobalSearch(Base):
         #If we are in old UI
         else:
             results = self.wait_elements(self.GLOBAL_SEARCH_RESULT_CATEGORY_TABLE_OLDUI, 30) 
-            
             if results == False:
                     writeToLog("INFO","No categories found")
                     return False        
@@ -198,8 +203,8 @@ class  GlobalSearch(Base):
     
     # Author: Michal Zomper
     # The function search and verify the channel that was searched in global search
-    def serchAndVerifyChannelInGlobalSearch(self, searchWord):
-        if self.searchInGlobalsearch(searchWord) == False:
+    def serchAndVerifyChannelInGlobalSearch(self, searchChannel):
+        if self.searchInGlobalsearch(searchChannel) == False:
             writeToLog("INFO","FAILED to search in global search ")
             return False
         
@@ -207,15 +212,99 @@ class  GlobalSearch(Base):
             if self.click(self.GLOBAL_SEARCH_GO_TO_CHANNEL_RESULTS_NEWUI, timeout=15, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on go to channel results button")
                 return False
+            sleep(3)
+            
+            tmpChannelName = (self.clsCommon.channel.MY_CHANNELS_HOVER[0], self.clsCommon.channel.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', searchChannel))
+            if self.wait_visible(tmpChannelName, timeout=15, multipleElements=False) == False:
+                writeToLog("INFO","FAILED, searched channel was NOT found")
+                return False
+            
+            writeToLog("INFO","Success, searched channel was found and verify")    
+            return True
+            
         else:
-            if self.click(self.GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI, timeout=15, multipleElements=True) == False:
+            if self.click(self.GLOBAL_SEARCH_CHANNEL_TAB_OLDUI, timeout=15, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on categories tab")
                 return False
-        sleep(3)
-        tmpChannelName = (self.clsCommon.channel.MY_CHANNELS_HOVER[0], self.clsCommon.channel.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', searchWord))
-        if self.wait_visible(tmpChannelName, timeout=15, multipleElements=False) == False:
-            writeToLog("INFO","FAILED, searched channel was NOT found")
-            return False
+            sleep(3)
             
-        writeToLog("INFO","Success, searched channel was found and verify")    
-        return True
+            results = self.wait_elements(self.GLOBAL_SEARCH_RESULT_CHANNELY_TABLE_OLDUI, 30) 
+            if results == False:
+                writeToLog("INFO","No categories found")
+                return False        
+            
+            for result in results:
+                if searchChannel in result.text:
+                    writeToLog("INFO","Success, searched channel was found and verify")
+                    return True 
+
+            writeToLog("INFO","FAILED, searched channel was NOT found")    
+            return False
+        
+        
+    # Author: Michal Zomper
+    # The function search and verify the caption that was searched in global search
+    def serchAndVerifyCaptionInGlobalSearch(self, searchedCaption, captionTime, entryName):
+        if self.searchInGlobalsearch('"' + searchedCaption+ '"') == False:
+            writeToLog("INFO","FAILED to search in global search ")
+            return False
+        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            tmpEntry =  self.clsCommon.myMedia.getResultAfterSearch(entryName)
+            if tmpEntry == False:
+                writeToLog("INFO","FAILED to find the entry of with the searched caption after global search")
+                return False
+            
+            try:
+                entryParent = tmpEntry.find_element_by_xpath("../../../..")
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find entry parent")
+                return False
+            
+            if self.click_child(entryParent, self.GLOBAL_SEARCH_CAPTION_ICON_NEWUI, timeout=15, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to click on entry caption icon")
+                return False
+            
+            try:
+                tmpCaption = self.get_child_element(entryParent, self.GLOBAL_SEARCH_CAPTION_RESULT_NEWUI)
+            except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find caption results")
+                    return False
+            
+            if (not captionTime in tmpCaption.text) == False:
+                writeToLog("INFO","FAILED to find caption correct time")
+                return False
+            
+            if (not searchedCaption in tmpCaption.text) == False:
+                writeToLog("INFO","FAILED to find searched caption under the entry")
+                return False
+                
+        else:
+            if self.click(self.GLOBAL_SEARCH_IN_CAPTION_TAB_OLDUI, timeout=15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on search in video tab")
+                return False
+            sleep(3)
+            
+            tmpEntryThumbnail = (self.clsCommon.myMedia.MY_MEDIA_ENTRY_THUMBNAIL[0], self.clsCommon.myMedia.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName))
+            entryThumbnail = self.wait_element(tmpEntryThumbnail, 30) 
+            if entryThumbnail == False:
+                writeToLog("INFO","FAILED No entry found")
+                return False 
+            try:
+                entryParent= entryThumbnail.find_element_by_xpath("../../../..")
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to fins entry parent")
+                return False
+            
+            tmeCaptionTime = (self.GLOBAL_SEARCH_CAPTION_TIME_RESULT_OLDUI[0], self.GLOBAL_SEARCH_CAPTION_TIME_RESULT_OLDUI[1].replace('CAPTION_TIME', captionTime))
+            if  self.wait_visible_child(entryParent, tmeCaptionTime, timeout=20) == False:
+                writeToLog("INFO","FAILED to find caption time after global search")
+                return False   
+            
+            tmeCaptionSearch = (self.GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI[0], self.GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI[1].replace('CAPTION_WORD', searchedCaption))
+            if  self.wait_visible_child(entryParent, tmeCaptionSearch, timeout=20) == False:
+                writeToLog("INFO","FAILED to find caption search word after global search")
+                return False
+            
+        writeToLog("INFO","Success, searched caption was found and verify")
+        return True 
