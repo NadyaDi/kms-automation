@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : General - Global Search for Channel
+    # Test Name : Global Search for Channel
     # Test description:
     # Create new channel  
     # In the header - global search enter the channel name to the text box and click on search: 

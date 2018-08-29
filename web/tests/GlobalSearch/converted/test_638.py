@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : General - Search Media
+    # Test Name : Global Search - Search for Media
     # Test description:
     # upload and publish new entry 
     # In the header - global search enter an existing word to the text box and click on search: 

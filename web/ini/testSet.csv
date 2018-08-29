@@ -2,8 +2,9 @@ case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_16,1,0,0,0,Download Source File
 test_594,1,0,0,0,KAF BlackBoard entry thumbnail
 test_603,1,0,0,0,KAF BlackBoard view modes
-test_637,1,0,0,0,General - Global Search for Channel
-test_638,1,0,0,0,General - Search Media
+test_637,1,0,0,0,Global Search for Channel
+test_638,1,0,0,0,Global Search for Media
+test_639,1,0,0,0,Global Search for Captions in Video
 test_643,1,0,0,0,Home Page Carousel
 test_653,1,0,0,0,Free trial
 test_655,1,0,0,0,My Media - Add to existing playlist - multiple
