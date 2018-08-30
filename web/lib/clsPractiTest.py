@@ -107,17 +107,88 @@ class clsPractiTest:
                     prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"]['---f-34785'] #PractiTest Field: Run On Hostname
                     prSessionInfo["runOnlyFailed"]    = dctSets["data"][0]["attributes"]["custom-fields"]['---f-38033'] #PractiTest Field: Automation Run Only FAILED
                     
-                    writeToLog("DEBUG","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
+                    writeToLog("INFO","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
                 else:
-                    writeToLog("DEBUG","No automated sessions found.")
+                    writeToLog("INFO","No automated sessions found.")
         else:
-            writeToLog("DEBUG","Bad response for get sessions. " + r.text) 
+            writeToLog("INFO","Bad response for get sessions. " + r.text) 
         
         return prSessionInfo
     
+
+    #=============================================================================================================
+    # Function that returns specific test set by ID 
+    #=============================================================================================================
+    def getPractiTestSetById(self, testSetId):
+#         testSetId = '367544'
+        page = '1'
+        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(testSetId) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&page[number]=" + str(page) + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
+
+        headers = {
+            'Content-Type': 'application/json',
+            'Connection':'close'
+        }
+        
+        r = requests.get(practiTestGetSessionsURL,headers = headers)
+        if (r.status_code == 200):
+            dctSets = json.loads(r.text)
+            if len(dctSets["data"]) != 0:
+                writeToLog("INFO","Automation Test Set found, id: '" + str(testSetId)+ "'; Display ID: '" + str(dctSets["data"][0]["attributes"]["set-display-id"]) + "'")
+                return dctSets["data"]
+            else:
+                writeToLog("INFO","No test found in Test Set: '" + str(testSetId) + "'")
+        else:
+            writeToLog("INFO","Bad response for get PractiTest Set By Id: " + r.text)
+            
+        return
+    
     
     #=============================================================================================================
-    # Function that retrievs the test Instance of a specific test in the csv file that contains the test list
+    # Function go over data (all tests in test set)
+    # practiTestFieldId - example: "---f-38302"
+    #=============================================================================================================    
+    def syncTestSetData(self, testSet, csvPath, practiTestFieldId):
+        listCsv = open(csvPath).readlines()
+        testSetData = self.getPractiTestSetById(testSet['id'])
+        for testPractitest in testSetData:
+            testDisplayId = str(testPractitest["attributes"]["test-display-id"])
+            for testCsv in listCsv:
+                if testDisplayId == testCsv.split(',')[0]:
+                    if str(testCsv.split(',')[1]) != '\n':
+                        #Update the test: instanceId, customFieldId, customFieldValue
+                        self.updateInstanceCustomField(str(testPractitest['id']), practiTestFieldId, str(testCsv.split(',')[1]).replace('\n',''))
+                        writeToLog("INFO", "Updated TestSet '" + str(testSet['id']) + "', Test ID '" + testDisplayId + "', Filed ID '" + practiTestFieldId + "', New Value: " + str(testCsv.split(',')[1]))
+        return    
+    
+    #=============================================================================================================
+    # Function that returns all tests sets that are located under the given filter 
+    #=============================================================================================================
+    def getPractiTestTestSetByFilterId(self, filterId):
+        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
+        
+        listTestSet = []    
+
+        headers = {
+            'Content-Type': 'application/json',
+            'Connection':'close'
+        }
+        
+        r = requests.get(practiTestGetSessionsURL,headers = headers)
+        if (r.status_code == 200):
+            dctSets = json.loads(r.text)
+            if len(dctSets["data"]) != 0:
+                for testSet in dctSets["data"]:
+                    listTestSet.append(testSet)
+            else:
+                writeToLog("INFO","No Test Sets found under filter id: '" + filterId + "'")
+        else:
+            writeToLog("INFO","Bad response for get Test Set: " + r.text)
+        
+        return listTestSet
+    
+    
+    #=============================================================================================================
+    # Function that retrieves the test Instance of a specific test in the csv file that contains the test list
     #=============================================================================================================
     def getTestInstanceFromTestSetFile(self, testID):
         instance = ""
@@ -158,10 +229,10 @@ class clsPractiTest:
             headers={'Content-type': 'application/json', 'Connection':'close'})    
 
         if (r.status_code == 200):
-            writeToLog("DEBUG","Updated test: " + testID + " as: " + testStatus) 
+            writeToLog("INFO","Updated test: " + testID + " as: " + testStatus) 
             return True
         else:
-            writeToLog("DEBUG","Bad response for update instances. " + r.text)
+            writeToLog("INFO","Bad response for update instances. " + r.text)
             return False 
         
     
@@ -186,7 +257,7 @@ class clsPractiTest:
             for plat in platformList:
                 if plat == platform:
                     testPlatformLine = testPlatformLine + ",1"
-                    writeToLog("DEBUG","Adding: " + "test_" + sTestID + " for platform: " + plat)
+                    writeToLog("INFO","Adding: " + "test_" + sTestID + " for platform: " + plat)
                 else:           
                     testPlatformLine = testPlatformLine + ",0"
             testPlatformLine = testPlatformLine + "," + str(testIDsDict[testID]).split(";")[0]
@@ -208,11 +279,32 @@ class clsPractiTest:
         
         r = requests.put(practiTestSetAutomationStatusAsProcessedUrl,headers = headers, data = json.dumps(data))
         if (r.status_code == 200):
-                writeToLog("DEBUG","Session: " + str(prSessionID) + " updated as processed")
+                writeToLog("INFO","Session: " + str(prSessionID) + " updated as processed")
                 return True
         else:
-            writeToLog("DEBUG","Bad response for get sessions. " + r.text)
-            return False       
+            writeToLog("INFO","Bad response for get sessions. " + r.text)
+            return False   
+        
+        
+    #=============================================================================================================
+    # Function that sets the test custom field
+    # customFiledId example: "---f-38302"
+    #=============================================================================================================
+    def updateInstanceCustomField(self, instanceId, customFieldId, customFieldValue):
+        practiTestSetAutomationStatusAsProcessedUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances/" + str(instanceId) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL)
+        
+        headers = { 
+            'Content-Type': 'application/json',
+            'Connection':'close'
+        }
+        data = {"data": { "type": "instances", "attributes": {"custom-fields": { customFieldId: str(customFieldValue)}}}}
+        
+        r = requests.put(practiTestSetAutomationStatusAsProcessedUrl,headers = headers, data = json.dumps(data))
+        if (r.status_code == 200):
+                return True
+        else:
+            writeToLog("INFO","Bad response for get sessions. " + r.text)
+            return False            
     
     
     #=============================================================================================================
