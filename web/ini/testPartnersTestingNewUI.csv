@@ -42,6 +42,7 @@ test_638,Global Search for Media,2370151,qakmstest.dev.kaltura.com,pythonautomat
 test_2510,Global Search for Category,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_637,Global Search for Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_639,Global Search for Captions in Video,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1026,Publish from upload page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1558,Disclaimer - Before publish (agreeRequired = No),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456

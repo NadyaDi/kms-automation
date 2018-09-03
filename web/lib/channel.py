@@ -1799,3 +1799,41 @@ class Channel(Base):
         
         writeToLog("INFO","Success, Channel subscription option was changed successfully")
         return True 
+    
+    
+    # Author: Michal Zomper
+    def searchEntryInChannel(self, entryName):
+        if self.searchInChannelWithoutVerifyResults(entryName) == False:
+            writeToLog("INFO","FAILED to make a search")
+            return False              
+
+        if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
+            writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
+            return False   
+                     
+        writeToLog("INFO","Success entry '" + entryName + "' was found")
+        return True
+    
+    
+    # @Author: Michal Zomper
+    # Search in category without verify results
+    def  searchInChannelWithoutVerifyResults(self, searchText):
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            # Click on the magnafine glass
+            if self.click(self.CHANNEL_PAGE_SEARCH_TAB, 30) == False:
+                writeToLog("INFO","FAILED to click on magnafine glass in channel page")
+                return False
+            sleep(2)
+            # Search Entry     
+            self.clsCommon.myMedia.getSearchBarElement().click()
+            
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            searchLine = '"' + searchText + '"'
+        else:
+            searchLine = searchText 
+                   
+        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
+        sleep(2)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True
