@@ -70,37 +70,37 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload new entry: " + self.entryName)
                 return
-            
+             
             writeToLog("INFO","Step 2: Going to publish entry to category")
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, "", publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED publish entry '" + self.entryName + "' to category: " + self.categoryName)
                 return
-            
+             
             writeToLog("INFO","Step 3: Going navigate to entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to entry '"+ self.entryName +"' page")
                 return           
-              
+               
             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return
-              
+               
             writeToLog("INFO","Step 5: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to edit entry page")
                 return    
-            
+             
             writeToLog("INFO","Step 6: Going to click on caption tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to click on caption tab")
                 return            
-            
+             
             writeToLog("INFO","Step 7: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
                 self.status = "Fail"
