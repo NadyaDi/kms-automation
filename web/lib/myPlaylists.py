@@ -19,6 +19,8 @@ class MyPlaylists(Base):
     CREATE_PLAYLIST_SAVE_BUTTON              = ('xpath', "//button[@id='playlists-submit']")
     CREATE_PLAYLIST_CONFIRM_MSG              = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Now your selected media is part of the selected playlist(s).')]")
     CREATE_PLAYLIST_CONFIRM_MSG_MULTIPLE     = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Media added to selected playlist(s):')]")
+    ADD_TO_PLAYLIST_CONFIRM_MSG_PLAYLIST_PG  = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Now your selected media is part of the selected playlist(s).')]")
+    ADD_TO_PLAYLIST_CONFIRM_MSG_ENTRY_PG     = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Media added to selected playlist(s):')]")    
     PLAYLIST_CHECKBOX                        = ('xpath', "//span[text() = 'PLAYLIST_NAME']")
     PLAYLIST_NAME                            = ('xpath', "//a[contains(@data-original-title,'PLAYLIST_NAME')]")
     PLAYLIST_DELETE_BUTTON                   = ('xpath', "//i[contains(@class,'icon-trash')]")
@@ -96,7 +98,7 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on create playlist Button")
                     return False
                 
-                if currentLocation == enums.Location.MY_MEDIA:
+                if currentLocation == enums.Location.MY_MEDIA:     
                     if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
                         writeToLog("INFO","FAILED to to create playlist: " + playlistName)
                         return False
@@ -498,10 +500,16 @@ class MyPlaylists(Base):
             
             self.clsCommon.general.waitForLoaderToDisappear()
             sleep(1)
-            
-            if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
-                return False
+
+            if currentLocation == enums.Location.MY_MEDIA: 
+                if self.wait_visible(self.ADD_TO_PLAYLIST_CONFIRM_MSG_PLAYLIST_PG, 10) == False:
+                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                    return False
+
+            elif currentLocation == enums.Location.ENTRY_PAGE:
+                if self.wait_visible(self.ADD_TO_PLAYLIST_CONFIRM_MSG_ENTRY_PG, 10) == False:
+                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                    return False
             
             writeToLog("INFO","Entry: '" + entryName + "' added to Playlists")
                                        
@@ -600,6 +608,53 @@ class MyPlaylists(Base):
             return False
             
         return True
+    
+    
+    # @Author:Ori Flchtman
+    # Verify multiple entries in multiple playlists
+    def verifyMultipleEntriesInMultiplePlaylists(self, entriesList, playlistsName='', isExpected=True):
+        try:                
+            if playlistsName != '':
+                if self.navigateToMyPlaylists() == False:
+                    writeToLog("INFO","FAILED to navigate to my Playlists")
+                    return False
+            else:
+                writeToLog("INFO","FAILED, Not provided acceptable value playlists name")
+                return False 
+                             
+            for playlist in playlistsName:    
+                tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlist))
+                if self.click(tmp_playlist_name) == False:
+                    writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
+                    return False
+
+                sleep(3)# DO NOT REMOVE
+                
+                # Get playlist list text
+                playlist_text = self.wait_element(self.PLAYLIST_TABLE, multipleElements=True).text
+                
+                # Split playlist text
+                playlist_entries_list = playlist_text.split()
+                
+                # Check that entry displayed just once in playlist
+                for entry in entriesList:
+                    numberOfDisplay = playlist_entries_list.count(entry)
+                    if numberOfDisplay == 1:
+                        if isExpected == True:
+                            writeToLog("INFO","As Expected: Entry was found in the Playlists")
+                        else:
+                            writeToLog("INFO","NOT Expected: Entry was found " + str(numberOfDisplay) + " in the Playlists")
+                            return False
+                    else:
+                        if isExpected == False:
+                            writeToLog("INFO","As Expected: Entry was not found in the Playlists")
+                        else:
+                            writeToLog("INFO","NOT Expected: Entry was " + str(numberOfDisplay) + " found in the Playlists")
+                            return False                    
+               
+            return True   
+        except NoSuchElementException:
+            return False                
     
     
     # @Author:Inbar Willman
