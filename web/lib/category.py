@@ -53,6 +53,7 @@ class Category(Base):
     EDIT_CATEGORY_BACK_TO_CATEGORY_BUTTON                       = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Back to Category')]")
     CATEGORY_DESCRIPTION                                        = ('xpath', "//div[@class='js-description' and contains(text(), 'CATEGORY_DESCRIPTION')]")
     CATEGORY_TAGS                                               = ('xpath', "//a[@class='badge badge-info' and contains(text(), 'CATEGORY_TAGS')]")
+    CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD                        = ('xpath', "//a[text()='Go To Category']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -144,34 +145,41 @@ class Category(Base):
         return True
 
 
-    # Author: Tzachi Guetta
+    # Author: Tzachi Guetta & Oleg Sigalov
     def addNewContentToCategory(self, categoryName, uploadEntrieList):
         try:
             self.clsCommon.navigateTo(enums.Location.CATEGORY_PAGE, nameValue=categoryName)
             
-            if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
-                writeToLog("INFO","FAILED to click add to channel button")
-                return False     
-            
-            sleep(1)
-            self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
-            
-            if self.click(self.CATEGORY_ADD_NEW_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on Add New at category page")
-                return False
-            
-            if self.click(self.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
-                return False
-            
-            if self.clsCommon.upload.uploadMulitple(uploadEntrieList, uploadFrom=enums.Location.CATEGORY_PAGE) == False:
-                writeToLog("INFO","FAILED to upload media from category page")
-                return False
+            for entry in uploadEntrieList:
+                if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click add to Gallery button")
+                    return False     
+                
+                sleep(1)
+                self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+                
+                if self.click(self.CATEGORY_ADD_NEW_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on Add New at category page")
+                    return False
+                
+                if self.click(self.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
+                    return False
+                
+                if self.clsCommon.upload.uploadEntry(entry.filePath, entry.name, entry.description, entry.tags, entry.timeout, uploadFrom=None) == False:
+                    writeToLog("INFO","FAILED to upload media from category page: " + entry.name)
+                    return False
+                
+                # Click 'Go To Category'
+                if self.click(self.CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD) == False:
+                    writeToLog("INFO","FAILED to click on 'Go To Category'")
+                    return False
             
         except NoSuchElementException:
             return False
         
         return True
+
     
     # Author: Michal Zomper 
     def verifyEntryDetails(self, entryName, numberOfLiks, numberOfViews, numberOfComments):
