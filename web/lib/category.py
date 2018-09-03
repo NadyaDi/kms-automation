@@ -110,7 +110,7 @@ class Category(Base):
     
     # @Author: Inbar Willman
     # Search in category without verify results
-    def searchInCategoryWithoutVerifyResults(self, searchText):
+    def    searchInCategoryWithoutVerifyResults(self, searchText):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             # Click on the magnafine glass
             if self.click(self.CATEGORY_SEARCH_MAGNAFINE_GLASS, 30) == False:
