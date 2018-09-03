@@ -35,8 +35,8 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_RESULT_CHANNELY_TABLE_OLDUI           = ('xpath', "//table[@id='channelResultsTable']")
     GLOBAL_SEARCH_IN_CAPTION_TAB_OLDUI                  = ('xpath', "//a[@id='captions-tab']")
     GLOBAL_SEARCH_CAPTION_TIME_RESULT_OLDUI             = ('xpath', "//a[@class='captions_search_result' and  contains(text(),'CAPTION_TIME')]")
-    GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI      = ('xpath', "//span[@class='searchTerm' and  contains(text(),'CAPTION_WORD')]")
-    GLOBAL_SEARCH_CAPTION_ICON_NEWUI                    = ('xpath', "//i[@class='v2ui-cc-icon icon icon--vertical-align-middle search-results-icon']")
+    GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI      = ('xpath', "//span[@class='resultLine searchme' and  contains(text(),'CAPTION_WORD')]")
+    GLOBAL_SEARCH_CAPTION_ICON_NEWUI                    = ('xpath', ".//span[@class='results-summary-item__text']")
     GLOBAL_SEARCH_CAPTION_RESULT_NEWUI                  = ('xpath', "//div[@class='results__result-item']")
     #============================================================================================================#
     
@@ -245,11 +245,11 @@ class  GlobalSearch(Base):
     # Author: Michal Zomper
     # The function search and verify the caption that was searched in global search
     def serchAndVerifyCaptionInGlobalSearch(self, searchedCaption, captionTime, entryName):
-        if self.searchInGlobalsearch('"' + searchedCaption+ '"') == False:
-            writeToLog("INFO","FAILED to search in global search ")
-            return False
-        
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if self.searchInGlobalsearch('"' + searchedCaption+ '"') == False:
+                writeToLog("INFO","FAILED to search in global search ")
+                return False
+        
             tmpEntry =  self.clsCommon.myMedia.getResultAfterSearch(entryName)
             if tmpEntry == False:
                 writeToLog("INFO","FAILED to find the entry of with the searched caption after global search")
@@ -261,9 +261,11 @@ class  GlobalSearch(Base):
                 writeToLog("INFO","FAILED to find entry parent")
                 return False
             
-            if self.click_child(entryParent, self.GLOBAL_SEARCH_CAPTION_ICON_NEWUI, timeout=15, multipleElements=False) == False:
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            if self.click_child(entryParent, self.GLOBAL_SEARCH_CAPTION_ICON_NEWUI, timeout=15, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on entry caption icon")
                 return False
+#             entryParent.find_element_by_xpath(".//span[@class='results-summary-item__text']").click()
             
             try:
                 tmpCaption = self.get_child_element(entryParent, self.GLOBAL_SEARCH_CAPTION_RESULT_NEWUI)
@@ -271,15 +273,19 @@ class  GlobalSearch(Base):
                     writeToLog("INFO","FAILED to find caption results")
                     return False
             
-            if (not captionTime in tmpCaption.text) == False:
+            if  (captionTime in tmpCaption.text) == False:
                 writeToLog("INFO","FAILED to find caption correct time")
                 return False
             
-            if (not searchedCaption in tmpCaption.text) == False:
+            if (searchedCaption in tmpCaption.text) == False:
                 writeToLog("INFO","FAILED to find searched caption under the entry")
                 return False
                 
         else:
+            if self.searchInGlobalsearch(searchedCaption) == False:
+                writeToLog("INFO","FAILED to search in global search ")
+                return False
+            
             if self.click(self.GLOBAL_SEARCH_IN_CAPTION_TAB_OLDUI, timeout=15, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on search in video tab")
                 return False
