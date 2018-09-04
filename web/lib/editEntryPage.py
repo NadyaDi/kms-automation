@@ -536,7 +536,8 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_CAPTION_BROWSE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on browse caption button")
             return False
-        sleep(2)
+        sleep(4)
+        
         # Type in a file path
         self.clsCommon.upload.typeIntoFileUploadDialog(captionFilePath)
         

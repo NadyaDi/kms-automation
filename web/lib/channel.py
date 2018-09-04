@@ -118,8 +118,8 @@ class Channel(Base):
     CHANNEL_REMOVE_SEARCH_ICON                      = ('xpath', "//i[@class='icon-remove']")
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
-    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
-    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='dropdown-toggle DropdownFilter__toggle']")
+    MY_CHANNELS_SORTBY_BUTTON_OLDUI                 = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_SORTBY_BUTTON_NEWUI                 = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
     CHANNEL_CANCEL_PLAYLIST_BUTTON                  = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
     MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
     CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
@@ -1677,11 +1677,11 @@ class Channel(Base):
     # Author: Michal Zomper
     def selectSortChannelOptionInMyChannelsPage(self, sortType):
         if self.clsCommon.isElasticSearchOnPage() == True:
-            if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI, 15) == False:
+            if self.click(self.MY_CHANNELS_SORTBY_BUTTON_NEWUI, 15) == False:
                 writeToLog("INFO","FAILED to click on sort channel filter button")
                 return False  
         else:
-            if self.click(self.MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON, 15) == False:
+            if self.click(self.MY_CHANNELS_SORTBY_BUTTON_OLDUI, 15) == False:
                 writeToLog("INFO","FAILED to click on sort channel filter button")
                 return False  
             
@@ -1719,7 +1719,7 @@ class Channel(Base):
                 return False
             prevChannelIndex = channelCurrentIndex
                 
-        writeToLog("INFO","Success, verify sort channels by '" + sortBy.value + "' was successful")
+        writeToLog("INFO","Success, verify sort channels by '" + sortBy.value + "' was successful, all channels display in the correct order")
         return True   
     
     
