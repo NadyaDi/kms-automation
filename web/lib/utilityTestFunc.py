@@ -1,5 +1,7 @@
+import codecs
 import csv
 from datetime import timedelta
+import io
 import subprocess
 from time import sleep
 
@@ -17,7 +19,7 @@ def updateTestCredentials(case_str):
     else:
         newuiStr = ""
     testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
-    with open(testPartnersPath, 'r') as csv_mat: #windows
+    with codecs.open(testPartnersPath,'r',encoding='utf8') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
         for row in testPartners:
             if (row['case'] == case_str):
