@@ -698,7 +698,7 @@ class Channel(Base):
         if self.click(tmpChannelName) == False:
             writeToLog("INFO","FAILED to Click on Channel name: '" + channelName + "'")
             return False   
-        sleep(1)
+        sleep(3)
         
         if self.click(self.CHANNEL_EDIT_DROP_DOWN_MENU) == False:
             writeToLog("INFO","FAILED to Click on edit drop down menu")
@@ -736,15 +736,15 @@ class Channel(Base):
         if self.navigateToChannelPlaylistTab(channelName) == False:
             writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
             return False 
-        
+         
         if self.click(self.CHANNEL_CREATE_NEW_PLAYLIST_DROP_DOWN) == False:
             writeToLog("INFO","FAILED to Click on drop down play-lists tab button")
             return False           
-
+ 
         if self.click(self.CHANNEL_MANUAL_PLAYLIST_BUTTON) == False:
             writeToLog("INFO","FAILED to Click on play-lists tab button")
             return False
-        
+         
         if self.wait_visible(self.CHANNEL_PLAYLISTS_HEADER) == False:
             writeToLog("INFO","FAILED to open 'Create a Manual Playlist' window")
             return False    
@@ -758,9 +758,9 @@ class Channel(Base):
             writeToLog("INFO","FAILED to fill a playlistDescription title :'" + playlistDescription + "'")
             return False    
        
-        if self.click(self.CHANNEL_PLAYLISTS_TAG) == False:
-            writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
-            return False   
+#         if self.fillChannelPlaylistTags(playlistTag) == False:
+#             writeToLog("INFO","FAILED to fill a playlisttags title :'" + playlistTag + "'")
+#             return False   
       
         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
             # Remove the Mask over all the screen (over tags filed also)
@@ -771,7 +771,8 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
                 return False      
         else:    
-            if self.send_keys(self.CHANNEL_PLAYLISTS_TAG, playlistTag) == False:
+            
+            if self.fillChannelPlaylistTags(playlistTag) == False:
                 writeToLog("INFO","FAILED to fill a playlisttags  :'" + playlistTag + "'")
                 return False     
                
@@ -829,6 +830,38 @@ class Channel(Base):
                    
         return True
     
+    
+    # Author : Michal Zomper
+    # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
+    #        for example 'tags1,tags2,'
+    def fillChannelPlaylistTags(self, tags):
+        try:
+            self.switch_to_default_content()
+            tagsElement = self.get_element(self.CHANNEL_PLAYLISTS_TAG)
+            
+        except NoSuchElementException:
+            writeToLog("DEBUG","FAILED to get Tags filed element")
+            return False
+        sleep(2)       
+        if tagsElement.click() == False:
+            writeToLog("DEBUG","FAILED to click on Tags filed")
+            return False            
+        sleep(2)        
+        
+        if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
+            temp = self.get_element(self.CHANNEL_REMOVE_TAG_MASK)
+            self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(temp))
+        
+            if tagsElement.click() == False:
+                writeToLog("DEBUG","FAILED to click on Tags filed")
+                return False                
+            
+        if self.send_keys(self.clsCommon.upload.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS_INPUT, tags) == True:
+            return True
+        else:
+            writeToLog("DEBUG","FAILED to type in Tags")
+            return False
+        
 
     def sortAndFilterInChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, sortBy='', filterMediaType=''):
         if self.navigateToChannelPlaylistTab(channelName) == False:

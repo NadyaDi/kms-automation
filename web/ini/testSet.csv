@@ -55,6 +55,7 @@ test_709,0,1,0,0,Category - Entries details
 test_710,1,0,0,0,Categories - Edit Entry link
 test_711,1,0,0,0,Categories - Edit metadata
 test_713,1,0,0,0,Category moderation
+test_716,1,0,0,0,Categories Type
 test_722,1,0,0,0,Categories - Browse channels
 test_724,1,0,0,0,My Channels - Sort Channels
 test_726,1,0,0,0,My Channels - Filter view
