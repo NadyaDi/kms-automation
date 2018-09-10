@@ -336,6 +336,7 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to click on embed tab")
             return False
         sleep(3)
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
         if self.wait_while_not_visible(self.ENTRY_PAGE_LOADING) == False:
             writeToLog("INFO","FAILED - Loading message is still displayed")
             return False   
