@@ -174,6 +174,7 @@ class Common():
     def createFolder(self, path):
         try:     
             os.makedirs(path)
+            writeToLog("INFO","Created folder: " + path)
         except:
             writeToLog("INFO","FAILED to create folder: " + path)
             return False
@@ -185,6 +186,7 @@ class Common():
     def deleteFolder(self, path):
         try:     
             shutil.rmtree(path)
+            writeToLog("INFO","Deleted folder: " + path)
         except:
             writeToLog("INFO","FAILED to delete folder: " + path)
             return False
