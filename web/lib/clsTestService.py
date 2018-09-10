@@ -57,7 +57,6 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 def initialize(test,driverFix,duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
-        cleanTempDownloadFolder()
     # Setup the test, initialize
     test = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     # Start driver - Open browser and navigate to base URL
@@ -271,8 +270,8 @@ def cleanFolder(folderPath):
     return True
 
 
-def addGuidToString(value, testID=""):
+def addGuidToString(value, testID="", delimiter="-"):
     if testID=="":
-        return localSettings.LOCAL_SETTINGS_GUID + '-' + value
+        return localSettings.LOCAL_SETTINGS_GUID + delimiter + value
     else:
-        return localSettings.LOCAL_SETTINGS_GUID + '-' + testID + '-' + value     
+        return localSettings.LOCAL_SETTINGS_GUID + delimiter + testID + delimiter + value     
