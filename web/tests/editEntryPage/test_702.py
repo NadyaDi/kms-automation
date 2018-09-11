@@ -135,14 +135,6 @@ class Test:
                  
                 step = step + 1  
                   
-                writeToLog("INFO","Step " + str(step) + ": Going to delete download file from folder")
-                if self.common.deleteFile(self.filePathDictionary[path]) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step " + str(step) + ": FAILED to delete download file from folder")
-                    return 
-                      
-                    step = step + 1                           
-                      
                 writeToLog("INFO","Step " + str(step) + ": Going to navigate to entry page")
                 if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
                     self.status = "Fail"

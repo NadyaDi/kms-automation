@@ -1368,7 +1368,8 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on download attachment icon")
             return False   
         
-        # Compare between uploaded file and download file    
+        # Compare between uploaded file and download file
+        writeToLog("INFO","Going to compare between uploaded file and download file")  
         if self.clsCommon.compareBetweenTwoFilesBinary(originalPath, downloadPath) == False:
             writeToLog("INFO","FAILED to click on to download file correctly")
             return False              
