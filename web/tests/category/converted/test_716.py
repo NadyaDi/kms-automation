@@ -34,7 +34,9 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName1 = None
+    entryName2 = None
+    entryName3 = None
     description = "Description"
     tags = "Tags,"
     openCategoryName = None
@@ -65,9 +67,13 @@ class Test:
             self.openCategoryName = clsTestService.addGuidToString("Categories Type - Open Category", self.testNum)
             self.restrictedCategoryName = clsTestService.addGuidToString("Categories Type - Restricted Category", self.testNum)
             self.privateCategoryName = clsTestService.addGuidToString("Categories Type - Private Category", self.testNum)
-            self.entryName = clsTestService.addGuidToString("Categories Type", self.testNum)
-            self.entry = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)            
-            uploadEntrieList = [self.entry]
+            self.entryName = clsTestService.addGuidToString("Categories Type - Open Category", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Categories Type - Restricted Category", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Categories Type - Private Category", self.testNum)
+            self.entry1 = UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
+            self.entry2 = UploadEntry(self.filePath, self.entryName2, self.description, self.tags, timeout=60, retries=3)
+            self.entry3 = UploadEntry(self.filePath, self.entryName3, self.description, self.tags, timeout=60, retries=3)            
+            uploadEntrieList = [self.entry1, self.entry2, self.entry3]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
@@ -120,20 +126,63 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to login with " + self.userName)
                 return       
             
-            writeToLog("INFO","Step 8: Going  navigate open category page")
+            writeToLog("INFO","Step 8: Going navigate open category page")
             if self.common.category.navigateToCategory(self.openCategoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to open category page")
                 return
             
-            writeToLog("INFO","Step 9: Going to add content to category with non member user")
-            if self.common.category.addNewContentToCategory(self.openCategoryName, uploadEntrieList) == False:
+            writeToLog("INFO","Step 9: Going to add content to open category with non member user")
+            if self.common.category.addNewContentToCategory(self.openCategoryName, uploadEntrieList[0]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to add media to open category ")
+                writeToLog("INFO","Step 9: FAILED to add media to open category")
+                return
+                        
+            writeToLog("INFO","Step 10: Going navigate restricted category page")
+            if self.common.category.navigateToCategory(self.restrictedCategoryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED navigate to restricted category page")
+                return
+            
+            writeToLog("INFO","Step 11: Going to add content to restricted category with non member user")
+            if self.common.category.addNewContentToCategory(self.openCategoryName, uploadEntrieList[1]) == True:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED, user is non member in restricted category and should NOT have permission to add content")
+                return
+            
+            writeToLog("INFO","Step 12: Going navigate restricted category page")
+            if self.common.category.navigateToCategory(self.restrictedCategoryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED navigate to restricted category page")
+                return
+            
+            writeToLog("INFO","Step 13: Going to add content to private category with non member user")
+            if self.common.category.addNewContentToCategory(self.privateCategoryName, uploadEntrieList[2]) == True:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED, user is non member in private category and should NOT have permission to add content")
+                return
+            
+            sleep(2)
+            writeToLog("INFO","Step 14: Going to logout from '" + self.userName + "' user")
+            if self.common.login.logOutOfKMS() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to logout from '" + self.userName + "' user")
+                return  
+            
+            writeToLog("INFO","Step 15: Going to login with main user")
+            if self.common.login()== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 15: FAILED to login with main user")
+                return 
+            
+            writeToLog("INFO","Step 16: Going navigate restricted category page")
+            if self.common.category.navigateToCategory(self.restrictedCategoryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 16: FAILED navigate to restricted category page")
                 return
 
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Categories - Edit metadata' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Categories Type' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -145,7 +194,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")        
             self.common.login.logOutOfKMS()
             self.common.login.loginToKMS(self.userName, self.userPass)
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)          
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)          
             self.common.apiClientSession.deleteCategory(self.openCategoryName)
             self.common.apiClientSession.deleteCategory(self.restrictedCategoryName)
             self.common.apiClientSession.deleteCategory(self.privateCategoryName)
