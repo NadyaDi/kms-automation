@@ -54,6 +54,9 @@ class Category(Base):
     CATEGORY_DESCRIPTION                                        = ('xpath', "//div[@class='js-description' and contains(text(), 'CATEGORY_DESCRIPTION')]")
     CATEGORY_TAGS                                               = ('xpath', "//a[@class='badge badge-info' and contains(text(), 'CATEGORY_TAGS')]")
     CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD                        = ('xpath', "//a[text()='Go To Category']")
+    CATEGORY_MEMBERS_TAB                                        = ('xpath', '//a[@id="categorymembers-tab"]')
+    CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD                    = ('xpath', '//input[@id="AddCategoryMember-userId"]')   
+    CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION                    = ('xpath', '//select[@id="AddCategoryMember-permission"]')     
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -519,3 +522,71 @@ class Category(Base):
             return False
         
         return True
+    
+    
+        # @Author: Michal Zomper
+    # Go to members tab 
+    def navigateToCategoryMembersTab(self):
+        if self.click(self.CATEGORY_MEMBERS_TAB) == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False     
+        return True
+    
+    
+    # @Author: Michal Zomper
+    def addMembersToCategory(self, categoryName, username, permission=enums.ChannelMemberPermission.MEMBER):
+        if self.navigateToEditCategoryPage(categoryName) == False:
+            writeToLog("INFO","Failed to navigate to edit category page")
+            return False  
+        sleep(1)   
+        
+        # Navigate to members tab
+        if self.navigateToCategoryMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False  
+        
+        # Wait until page contains add member button
+        if self.wait_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
+            writeToLog("INFO","Failed to display add member tab content")
+            return False           
+        
+        # Click on add member button
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
+            writeToLog("INFO","Failed to click on add members button")
+            return False   
+        
+        # Wait until add member modal is displayed
+        sleep(3)
+        
+        #Click on username field
+        if self.click(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
+            writeToLog("INFO","Failed to click on username field")
+            return False             
+                    
+        # Insert username to field
+        if self.send_keys(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
+            writeToLog("INFO","Failed to insert username")
+            return False 
+        
+        # Set permission
+        if self.chooseMemberPermissionInChannel(permission) == False:
+            writeToLog("INFO","Failed to set permission")
+            return False   
+        
+        #Click add button
+        if self.click(self.CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON) == False:
+            writeToLog("INFO","Failed to click on add button")
+            return False  
+        
+        # Wait until add member modal isn't displayed
+        if self.wait_while_not_visible(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+            writeToLog("INFO","Failed to display add member modal")
+            return False    
+        
+        #Verify new member is added to member table
+        tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
+        if self.is_visible(tmp_member_row) == False:
+            writeToLog("INFO","Failed to add new member to table")
+            return False  
+        
+        return True 
