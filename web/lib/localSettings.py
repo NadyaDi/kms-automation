@@ -64,12 +64,13 @@ else:
     LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'media'))
     LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))
 
+LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = '/mnt/auto_kms_py1/downloads'
+LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH      = '/home/local/KALTURA/oleg.sigalov/build/workspace/qaKmsFrontEnd/web/media'
 if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
     # Z:\\ - Is shared folder on il-AutoKmsJenkinsNode-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
     LOCAL_SETTINGS_TEMP_DOWNLOADS               = 'Z:\\'
-    LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = '/mnt/auto_kms_py1/downloads'
-    LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH      = '/home/local/KALTURA/oleg.sigalov/build/workspace/qaKmsFrontEnd/web/media'
+
 
 # Will updates in 'utilityTestFunc' class, 'updateTestCredentials' method:
 LOCAL_SETTINGS_GUID                         = None
