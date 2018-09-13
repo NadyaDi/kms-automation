@@ -150,14 +150,17 @@ class MyMedia(Base):
     #    in order to delete list of entries pass a List[] of entries name, for single entry - just pass the entry name
     #    also: the method will navigate to My media
     # Known limitation: entries MUST be presented on the first page of my media
-    def deleteEntriesFromMyMedia(self, entriesNames):
+    def deleteEntriesFromMyMedia(self, entriesNames, showAllEntries=False):
         if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
         
         success = True
         # Checking if entriesNames list type
-        if type(entriesNames) is list: 
+        if type(entriesNames) is list:
+            if showAllEntries == True:
+                if self.showAllEntries() == False:
+                    return False                
             for entryName in entriesNames: 
                 if self.checkSingleEntryInMyMedia(entryName) == False:
                     writeToLog("INFO","FAILED to CHECK the entry in my-media page")
@@ -204,7 +207,7 @@ class MyMedia(Base):
         if self.navigateToMyMedia(forceNavigate) == False:
             return False
         
-        sleep(3)
+        sleep(5)
         # Search Entry     
         searchBarElement = self.getSearchBarElement()
         if searchBarElement == False:
@@ -1008,10 +1011,14 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     #    in categoryList / channelList will have all the names of the categories / channels to publish to
     # Known limitation: entries MUST be presented on the first page of my media
-    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList, disclaimer=False):
+    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList='', disclaimer=False, showAllEntries=False):
         if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
+        
+        if showAllEntries == True:
+            if self.showAllEntries() == False:
+                return False     
         
         # Checking if entriesNames list type
         if type(entriesName) is list:
@@ -1178,31 +1185,7 @@ class MyMedia(Base):
             writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
             return True   
 
-
-#TODO remove next block    
-    #  @Author: Michal Zomper    
-#     def showAllEntriesInMyMedia(self, timeOut=60):
-#         if len(self.get_elements(self.MY_MEDIA_TABLE_SIZE)) < 4:
-#                 writeToLog("INFO","Success, All media in my media is display")
-#                 return True 
-#              
-#         self.clsCommon.sendKeysToBodyElement(Keys.END)
-#         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
-#         while wait_until > datetime.datetime.now():
-#             if self.is_present(self.MY_MEDIA_NO_RESULTS_ALERT, 2) == True:
-#                 writeToLog("INFO","Success, All media in my media is display")
-#                 sleep(1)
-#                 # go back to the top of the page
-#                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
-#                 return True 
-#             
-#             self.clsCommon.sendKeysToBodyElement(Keys.END)
-#             
-#         writeToLog("INFO","FAILED to show all media in my media")
-#         return False  
-
-
-    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=60):
+    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=60, afterSearch=False):
         # Check if we are in My Media page  
         if searchIn == enums.Location.MY_MEDIA:
             tmp_table_size = self.MY_MEDIA_TABLE_SIZE
@@ -1210,9 +1193,21 @@ class MyMedia(Base):
         
         # Check if we are in category page    
         elif searchIn == enums.Location.CATEGORY_PAGE:
-            tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE
-            no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_FOUND_MSG
-            
+            if self.clsCommon.isElasticSearchOnPage() == True:
+                if afterSearch == False:
+                    tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE_NEW_UI
+                    no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_ITEMS_MSG                    
+                else:
+                    tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE_AFTER_SEARCH
+                    no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_FOUND_NEW_UI_MSG 
+            else:#TODO OLD UI
+                if afterSearch == False:
+                    tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE
+                    no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_FOUND_MSG                    
+                else:
+                    tmp_table_size = self.clsCommon.category.CATEGORY_TABLE_SIZE
+                    no_entries_page_msg = self.clsCommon.category.CATEGORY_NO_MORE_MEDIA_FOUND_MSG                 
+                
         elif searchIn == enums.Location.MY_HISTORY: 
             tmp_table_size = self.clsCommon.myHistory.MY_HISTORY_TABLE_SIZE
             no_entries_page_msg = self.clsCommon.myHistory.MY_HISTORY_NO_MORE_RESULTS_ALERT       

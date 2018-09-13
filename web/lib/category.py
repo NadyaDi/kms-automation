@@ -36,8 +36,12 @@ class Category(Base):
     CATEGORY_NO_RESULTS_MSG_NEW_UI                              = ('xpath', '//div[@class="no-results_body" and text()="No media results were found. Try to adjust your search terms."]')
     CATEGORY_NO_RESULTS_MSG_OLD_UI                              = ('xpath','//div[@class="alert alert-info" and text() = "No Search Results..."]') 
     CATEGORY_TABLE_SIZE                                         = ('xpath', '//table[@class="table table-hover mediaTable"]/tbody/tr')
+    CATEGORY_TABLE_SIZE_NEW_UI                                  = ('xpath', '//li[contains@class="galleryItem"]')
+    CATEGORY_TABLE_SIZE_AFTER_SEARCH                            = ('xpath', '//div[@class="results-entry__container"]')
     CATEGORY_TITLE                                              = ('xpath', '//span[@id="gallery_title"]')
     CATEGORY_NO_MORE_MEDIA_FOUND_MSG                            = ('xpath' , '//div[@id="entries_scroller_alert" and text()="No more Entries found."]')
+    CATEGORY_NO_MORE_MEDIA_FOUND_NEW_UI_MSG                     = ('xpath' , '//div[@class="no-results alert alert-info" and text()="No more media found."]')
+    CATEGORY_NO_MORE_MEDIA_ITEMS_MSG                            = ('xpath' , '//div[@id="channelGallery_scroller_alert" and text()="There are no more media items."]')
     CATEGORY_EDIT_ENTRY_BTN_OLD_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')          
     CATEGORY_EDIT_ENTRY_BTN_NEW_UI                              = ('xpath', '//a[@aria-label="Edit ENTRY_NAME"]')
     EDIT_CATEGORY_NAME_TEXTBOX                                  = ('xpath', '//input[@id="Category-name"]')
@@ -110,7 +114,8 @@ class Category(Base):
     
     # @Author: Inbar Willman
     # Search in category without verify results
-    def    searchInCategoryWithoutVerifyResults(self, searchText):
+    # noQuotationMarks = True will force and wont add quotation marks at the beginning and the end of searchText(when Elastic search is enabled)
+    def searchInCategoryWithoutVerifyResults(self, searchText, noQuotationMarks=False):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             # Click on the magnafine glass
             if self.click(self.CATEGORY_SEARCH_MAGNAFINE_GLASS, 30) == False:
@@ -119,11 +124,15 @@ class Category(Base):
             sleep(2)
             # Search Entry     
             self.clsCommon.myMedia.getSearchBarElement().click()
-            
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            searchLine = '"' + searchText + '"'
+        
+        if noQuotationMarks == False:
+            if self.clsCommon.isElasticSearchOnPage() == True:
+                searchLine = '"' + searchText + '"'
+            else:
+                searchLine = searchText
         else:
-            searchLine = searchText        
+            searchLine = searchText
+            
         self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
@@ -295,15 +304,21 @@ class Category(Base):
         return True 
     
     # @Author: Inbar Willman
-    # Verify category table results before scrolling down in page and after scrolling down in page - After scrolling down number of table should be bigger
-    def verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self, search, pageSizeBeforeScrolling, pageSizeAfterScrolling):
+    # Verify category table results before scrolling down in page and after scrolling down in page - After scrolling down number of table should be bigger AFTER SEARCH
+    # noQuotationMarks = True will force and wont add quotation marks at the beginning and the end of searchText(when Elastic search is enabled)
+    def verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self, search, pageSizeBeforeScrolling, pageSizeAfterScrolling, noQuotationMarks=False):
         # Make a search in page that will return results that are bigger than the page side
-        if self.searchInCategoryWithoutVerifyResults(search) == False:
+        if self.searchInCategoryWithoutVerifyResults(search, noQuotationMarks) == False:
             writeToLog("INFO","FAILED to make a search in category")
             return False         
                   
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            categoryTableSizeLocator = self.CATEGORY_TABLE_SIZE_AFTER_SEARCH
+        else:
+            categoryTableSizeLocator = self.CATEGORY_TABLE_SIZE
+                      
         # Check page size before scrolling
-        category_table_size = len(self.get_elements(self.CATEGORY_TABLE_SIZE))
+        category_table_size = len(self.get_elements(categoryTableSizeLocator))
         if category_table_size != pageSizeBeforeScrolling:
             writeToLog("INFO","FAILED to display correct number of entries in results - Before scrolling down in page")
             return False   
@@ -312,12 +327,12 @@ class Category(Base):
         self.click(self.CATEGORY_TITLE)
         
         # Scroll down in page in order get all entries in results for the search
-        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.CATEGORY_PAGE) == False:
+        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.CATEGORY_PAGE, afterSearch=True) == False:
             writeToLog("INFO","FAILED to scroll down in page")
             return False      
                            
         # Check page size after scrolling
-        category_table_size = len(self.get_elements(self.CATEGORY_TABLE_SIZE))
+        category_table_size = len(self.get_elements(categoryTableSizeLocator))
         if category_table_size != pageSizeAfterScrolling:
             writeToLog("INFO","FAILED to display correct number of entries in results - after scrolling down in page")
             return False    

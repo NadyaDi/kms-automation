@@ -12,7 +12,7 @@ import enums
 class Test:
     
     #================================================================================================================================
-    #  @Author: Inbar Willman
+    #  @Author: Inbar Willman and Oleg Sigalov
     # Test Name :  Categories - Search in category
     # Test description:
     # Upload entry -> publish entry to category-> Make a search in category that shouldn't return results -> Make a search in category that should return results
@@ -52,7 +52,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             self.entryName1 = clsTestService.addGuidToString('searchCategory 1', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('searchCategory 2', self.testNum)
@@ -67,9 +67,11 @@ class Test:
             self.entryName11 = clsTestService.addGuidToString('searchCategory 11', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5,
                                 self.entryName6, self.entryName7, self.entryName8, self.entryName9, self.entryName10, self.entryName11]
-            self.entriesList2 = ['C3B78592-705-searchCategory 1', 'C3B78592-705-searchCategory 2', 'C3B78592-705-searchCategory 3', 'C3B78592-705-searchCategory 4',
-                                 'C3B78592-705-searchCategory 5', 'C3B78592-705-searchCategory 6', 'C3B78592-705-searchCategory 7', 'C3B78592-705-searchCategory 8',
-                                 'C3B78592-705-searchCategory 9', 'C3B78592-705-searchCategory 10', 'C3B78592-705-searchCategory 11']
+
+# FOR DEBUG
+#             self.entriesList2 = ['A14192A6-705-searchCategory 1', 'A14192A6-705-searchCategory 2', 'A14192A6-705-searchCategory 3', 'A14192A6-705-searchCategory 4',
+#                                  'A14192A6-705-searchCategory 5', 'A14192A6-705-searchCategory 6', 'A14192A6-705-searchCategory 7', 'A14192A6-705-searchCategory 8',
+#                                  'A14192A6-705-searchCategory 9', 'A14192A6-705-searchCategory 10', 'A14192A6-705-searchCategory 11']
             self.entriesToUpload = {
                 self.entryName1: self.filePathVideo, 
                 self.entryName2: self.filePathVideo,
@@ -82,21 +84,49 @@ class Test:
                 self.entryName9: self.filePathVideo,
                 self.entryName10: self.filePathVideo,
                 self.entryName11: self.filePathVideo}
-            ##################### TEST STEPS - MAIN FLOW ##################### 
-#             writeToLog("INFO","Step 1: Going to upload 11 entries")            
-#             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entries")
-#                 return
             
-            writeToLog("INFO","Step 2: Going to show all entries")            
+            self.openCategoryName = clsTestService.addGuidToString("SaerchInCategory", self.testNum)
+            
+            writeToLog("INFO","Setup 1: Going to create new category") 
+            self.common.apiClientSession.startCurrentApiClientSession()
+            parentId = self.common.apiClientSession.getParentId('galleries') 
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.openCategoryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Setup 1: FAILED to create category")
+                return
+            
+            writeToLog("INFO","Setup 2: Going to clear cache")            
+            if self.common.admin.clearCache() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Setup 2: FAILED to clear cache")
+                return            
+            ##################### TEST STEPS - MAIN FLOW #####################
+            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to login as user")
+                return        
+                        
+            writeToLog("INFO","Step 1.1: Going to upload 11 entries")  
+            if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1.1: FAILED to upload entries")
+                return
+
+            writeToLog("INFO","Step 2: Going to navigate to My Media")            
+            if self.common.myMedia.navigateToMyMedia() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate to My Media")
+                return 
+             
+            writeToLog("INFO","Step 2.1: Going to show all entries")            
             if self.common.myMedia.showAllEntries() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to show all entries")
+                writeToLog("INFO","Step 2.1: FAILED to show all entries")
                 return            
-  
+   
             writeToLog("INFO","Step 3: Going to publish entries to category from my media")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList2, [self.categoryName], "") == False:
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.categoryName], showAllEntries=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish entries to category from my media")
                 return 
@@ -108,7 +138,7 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 5: Going to check that additional entries are displayed after loading")
-            if self.common.category.verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self.searchWithResults, self.pageBeforeScrolling, self.pageAfterScrolling) == False:
+            if self.common.category.verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self.searchWithResults, self.pageBeforeScrolling, self.pageAfterScrolling, noQuotationMarks=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to display additional entries after loading")
                 return                     
@@ -122,8 +152,9 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")     
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
+            writeToLog("INFO","**************** Starting: teardown_method ****************")
+            self.common.apiClientSession.deleteCategory(self.openCategoryName)   
+            self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList, showAllEntries=True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

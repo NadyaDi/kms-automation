@@ -585,12 +585,12 @@ class EntryPage(Base):
     
     
     # @Author: Inbar Willman
-    # Verify that correc tnumber of related media is displayed
+    # Verify that correct count of related media is displayed
     # By default = 10
-    def verifyRelatedMediaCount(self):
+    def verifyRelatedMediaCount(self, realtedLimit):
         # get related media table length
         related_media_length = len(self.get_elements(self.ENTRY_PAGE_RELATED_MEDIA_TABLE))
-        if related_media_length != 10:
+        if related_media_length != realtedLimit:
             writeToLog("INFO","Failed to displayed correct number of media in Related section")
             return False   
         
