@@ -169,7 +169,7 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
     # Set auto download path
     # If you need a shared folder between the win node and Jenkins node, create a folder in your test: localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS
     localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + str(localSettings.LOCAL_SETTINGS_GUID)
-    localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + r'\\' + str(localSettings.LOCAL_SETTINGS_GUID)
+    localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + '\\' + str(localSettings.LOCAL_SETTINGS_GUID)
     test.driver = testWebDriverLocalOrRemote(driverFix)        
         
     if ("version" in test.driver.capabilities):

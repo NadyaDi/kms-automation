@@ -36,9 +36,11 @@ class Admin(Base):
     ADMIN_CAROUSEL_ID                               = ('xpath', "//input[@id='carousel-playlistId' and @name='carousel[playlistId]']")
     ADMIN_CAROUSEL_INTERVAL                         = ('xpath', "//input[@id='carouselInterval' and @name='carouselInterval']")
     ADMIN_LIKE_MODULE                               = ('xpath', "//select[@id='enableLike' and @name='enableLike']")
-    ADMIN_SIDEMYMEDIA_MODULE                        = ('xpath', '//select[@id="enabled"]')    
+    ADMIN_SELECT_ENABLE                             = ('xpath', '//select[@id="enabled"]')
+    ADMIN_RELATED_LIMIT                             = ('xpath', "//input[@id='limit']")
     ADMIN_CLEAR_CACHE_BUTTON                        = ('xpath', "//a[@href='/admin/clear-cache' and contains(text(),'CLEAR THE CACHE')]")
     ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON       = ('xpath', "//button[contains (@class, 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only')]")
+    
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -507,7 +509,7 @@ class Admin(Base):
         
         #Enable/Disable module
         selection_description = self.convertBooleanToYesNo(isEnabled)
-        if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
+        if self.select_from_combo_by_text(self.ADMIN_SELECT_ENABLE, selection_description) == False:
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
         
@@ -569,7 +571,7 @@ class Admin(Base):
     
     # @Author: Inbar Willman
     # isEnable = True to enable module, isEnable = False to disabled module
-    def enableRelatedMedia(self, isEnabled):
+    def enableRelatedMedia(self, isEnabled, limit=''):
         # Login to Admin
         if self.loginToAdminPage() == False:
             writeToLog("INFO","FAILED to login to admin page")
@@ -583,10 +585,15 @@ class Admin(Base):
         
         #Enable/Disable module
         selection_description = self.convertBooleanToYesNo(isEnabled)
-        if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
+        if self.select_from_combo_by_text(self.ADMIN_SELECT_ENABLE, selection_description) == False:
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
         
+        if limit != '':
+            if self.clear_and_send_keys(self.ADMIN_RELATED_LIMIT, str(limit)) == False:
+                writeToLog("INFO","FAILED to set limit to related media: " + str(limit))
+                return False         
+            
         #Save changes
         if self.adminSave() == False:
             writeToLog("INFO","FAILED to save changes in admin page")
