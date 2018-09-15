@@ -201,7 +201,7 @@ class MyMedia(Base):
         return success
      
         
-    def searchEntryMyMedia(self, entryName, forceNavigate=True, exactSearch=True):
+    def searchEntryMyMedia(self, entryName, forceNavigate=True, exactSearch=False):
         # Check if my media page is already open
         # Navigate to My Media
         if self.navigateToMyMedia(forceNavigate) == False:
@@ -217,7 +217,11 @@ class MyMedia(Base):
         if exactSearch == True:
             searchLine = '"' + entryName + '"'
         else:
-            searchLine = entryName
+            if self.clsCommon.isElasticSearchOnPage():
+                searchLine = '"' + entryName + '"'
+            else:
+                searchLine = entryName
+            
         self.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
