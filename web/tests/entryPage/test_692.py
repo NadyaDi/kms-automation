@@ -64,7 +64,7 @@ class Test:
             self.entryName4 = clsTestService.addGuidToString('sideBar4', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
             self.entriesToDelete = [self.entryName1, self.entryName2, self.entryName3, self.entryName4]
-            self.common.admin.enableSideMyMedia(True, 10)
+            self.common.admin.enableSideMyMedia(True)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
@@ -113,6 +113,7 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteEntriesFromMyMedia(self.entriesToDelete)
+            self.common.admin.enableSideMyMedia(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

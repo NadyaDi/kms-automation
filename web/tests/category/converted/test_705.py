@@ -30,7 +30,6 @@ class Test:
     entryName1 =None
     entryName2 =None
     entryName3 = None
-    categoryName = 'Apps Automation Category'
     description = "Description" 
     tags = "Tags,"
     searchWithNoResults = 'blablabal'
@@ -67,11 +66,6 @@ class Test:
             self.entryName11 = clsTestService.addGuidToString('searchCategory 11', self.testNum)
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5,
                                 self.entryName6, self.entryName7, self.entryName8, self.entryName9, self.entryName10, self.entryName11]
-
-# FOR DEBUG
-#             self.entriesList2 = ['A14192A6-705-searchCategory 1', 'A14192A6-705-searchCategory 2', 'A14192A6-705-searchCategory 3', 'A14192A6-705-searchCategory 4',
-#                                  'A14192A6-705-searchCategory 5', 'A14192A6-705-searchCategory 6', 'A14192A6-705-searchCategory 7', 'A14192A6-705-searchCategory 8',
-#                                  'A14192A6-705-searchCategory 9', 'A14192A6-705-searchCategory 10', 'A14192A6-705-searchCategory 11']
             self.entriesToUpload = {
                 self.entryName1: self.filePathVideo, 
                 self.entryName2: self.filePathVideo,
@@ -126,13 +120,13 @@ class Test:
                 return            
    
             writeToLog("INFO","Step 3: Going to publish entries to category from my media")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.categoryName], showAllEntries=True) == False:
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.openCategoryName], showAllEntries=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish entries to category from my media")
                 return 
             
             writeToLog("INFO","Step 4: Going to make a search in category - no results should be displayed")
-            if self.common.category.searchInCategoryNoResults(self.searchWithNoResults, self.categoryName) == False:
+            if self.common.category.searchInCategoryNoResults(self.searchWithNoResults, self.openCategoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to make a search and display correct message")
                 return   
