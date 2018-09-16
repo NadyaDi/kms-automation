@@ -426,7 +426,7 @@ class MyPlaylists(Base):
         if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName) == False:
             writeToLog("INFO","FAILED to type playlist name")
             return False
-        sleep(2)
+        sleep(4)
     
         if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on create playlist Button")
