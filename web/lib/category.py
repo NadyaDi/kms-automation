@@ -60,7 +60,8 @@ class Category(Base):
     CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD                        = ('xpath', "//a[text()='Go To Category']")
     CATEGORY_MEMBERS_TAB                                        = ('xpath', '//a[@id="categorymembers-tab"]')
     CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD                    = ('xpath', '//input[@id="AddCategoryMember-userId"]')   
-    CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION                    = ('xpath', '//select[@id="AddCategoryMember-permission"]')     
+    CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION                    = ('xpath', '//select[@id="AddCategoryMember-permission"]')
+    CATEGORY_REFRESH_NOW_BUTTON                                 = ('xpath', "//a[text()='Refresh Now']")     
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -604,4 +605,17 @@ class Category(Base):
             writeToLog("INFO","Failed to add new member to table")
             return False  
         
-        return True 
+        return True
+    
+    
+    # @Author: Oleg Sigalov
+    # interval - interval between refresh
+    def refreshNowCategory(self, timeout=30, interval=5):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        while True:
+            if self.click(self.CATEGORY_REFRESH_NOW_BUTTON, 5) == False:
+                return True
+            sleep(interval)
+            if wait_until < datetime.datetime.now():
+                writeToLog("INFO","WARNING 'Refresh Now' still appears, it possible because of an other entry in this category, timeout is:" + str(timeout))
+                return True

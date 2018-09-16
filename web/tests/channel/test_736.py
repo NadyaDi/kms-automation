@@ -14,7 +14,6 @@ class Test:
     
     #================================================================================================================================
     # @Author: Oded.berihon @Test name : Remove media from channel
-
     # Test description:
     # Upload entry publish to channel and remove it from the channel
     # 
@@ -27,13 +26,9 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName1 = None
-#     entryName2 = None
-#     entryName3 = None
     entryDescription = "description"
     entryTags = "tag,"
     entriesNames = None
-    channelName = "9437BD9A_this Is My New Channel"
     channelDescription = "description"
     channelTags = "tag,"
     privacyType = ""
@@ -81,18 +76,18 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
                 return
-           
+            
             writeToLog("INFO","Step 3: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create Channel#1")
                 return
-           
+            
             writeToLog("INFO","Step 4: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 4: FAILED - could not publish Video to channel")
                 return
-            
+
             writeToLog("INFO","Step 5: Going to add and remove entry from channel")                                     
             if self.common.channel.removeEntryFromChannel(self.channelName, self.entryName1)== False:    
                 self.status = "Fail"

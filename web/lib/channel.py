@@ -133,10 +133,11 @@ class Channel(Base):
     CHANNEL_SEARCH_ENTRY                            = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search this channel']")
     CHANNEL_EDIT_BUTTON_AFTER_SEARCH                = ('xpath', '//*[@aria-label= "Edit ENTRY_NAME"]')
     CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE             = ('xpath', "//a[@id='deleteMediaBtnForm' and contains(@href,'/entry/delete/')]")
-    CHANNEL_CONFIRM_ENTRY_DELETE                    = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
+    CHANNEL_CONFIRM_ENTRY_DELETE                    = ('xpath', "//a[@class='btn btn-danger' and text()='Remove']")
     CHANNEL_ENTRY_THUMBNAIL                         = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
     CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON           = ('xpath', "//div[@class='hidden buttons-expand']")
     CHANNEL_EDIT_BUTTON_NO_SEARCH                   = ('xpath', "//i[@class='icon-pencil']")
+    CHANNEL_ENTRY_DELETE_BUTTON                     = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -994,10 +995,10 @@ class Channel(Base):
         return True 
 
     
-    #@Author: Oded Berihon
+    #@Author: Oded Berihon and Oleg Sigalov
     def removeEntryFromChannel(self, channelName, entryName):
         if self.searchAChannelInMyChannels(channelName) == False:
-            writeToLog("INFO","FAILED to find to  channel: " +  channelName)
+            writeToLog("INFO","FAILED to find to channel: " +  channelName)
             return False 
             
         tmpChannelName = (self.CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH[0], self.CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH[1].replace('CHANNEL_NAME', channelName))
@@ -1006,26 +1007,31 @@ class Channel(Base):
             return False   
         sleep(5)
         
-        if self.send_keys(self.CHANNEL_SEARCH_ENTRY, entryName) == False:
-            writeToLog("INFO","FAILED to find to  channel: " +  entryName)
-            return False  
-        sleep(5)
-         
-        tmp_entry_name = (self.CHANNEL_EDIT_BUTTON_AFTER_SEARCH[0], self.CHANNEL_EDIT_BUTTON_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
-        if self.click(tmp_entry_name) == False:  
-            writeToLog("INFO","FAILED to click on edit icon: ")
-            return False  
-        sleep(5)
-        
-        if self.click(self.CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE) == False:
-            writeToLog("INFO","FAILED to find to  channel: " +  entryName)
-            return False  
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            parent_entry = self.expandEntryDetails(entryName)
+            if parent_entry == False:
+                return False
+        # If we are in old UI we need to click first on "+" icon on entry's thumbnail
+        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+            if self.clickEntryPlusIcon(entryName) == False:
+                return False
+            
+        # Set Remove button locator for old UI
+        tmp_entry_remove_btn = (self.CHANNEL_ENTRY_DELETE_BUTTON[0], self.CHANNEL_ENTRY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))   
+
+        sleep(2)
+        if self.click(tmp_entry_remove_btn) == False:
+            writeToLog("INFO","FAILED to click on Remove button")
+            return False 
+
+        sleep(3)
         
         if self.click(self.CHANNEL_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
         
         return True
+    
 
     #@Author: Oded Berihon
     def addCommentToEntryFromChannel(self, channelName, entryName, comment):
@@ -1104,19 +1110,12 @@ class Channel(Base):
 
    
     def navigateToEditEntryPageFromChannelWhenNoSearchIsMade(self, entryName):
-        # "+" icon on thumnail
-        tmp_entry_thumbnail = (self.clsCommon.category.CATEGORY_ENTRY_THUMBNAIL[0], self.clsCommon.category.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
-        
         tmp_entry_edit_btn = None
         
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-        
-            tmp_entry_thumbnail = (self.CHANNEL_ENTRY_THUMBNAIL[0], self.CHANNEL_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
-            parent_entry = self.get_element(tmp_entry_thumbnail)
-        
-            if self.click_child(parent_entry, self.CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON, timeout=20, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on expand button")
-                return False 
+            parent_entry = self.expandEntryDetails(entryName)
+            if parent_entry == False:
+                return False
         
             sleep(1)
             if self.click_child(parent_entry, self.CHANNEL_EDIT_BUTTON_NO_SEARCH, timeout=20, multipleElements=True) == False:
@@ -1125,16 +1124,8 @@ class Channel(Base):
             
         # If we are in old UI we need to click first on "+" icon on entry's thumbnail
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            try:
-                parent_entry = self.get_element(tmp_entry_thumbnail)
-                parent_entry = parent_entry.find_element_by_xpath("..")
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
+            if self.clickEntryPlusIcon(entryName) == False:
                 return False
-            
-            if self.click_child(parent_entry, self.clsCommon.category.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on the plus button in order to see entry details")
-                return False 
             
             #set edit button for old UI
             tmp_entry_edit_btn = (self.clsCommon.category.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[0], self.clsCommon.category.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[1].replace('ENTRY_NAME', entryName))   
@@ -1150,10 +1141,43 @@ class Channel(Base):
             writeToLog("INFO","FAILED to displayed edit entry page title")
             return False          
                
-        return True           
+        return True                      
+    
+    
+    # @Author: Oleg Sigalov
+    def clickEntryPlusIcon(self, entryName):
+        tmp_entry_thumbnail = (self.clsCommon.category.CATEGORY_ENTRY_THUMBNAIL[0], self.clsCommon.category.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))    
+        try:
+            parent_entry = self.get_element(tmp_entry_thumbnail)
+            parent_entry = parent_entry.find_element_by_xpath("..")
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
+            return False
+        
+        if self.click_child(parent_entry, self.clsCommon.category.CATEGORY_PLUS_SIGN_BUTTON_ON_ENTRY_THUMBNAIL, timeout=20, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on the plus button in order to see entry details")
+            return False
+        
+        return True
+    
+    
+    # @Author: Oleg Sigalov
+    def expandEntryDetails(self, entryName):
+        tmp_entry_thumbnail = (self.CHANNEL_ENTRY_THUMBNAIL[0], self.CHANNEL_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
+        try:
+            parent_entry = self.get_element(tmp_entry_thumbnail)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entry '" + entryName + "' element")
+            return False            
+    
+        if self.click_child(parent_entry, self.CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON, timeout=20, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on expand button")
+            return False
+        
+        return True      
     
 
-    #  @Author: Tzachi Guetta    
+    # @Author: Tzachi Guetta    
     def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):
         try:                
             if self.navigateToChannel(channelName, publishFrom) == False:

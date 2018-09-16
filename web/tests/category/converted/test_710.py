@@ -72,10 +72,16 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to navigate to category page")
                 return             
                  
-            writeToLog("INFO","Step 4: Going to navigate to entry's edit page")            
+            writeToLog("INFO","Step 4: Going to refresh category")            
+            if self.common.category.refreshNowCategory(60) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to navigate to category page")
+                return   
+                             
+            writeToLog("INFO","Step 5: Going to navigate to entry's edit page")            
             if self.common.category.navigateToEditEntryPageFromCategoryWhenNoSearchIsMade(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to click entry Edit button, Entry name: '" + self.entryName + "'")
+                writeToLog("INFO","Step 5: FAILED to click entry Edit button, Entry name: '" + self.entryName + "'")
                 return                                          
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Navigate to edit page from category page' was done successfully")
