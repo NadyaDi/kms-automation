@@ -77,47 +77,48 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry number 1")
                 return
-             
+              
             writeToLog("INFO","Step 2: Going to upload entry number 2")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry number 2")
                 return
-              
+               
             writeToLog("INFO","Step 3: Going to upload entry number 3")
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry number 3")
                 return
-                   
+                    
             writeToLog("INFO","Step 4: Going to create new playlist with entries")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create new playlist '" + self.playlistName + "'")
                 return
-              
+               
             writeToLog("INFO","Step 5: Going to get playlist id")            
             self.playlistID = self.common.myPlaylists.getPlaylistID(self.playlistName)
             if self.playlistID == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to get playlist '" + self.playlistName + "' id")
                 return   
-             
+              
             writeToLog("INFO","Step 6: Going to set carousel playlist in admin")  
             if self.common.admin.setCarouselForHomePage(self.playlistType, self.playlistID) == False:
                 writeToLog("INFO","Step 6: FAILED set playlist as carousel playlist in admin")
                 return
-             
+              
             writeToLog("INFO","Step 7: Going to set carousel interval in admin")  
             if self.common.admin.setCarouselInterval(self.carouselInterval) == False:
                 writeToLog("INFO","Step 7: FAILED set carousel interval in admin")
                 return
+            
             writeToLog("INFO","Step 8: Going to navigate to home page")
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to home page")
                 return
-             
+            
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
                 writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
                 if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.8, 5.56, 1.23, 1.39)  == False:
@@ -139,19 +140,19 @@ class Test:
              
             elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                 writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.8, 5.56, 1.23, 1.39)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 3.7, 10.2, 1.53, 1.37)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval + 1) 
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.8, 5.56, 1.23, 1.39)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 3.7, 10.2, 1.38, 1.32)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval - 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.8, 5.56, 1.23, 1.39)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 3.7, 10.2, 1.38, 1.32)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
                     return
