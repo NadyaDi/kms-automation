@@ -61,7 +61,8 @@ class Category(Base):
     CATEGORY_MEMBERS_TAB                                        = ('xpath', '//a[@id="categorymembers-tab"]')
     CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD                    = ('xpath', '//input[@id="AddCategoryMember-userId"]')   
     CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION                    = ('xpath', '//select[@id="AddCategoryMember-permission"]')
-    CATEGORY_REFRESH_NOW_BUTTON                                 = ('xpath', "//a[text()='Refresh Now']")     
+    CATEGORY_REFRESH_NOW_BUTTON                                 = ('xpath', "//a[text()='Refresh Now']")
+    CATEGORY_EDIT_PAGE_TITLE                                    = ('xpath', "//h1[@id='category_title_edit']")     
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -161,39 +162,55 @@ class Category(Base):
     # Author: Tzachi Guetta & Oleg Sigalov
     def addNewContentToCategory(self, categoryName, uploadEntrieList):
         try:
-            self.clsCommon.navigateTo(enums.Location.CATEGORY_PAGE, nameValue=categoryName)
+            if self.clsCommon.navigateTo(enums.Location.CATEGORY_PAGE, nameValue=categoryName) == False:
+                writeToLog("INFO","FAILED navigate to category: " + self.categoryName)
+                return False      
             
-            for entry in uploadEntrieList:
-                if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click add to Gallery button")
-                    return False     
+            if type(uploadEntrieList) is list:
+                for entry in uploadEntrieList:
+                    if self.addNewContentToCategoryWithoutNavigate(entry) == False:
+                        writeToLog("INFO","FAILED to upload new media to category")
+                        return False 
+            else:
+                if self.addNewContentToCategoryWithoutNavigate(uploadEntrieList) == False:
+                    writeToLog("INFO","FAILED to upload new media to category")
+                    return False  
                 
-                sleep(1)
-                self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
-                
-                if self.click(self.CATEGORY_ADD_NEW_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on Add New at category page")
-                    return False
-                
-                if self.click(self.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
-                    return False
-                
-                if self.clsCommon.upload.uploadEntry(entry.filePath, entry.name, entry.description, entry.tags, entry.timeout, uploadFrom=None) == False:
-                    writeToLog("INFO","FAILED to upload media from category page: " + entry.name)
-                    return False
-                
-                # Click 'Go To Category'
-                if self.click(self.CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD) == False:
-                    writeToLog("INFO","FAILED to click on 'Go To Category'")
-                    return False
-            
         except NoSuchElementException:
             return False
         
+        writeToLog("INFO","Success, media was added to category successfully")
         return True
 
     
+    def addNewContentToCategoryWithoutNavigate(self, uploadEntry):
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click add to Gallery button")
+            return False     
+            
+        sleep(4)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+        
+        if self.click(self.CATEGORY_ADD_NEW_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Add New at category page")
+            return False
+        
+        if self.click(self.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
+            return False
+        
+        if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout, uploadFrom=None) == False:
+            writeToLog("INFO","FAILED to upload media from category page: " + uploadEntry.name)
+            return False
+        
+        # Click 'Go To Category'
+        if self.click(self.CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD) == False:
+            writeToLog("INFO","FAILED to click on 'Go To Category'")
+            return False
+        
+        return True
+        
+            
     # Author: Michal Zomper 
     def verifyEntryDetails(self, entryName, numberOfLiks, numberOfViews, numberOfComments):
         tmp_entryName = (self.CATEGORY_ENTRY_THUMBNAIL[0], self.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
@@ -246,6 +263,7 @@ class Category(Base):
         if self.navigateToCategory(categoryName) == False:
             writeToLog("INFO","FAILED navigate to category")
             return False
+        sleep(2)
         
         if self.click(self.CATEGORY_ACTION_BUTTON) == False:
             writeToLog("INFO","FAILED to click on action button")
@@ -255,7 +273,11 @@ class Category(Base):
             writeToLog("INFO","FAILED to click on edit button")
             return False 
         
-        writeToLog("INFO","Success, all entry details was verified successfully")
+        if self.is_visible(self.CATEGORY_EDIT_PAGE_TITLE, multipleElements= False) == False:
+            writeToLog("INFO","FAILED, can NOT find edit entry page title")
+            return False 
+            
+        writeToLog("INFO","Success, Category edit page is dispaly")
         return True
     
     
@@ -550,7 +572,7 @@ class Category(Base):
     
     
     # @Author: Michal Zomper
-    def addMembersToCategory(self, categoryName, username, permission=enums.ChannelMemberPermission.MEMBER):
+    def addMembersToCategory(self, categoryName, username, permission=enums.CategoryMemberPermission.MEMBER):
         if self.navigateToEditCategoryPage(categoryName) == False:
             writeToLog("INFO","Failed to navigate to edit category page")
             return False  
@@ -560,6 +582,7 @@ class Category(Base):
         if self.navigateToCategoryMembersTab() == False:
             writeToLog("INFO","Failed to click on members tab")
             return False  
+        sleep(2)
         
         # Wait until page contains add member button
         if self.wait_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
@@ -585,27 +608,58 @@ class Category(Base):
             return False 
         
         # Set permission
-        if self.chooseMemberPermissionInChannel(permission) == False:
+        if self.chooseMemberPermissionInCategory(permission) == False:
             writeToLog("INFO","Failed to set permission")
             return False   
         
         #Click add button
-        if self.click(self.CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON) == False:
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON) == False:
             writeToLog("INFO","Failed to click on add button")
             return False  
         
         # Wait until add member modal isn't displayed
-        if self.wait_while_not_visible(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+        if self.wait_while_not_visible(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
             writeToLog("INFO","Failed to display add member modal")
             return False    
         
         #Verify new member is added to member table
-        tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
+        tmp_member_row = (self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
         if self.is_visible(tmp_member_row) == False:
             writeToLog("INFO","Failed to add new member to table")
             return False  
         
         return True
+    
+    
+    
+    # @Author: Michal Zomper 
+    # Choose permission from drop down list
+    def chooseMemberPermissionInCategory(self, permission = enums.CategoryMemberPermission.MEMBER):    
+        # If permission is member click on member option       
+        if permission ==  enums.CategoryMemberPermission.MEMBER:
+            if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Member') == False:
+                writeToLog("INFO","Failed to click on member option")
+                return False                    
+       
+        # If permission is contributor click on member option       
+        elif permission ==  enums.CategoryMemberPermission.CONTRIBUTOR:
+            if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Contributor') == False:
+                writeToLog("INFO","Failed to click on contributor option")
+                return False  
+            
+        # If permission is moderator click on member option       
+        elif permission ==  enums.CategoryMemberPermission.MODERATOR:
+            if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Moderator') == False:
+                writeToLog("INFO","Failed to click on moderator option")
+                return False 
+        
+        # If permission is manager click on member option       
+        elif permission ==  enums.CategoryMemberPermission.MANAGER:
+            if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Manager') == False:
+                writeToLog("INFO","Failed to click on manager option")
+                return False   
+            
+        return True    
     
     
     # @Author: Oleg Sigalov

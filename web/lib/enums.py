@@ -208,6 +208,16 @@ class ChannelMemberPermission(Enum):
     MODERATOR               = 'Moderator'
     MANAGER                 = 'Manager'
     
+    
+class CategoryMemberPermission(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MEMBER                  = 'Member'
+    CONTRIBUTOR             = 'Contributor'   
+    MODERATOR               = 'Moderator'
+    MANAGER                 = 'Manager'
+    
 
 class ReleatedMedia(Enum):
     def __str__(self):
