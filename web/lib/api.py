@@ -2,7 +2,7 @@ from KalturaClient import *
 from KalturaClient.Plugins.Core import KalturaSessionType, KalturaCategory, \
     KalturaPrivacyType, KalturaNullableBoolean, KalturaAppearInListType, \
     KalturaInheritanceType, KalturaCategoryUserPermissionLevel, \
-    KalturaCategoryFilter
+    KalturaCategoryFilter,KalturaContributionPolicyType, KalturaAppearInListType
 
 from utilityTestFunc import *
 
@@ -103,7 +103,7 @@ class ApiClientSession:
 #             self.common.apiClientSession.createCategory(parentId, 'python_automation', 'testCategory', 'description', 'tags')
 #             self.common.apiClientSession.deleteCategory('testCategory')
 ###############################################################################################################################        
-    def createCategoryApi(self, client, parentId, owner, name, description=None, tags=None):
+    def createCategoryApi(self, client, parentId, owner, name, description=None, tags=None, privacy=KalturaPrivacyType.ALL, addContentToCategory= KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.PARTNER_ONLY):
         category = KalturaCategory()
         category.parentId = parentId
         category.name = name
@@ -111,13 +111,15 @@ class ApiClientSession:
         category.tags = tags
         category.owner = owner
         
-        category.privacy = KalturaPrivacyType.ALL
+        category.privacy = privacy
         category.moderation = KalturaNullableBoolean.FALSE_VALUE
         category.appearInList = KalturaAppearInListType.PARTNER_ONLY
         category.privacyContext = "public"
         category.inheritanceType = KalturaInheritanceType.MANUAL
         category.defaultPermissionLevel =  KalturaCategoryUserPermissionLevel.MANAGER
         category.defaultOrderBy = None
+        category.contributionPolicy = addContentToCategory
+        category.appearInList = whoCanSeeTheCategory
         
         try:
             result = client.category.add(category)
@@ -162,8 +164,8 @@ class ApiClientSession:
             return False
                 
                 
-    def createCategory(self, parentId, owner, name, description, tags):
-        categoryId = self.createCategoryApi(self.client, parentId, owner, name, description, tags)
+    def createCategory(self, parentId, owner, name, description, tags, privacy=KalturaPrivacyType.ALL, addContentToCategory= KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.PARTNER_ONLY):
+        categoryId = self.createCategoryApi(self.client, parentId, owner, name, description, tags, privacy, addContentToCategory, whoCanSeeTheCategory)
         if categoryId == -1:
             writeToLog("INFO","FAILED to create category")
             return False

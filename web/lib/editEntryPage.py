@@ -1092,7 +1092,7 @@ class EditEntryPage(Base):
         thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
         
         #TODO add tolerance 
-        if thumbnailResult != str(qrCodeRedult):
+        if (qrCodeRedult-1 <= int(thumbnailResult)) and (int(thumbnailResult) < qrCodeRedult+1) == False:
             writeToLog("INFO","FAILED to verify that the capture thumbnail is correct, expected qr code is '" + str(qrCodeRedult)+ "' and the capture thumbnail qr code is '" + str(thumbnailResult) + "'")
             return False
         
@@ -1111,7 +1111,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on thumbnail auto generate button")
             return False
         
-        sleep(2)
+        sleep(5)
         chosenThumbnail = (self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[0], self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[1].replace('SLOCE_NUMBER', str(chosenThumbnailNumber)))
         if self.click(chosenThumbnail, timeout=20) == False:
             writeToLog("INFO","FAILED to choose thumbnail number '" + str(chosenThumbnailNumber) + "' from auto generate")
