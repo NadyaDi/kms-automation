@@ -175,7 +175,7 @@ class Upload(Base):
                 if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
                     writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
                     continue
-                    
+                   
                 # Fill entry details: name, description, tags
                 if self.fillFileUploadEntryDetails(name, description, tags) == False:
                     continue
@@ -362,11 +362,11 @@ class Upload(Base):
         if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
             writeToLog("INFO","FAILED to fill a entry name:'" + name + "'")
             return False
-        
+        sleep(2)
         if self.fillFileUploadEntryDescription(description) == False:
             writeToLog("INFO","FAILED to fill a entry Description:'" + description + "'")
             return False
-        
+        sleep(2)
         if self.fillFileUploadEntryTags(tags) == False:
             writeToLog("INFO","FAILED to fill a entry Tags:'" + tags + "'")
             return False        

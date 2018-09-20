@@ -74,7 +74,6 @@ class Test:
             self.entry1 = UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
             self.entry2 = UploadEntry(self.filePath, self.entryName2, self.description, self.tags, timeout=60, retries=3)
             self.entry3 = UploadEntry(self.filePath, self.entryName3, self.description, self.tags, timeout=60, retries=3)            
-            uploadEntrieList = [self.entry1, self.entry2, self.entry3]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
@@ -127,12 +126,13 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to login with " + self.userName)
                 return       
              
-            writeToLog("INFO","Step 8: Going to add content to open category with non member user")
-            if self.common.category.addNewContentToCategory(self.openCategoryName, uploadEntrieList[0]) == False:
+            writeToLog("INFO","Step 8: Going to add media to open category with non member user")
+            if self.common.category.addNewContentToCategory(self.openCategoryName, self.entry1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to add media to open category")
                 return
-                          
+            sleep(3)
+                        
             writeToLog("INFO","Step 9: Going to verify entry found in category")
             if self.common.category.searchEntryInCategory(self.entryName1) == False:
                 self.status = "Fail"
@@ -140,14 +140,14 @@ class Test:
                 return
              
             writeToLog("INFO","Step 10: Going to add content to restricted category with non member user")
-            if self.common.category.addNewContentToCategory(self.restrictedCategoryName, uploadEntrieList[1]) == True:
+            if self.common.category.addNewContentToCategory(self.restrictedCategoryName, self.entry2) == True:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED, user is non member in restricted category and should NOT have permission to add content")
                 return
             writeToLog("INFO","Step 10: preview step failed as expected: user is non member in restricted category and should NOT have permission to add content")
              
             writeToLog("INFO","Step 11: Going to add content to private category with non member user")
-            if self.common.category.addNewContentToCategory(self.privateCategoryName, uploadEntrieList[2]) == True:
+            if self.common.category.addNewContentToCategory(self.privateCategoryName, self.entry3) == True:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED, user is non member in private category and should NOT have permission to add content")
                 return
@@ -191,28 +191,30 @@ class Test:
                 writeToLog("INFO","Step 17: FAILED to login with " + self.userName)
                 return       
              
-            writeToLog("INFO","Step 18: Going to add content to restricted category with non member user")
-            if self.common.category.addNewContentToCategory(self.restrictedCategoryName, uploadEntrieList[1]) == False:
+            writeToLog("INFO","Step 18: Going to add media to restricted category with member user")
+            if self.common.category.addNewContentToCategory(self.restrictedCategoryName, self.entry2) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED, user is a member in restricted category and should have permission to add content")
                 return
-             
+            sleep(3)
+            
             writeToLog("INFO","Step 19: Going to verify entry found in category")
-            if self.common.category.searchEntryInCategory(self.entryName1) == False:
+            if self.common.category.searchEntryInCategory(self.entryName2) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to find entry '" + self.entryName2 + "' in category: " + self.restrictedCategoryName)
                 return
              
-            writeToLog("INFO","Step 20: Going to add content to private category with non member user")
-            if self.common.category.addNewContentToCategory(self.privateCategoryName, uploadEntrieList[2]) == False:
+            writeToLog("INFO","Step 20: Going to add media to private category with member user")
+            if self.common.category.addNewContentToCategory(self.privateCategoryName, self.entry3) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED, user is a member in private category and should have permission to add content")
                 return
+            sleep(3)
             
             writeToLog("INFO","Step 21: Going to verify entry found in category")
-            if self.common.category.searchEntryInCategory(self.entryName2) == False:
+            if self.common.category.searchEntryInCategory(self.entryName3) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 21: FAILED to find entry '" + self.entryName2 + "' in category: " + self.privateCategoryName)
+                writeToLog("INFO","Step 21: FAILED to find entry '" + self.entryName3 + "' in category: " + self.privateCategoryName)
                 return
             
             ##################################################################
@@ -228,7 +230,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")        
             self.common.login.logOutOfKMS()
             self.common.login.loginToKMS(self.userName, self.userPass)
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)          
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])         
             self.common.apiClientSession.deleteCategory(self.openCategoryName)
             self.common.apiClientSession.deleteCategory(self.restrictedCategoryName)
             self.common.apiClientSession.deleteCategory(self.privateCategoryName)
