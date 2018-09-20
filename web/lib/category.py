@@ -176,7 +176,8 @@ class Category(Base):
                     writeToLog("INFO","FAILED to upload new media to category")
                     return False  
                 
-        except NoSuchElementException:
+#         except NoSuchElementException:
+        except:
             return False
         
         writeToLog("INFO","Success, media was added to category successfully")
@@ -194,17 +195,19 @@ class Category(Base):
         if self.click(self.CATEGORY_ADD_NEW_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Add New at category page")
             return False
+        sleep(2)
         
         if self.click(self.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Add New -> Media upload, at category page")
             return False
+        sleep(3)
         
-        if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout, uploadFrom=None) == False:
+        if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None) == False:
             writeToLog("INFO","FAILED to upload media from category page: " + uploadEntry.name)
             return False
         
         # Click 'Go To Category'
-        if self.click(self.CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD) == False:
+        if self.click(self.CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on 'Go To Category'")
             return False
         
