@@ -17,6 +17,7 @@ class Channel(Base):
     #=============================================================================================================
     #                                   Channel locators:                                                        #
     #=============================================================================================================
+    #MY_CHANNELS_CREATE_CHANNEL_BUTTON               = ('id', 'createChannelBtnGo To Channel')
     MY_CHANNELS_CREATE_CHANNEL_BUTTON               = ('id', 'createChannelBtn')
     CHANNEL_DETAILS_NAME_FIELD                      = ('id', 'Category-name')
     CHANNEL_DETAILS_CHANNEL_TAGS                    = ('id', 's2id_tags')
@@ -138,6 +139,7 @@ class Channel(Base):
     CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON           = ('xpath', "//div[@class='hidden buttons-expand']")
     CHANNEL_EDIT_BUTTON_NO_SEARCH                   = ('xpath', "//i[@class='icon-pencil']")
     CHANNEL_ENTRY_DELETE_BUTTON                     = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
+    CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD              = ('xpath', "//a[@id='next' and text()='Go To Channel']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -460,7 +462,7 @@ class Channel(Base):
                     return False
                 sleep(1)
                 
-                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, channelName + Keys.ENTER, multipleElements=True) == False:
+                if self.send_keys(self.MY_CHANNELS_SERACH_FIELD,  '"' + channelName +  '"' + Keys.ENTER, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to type in 'name' text field")
                     return False
             else:
@@ -1807,7 +1809,6 @@ class Channel(Base):
     
       
     def verifyChannelDetailsOnThumbnail(self, channelName, mediaCount, memberCount, subscriberCount):
-        
         tmpChannelDetails = (self.CHANNEL_DETAILS_ON_THUMBNAIL[0], self.CHANNEL_DETAILS_ON_THUMBNAIL[1].replace('CHANNEL_NAME', channelName))
         try:
             channelDetails = self.get_element(tmpChannelDetails).text
@@ -1892,5 +1893,66 @@ class Channel(Base):
         self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True
+    
+    
+    # Author: Michal Zomper
+    # The function perform upload to new media from channel page
+    # each item in uploadEntrieList need to have to value from type  "UploadEntry":  
+    # UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
+    # if we need only 1 upload we can set :self.entry1 = UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3) 
+    # and pass only self.entry1
+    # if we need to upload more then 1 entry we need to pass a list of UploadEntry : self.uploadEntrieList = [self.entry1, self.entry2,....]
+    def addNewContentToChannel(self, channelName, uploadEntrieList, navigateFrom= ''):
+        try:
+            if self.clsCommon.navigateTo(navigateTo = enums.Location.CHANNEL_PAGE, navigateFrom=navigateFrom, nameValue=channelName) == False:
+                writeToLog("INFO","FAILED navigate to channel: " + self.channelName)
+                return False      
+            
+            if type(uploadEntrieList) is list:
+                for entry in uploadEntrieList:
+                    if self.addNewContentToChannelWithoutNavigate(entry) == False:
+                        writeToLog("INFO","FAILED to upload new media to channel")
+                        return False 
+            else:
+                if self.addNewContentToChannelWithoutNavigate(uploadEntrieList) == False:
+                    writeToLog("INFO","FAILED to upload new media to channel")
+                    return False  
+        except:
+            return False
+        
+        writeToLog("INFO","Success, media was added to channel successfully")
+        return True
+
+
+    # Author: Michal Zomper
+    #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
+    def addNewContentToChannelWithoutNavigate(self, uploadEntry):
+        if self.click(self.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click add to Gallery button")
+            return False     
+            
+        sleep(4)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+        
+        if self.click(self.clsCommon.category.CATEGORY_ADD_NEW_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Add New at channel page")
+            return False
+        sleep(2)
+        
+        if self.click(self.clsCommon.category.CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Add New -> Media upload, at channel page")
+            return False
+        sleep(3)
+        
+        if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None) == False:
+            writeToLog("INFO","FAILED to upload media from channel page: " + uploadEntry.name)
+            return False
+        
+        # Click 'Go To Channel'
+        if self.click(self.CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'Go To Channel'")
+            return False
         
         return True

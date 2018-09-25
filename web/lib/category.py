@@ -160,6 +160,12 @@ class Category(Base):
 
 
     # Author: Tzachi Guetta & Oleg Sigalov
+    # The function perform upload to new media from category page
+    # each item in uploadEntrieList need to have to value from type  "UploadEntry":  
+    # UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
+    # if we need only 1 upload we can set :self.entry1 = UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3) 
+    # and pass only self.entry1
+    # if we need to upload more then 1 entry we need to pass a list of UploadEntry : self.uploadEntrieList = [self.entry1, self.entry2,....]
     def addNewContentToCategory(self, categoryName, uploadEntrieList):
         try:
             if self.clsCommon.navigateTo(enums.Location.CATEGORY_PAGE, nameValue=categoryName) == False:
@@ -176,14 +182,14 @@ class Category(Base):
                     writeToLog("INFO","FAILED to upload new media to category")
                     return False  
                 
-#         except NoSuchElementException:
         except:
             return False
         
         writeToLog("INFO","Success, media was added to category successfully")
         return True
-
     
+    # Author: Michal Zomper
+    #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
     def addNewContentToCategoryWithoutNavigate(self, uploadEntry):
         if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to Gallery button")

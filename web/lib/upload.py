@@ -65,6 +65,7 @@ class Upload(Base):
     # Elements for multiple upload
     UPLOAD_UPLOADBOX                            = ('xpath', "//div[@id='uploadbox[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
+    UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@id='back' and contains(text(), 'Go To Media')]")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -606,4 +607,20 @@ class Upload(Base):
                 return False
             
         return True
-                
+           
+           
+    def navigateToEntryPageFromUploadPage(self, entryName):     
+        if self.click(self.UPLOAD_GO_TO_MEDIA_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'go to media' button")
+            return False  
+        
+        tmpEntry = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        #Check if we already in edit entry page
+        if self.wait_visible(tmpEntry, 15) == False:
+            writeToLog("INFO","FAILED, entry page for entry '" + entryName + "' did NOT open")
+            return False      
+        
+        sleep(2)
+        writeToLog("INFO","Success, entry page was open successfully")
+        return True
+        

@@ -90,7 +90,7 @@ class Test:
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.restrictedCategoryName, self.description, self.tags, privacy=KalturaPrivacyType.AUTHENTICATED_USERS, addContentToCategory=KalturaContributionPolicyType.MEMBERS_WITH_CONTRIBUTION_PERMISSION) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create open category")
+                writeToLog("INFO","Step 2: FAILED to create restricted category")
                 return
              
             writeToLog("INFO","Step 3: Going to create private category") 
@@ -151,7 +151,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED, user is non member in private category and should NOT have permission to add content")
                 return
-            writeToLog("INFO","Step 11: preview step failed as expected: user is non member in private category and can NOT enter to category")
+            writeToLog("INFO","Step 11: preview step failed as expected: user is non member in private category and can NOT find the category")
              
             sleep(2)
             writeToLog("INFO","Step 12: Going to logout from '" + self.userName + "' user")
