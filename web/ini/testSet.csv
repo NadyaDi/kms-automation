@@ -6,6 +6,7 @@ test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
 test_643,1,0,0,0,Home Page Carousel
+test_651,1,0,0,0,Navigate to entry page from upload page
 test_653,1,0,0,0,Free trial
 test_655,1,0,0,0,My Media - Add to existing playlist - multiple
 test_656,1,0,0,0,My Media - Add to a new playlist- multiple
@@ -81,6 +82,7 @@ test_883,1,0,0,0,add Publishing Schedule via edit entry page
 test_894,1,0,0,0,sort in my media
 test_1026,1,0,0,0,Publish from upload page
 test_1027,1,0,0,0,Edir entry - thumbnail tab
+test_1395,1,0,0,0,Channel Type (Open / Restricted / Private)
 test_1555,1,0,0,0,Disclaimer - before upload
 test_1556,1,0,0,0,Disclaimer - before publish
 test_1557,1,0,0,0,importChannel
