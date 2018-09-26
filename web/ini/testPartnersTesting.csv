@@ -44,6 +44,7 @@ test_1026,Publish from upload page,2370151-1,qakmstest.dev.kaltura.com,pythonaut
 test_716,Categories Type,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_651,Navigate to entry page from upload page,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_1395,Channel Type (Open / Restricted / Private),2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_735,Channel page - Search in channel,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_706,Publish to channel multiple,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456

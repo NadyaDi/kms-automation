@@ -372,6 +372,8 @@ class Category(Base):
             writeToLog("INFO","FAILED to display correct number of entries in results - after scrolling down in page")
             return False    
         
+        return True
+        
         
     # @Author: Inbar Willman
     # Navigate to edit entry page from category page without making a search in category page
