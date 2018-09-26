@@ -66,6 +66,7 @@ test_729,1,0,0,0,My Channels - Search as subscriber
 test_731,1,0,0,0,Channel page Information
 test_733,1,0,0,0,Add media to channel via Add to
 test_734,0,1,0,0,Channel - Entries details
+test_735,1,0,0,0,Channel page - Search in channel
 test_736,1,0,0,0,Channel - Remove entry from channel
 test_737,1,0,0,0,Edit entry link in channel
 test_739,1,0,0,0,Channel - Members tab

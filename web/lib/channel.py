@@ -1875,7 +1875,8 @@ class Channel(Base):
     
     # @Author: Michal Zomper
     # Search in category without verify results
-    def  searchInChannelWithoutVerifyResults(self, searchText):
+    # noQuotationMarks = True will force and wont add quotation marks at the beginning and the end of searchText(when Elastic search is enabled)
+    def  searchInChannelWithoutVerifyResults(self, searchText, noQuotationMarks=False):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             # Click on the magnafine glass
             if self.click(self.CHANNEL_PAGE_SEARCH_TAB, 30) == False:
@@ -1884,11 +1885,13 @@ class Channel(Base):
             sleep(2)
             # Search Entry     
             self.clsCommon.myMedia.getSearchBarElement().click()
-            
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            searchLine = '"' + searchText + '"'
-        else:
-            searchLine = searchText 
+        if noQuotationMarks == False:   
+            if self.clsCommon.isElasticSearchOnPage() == True:
+                searchLine = '"' + searchText + '"'
+            else:
+                searchLine = searchText
+        else: 
+            searchLine = searchText
                    
         self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
@@ -1956,3 +1959,69 @@ class Channel(Base):
             return False
         
         return True
+    
+    
+    # @Author: Michal Zomper
+    # Search in channel when there are no results
+    def searchInChannelNoResults(self, search, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE):
+        # Navigate to channel
+        if self.navigateToChannel(channelName, navigateFrom) == False:
+            writeToLog("INFO","FAILED navigate to channel")
+            return False 
+        
+        # Make a search that won't return any results
+        if self.searchInChannelWithoutVerifyResults(search) == False:
+            writeToLog("INFO","FAILED to make a search in channel page")
+            return False  
+        
+        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            no_results_msg = self.clsCommon.category.CATEGORY_NO_RESULTS_MSG_NEW_UI
+        else:
+            no_results_msg = self.clsCommon.category.CATEGORY_NO_RESULTS_MSG_OLD_UI
+        
+        # Verify that correct message is displayed  
+        if self.is_visible(no_results_msg) == False:
+            writeToLog("INFO","FAILED to displayed correct message")
+            return False              
+            
+        # Clear search content  
+        self.clsCommon.myMedia.clearSearch()
+            
+        return True 
+    
+    
+    # @Author: Michal Zomper
+    # Verify channel table results before scrolling down in page and after scrolling down in page - After scrolling down number of table should be bigger AFTER SEARCH
+    # noQuotationMarks = True will force and wont add quotation marks at the beginning and the end of searchText(when Elastic search is enabled)
+    def verifyChannelTableSizeBeforeAndAfterScrollingDownInPage(self, search, pageSizeBeforeScrolling, pageSizeAfterScrolling, noQuotationMarks=False):
+        # Make a search in page that will return results that are bigger than the page side
+        if self.searchInChannelWithoutVerifyResults(search, noQuotationMarks) == False:
+            writeToLog("INFO","FAILED to make a search in channel")
+            return False         
+                  
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            channelTableSizeLocator = self.clsCommon.category.CATEGORY_TABLE_SIZE_AFTER_SEARCH
+        else:
+            channelTableSizeLocator =  self.clsCommon.category.CATEGORY_TABLE_SIZE
+                      
+        # Check page size before scrolling
+        channelTableSize = len(self.get_elements(channelTableSizeLocator))
+        if channelTableSize != pageSizeBeforeScrolling:
+            writeToLog("INFO","FAILED to display correct number of entries in results - Before scrolling down in page")
+            return False   
+        
+        # Click outside search field
+        self.click(self.CHANNEL_TYPE)
+        
+        # Scroll down in page in order get all entries in results for the search
+        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.CATEGORY_PAGE, afterSearch=True) == False:
+            writeToLog("INFO","FAILED to scroll down in page")
+            return False      
+                           
+        # Check page size after scrolling
+        channelTableSize = len(self.get_elements(channelTableSizeLocator))
+        if channelTableSize != pageSizeAfterScrolling:
+            writeToLog("INFO","FAILED to display correct number of entries in results - after scrolling down in page")
+            return False   
+        
+        return True 
