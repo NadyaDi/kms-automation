@@ -40,7 +40,7 @@ class Admin(Base):
     ADMIN_RELATED_LIMIT                             = ('xpath', "//input[@id='limit']")
     ADMIN_CLEAR_CACHE_BUTTON                        = ('xpath', "//a[@href='/admin/clear-cache' and contains(text(),'CLEAR THE CACHE')]")
     ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON       = ('xpath', "//button[contains (@class, 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only')]")
-    
+    ADMIN_ENTRIES_PAGE_SIZE_IN_CHANNEL              = ('xpath', "//input[@id='entriesPageSize']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -599,4 +599,24 @@ class Admin(Base):
             writeToLog("INFO","FAILED to save changes in admin page")
             return False
         
-        return True        
+        return True   
+    
+    def changNumberEentriesPageSizeForChannel(self, numberOfEntries):   
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/channels') == False:
+            writeToLog("INFO","FAILED to load Channels page in admin")
+            return False
+        sleep(1)  
+        
+        if self.clear_and_send_keys(self.ADMIN_ENTRIES_PAGE_SIZE_IN_CHANNEL, numberOfEntries) == False:
+            writeToLog("INFO","FAILED to change number of entries to display in channel page")
+            return False
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        return True  

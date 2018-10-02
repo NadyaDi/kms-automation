@@ -1998,25 +1998,27 @@ class Channel(Base):
         if self.searchInChannelWithoutVerifyResults(search, noQuotationMarks) == False:
             writeToLog("INFO","FAILED to make a search in channel")
             return False         
-                  
+        
         if self.clsCommon.isElasticSearchOnPage() == True:
             channelTableSizeLocator = self.clsCommon.category.CATEGORY_TABLE_SIZE_AFTER_SEARCH
         else:
             channelTableSizeLocator =  self.clsCommon.category.CATEGORY_TABLE_SIZE
-                      
-        # Check page size before scrolling
-        channelTableSize = len(self.get_elements(channelTableSizeLocator))
-        if channelTableSize != pageSizeBeforeScrolling:
-            writeToLog("INFO","FAILED to display correct number of entries in results - Before scrolling down in page")
-            return False   
-        
-        # Click outside search field
-        self.click(self.CHANNEL_TYPE)
-        
-        # Scroll down in page in order get all entries in results for the search
-        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.CATEGORY_PAGE, afterSearch=True) == False:
-            writeToLog("INFO","FAILED to scroll down in page")
-            return False      
+            
+        # due to bug in old ui that show all the entries in the page without the show more option we only check to see that all the entries are dispaly 
+        if self.clsCommon.isElasticSearchOnPage() == True:                     
+            # Check page size before scrolling
+            channelTableSize = len(self.get_elements(channelTableSizeLocator))
+            if channelTableSize != pageSizeBeforeScrolling:
+                writeToLog("INFO","FAILED to display correct number of entries in results - Before scrolling down in page")
+                return False   
+            
+            # Click outside search field
+            self.click(self.CHANNEL_TYPE)
+            
+            # Scroll down in page in order get all entries in results for the search
+            if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.CATEGORY_PAGE, afterSearch=True) == False:
+                writeToLog("INFO","FAILED to scroll down in page")
+                return False      
                            
         # Check page size after scrolling
         channelTableSize = len(self.get_elements(channelTableSizeLocator))
