@@ -38,6 +38,7 @@ class Test:
     searchWithResults = "Search in channel"
     pageBeforeScrolling = 10
     pageAfterScrolling = 11
+    numberOfEntriesInChannelPage = 10
 
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -71,37 +72,62 @@ class Test:
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5,
                                 self.entryName6, self.entryName7, self.entryName8, self.entryName9, self.entryName10, self.entryName11]
             
+            self.entriesToUpload = {
+                self.entryName1: self.filePath, 
+                self.entryName2: self.filePath,
+                self.entryName3: self.filePath, 
+                self.entryName4: self.filePath,
+                self.entryName5: self.filePath,
+                self.entryName6: self.filePath, 
+                self.entryName7: self.filePath,
+                self.entryName8: self.filePath, 
+                self.entryName9: self.filePath,
+                self.entryName10: self.filePath,
+                self.entryName11: self.filePath }            
+            
             ##################### TEST STEPS - MAIN FLOW ##################### 
                 
-            for i in range(1,12):
-                writeToLog("INFO","Step " + str(i) + ": Going to upload new entry: '" + eval('self.entryName'+str(i)))            
-                if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.description, self.tags) == None:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to upload new entry: " + eval('self.entryName'+str(i)))
-                    return
+            writeToLog("INFO","Step 1: Going to change number of entries to display in channel page")            
+            if self.common.admin.changNumberEentriesPageSizeForChannel(self.numberOfEntriesInChannelPage) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to change number of entries to display in channel page")
+                return
              
-            writeToLog("INFO","Step 12: Going to create new channel")            
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
+             
+            writeToLog("INFO","Step 3: Going to upload 11 entries")
+            if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to upload 11 entries")
+                return
+
+            writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED create new channel")
+                writeToLog("INFO","Step 4: FAILED create new channel")
                 return
-             
-            writeToLog("INFO","Step 13: Going to publish entries to channel")            
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, "", self.channelName, disclaimer=False, showAllEntries=False) == False:
+            
+            sleep(2)
+            writeToLog("INFO","Step 5: Going to publish entries to channel")            
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, "", self.channelName, disclaimer=False, showAllEntries=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to publish entries to channel: " + self.channelName)
+                writeToLog("INFO","Step 5: FAILED to publish entries to channel: " + self.channelName[0])
                 return
              
-            writeToLog("INFO","Step 14: Going to make a search in channel - no results should be displayed")
+            writeToLog("INFO","Step 6: Going to make a search in channel - no results should be displayed")
             if self.common.channel.searchInChannelNoResults(self.searchWithNoResults, self.channelName[0]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to make a search and display correct message")
+                writeToLog("INFO","Step 6: FAILED to make a search and display correct message")
                 return   
             
-            writeToLog("INFO","Step 15: Going to check that additional entries are displayed after loading")
+            writeToLog("INFO","Step 7: Going to check that additional entries are displayed after loading")
             if self.common.channel.verifyChannelTableSizeBeforeAndAfterScrollingDownInPage(self.searchWithResults, self.pageBeforeScrolling, self.pageAfterScrolling, noQuotationMarks=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to verify all entries display in channel")
+                writeToLog("INFO","Step 7: FAILED to verify all entries display in channel")
                 return      
             
             ##################################################################

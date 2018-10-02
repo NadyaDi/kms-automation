@@ -1028,6 +1028,7 @@ class MyMedia(Base):
         if type(entriesName) is list:
             if disclaimer == True:
                 for entryName in entriesName: 
+                    sleep(2)
                     if self.handleDisclaimerBeforePublish(entryName) == False:
                         writeToLog("INFO","FAILED, Handle disclaimer before Publish failed for entry:" + entryName)
                         return False
