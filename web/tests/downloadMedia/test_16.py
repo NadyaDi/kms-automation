@@ -112,6 +112,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryName + '_Downloaded'])
+            self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

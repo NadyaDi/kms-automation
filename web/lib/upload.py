@@ -137,7 +137,8 @@ class Upload(Base):
                 if i > 0:
                     writeToLog("INFO","FAILED to upload after " + str(i) + " retries of " + str(retries) + ". Going to upload again...")
                 # Convert path for Windows
-                filePath = filePath.replace("/", "\\")     
+                filePath = filePath.replace("/", "\\")
+                filePath = filePath.replace("\\\\", "\\")
                 
                 # Navigate to upload page
                 if uploadFrom == enums.Location.UPLOAD_PAGE:
