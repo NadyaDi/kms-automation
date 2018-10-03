@@ -139,7 +139,7 @@ class Test:
             
             writeToLog("INFO","Step 13: Going to verify channel page information")
 #             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", "QA Application", self.categoryName[0]) == False:
+            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "1", "2", "1", self.common.login.getLoginUserName(), self.categoryName[0]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED navigate to channel: " + self.channelName[0])
                 return 
