@@ -56,7 +56,6 @@ class Test:
             ########################################################################
             self.entryName = clsTestService.addGuidToString('Disclaimer', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel name', self.testNum)
-            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
             
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -70,12 +69,15 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return   
-               
+            
             writeToLog("INFO","Step 3: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
+            
+            self.common.admin.adminDisclaimer(True, enums.DisclaimerDisplayArea.BEFORE_PUBLISH, True)
+            self.common.home.navigateToHomePage()
             
             writeToLog("INFO","Step 4: Going to publish the entry while Disclaimer before published turned ON")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], disclaimer=True) == False:
