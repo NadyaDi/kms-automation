@@ -107,12 +107,11 @@ class Channel(Base):
     CHANNEL_CHANNEL_INFO_OLD_UI                     = ('xpath', "//div[@id='channelSidebarInner']")
     CHANNEL_PLAYLISTS_TAG_AFTER_CLICK               = ('xpath', "//input[contains(@id, 's2id_autogen')]")
     CHANNEL_MEMBER_COUNT                            = ('xpath', "//div[@id='Channelmembers_persons']")
-    CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[@class='btn-group right-sep']")
-    CHANNEL_MANGER_NAME_NEW_UI                      = ('xpath', "//a[@href='javascript:;' and contains(text(),'MANAGER_NAME')]")
+    CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[contains(@class,'btn-group right-sep')]")
+    CHANNEL_MANGER_NAME_NEW_UI                      = ('xpath', "//a[@href='javascript:;']")
     CHANNEL_MANGER_NAME_OLD_UI                      = ('xpath', "//dd[@id='functionaries-Managers']")
     CHANNEL_APPEARS_IN_BUTTON                       = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
     CHANNEL_APPEARS_IN_CATEGORY_NAME                = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
-    CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME        = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
     CHANNEL_PLAYLIST_VERIFICATION                   = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
     MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='type-btn' and @class='dropdown-toggle responsiveSize']")
     MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'VIEW_CHANNEL_FILTER')]")
@@ -140,6 +139,7 @@ class Channel(Base):
     CHANNEL_EDIT_BUTTON_NO_SEARCH                   = ('xpath', "//i[@class='icon-pencil']")
     CHANNEL_ENTRY_DELETE_BUTTON                     = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
     CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD              = ('xpath', "//a[@id='next' and text()='Go To Channel']")
+    CHANNEL_GO_BACK_TO_CHANNEL_BUTTON               = ('xpath', "//a[@class='btn btn-link' and text()='Back to Channel']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1588,7 +1588,7 @@ class Channel(Base):
             
                                
     # Author: Michal Zomper
-    def verifyChannelInformation(self, channelType, entriesCount, memberCount, subscriberCount, managerName, appearsInCategoryName):  
+    def verifyChannelInformation(self, channelType, entriesCount, memberCount, subscriberCount, managerName, appearsInCategoryName=''):  
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True: 
             if channelType in self.get_element_text(self.CHANNEL_TYPE, 20).lower() == False:
                 writeToLog("INFO","Failed to verify that channel type is : " + channelType)
@@ -1606,28 +1606,35 @@ class Channel(Base):
                 writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
                 return False 
             
-            tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME_NEW_UI[0], self.CHANNEL_MANGER_NAME_NEW_UI[1].replace('MANAGER_NAME', managerName))
             if self.click(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True) == False:
                 writeToLog("INFO","Failed to click on managers button")
                 return False
             
-            if self.is_visible(tmp_chnnelManagerName) == False:
+            try:
+                parent = self.wait_element(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True)
+                elManagerName = self.get_child_element(parent, self.CHANNEL_MANGER_NAME_NEW_UI, multipleElements=True)
+            except NoSuchElementException:
+                writeToLog("INFO","Failed to get channel manager element")
+                return False
+            
+            if managerName.lower() != elManagerName.text.lower():
                 writeToLog("INFO","Failed to verify channel manager name: " + managerName)
                 return False 
             
             # close mangers list
-            if self.click(tmp_chnnelManagerName, 20, multipleElements=True) == False:
+            if self.click(self.CHANNEL_MANGERS_BUTTON, 20, multipleElements=True) == False:
                 writeToLog("INFO","Failed to click on managers button")
                 return False
             
-            tmp_chnnelAppearIn = (self.CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
-            if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
-                writeToLog("INFO","Failed to click on appears in button")
-                return False
-            
-            if self.is_visible(tmp_chnnelAppearIn) == False:
-                writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
-                return False 
+            if appearsInCategoryName != '':
+                tmp_chnnelAppearIn = (self.CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+                if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
+                    writeToLog("INFO","Failed to click on appears in button")
+                    return False
+                
+                if self.is_visible(tmp_chnnelAppearIn) == False:
+                    writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+                    return False 
         
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             try:
@@ -1653,16 +1660,15 @@ class Channel(Base):
                 writeToLog("INFO","Failed to verify that channel subscriber count is: " + subscriberCount)
                 return False 
             
-            #tmp_chnnelManagerName = (self.CHANNEL_MANGER_NAME[0], self.CHANNEL_MANGER_NAME[1].replace('MANAGER_NAME', managerName))
-            if managerName in self.get_element_text(self.CHANNEL_MANGER_NAME_OLD_UI, timeout=20).lower() == False:
-#             if self.is_visible(tmp_chnnelManagerName, multipleElements= True) == False:
+            if (managerName.lower() in self.get_element_text(self.CHANNEL_MANGER_NAME_OLD_UI, timeout=20).lower()) == False:
                 writeToLog("INFO","Failed to verify channel manager name: " + managerName)
                 return False 
             
-            tmp_chnnelAppearIn = (self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
-            if self.is_visible(tmp_chnnelAppearIn) == False:
-                writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
-                return False 
+            if appearsInCategoryName != '':
+                tmp_chnnelAppearIn = (self.CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+                if self.is_visible(tmp_chnnelAppearIn) == False:
+                    writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+                    return False 
             
         writeToLog("INFO","Success, All channel information was verified")
         return True
@@ -2027,3 +2033,65 @@ class Channel(Base):
             return False   
         
         return True 
+    
+    
+    # Author: Michal Zomper
+    def editChannelMatedate(self, newChannelName="", newChanneldescription="", newchannelTags="", newChannelType='', CategoriesList=''):
+        if newChannelName != "":
+            if self.clear_and_send_keys(self.clsCommon.category.EDIT_CATEGORY_NAME_TEXTBOX, newChannelName) == False:
+                writeToLog("INFO","FAILED to replace channel name to:'" + newChannelName + "'")
+                return False
+        
+        if newChanneldescription != "":
+            if self.clsCommon.category.fillCategoryDescription(newChanneldescription, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace channel description to:'" + newChanneldescription + "'")    
+                return False
+        
+        if newchannelTags != "":
+            if self.clsCommon.category.fillCategoryTags(newchannelTags, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace channel tags to:'" + newchannelTags + "'")    
+                return False  
+            
+        if newChannelType != '':
+            if self.selectChannelPrivacy(newChannelType) == False:
+                writeToLog("INFO","FAILED to change channel type")
+                return False
+            
+        # Click if category list is empty
+        if len(CategoriesList) != 0:            
+            # choose all the  categories to publish to
+            for category in CategoriesList:
+                tmoCategoryName = (self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+                if self.click(tmoCategoryName, 30) == False:
+                    writeToLog("INFO","FAILED to select published category '" + category + "'")
+                    return False  
+            
+        # Click Save
+        if self.click(self.clsCommon.category.EDIT_CATEGORY_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False
+        sleep(3)
+        
+        # Wait for loader to disappear
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Wait for 'Your changes have been saved.' message
+        if self.wait_visible(self.clsCommon.category.EDIT_CATEGORY_SUCCESS_MESSAGE, 45) == False:                
+            writeToLog("INFO","FAILED to find success message")
+            return False
+
+        return True
+    
+    
+    # Author: Michal Zomper
+    def navigateToChannelPageFromEditChannelPage(self, channelName):
+        if self.click(self.CHANNEL_GO_BACK_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'back to channel' button")
+            return False
+        
+        tmpChannelName = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+        if self.wait_visible(tmpChannelName, 30) == False:
+            writeToLog("INFO","FAILED navigate to Channel page")
+            return False
+        
+        return True
