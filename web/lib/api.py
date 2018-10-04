@@ -133,7 +133,7 @@ class ApiClientSession:
                                 
     def getCategoryByName(self, catName):
         filter = KalturaCategoryFilter()
-        filter.nameOrReferenceIdStartsWith = catName
+        filter.freeText = catName
         pager = None
         try:
             result = self.client.category.list(filter, pager)
@@ -164,7 +164,7 @@ class ApiClientSession:
             return False
                 
                 
-    def createCategory(self, parentId, owner, name, description, tags, privacy=KalturaPrivacyType.ALL, addContentToCategory= KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.PARTNER_ONLY):
+    def createCategory(self, parentId, owner, name, description=None, tags=None, privacy=KalturaPrivacyType.ALL, addContentToCategory= KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.PARTNER_ONLY):
         categoryId = self.createCategoryApi(self.client, parentId, owner, name, description, tags, privacy, addContentToCategory, whoCanSeeTheCategory)
         if categoryId == -1:
             writeToLog("INFO","FAILED to create category")
