@@ -38,7 +38,7 @@ class Test:
     newTags = "New Tags,"
     channelName = None
     newChannelName = None
-    categoryName1 = None
+    categoryName = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -58,14 +58,14 @@ class Test:
             self.common = Common(self.driver)
             self.channelName = clsTestService.addGuidToString("Channel page - Edit metadata", self.testNum)
             self.newChannelName = clsTestService.addGuidToString("New Channel Name - Edit metadata", self.testNum)
-            self.categoryName1 = clsTestService.addGuidToString("Category-Edit metadata", self.testNum)
+            self.categoryName = clsTestService.addGuidToString("Category-Edit metadata", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
              
             writeToLog("INFO","Step 1: Going to create new category") 
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
-            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName1, self.description, None) == False:
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create category")
                 return
@@ -75,51 +75,51 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to clear cache in admin page")
                 return
-             
+              
             writeToLog("INFO","Step 3: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
-             
+              
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED create new channel: " + self.channelName)
                 return
-              
+               
             writeToLog("INFO","Step 5: Going navigate to channel page")
             if self.common.channel.navigateToChannel(self.channelName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to channel page: " + self.channelName)
                 return
-             
+              
             writeToLog("INFO","Step 6: Going to verify channel details")
             if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "0", "1", "0", self.common.login.getLoginUserName()) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify channel details")
                 return
- 
+  
             writeToLog("INFO","Step 7: Going navigate to edit channel page")
             if self.common.channel.navigateToEditChannelPage(self.channelName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED navigate to edit channel page")
                 return
-             
+              
             writeToLog("INFO","Step 8: Going to edit channel matedata")
-            if self.common.channel.editChannelMatedate(self.newChannelName, self.newDescription, self.newTags,  enums.ChannelPrivacyType.PRIVATE, [self.categoryName1]) == False:
+            if self.common.channel.editChannelMatedate(self.newChannelName, self.newDescription, self.newTags,  enums.ChannelPrivacyType.PRIVATE, [self.categoryName]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to edit channel matedata")
                 return
-             
+              
             writeToLog("INFO","Step 9: Going navigate to channel page")
             if self.common.channel.navigateToChannelPageFromEditChannelPage(self.newChannelName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to navigate to channel page: " + self.channelName)
                 return
-             
+              
             writeToLog("INFO","Step 10: Going to verify channel details")
-            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.PRIVATE), "0", "1", "0", self.common.login.getLoginUserName(), self.categoryName1) == False:
+            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.PRIVATE), "0", "1", "0", self.common.login.getLoginUserName(), self.categoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to verify channel details")
                 return    
@@ -136,7 +136,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
             if self.common.channel.deleteChannel(self.newChannelName) == False:
                 self.common.channel.deleteChannel(self.channelName)
-            self.common.apiClientSession.deleteCategory(self.categoryName1)
+            self.common.apiClientSession.deleteCategory(self.categoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
