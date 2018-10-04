@@ -168,10 +168,16 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
     
     # Set auto download path
     # If you need a shared folder between the win node and Jenkins node, create a folder in your test: localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS
-    localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = '/mnt/auto_kms_py1/downloads' + '/' + str(localSettings.LOCAL_SETTINGS_GUID)
-    localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH      = '/home/local/KALTURA/oleg.sigalov/build/workspace/qaKmsFrontEnd/web/media' + '\\' + str(localSettings.LOCAL_SETTINGS_GUID)
-#     localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + str(localSettings.LOCAL_SETTINGS_GUID)
-#     localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + '\\' + str(localSettings.LOCAL_SETTINGS_GUID)
+    localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = '/mnt/auto_kms_py1/downloads/' + str(localSettings.LOCAL_SETTINGS_GUID)
+    if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
+        localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp', 'downloads'))
+    else:
+        localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))
+    
+    if isAutomationEnv() == True:
+        # Z:\\ - Is shared folder on il-AutoKmsJenkinsNode-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
+        localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'Z:\\' + str(localSettings.LOCAL_SETTINGS_GUID)
+
     test.driver = testWebDriverLocalOrRemote(driverFix)        
         
     if ("version" in test.driver.capabilities):

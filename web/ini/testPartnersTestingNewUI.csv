@@ -49,6 +49,7 @@ test_1395,Channel Type (Open / Restricted / Private),2370151,qakmstest.dev.kaltu
 test_735,Channel page - Search in channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_730,My Channels - Create Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_738,Channel page - Edit metadata,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_714,Categories - Enable Disable comments in category,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1558,Disclaimer - Before publish (agreeRequired = No),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
@@ -57,7 +58,7 @@ test_883,Scheduling: add Publishing Schedule via edit entry page,5447-1,qakmstes
 test_894,Sort in My-Media,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Scheduling,123456
 test_1555,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_16,Download Source File,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_675,Playlist reorder,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_675,Playlist reorder,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_679,Remove Entry from one of playlist during to add same Entry to new,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
 test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
 test_733,Add media to channel via Add to,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
