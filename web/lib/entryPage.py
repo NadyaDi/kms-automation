@@ -82,7 +82,8 @@ class EntryPage(Base):
         if self.clsCommon.category.navigateToCategory(categoryName) == False:
             writeToLog("INFO","FAILED navigate to category:" + categoryName)
             return False             
-            
+        sleep(2)
+           
         if self.clsCommon.category.searchEntryInCategory(entryName) == False:
             writeToLog("INFO","FAILED to search entry'" + entryName + "' in category" + categoryName)
             return False  
