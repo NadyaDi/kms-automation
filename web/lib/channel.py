@@ -1176,7 +1176,7 @@ class Channel(Base):
             writeToLog("INFO","FAILED to click on expand button")
             return False
         
-        return True      
+        return parent_entry      
     
 
     # @Author: Tzachi Guetta    
