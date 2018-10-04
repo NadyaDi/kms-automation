@@ -284,6 +284,8 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
                 
+                sleep(3)
+                
                 # Show all entries at the bottom of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
                 entriesTableList = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)

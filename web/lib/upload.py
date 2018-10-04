@@ -214,7 +214,7 @@ class Upload(Base):
         uploadboxCount = 1
         if uploadFrom == enums.Location.UPLOAD_PAGE:
             # Click Add New
-            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on 'Add New' button")
                 return False
             # Click Media Upload
@@ -589,7 +589,7 @@ class Upload(Base):
             self.clsCommon.sharePoint.navigateToUploadPageSharePoint()
                       
         # Click Add New
-        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")
             return False
         # Click Media Upload
