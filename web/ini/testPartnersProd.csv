@@ -52,6 +52,8 @@ test_1395,Channel Type (Open / Restricted / Private),1756201,mediaspace.kaltura.
 test_735,Channel page - Search in channel,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_730,My Channels - Create Channel,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_738,Channel page - Edit metadata,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_714,Categories - Enable\Disable comments in category,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_712,Categories - Members tab,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1594,Entry required field,2373952,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2565,Watch History - Add entry (Private) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,Watch History - Add entry (Published to channel- public) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

@@ -65,7 +65,7 @@ class Test:
             writeToLog("INFO","Step 1: Going to create new category") 
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
-            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName1, self.description, self.tags) == False:
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName1, self.description, None) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create category")
                 return
@@ -134,8 +134,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
-#             if self.common.channel.deleteChannel(self.newChannelName) == False:
-#                 self.common.channel.deleteChannel(self.channelName)
+            if self.common.channel.deleteChannel(self.newChannelName) == False:
+                self.common.channel.deleteChannel(self.channelName)
             self.common.apiClientSession.deleteCategory(self.categoryName1)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:

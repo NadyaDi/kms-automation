@@ -1050,10 +1050,6 @@ class Channel(Base):
    
     #@Author: Oded Berihon
     def enableDisableCommentsInChannel(self, channelName, isCommentsEnabled):
-        if self.navigateToEditChannelPage(channelName) == False: 
-            writeToLog("INFO","FAILED to click on confirm delete button")
-            return False
-        
         if isCommentsEnabled == True:
             if self.is_element_checked(self.CHANNEL_DETAILS_OPTION_COMMENT)==True:
                 return True
@@ -1082,32 +1078,19 @@ class Channel(Base):
             writeToLog("INFO","FAILED to navigate to Channel page")
             return False
         
-        if self.clsCommon.isElasticSearchOnPage() == False:
-            if self.click(self.CHANNEL_SEARCH_ENTRY) == False:
-                writeToLog("INFO","FAILED to click on Channel's search Tab icon")
-                return False
-            sleep(2)
-            # Search Entry     
-            self.clsCommon.myMedia.getSearchBarElement().click()
-            
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            searchLine = '"' + entryName + '"'
-        else:
-            searchLine = entryName    
-        
-        sleep(2)
-        
-        if self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine) == False:
-            writeToLog("INFO","FAILED to find entry name in channel: " +  entryName)
-            return False  
-            sleep(5)   
-        
-        self.clsCommon.general.waitForLoaderToDisappear()
+        if self.searchEntryInChannel(entryName) == False:
+            writeToLog("INFO","FAILED to search for entry in channel page")
+            return False
         
         if self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to click on Channel's search Tab icon")
             return False 
-
+        
+        tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        if self.wait_visible(tmp_entry_name, 15) == False:
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            return False
+        
         return True
 
    
@@ -1458,7 +1441,7 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Edit member permission
-    def editChannlMemberPermission(self,username, permission = enums.ChannelMemberPermission.MODERATOR): 
+    def editChannelMemberPermission(self,username, permission = enums.ChannelMemberPermission.MODERATOR): 
         #Click on edit button
         tmp_edit_button = (self.CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON[0], self.CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON[1].replace('MEMBER', username))
         if self.hover_on_element(tmp_edit_button) == False:
@@ -1484,7 +1467,7 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Delete member from channel
-    def deleteChannlMember(self,username): 
+    def deleteChannelMember(self,username): 
         #Click on delete button
         tmp_delete_btn = (self.CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON[0], self.CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON[1].replace('MEMBER', username))
         if self.hover_on_element(tmp_delete_btn) == False:
