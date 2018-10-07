@@ -621,27 +621,27 @@ class MyMedia(Base):
                 tmpSortlocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
                 
                 if self.click(tmpSortlocator, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on :" + dropDownListItem + " filter in my media")
+                    writeToLog("INFO","FAILED to click on :" + dropDownListItem.value + " filter in my media")
                     return False
                 
                 # only sort filter use the locater of the dropdownlist_item_old_ui
-                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
+                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value)) 
                 if self.click(tmpSortBy, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem + " filter in my media")
+                    writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem.value + " filter in my media")
                     return False
             else:
-                if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on filters button in my media")
                     return False
                 sleep(2)
                 
-                tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
+                tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value)) 
                 if self.click(tmpEntry, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem)
+                    writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                     return False
                 
             self.clsCommon.general.waitForLoaderToDisappear()    
-            writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
+            writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
             return True
         else:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
