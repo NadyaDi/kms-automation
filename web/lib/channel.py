@@ -140,6 +140,7 @@ class Channel(Base):
     CHANNEL_ENTRY_DELETE_BUTTON                     = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
     CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD              = ('xpath', "//a[@id='next' and text()='Go To Channel']")
     CHANNEL_GO_BACK_TO_CHANNEL_BUTTON               = ('xpath', "//a[@class='btn btn-link' and text()='Back to Channel']")
+    CHANNEL_MEMEBER_TAB_OWNER_LABLE                 = ('xpath', "//div[@class='span3' and contains(text(),'owner')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1529,10 +1530,10 @@ class Channel(Base):
             return False              
          
         #Verify that user don't have set as owner button
-        if self.hover_on_element(tmp_set_as_owner) == True:
+        if self.wait_element(self.CHANNEL_MEMEBER_TAB_OWNER_LABLE)  == False:
             writeToLog("INFO","Failed to set user as owner - set as owner button still displayed")
             return False  
-        
+        sleep(2)
         return True
     
     

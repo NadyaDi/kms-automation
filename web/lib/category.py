@@ -16,6 +16,7 @@ class Category(Base):
     #Category locators:
     #=============================================================================================================
     CATEGORY_NAME_NAV_BAR                                       = ('xpath', "//a[@role='button' and contains(text(), 'CATEGORY_NAME')]")# When using this locator, replace 'CATEGORY_NAME' string with your real category name
+    SUB_CATEGORY_NAME_NAV_BAR                                   = ('xpath', "//a[@role='menuitem' and contains(text(), 'CATEGORY_NAME')]")# When using this locator, replace 'CATEGORY_NAME' string with your real category name
     CATEGORY_TITLE_IN_CATEGORY_PAGE                             = ('xpath', "//span[@id='gallery_title' and contains(text(), 'CATEGORY_NAME')]")# When using this locator, replace 'CATEGORY_NAME' string with your real category name
     CATEGORY_SEARCH_MAGNAFINE_GLASS                             = ('id', 'gallerySearch-tab')
     CATEGORY_SEARCH_RESULT                                      = ('class_name', 'entryTitle')
@@ -62,7 +63,8 @@ class Category(Base):
     CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD                    = ('xpath', '//input[@id="AddCategoryMember-userId"]')   
     CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION                    = ('xpath', '//select[@id="AddCategoryMember-permission"]')
     CATEGORY_REFRESH_NOW_BUTTON                                 = ('xpath', "//a[text()='Refresh Now']")
-    CATEGORY_EDIT_PAGE_TITLE                                    = ('xpath', "//h1[@id='category_title_edit']")     
+    CATEGORY_EDIT_PAGE_TITLE                                    = ('xpath', "//h1[@id='category_title_edit']")
+    CATEGORY_IMPORT_MEMBER_BUTTON                               = ('xpath', "//a[@id='importMembersBtn']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -92,6 +94,33 @@ class Category(Base):
         
         # Verify category page open
         if self.wait_visible(tmpCategoryName, 30) == False:
+            writeToLog("INFO","FAILED to verify category page is display")
+            return False
+        
+        return True
+    
+    
+    # @Author: Michal Zomper
+    def navigateToSubCateogry(self, parentCategory, subCategory, forceNavigate=False):
+        tmpSubCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', subCategory))
+        if forceNavigate:
+            # Check if we are already in category page
+            if self.wait_visible(tmpSubCategoryName, 5) != False:
+                writeToLog("INFO","Success Already in my category page")
+                return True
+    
+        tmpParentCategoryName = (self.CATEGORY_NAME_NAV_BAR[0], self.CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', parentCategory))
+        if self.hover_on_element(tmpParentCategoryName) == False:
+            writeToLog("INFO","FAILED to hover on parent category page")
+            return False
+        
+        tmpNavSubCategoryName = (self.SUB_CATEGORY_NAME_NAV_BAR[0], self.SUB_CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', subCategory))
+        if self.click(tmpNavSubCategoryName, 30, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on category name '" + tmpSubCategoryName + "' in the nav bar")
+            return False
+            
+        # Verify category page open
+        if self.wait_visible(tmpSubCategoryName, 30) == False:
             writeToLog("INFO","FAILED to verify category page is display")
             return False
         
@@ -270,6 +299,29 @@ class Category(Base):
     # Author: Michal Zomper 
     def navigateToEditCategoryPage(self, categoryName):
         if self.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED navigate to category")
+            return False
+        sleep(2)
+        
+        if self.click(self.CATEGORY_ACTION_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on action button")
+            return False 
+        
+        if self.click(self.CATEGORY_EDIT_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on edit button")
+            return False 
+        
+        if self.is_visible(self.CATEGORY_EDIT_PAGE_TITLE, multipleElements= False) == False:
+            writeToLog("INFO","FAILED, can NOT find edit entry page title")
+            return False 
+            
+        writeToLog("INFO","Success, Category edit page is dispaly")
+        return True
+    
+    
+    # Author: Michal Zomper 
+    def navigateToEditSubCategoryPage(self, parentCategory, subCategory, forcrNavigate=False):
+        if self.navigateToSubCateogry(parentCategory, subCategory, forcrNavigate) == False:
             writeToLog("INFO","FAILED navigate to category")
             return False
         sleep(2)
@@ -583,17 +635,39 @@ class Category(Base):
     
     
     # @Author: Michal Zomper
-    def addMembersToCategory(self, categoryName, username, permission=enums.CategoryMemberPermission.MEMBER):
+    # membersList need to be like: [(userName, permission), (userName, permission) ......]
+    def addMembersToCategory(self, categoryName, membersList):
         if self.navigateToEditCategoryPage(categoryName) == False:
             writeToLog("INFO","Failed to navigate to edit category page")
             return False  
         sleep(1)   
         
-        # Navigate to members tab
         if self.navigateToCategoryMembersTab() == False:
             writeToLog("INFO","Failed to click on members tab")
             return False  
         sleep(2)
+        
+        if type(membersList) is list:
+            for member in membersList:
+                if self.addMemberToCategory(categoryName, member[0], member[1], forceNavigate=False) == False:
+                    writeToLog("INFO","Failed to add user '" + member[0] + "' to category")
+                    return False
+                sleep(4)
+
+
+    # @Author: Michal Zomper
+    def addMemberToCategory(self, categoryName, username, permission=enums.CategoryMemberPermission.MEMBER, forceNavigate=True):
+        if forceNavigate:
+            if self.navigateToEditCategoryPage(categoryName) == False:
+                writeToLog("INFO","Failed to navigate to edit category page")
+                return False  
+            sleep(1)   
+             
+            # Navigate to members tab
+            if self.navigateToCategoryMembersTab() == False:
+                writeToLog("INFO","Failed to click on members tab")
+                return False  
+            sleep(2)
         
         # Wait until page contains add member button
         if self.wait_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
@@ -684,3 +758,43 @@ class Category(Base):
             if wait_until < datetime.datetime.now():
                 writeToLog("INFO","WARNING 'Refresh Now' still appears, it possible because of an other entry in this category, timeout is:" + str(timeout))
                 return True
+            
+            
+    # @Author: Michal Zomper
+    # Edit member permission
+    def editCategoryMemberPermission(self,username, permission = enums.ChannelMemberPermission.MODERATOR): 
+        #Click on edit button
+        tmp_edit_button = (self.clsCommon.channel.CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON[0], self.clsCommon.channel.CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON[1].replace('MEMBER', username))
+        if self.hover_on_element(tmp_edit_button) == False:
+            writeToLog("INFO","FAILED to Hover above edit member button")
+            return False
+        
+        if self.click(tmp_edit_button) == False:
+                writeToLog("INFO","Failed to click on edit button")
+                return False               
+                         
+        # Set new permission
+        if self.chooseMemberPermissionInCategory(permission) == False:
+            writeToLog("INFO","Failed to set new permission")
+            return False   
+        
+        # Save new permission
+        if self.click(tmp_edit_button) == False:
+                writeToLog("INFO","Failed to click on save button")
+                return False                  
+        
+        return True
+    
+        
+    def importMemberFormCategory(self):
+        if self.navigateToCategoryMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False  
+        sleep(2)
+        
+        if self.click(self.CATEGORY_IMPORT_MEMBER_BUTTON) == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False
+        
+        sleep(4)
+        return True

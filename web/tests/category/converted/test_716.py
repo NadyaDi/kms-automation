@@ -167,13 +167,13 @@ class Test:
                 return 
              
             writeToLog("INFO","Step 14: Going to add user as member in category: " + self.restrictedCategoryName)
-            if self.common.category.addMembersToCategory(self.restrictedCategoryName, self.userName, permission=enums.CategoryMemberPermission.CONTRIBUTOR) == False:
+            if self.common.category.addMemberToCategory(self.restrictedCategoryName, self.userName, permission=enums.CategoryMemberPermission.CONTRIBUTOR) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to add user '"+ self.userName + "' as a member in category: " + self.restrictedCategoryName)
                 return
             
             writeToLog("INFO","Step 15: Going to add user as member in category: " + self.privateCategoryName)
-            if self.common.category.addMembersToCategory(self.privateCategoryName, self.userName, permission=enums.CategoryMemberPermission.CONTRIBUTOR) == False:
+            if self.common.category.addMemberToCategory(self.privateCategoryName, self.userName, permission=enums.CategoryMemberPermission.CONTRIBUTOR) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add user '"+ self.userName + "' as a member in category: " + self.privateCategoryName)
                 return
