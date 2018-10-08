@@ -27,6 +27,7 @@ class Test:
     
     # Test variables
     serviceUrl = 'https://www.kaltura.com'
+    verifySSL = True
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -53,7 +54,7 @@ class Test:
              
             writeToLog("INFO","Step 2: Login to admin and set service url")
             for instance, cred in instacesDict.items():
-                if self.common.admin.setServiceUrl(instance, cred[0], cred[1], self.serviceUrl, True) == False:
+                if self.common.admin.setServiceUrl(instance, cred[0], cred[1], self.serviceUrl, self.verifySSL) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 2: FAILED to set service url for instance: " + str(instance))
                   
