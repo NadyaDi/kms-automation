@@ -69,6 +69,7 @@ test_728,1,0,0,0,My Channels - Search as member
 test_729,1,0,0,0,My Channels - Search as subscriber
 test_730,1,0,0,0,My Channels - Create Channel
 test_731,1,0,0,0,Channel page Information
+test_732,1,0,0,0,Channel page - Add New Media
 test_733,1,0,0,0,Add media to channel via Add to
 test_734,0,1,0,0,Channel - Entries details
 test_735,1,0,0,0,Channel page - Search in channel
