@@ -1,5 +1,6 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_0001,Publish to channel multiple,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_0002,Set service url,2438361,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_0168,Publish to channel multiple,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_683,Create Empty Playlist,2362001-2,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_677,Add Entry from My Media to Several Playlists,2362001-2,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
