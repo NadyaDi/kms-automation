@@ -65,6 +65,7 @@ class Category(Base):
     CATEGORY_REFRESH_NOW_BUTTON                                 = ('xpath', "//a[text()='Refresh Now']")
     CATEGORY_EDIT_PAGE_TITLE                                    = ('xpath', "//h1[@id='category_title_edit']")
     CATEGORY_IMPORT_MEMBER_BUTTON                               = ('xpath', "//a[@id='importMembersBtn']")
+    CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW                         = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -113,10 +114,10 @@ class Category(Base):
         if self.hover_on_element(tmpParentCategoryName) == False:
             writeToLog("INFO","FAILED to hover on parent category page")
             return False
-        
+        sleep(2)
         tmpNavSubCategoryName = (self.SUB_CATEGORY_NAME_NAV_BAR[0], self.SUB_CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', subCategory))
         if self.click(tmpNavSubCategoryName, 30, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on category name '" + tmpSubCategoryName + "' in the nav bar")
+            writeToLog("INFO","FAILED to click on category name '" + subCategory + "' in the nav bar")
             return False
             
         # Verify category page open
@@ -653,6 +654,9 @@ class Category(Base):
                     writeToLog("INFO","Failed to add user '" + member[0] + "' to category")
                     return False
                 sleep(4)
+        
+        writeToLog("INFO","Success, All members was added to category")
+        return True
 
 
     # @Author: Michal Zomper
@@ -711,10 +715,10 @@ class Category(Base):
         tmp_member_row = (self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
         if self.is_visible(tmp_member_row) == False:
             writeToLog("INFO","Failed to add new member to table")
-            return False  
-        
+            return False 
+         
+        writeToLog("INFO","Success, member '" + username + "' was added to category")
         return True
-    
     
     
     # @Author: Michal Zomper 
@@ -797,4 +801,44 @@ class Category(Base):
             return False
         
         sleep(4)
+        return True
+    
+    
+    # @Author: Michal Zomper 
+    def verifyMemberPermissionsInMemberTable(self, userId, permission):
+        # Navigate to members tab
+        if self.navigateToCategoryMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False  
+        sleep(2)
+            
+        tmpMember = (self.CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', userId))
+        try:
+            memberText = self.get_element_text(tmpMember)
+        except NoSuchElementException:
+            writeToLog("INFO","Failed to find member '" + userId +"' in members table")
+            return False
+        
+        if (permission.value in memberText) == False:
+            writeToLog("INFO","Failed, member '" + userId +"' permission does NOT match")
+            return False
+        
+        writeToLog("INFO","Success, member '" + userId + "' was found in member table with the right permissions")
+        return True
+    
+    
+    # membersList need to be like: [(userName, permission), (userName, permission) ......]
+    def verifyMembersPermissionsInMemberTable(self, membersList):
+        if self.navigateToCategoryMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False  
+        sleep(2)
+        
+        for member in membersList:
+            if self.verifyMemberPermissionsInMemberTable(member[0], member[1]) == False:
+                writeToLog("INFO","Failed verify that user '" + member[0] + "' and permissions was found in members table")
+                return False
+            sleep(3)
+        
+        writeToLog("INFO","Success, All members display in members table") 
         return True

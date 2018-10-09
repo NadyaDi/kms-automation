@@ -1092,7 +1092,7 @@ class EditEntryPage(Base):
         thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
         
         #TODO add tolerance 
-        if (qrCodeRedult-1 <= int(thumbnailResult)) and (int(thumbnailResult) < qrCodeRedult+1) == False:
+        if (int(qrCodeRedult)-1 <= int(thumbnailResult)) and (int(thumbnailResult) < int(qrCodeRedult)+1) == False:
             writeToLog("INFO","FAILED to verify that the capture thumbnail is correct, expected qr code is '" + str(qrCodeRedult)+ "' and the capture thumbnail qr code is '" + str(thumbnailResult) + "'")
             return False
         

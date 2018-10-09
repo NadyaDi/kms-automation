@@ -88,10 +88,10 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED navigate to home page")
                 return
             
-            writeToLog("INFO","Step 5: Going to add members to category")
+            writeToLog("INFO","Step 5: Going to add members to parent category")
             if self.common.category.addMembersToCategory(self.parentCategoryName, self.membersList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to add members to category")
+                writeToLog("INFO","Step 5: FAILED to add members to parent category")
                 return  
             
             writeToLog("INFO","Step 6: Going navigate to sub category edit page")
@@ -112,30 +112,37 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED navigate to sub category edit page")
                 return 
              
-             
-             
-            writeToLog("INFO","Step 5: Going to change member permission")
-            if self.common.category.editCategoryMemberPermission(self.userName, permission = enums.ChannelMemberPermission.MODERATOR) == False:
+            writeToLog("INFO","Step 9: Going to verify that import members form parent category display in sub category member tab after import")
+            if self.common.category.verifyMembersPermissionsInMemberTable(self.membersList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED change member permission")
-                return  
+                writeToLog("INFO","Step 9: to verify that add members form parent category display in sub category member tab after import")
+                return 
              
-            writeToLog("INFO","Step 6: Going to delete member")
-            if self.common.channel.deleteChannelMember(self.userName) == False:
+            writeToLog("INFO","Step 10: Going to delete member")
+            if self.common.channel.deleteChannelMember(self.userName2) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to delete member")
-                return     
-            
-            writeToLog("INFO","Step 7: Going to add member to category")
-            if self.common.category.addMemberToCategory(self.categoryName, self.userName, permission=enums.CategoryMemberPermission.MEMBER) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to add member to category")
+                writeToLog("INFO","Step 10: FAILED to delete member")
                 return   
-             
-            writeToLog("INFO","Step 8: Going to set member as owner")
-            if self.common.channel.setChannelMemberAsOwner(self.userName) == False:
+            sleep(3)
+            
+            writeToLog("INFO","Step 11: Going to add member to sub category")
+            if self.common.category.addMemberToCategory(self.subCategoryName, self.userName2, permission=enums.CategoryMemberPermission.MEMBER, forceNavigate=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to set member as owner")
+                writeToLog("INFO","Step 11: FAILED to add member to sub category")
+                return   
+            sleep(3)
+            
+            writeToLog("INFO","Step 12: Going to change member permission")
+            if self.common.category.editCategoryMemberPermission(self.userName1, permission = enums.CategoryMemberPermission.MODERATOR) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED change member permission")
+                return  
+            sleep(3)
+            
+            writeToLog("INFO","Step 13: Going to set member as owner")
+            if self.common.channel.setChannelMemberAsOwner(self.userName3) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to set member as owner")
                 return      
             sleep(3)                                             
             #########################################################################
