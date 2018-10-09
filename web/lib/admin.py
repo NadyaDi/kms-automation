@@ -57,7 +57,12 @@ class Admin(Base):
 
               
     # @Author: Oleg Sigalov           
-    def loginToAdminPage(self, username=localSettings.LOCAL_SETTINGS_ADMIN_USERNAME, password=localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD):
+    def loginToAdminPage(self, username='default', password='default'):
+        if username == 'default':
+            username = localSettings.LOCAL_SETTINGS_ADMIN_USERNAME
+        if password == 'default':
+            password = localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD
+                       
         if self.navigateToAdminPage() == False:
             return False
                 
