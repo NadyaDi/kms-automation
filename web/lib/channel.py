@@ -1492,7 +1492,7 @@ class Channel(Base):
             writeToLog("INFO","Failed to wait until remove modal isn't visible")
             return False  
         
-        sleep (2)
+        sleep (6)
             
         # Verify user isn't displayed in members table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))

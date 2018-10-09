@@ -625,7 +625,8 @@ class MyMedia(Base):
                     return False
                 
                 # only sort filter use the locater of the dropdownlist_item_old_ui
-                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value)) 
+#                 tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
+                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
                 if self.click(tmpSortBy, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem.value + " filter in my media")
                     return False
@@ -641,7 +642,7 @@ class MyMedia(Base):
                     return False
                 
             self.clsCommon.general.waitForLoaderToDisappear()    
-            writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+            writeToLog("INFO","Success, " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
             return True
         else:
             if dropDownListName == enums.SortAndFilter.SORT_BY:

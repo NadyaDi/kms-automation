@@ -165,7 +165,7 @@ class Test:
                     writeToLog("INFO","Step 12: FAILED to filter my media entries  by '" + enums.MediaType.AUDIO.value + "'")
                     return
             
-            writeToLog("INFO","Step 13: Going to verify my media entries by: " + enums.MediaType.AUDIO)  
+            writeToLog("INFO","Step 13: Going to verify my media entries by: " + enums.MediaType.AUDIO.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAudio) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
@@ -242,7 +242,7 @@ class Test:
                     writeToLog("INFO","Step 18: FAILED to filter my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
                     return
             
-            writeToLog("INFO","Step 19: Going to verify my media entries by: " + enums.MediaType.ALL_MEDIA)  
+            writeToLog("INFO","Step 19: Going to verify my media entries by: " + enums.MediaType.ALL_MEDIA.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAllMedia) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to filter and verify my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
