@@ -15,6 +15,7 @@ class Test:
     
     #================================================================================================================================
     # @Author: Tzachi Guetta
+    # Test Name : Playlists - Change the entries order
     # Test description:
     # Playlist reorder
     #================================================================================================================================
@@ -104,7 +105,7 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to verify entries order before reorder")
                 return
             #########################################################################
-            writeToLog("INFO","TEST PASSED")
+            writeToLog("INFO","TEST PASSED: 'Playlists - Change the entries order' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

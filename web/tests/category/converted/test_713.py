@@ -83,10 +83,10 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to set entry #4 as Unlisted")
                 return     
                   
-            writeToLog("INFO","Step 4: Going to publish entries 1-3 to Moderated channel")
+            writeToLog("INFO","Step 4: Going to publish entries 1-3 to Moderated category")
             if self.common.category.addNewContentToCategory("KMS-Automation_Moderate_Category", uploadEntrieList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish entries 1-3 to Moderated channel")
+                writeToLog("INFO","Step 4: FAILED to publish entries 1-3 to Moderated category")
                 return
                   
             writeToLog("INFO","Step 5: Going to logout from End-user")
@@ -151,6 +151,7 @@ class Test:
                 self.status = "Fail"
                 return
             ##################################################################
+            writeToLog("INFO","TEST PASSED: 'Category Moderated' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
