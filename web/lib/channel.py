@@ -1849,6 +1849,28 @@ class Channel(Base):
         return True 
     
     
+        # Author: Tzachi Guetta
+    def searchEntriesInChannel(self, entriesNames, navigateFrom, channelName):        
+        # Checking if entriesNames list type
+        if type(entriesNames) is list:             
+            if self.clsCommon.navigateTo(enums.Location.ENTRY_PAGE, navigateFrom, channelName, True) == False:
+                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                return False
+            for entryName in entriesNames: 
+                if self.searchInChannelWithoutVerifyResults(entryName) == False:
+                    writeToLog("INFO","FAILED to make a search")
+                    return False              
+        
+                if self.clsCommon.myMedia.getResultAfterSearch(entryName) == False:
+                    writeToLog("INFO","FAILED to find entry '" + entryName + "' in search result")
+                    return False   
+                     
+                writeToLog("INFO","Success entry '" + entryName + "' was found")
+            return True
+        
+        return False
+    
+    
     # Author: Michal Zomper
     def searchEntryInChannel(self, entryName):
         if self.searchInChannelWithoutVerifyResults(entryName) == False:
