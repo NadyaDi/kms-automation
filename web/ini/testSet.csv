@@ -60,6 +60,7 @@ test_712,1,0,0,0,Categories - Members tab
 test_713,1,0,0,0,Category moderation
 test_714,0,1,0,0,Categories - Enable Disable comments in category
 test_716,1,0,0,0,Categories Type
+test_719,1,0,0,0,Categories - Enable / Disable Inherit permissions
 test_721,1,0,0,0,Categories - Import Mermbers
 test_722,1,0,0,0,Categories - Browse channels
 test_724,1,0,0,0,My Channels - Sort Channels
