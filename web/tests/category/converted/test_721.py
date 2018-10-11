@@ -115,7 +115,7 @@ class Test:
             writeToLog("INFO","Step 9: Going to verify that import members form parent category display in sub category member tab after import")
             if self.common.category.verifyMembersPermissionsInMemberTable(self.membersList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: to verify that add members form parent category display in sub category member tab after import")
+                writeToLog("INFO","Step 9: FAILED to verify that add members form parent category display in sub category member tab after import")
                 return 
              
             writeToLog("INFO","Step 10: Going to delete member")

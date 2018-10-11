@@ -66,6 +66,8 @@ class Category(Base):
     CATEGORY_EDIT_PAGE_TITLE                                    = ('xpath', "//h1[@id='category_title_edit']")
     CATEGORY_IMPORT_MEMBER_BUTTON                               = ('xpath', "//a[@id='importMembersBtn']")
     CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW                         = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')
+    CATEGORY_INHERIT_PERMISSIONS_BUTTON                         = ('xpath', "//input[@id='inherit']")
+    CATEGORY_COMFIRM_INHERIT_PERMISSIONS                        = ('xpath', "//a[@class='btn btn-danger' and text()='Yes']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -774,8 +776,8 @@ class Category(Base):
             return False
         
         if self.click(tmp_edit_button) == False:
-                writeToLog("INFO","Failed to click on edit button")
-                return False               
+            writeToLog("INFO","Failed to click on edit button")
+            return False               
                          
         # Set new permission
         if self.chooseMemberPermissionInCategory(permission) == False:
@@ -797,7 +799,7 @@ class Category(Base):
         sleep(2)
         
         if self.click(self.CATEGORY_IMPORT_MEMBER_BUTTON) == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","Failed to click on import member button")
             return False
         
         sleep(4)
@@ -815,6 +817,10 @@ class Category(Base):
         tmpMember = (self.CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', userId))
         try:
             memberText = self.get_element_text(tmpMember)
+            if memberText == None:
+                writeToLog("INFO","Failed to find member '" + userId +"' in members table")
+                return False
+                
         except NoSuchElementException:
             writeToLog("INFO","Failed to find member '" + userId +"' in members table")
             return False
@@ -827,6 +833,7 @@ class Category(Base):
         return True
     
     
+    # @Author: Michal Zomper 
     # membersList need to be like: [(userName, permission), (userName, permission) ......]
     def verifyMembersPermissionsInMemberTable(self, membersList):
         if self.navigateToCategoryMembersTab() == False:
@@ -841,4 +848,24 @@ class Category(Base):
             sleep(3)
         
         writeToLog("INFO","Success, All members display in members table") 
+        return True
+    
+    
+    # @Author: Michal Zomper 
+    def inheritPermissionsFormCategory(self):
+        if self.navigateToCategoryMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False  
+        sleep(2)
+        
+        if self.click(self.CATEGORY_INHERIT_PERMISSIONS_BUTTON) == False:
+            writeToLog("INFO","Failed to click on inherit permissions button")
+            return False
+        sleep(2)
+        
+        if self.click(self.CATEGORY_COMFIRM_INHERIT_PERMISSIONS) == False:
+            writeToLog("INFO","Failed to click  on confirm inherit permissions button")
+            return False
+        
+        sleep(4)
         return True
