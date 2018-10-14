@@ -36,9 +36,13 @@ class Admin(Base):
     ADMIN_CAROUSEL_ID                               = ('xpath', "//input[@id='carousel-playlistId' and @name='carousel[playlistId]']")
     ADMIN_CAROUSEL_INTERVAL                         = ('xpath', "//input[@id='carouselInterval' and @name='carouselInterval']")
     ADMIN_LIKE_MODULE                               = ('xpath', "//select[@id='enableLike' and @name='enableLike']")
-    ADMIN_SIDEMYMEDIA_MODULE                        = ('xpath', '//select[@id="enabled"]')    
+    ADMIN_SELECT_ENABLE                             = ('xpath', '//select[@id="enabled"]')
+    ADMIN_RELATED_LIMIT                             = ('xpath', "//input[@id='limit']")
     ADMIN_CLEAR_CACHE_BUTTON                        = ('xpath', "//a[@href='/admin/clear-cache' and contains(text(),'CLEAR THE CACHE')]")
     ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON       = ('xpath', "//button[contains (@class, 'ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only')]")
+    ADMIN_ENTRIES_PAGE_SIZE_IN_CHANNEL              = ('xpath', "//input[@id='entriesPageSize']")
+    ADMIN_SERVICE_URL                               = ('xpath', "//input[@id='serviceUrl']")
+    ADMIN_VERIFY_SSL                                = ('xpath', '//select[@id="verifySSL"]')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -49,17 +53,16 @@ class Admin(Base):
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL) == False:
             writeToLog("INFO","FAILED to load Admin page")
             return False
-                    
-#         if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False)  == False:
-#             return False
-#         else:
-#             return True
         return True
 
               
-              
     # @Author: Oleg Sigalov           
-    def loginToAdminPage(self):
+    def loginToAdminPage(self, username='default', password='default'):
+        if username == 'default':
+            username = localSettings.LOCAL_SETTINGS_ADMIN_USERNAME
+        if password == 'default':
+            password = localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD
+                       
         if self.navigateToAdminPage() == False:
             return False
                 
@@ -68,12 +71,12 @@ class Admin(Base):
             return True
         
         # Enter test partner username
-        if self.send_keys(self.clsCommon.login.LOGIN_USERNAME_FIELD, localSettings.LOCAL_SETTINGS_ADMIN_USERNAME) == False:
+        if self.send_keys(self.clsCommon.login.LOGIN_USERNAME_FIELD, username) == False:
             writeToLog("INFO","FAILED to enter username")
             return False 
                    
         # Enter test partner password
-        if self.send_keys(self.clsCommon.login.LOGIN_PASSWORD_FIELD, localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD) == False:
+        if self.send_keys(self.clsCommon.login.LOGIN_PASSWORD_FIELD, password) == False:
             writeToLog("INFO","FAILED to enter password")
             return False
         
@@ -507,7 +510,7 @@ class Admin(Base):
         
         #Enable/Disable module
         selection_description = self.convertBooleanToYesNo(isEnabled)
-        if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
+        if self.select_from_combo_by_text(self.ADMIN_SELECT_ENABLE, selection_description) == False:
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
         
@@ -569,7 +572,7 @@ class Admin(Base):
     
     # @Author: Inbar Willman
     # isEnable = True to enable module, isEnable = False to disabled module
-    def enableRelatedMedia(self, isEnabled):
+    def enableRelatedMedia(self, isEnabled, limit=''):
         # Login to Admin
         if self.loginToAdminPage() == False:
             writeToLog("INFO","FAILED to login to admin page")
@@ -583,13 +586,73 @@ class Admin(Base):
         
         #Enable/Disable module
         selection_description = self.convertBooleanToYesNo(isEnabled)
-        if self.select_from_combo_by_text(self.ADMIN_SIDEMYMEDIA_MODULE, selection_description) == False:
+        if self.select_from_combo_by_text(self.ADMIN_SELECT_ENABLE, selection_description) == False:
             writeToLog("INFO","FAILED to set sideMyMedia as: " + str(selection_description))
             return False 
         
+        if limit != '':
+            if self.clear_and_send_keys(self.ADMIN_RELATED_LIMIT, str(limit)) == False:
+                writeToLog("INFO","FAILED to set limit to related media: " + str(limit))
+                return False         
+            
         #Save changes
         if self.adminSave() == False:
             writeToLog("INFO","FAILED to save changes in admin page")
             return False
         
-        return True        
+        return True   
+    
+    def changNumberEentriesPageSizeForChannel(self, numberOfEntries):   
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/channels') == False:
+            writeToLog("INFO","FAILED to load Channels page in admin")
+            return False
+        sleep(1)  
+        
+        if self.clear_and_send_keys(self.ADMIN_ENTRIES_PAGE_SIZE_IN_CHANNEL, numberOfEntries) == False:
+            writeToLog("INFO","FAILED to change number of entries to display in channel page")
+            return False
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        return True
+    
+    
+    # @Author: Oleg Sigalov
+    # instance = instance number
+    # verifySSL = True for 'yes', False for 'No'
+    def setServiceUrl(self, instance, username, password, serviceUrl, verifySSL):
+        # Set base URL
+        baseUrlSplit = localSettings.LOCAL_SETTINGS_TEST_BASE_URL.split('.')
+        localSettings.LOCAL_SETTINGS_TEST_BASE_URL = 'http://' + instance + '.' + '.'.join(baseUrlSplit[1:])
+        localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
+        if self.loginToAdminPage(username, password) == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/client') == False:
+            writeToLog("INFO","FAILED to load client page in admin")
+            return False
+        sleep(0.5)
+        
+        # Set serviceUrl
+        if self.clear_and_send_keys(self.ADMIN_SERVICE_URL, serviceUrl) == False:
+            writeToLog("INFO","FAILED to set service url")
+            return False
+        
+        # Set verifySSL
+        selection = self.convertBooleanToYesNo(verifySSL)
+        if self.select_from_combo_by_text(self.ADMIN_VERIFY_SSL, selection) == False:
+            writeToLog("INFO","FAILED to set verifySSL as: " + str(selection))
+            return False        
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        return True            

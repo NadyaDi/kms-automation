@@ -20,7 +20,7 @@ class Test:
     # go back to edit channel and disable comment go to entry and try to add comment.
     # 
     #================================================================================================================================
-    testNum     = "740"
+    testNum = "740"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -57,7 +57,7 @@ class Test:
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
-            self.channelName = clsTestService.addGuidToString('Channel playlist', self.testNum)
+            self.channelName = clsTestService.addGuidToString('Enable/Disable comments in channel', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -88,28 +88,34 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to add comment to entry")
                 return 
-            sleep(3)  
-             
-            writeToLog("INFO","Step 6: Going to enable and disable comments in channel")                                     
+            
+            writeToLog("INFO","Step 6: Going navigate to edit channel page") 
+            if self.common.channel.navigateToEditChannelPage(self.channelName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to navigate to edit channel page")
+                return  
+
+            writeToLog("INFO","Step 7: Going to enable and disable comments in channel")                                     
             if self.common.channel.enableDisableCommentsInChannel(self.channelName, False) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to add and disable comments in channel")
+                writeToLog("INFO","Step 7: FAILED to add and disable comments in channel")
                 return 
             
-            writeToLog("INFO","Step 7: Going to navigate to entry from channel page")      
+            writeToLog("INFO","Step 8: Going to navigate to entry from channel page")      
             if self.common.channel.navigateToEntryFromChannel(self.channelName, self.entryName1) == False:
-                writeToLog("INFO","FAILED to navigate to edit channel page")
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to navigate to edit channel page")
                 return False
             
-            
-            writeToLog("INFO","Step 8: Going to verify user can't add comment")
+            writeToLog("INFO","Step 9: Going to verify user can't add comment")
             if self.common.entryPage.checkEntryCommentsSection(self.comment, True, False) == False:
-                writeToLog("INFO","FAILED to verify user can't add comment") 
+                self.status = "Fail"
+                writeToLog("INFO","Step 9:FAILED to verify user can't add comment") 
                 return False
             
             sleep(3)   
             #########################################################################
-            writeToLog("INFO","TEST PASSED")
+            writeToLog("INFO","TEST PASSED: 'Enable/Disable comments in channel' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

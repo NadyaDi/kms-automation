@@ -13,7 +13,7 @@ class Test:
     #=============================================================================================================
     
     practiTest = clsPractiTest()
-    testName     = "syncData"
+    testNum     = "0001"
     status      = "Pass"   
 #     csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','EE_export_auto.csv'))
     csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','EE_export_manual.csv'))
@@ -42,9 +42,8 @@ class Test:
             self.status = clsTestService.handleException(self,inst,self.startTime)
                 
     def teardown_method(self,method):
-        
         duration = str(round(time.time() - self.startTime))
         assert (self.status == "Pass")   
         
-    pytest.main('test_' + testName  + '.py --tb=line')
+    pytest.main('test_' + testNum  + '.py --tb=line')
          

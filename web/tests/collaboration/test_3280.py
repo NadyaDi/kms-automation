@@ -18,8 +18,9 @@ class Test:
     # The collaboration permission is co edit
     # The entry is published to category so the collaborator user can see the entry
     # Login with the collaborator user - go to entry caption tab and added caption to the entry successfully.
+    # Remove caption 
     #================================================================================================================================
-    testNum     = "3280"
+    testNum = "3280"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

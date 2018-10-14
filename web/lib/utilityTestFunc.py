@@ -1,8 +1,10 @@
+import codecs
 import csv
 from datetime import timedelta
+import io
 import subprocess
 from time import sleep
-
+import localSettings
 import requests
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -17,7 +19,7 @@ def updateTestCredentials(case_str):
     else:
         newuiStr = ""
     testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
-    with open(testPartnersPath, 'r') as csv_mat: #windows
+    with codecs.open(testPartnersPath,'r',encoding='utf8') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
         for row in testPartners:
             if (row['case'] == case_str):
@@ -76,33 +78,6 @@ def saveScreenshotToFile(driver, fullPath):
     screenShotPath=os.path.abspath(fullPath)
     return driver.save_screenshot(screenShotPath)
 
-#===============================================================================
-# the function that disables system proxy via connectionto helper service
-#===============================================================================
-
-def disableRemoteSystemProxyViaRegistry():
-    
-    try:
-        r = requests.get('http://52.16.122.203:8080/resetMachineProxy')
-    except Exception as inst:
-        raise Exception("Failed to disable proxy on remote player machine")
-    
-    if (r.status_code != 200):
-        raise Exception("Failed to disable proxy on remote player machine")
-
-#===============================================================================
-# Press given key
-#===============================================================================
-def keyPress(test, key):
-    ActionChains(test.driver).send_keys(key).perform()
-
-#===============================================================================
-# Press multiple time given key
-#===============================================================================
-def multipleKeyPress(test, key, count):
-    for i in range(count):
-        keyPress(test, key)
-        time.sleep(0.5)
 
 #===============================================================================
 # Convert time to secods.
@@ -188,3 +163,25 @@ def clearFilesFromLogFolderPath(fileType):
     filelist = [ f for f in os.listdir(path) if f.endswith(fileType) ]
     for f in filelist:
         os.remove(os.path.join(path, f))
+
+
+        
+# @Author: Oleg Sigalov
+# Get all instances from csv file
+def getListOfInstances():
+    instacesList = {} #[instance:(adminUsername,adminPassword)]
+    newUiStr = ''
+    if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+        newUiStr = 'NewUI'
+        
+    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newUiStr + '.csv'))
+    with open(matrixPath, 'r') as csv_mat: #windows
+        testRow = csv.DictReader(csv_mat)
+        for row in testRow:
+            # Verify first four characters is a digit - instace number
+            if row['partner'][:4].isdigit():
+                # Update/Append new instance with admin user name and password
+                instacesList.update({row['partner']:(row['admin_username'],row['admin_password'])})
+                
+    return instacesList        
+        

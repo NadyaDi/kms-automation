@@ -1,4 +1,5 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
+test_0002,1,0,0,0,Set service url
 test_16,1,0,0,0,Download Source File
 test_594,1,0,0,0,KAF BlackBoard entry thumbnail
 test_603,1,0,0,0,KAF BlackBoard view modes
@@ -6,6 +7,7 @@ test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
 test_643,1,0,0,0,Home Page Carousel
+test_651,1,0,0,0,Navigate to entry page from upload page
 test_653,1,0,0,0,Free trial
 test_655,1,0,0,0,My Media - Add to existing playlist - multiple
 test_656,1,0,0,0,My Media - Add to a new playlist- multiple
@@ -54,18 +56,27 @@ test_707,1,0,0,0,Categories - Add new media from my media to category
 test_709,0,1,0,0,Category - Entries details
 test_710,1,0,0,0,Categories - Edit Entry link
 test_711,1,0,0,0,Categories - Edit metadata
+test_712,1,0,0,0,Categories - Members tab
 test_713,1,0,0,0,Category moderation
+test_714,0,1,0,0,Categories - Enable Disable comments in category
+test_716,1,0,0,0,Categories Type
+test_719,1,0,0,0,Categories - Enable / Disable Inherit permissions
+test_721,1,0,0,0,Categories - Import Mermbers
 test_722,1,0,0,0,Categories - Browse channels
 test_724,1,0,0,0,My Channels - Sort Channels
 test_726,1,0,0,0,My Channels - Filter view
 test_727,1,0,0,0,My Channels - Search as manager
 test_728,1,0,0,0,My Channels - Search as member
 test_729,1,0,0,0,My Channels - Search as subscriber
+test_730,1,0,0,0,My Channels - Create Channel
 test_731,1,0,0,0,Channel page Information
+test_732,1,0,0,0,Channel page - Add New Media
 test_733,1,0,0,0,Add media to channel via Add to
 test_734,0,1,0,0,Channel - Entries details
+test_735,1,0,0,0,Channel page - Search in channel
 test_736,1,0,0,0,Channel - Remove entry from channel
 test_737,1,0,0,0,Edit entry link in channel
+test_738,1,0,0,0,Channel page - Edit metadata
 test_739,1,0,0,0,Channel - Members tab
 test_740,1,0,0,0,Channel page - Enable/Disable comments in channel
 test_741,1,0,0,0,Channel page - Enable subscription in channel
@@ -78,7 +89,9 @@ test_869,1,0,0,0,add Publishing - playlist flow
 test_876,1,0,0,0,add Publishing Schedule during upload
 test_883,1,0,0,0,add Publishing Schedule via edit entry page
 test_894,1,0,0,0,sort in my media
+test_1026,1,0,0,0,Publish from upload page
 test_1027,1,0,0,0,Edir entry - thumbnail tab
+test_1395,1,0,0,0,Channel Type (Open / Restricted / Private)
 test_1555,1,0,0,0,Disclaimer - before upload
 test_1556,1,0,0,0,Disclaimer - before publish
 test_1557,1,0,0,0,importChannel

@@ -536,7 +536,8 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_CAPTION_BROWSE_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on browse caption button")
             return False
-        sleep(2)
+        sleep(4)
+        
         # Type in a file path
         self.clsCommon.upload.typeIntoFileUploadDialog(captionFilePath)
         
@@ -1091,7 +1092,7 @@ class EditEntryPage(Base):
         thumbnailResult = self.clsCommon.qrcode.getScreenshotAndResolveImageInThumbnailTabQrCode()
         
         #TODO add tolerance 
-        if thumbnailResult != str(qrCodeRedult):
+        if (int(qrCodeRedult)-1 <= int(thumbnailResult)) and (int(thumbnailResult) < int(qrCodeRedult)+1) == False:
             writeToLog("INFO","FAILED to verify that the capture thumbnail is correct, expected qr code is '" + str(qrCodeRedult)+ "' and the capture thumbnail qr code is '" + str(thumbnailResult) + "'")
             return False
         
@@ -1110,7 +1111,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on thumbnail auto generate button")
             return False
         
-        sleep(2)
+        sleep(5)
         chosenThumbnail = (self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[0], self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[1].replace('SLOCE_NUMBER', str(chosenThumbnailNumber)))
         if self.click(chosenThumbnail, timeout=20) == False:
             writeToLog("INFO","FAILED to choose thumbnail number '" + str(chosenThumbnailNumber) + "' from auto generate")
@@ -1186,12 +1187,12 @@ class EditEntryPage(Base):
         
         # Upload attachment file
         if self.uploadAttachment(filePath) == False:
-            writeToLog("INFO","Failed to upload attachment file")
+            writeToLog("INFO","FAILED to upload attachment file")
             return False              
        
         #Insert attachment fields and save information
         if self.insertAttachmentFields(attachmentsTitle, attachmentsDescription) == False:
-            writeToLog("INFO","Failed to insert attachment fields - title and description")
+            writeToLog("INFO","FAILED to insert attachment fields - title and description")
             return False      
         
         # wait for loading to disappeared
@@ -1199,7 +1200,7 @@ class EditEntryPage(Base):
         
         #Verify that attachment fields are displayed
         if self.verifyAttachmentFields(attachmentName, attachmentsTitle, attachmentsDescription) == False:
-            writeToLog("INFO","Failed to displayed correct attachment field")
+            writeToLog("INFO","FAILED to displayed correct attachment field")
             return False              
     
         return True
@@ -1258,7 +1259,7 @@ class EditEntryPage(Base):
 
         # Insert content to field
         if self.clear_and_send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE, attachmentsTitle) == False:
-            writeToLog("INFO","Failed to insert title")
+            writeToLog("INFO","FAILED to insert title")
             return False 
              
         # Click on description field
@@ -1268,17 +1269,17 @@ class EditEntryPage(Base):
         
         # Insert content to field
         if self.clear_and_send_keys(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_DESCRIPTION, attachmentsDescription) == False:
-            writeToLog("INFO","Failed to insert description")
+            writeToLog("INFO","FAILED to insert description")
             return False              
         
         # Save fields
         if self.click(self.EDIT_ENTRY_UPLOAD_ATTACHMENTS_SAVE_BUTTON) == False:
-            writeToLog("INFO","Failed to click save button")
+            writeToLog("INFO","FAILED to click save button")
             return False
         
         # Check that success message is displayed
         if self.wait_visible(self.EDIT_ENTRY_UPLOAD_ATTACHMENT_SUCCESS_MSG) == False:
-            writeToLog("INFO","Failed to displayed success message")
+            writeToLog("INFO","FAILED to displayed success message")
             return False
         
         return True
@@ -1294,22 +1295,22 @@ class EditEntryPage(Base):
         
         # Check that success message is displayed
         if self.wait_visible(self.EDIT_ENTRY_UPLOAD_SUCCESS_MSG) == False:
-            writeToLog("INFO","Failed to success message")
+            writeToLog("INFO","FAILED to success message")
             return False             
         
         # Check that correct file name is displayed
         if self.is_visible(tmp_name) == False:
-            writeToLog("INFO","Failed to displayed correct name")
+            writeToLog("INFO","FAILED to displayed correct name: " + attachmentName)
             return False 
         
         # Check that correct file title is displayed
         if self.is_visible(tmp_title) == False:
-            writeToLog("INFO","Failed to displayed correct title")
+            writeToLog("INFO","FAILED to displayed correct title: " + attachmentsTitle)
             return False 
         
         # Check that correct file description is displayed
         if self.is_visible(tmp_descrition) == False:
-            writeToLog("INFO","Failed to displayed correct description")
+            writeToLog("INFO","FAILED to displayed correct description: " + attachmentsDescription)
             return False       
         
         return True   
@@ -1325,17 +1326,17 @@ class EditEntryPage(Base):
         
         # Hover over edit icon
         if self.hover_on_element(self.EDIT_ENTRY_EDIT_ATTACHMENT_ICON) == False:
-            writeToLog("INFO","Failed to hover over attachment icon")
+            writeToLog("INFO","FAILED to hover over attachment icon")
             return False  
         
         #Click on edit icon   
         if self.click(self.EDIT_ENTRY_EDIT_ATTACHMENT_ICON) == False:
-            writeToLog("INFO","Failed to click on edit attachment icon")
+            writeToLog("INFO","FAILED to click on edit attachment icon")
             return False       
        
         #Insert attachment fields and save inforamtion
         if self.insertAttachmentFields(newAttachmentsTitle, newAttachmentsDescription,isNewAttachment) == False:
-            writeToLog("INFO","Failed to insert attachment fields - title and description")
+            writeToLog("INFO","FAILED to insert attachment fields - title and description")
             return False   
         
         # wait for loading to disappeared
@@ -1343,7 +1344,7 @@ class EditEntryPage(Base):
         
         #Verify that attachment fields are displayed
         if self.verifyAttachmentFields(attachmentName, newAttachmentsTitle, newAttachmentsDescription) == False:
-            writeToLog("INFO","Failed to displayed correct attachment field")
+            writeToLog("INFO","FAILED to displayed correct attachment field")
             return False              
     
         return True      
@@ -1359,17 +1360,18 @@ class EditEntryPage(Base):
         
         # Hover over download icon
         if self.hover_on_element(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
-            writeToLog("INFO","Failed to hover over download attachment icon")
+            writeToLog("INFO","FAILED to hover over download attachment icon")
             return False             
         
         #Click on download icon   
         if self.click(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
-            writeToLog("INFO","Failed to click on download attachment icon")
+            writeToLog("INFO","FAILED to click on download attachment icon")
             return False   
         
-        # Compare between uploaded file and download file    
+        # Compare between uploaded file and download file
+        writeToLog("INFO","Going to compare between uploaded file and download file")  
         if self.clsCommon.compareBetweenTwoFilesBinary(originalPath, downloadPath) == False:
-            writeToLog("INFO","Failed to click on to download file correctly")
+            writeToLog("INFO","FAILED to click on to download file correctly")
             return False              
           
         return True
@@ -1393,29 +1395,29 @@ class EditEntryPage(Base):
                    
         # Hover over remove icon
         if self.hover_on_element(self.EDIT_ENTRY_REMOVE_ATTACHMENT_ICON) == False:
-            writeToLog("INFO","Failed to hover over download attachment icon")
+            writeToLog("INFO","FAILED to hover over download attachment icon")
             return False             
         
         # Click on remove icon   
         if self.click(self.EDIT_ENTRY_REMOVE_ATTACHMENT_ICON) == False:
-            writeToLog("INFO","Failed to click on download attachment icon")
+            writeToLog("INFO","FAILED to click on download attachment icon")
             return False 
         
         sleep(2)
           
         # Click on delete in delete confirmation modal
         if self.click(self.EDIT_ENTRY_DELETE_CONFIRMATION_BTN) == False:
-            writeToLog("INFO","Failed to click on delete confirmation button")
+            writeToLog("INFO","FAILED to click on delete confirmation button")
             return False 
         
         # Wait until confirmation delete message is displayed
         if self.wait_visible(self.EDIT_ENTRY_DELETE_CONFIRMATION_MSG) == False:
-            writeToLog("INFO","Failed to displayed delete success message")
+            writeToLog("INFO","FAILED to displayed delete success message")
             return False   
         
         # Check that 'No attachments' message is displayed
         if self.is_visible(self.EDIT_ENTRY_NO_ATTACHMENT_MSG) == False:
-            writeToLog("INFO","Failed to displayed 'No attachments' message")
+            writeToLog("INFO","FAILED to displayed 'No attachments' message")
             return False                         
         
         return True    

@@ -15,6 +15,7 @@ class Test:
     
     #================================================================================================================================
     # @Author: Tzachi Guetta
+    #  Test Name: Categories - Add New Media to category
     # Test description:
     # 
     #================================================================================================================================
@@ -50,13 +51,13 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Audio-entry1')
             self.entryName2 = clsTestService.addGuidToString('Video-entry2')
             self.entryName3 = clsTestService.addGuidToString('Image-entry3')
-            self.categoryName = "Apps Automation Category"
+            self.categoryName = clsTestService.addGuidToString('Categories - Add New Media to category',self.testNum)
             
             self.audioEntry = UploadEntry(self.filePathAudio, self.entryName1, self.entryDescription, self.entryTags, timeout=60, retries=3)
             self.videoEntry = UploadEntry(self.filePathVideo, self.entryName2, self.entryDescription, self.entryTags, timeout=60, retries=3)
@@ -65,28 +66,42 @@ class Test:
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3]
             ########################## TEST STEPS - MAIN FLOW #######################
             
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
+            writeToLog("INFO","Step 1: Going to create parent category") 
+            self.common.apiClientSession.startCurrentApiClientSession()
+            parentId = self.common.apiClientSession.getParentId('galleries') 
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.entryDescription) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
+                writeToLog("INFO","Step 1: FAILED to create parent category")
+                return
+            
+            writeToLog("INFO","Step 2: Going to clear cache")            
+            if self.common.admin.clearCache() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to clear cache")
+                return
+            
+            writeToLog("INFO","Step 3: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
                         
-            writeToLog("INFO","Step 2: Going to upload and publish 3 kind of entries to: " + self.categoryName )
+            writeToLog("INFO","Step 4: Going to upload and publish 3 kind of entries to: " + self.categoryName )
             if self.common.category.addNewContentToCategory(self.categoryName, uploadEntrieList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to upload and publish 3 kind of entries to: " + self.categoryName)
+                writeToLog("INFO","Step 4: FAILED to upload and publish 3 kind of entries to: " + self.categoryName)
                 return
             
             sleep(30)
             for entry in self.entriesList:
-                writeToLog("INFO","Step 2: Going to verify that " + entry + ", is presented inside the category")
+                writeToLog("INFO","Step 5: Going to verify that " + entry + ", is presented inside the category")
                 if self.common.entryPage.navigateToEntryPageFromCategoryPage(entry, self.categoryName) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 2: FAILED to verify that " + entry + ", is presented inside the category")
+                    writeToLog("INFO","Step 5: FAILED to verify that " + entry + ", is presented inside the category")
                     return
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED")
+            writeToLog("INFO","TEST PASSED: 'Categories - Add New Media to category' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -97,6 +112,7 @@ class Test:
             self.common.handleTestFail(self.status)           
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
+            self.common.apiClientSession.deleteCategory(self.categoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

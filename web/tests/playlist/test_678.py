@@ -91,28 +91,35 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to create playlist with 1 Entry ")
                 return
             
-            writeToLog("INFO","Step 4: Going to add Video Entry to Multiple Playlists") 
-            if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName2, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
+            #At step 2, we used the entry only to create new empty playlist, but it was not added to the playlist
+            writeToLog("INFO","Step 4: Going to add 1 entry to first creted Playlists") 
+            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName1, self.playlistName1, toCreateNewPlaylist=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add Video Entry to Multiple Playlists")
+                return             
+            
+            writeToLog("INFO","Step 5: Going to add Video Entry to Multiple Playlists") 
+            if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName2, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to add Video Entry to Multiple Playlists")
                 return       
             
-            writeToLog("INFO","Step 5: Going to add Audio Entry to Multiple Playlists") 
+            writeToLog("INFO","Step 6: Going to add Audio Entry to Multiple Playlists") 
             if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName3, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to add Audio Entry to Multiple Playlists")
+                writeToLog("INFO","Step 6: FAILED to add Audio Entry to Multiple Playlists")
                 return         
             
-            writeToLog("INFO","Step 6: Going to add Image Entry to Multiple Playlists") 
+            writeToLog("INFO","Step 7: Going to add Image Entry to Multiple Playlists") 
             if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName4, self.listOfPlaylists, currentLocation = enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to add Image Entry to Multiple Playlists")
+                writeToLog("INFO","Step 7: FAILED to add Image Entry to Multiple Playlists")
                 return                              
              
-            writeToLog("INFO","Step 7: Going to verify Entry in Playlist1")
+            writeToLog("INFO","Step 8: Going to verify Entry in Playlist1")
             if self.common.myPlaylists.verifyMultipleEntriesInMultiplePlaylists(self.entriesList, self.listOfPlaylists) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify Entry in Playlist1")
+                writeToLog("INFO","Step 8: FAILED to verify Entry in Playlist1")
                 return
                                                                       
             #########################################################################

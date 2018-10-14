@@ -205,7 +205,7 @@ class Test:
             tmpStatus = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.EntryPrivacyType.ALL_STATUSSES.value))
             writeToLog("INFO","Step 22: Going to verify that only entries with " + enums.EntryPrivacyType.PRIVATE.value + " icon display")
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 22: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
                     return
@@ -244,7 +244,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 25: Going to verify that only entries with " + enums.EntryPrivacyType.UNLISTED.value + " icon display")
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.UNLISTED.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.UNLISTED) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 25: FAILED to filter my media entries by '" + enums.EntryPrivacyType.UNLISTED.value + "'")
                     return
@@ -282,7 +282,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 28: Going to verify that only entries with " + enums.EntryPrivacyType.PUBLISHED.value + " icon display")
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 28: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
                     return
@@ -321,7 +321,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 31: Going to verify that only entries with " + enums.EntryPrivacyType.REJECTED.value + " icon display")
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 31: FAILED to filter my media entries by '" + enums.EntryPrivacyType.REJECTED.value + "'")
                     return
@@ -360,7 +360,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 34: Going to verify that only entries with " + enums.EntryPrivacyType.PENDING.value + " icon display")
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 34: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PENDING.value + "'")
                     return
@@ -399,7 +399,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 37: Going to verify that only entries with " + enums.EntryPrivacyType.ALL_STATUSSES.value + " icon display")
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 37: FAILED to filter my media entries by '" + enums.EntryPrivacyType.ALL_STATUSSES.value + "'")
                     return

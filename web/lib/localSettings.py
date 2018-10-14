@@ -56,17 +56,18 @@ LOCAL_SETTINGS_AUTOIT_SCRIPTS                   = os.path.abspath(os.path.join(L
 if LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE:
     LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'media'))
     LOCAL_SETTINGS_TEMP_PATH                    = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp'))
-    LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp', 'downloads'))
+    LOCAL_SETTINGS_TEMP_DOWNLOADS               = None # Will updated in clsTestService, basicSetUp method
     LOCAL_QRCODE_TEMP_DIR                       = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'screenShots', 'qrCode'))
 else:
     LOCAL_SETTINGS_TEMP_PATH                    = os.path.abspath(os.path.join(os.getenv('KMS_WEB'),'temp'))
     LOCAL_QRCODE_TEMP_DIR                       = os.path.abspath(os.path.join(os.getenv('KMS_WEB'),'screenShots','qrCode'))
     LOCAL_SETTINGS_MEDIA_PATH                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'media'))
-    LOCAL_SETTINGS_TEMP_DOWNLOADS               = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))
+    LOCAL_SETTINGS_TEMP_DOWNLOADS               = None # Will updated in clsTestService, basicSetUp method
 
+LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = None # Will updated in clsTestService, basicSetUp method
+LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH      = '/home/local/KALTURA/oleg.sigalov/build/workspace/qaKmsFrontEnd/web/media'
 if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
-    LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'C:\\selenium\\kms-automation\\web\\temp\\downloads'
 
 
 # Will updates in 'utilityTestFunc' class, 'updateTestCredentials' method:

@@ -126,7 +126,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to navigate to entry page")
                 return 
-              
+            sleep(5)  
             writeToLog("INFO","Step 11: Going to get embed link")
             self.embedLink = self.common.entryPage.getEmbedLink()
             if self.embedLink == False:

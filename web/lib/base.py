@@ -41,8 +41,8 @@ class Base:
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
             raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         
-        
-    def get_child_element(self, parent, locator):
+
+    def get_child_element(self, parent, locator, multipleElements=False):
         """
         Returns element based on provided locator.
         Locator include the method and locator value in a tuple.
@@ -55,7 +55,13 @@ class Base:
         
         if type(values) is str:
             try:
-                return self.get_child_element_by_type(parent, method, values)
+                if multipleElements == True:
+                    elements = self.get_child_elements_by_type(parent, method, values)
+                    for el in elements:
+                        if el.size['width']!=0 and el.size['height']!=0:
+                            return el                    
+                else:
+                    return self.get_child_element_by_type(parent, method, values)
             except NoSuchElementException:
                 raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
         elif type(values) is list:
@@ -65,8 +71,8 @@ class Base:
                 except NoSuchElementException:
                     pass
             writeToLog("DEBUG","Function: " + sys._getframe().f_code.co_name + ": Element not found by: '" + method + "' = '" + values + '"')
-            raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)
-        
+            raise NoSuchElementException("FAILED to get element locator value: " + values + "; method: " + method)        
+   
 
     def get_child_elements(self, parent, locator):
         """
@@ -311,8 +317,6 @@ class Base:
                 pass      
             
 
-
-
     # waits for the elements to appear (self.is_visible)
     def wait_elements(self, locator, timeout=10):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
@@ -345,32 +349,7 @@ class Base:
             except:
                 self.setImplicitlyWaitToDefault()
                 return False
-            
 
-    # If you want to verify partial (contains) text set 'contains' True
-    def wait_for_text2(self, locator, text, timeout=10, contains=False):
-        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
-        self.setImplicitlyWait(0)
-        while True:
-            try:
-                element = self.get_element(locator)
-                element_text = element.text
-                if contains == True:
-                    if text.lower() in element_text.lower():
-                        self.setImplicitlyWaitToDefault()
-                        return True                    
-                else:    
-                    if element_text.lower() == text.lower():
-                        self.setImplicitlyWaitToDefault()
-                        return True
-                if wait_until < datetime.datetime.now():
-                    writeToLog('INFO','Text element not visible')
-                    self.setImplicitlyWaitToDefault()
-                    return False                  
-            except:
-                self.setImplicitlyWaitToDefault()
-                return False
-            
 
     # If you want to verify partial (contains) text set 'contains' True
     def wait_for_text(self, locator, text, timeout=30, contains=False):

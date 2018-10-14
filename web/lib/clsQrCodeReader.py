@@ -279,18 +279,21 @@ class QrCodeReader(Base):
         
         
     # Take screenshot of the visible page according to the coordinate crop and resolve QR code
-    # If given locator, it will take screen shot of the element and crop according to the coordinates. 
+    # If given locator, it will take screen shot of the element and crop according to the coordinates.
+    # The coordinates are should given relative to given element Width and element Height:
+    # elementWidth / left , elementHeight / top, elementWidth / right , elementHeight / bottom
+    # For example if elementWidth = 100px and we want to crop the 80px from the right we should pass 100/20=5 (left = 5)
     def getScreenshotAndResolveCustomImageQrCode(self, cropLeft, croTop, cropRight, cropBottom, locator=None):
         if locator == None:
             sc = self.takeCustomQrCodeScreenshot(cropLeft, croTop, cropRight, cropBottom)
         else:
             sc = self.takeElementLocatorQrCodeScreenshotAndCrop(locator, cropLeft, croTop, cropRight, cropBottom)
         if sc == None:
-            writeToLog("DEBUG","Failed to get screenshot for QR code")
+            writeToLog("DEBUG","FAILED to get screenshot for QR code")
             return None
         result = self.resolveQrCode(sc)
         if result == None:
-            writeToLog("DEBUG","Failed to resolve QR code")
+            writeToLog("DEBUG","FAILED to resolve QR code")
             return False
         else:
             writeToLog("DEBUG","QR code result is: " + result)

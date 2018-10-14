@@ -136,7 +136,7 @@ class Test:
                 self.status = "Fail"
                 return                  
                
-            writeToLog("INFO","Step 13: Going to chose auto generate  thumbnail")            
+            writeToLog("INFO","Step 13: Going to choose auto generate  thumbnail")            
             if self.common.editEntryPage.chooseAutoGthumbnail(self.autoGenerateSliceNumber, self.autoGenerateThumbnailExpectedResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to choose auto generate thumbnail")

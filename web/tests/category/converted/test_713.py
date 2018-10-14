@@ -13,6 +13,7 @@ class Test:
     
     #==============================================================================================================
     # Test Description 
+    # author: Tzachi guetta
     # Category page - Category Moderated
     #==============================================================================================================
     testNum     = "713"
@@ -25,13 +26,6 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName1 = None
-    entryName2 = None
-    entryName3 = None
-    entryName4 = None
-    entryName5 = None
-    newUserId = None
-    newUserPass = None
     entryDescription = "Entry description"
     entryTags = "entrytags1,entrytags2,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
@@ -72,71 +66,71 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as End-user")
                 return
-              
+               
             self.entriesToUpload = { 
                 self.entryName4: self.filePath,
                 self.entryName5: self.filePath }            
-              
+               
             writeToLog("INFO","Step 2: Going to upload 5 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
-                
-            writeToLog("INFO","Step 6: Going to set entry #4 as Unlisted")
+                 
+            writeToLog("INFO","Step 3: Going to set entry #4 as Unlisted")
             if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to set entry #4 as Unlisted")
+                writeToLog("INFO","Step 3: FAILED to set entry #4 as Unlisted")
                 return     
-                 
-            writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
+                  
+            writeToLog("INFO","Step 4: Going to publish entries 1-3 to Moderated category")
             if self.common.category.addNewContentToCategory("KMS-Automation_Moderate_Category", uploadEntrieList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
+                writeToLog("INFO","Step 4: FAILED to publish entries 1-3 to Moderated category")
                 return
-                 
-            writeToLog("INFO","Step 8: Going to logout from End-user")
+                  
+            writeToLog("INFO","Step 5: Going to logout from End-user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED failed to logout from End-user")
+                writeToLog("INFO","Step 5: FAILED failed to logout from End-user")
                 return  
                                       
-            writeToLog("INFO","Step 9: Going to login to KMS with channel's owner")
+            writeToLog("INFO","Step 6: Going to login to KMS with channel's owner")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to login with channel's owner")
+                writeToLog("INFO","Step 6: FAILED to login with channel's owner")
                 return
              
             expectedEntriesList = [self.entryName1, self.entryName2]
                
-            writeToLog("INFO","Step 6: Going to sort entries by Alphabetical & Image type")
+            writeToLog("INFO","Step 7: Going to sort entries by Alphabetical & Image type")
             if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, "KMS-Automation_Moderate_Category", True, enums.Location.CATEGORY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to sort entries by Alphabetical & Image type")
+                writeToLog("INFO","Step 7: FAILED to sort entries by Alphabetical & Image type")
                 return
                
-            writeToLog("INFO","Step 7: Going to verify entries order - by Alphabetical & Image type")
+            writeToLog("INFO","Step 8: Going to verify entries order - by Alphabetical & Image type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify entries order - by Alphabetical & Image type")
+                writeToLog("INFO","Step 8: FAILED to verify entries order - by Alphabetical & Image type")
                 return
                     
-            writeToLog("INFO","Step 10: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
+            writeToLog("INFO","Step 9: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
             if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", self.entryName1, self.entryName2, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to handle entries in Pending tab")
+                writeToLog("INFO","Step 9: FAILED to handle entries in Pending tab")
                 return
              
-            writeToLog("INFO","Step 11: Going to logout ")
+            writeToLog("INFO","Step 10: Going to logout ")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED failed to logout")
+                writeToLog("INFO","Step 10: FAILED failed to logout")
                 return  
              
-            writeToLog("INFO","Step 12: Going to perform login to KMS site End-user")
+            writeToLog("INFO","Step 11: Going to perform login to KMS site End-user")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to login as End-user")
+                writeToLog("INFO","Step 11: FAILED to login as End-user")
                 return
              
             self.entries = {self.entryName1: enums.EntryPrivacyType.REJECTED, 
@@ -145,18 +139,19 @@ class Test:
                             self.entryName4: enums.EntryPrivacyType.UNLISTED,
                             self.entryName5: enums.EntryPrivacyType.PRIVATE }
              
-            writeToLog("INFO","Step 13: Going to verify the entries' privacy on my-media")
+            writeToLog("INFO","Step 12: Going to verify the entries' privacy on my-media")
             try:
                 for entry in self.entries:
                     if self.common.myMedia.verifyEntryPrivacyInMyMedia(entry, self.entries.get(entry)) == False:
-                        writeToLog("INFO","Step 13: FAILED verify privacy for entry: " + str(entry))  
+                        writeToLog("INFO","Step 12: FAILED verify privacy for entry: " + str(entry))  
                         self.status = "Fail"
                         return                        
             except:
-                writeToLog("INFO","Step 13: FAILED verify privacy for entry: " + str(entry))  
+                writeToLog("INFO","Step 12: FAILED verify privacy for entry: " + str(entry))  
                 self.status = "Fail"
                 return
             ##################################################################
+            writeToLog("INFO","TEST PASSED: 'Category Moderated' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
