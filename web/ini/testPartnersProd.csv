@@ -1,5 +1,5 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
+test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,2438361-1,mediaspace.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_713,category moderation,2438361-1,mediaspace.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_732,Channel page - Add New Media to channel,2438361-1,mediaspace.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -103,8 +103,8 @@ test_703,Entry page - Replace video,2373952-1,mediaspace.kaltura.com,inbar.willm
 test_676,Playlists - Add to playlist Entry already existing inside,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_692,Entry page - Side My Media,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_683,Create Empty Playlist,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
-test_677,Add Entry from My Media to Several Playlists,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_683,Create Empty Playlist,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura!1,Admin,123456
+test_677,Add Entry from My Media to Several Playlists,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
 test_733,Add media to channel via Add to,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_737,Edit entry link in channel,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_736,Remove entry from Channel,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
@@ -134,5 +134,5 @@ test_707,Categories - Add new media from my media to category,2373952-1,mediaspa
 test_705,Categories - Search in category,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_710,Categories - Edit Entry link,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2693,Watch History - Search by name,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_2697,Watch History - Filter – media type - video,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2697,Watch History - Filter Â– media type - video,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2702,Watch History - Filter by watch status,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

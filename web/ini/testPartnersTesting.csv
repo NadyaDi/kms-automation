@@ -1,4 +1,7 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
+test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
+test_677,Add Entry from My Media to Several Playlists,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
+test_683,Create Empty Playlist,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,Admin,123456
 test_742,Channel moderation,2438361-1,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_713,Category moderation,2438361-1,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
@@ -127,5 +130,5 @@ test_707,Categories - Add new media from my media to category,2373952-1,qakmstes
 test_705,Categories - Search in category,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_710,Categories - Edit Entry link,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2693,Watch History - Search by name,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_2697,Watch History - Filter – media type - video,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2697,Watch History - Filter Â– media type - video,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2702,Watch History - Filter by watch status,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
