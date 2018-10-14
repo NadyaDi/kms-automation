@@ -106,7 +106,7 @@ class Category(Base):
     # @Author: Michal Zomper
     def navigateToSubCateogry(self, parentCategory, subCategory, forceNavigate=False):
         tmpSubCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', subCategory))
-        if forceNavigate:
+        if forceNavigate == False:
             # Check if we are already in category page
             if self.wait_visible(tmpSubCategoryName, 5) != False:
                 writeToLog("INFO","Success Already in my category page")
@@ -327,7 +327,7 @@ class Category(Base):
         if self.navigateToSubCateogry(parentCategory, subCategory, forcrNavigate) == False:
             writeToLog("INFO","FAILED navigate to category")
             return False
-        sleep(2)
+        sleep(3)
         
         if self.click(self.CATEGORY_ACTION_BUTTON) == False:
             writeToLog("INFO","FAILED to click on action button")
@@ -816,7 +816,7 @@ class Category(Base):
             
         tmpMember = (self.CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', userId))
         try:
-            memberText = self.get_element_text(tmpMember)
+            memberText = self.get_element_text(tmpMember, timeout=20)
             if memberText == None:
                 writeToLog("INFO","Failed to find member '" + userId +"' in members table")
                 return False
@@ -867,5 +867,6 @@ class Category(Base):
             writeToLog("INFO","Failed to click  on confirm inherit permissions button")
             return False
         
+        self.clsCommon.general.waitForLoaderToDisappear()
         sleep(4)
         return True

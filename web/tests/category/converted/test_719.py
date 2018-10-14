@@ -72,6 +72,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create parent category")
                 return
+            sleep(3)
             
             writeToLog("INFO","Step 2: Going to create sub category") 
             self.common.apiClientSession.startCurrentApiClientSession()
@@ -113,7 +114,7 @@ class Test:
             sleep(3)
             
             writeToLog("INFO","Step 8: Going navigate to sub category edit page")
-            if self.common.category.navigateToEditSubCategoryPage(self.parentCategoryName, self.subCategoryName, forcrNavigate=True) == False:
+            if self.common.category.navigateToEditSubCategoryPage(self.parentCategoryName, self.subCategoryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to sub category edit page")
                 return 
@@ -129,13 +130,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED, user delete member although after inherit members permissions user can NOT delete member")
                 return   
-            writeToLog("INFO","Step 10: preview step failed as expected: user can NOT delete members after inherit members permissions")
+            writeToLog("INFO","Step 10: preview step failed as expected: user can NOT delete members after inherit members ")
             sleep(3)
             
             writeToLog("INFO","Step 11: Going to try and add member to sub category")
             if self.common.category.addMemberToCategory(self.subCategoryName, self.userName2, permission=enums.CategoryMemberPermission.MEMBER, forceNavigate=False) == True:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED, user added member to sub category although after inherit members permissions user can NOT add member ")
+                writeToLog("INFO","Step 11: FAILED, user added member to sub category although after inherit members permissions user can NOT add member")
                 return   
             writeToLog("INFO","Step 11: preview step failed as expected: user can NOT add members after inherit members permissions")
             sleep(3)
@@ -145,7 +146,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED, user change member permission although after inherit members permissions user can NOT change member permission")
                 return  
-            writeToLog("INFO","Step 12: preview step failed as expected: user can NOT change member permission after inherit members permissions")
+            writeToLog("INFO","Step 12: preview step failed as expected: user can NOT change member permission after inherit members")
             sleep(3)
             
             writeToLog("INFO","Step 13: Going to try and set member as owner")
@@ -153,7 +154,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED, user set member as owner although after inherit members permissions user can NOT set member as owner")
                 return   
-            writeToLog("INFO","Step 13: preview step failed as expected: user can NOT set member as owner after inherit members permissions")   
+            writeToLog("INFO","Step 13: preview step failed as expected: user can NOT set member as owner after inherit members")   
             sleep(3)       
             
             writeToLog("INFO","Step 14: Going navigate to sub category edit page")
@@ -167,6 +168,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to disable inherit permissions from parent category")
                 return
+            sleep(3)
             
             writeToLog("INFO","Step 16: Going navigate to sub category edit page")
             if self.common.category.navigateToEditSubCategoryPage(self.parentCategoryName, self.subCategoryName) == False:
