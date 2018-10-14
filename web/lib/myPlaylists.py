@@ -641,16 +641,19 @@ class MyPlaylists(Base):
                     numberOfDisplay = playlist_entries_list.count(entry)
                     if numberOfDisplay == 1:
                         if isExpected == True:
-                            writeToLog("INFO","As Expected: Entry was found in the Playlists")
+                            writeToLog("INFO","As Expected: Entry " + entry + " was found in the Playlists")
                         else:
-                            writeToLog("INFO","NOT Expected: Entry was found " + str(numberOfDisplay) + " in the Playlists")
+                            writeToLog("INFO","NOT Expected: Entry " + entry + "  was found " + str(numberOfDisplay) + " in the Playlists")
                             return False
                     else:
                         if isExpected == False:
-                            writeToLog("INFO","As Expected: Entry was not found in the Playlists")
+                            writeToLog("INFO","As Expected: Entry " + entry + "  was not found in the Playlists")
                         else:
-                            writeToLog("INFO","NOT Expected: Entry was " + str(numberOfDisplay) + " found in the Playlists")
+                            writeToLog("INFO","NOT Expected: Entry " + entry + "  was " + str(numberOfDisplay) + " found in the Playlists")
                             return False                    
+            else:
+                writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
+                return False                    
                
             return True   
         except NoSuchElementException:
