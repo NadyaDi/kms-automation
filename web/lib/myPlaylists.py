@@ -187,13 +187,13 @@ class MyPlaylists(Base):
                 if self.navigateToMyPlaylists() == False:
                     writeToLog("INFO","FAILED to navigate to my Playlists")
                     return False
-                 
+                sleep(3)
                 tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
                 if self.click(tmp_playlist_name) == False:
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
     
-                sleep(5)
+                sleep(7)
                 if self.click(self.PLAYLIST_DELETE_BUTTON, timeout=20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on playlist delete button (at my playlist page)")
                     return False
@@ -631,7 +631,11 @@ class MyPlaylists(Base):
                 writeToLog("INFO","FAILED, Not provided acceptable value playlists name")
                 return False 
                              
-            for playlist in playlistsName:    
+            for playlist in playlistsName:   
+                if playlist == '':
+                    writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
+                    return False
+                    
                 tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlist))
                 if self.click(tmp_playlist_name) == False:
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
@@ -660,9 +664,6 @@ class MyPlaylists(Base):
                         else:
                             writeToLog("INFO","NOT Expected: Entry " + entry + "  was " + str(numberOfDisplay) + " found in the Playlists")
                             return False                    
-            else:
-                writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
-                return False                    
                
             return True   
         except NoSuchElementException:
