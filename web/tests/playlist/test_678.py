@@ -16,7 +16,11 @@ class Test:
     # Test description:
     # Add Video/ Audio/ Image Entries to Several Playlists from Entry Page
     # The test's Flow: 
-    # Login to KMS-> Upload entries (Video/ Audio/ Image) -> add entry to playlist (create new one- DO NOT SAVE) > Upload additional Entry-> add to Play lists (create new one and check previous created)-> Open Entry Page--> Actions--> Add To Playlist--> Check 2 Playlists--> Go to my playlist -> Click on playlist -> Verify both lists contain the 2nd Entry
+    # Login to KMS-> Upload entries (Video/ Audio/ Image) 
+    # add entry to playlist
+    # Upload additional Entry-> add to Playlists (create new one and check previous created)
+    # Open Entry Page--> Actions--> Add To Playlist--> Check 2 Playlists
+    # Go to my playlist -> Click on playlist -> Verify both lists contain the 2nd Entry# 
     #================================================================================================================================
     testNum     = "678"
     enableProxy = False
