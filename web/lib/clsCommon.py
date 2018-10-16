@@ -1,4 +1,5 @@
 import os
+import shutil
 from admin import Admin
 from autoit import Autoit
 from base import Base
@@ -169,6 +170,30 @@ class Common():
         
         
     # @Author: Oleg Sigalov
+    # Use ONLY for linux    
+    def createFolder(self, path):
+        try:     
+            os.makedirs(path)
+            writeToLog("INFO","Created folder: " + path)
+        except:
+            writeToLog("INFO","FAILED to create folder: " + path)
+            return False
+        return True
+    
+    
+    # @Author: Oleg Sigalov
+    # Use ONLY for linux    
+    def deleteFolder(self, path):
+        try:     
+            shutil.rmtree(path)
+            writeToLog("INFO","Deleted folder: " + path)
+        except:
+            writeToLog("INFO","FAILED to delete folder: " + path)
+            return False
+        return True            
+    
+    
+    # @Author: Oleg Sigalov
     # leavePageExpected=True if the test may fail somewhere, and Leave Page may appear.
     # we need to click leave page, because it will not continue to tearDown and other tests...
     def handleTestFail(self, status, leavePageExpected=False):
@@ -218,5 +243,6 @@ class Common():
         if filecmp.cmp(path1, path2) == False:
             writeToLog("INFO","FAILED to find match between two files")
             return False      
-        
+        else:
+            writeToLog("INFO","Two files are identical (binary)")
         return True      

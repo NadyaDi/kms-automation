@@ -122,7 +122,7 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED to navigate to to my media")
                 return                                                                             
             #########################################################################
-            writeToLog("INFO","TEST PASSED")
+            writeToLog("INFO","TEST PASSED: 'Playlists - Embed playlist' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

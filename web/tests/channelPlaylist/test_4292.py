@@ -19,7 +19,7 @@ class Test:
     # Upload entries - create Channel - publish the entries to the channel and create channel playlist. 
     # Adding entries to it using the filters.
     #================================================================================================================================
-    testNum     = "768"
+    testNum     = "4292"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

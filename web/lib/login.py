@@ -19,6 +19,7 @@ class Login(Base):
     USER_MENU_TOGGLE_BTN                = ('id', 'userMenuToggleBtn')
     USER_LOGOUT_BTN                     = ('xpath', "//i[@class='icon-signout']")
     USER_GUEST                          = ('xpath', "//span[@id='userMenuDisplayName' and contains(text(), 'Guest')]")
+    USER_NAME                           = ('xpath', "//span[@id='userMenuDisplayName']")
     #============================================================================================================
     def loginToKMS(self, username, password, url=''):
         try:
@@ -117,3 +118,13 @@ class Login(Base):
             writeToLog("INFO","FAILED to click login/submit button")
             return False         
         return True
+    
+    
+    def getLoginUserName(self):
+        try:
+            userName=self.get_element_text(self.USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName
+        

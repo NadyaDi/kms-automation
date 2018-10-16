@@ -57,7 +57,6 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 def initialize(test,driverFix,duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
-        cleanTempDownloadFolder()
     # Setup the test, initialize
     test = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     # Start driver - Open browser and navigate to base URL
@@ -167,6 +166,18 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
     localSettings.LOCAL_RUNNING_BROWSER = driverFix
     localSettings.LOCAL_SETTINGS_GUID = str(uuid.uuid4())[:8].upper()
     
+    # Set auto download path
+    # If you need a shared folder between the win node and Jenkins node, create a folder in your test: localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS
+    localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = '/mnt/auto_kms_py1/downloads/' + str(localSettings.LOCAL_SETTINGS_GUID)
+    if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
+        localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'temp', 'downloads'))
+    else:
+        localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))
+    
+    if isAutomationEnv() == True:
+        # Z:\\ - Is shared folder on il-AutoKmsJenkinsNode-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
+        localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'Z:\\' + str(localSettings.LOCAL_SETTINGS_GUID)
+
     test.driver = testWebDriverLocalOrRemote(driverFix)        
         
     if ("version" in test.driver.capabilities):
@@ -271,8 +282,8 @@ def cleanFolder(folderPath):
     return True
 
 
-def addGuidToString(value, testID=""):
+def addGuidToString(value, testID="", delimiter="-"):
     if testID=="":
-        return localSettings.LOCAL_SETTINGS_GUID + '-' + value
+        return localSettings.LOCAL_SETTINGS_GUID + delimiter + value
     else:
-        return localSettings.LOCAL_SETTINGS_GUID + '-' + testID + '-' + value     
+        return localSettings.LOCAL_SETTINGS_GUID + delimiter + testID + delimiter + value     

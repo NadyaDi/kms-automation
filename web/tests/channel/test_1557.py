@@ -72,8 +72,8 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
             
-            entriesList = [self.entryName1 ,self.entryName2 ,self.entryName3]
-            for entry in entriesList:
+            self.entriesList = [self.entryName1 ,self.entryName2 ,self.entryName3]
+            for entry in self.entriesList:
                 if self.common.upload.uploadEntry(self.filePath, entry, self.entryDescription, self.entryTags) == None:
                     self.status = "Fail"
                     writeToLog("INFO","Step 1: FAILED failed to upload entry")
@@ -92,13 +92,13 @@ class Test:
                 return
              
             writeToLog("INFO","Step 4: Going to publish single entry")
-            if self.common.channel.addContentToChannel(self.channelName1, entriesList, False) == False:
+            if self.common.channel.addContentToChannel(self.channelName1, self.entriesList, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry to Channel#1")
                 return
              
             writeToLog("INFO","Step 5: Going to import channel")
-            if self.common.channel.importChannel(self.channelName1, self.channelName2, entriesList) == False:
+            if self.common.channel.importChannel(self.channelName1, self.channelName2, self.entriesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to import channel 1 to Channel#2")
                 return
@@ -114,7 +114,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
             self.common.channel.deleteChannel(self.channelName1)
             self.common.channel.deleteChannel(self.channelName2)
             writeToLog("INFO","**************** Ended: teardown_method *******************")

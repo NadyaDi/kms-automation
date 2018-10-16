@@ -18,7 +18,7 @@ class Test:
     # Upload entries - create Channel - publish the entries to channel and create channel playlist while adding the new entries to it .
     # Go back to edit channel playlist page grab the embed code and play it as stand alone page.
     #================================================================================================================================
-    testNum     = "769"
+    testNum     = "4293"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

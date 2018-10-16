@@ -80,7 +80,7 @@ class Home(Base):
 
     def verifyEntryInHomePageCarousel(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropBottom):  
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            tmpEntryName = (self.HOME_CAROUSEL_ENTRY_OLD_UI[0], self.HOME_CAROUSEL_ENTRY_OLD_UI[1].replace('ENTRY_NAME', entryName))
+            tmpEntryName = (self.HOME_CAROUSEL_ENTRY_OLD_UI[0], self.HOME_CAROUSEL_ENTRY_OLD_UI[1].replace('ENTRY_NAME', entryName) + "/ancestor::div[@class='carmain']")
         else:
             tmpEntryName = (self.HOME_CAROUSEL_ENTRY[0], self.HOME_CAROUSEL_ENTRY[1].replace('ENTRY_NAME', entryName) + "/ancestor::div[@class='thumbnail-info__container']")
          

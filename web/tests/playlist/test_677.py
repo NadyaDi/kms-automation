@@ -16,7 +16,9 @@ class Test:
     # Test description:
     # Add Entry from My Media to Several Playlists
     # The test's Flow: 
-    # Login to KMS-> Upload entries -> add entry to playlist (create new one- DO NOT SAVE) > Upload additional Entry-> add to Play lists (create new one and check previous created)-> Go to my playlist -> Click on playlist -> Verify both lists contain the 2nd Entry
+    # Login to KMS-> Upload entries -> add entry to playlist (create new one- DO NOT SAVE)
+    # Upload additional Entry-> add to Play lists (create new one and check previous created)
+    # Go to my playlist -> Click on playlist -> Verify both lists contain the 2nd Entry
     #================================================================================================================================
     testNum     = "677"
     enableProxy = False
@@ -88,7 +90,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify Entry in Playlist1")
                 return
-                                                                      
+            sleep(4)                                                       
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

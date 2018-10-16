@@ -1,7 +1,9 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
+test_0002,Set service url,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
+test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
-test_742,Channel moderation,5447-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
-test_713,Category moderation,5447-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
+test_742,Channel moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_713,Category moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -22,6 +24,7 @@ test_643,Home Page Carousel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@
 test_709,Category - Entries details,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_734,Channel - Entries details,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_731,Channel page Information,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_732,Channel page - Add New Media to channel,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_672,My media - Navigate to entry page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_665,My media - Search in my media,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_728,My Channels - Search as member,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -43,16 +46,27 @@ test_2510,Global Search for Category,2370151,qakmstest.dev.kaltura.com,pythonaut
 test_637,Global Search for Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_639,Global Search for Captions in Video,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1026,Publish from upload page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_1556,Disclaimer - Before publish (agreeRequired = Yes),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_1558,Disclaimer - Before publish (agreeRequired = No),5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_876,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_869,Scheduling: add Publishing  - playlist flows,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_883,Scheduling: add Publishing Schedule via edit entry page,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_894,Sort in My-Media,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Scheduling,123456
-test_1555,Disclaimer - Before publish,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_16,Download Source File,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_675,Playlist reorder,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
-test_679,Remove Entry from one of playlist during to add same Entry to new,5447-1,qakmstest.dev.kaltura.com,webcast@mailinator.com,Automation1!,Admin,123456
+test_716,Categories Type,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_651,Navigate to entry page from upload page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1395,Channel Type (Open / Restricted / Private),2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_735,Channel page - Search in channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_730,My Channels - Create Channel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_738,Channel page - Edit metadata,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_714,Categories - Enable Disable comments in category,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_712,Categories - Members tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_721,Categories - Import Mermbers,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_719,Categories - Enable / Disable Inherit permissions,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1025,Categories - Sort media on category page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1556,Disclaimer - Before publish (agreeRequired = Yes),2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1558,Disclaimer - Before publish (agreeRequired = No),2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_876,Scheduling media - add media to channel via upload page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_869,Scheduling: add Publishing  - playlist flows,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_883,Scheduling: add Publishing Schedule via edit entry page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_894,Filter and Sort scheduling media in My-Media,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1555,Disclaimer - Before publish,2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_16,Download Source File,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_675,Playlist reorder,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_679,Remove Entry from one of playlist during to add same Entry to new,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
 test_733,Add media to channel via Add to,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_737,Edit entry link in channel,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
@@ -101,8 +115,8 @@ test_703,Entry page - Replace video,2373952,qakmstest.dev.kaltura.com,inbar.will
 test_692,Entry page - Side My Media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3881,SAML Login,kaltura,com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_677,Add Entry from My Media to Several Playlists,2362001-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
-test_683,Create Empty Playlist,2362001-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
+test_677,Add Entry from My Media to Several Playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
+test_683,Create Empty Playlist,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_662,My Media - Publish to category - single,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_664,My Media - Publish to category - multiple,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_663,My Media - Publish to channel - multiple,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -126,7 +140,7 @@ test_707,Categories - Add new media from my media to category,2373952,qakmstest.
 test_705,Categories - Search in category,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_710,Categories - Edit Entry link,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2693,Watch History - Search by name,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_2697,Watch History - Filter – media type - video,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2697,Watch History - Filter media type - video,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2702,Watch History - Filter by watch status,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3902,Sort by - Galleries page,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3901,Sort by - My Channels - when search is made,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

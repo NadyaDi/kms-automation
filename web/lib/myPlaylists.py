@@ -187,13 +187,13 @@ class MyPlaylists(Base):
                 if self.navigateToMyPlaylists() == False:
                     writeToLog("INFO","FAILED to navigate to my Playlists")
                     return False
-                 
+                sleep(3)
                 tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
                 if self.click(tmp_playlist_name) == False:
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
     
-                sleep(5)
+                sleep(7)
                 if self.click(self.PLAYLIST_DELETE_BUTTON, timeout=20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on playlist delete button (at my playlist page)")
                     return False
@@ -267,30 +267,39 @@ class MyPlaylists(Base):
             
         return True    
     
-    #  @Author: Tzachi Guetta
-    # indexEntryFrom - index of entry from entriesList we wish to move
+
+    #  @Author: Tzachi Guetta and Oleg Sigalov
+    # indexEntryFrom - Index of entry from the playlist we wish to move
     # indexEntryTo - The index of wished place to move in playlist, for example: 1 will move to the top of the list
-    def shufflePlaylistEntries(self, playlistName, entriesList, indexEntryFrom, indexEntryTo):
+    def shufflePlaylistEntries(self, playlistName, indexEntryFrom, indexEntryTo):
         try:
             if playlistName != '':
                 if self.navigateToMyPlaylists() == False:
                     writeToLog("INFO","FAILED to navigate to my Playlists")
                     return False
-                 
+                
+                # Click on the playlist name 
                 tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
                 if self.click(tmp_playlist_name) == False:
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
                     return False
                 
-                tmp_entry_name = (self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[0], self.PLAYLIST_ENTRY_NAME_IN_PLAYLIST[1].replace('ENTRY_NAME', entriesList[indexEntryFrom]))
-                source_element = self.get_element(tmp_entry_name)
+                sleep(3)
                 
+                # Show all entries at the bottom of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
-                heightOfEntry = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)[0].size['height']
-                moveX = 800
-                moveY = int((indexEntryTo * heightOfEntry) +  heightOfEntry)
+                entriesTableList = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)
+                heightOfEntry = entriesTableList[0].size['height'] + 5
+                moveX = 0
+                moveY = abs(indexEntryTo - indexEntryFrom)
+                if indexEntryFrom > indexEntryTo:
+                    # Move up
+                    moveY = -1 * (moveY * heightOfEntry)
+                else:
+                    # Move down
+                    moveY = moveY * heightOfEntry
                 writeToLog("INFO","FOR DEBUG: X = " + str(moveX) + "; Y = " + str(moveY))
-                ActionChains(self.driver).drag_and_drop_by_offset(source_element, moveX, moveY).perform()
+                ActionChains(self.driver).drag_and_drop_by_offset(entriesTableList[indexEntryFrom-1], moveX, moveY).perform()
                 
                 sleep(2)
                 if self.click(self.PLAYLIST_SAVE_BUTTON) == False:
@@ -304,7 +313,7 @@ class MyPlaylists(Base):
         except NoSuchElementException:
             return False
             
-        return True
+        return True    
     
     
     # @author: Michal Zomper
@@ -419,7 +428,7 @@ class MyPlaylists(Base):
         if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName) == False:
             writeToLog("INFO","FAILED to type playlist name")
             return False
-        sleep(2)
+        sleep(4)
     
         if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on create playlist Button")
@@ -622,7 +631,11 @@ class MyPlaylists(Base):
                 writeToLog("INFO","FAILED, Not provided acceptable value playlists name")
                 return False 
                              
-            for playlist in playlistsName:    
+            for playlist in playlistsName:   
+                if playlist == '':
+                    writeToLog("INFO","FAILED, Not provided acceptable value playlistName")
+                    return False
+                    
                 tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlist))
                 if self.click(tmp_playlist_name) == False:
                     writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
@@ -641,15 +654,15 @@ class MyPlaylists(Base):
                     numberOfDisplay = playlist_entries_list.count(entry)
                     if numberOfDisplay == 1:
                         if isExpected == True:
-                            writeToLog("INFO","As Expected: Entry was found in the Playlists")
+                            writeToLog("INFO","As Expected: Entry " + entry + " was found in the Playlists")
                         else:
-                            writeToLog("INFO","NOT Expected: Entry was found " + str(numberOfDisplay) + " in the Playlists")
+                            writeToLog("INFO","NOT Expected: Entry " + entry + "  was found " + str(numberOfDisplay) + " in the Playlists")
                             return False
                     else:
                         if isExpected == False:
-                            writeToLog("INFO","As Expected: Entry was not found in the Playlists")
+                            writeToLog("INFO","As Expected: Entry " + entry + "  was not found in the Playlists")
                         else:
-                            writeToLog("INFO","NOT Expected: Entry was " + str(numberOfDisplay) + " found in the Playlists")
+                            writeToLog("INFO","NOT Expected: Entry " + entry + "  was " + str(numberOfDisplay) + " found in the Playlists")
                             return False                    
                
             return True   

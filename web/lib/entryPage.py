@@ -82,7 +82,8 @@ class EntryPage(Base):
         if self.clsCommon.category.navigateToCategory(categoryName) == False:
             writeToLog("INFO","FAILED navigate to category:" + categoryName)
             return False             
-            
+        sleep(2)
+           
         if self.clsCommon.category.searchEntryInCategory(entryName) == False:
             writeToLog("INFO","FAILED to search entry'" + entryName + "' in category" + categoryName)
             return False  
@@ -336,6 +337,7 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to click on embed tab")
             return False
         sleep(3)
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
         if self.wait_while_not_visible(self.ENTRY_PAGE_LOADING) == False:
             writeToLog("INFO","FAILED - Loading message is still displayed")
             return False   
@@ -584,12 +586,12 @@ class EntryPage(Base):
     
     
     # @Author: Inbar Willman
-    # Verify that correc tnumber of related media is displayed
+    # Verify that correct count of related media is displayed
     # By default = 10
-    def verifyRelatedMediaCount(self):
+    def verifyRelatedMediaCount(self, realtedLimit):
         # get related media table length
         related_media_length = len(self.get_elements(self.ENTRY_PAGE_RELATED_MEDIA_TABLE))
-        if related_media_length != 10:
+        if related_media_length != realtedLimit:
             writeToLog("INFO","Failed to displayed correct number of media in Related section")
             return False   
         

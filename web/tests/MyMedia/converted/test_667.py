@@ -117,7 +117,7 @@ class Test:
             tmpType = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.MediaType.ALL_MEDIA.value))
             writeToLog("INFO","Step 9: Going to filter my media entries by: " + enums.MediaType.IMAGE.value) 
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.IMAGE.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.IMAGE) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED to filter my media entries  by '" + enums.MediaType.IMAGE.value + "'")
                     return
@@ -155,7 +155,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 12: Going to filter my media entries by: " + enums.MediaType.AUDIO.value) 
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.AUDIO.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.AUDIO) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 12: FAILED to filter my media entries  by '" + enums.MediaType.AUDIO.value + "'")
                     return
@@ -193,7 +193,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 15: Going to filter my media entries by: " + enums.MediaType.VIDEO.value) 
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.VIDEO.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.VIDEO) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 15: FAILED to filter my media entries  by '" + enums.MediaType.VIDEO.value + "'")
                     return
@@ -232,7 +232,7 @@ class Test:
             sleep(1)
             writeToLog("INFO","Step 18: Going to filter my media entries by: " + enums.MediaType.ALL_MEDIA.value)
             if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.ALL_MEDIA.value) == False:
+                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.ALL_MEDIA) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 18: FAILED to filter my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
                     return

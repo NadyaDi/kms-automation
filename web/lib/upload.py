@@ -65,6 +65,7 @@ class Upload(Base):
     # Elements for multiple upload
     UPLOAD_UPLOADBOX                            = ('xpath', "//div[@id='uploadbox[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
+    UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@id='back' and contains(text(), 'Go To Media')]")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -136,7 +137,8 @@ class Upload(Base):
                 if i > 0:
                     writeToLog("INFO","FAILED to upload after " + str(i) + " retries of " + str(retries) + ". Going to upload again...")
                 # Convert path for Windows
-                filePath = filePath.replace("/", "\\")     
+                filePath = filePath.replace("/", "\\")
+                filePath = filePath.replace("\\\\", "\\")
                 
                 # Navigate to upload page
                 if uploadFrom == enums.Location.UPLOAD_PAGE:
@@ -175,7 +177,7 @@ class Upload(Base):
                 if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
                     writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
                     continue
-                    
+                   
                 # Fill entry details: name, description, tags
                 if self.fillFileUploadEntryDetails(name, description, tags) == False:
                     continue
@@ -212,7 +214,7 @@ class Upload(Base):
         uploadboxCount = 1
         if uploadFrom == enums.Location.UPLOAD_PAGE:
             # Click Add New
-            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on 'Add New' button")
                 return False
             # Click Media Upload
@@ -362,11 +364,11 @@ class Upload(Base):
         if self.send_keys(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
             writeToLog("INFO","FAILED to fill a entry name:'" + name + "'")
             return False
-        
+        sleep(2)
         if self.fillFileUploadEntryDescription(description) == False:
             writeToLog("INFO","FAILED to fill a entry Description:'" + description + "'")
             return False
-        
+        sleep(2)
         if self.fillFileUploadEntryTags(tags) == False:
             writeToLog("INFO","FAILED to fill a entry Tags:'" + tags + "'")
             return False        
@@ -587,7 +589,7 @@ class Upload(Base):
             self.clsCommon.sharePoint.navigateToUploadPageSharePoint()
                       
         # Click Add New
-        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")
             return False
         # Click Media Upload
@@ -606,4 +608,20 @@ class Upload(Base):
                 return False
             
         return True
-                
+           
+           
+    def navigateToEntryPageFromUploadPage(self, entryName):     
+        if self.click(self.UPLOAD_GO_TO_MEDIA_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'go to media' button")
+            return False  
+        
+        tmpEntry = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        #Check if we already in edit entry page
+        if self.wait_visible(tmpEntry, 15) == False:
+            writeToLog("INFO","FAILED, entry page for entry '" + entryName + "' did NOT open")
+            return False      
+        
+        sleep(2)
+        writeToLog("INFO","Success, entry page was open successfully")
+        return True
+        
