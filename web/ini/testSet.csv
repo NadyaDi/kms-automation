@@ -89,7 +89,7 @@ test_869,1,0,0,0,add Publishing - playlist flow
 test_876,1,0,0,0,add Publishing Schedule during upload
 test_883,1,0,0,0,add Publishing Schedule via edit entry page
 test_894,1,0,0,0,sort in my media
-test_1025,1,0,0,0,Categories - Sort media on category page
+test_1025,0,1,0,0,Categories - Sort media on category page
 test_1026,1,0,0,0,Publish from upload page
 test_1027,1,0,0,0,Edir entry - thumbnail tab
 test_1395,1,0,0,0,Channel Type (Open / Restricted / Private)

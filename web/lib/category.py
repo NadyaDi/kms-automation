@@ -923,3 +923,36 @@ class Category(Base):
         sleep(4)
         return True
 
+
+    #  @Author: Michal Zomper    
+    # The function check and verify that the entries sort in category are in the correct order 
+    def verifySortInCategory(self, sortBy, entriesList):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            sortBy = sortBy.value
+            
+        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries")
+            return False
+                
+        if self.clsCommon.myMedia.showAllEntries(searchIn=enums.Location.CATEGORY_PAGE) == False:
+            writeToLog("INFO","FAILED to show all entries in category page")
+            return False
+        sleep(10)
+        
+        try:
+            entriesIncategory = self.wait_visible(self.MY_MEDIA_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        entriesIncategory = entriesIncategory.split("\n")
+        
+        if self.verifySortOrder(entriesList, entriesIncategory) == False:
+            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True
+        else:
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True
