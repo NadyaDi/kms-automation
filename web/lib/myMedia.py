@@ -1110,38 +1110,7 @@ class MyMedia(Base):
                      
                      
     #  @Author: Michal Zomper    
-    # The function check the the entries sort in my media is correct
-    def verifySortInMyMediaOldUi(self, sortBy, entriesList):
-        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
-            writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
-            return False
-                
-        if self.showAllEntries() == False:
-            writeToLog("INFO","FAILED to show all entries in my media")
-            return False
-            
-        try:
-            entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to get entries list in galley")
-            return False
-        
-        entriesInMyMedia = entriesInMyMedia.split("\n")
-        prevEntryIndex = -1
-        
-        for entry in entriesList:
-            currentEntryIndex = entriesInMyMedia.index(entry.lower())
-            if prevEntryIndex > currentEntryIndex:
-                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
-                return False
-            prevEntryIndex = currentEntryIndex
-                
-        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-        return True   
-    
-    
-    
-    
+    # The function check and verify that the entries sort in my media are in the correct order 
     def verifySortInMyMedia(self, sortBy, entriesList):
         if self.clsCommon.isElasticSearchOnPage() == True:
             sortBy = sortBy.value
@@ -1160,37 +1129,56 @@ class MyMedia(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list in galley")
             return False
-        
-        
         entriesInMyMedia = entriesInMyMedia.split("\n")
-        prevEntryIndex = -1
         
+        if self.verifySortOrder(entriesList, entriesInMyMedia) == False:
+            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True
+        else:
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True
+
+    
+    # @Author: Michal Zomper
+    # The function is checking that the sort order is correct
+    # entriesOrderAfterSor is the parameter of all the text in the sort page
+    def verifySortOrder(self, entriesList, entriesOrderAfterSort):
+        prevEntryIndex = -1
+         
         if self.clsCommon.isElasticSearchOnPage() == True:
             for entry in entriesList:
                 try:
-                    currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                    currentEntryIndex = entriesOrderAfterSort.index(entry.lower())
                 except:
-                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found in my media" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found" )
                     return False             
-                       
+                        
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    #writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' isn't in the right place")
                     return False
                 prevEntryIndex = currentEntryIndex
-                    
-            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            #writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")         
+            writeToLog("INFO","Success, entries sort was successful")
             return True   
         else:
             for entry in entriesList:
-                currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                currentEntryIndex = entriesOrderAfterSort.index(entry.lower())
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    #writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' isn't in the right place")
                     return False
                 prevEntryIndex = currentEntryIndex
-                    
-            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-            return True   
-
+                
+            #writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            writeToLog("INFO","Success, entries sort  was successful")
+            return True
+        
+    
     def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=60, afterSearch=False):
         # Check if we are in My Media page  
         if searchIn == enums.Location.MY_MEDIA:
