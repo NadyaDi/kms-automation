@@ -113,6 +113,7 @@ class SortBy(Enum):
     VIEWS                   = 'Views'
     LIKES                   = 'Likes'
     ALPHABETICAL            = "Alphabetically - A to Z"
+    ALPHABETICAL_Z_A        = "Alphabetically - Z to A"
     COMMENTS                = "Comments"
     SCHEDULING_ASC          = "Scheduling Ascending"
     SCHEDULING_DESC         = "Scheduling Descending" 
@@ -248,6 +249,8 @@ class ChannelsSortBy(Enum):
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
     MEDIA_COUNT_NEWUI         = "Media count"
     MEDIA_COUNT_OLDUI         = "Media Count"
+    ALPHABETICAL_Z_A_NEWUI    = "Alphabetical Z-A"
+    RELEVANCE                 = 'Relevance'
 
 class MyHistoryFilters(Enum):
     def __str__(self):

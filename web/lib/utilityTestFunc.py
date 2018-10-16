@@ -56,6 +56,7 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_KMS_MY_HISTORY_URL         = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/history'
         localSettings.LOCAL_SETTINGS_KMS_CHANNELS_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/channels'   
         localSettings.LOCAL_SETTINGS_KMS_MEDIA_SELECTION_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/quiz/entry/add-quiz/context/'
+        localSettings.LOCAL_SETTINGS_KMS_GALLERIES_URL          = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/esearch/search-galleries/?keyword=gallery'
     
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL

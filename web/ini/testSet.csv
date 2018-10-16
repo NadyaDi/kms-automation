@@ -128,3 +128,8 @@ test_3282,1,0,0,0,Collaboration negative test
 test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
 test_3284,1,0,0,0,Slide Deck Upload- search slides
 test_3881,1,0,0,0,SAML Login
+test_3902,1,0,0,0,Sort by - Galleries page
+test_3901,1,0,0,0,Sort by - My Channels - when search is made
+test_4309,1,0,0,0,Sort by - Channels - when search is made
+test_1,1,0,0,0,Setup test for eSearch
+test_4310,1,0,0,0,Sort by - Channels - when no search is made
