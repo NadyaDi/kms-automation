@@ -59,6 +59,9 @@ class Category(Base):
     CATEGORY_DESCRIPTION                                        = ('xpath', "//div[@class='js-description' and contains(text(), 'CATEGORY_DESCRIPTION')]")
     CATEGORY_TAGS                                               = ('xpath', "//a[@class='badge badge-info' and contains(text(), 'CATEGORY_TAGS')]")
     CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD                        = ('xpath', "//a[text()='Go To Category']")
+    CATEGORIES_TABLE_SIZE                                       = ('xpath', '//li[@class="gallery-result row-fluid"]')
+    CATEGORIES_NO_MORE_GALLERIES_ALERT                          = ('xpath', '//div[@class="message__text" and text()="No more galleries found."]')
+    CATEGORIES_PAGE_ALL_GALLERIES_LIST                          = ('xpath', '//ul[@class="galleries-results-list row-fluid span12"]')                                       
     CATEGORY_MEMBERS_TAB                                        = ('xpath', '//a[@id="categorymembers-tab"]')
     CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD                    = ('xpath', '//input[@id="AddCategoryMember-userId"]')   
     CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION                    = ('xpath', '//select[@id="AddCategoryMember-permission"]')
@@ -627,7 +630,56 @@ class Category(Base):
         
         return True
     
+   
+    # @Author: Inbar Willman
+    # Verify that galleries are sorted correctly by the chosen sort
+    def verifySortInGalleries(self, sortBy, galleriesList):
+        if self.clsCommon.channel.selectSortChannelOptionInMyChannelsPage(sortBy.value) == False:
+            writeToLog("INFO","FAILED to sort galleries by: " + sortBy.value)
+            return False
+        
+        if self.showAllGalleries() == False:
+            writeToLog("INFO","FAILED to show all galleries")
+            return False
+            
+        try:
+            galleriesInPage = self.get_element(self.CATEGORIES_PAGE_ALL_GALLERIES_LIST).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get channels list in galley")
+            return False
+        galleriesInPage = galleriesInPage.split("\n")
+        prevChannelIndex = -1
+        
+        for gallery in galleriesList:
+            galleryCurrentIndex = galleriesInPage.index(gallery.lower())
+            if prevChannelIndex > galleryCurrentIndex:
+                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. gallery '" + gallery + "' isn't in the right place" )
+                return False
+            prevChannelIndex = galleryCurrentIndex + 2
+                
+        writeToLog("INFO","Success, verify sort galleries by '" + sortBy.value + "' was successful")
+        return True   
     
+    
+    #  @Author: Inbar Willman    
+    def showAllGalleries(self, timeOut=60): 
+        if len(self.get_elements(self.CATEGORIES_TABLE_SIZE)) < 5:
+            writeToLog("INFO","Success, All galleries are display")
+            return True 
+                  
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
+        while wait_until > datetime.datetime.now():
+            if self.is_present(self.CATEGORIES_NO_MORE_GALLERIES_ALERT, 2) == True:
+                writeToLog("INFO","Success, All channels are display")
+                return True 
+             
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+             
+        writeToLog("INFO","FAILED to show all channels")
+        return False    
+
+      
         # @Author: Michal Zomper
     # Go to members tab 
     def navigateToCategoryMembersTab(self):
@@ -870,3 +922,4 @@ class Category(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         sleep(4)
         return True
+

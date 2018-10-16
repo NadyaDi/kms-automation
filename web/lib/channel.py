@@ -118,6 +118,9 @@ class Channel(Base):
     CHANNEL_REMOVE_SEARCH_ICON                      = ('xpath', "//i[@class='icon-remove']")
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
+    #MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='dropdown-toggle DropdownFilter__toggle']")
     MY_CHANNELS_SORTBY_BUTTON_OLDUI                 = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
     MY_CHANNELS_SORTBY_BUTTON_NEWUI                 = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
     CHANNEL_CANCEL_PLAYLIST_BUTTON                  = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
@@ -137,6 +140,7 @@ class Channel(Base):
     CHANNEL_ENTRY_THUMBNAIL                         = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
     CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON           = ('xpath', "//div[@class='hidden buttons-expand']")
     CHANNEL_EDIT_BUTTON_NO_SEARCH                   = ('xpath', "//i[@class='icon-pencil']")
+    CHANNELS_DEFAULT_SORT                           = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ' and text()='DEFAULT_SORT']")
     CHANNEL_ENTRY_DELETE_BUTTON                     = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
     CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD              = ('xpath', "//a[@id='next' and text()='Go To Channel']")
     CHANNEL_GO_BACK_TO_CHANNEL_BUTTON               = ('xpath', "//a[@class='btn btn-link' and text()='Back to Channel']")
@@ -1912,6 +1916,55 @@ class Channel(Base):
         return True
     
     
+    # @Author: Inbar Willman
+    # Verify that correct default sort is displayed
+    def verifyChannelsDefaultSort(self, sortBy):
+        tmpDefaultSort = (self.CHANNELS_DEFAULT_SORT[0], self.CHANNELS_DEFAULT_SORT[1].replace('DEFAULT_SORT', str(sortBy)))
+        
+        try:
+            self.get_element(tmpDefaultSort)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get default sort element")
+            return False
+        
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    # Make a search in my channels page without verify results
+    def searchInMyChannelsAndChannelsWithoutVerifyResults(self, search, exactName=True):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on name text field")
+                return False
+                
+            sleep(1)
+                
+            if exactName == True: 
+                searchString = '"' + search + '"'
+            else:
+                searchString = search
+            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD, searchString + Keys.ENTER, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to type in 'name' text field")
+                return False
+        else:
+            if self.click(self.MY_CHANNELS_SERACH_FIELD_OLD_UI, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on name text field")
+                return False
+                
+            sleep(1)
+                
+            if self.send_keys(self.MY_CHANNELS_SERACH_FIELD_OLD_UI, search, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to type in 'name' text field")
+                return False
+                
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(3) 
+            
+        writeToLog("INFO","Search is made successfully in my channels page")
+        return True     
+
+      
     # Author: Michal Zomper
     # The function perform upload to new media from channel page
     # each item in uploadEntrieList need to have to value from type  "UploadEntry":  
@@ -2101,3 +2154,4 @@ class Channel(Base):
             return False
         
         return True
+

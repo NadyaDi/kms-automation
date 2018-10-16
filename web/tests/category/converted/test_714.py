@@ -1,5 +1,4 @@
 import time, pytest
-import sys,os
 sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from clsCommon import Common
 import clsTestService
@@ -12,8 +11,9 @@ from upload import UploadEntry
 
 
 class Test:
-    
     #================================================================================================================================
+    testNum     = "714"
+    enableProxy = False
     #  @Author: Michal Zomper
     # Test Name : Categories - Enable\Disable comments in category
     # Test description:
@@ -41,7 +41,6 @@ class Test:
     comment1 = "Enable comments in category"
     comment2 = "Disable comments in category"
 
-    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -58,6 +57,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
+
             self.catagoryName = clsTestService.addGuidToString("Enable Disable comments in category", self.testNum)
             self.entryName = clsTestService.addGuidToString("Enable Disable comments in category", self.testNum)
             self.entry1 = UploadEntry(self.filePath, self.entryName, self.description, "", timeout=60, retries=3)
