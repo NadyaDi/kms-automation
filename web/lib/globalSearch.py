@@ -1,12 +1,13 @@
 from openpyxl.compat.strings import unicode
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-
+ 
+ 
 from base import *
 import clsTestService
 import enums
-from general import General
 from selenium.webdriver.common.keys import Keys
+from general import General
+
 
 
 class  GlobalSearch(Base):
@@ -338,7 +339,7 @@ class  GlobalSearch(Base):
         else:
             searchLine = searchTerm
                 
-        if self.clear_and_send_keys(self.GLOBAL_SEARCH_TEXTBOX, searchLine  Keys.ENTER, multipleElements=True) == False:
+        if self.clear_and_send_keys(self.GLOBAL_SEARCH_TEXTBOX, searchLine + Keys.ENTER, multipleElements=True) == False:
             writeToLog("INFO","FAILED to insert search word to global search textbox")
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
@@ -382,25 +383,25 @@ class  GlobalSearch(Base):
                 try:
                     currentEntryIndex = listOfEntriesInResults.index(entry.lower())
                 except:
-                    writeToLog("INFO","FAILED , entry '"  entry  "' was not found in global page" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found in global page" )
                     return False             
                        
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '"  sortBy  "' isn't correct. entry '"  entry  "' isn't in the right place" )
+                    writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
                     return False
                 prevEntryIndex = currentEntryIndex
                     
-            writeToLog("INFO","Success, Global page sort by '"  sortBy  "' was successful")
+            writeToLog("INFO","Success, Global page sort by '" + sortBy + "' was successful")
             return True   
         else:
             for entry in entriesList:
                 currentEntryIndex = listOfEntriesInResults.index(entry.lower())
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '"  sortBy.value  "' isn't correct. entry '"  entry  "' isn't in the right place" )
+                    writeToLog("INFO","FAILED ,sort by '"  + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
                     return False
                 prevEntryIndex = currentEntryIndex
                     
-            writeToLog("INFO","Success, Global page sort by '"  sortBy.value  "' was successful")
+            writeToLog("INFO","Success, Global page sort by '" + sortBy.value + "' was successful")
             return True
         
     # @Author: Inbar Willman
@@ -420,7 +421,7 @@ class  GlobalSearch(Base):
         
         else:      
             self.clsCommon.sendKeysToBodyElement(Keys.END)
-            wait_until = datetime.datetime.now()  datetime.timedelta(seconds=timeOut)  
+            wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
             while wait_until > datetime.datetime.now():                       
                 if self.is_present(self.GLOBAL_SEARCH_NO_RESULTS_ALERT, 2) == True:
                     writeToLog("INFO","Success, All media in global page are displayed")
