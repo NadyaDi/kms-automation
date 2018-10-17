@@ -286,3 +286,15 @@ class MyHistoryTimeItems(Enum):
     LAST_7_DAYS                = "Last 7 Days"
     LAST_30_DAYS               = "Last 30 Days"
     CUSTOM                     = "Custom"    
+    
+class DepartmentDivision(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MARKETING                  = "Marketing"
+    PRODUCT                    = "Product"
+    ENGINEERING                = "Engineering"
+    FINANCE                    = "FInance"      
+    SALES                      = "Sales"   
+    HR                         = "HR"  
+    MANAGMENT                  = "Management"  
