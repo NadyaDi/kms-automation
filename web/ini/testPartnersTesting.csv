@@ -133,4 +133,5 @@ test_710,Categories - Edit Entry link,2373952-1,qakmstest.dev.kaltura.com,inbar.
 test_2693,Watch History - Search by name,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2697,Watch History - Filter  media type - video,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2702,Watch History - Filter by watch status,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_674,Playlists - Delete playlist,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_1592,Custom data,2378481-1,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
