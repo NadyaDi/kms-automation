@@ -71,6 +71,7 @@ class Category(Base):
     CATEGORY_MEMBERS_TAB_NEW_MEMBER_ROW                         = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')
     CATEGORY_INHERIT_PERMISSIONS_BUTTON                         = ('xpath', "//input[@id='inherit']")
     CATEGORY_COMFIRM_INHERIT_PERMISSIONS                        = ('xpath', "//a[@class='btn btn-danger' and text()='Yes']")
+    CATEGORY_GALLEY_ALL_MEDIA_TABLE                             = ('xpath', "//div[@id='galleryGrid']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -930,7 +931,7 @@ class Category(Base):
         if self.clsCommon.isElasticSearchOnPage() == True:
             sortBy = sortBy.value
             
-        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+        if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
                 
@@ -940,7 +941,7 @@ class Category(Base):
         sleep(10)
         
         try:
-            entriesIncategory = self.wait_visible(self.MY_MEDIA_TABLE).text.lower()
+            entriesIncategory = self.wait_visible(self.CATEGORY_GALLEY_ALL_MEDIA_TABLE).text.lower()
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list in galley")
             return False

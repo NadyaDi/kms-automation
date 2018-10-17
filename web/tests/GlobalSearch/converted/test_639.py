@@ -106,11 +106,12 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to upload caption")
                 return     
+            sleep(10)
             
             writeToLog("INFO","Step 8: Going to search and verify caption in global search")
             if self.common.globalSearch.serchAndVerifyCaptionInGlobalSearch(self.captionText, self.captionTime, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to search for caption '" + self.captionText + "' in entry '" + self.entryName +"' in global search")
+                writeToLog("INFO","Step 8: FAILED to search for caption '" + self.captionText + "' in entry '" + self.entryName +"' after global search")
                 return 
              
             ##################################################################
