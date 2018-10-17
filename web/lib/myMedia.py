@@ -78,6 +78,12 @@ class MyMedia(Base):
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
     SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]')
+    EDIT_BUTTON_REQUIRED_FIELD_MASSAGE                          = ('xpath', '//a[@class="hidden-phone" and text()="Edit"]')
+    CUSTOM_FIELD                                                = ('xpath', '//input[@id="customdata-DepartmentName"]')
+    CUSTOM_FIELD_DROP_DOWN                                      = ('xpath', '//select[@id="customdata-DepartmentDivision"]')
+    SET_DATE_FROM_CALENDAR                                      = ('xpath' , "//input[@id='customdata-DateEstablished']")
+    EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY                         = ('xpath' , "//td[contains(@class,'day') and text()='DAY']")
+    CLICK_ON_CALENDAR                                           = ('xpath', "//input[@id='customdata-DateEstablished' and contain(@class='span11')]")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1109,39 +1115,96 @@ class MyMedia(Base):
         return True
                      
                      
-    #  @Author: Michal Zomper    
-    # The function check the the entries sort in my media is correct
-    def verifySortInMyMediaOldUi(self, sortBy, entriesList):
-        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
-            writeToLog("INFO","FAILED to sort entries by: " + sortBy.value)
+    def addCustomDataAndPublish(self, entryName , customfield1, customfielddropdwon = enums.DepartmentDivision.FINANCE):  
+        if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
-                
-        if self.showAllEntries() == False:
-            writeToLog("INFO","FAILED to show all entries in my media")
+        
+        if self.clickActionsAndPublishFromMyMedia() == False:
+            writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
             return False
+        
+        if self.wait_visible(self.MY_MEDIA_DISCLAIMER_MSG) == False:
+            writeToLog("INFO","FAILED, Disclaimer alert (before publish) wasn't presented although Disclaimer module is turned on")
+            return False  
+        
+        if self.click(self.EDIT_BUTTON_REQUIRED_FIELD_MASSAGE) == False:
+            writeToLog("INFO","FAILED to click on edit button")
+            return False  
+
+        if self.send_keys(self.CUSTOM_FIELD, customfield1) == False:
+            writeToLog("INFO","FAILED to fill a customfield1:'" + customfield1 + "'")
+            return False
+                      
+        if customfielddropdwon == enums.DepartmentDivision.FINANCE:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'FInance') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False 
+        
+        elif customfielddropdwon == enums.DepartmentDivision.MARKETING:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Marketing') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False 
             
-        try:
-            entriesInMyMedia = self.get_element(self.MY_MEDIA_TABLE).text.lower()
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to get entries list in galley")
+        elif customfielddropdwon == enums.DepartmentDivision.PRODUCT:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Product') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False    
+            
+        elif customfielddropdwon == enums.DepartmentDivision.ENGINEERING:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Engineering') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False    
+            
+        elif customfielddropdwon == enums.DepartmentDivision.SALES:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Sales') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False  
+            
+        elif customfielddropdwon == enums.DepartmentDivision.HR:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'HR') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False 
+            
+        elif customfielddropdwon == enums.DepartmentDivision.MANAGMENT:
+            if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Management') == False:
+                writeToLog("INFO","Failed select finance devision")
+                return False        
+        
+        if self.click(self.CLICK_ON_CALENDAR) == False:
+            writeToLog("INFO","FAILED to click on Edit button")
+            return False 
+        sleep(2)
+        
+
+        return True 
+
+
+    def setDate(self , date, start):
+        if start == 'start':
+            locator = (self.SET_DATE_FROM_CALENDAR[0], self.SET_DATE_FROM_CALENDAR[1] + "/following-sibling::span")
+            writeToLog("INFO","FAILED, unknown Schedule start/stop type: '" + date + "'")
             return False
         
-        entriesInMyMedia = entriesInMyMedia.split("\n")
-        prevEntryIndex = -1
-        
-        for entry in entriesList:
-            currentEntryIndex = entriesInMyMedia.index(entry.lower())
-            if prevEntryIndex > currentEntryIndex:
-                writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+        day = date.split('/')[0]
+        # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3'
+        intDay = int(day)
+        day = str(intDay)
+
+        if self.click(locator) == False:
+                writeToLog("INFO","FAILED to click start date calendar")
                 return False
-            prevEntryIndex = currentEntryIndex
-                
-        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-        return True   
+
+        if self.click((self.EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY[0], self.EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY[1].replace('DAY', day))) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
+            return False
+
+        return True
+
     
     
-    
-    
+    #  @Author: Michal Zomper    
+    # The function check and verify that the entries sort in my media are in the correct order 
     def verifySortInMyMedia(self, sortBy, entriesList):
         if self.clsCommon.isElasticSearchOnPage() == True:
             sortBy = sortBy.value
@@ -1160,37 +1223,56 @@ class MyMedia(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list in galley")
             return False
-        
-        
         entriesInMyMedia = entriesInMyMedia.split("\n")
-        prevEntryIndex = -1
         
+        if self.verifySortOrder(entriesList, entriesInMyMedia) == False:
+            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True
+        else:
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True
+
+    
+    # @Author: Michal Zomper
+    # The function is checking that the sort order is correct
+    # entriesOrderAfterSor is the parameter of all the text in the sort page
+    def verifySortOrder(self, entriesList, entriesOrderAfterSort):
+        prevEntryIndex = -1
+         
         if self.clsCommon.isElasticSearchOnPage() == True:
             for entry in entriesList:
                 try:
-                    currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                    currentEntryIndex = entriesOrderAfterSort.index(entry.lower())
                 except:
-                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found in my media" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' was not found" )
                     return False             
-                       
+                        
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    #writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' isn't in the right place")
                     return False
                 prevEntryIndex = currentEntryIndex
-                    
-            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            #writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")         
+            writeToLog("INFO","Success, entries sort was successful")
             return True   
         else:
             for entry in entriesList:
-                currentEntryIndex = entriesInMyMedia.index(entry.lower())
+                currentEntryIndex = entriesOrderAfterSort.index(entry.lower())
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    #writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    writeToLog("INFO","FAILED , entry '" + entry + "' isn't in the right place")
                     return False
                 prevEntryIndex = currentEntryIndex
-                    
-            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-            return True   
-
+                
+            #writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            writeToLog("INFO","Success, entries sort  was successful")
+            return True
+        
+    
     def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=60, afterSearch=False):
         # Check if we are in My Media page  
         if searchIn == enums.Location.MY_MEDIA:
