@@ -120,7 +120,7 @@ class SortBy(Enum):
     CREATION_DATE_DESC      = "Creation Date - Descending"
     CREATION_DATE_ASC       = "Creation Date - Ascending"
     PLAYS                   = "Plays"
-    
+    RELEVANCE               = 'Relevance'
     
 class MediaType(Enum):
     def __str__(self):

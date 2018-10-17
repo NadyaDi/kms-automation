@@ -23,7 +23,7 @@ class Test:
     #    4. Members & Subscribers - The channels' order should be descending by members number
     #    5. Media Count - The channels' order should be the channel with most media first
     #================================================================================================================================
-    testNum = "4309"
+    testNum = "4310"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
