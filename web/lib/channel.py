@@ -1330,6 +1330,9 @@ class Channel(Base):
                         return False     
             sleep(2)
             
+            if self.clsCommon.isElasticSearchOnPage() == True:
+                    sortBy = sortBy.value
+                    
             if sortBy != '':
                 if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
                     writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")

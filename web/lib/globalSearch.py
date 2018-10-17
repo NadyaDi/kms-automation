@@ -37,6 +37,9 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_RESULT_CHANNELY_TABLE_OLDUI           = ('xpath', "//table[@id='channelResultsTable']")
     GLOBAL_SEARCH_IN_CAPTION_TAB_OLDUI                  = ('xpath', "//a[@id='captions-tab']")
     GLOBAL_SEARCH_CAPTION_TIME_RESULT_OLDUI             = ('xpath', "//a[@class='captions_search_result' and  contains(text(),'CAPTION_TIME')]")
+    #GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI      = ('xpath', "//span[@class='resultLine searchme' and  contains(text(),'CAPTION_WORD')]")
+    GLOBAL_SEARCH__PARENT_CAPTION_SEARCH_WORD_RESULT_NEWUI = ('xpath', "//span[@class='resultLine searchme']")
+    GLOBAL_SEARCH__CHILD_CAPTION_SEARCH_WORD_RESULT_NEWUI = ('xpath', "//span[@class='searchTerm' and contains(text(),'CAPTION_WORD')]")
     GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI      = ('xpath', "//span[@class='resultLine searchme' and  contains(text(),'CAPTION_WORD')]")
     GLOBAL_SEARCH_CAPTION_ICON_NEWUI                    = ('xpath', ".//span[@class='results-summary-item__text']")
     GLOBAL_SEARCH_CAPTION_RESULT_NEWUI                  = ('xpath', "//div[@class='results__result-item']")
@@ -312,8 +315,16 @@ class  GlobalSearch(Base):
                 writeToLog("INFO","FAILED to find caption time after global search")
                 return False   
             
-            tmeCaptionSearch = (self.GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI[0], self.GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI[1].replace('CAPTION_WORD', searchedCaption))
-            if  self.wait_visible_child(entryParent, tmeCaptionSearch, timeout=20) == False:
+            try:
+                parentCaptionSearch= self.wait_element(self.GLOBAL_SEARCH__PARENT_CAPTION_SEARCH_WORD_RESULT_NEWUI)
+                if parentCaptionSearch == False:
+                    writeToLog("INFO","FAILED to find caption parent element after global search")
+                    return False   
+            except NoSuchElementException:
+                return False     
+            
+            tmeCaptionSearch = (self.GLOBAL_SEARCH__CHILD_CAPTION_SEARCH_WORD_RESULT_NEWUI[0], self.GLOBAL_SEARCH__CHILD_CAPTION_SEARCH_WORD_RESULT_NEWUI[1].replace('CAPTION_WORD', searchedCaption))
+            if self.wait_visible_child(parentCaptionSearch, tmeCaptionSearch, timeout=20) == False:
                 writeToLog("INFO","FAILED to find caption search word after global search")
                 return False
             

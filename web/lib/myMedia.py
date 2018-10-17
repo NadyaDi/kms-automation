@@ -620,7 +620,7 @@ class MyMedia(Base):
         return True 
 
 
-        # Author: Tzachi Guetta 
+    # Author: Tzachi Guetta 
     def SortAndFilter(self, dropDownListName='' ,dropDownListItem=''):
         if self.clsCommon.isElasticSearchOnPage() == True:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
@@ -647,8 +647,8 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                     return False
                 
-            self.clsCommon.general.waitForLoaderToDisappear()    
-            writeToLog("INFO","Success, " + dropDownListName.value + " - " + dropDownListItem + " was set successfully")
+            self.clsCommon.general.waitForLoaderToDisappear()   
+            writeToLog("INFO","Success, Sort was set successfully")
             return True
         else:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
