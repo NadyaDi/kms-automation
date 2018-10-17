@@ -6,6 +6,7 @@ from base import *
 import clsTestService
 import enums
 from general import General
+from selenium.webdriver.common.keys import Keys
 
 
 class  GlobalSearch(Base):
@@ -38,6 +39,9 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_CAPTION_SEARCH_WORD_RESULT_NEWUI      = ('xpath', "//span[@class='resultLine searchme' and  contains(text(),'CAPTION_WORD')]")
     GLOBAL_SEARCH_CAPTION_ICON_NEWUI                    = ('xpath', ".//span[@class='results-summary-item__text']")
     GLOBAL_SEARCH_CAPTION_RESULT_NEWUI                  = ('xpath', "//div[@class='results__result-item']")
+    GLOBAL_SEARCH_ENTRY_RESUTLT_ROW                     = ('xpath', "//div[@class='results-entry__container']")
+    GLOBAL_SEARCH_NO_RESULTS_ALERT                      = ('xpath', '//div[@class="no-results alert alert-info" and text()="No more media found."]')
+    GLOBAL_SEARCH_ENTRY_RESUTLT_NAME                    = ('xpath', '//span[@class="results-entry__name"]')
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -314,3 +318,118 @@ class  GlobalSearch(Base):
             
         writeToLog("INFO","Success, searched caption was found and verify")
         return True 
+    
+    
+    # @Author: Inbar Willman
+    # Make an exact search in global search
+    # isHeader search - if true make an header global search, else make global search in global search body page
+    def makeAGloablSearchForEsearch(self,searchTerm,isHeaderSearch=True, exactSearch=True):
+        if isHeaderSearch == True:
+            if self.click(self.GLOBAL_SEARCH_BUTTON_NEWUI, timeout=15) == False:
+                writeToLog("INFO","FAILED to click on global search button")
+                return False
+            
+        if self.click(self.GLOBAL_SEARCH_TEXTBOX, timeout=10, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on global search textbox")
+            return False
+        
+        if exactSearch == True:
+            searchLine = '"' + searchTerm + '"'
+        else:
+            searchLine = searchTerm
+                
+        if self.clear_and_send_keys(self.GLOBAL_SEARCH_TEXTBOX, searchLine  Keys.ENTER, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to insert search word to global search textbox")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(5)
+        
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Sort entries in global page and verify that they are sorted by the correct order
+    def verifySortInGlobalPage(self, sortBy, entriesList):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            sortBy = sortBy.value
+            
+        if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries")
+            return False
+                
+        if self.showAllEntriesInGloablPage() == False:
+            writeToLog("INFO","FAILED to show all entries in global page")
+            return False
+        sleep(10)
+        
+        try:
+            # Get list of all entries element in results
+            entriesInGlobalPage = self.get_elements(self.GLOBAL_SEARCH_ENTRY_RESUTLT_NAME)
+            listOfEntriesInResults = []
+            
+            # Get text of each entry element and add to a new list
+            for entry in entriesInGlobalPage:
+                entry.text.lower()
+                listOfEntriesInResults.append(entry.text.lower())
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list")
+            return False
+        
+        prevEntryIndex = -1
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            for entry in entriesList:
+                try:
+                    currentEntryIndex = listOfEntriesInResults.index(entry.lower())
+                except:
+                    writeToLog("INFO","FAILED , entry '"  entry  "' was not found in global page" )
+                    return False             
+                       
+                if prevEntryIndex > currentEntryIndex:
+                    writeToLog("INFO","FAILED ,sort by '"  sortBy  "' isn't correct. entry '"  entry  "' isn't in the right place" )
+                    return False
+                prevEntryIndex = currentEntryIndex
+                    
+            writeToLog("INFO","Success, Global page sort by '"  sortBy  "' was successful")
+            return True   
+        else:
+            for entry in entriesList:
+                currentEntryIndex = listOfEntriesInResults.index(entry.lower())
+                if prevEntryIndex > currentEntryIndex:
+                    writeToLog("INFO","FAILED ,sort by '"  sortBy.value  "' isn't correct. entry '"  entry  "' isn't in the right place" )
+                    return False
+                prevEntryIndex = currentEntryIndex
+                    
+            writeToLog("INFO","Success, Global page sort by '"  sortBy.value  "' was successful")
+            return True
+        
+    # @Author: Inbar Willman
+    # Show all entries in global page    
+    def showAllEntriesInGloablPage(self, timeOut=60):
+        # Get all entries in results
+        try:
+            tmpResultsList = self.get_elements(self.GLOBAL_SEARCH_ENTRY_RESUTLT_ROW)
+            
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries in results")
+            return False
+        
+        if len(tmpResultsList) < 4:
+            writeToLog("INFO","Success, All media in global page are displayed")
+            return True 
+        
+        else:      
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+            wait_until = datetime.datetime.now()  datetime.timedelta(seconds=timeOut)  
+            while wait_until > datetime.datetime.now():                       
+                if self.is_present(self.GLOBAL_SEARCH_NO_RESULTS_ALERT, 2) == True:
+                    writeToLog("INFO","Success, All media in global page are displayed")
+                    sleep(1)
+                    # go back to the top of the page
+                    self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+                    return True 
+             
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+             
+        writeToLog("INFO","FAILED to show all media")
+        return False    
