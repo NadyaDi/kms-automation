@@ -106,11 +106,19 @@ class Test:
             self.entryForSortBy12 = clsTestService.addGuidToString("Sort by Scheduling - In scheduling", self.testNum)
             self.entryForSortBy13 = clsTestService.addGuidToString("Sort by Scheduling - Past", self.testNum)
             
+            # For sort in channel/ gallery/ add to channel/gallery pages
             self.categoryForEsearch = 'Apps Automation Category'
             self.channelForEsearch  = clsTestService.addGuidToString("Channel for sort by", self.testNum)
             self.channelForEsearchDescription = "channel for eSearch sort by tests"
             self.channelForEsearchTags = 'channel tag,'
             self.channelForEsearchPrivacy = 'open'
+            
+            # For sort by in pending tab in channel and category
+            self.categoryForModerator = 'category for eSearch moderator'
+            self.channelForModerator = clsTestService.addGuidToString("channel moderator for eSearch", self.testNum)
+            
+            # For sort in add to channel/gallery SR tab
+            self.SrChannelForEsearch = clsTestService.addGuidToString("SR Channel for eSearch", self.testNum)
             
             self.entryPastStartDate = (datetime.datetime.now() + timedelta(days=-1)).strftime("%d/%m/%Y")
             self.entryTodayStartDate = datetime.datetime.now().strftime("%d/%m/%Y")
@@ -127,6 +135,24 @@ class Test:
             self.sortEntriesByCreationDateAscending = (self.entryForSortBy1, self.entryForSortBy2, self.entryForSortBy3, self.entryForSortBy4, self.entryForSortBy4,
                                                        self.entryForSortBy5, self.entryForSortBy6, self.entryForSortBy7, self.entryForSortBy8, self.entryForSortBy9, self.entryForSortBy10)
             ##################### TEST STEPS - MAIN FLOW ############################################################# 
+            ############### Create categories for pending tests##############################  
+            writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
+            if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
+                return  
+            
+            writeToLog("INFO","Step 2 : Going to create new channel '" + self.channelForModerator)            
+            if self.common.channel.createChannel(self.channelForModerator, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED create new channel: " + self.channelForModerator)
+                return   
+            
+            writeToLog("INFO","Step 3 : Going to add member to channel:" + self.userName1)            
+            if self.common.channel.addMembersToChannel(self.channelForModerator, self.userName1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to add member to channel:" + self.userName1)
+                return   
             ######### Creating channels for Sort by in channels/My channels/galleries tests: 3901, 4309 and 4310 #####
 #             writeToLog("INFO","Creating channels data for the next tests: 3901, 4309, 4310")
 #             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
@@ -253,19 +279,25 @@ class Test:
 #                 writeToLog("INFO","Step 2: FAILED navigate to home page")
 #                 return
 #             
-            writeToLog("INFO","Step 3: Going to login with user " + self.userName1)
-            if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to login with " + self.userName1)
-                return
-                         
-#             writeToLog("INFO","Step 4: Going to create channel")            
+#             writeToLog("INFO","Step 3: Going to login with user " + self.userName1)
+#             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 3: FAILED to login with " + self.userName1)
+#                 return
+#                          
+#             writeToLog("INFO","Step 4: Going to create open channel")            
 #             if self.common.channel.createChannel(self.channelForEsearch, self.channelForEsearchDescription, self.channelForEsearchTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
 #                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED navigate to home page")
-#                 return            
+#                 writeToLog("INFO","Step 4: FAILED to create open channel")
+#                 return  
+#  
+#             writeToLog("INFO","Step 5: Going to create SR channel")
+#             if self.common.channel.createChannel(self.SrChannelForEsearch, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.SHAREDREPOSITORY, False, True, True) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 5: FAILED to create SR channel")
+#                 return         
 #              
-#             step = 5
+#             step = 6
 #                   
 #             for i in range(1,14):
 #                 writeToLog("INFO","Step " + str(step) + ": Going to upload new entry '" + eval('self.entryForSortBy'+str(i)))            
@@ -277,31 +309,31 @@ class Test:
 #                 step = step + 1
 #                  
 #                 writeToLog("INFO","Step " + str(step) + ": Going to publish entry '" + eval('self.entryForSortBy'+str(i)) + "to category and channel")            
-#                 if self.common.myMedia.publishSingleEntry(eval('self.entryForSortBy'+str(i)), [self.categoryForEsearch], [self.channelForEsearch], publishFrom = enums.Location.UPLOAD_PAGE) == False:
+#                 if self.common.myMedia.publishSingleEntry(eval('self.entryForSortBy'+str(i)), [self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch], publishFrom = enums.Location.UPLOAD_PAGE) == False:
 #                     self.status = "Fail"
 #                     writeToLog("INFO","Step " + str(step) + ": FAILED to upload new entry " + eval('self.entryForSortBy'+str(i)))
 #                     return
 #                  
 #                 step = step + 1
-                  
-            writeToLog("INFO","Step 31: Going to add future scheduling to '" + "C160E832-1-Sort by Scheduling - Future" + "'")    
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName="C160E832-1-Sort by Scheduling - Future") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 31: FAILED to add future scheduling to" + self.entryForSortBy11)
-                return 
-            
-            writeToLog("INFO","Step 32: Going to add present scheduling to '" + self.entryForSortBy12 + "'")    
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryFutureStartDate,endTime=self.entryFutureStartTime, entryName="C160E832-1-Sort by Scheduling - In scheduling") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 32: FAILED to add present scheduling to: " + self.entryForSortBy12)
-                return  
-            
-            writeToLog("INFO","Step 33: Going to add past scheduling to '" + self.entryForSortBy13 + "'")    
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryPastStartDate, endTime=self.entryPastStartTime, entryName="C160E832-1-Sort by Scheduling - Past") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 33: FAILED to past scheduling to: " + self.entryForSortBy13)
-                return                                                    
-                                
+#                   
+#             writeToLog("INFO","Step 31: Going to add future scheduling to '" + "C160E832-1-Sort by Scheduling - Future" + "'")    
+#             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName="C160E832-1-Sort by Scheduling - Future") == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 31: FAILED to add future scheduling to" + self.entryForSortBy11)
+#                 return 
+#             
+#             writeToLog("INFO","Step 32: Going to add present scheduling to '" + self.entryForSortBy12 + "'")    
+#             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryFutureStartDate,endTime=self.entryFutureStartTime, entryName="C160E832-1-Sort by Scheduling - In scheduling") == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 32: FAILED to add present scheduling to: " + self.entryForSortBy12)
+#                 return  
+#             
+#             writeToLog("INFO","Step 33: Going to add past scheduling to '" + self.entryForSortBy13 + "'")    
+#             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryPastStartDate, endTime=self.entryPastStartTime, entryName="C160E832-1-Sort by Scheduling - Past") == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 33: FAILED to past scheduling to: " + self.entryForSortBy13)
+#                 return                                                    
+#                                 
 #             writeToLog("INFO","Step 31: Going navigate to entry '" + self.entryForSortBy1 + "'")    
 #             if self.common.entryPage.navigateToEntry(self.entryForSortBy1, enums.Location.MY_MEDIA) == False:
 #                 self.status = "Fail"
@@ -793,8 +825,10 @@ class Test:
 #             if self.common.entryPage.LikeUnlikeEntry(True) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 103: FAILED to like entry: " + self.entryForSortBy10)
-#                 return                                     
-            ##################################################################
+#                 return  
+            #################################################################################
+                                                                            
+            #################################################################################
             writeToLog("INFO","TEST PASSED: 'My Channels - Sort Channels with search' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

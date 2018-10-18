@@ -18,133 +18,139 @@ class Channel(Base):
     #                                   Channel locators:                                                        #
     #=============================================================================================================
     #MY_CHANNELS_CREATE_CHANNEL_BUTTON               = ('id', 'createChannelBtnGo To Channel')
-    MY_CHANNELS_CREATE_CHANNEL_BUTTON               = ('id', 'createChannelBtn')
-    CHANNEL_DETAILS_NAME_FIELD                      = ('id', 'Category-name')
-    CHANNEL_DETAILS_CHANNEL_TAGS                    = ('id', 's2id_tags')
-    CHANNEL_REMOVE_TAG_MASK                         = ('xpath', "//div[@id='select2-drop-mask']")
-    CHANNEL_DETAILS_PRIVACY_OPEN                    = ('xpath', "//strong[contains(text(),'Open')]")
-    CHANNEL_DETAILS_PRIVACY_RESTRICTED              = ('xpath', "//strong[contains(text(),'Restricted')]")
-    CHANNEL_DETAILS_PRIVACY_PRIVATE                 = ('xpath', "//strong[contains(text(),'Private')]")
-    CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY       = ('xpath', "//strong[contains(text(),'Shared Repository')]")
-    CHANNEL_DETAILS_PRIVACY_PUBLIC                  = ('xpath', "//strong[contains(text(),'Public')]")
-    CHANNEL_DETAILS_OPTION_MODARATE                 = ('id', 'Category-options-moderation')
-    CHANNEL_DETAILS_OPTION_COMMENT                  = ('id', 'Category-options-enableComments')
-    CHANNEL_DETAILS_OPTION_SUBSCRIPTION             = ('id', 'Category-options-enableChannelSubscription')
-    CHANNEL_SAVE_BUTTON                             = ('id', 'Category-submit')
-    CHANNEL_CREATION_DONE                           = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'The information was saved successfully')]")
-    MY_CHANNELS_SERACH_FIELD_OLD_UI                 = ('xpath', "//input[@id='searchBar']")
-    MY_CHANNELS_SERACH_FIELD                        = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search For Channels']")
-    MY_CHANNELS_EDIT_BUTTON                         = ('xpath', "//a[contains(@class,'edit')]")
-    MY_CHANNELS_HOVER                               = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
-    EDIT_CHANNEL_DELETE                             = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
-    EDIT_CHANNEL_DELETE_CONFIRM                     = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
-    CHANNEL_PAGE_TITLE                              = ('xpath', "//h1[@id='channel_title' and contains(text(), 'CHANNEL_TITLE')]")
-    CHANNEL_PAGE_SEARCH_TAB                         = ('id', 'channelSearch-tab')
-    CHANNEL_PAGE_SEARCH_BAR                         = ('id', 'searchBar')
+    MY_CHANNELS_CREATE_CHANNEL_BUTTON                   = ('id', 'createChannelBtn')
+    CHANNEL_DETAILS_NAME_FIELD                          = ('id', 'Category-name')
+    CHANNEL_DETAILS_CHANNEL_TAGS                        = ('id', 's2id_tags')
+    CHANNEL_REMOVE_TAG_MASK                             = ('xpath', "//div[@id='select2-drop-mask']")
+    CHANNEL_DETAILS_PRIVACY_OPEN                        = ('xpath', "//strong[contains(text(),'Open')]")
+    CHANNEL_DETAILS_PRIVACY_RESTRICTED                  = ('xpath', "//strong[contains(text(),'Restricted')]")
+    CHANNEL_DETAILS_PRIVACY_PRIVATE                     = ('xpath', "//strong[contains(text(),'Private')]")
+    CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY           = ('xpath', "//strong[contains(text(),'Shared Repository')]")
+    CHANNEL_DETAILS_PRIVACY_PUBLIC                      = ('xpath', "//strong[contains(text(),'Public')]")
+    CHANNEL_DETAILS_OPTION_MODARATE                     = ('id', 'Category-options-moderation')
+    CHANNEL_DETAILS_OPTION_COMMENT                      = ('id', 'Category-options-enableComments')
+    CHANNEL_DETAILS_OPTION_SUBSCRIPTION                 = ('id', 'Category-options-enableChannelSubscription')
+    CHANNEL_SAVE_BUTTON                                 = ('id', 'Category-submit')
+    CHANNEL_CREATION_DONE                               = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'The information was saved successfully')]")
+    MY_CHANNELS_SERACH_FIELD_OLD_UI                     = ('xpath', "//input[@id='searchBar']")
+    MY_CHANNELS_SERACH_FIELD                            = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search For Channels']")
+    MY_CHANNELS_EDIT_BUTTON                             = ('xpath', "//a[contains(@class,'edit')]")
+    MY_CHANNELS_HOVER                                   = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
+    EDIT_CHANNEL_DELETE                                 = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
+    EDIT_CHANNEL_DELETE_CONFIRM                         = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
+    CHANNEL_PAGE_TITLE                                  = ('xpath', "//h1[@id='channel_title' and contains(text(), 'CHANNEL_TITLE')]")
+    CHANNEL_PAGE_SEARCH_TAB                             = ('id', 'channelSearch-tab')
+    CHANNEL_PAGE_SEARCH_BAR                             = ('id', 'searchBar')
 #     CHANNEL_PAGE_NO_RESULT_ALERT_OLD                = ('xpath', "//div[contains(@class,'alert alert-info') and contains(text(),'No Search Results...')]")
-    CHANNEL_PAGE_NO_RESULT_ALERT                    = ('xpath', "//div[@class='no-results_body' and contains(text(),'No Media results were found')]")
-    CHANNEL_PAGE_ENTRY_THUMBNAIL                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and contains(@title,'ENTRY_NAME')]")
-    CHANNEL_DELETE_ALERT                            = ('xpath', "//div[@class='alert alert-success ']")
-    CHANNEL_ACTION_BUTTON                           = ('id', 'channelActionsDropdown')
-    CHANNEL_IMPORT_MENU                             = ('xpath', "//a[contains(@href,'/importchannel/') and @role='menuitem']")
-    CHANNEL_IMPORT_CHANNEL                          = ('xpath', "//label[@class='radio' and text()='CHANNEL_NAME']")
-    CHANNEL_IMPORT_BUTTON                           = ('xpath', "//a[@class='btn btn-primary importButton']")
-    CHANNEL_IMPORT_ALERT                            = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Importing completed successfully. To refresh the page and view the imported entries')]")
-    CHANNEL_CLICKHERE_REFRESH_BUTTON                = ('xpath', "//a[@href='#' and text()='click here.']")
-    CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH           = ('xpath', "//p[@class='channel_content' and text()='CHANNEL_NAME']")
-    CHANNEL_EDIT_DROP_DOWN_MENU                     = ('id', "channelActionsDropdown")
-    CHANNEL_EDIT_BUTTON                             = ('xpath', "//i[@class='icon-wrench']")
-    CHANNEL_EDIT_CHANNNEL_PAGE                      = ('xpath', "//a[contains(@href,'/channel/') and text()= 'CHANNEL_NAME']")
-    CHANNEL_PLAYLISTS_TAB                           = ('id', 'channelPlaylists-tab')
-    CHANNEL_CREATE_NEW_PLAYLIST_DROP_DOWN           = ('id', 'typeLabel')
-    CHANNEL_MANUAL_PLAYLIST_BUTTON                  = ('xpath', "//ul[@id='typeLabelMenu']")
-    CHANNEL_ENTER_PLAYLIST_TITLE                    = ('id', 'playlistTitle')
-    CHANNEL_PLAYLISTS_DESCRIPTION                   = ('id', 'playlistDescription')
-    CHANNEL_PLAYLISTS_TAG                           = ('id', 's2id_StaticPlaylist-tags')
-    CHANNEL_PLAYLISTS_ADD_MEDIA_URL                 = ('xpath', "//a[@class='accordion-toggle collapsed' and @data-toggle= 'collapse']")
-    CHANNEL_PLAYLISTS_HEADER                        = ('xpath', "//h3[ text()= 'Create a Manual Playlist']")
-    CHANNEL_ADD_TO_CHANNEL_BUTTON                   = ('xpath', "//a[@id='tab-addcontent']")
-    CHANNEL_LOADING_MSG                             = ('xpath', "//div[contains(.,'Loading')]")
-    CHANNEL_PUBLISH_BUTTON                          = ('xpath', "//a[contains(@class,'btn tight btn-primary addMedia')]")
-    CHANNEL_MODARATE_PUBLISH_MSG                    = ('xpath', "//div[text() ='All media was published successfully. Note that your media will not be listed until a moderator approves it.']")
-    CHANNEL_PUBLISH_MSG                             = ('xpath', "//div[text() ='All media was published successfully. ']")
-    CHANNEL_MODERATION_TAB                          = ('id', 'channelmoderation-tab')
-    CHANNEL_ENTRY_IN_PENDING_TAB_PARENT             = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]") 
-    CHANNEL_REJECT_BUTTON                           = ('xpath', "//button[contains(@id,'reject_btn_ENTRY_ID')]")
-    CHANNEL_APPROVE_BUTTON                          = ('xpath', "//button[contains(@id,'accept_btn_ENTRY_ID')]")
-    CHANNEL_ADD_MEDIA_TO_CHANNEL_PLAYLIST           = ('xpath', "//span[@class='searchme' and text() ='ENTRY_NAME']/ancestor::div[@class='fullsize']")
-    CHANNEL_ADD_MEDIA_BUTTON                        = ('xpath', "//a[@class='playlist-entry-select action' and @title='Add to Playlist']")
-    CHANNEL_SEARCH_BUTTON_CHANNEL_PLAYLIST          = ('xpath', "//form[@id='navbar-search' and @class= 'navbar-search']")
-    CHANNEL_SEARCH_BUTTON_FIELD                     = ('xpath', "//input[@id='searchBar' and @placeholder= 'Search Media']")
-    CHANNEL_SAVE_PLAYLIST_BUTTON                    = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
-    CHANNEL_CHANNEL_PLAYLIST_SAVED_MASSAGE          = ('xpath', "//div[@class='alert alert-success ']")  
-    CHANNEL_PLAYLIST_DELETE_CONFIRMATION            = ('xpath', "//a[@class='btn btn-danger' and contains(text(),'Delete')]")
-    CHANNEL_PLAYLIST_NAME_COLUMN                    = ('xpath', "//p[@class='playlistNameColumn' and text()= 'PLYLIST_TITLE']")
-    CHANNEL_PLAYLIST_DELETE_ICON_TABLE              = ('xpath', "//a[@onclick=\"channelPlaylistsjs.deletePlaylist('PLAYLIST_ID')\"]")   
-    CHANNEL_MEMBERS_TAB                             = ('xpath', '//a[@id="channelmembers-tab"]')  
-    CHANNEL_ADD_MEMBER_BUTTON                       = ('xpath', '//a[@id="addmember"]') 
-    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD         = ('xpath', '//input[@id="addChannelMember-userId"]')   
-    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION         = ('xpath', '//select[@id="addChannelMember-permission"]')     
-    CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON             = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
-    CHANNEL_ADD_MEMBER_MODAL_CONTENT                = ('xpath', '//p[@class="help-block" and contains(text(),"Please input at least 3")]')
-    CHANNEL_SET_MEMBER_PERMISSION                   = ('xpath', '//option[@value="3" and text()="Member"]')        
-    CHANNEL_SET_CONTRIBUTOR_PERMISSION              = ('xpath', '//option[@value="2" and text()="Contributor"]') 
-    CHANNEL_SET_MODERATOR_PERMISSION                = ('xpath', '//option[@value="1" and text()="Moderator"]')
-    CHANNEL_SET_MANAGER_PERMISSION                  = ('xpath', '//option[@value="0" and text()="Manager"]')      
-    CHANNEL_MEMBERS_TAB_CONTENT                     = ('xpath', '//div[@id="channelmembers-pane"]') 
-    CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW              = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')      
-    CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON          = ('xpath', '//a[contains(@class, "editMemberBtn") and contains(@href,"MEMBER")]') 
-    CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON         = ('xpath', '//a[@class="setOwnerBtn " and contains(@href,"MEMBER")]')
-    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON        = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]')  
-    CHANNEL_REMOVE_USER_MODAL_CONTENT               = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
-    CHANNEL_SET_OWNER_MODAL_CONTENT                 = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
-    CHANNEL_YES_MODAL_BUTTON                        = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
-    CHANNEL_SUBSCRIBE_BUTTON                        = ('xpath', "//label[@id='v2uiSubscribeSwitch' and @class='checkbox span12 toggle off']")
-    CHANNEL_SUBSCRIBE_BUTTON_OLD_UI                 = ('xpath', "//span[@class='toggle-on ' and contains(text(),'Subscribed')]")    
-    CHANNEL_SUBSCRIBER_COUNT                        = ('xpath', "//div[@id='Channelsubscription_persons']")
-    CHANNEL_TYPE                                    = ('xpath', "//div[@id='membership']")
-    CHANNEL_MEDIA_COUNT                             = ('xpath', "//div[@id='media_persons']")
-    CHANNEL_CHANNEL_INFO_OLD_UI                     = ('xpath', "//div[@id='channelSidebarInner']")
-    CHANNEL_PLAYLISTS_TAG_AFTER_CLICK               = ('xpath', "//input[contains(@id, 's2id_autogen')]")
-    CHANNEL_MEMBER_COUNT                            = ('xpath', "//div[@id='Channelmembers_persons']")
-    CHANNEL_MANGERS_BUTTON                          = ('xpath', "//div[contains(@class,'btn-group right-sep')]")
-    CHANNEL_MANGER_NAME_NEW_UI                      = ('xpath', "//a[@href='javascript:;']")
-    CHANNEL_MANGER_NAME_OLD_UI                      = ('xpath', "//dd[@id='functionaries-Managers']")
-    CHANNEL_APPEARS_IN_BUTTON                       = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
-    CHANNEL_APPEARS_IN_CATEGORY_NAME                = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
-    CHANNEL_PLAYLIST_VERIFICATION                   = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
-    MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='type-btn' and @class='dropdown-toggle responsiveSize']")
-    MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'VIEW_CHANNEL_FILTER')]")
-    CHANNEL_REMOVE_SEARCH_ICON                      = ('xpath', "//i[@class='icon-remove']")
-    CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH            = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
-    CHANNELS_PAGE_ALL_CHANNELS_LIST                 = ('xpath', "//ul[@id='channelGallery']")
-    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON         = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
-    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
+    CHANNEL_PAGE_NO_RESULT_ALERT                        = ('xpath', "//div[@class='no-results_body' and contains(text(),'No Media results were found')]")
+    CHANNEL_PAGE_ENTRY_THUMBNAIL                        = ('xpath', "//div[@class='photo-group thumb_wrapper' and contains(@title,'ENTRY_NAME')]")
+    CHANNEL_DELETE_ALERT                                = ('xpath', "//div[@class='alert alert-success ']")
+    CHANNEL_ACTION_BUTTON                               = ('id', 'channelActionsDropdown')
+    CHANNEL_IMPORT_MENU                                 = ('xpath', "//a[contains(@href,'/importchannel/') and @role='menuitem']")
+    CHANNEL_IMPORT_CHANNEL                              = ('xpath', "//label[@class='radio' and text()='CHANNEL_NAME']")
+    CHANNEL_IMPORT_BUTTON                               = ('xpath', "//a[@class='btn btn-primary importButton']")
+    CHANNEL_IMPORT_ALERT                                = ('xpath', "//div[contains(@class,'alert alert-success') and contains(text(),'Importing completed successfully. To refresh the page and view the imported entries')]")
+    CHANNEL_CLICKHERE_REFRESH_BUTTON                    = ('xpath', "//a[@href='#' and text()='click here.']")
+    CHANNEL_CLICK_ON_CHANNEL_AFTER_SEARCH               = ('xpath', "//p[@class='channel_content' and text()='CHANNEL_NAME']")
+    CHANNEL_EDIT_DROP_DOWN_MENU                         = ('id', "channelActionsDropdown")
+    CHANNEL_EDIT_BUTTON                                 = ('xpath', "//i[@class='icon-wrench']")
+    CHANNEL_EDIT_CHANNNEL_PAGE                          = ('xpath', "//a[contains(@href,'/channel/') and text()= 'CHANNEL_NAME']")
+    CHANNEL_PLAYLISTS_TAB                               = ('id', 'channelPlaylists-tab')
+    CHANNEL_CREATE_NEW_PLAYLIST_DROP_DOWN               = ('id', 'typeLabel')
+    CHANNEL_MANUAL_PLAYLIST_BUTTON                      = ('xpath', "//ul[@id='typeLabelMenu']")
+    CHANNEL_ENTER_PLAYLIST_TITLE                        = ('id', 'playlistTitle')
+    CHANNEL_PLAYLISTS_DESCRIPTION                       = ('id', 'playlistDescription')
+    CHANNEL_PLAYLISTS_TAG                               = ('id', 's2id_StaticPlaylist-tags')
+    CHANNEL_PLAYLISTS_ADD_MEDIA_URL                     = ('xpath', "//a[@class='accordion-toggle collapsed' and @data-toggle= 'collapse']")
+    CHANNEL_PLAYLISTS_HEADER                            = ('xpath', "//h3[ text()= 'Create a Manual Playlist']")
+    CHANNEL_ADD_TO_CHANNEL_BUTTON                       = ('xpath', "//a[@id='tab-addcontent']")
+    CHANNEL_LOADING_MSG                                 = ('xpath', "//div[contains(.,'Loading')]")
+    CHANNEL_PUBLISH_BUTTON                              = ('xpath', "//a[contains(@class,'btn tight btn-primary addMedia')]")
+    CHANNEL_MODARATE_PUBLISH_MSG                        = ('xpath', "//div[text() ='All media was published successfully. Note that your media will not be listed until a moderator approves it.']")
+    CHANNEL_PUBLISH_MSG                                 = ('xpath', "//div[text() ='All media was published successfully. ']")
+    CHANNEL_MODERATION_TAB                              = ('id', 'channelmoderation-tab')
+    CHANNEL_ENTRY_IN_PENDING_TAB_PARENT                 = ('xpath', "//a[contains(@href, '/media/') and contains(text(), 'ENTRY_NAME')]") 
+    CHANNEL_REJECT_BUTTON                               = ('xpath', "//button[contains(@id,'reject_btn_ENTRY_ID')]")
+    CHANNEL_APPROVE_BUTTON                              = ('xpath', "//button[contains(@id,'accept_btn_ENTRY_ID')]")
+    CHANNEL_ADD_MEDIA_TO_CHANNEL_PLAYLIST               = ('xpath', "//span[@class='searchme' and text() ='ENTRY_NAME']/ancestor::div[@class='fullsize']")
+    CHANNEL_ADD_MEDIA_BUTTON                            = ('xpath', "//a[@class='playlist-entry-select action' and @title='Add to Playlist']")
+    CHANNEL_SEARCH_BUTTON_CHANNEL_PLAYLIST              = ('xpath', "//form[@id='navbar-search' and @class= 'navbar-search']")
+    CHANNEL_SEARCH_BUTTON_FIELD                         = ('xpath', "//input[@id='searchBar' and @placeholder= 'Search Media']")
+    CHANNEL_SAVE_PLAYLIST_BUTTON                        = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
+    CHANNEL_CHANNEL_PLAYLIST_SAVED_MASSAGE              = ('xpath', "//div[@class='alert alert-success ']")  
+    CHANNEL_PLAYLIST_DELETE_CONFIRMATION                = ('xpath', "//a[@class='btn btn-danger' and contains(text(),'Delete')]")
+    CHANNEL_PLAYLIST_NAME_COLUMN                        = ('xpath', "//p[@class='playlistNameColumn' and text()= 'PLYLIST_TITLE']")
+    CHANNEL_PLAYLIST_DELETE_ICON_TABLE                  = ('xpath', "//a[@onclick=\"channelPlaylistsjs.deletePlaylist('PLAYLIST_ID')\"]")   
+    CHANNEL_MEMBERS_TAB                                 = ('xpath', '//a[@id="channelmembers-tab"]')  
+    CHANNEL_ADD_MEMBER_BUTTON                           = ('xpath', '//a[@id="addmember"]') 
+    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[@id="addChannelMember-userId"]')   
+    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//select[@id="addChannelMember-permission"]')     
+    CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON                 = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
+    CHANNEL_ADD_MEMBER_MODAL_CONTENT                    = ('xpath', '//p[@class="help-block" and contains(text(),"Please input at least 3")]')
+    CHANNEL_SET_MEMBER_PERMISSION                       = ('xpath', '//option[@value="3" and text()="Member"]')        
+    CHANNEL_SET_CONTRIBUTOR_PERMISSION                  = ('xpath', '//option[@value="2" and text()="Contributor"]') 
+    CHANNEL_SET_MODERATOR_PERMISSION                    = ('xpath', '//option[@value="1" and text()="Moderator"]')
+    CHANNEL_SET_MANAGER_PERMISSION                      = ('xpath', '//option[@value="0" and text()="Manager"]')      
+    CHANNEL_MEMBERS_TAB_CONTENT                         = ('xpath', '//div[@id="channelmembers-pane"]') 
+    CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW                  = ('xpath', '//div[@class="row-fluid memberRow" and @data-id="MEMBER"]')      
+    CHANNEL_MEMBERS_TAB_EDIT_MEMBER_BUTTON              = ('xpath', '//a[contains(@class, "editMemberBtn") and contains(@href,"MEMBER")]') 
+    CHANNEL_MEMBERS_TAB_SET_AS_OWNER_BUTTON             = ('xpath', '//a[@class="setOwnerBtn " and contains(@href,"MEMBER")]')
+    CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON            = ('xpath', '//a[@class="deleteMemberBtn " and contains(@href,"MEMBER")]')  
+    CHANNEL_REMOVE_USER_MODAL_CONTENT                   = ('xpath', '//div[@class="modal-body" and text()="Remove private as a member of this channel?"]')    
+    CHANNEL_SET_OWNER_MODAL_CONTENT                     = ('xpath', '//div[@class="modal-body" and contains(text(),"only one owner can be assigned")]')        
+    CHANNEL_YES_MODAL_BUTTON                            = ('xpath', '//a[@data-handler="1" and @class="btn btn-danger" and text()="Yes"]')
+    CHANNEL_SUBSCRIBE_BUTTON                            = ('xpath', "//label[@id='v2uiSubscribeSwitch' and @class='checkbox span12 toggle off']")
+    CHANNEL_SUBSCRIBE_BUTTON_OLD_UI                     = ('xpath', "//span[@class='toggle-on ' and contains(text(),'Subscribed')]")    
+    CHANNEL_SUBSCRIBER_COUNT                            = ('xpath', "//div[@id='Channelsubscription_persons']")
+    CHANNEL_TYPE                                        = ('xpath', "//div[@id='membership']")
+    CHANNEL_MEDIA_COUNT                                 = ('xpath', "//div[@id='media_persons']")
+    CHANNEL_CHANNEL_INFO_OLD_UI                         = ('xpath', "//div[@id='channelSidebarInner']")
+    CHANNEL_PLAYLISTS_TAG_AFTER_CLICK                   = ('xpath', "//input[contains(@id, 's2id_autogen')]")
+    CHANNEL_MEMBER_COUNT                                = ('xpath', "//div[@id='Channelmembers_persons']")
+    CHANNEL_MANGERS_BUTTON                              = ('xpath', "//div[contains(@class,'btn-group right-sep')]")
+    CHANNEL_MANGER_NAME_NEW_UI                          = ('xpath', "//a[@href='javascript:;']")
+    CHANNEL_MANGER_NAME_OLD_UI                          = ('xpath', "//dd[@id='functionaries-Managers']")
+    CHANNEL_APPEARS_IN_BUTTON                           = ('xpath', "//a[@class='btn dropdown-toggle func-group' and contains(text(),'Appears in')]")
+    CHANNEL_APPEARS_IN_CATEGORY_NAME                    = ('xpath', "//span[@data-toggle='tooltip' and @data-original-title='CATEGORY_NAME']")
+    CHANNEL_PLAYLIST_VERIFICATION                       = ('xpath', "//a[@class='channel-playlist-link' and contains(@href,'/playlist/dedicated/')]")
+    MY_CHANNELS_VIEW_CHANNELS_FILTER_BUTTON             = ('xpath', "//a[@id='type-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_CHOOSE_VIEW_CHANNEL_FILTER              = ('xpath', "//a[@role='menuitem' and contains(text(),'VIEW_CHANNEL_FILTER')]")
+    CHANNEL_REMOVE_SEARCH_ICON                          = ('xpath', "//i[@class='icon-remove']")
+    CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH                = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
+    CHANNELS_PAGE_ALL_CHANNELS_LIST                     = ('xpath', "//ul[@id='channelGallery']")
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON             = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI       = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
     #MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI   = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='dropdown-toggle DropdownFilter__toggle']")
-    MY_CHANNELS_SORTBY_BUTTON_OLDUI                 = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
-    MY_CHANNELS_SORTBY_BUTTON_NEWUI                 = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
-    CHANNEL_CANCEL_PLAYLIST_BUTTON                  = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
-    MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER          = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
-    CHANNEL_PLAYLIST_EMBED_BUTTON                   = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
-    CHANNEL_PLAYLIST_NAME                           = ('xpath', "//p[@data-lorem='3w' and text() ='PLAYLIST_TITLE']/ancestor::tr[contains(@data-playlistid, '')]")
-    CHANNEL_PLAYLIST_EMBED_TEXT_AREA                = ('xpath', '//textarea[@id="embed_code-CHANNEL_PLAYLIST_ID" and @class="span11 embedCodeText"]')
-    CHANNELS_NO_MORE_CHANNELS_ALERT                 = ('xpath', "//div[@id='channels_scroller_alert' and contains(text(),'There are no more channels.')]")
-    CHANNELS_TABLE_SIZE                             = ('xpath', "//li[contains(@class,'span3 hidden-phone visible-v2ui')]")
-    CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY        = ('xpath', "//a[@id='addcontent-repositories-tab' and @class='dropdown-toggle addcontent-repositories-tab']")
-    CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL         = ('xpath', "//a[@data-original-title='CHANNEL_NAME' and @role='menuitem']")
-    CHANNEL_DETAILS_ON_THUMBNAIL                    = ('xpath', "//img[@alt='Thumbnail for channel CHANNEL_NAME']/ancestor::div[contains (@class,'wrapper')]")
-    CHANNEL_SEARCH_ENTRY                            = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search this channel']")
-    CHANNEL_EDIT_BUTTON_AFTER_SEARCH                = ('xpath', '//*[@aria-label= "Edit ENTRY_NAME"]')
-    CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE             = ('xpath', "//a[@id='deleteMediaBtnForm' and contains(@href,'/entry/delete/')]")
-    CHANNEL_CONFIRM_ENTRY_DELETE                    = ('xpath', "//a[@class='btn btn-danger' and text()='Remove']")
-    CHANNEL_ENTRY_THUMBNAIL                         = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
-    CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON           = ('xpath', "//div[@class='hidden buttons-expand']")
-    CHANNEL_EDIT_BUTTON_NO_SEARCH                   = ('xpath', "//i[@class='icon-pencil']")
-    CHANNELS_DEFAULT_SORT                           = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ' and text()='DEFAULT_SORT']")
-    CHANNEL_ENTRY_DELETE_BUTTON                     = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
-    CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD              = ('xpath', "//a[@id='next' and text()='Go To Channel']")
-    CHANNEL_GO_BACK_TO_CHANNEL_BUTTON               = ('xpath', "//a[@class='btn btn-link' and text()='Back to Channel']")
-    CHANNEL_MEMEBER_TAB_OWNER_LABLE                 = ('xpath', "//div[@class='span3' and contains(text(),'owner')]")
+    MY_CHANNELS_SORTBY_BUTTON_OLDUI                     = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MY_CHANNELS_SORTBY_BUTTON_NEWUI                     = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
+    CHANNEL_CANCEL_PLAYLIST_BUTTON                      = ('xpath', "//a[@class='btn null' and contains(text(),'Cancel')]")
+    MY_CHANNELS_CHOOSE_SORT_CHANNEL_FILTER              = ('xpath', "//a[@role='menuitem' and contains(text(),'SORT_CHANNEL_FILTER')]")
+    CHANNEL_PLAYLIST_EMBED_BUTTON                       = ('xpath', "//a[@id='tab-Embed' and contains(@href,'/embedplaylist/index/')]")
+    CHANNEL_PLAYLIST_NAME                               = ('xpath', "//p[@data-lorem='3w' and text() ='PLAYLIST_TITLE']/ancestor::tr[contains(@data-playlistid, '')]")
+    CHANNEL_PLAYLIST_EMBED_TEXT_AREA                    = ('xpath', '//textarea[@id="embed_code-CHANNEL_PLAYLIST_ID" and @class="span11 embedCodeText"]')
+    CHANNELS_NO_MORE_CHANNELS_ALERT                     = ('xpath', "//div[@id='channels_scroller_alert' and contains(text(),'There are no more channels.')]")
+    CHANNELS_TABLE_SIZE                                 = ('xpath', "//li[contains(@class,'span3 hidden-phone visible-v2ui')]")
+    CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY            = ('xpath', "//a[@id='addcontent-repositories-tab' and @class='dropdown-toggle addcontent-repositories-tab']")
+    CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL             = ('xpath', "//a[@data-original-title='CHANNEL_NAME' and @role='menuitem']")
+    CHANNEL_DETAILS_ON_THUMBNAIL                        = ('xpath', "//img[@alt='Thumbnail for channel CHANNEL_NAME']/ancestor::div[contains (@class,'wrapper')]")
+    CHANNEL_SEARCH_ENTRY                                = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search this channel']")
+    CHANNEL_EDIT_BUTTON_AFTER_SEARCH                    = ('xpath', '//*[@aria-label= "Edit ENTRY_NAME"]')
+    CHANNEL_DELETE_FROM_EDIT_ENTRY_PAGE                 = ('xpath', "//a[@id='deleteMediaBtnForm' and contains(@href,'/entry/delete/')]")
+    CHANNEL_CONFIRM_ENTRY_DELETE                        = ('xpath', "//a[@class='btn btn-danger' and text()='Remove']")
+    CHANNEL_ENTRY_THUMBNAIL                             = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
+    CHANNEL_ENTRY_THUMBNAIL_EXPAND_BUTTON               = ('xpath', "//div[@class='hidden buttons-expand']")
+    CHANNEL_EDIT_BUTTON_NO_SEARCH                       = ('xpath', "//i[@class='icon-pencil']")
+    CHANNELS_DEFAULT_SORT                               = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ' and text()='DEFAULT_SORT']")
+    CHANNEL_ENTRY_DELETE_BUTTON                         = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
+    CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD                  = ('xpath', "//a[@id='next' and text()='Go To Channel']")
+    CHANNEL_GO_BACK_TO_CHANNEL_BUTTON                   = ('xpath', "//a[@class='btn btn-link' and text()='Back to Channel']")
+    CHANNEL_MEMEBER_TAB_OWNER_LABLE                     = ('xpath', "//div[@class='span3' and contains(text(),'owner')]")
+    ADD_TO_CHANNEL_SEARCH_BAR                           = ('xpath', '//input[@class="searchForm__text" and @placeholder="SEARCH_TAB"]')
+    ADD_TO_CHANNEL_MY_MEDIA_TABLE                       = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable "]')
+    ADD_TO_CHANNEL_MY_MEDIA_TABLE_SIZE                  = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable "]/tbody/tr')
+    ADD_TO_CHANNEL_MY_MEDIA_NO_MORE_MEDIA_FOUND_MSG     = ('xpath', '//div[@id="myMedia_scroller_alert" and text()="There are no more media items."]')
+    ADD_TO_CHANNEL_SR_NO_MORE_MEDIA_FOUND_MSG           = ('xpath', '//div[contains(@id, "sharedRepoEndless") and text()="There are no more media items."]')
+    ADD_TO_CHANNEL_SR_DROP_DOWN_MENU                    = ('xpath', '//a[@id="addcontent-repositories-tab"]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -2157,4 +2163,94 @@ class Channel(Base):
             return False
         
         return True
+    
+    
+    #@ Author: Inbar willman   
+    # Make a search in add to channel page
+    # There are two option for search - in My media tab or in SR tab
+    def searchInAddToChannel(self, searchTerm,exactSearch=True, tabToSearcFrom=enums.AddToChannelTabs.MY_MEDIA):
+        if tabToSearcFrom == enums.AddToChannelTabs.MY_MEDIA:
+            tmpSearchBar = (self.ADD_TO_CHANNEL_SEARCH_BAR[0], self.ADD_TO_CHANNEL_SEARCH_BAR[1].replace('SEARCH_TAB', 'Search My Media'))
+        
+        elif tabToSearcFrom == enums.AddToChannelTabs.SHARED_REPOSITORY:
+            tmpSearchBar = (self.ADD_TO_CHANNEL_SEARCH_BAR[0], self.ADD_TO_CHANNEL_SEARCH_BAR[1].replace('SEARCH_TAB', 'Search Repository'))
+            
+        searchBarElement = self.get_element(tmpSearchBar)
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get search bar element")
+            return False
+        searchBarElement.click()
+        if exactSearch == True:
+            searchLine = '"' + searchTerm + '"'
+        else:
+            if self.clsCommon.isElasticSearchOnPage():
+                searchLine = '"' + searchTerm + '"'
+            else:
+                searchLine = searchTerm
+            
+        searchBarElement.send_keys(searchLine + Keys.ENTER)
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True
+    
 
+    #  @Author: Inbar Willman     
+    # The function check the the entries in my media are filter correctly
+    def verifySortInAddToChannel(self, sortBy, entriesList):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            sortBy = sortBy.value
+            
+        if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries")
+            return False
+                
+        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA) == False:
+            writeToLog("INFO","FAILED to show all entries in my media")
+            return False
+        sleep(10)
+        
+        try:
+            entriesInMyMedia = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        entriesInMyMedia = entriesInMyMedia.split("\n")
+        
+        if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInMyMedia) == False:
+            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True
+        else:
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True
+        
+        
+    # @Author: Inbar Willman 
+    def clearSearchInAddToChannel(self):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            try:
+                clear_button = self.get_elements(self.clsCommon.myMedia.MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI)
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find clear search icon")
+                return False
+            
+            if self.clickElement(clear_button[2]) == False:
+                writeToLog("INFO","FAILED click on the remove search icon")
+                return False
+        else:
+            if self.click(self.clsCommon.myMedia.MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI, 15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED click on the remove search icon")
+                return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+             
+        writeToLog("INFO","Success, search was clear from search textbox")
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Click on SR drop down menu in add to channel page   
+    def clickOnSRdropDownMenuInAddToChannel(self):
+        return True

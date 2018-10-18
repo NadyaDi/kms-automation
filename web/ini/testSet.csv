@@ -150,3 +150,4 @@ test_1,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media
 test_4313,1,0,0,0,eSearch - Sort by - Global search
+test_4315,1,0,0,0,eSearch - Sort by - Add to channel - My media and SR tabs
