@@ -1482,6 +1482,7 @@ class Channel(Base):
     # @Author: Inbar Willman
     # Delete member from channel
     def deleteChannelMember(self,username): 
+        sleep(2)
         #Click on delete button
         tmp_delete_btn = (self.CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON[0], self.CHANNEL_MEMBERS_TAB_DELETE_MEMBER_BUTTON[1].replace('MEMBER', username))
         if self.hover_on_element(tmp_delete_btn) == False:
