@@ -32,8 +32,7 @@ class Test:
     entriesName = []
     entryDescription = "description"
     entryTags = "tag1,"
-    channelName = 'publicChannelMyHistory'
-    channelList = [(channelName)]
+    channelName = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
 
     #run test as different instances on all the supported platforms
@@ -59,23 +58,30 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('publishEntryToChannel2', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('publishEntryToChannel3', self.testNum)
             self.entriesName = [self.entryName1, self.entryName2, self.entryName3]
+            self.channelName = clsTestService.addGuidToString("'My Media - Publish to channel-multiple", self.testNum) 
             ##################### TEST STEPS - MAIN FLOW #####################  
             writeToLog("INFO","Step 1: Going to upload entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entries")
                 return
+            
+            writeToLog("INFO","Step 2: Going to create new channel")            
+            if self.common.channel.createChannel(self.channelName, self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED create new channel: " + self.channelName)
+                return
                
-            writeToLog("INFO","Step 2: Going to publish entries to channel from My media page")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesName, [], self.channelList) == False:
+            writeToLog("INFO","Step 3: Going to publish entries to channel from My media page")
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesName, "", [self.channelName]) == False:
                 self.status = "Fail"        
-                writeToLog("INFO","Step 2: FAILED to publish entries to channel from My Media")
+                writeToLog("INFO","Step 3: FAILED to publish entries to channel from My Media")
                 return    
             
-            writeToLog("INFO","Step 3: Going to search entries in channel page")
+            writeToLog("INFO","Step 4: Going to search entries in channel page")
             if self.common.channel.verifyIfMultipleEntriesInChannel(self.channelName, self.entriesName) == False:
                 self.status = "Fail"        
-                writeToLog("INFO","Step 3: FAILED to find entries in channel")
+                writeToLog("INFO","Step 4: FAILED to find entries in channel")
                 return                         
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Search in my media' was done successfully")
@@ -89,6 +95,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
             self.common.myMedia.deleteEntriesFromMyMedia(self.entriesName)
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
