@@ -39,19 +39,21 @@ class Location(Enum):
     def __str__(self):
         return str(self.value)
     
-    MY_MEDIA               = 'my media'
-    ENTRY_PAGE             = 'entry page'
-    UPLOAD_PAGE            = 'upload page'
-    CHANNEL_PAGE           = 'channel page'
-    CATEGORY_PAGE          = 'category page'
-    MY_CHANNELS_PAGE       = 'my channels page'
-    CHANNELS_PAGE          = 'channels page'
-    MY_PLAYLISTS           = 'my playlists'
-    EDIT_ENTRY_PAGE        = 'edit entry page'
-    MY_HISTORY             = 'my history'
-    PENDING_TAB            = 'channel - Pending tab' 
-    HOME                   = 'home'
-    CHANNEL_PLAYLIST       = 'channel playlist'
+    MY_MEDIA                = 'my media'
+    ENTRY_PAGE              = 'entry page'
+    UPLOAD_PAGE             = 'upload page'
+    CHANNEL_PAGE            = 'channel page'
+    CATEGORY_PAGE           = 'category page'
+    MY_CHANNELS_PAGE        = 'my channels page'
+    CHANNELS_PAGE           = 'channels page'
+    MY_PLAYLISTS            = 'my playlists'
+    EDIT_ENTRY_PAGE         = 'edit entry page'
+    MY_HISTORY              = 'my history'
+    PENDING_TAB             = 'channel - Pending tab' 
+    HOME                    = 'home'
+    CHANNEL_PLAYLIST        = 'channel playlist'
+    ADD_TO_CHANNEL_MY_MEDIA = 'Add to channel My Media'
+    ADD_TO_CHANNEL_SR       = 'Add to channel SR'
 
 
 class EditEntryPageTabName(Enum):
@@ -298,3 +300,10 @@ class DepartmentDivision(Enum):
     SALES                      = "Sales"   
     HR                         = "HR"  
     MANAGMENT                  = "Management"  
+    
+class AddToChannelTabs(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MY_MEDIA                   = 'My Media'
+    SHARED_REPOSITORY          = 'Shared Repository'  
