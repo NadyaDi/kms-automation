@@ -37,7 +37,7 @@ class Category(Base):
     CATEGORY_NO_RESULTS_MSG_NEW_UI                              = ('xpath', '//div[@class="no-results_body" and text()="No media results were found. Try to adjust your search terms."]')
     CATEGORY_NO_RESULTS_MSG_OLD_UI                              = ('xpath','//div[@class="alert alert-info" and text() = "No Search Results..."]') 
     CATEGORY_TABLE_SIZE                                         = ('xpath', '//table[@class="table table-hover mediaTable"]/tbody/tr')
-    CATEGORY_TABLE_SIZE_NEW_UI                                  = ('xpath', '//li[contains@class="galleryItem"]')
+    CATEGORY_TABLE_SIZE_NEW_UI                                  = ('xpath', '//li[contains(@class,"galleryItem")]')
     CATEGORY_TABLE_SIZE_AFTER_SEARCH                            = ('xpath', '//div[@class="results-entry__container"]')
     CATEGORY_TITLE                                              = ('xpath', '//span[@id="gallery_title"]')
     CATEGORY_NO_MORE_MEDIA_FOUND_MSG                            = ('xpath' , '//div[@id="entries_scroller_alert" and text()="No more Entries found."]')
@@ -947,7 +947,7 @@ class Category(Base):
             return False
         entriesIncategory = entriesIncategory.split("\n")
         
-        if self.verifySortOrder(entriesList, entriesIncategory) == False:
+        if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesIncategory) == False:
             writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
             return False
         

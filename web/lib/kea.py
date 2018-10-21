@@ -29,6 +29,9 @@ class Kea(Base):
     KEA_QUIZ_ANSWER                               = ('id', 'ANSWER_NUMBER')
     KEA_QUIZ_ADD_ANSWER_BUTTON                    = ('xpath', '//div[@class="add-answer-btn"]') 
     KEA_QUIZ_BUTTON                               = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="BUTTON_NAME"]')
+    EDITOR_TABLE                                  = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
+    EDITOR_TABLE_SIZE                             = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
+    EDITOR_NO_MORE_MEDIA_FOUND_MSG                = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -225,3 +228,36 @@ class Kea(Base):
          
         sleep (3)   
         return True
+    
+    # @Author: Inbar Willman
+    # The function check and verify that the entries sort in my media are in the correct order 
+    def verifySortInEditor(self, sortBy, entriesList):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            sortBy = sortBy.value
+            
+        if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+            writeToLog("INFO","FAILED to sort entries")
+            return False
+                
+        if self.clsCommon.myMedia.showAllEntries(searchIn=enums.Location.EDITOR_PAGE) == False:
+            writeToLog("INFO","FAILED to show all entries in editor page")
+            return False
+        sleep(10)
+        
+        try:
+            entriesInMyMedia = self.wait_visible(self.EDITOR_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        entriesInMyMedia = entriesInMyMedia.split("\n")
+        
+        if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInMyMedia) == False:
+            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
+            return True
+        else:
+            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+            return True
