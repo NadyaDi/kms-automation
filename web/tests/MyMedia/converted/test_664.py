@@ -32,8 +32,7 @@ class Test:
     entriesName = []
     entryDescription = "description"
     entryTags = "tag1,"
-    categoryName = 'OpenCategoryForMyHistory'
-    categoryList = [(categoryName)]
+    categoryName = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
 
     #run test as different instances on all the supported platforms
@@ -59,26 +58,48 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('publishEntryToCategory2', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('publishEntryToCategory3', self.testNum)
             self.entriesName = [self.entryName1, self.entryName2, self.entryName3]
-            ##################### TEST STEPS - MAIN FLOW #####################  
-            writeToLog("INFO","Step 1: Going to upload entries")
+            self.categoryName = clsTestService.addGuidToString("My Media-Publish to category-multiple", self.testNum)
+            ##################### TEST STEPS - MAIN FLOW ##################### 
+             
+            writeToLog("INFO","Step 1: Going to create open category") 
+            self.common.apiClientSession.startCurrentApiClientSession()
+            parentId = self.common.apiClientSession.getParentId('galleries') 
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.entryDescription) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to create open category")
+                return
+             
+            writeToLog("INFO","Step 2: Going to clear cache")            
+            if self.common.admin.clearCache() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to clear cache")
+                return
+            
+            writeToLog("INFO","Step 3: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED navigate to home page")
+                return
+            
+            writeToLog("INFO","Step 4: Going to upload entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesName, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entries")
+                writeToLog("INFO","Step 4: FAILED failed to upload entries")
                 return
                
-            writeToLog("INFO","Step 2: Going to publish entries to category from My media page")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesName, self.categoryList, []) == False:
+            writeToLog("INFO","Step 5: Going to publish entries to category from My media page")
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesName, [self.categoryName], "") == False:
                 self.status = "Fail"        
-                writeToLog("INFO","Step 2: FAILED to publish entries to category from My Media")
+                writeToLog("INFO","Step 5: FAILED to publish entries to category from My Media")
                 return    
             
-            writeToLog("INFO","Step 3: Going to search entries in category page")
+            writeToLog("INFO","Step 6: Going to search entries in category page")
             if self.common.category.searchEntriesInCategory(self.entriesName, self.categoryName) == False:
                 self.status = "Fail"        
-                writeToLog("INFO","Step 3: FAILED to find entries in category")
+                writeToLog("INFO","Step 6: FAILED to find entries in category")
                 return                         
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Entries published successfully to category")
+            writeToLog("INFO","TEST PASSED: 'My Media - Publish to category - multiple' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -89,6 +110,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
             self.common.myMedia.deleteEntriesFromMyMedia(self.entriesName)
+            self.common.apiClientSession.deleteCategory(self.categoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

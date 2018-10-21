@@ -52,7 +52,7 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('publishEntryToChannel', self.testNum)
-            self.channelName = clsTestService.addGuidToString("'My Media - Publish to channel-single", self.testNum)
+            self.channelName = clsTestService.addGuidToString("My Media - Publish to channel-single", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################  
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
@@ -67,7 +67,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 3: Going to publish entry to channel from My media page")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entryName, "", self.channelName) == False:
+            if self.common.myMedia.publishEntriesFromMyMedia(self.entryName, "", [self.channelName]) == False:
                 self.status = "Fail"        
                 writeToLog("INFO","Step 3: FAILED to publish entry to channel from My Media")
                 return    
