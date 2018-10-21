@@ -1249,9 +1249,10 @@ class MyMedia(Base):
                     currentEntryIndex = entriesOrderAfterSort.index(entry.lower())
                 except:
                     writeToLog("INFO","FAILED , entry '" + entry + "' was not found" )
-                    return False             
-                        
-                if prevEntryIndex > currentEntryIndex:
+                    return False  
+          
+                #if prevEntryIndex > currentEntryIndex:       
+                if (prevEntryIndex < currentEntryIndex) == False:
                     #writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
                     writeToLog("INFO","FAILED , entry '" + entry + "' isn't in the right place")
                     return False
@@ -1262,7 +1263,8 @@ class MyMedia(Base):
         else:
             for entry in entriesList:
                 currentEntryIndex = entriesOrderAfterSort.index(entry.lower())
-                if prevEntryIndex > currentEntryIndex:
+                #if prevEntryIndex > currentEntryIndex:
+                if (prevEntryIndex < currentEntryIndex) == False:
                     #writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
                     writeToLog("INFO","FAILED , entry '" + entry + "' isn't in the right place")
                     return False
