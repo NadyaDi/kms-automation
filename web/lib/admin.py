@@ -655,4 +655,32 @@ class Admin(Base):
             writeToLog("INFO","FAILED to save changes in admin page")
             return False
         
-        return True            
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Enable category scheduling - enabling this module will enable scheduling sort by and filter in global search and categories
+    def enableCategoryScheduling(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/categoryscheduling') == False:
+            writeToLog("INFO","FAILED to load category scheduling page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable category scheduling module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set category scheduling module as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, category scheduling module was set to: " + str(selection) + "'")
+        return True         

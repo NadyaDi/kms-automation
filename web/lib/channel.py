@@ -149,8 +149,11 @@ class Channel(Base):
     ADD_TO_CHANNEL_MY_MEDIA_TABLE                       = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable "]')
     ADD_TO_CHANNEL_MY_MEDIA_TABLE_SIZE                  = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable "]/tbody/tr')
     ADD_TO_CHANNEL_MY_MEDIA_NO_MORE_MEDIA_FOUND_MSG     = ('xpath', '//div[@id="myMedia_scroller_alert" and text()="There are no more media items."]')
-    ADD_TO_CHANNEL_SR_NO_MORE_MEDIA_FOUND_MSG           = ('xpath', '//div[contains(@id, "sharedRepoEndless") and text()="There are no more media items."]')
+    ADD_TO_CHANNEL_SR_NO_MORE_MEDIA_FOUND_MSG           = ('xpath', '//div[contains(@id, "sharedRepoEndless") and @class="alert alert-info endlessScrollAlert" and text()="There are no more media items."]')
     ADD_TO_CHANNEL_SR_DROP_DOWN_MENU                    = ('xpath', '//a[@id="addcontent-repositories-tab"]')
+    ADD_TO_CHANNEL_SR_DROP_DOWN_MENU_OPTION             = ('xpath', '//a[@data-original-title="SR_NAME"]')
+    ADD_TO_CHANNEL_SR_TABLE                             = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full"]')
+    ADD_TO_CHANNEL_SR_TABLE_SIZE                        = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full"]/tbody/tr')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -2169,7 +2172,7 @@ class Channel(Base):
     #@ Author: Inbar willman   
     # Make a search in add to channel page
     # There are two option for search - in My media tab or in SR tab
-    def searchInAddToChannel(self, searchTerm,exactSearch=True, tabToSearcFrom=enums.AddToChannelTabs.MY_MEDIA):
+    def searchInAddToChannel(self, searchTerm, exactSearch=True, tabToSearcFrom=enums.AddToChannelTabs.MY_MEDIA):
         if tabToSearcFrom == enums.AddToChannelTabs.MY_MEDIA:
             tmpSearchBar = (self.ADD_TO_CHANNEL_SEARCH_BAR[0], self.ADD_TO_CHANNEL_SEARCH_BAR[1].replace('SEARCH_TAB', 'Search My Media'))
         
@@ -2196,8 +2199,8 @@ class Channel(Base):
     
 
     #  @Author: Inbar Willman     
-    # The function check the the entries in my media are filter correctly
-    def verifySortInAddToChannel(self, sortBy, entriesList):
+    # The function check the the entries add to channel (my media and SR tab) are filter correctly
+    def verifySortInAddToChannel(self, sortBy, entriesList, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
         if self.clsCommon.isElasticSearchOnPage() == True:
             sortBy = sortBy.value
             
@@ -2205,19 +2208,23 @@ class Channel(Base):
             writeToLog("INFO","FAILED to sort entries")
             return False
                 
-        if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA) == False:
+        if self.clsCommon.myMedia.showAllEntries(searchIn) == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
         sleep(10)
         
         try:
-            entriesInMyMedia = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
+            if searchIn == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:
+                entriesInPage = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
+                
+            elif searchIn == enums.Location.ADD_TO_CHANNEL_SR:
+                    entriesInPage = self.wait_visible(self.ADD_TO_CHANNEL_SR_TABLE).text.lower() 
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list in galley")
             return False
-        entriesInMyMedia = entriesInMyMedia.split("\n")
+        entriesInPage = entriesInPage.split("\n")
         
-        if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInMyMedia) == False:
+        if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInPage) == False:
             writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
             return False
         
@@ -2230,7 +2237,7 @@ class Channel(Base):
         
         
     # @Author: Inbar Willman 
-    def clearSearchInAddToChannel(self):
+    def clearSearchInAddToChannel(self, tab = enums.AddToChannelTabs.MY_MEDIA):
         if self.clsCommon.isElasticSearchOnPage() == True:
             try:
                 clear_button = self.get_elements(self.clsCommon.myMedia.MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI)
@@ -2238,7 +2245,12 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to find clear search icon")
                 return False
             
-            if self.clickElement(clear_button[2]) == False:
+            if tab == enums.AddToChannelTabs.MY_MEDIA:
+                clearBtn = clear_button[2]
+            elif tab == enums.AddToChannelTabs.SHARED_REPOSITORY:
+                clearBtn = clear_button[3]
+            
+            if self.clickElement(clearBtn) == False:
                 writeToLog("INFO","FAILED click on the remove search icon")
                 return False
         else:
@@ -2253,5 +2265,18 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Click on SR drop down menu in add to channel page   
-    def clickOnSRdropDownMenuInAddToChannel(self):
-        return True
+    def navigateToSrTabInAddToChannel(self, sharedRepositoryName):
+        # Click on SR drop down menu
+        if self.click(self.ADD_TO_CHANNEL_SR_DROP_DOWN_MENU) == False:
+            writeToLog("INFO","FAILED to click on SR drop down menu")
+            return False   
+        
+        tmpSR = (self.ADD_TO_CHANNEL_SR_DROP_DOWN_MENU_OPTION[0], self.ADD_TO_CHANNEL_SR_DROP_DOWN_MENU_OPTION[1].replace('SR_NAME', sharedRepositoryName)) 
+        
+        # Click on the SR that you want to navigate to
+        if self.click(tmpSR) == False:
+            writeToLog("INFO","FAILED to click on SR drop down menu option")
+            return False 
+        
+        sleep(2)
+        return True     
