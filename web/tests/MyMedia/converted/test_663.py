@@ -58,7 +58,7 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString('publishEntryToChannel2', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('publishEntryToChannel3', self.testNum)
             self.entriesName = [self.entryName1, self.entryName2, self.entryName3]
-            self.channelName = clsTestService.addGuidToString("'My Media - Publish to channel-multiple", self.testNum) 
+            self.channelName = clsTestService.addGuidToString("My Media - Publish to channel-multiple", self.testNum) 
             ##################### TEST STEPS - MAIN FLOW #####################  
             writeToLog("INFO","Step 1: Going to upload entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesName, self.entryDescription, self.entryTags) == False:

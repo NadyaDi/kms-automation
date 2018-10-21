@@ -33,7 +33,7 @@ class Test:
     entryName = None
     entryDescription = "description"
     entryTags = "tag1,"
-    channelName = 'publicChannelMyHistory'
+    channelName = None
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     #run test as different instances on all the supported platforms
@@ -54,35 +54,42 @@ class Test:
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('publishEntryToChannelFromEntryPage', self.testNum)
+            self.channelName = clsTestService.addGuidToString("Entry page - Publish to channel from entry page", self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
-            writeToLog("INFO","Step 1: Going to upload entry")
+            writeToLog("INFO","Step 1: Going to create new channel")            
+            if self.common.channel.createChannel(self.channelName, self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED create new channel")
+                return
+            
+            writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
+                writeToLog("INFO","Step 2: FAILED to upload entry")
                 return      
               
-            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                writeToLog("INFO","Step 3: FAILED to navigate to entry page")
                 return           
               
-            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return
                   
-            writeToLog("INFO","Step 4: Going to publish entry to channel from entry page")
-            if self.common.myMedia.publishSingleEntry(self.entryName, [], [self.channelName], publishFrom = enums.Location.ENTRY_PAGE) == False:
+            writeToLog("INFO","Step 5: Going to publish entry to channel from entry page")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], publishFrom = enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish entry to channel from entry page")
+                writeToLog("INFO","Step 5: FAILED to publish entry to channel from entry page")
                 return                           
                           
-            writeToLog("INFO","Step 5: Going to search entry in channel")
+            writeToLog("INFO","Step 6: Going to search entry in channel")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to find entry in channel")
+                writeToLog("INFO","Step 6: FAILED to find entry in channel")
                 return                                                                           
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -96,6 +103,7 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

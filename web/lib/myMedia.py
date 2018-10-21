@@ -344,8 +344,7 @@ class MyMedia(Base):
         if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Action button")
             return False 
-        
-        sleep(2)
+        sleep(5)
         
         if self.click(self.MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Publish button")
