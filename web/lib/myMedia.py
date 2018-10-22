@@ -81,9 +81,10 @@ class MyMedia(Base):
     EDIT_BUTTON_REQUIRED_FIELD_MASSAGE                          = ('xpath', '//a[@class="hidden-phone" and text()="Edit"]')
     CUSTOM_FIELD                                                = ('xpath', '//input[@id="customdata-DepartmentName"]')
     CUSTOM_FIELD_DROP_DOWN                                      = ('xpath', '//select[@id="customdata-DepartmentDivision"]')
-    SET_DATE_FROM_CALENDAR                                      = ('xpath' , "//input[@id='customdata-DateEstablished']")
-    EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY                         = ('xpath' , "//td[contains(@class,'day') and text()='DAY']")
-    CLICK_ON_CALENDAR                                           = ('xpath', "//input[@id='customdata-DateEstablished' and contain(@class='span11')]")
+    SET_DATE_FROM_CALENDAR                                      = ('xpath', "//input[@id='customdata-DateEstablished']")
+    EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY                         = ('xpath', "//td[@class='today day']")
+    CLICK_ON_CALENDAR                                           = ('xpath', "//i[@class='icon-th']")
+    CLICK_ON_CALENDAR_DATE_ESTABLISHED                          = ('xpath', "//div[@class='input-append date datepicker']") 
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1112,9 +1113,10 @@ class MyMedia(Base):
         else:
             writeToLog("INFO","Success, The entry '" + entriesName + "' was publish  successfully")
         return True
+                
                      
-                     
-    def addCustomDataAndPublish(self, entryName , customfield1, customfielddropdwon = enums.DepartmentDivision.FINANCE):  
+    #  @Author: Oded berihon                 
+    def addCustomDataAndPublish(self, entryName, customfield, customFieldDropdwon=enums.DepartmentDivision.FINANCE):  
         if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
@@ -1131,77 +1133,59 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to click on edit button")
             return False  
 
-        if self.send_keys(self.CUSTOM_FIELD, customfield1) == False:
-            writeToLog("INFO","FAILED to fill a customfield1:'" + customfield1 + "'")
+        if self.send_keys(self.CUSTOM_FIELD, customfield) == False:
+            writeToLog("INFO","FAILED to fill a customfield:'" + customfield + "'")
             return False
                       
-        if customfielddropdwon == enums.DepartmentDivision.FINANCE:
+        if customFieldDropdwon == enums.DepartmentDivision.FINANCE:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'FInance') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False 
         
-        elif customfielddropdwon == enums.DepartmentDivision.MARKETING:
+        elif customFieldDropdwon == enums.DepartmentDivision.MARKETING:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Marketing') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False 
             
-        elif customfielddropdwon == enums.DepartmentDivision.PRODUCT:
+        elif customFieldDropdwon == enums.DepartmentDivision.PRODUCT:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Product') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False    
             
-        elif customfielddropdwon == enums.DepartmentDivision.ENGINEERING:
+        elif customFieldDropdwon == enums.DepartmentDivision.ENGINEERING:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Engineering') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False    
             
-        elif customfielddropdwon == enums.DepartmentDivision.SALES:
+        elif customFieldDropdwon == enums.DepartmentDivision.SALES:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Sales') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False  
             
-        elif customfielddropdwon == enums.DepartmentDivision.HR:
+        elif customFieldDropdwon == enums.DepartmentDivision.HR:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'HR') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False 
             
-        elif customfielddropdwon == enums.DepartmentDivision.MANAGMENT:
+        elif customFieldDropdwon == enums.DepartmentDivision.MANAGMENT:
             if self.select_from_combo_by_text(self.CUSTOM_FIELD_DROP_DOWN, 'Management') == False:
                 writeToLog("INFO","Failed select finance devision")
                 return False        
         
-        if self.click(self.CLICK_ON_CALENDAR) == False:
+        parentElement = self.wait_visible(self.CLICK_ON_CALENDAR_DATE_ESTABLISHED)        
+        self.get_child_element(parentElement, self.CLICK_ON_CALENDAR).click()             
+        
+        if self.click(self.EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY) == False:                  
+            writeToLog("INFO","Failed select finance devision")
+            return False         
+        
+        if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on Edit button")
-            return False 
-        sleep(2)
+            return False    
         
-
         return True 
-
-
-    def setDate(self , date, start):
-        if start == 'start':
-            locator = (self.SET_DATE_FROM_CALENDAR[0], self.SET_DATE_FROM_CALENDAR[1] + "/following-sibling::span")
-            writeToLog("INFO","FAILED, unknown Schedule start/stop type: '" + date + "'")
-            return False
         
-        day = date.split('/')[0]
-        # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3'
-        intDay = int(day)
-        day = str(intDay)
-
-        if self.click(locator) == False:
-                writeToLog("INFO","FAILED to click start date calendar")
-                return False
-
-        if self.click((self.EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY[0], self.EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY[1].replace('DAY', day))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
-            return False
-
-        return True
-
-    
-    
+   
     #  @Author: Michal Zomper    
     # The function check and verify that the entries sort in my media are in the correct order 
     def verifySortInMyMedia(self, sortBy, entriesList):
