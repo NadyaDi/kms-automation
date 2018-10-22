@@ -1317,7 +1317,7 @@ class MyMedia(Base):
             writeToLog("INFO","Failed to get valid location page")
             return False
          
-        if len(self.get_elements(tmp_table_size)) < 4:
+        if len(self.get_elements(tmp_table_size)) < 5:
                 writeToLog("INFO","Success, All media is display")
                 return True 
               

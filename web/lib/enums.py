@@ -308,3 +308,24 @@ class AddToChannelTabs(Enum):
     
     MY_MEDIA                   = 'My Media'
     SHARED_REPOSITORY          = 'Shared Repository'  
+    
+class NavigationStyle(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    HORIZONTAL                 = 'Horizontal'
+    VERTICAL                   = 'Vertical' 
+    
+class NavigationPrePost(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    PRE                         = 'pre'
+    POST                        = 'post'   
+    
+class SameWindowPrePost(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    YES                         = 'Yes'
+    NO                          = 'No'   

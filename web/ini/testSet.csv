@@ -6,6 +6,7 @@ test_603,1,0,0,0,KAF BlackBoard view modes
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
+test_641,1,0,0,0,General - Navigation
 test_643,1,0,0,0,Home Page Carousel
 test_651,1,0,0,0,Navigate to entry page from upload page
 test_653,1,0,0,0,Free trial
