@@ -43,6 +43,11 @@ class Admin(Base):
     ADMIN_ENTRIES_PAGE_SIZE_IN_CHANNEL              = ('xpath', "//input[@id='entriesPageSize']")
     ADMIN_SERVICE_URL                               = ('xpath', "//input[@id='serviceUrl']")
     ADMIN_VERIFY_SSL                                = ('xpath', '//select[@id="verifySSL"]')
+    ADMIN_NAVIGATION_STYLE                          = ('xpath', "//select[@id='navigationStyle' and @name='navigationStyle']")
+    ADMIN_ADD_PRE_POST                              = ('xpath', "//a[@class='add' and contains(text(), '+ Add \"PRE_OR_POST\"')]")
+    ADMIN_PRE_POST_ITEM_NAME                        = ('xpath', "//input[@data-name='name' and contains(@id, 'PRE_OR_POST')]")
+    ADMIN_PRE_POST_ITEM_VALUE                       = ('xpath', "//input[@data-name='value' and contains(@id, 'PRE_OR_POST')]")
+    ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION          = ('xpath', "//select[@data-name='sameWindow']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -683,4 +688,107 @@ class Admin(Base):
             return False
         
         writeToLog("INFO","Success, category scheduling module was set to: " + str(selection) + "'")
-        return True         
+        return True        
+    
+    # @Author: Michal Zomper
+    def setNavigationStyle(self, navigationStyle):
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/navigation') == False:
+            writeToLog("INFO","FAILED to load navigation page in admin")
+            return False
+        sleep(1) 
+        
+        if self.select_from_combo_by_text(self.ADMIN_NAVIGATION_STYLE, navigationStyle.value) == False:
+            writeToLog("INFO","FAILED to change navigate style to: " + navigationStyle.value)
+            return False    
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, navigation style was set to: " + navigationStyle.value + "'")
+        return True  
+    
+    # @Author: Michal Zomper
+    # This function add link items to the pre post option in navigation tab
+    def addPrePostLinkItem(self, preOrPost, name, url, sameWindow):
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/navigation') == False:
+            writeToLog("INFO","FAILED to load navigation page in admin")
+            return False
+        sleep(1) 
+        
+        if preOrPost == enums.NavigationPrePost.PRE:
+            addbuttontmp= (self.ADMIN_ADD_PRE_POST[0], self.ADMIN_ADD_PRE_POST[1].replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
+            if self.click(addbuttontmp,multipleElements=False) == False:
+                writeToLog("INFO","FAILED to click on add pre option button")
+                return False
+            
+            if self.addlinkItem(enums.NavigationPrePost.PRE, name, url, sameWindow) == False:
+                writeToLog("INFO","FAILED to add pre like item")
+                return False
+            
+        elif preOrPost == enums.NavigationPrePost.POST:
+            addbuttontmp= (self.ADMIN_ADD_PRE_POST[0], self.ADMIN_ADD_PRE_POST[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
+            if self.click(addbuttontmp,multipleElements=False) == False:
+                writeToLog("INFO","FAILED to click on add pre option button")
+                return False
+            
+            if self.addlinkItem(enums.NavigationPrePost.POST, name, url, sameWindow) == False:
+                writeToLog("INFO","FAILED to add post like item")
+                return False
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, like item was added successfully")
+        return True  
+
+   
+    # @Author: Michal Zomper
+    # This function choose link option(for pre / post item) and set all its parameters
+    def addlinkItem(self, preOrPost, name, url, sameWindow):
+        asteriskElement = self.driver.find_element_by_xpath(".//legend[@class='num' and contains(text(), '*')]")
+        parentAsteriskElement = asteriskElement.find_element_by_xpath("..")
+        comboboxElement = parentAsteriskElement.find_element_by_tag_name("select")
+        Select(comboboxElement).select_by_visible_text("Link")   
+        
+        
+        if preOrPost == enums.NavigationPrePost.PRE:
+            linkNameTmp= (self.ADMIN_PRE_POST_ITEM_NAME[0], self.ADMIN_PRE_POST_ITEM_NAME[1].replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
+            elementLinkNameTmp = parentAsteriskElement.find_elements_by_xpath(linkNameTmp[1])[1]
+            if self.send_keys_to_element(elementLinkNameTmp, name) == False:
+                writeToLog("INFO","FAILED to insert link item name")
+                return False
+            
+            linkValueTmp= (self.ADMIN_PRE_POST_ITEM_VALUE[0], self.ADMIN_PRE_POST_ITEM_VALUE[1].replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
+            elementValueNameTmp = parentAsteriskElement.find_elements_by_xpath(linkValueTmp[1])[1]
+            if self.send_keys_to_element(elementValueNameTmp, url) == False:
+                writeToLog("INFO","FAILED to insert link item value")
+                return False
+                
+        elif preOrPost == enums.NavigationPrePost.POST:
+            linkNameTmp= (self.ADMIN_PRE_POST_ITEM_NAME[0], self.ADMIN_PRE_POST_ITEM_NAME[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value)) 
+            if self.click_and_send_keys(linkNameTmp, name) == False:
+                writeToLog("INFO","FAILED to insert link item name")
+                return False
+            
+            linkValueTmp= (self.ADMIN_PRE_POST_ITEM_VALUE[0], self.ADMIN_PRE_POST_ITEM_VALUE[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
+            if self.click_and_send_keys(linkValueTmp, url) == False:
+                writeToLog("INFO","FAILED to insert link item value")
+                return False 
+        
+        if self.select_from_combo_by_text(self.ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION, sameWindow.value) == False:
+            writeToLog("INFO","FAILED to change navigate style to: " + sameWindow.value)
+            return False 
+        
+        return True  

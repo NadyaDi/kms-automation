@@ -1,5 +1,5 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new ,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
+test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,2438361-1,mediaspace.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_713,category moderation,2438361-1,mediaspace.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -68,6 +68,7 @@ test_712,Categories - Members tab,1756201,mediaspace.kaltura.com,oleg.sigalov@ka
 test_721,Categories - Import Mermbers,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_719,Categories - Enable / Disable Inherit permissions,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1025,Categories - Sort media on category page,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_641,Navigation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1594,Entry required field,2373952,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2565,Watch History - Add entry (Private) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,Watch History - Add entry (Published to channel- public) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -138,4 +139,4 @@ test_2693,Watch History - Search by name,2373952-1,mediaspace.kaltura.com,inbar.
 test_2697,Watch History - Filter  media type - video,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2702,Watch History - Filter by watch status,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_674,Playlists - Delete playlist,2362001-2,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
-test_1592,Custom data,2378481-2,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_1592,Custom data,2378481-3,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
