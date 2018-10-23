@@ -154,6 +154,11 @@ class Channel(Base):
     ADD_TO_CHANNEL_SR_DROP_DOWN_MENU_OPTION             = ('xpath', '//a[@data-original-title="SR_NAME"]')
     ADD_TO_CHANNEL_SR_TABLE                             = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full"]')
     ADD_TO_CHANNEL_SR_TABLE_SIZE                        = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full"]/tbody/tr')
+    CHANNEL_PENDING_TAB_TABLE                           = ('xpath', '//table[@class="table table-hover bulkCheckbox mediaTable moderation-table"]')
+    CHANNEL_PENDING_TAB_TABLE_SIZE                      = ('xpath', '//table[@class="table table-hover bulkCheckbox mediaTable moderation-table"]/tbody/tr')
+    CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG               = ('xpath', '//div[@class="alert alert-info endlessScrollAlert"]')
+    CHANNEL_PENDING_TAB_SEARCH_BAR                      = ('xpath', '//input[@placeholder="Search in Pending" and @class="searchForm__text"]')
+    CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG             = ('xpath', '//div[@class="message" and text()="Loading..."]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1316,27 +1321,14 @@ class Channel(Base):
         writeToLog("INFO","The following entry was approved : " + approveEntry)
         
         
-        # Author: Tzachi Guetta 
-    def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate = True, location = enums.Location.CHANNEL_PAGE):
+    # Author: Tzachi Guetta 
+    def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate=True, location=enums.Location.CHANNEL_PAGE):
         try:         
             if navigate == True:
-                if location == enums.Location.CHANNEL_PAGE:
-                    if self.navigateToChannel(channelName) == False:
-                        writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
-                        return False
-                    
-                    if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
-                        writeToLog("INFO","FAILED to click on channel's moderation tab")
-                        return False
-                    
-                elif location == enums.Location.CATEGORY_PAGE:
-                    if self.clsCommon.category.navigateToCategory(channelName) == False:
-                        writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
-                        return False
-                    
-                    if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
-                        writeToLog("INFO","FAILED to click on category's moderation tab")
-                        return False     
+                if self.navigateToPendingaTab(channelName, location) == False:
+                    writeToLog("INFO","FAILED to navigate to pending tab in: " + channelName)
+                    return False   
+                   
             sleep(2)
             
             if self.clsCommon.isElasticSearchOnPage() == True:
@@ -2279,4 +2271,119 @@ class Channel(Base):
             return False 
         
         sleep(2)
-        return True     
+        return True       
+    
+    
+    # @Author: Inbar Willamn
+    # The function check and verify that the entries sort in the correct order in pending tab in channel and category 
+    # Default location is channel page
+    def verifySortAndFiltersInPendingTab(self, sortBy='', filterMediaType='',channelName ='',entriesList='', navigate = False, location = enums.Location.CHANNEL_PAGE):
+        if self.sortAndFilterInPendingTab(sortBy, filterMediaType, channelName, entriesList) == False:
+            writeToLog("INFO","FAILED to sort entries")
+            return False
+         
+        if self.showAllEntriesPendingTab() == False:
+            writeToLog("INFO","FAILED to show all entries in pending tab page")
+            return False
+        sleep(10)
+        
+        try:
+            entriesIncategory = self.wait_visible(self.CHANNEL_PENDING_TAB_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in pending tab")
+            return False
+        entriesIncategory = entriesIncategory.split("\n")
+        
+        if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesIncategory) == False:
+            writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
+            return False
+        
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            writeToLog("INFO","Success, Pending sort by '" + sortBy.value + "' was successful")
+            return True
+        else:
+            writeToLog("INFO","Success, Pending sort by '" + sortBy.value + "' was successful")
+            return True
+        
+        
+    # @Author: Inbar Willman
+    # Navigate to pending tab - in channel and category
+    def navigateToPendingaTab(self,channelName, location=enums.Location.CHANNEL_PAGE):
+        if location == enums.Location.CHANNEL_PAGE:
+            if self.navigateToChannel(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                return False
+                    
+            if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on channel's moderation tab")
+                return False
+                    
+        elif location == enums.Location.CATEGORY_PAGE:
+                if self.clsCommon.category.navigateToCategory(channelName) == False:
+                    writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
+                    return False
+                    
+                if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on category's moderation tab")
+                    return False 
+                
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
+        return True
+    
+    
+    # @Author: Inbar WIllman
+    # Make a search in pending tab - channel and category - for eSearch tests
+    def makeSearchInPending(self, searchTerm, exactSearch=True):
+        try:
+            searchBarElement = self.get_element(self.CHANNEL_PENDING_TAB_SEARCH_BAR)
+        except:
+            writeToLog("INFO","FAILED get Search Bar element")
+            return False 
+        
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get search bar element")
+            return False
+        
+        searchBarElement.click()
+        if exactSearch == True:
+            searchLine = '"' + searchTerm + '"'
+        else:
+            if self.clsCommon.isElasticSearchOnPage():
+                searchLine = '"' + searchTerm + '"'
+            else:
+                searchLine = searchTerm
+            
+        searchBarElement.send_keys(searchLine + Keys.ENTER)
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Show all entries in pending tab
+    def showAllEntriesPendingTab(self, timeOut=10):
+        tmp_table_size = self.CHANNEL_PENDING_TAB_TABLE_SIZE
+        loading_message = self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG
+        no_entries_page_msg = self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG                       
+                
+        if len(self.get_elements(tmp_table_size)) < 4:
+                writeToLog("INFO","Success, All media is display")
+                return True 
+              
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
+        while wait_until > datetime.datetime.now():                       
+            if self.wait_while_not_visible(loading_message, 10) == True:
+                    self.clsCommon.sendKeysToBodyElement(Keys.END)
+            
+
+        if self.is_present(no_entries_page_msg, 5) == True:
+            writeToLog("INFO","Success, All media is display")
+            sleep(1)
+            # go back to the top of the page
+            self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+            return True    
+         
+        else:
+            writeToLog("INFO","FAILED to show all media")
+            return False  

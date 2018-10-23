@@ -1295,7 +1295,7 @@ class MyMedia(Base):
             
         elif searchIn == enums.Location.EDITOR_PAGE:
             tmp_table_size = self.clsCommon.kea.EDITOR_TABLE_SIZE
-            no_entries_page_msg = self.clsCommon.kea.EDITOR_NO_MORE_MEDIA_FOUND_MSG                
+            no_entries_page_msg = self.clsCommon.kea.EDITOR_NO_MORE_MEDIA_FOUND_MSG                          
                 
         else:
             writeToLog("INFO","Failed to get valid location page")
