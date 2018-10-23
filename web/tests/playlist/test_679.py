@@ -58,15 +58,16 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('EntryAudio', self.testNum)
             self.entryName4 = clsTestService.addGuidToString('EntryImage', self.testNum)             
             self.entriesList = [self.entryName1, self.entryName2, self.entryName3, self.entryName4]
-            self.playlistName1 = clsTestService.addGuidToString('emptyPlaylistTest#1', self.testNum)
+            self.playlistName1 = clsTestService.addGuidToString('PlaylistTest#1', self.testNum)
             self.playlistName2 = clsTestService.addGuidToString('PlaylistTest#2', self.testNum)
-            self.listOfPlaylists = [self.playlistName1, self.playlistName2]
+            self.listOfPlaylists = [self.playlistName1]
             ########################## TEST STEPS - MAIN FLOW ####################### 
             self.entriesToUpload = {
                 self.entryName1: self.filePath1, 
                 self.entryName2: self.filePathVideo,
                 self.entryName3: self.filePathAudio,
-                self.entryName4: self.filePathImage}                      
+                self.entryName4: self.filePathImage}
+                                                  
             
             writeToLog("INFO","Step 1: Going to upload 4 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
@@ -76,15 +77,14 @@ class Test:
             
             self.common.myMedia.navigateToMyMedia(forceNavigate=True)
             writeToLog("INFO","Step 2: Going to create playlist with 3 Entries")
-            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entriesList, toCreateNewPlaylist=True) == False:
+            if self.common.myPlaylists.addSingleEntryToPlaylist(self.entriesList, self.playlistName1, toCreateNewPlaylist=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create playlist with 3 Entries ")
                 return
-            
-#             self.common.myMedia.navigateToMyMedia(forceNavigate=True)     
+                 
 # #           Need to write a new function that will create new playlist but also uncheck current playlist
 #             writeToLog("INFO","Step 3: Going to create playlist with 3 Entries and remove entries from previous playlist")
-#             if self.common.myPlaylists.addMultipleEntriesToPlaylistRemoveFromOldPlaylist(self.entriesList, toCreateNewPlaylist=True) == False:
+#             if self.common.myPlaylists.moveEntriesToNewPlaylist(self.entriesList, toCreateNewPlaylist=True) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 3: FAILED to create playlist with 3 Entries and remove entries from previous playlist ")
 #                 return         
