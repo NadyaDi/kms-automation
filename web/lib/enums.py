@@ -54,7 +54,8 @@ class Location(Enum):
     CHANNEL_PLAYLIST        = 'channel playlist'
     ADD_TO_CHANNEL_MY_MEDIA = 'Add to channel My Media'
     ADD_TO_CHANNEL_SR       = 'Add to channel SR'
-    EDITOR_PAGE             = ('Editor page') 
+    EDITOR_PAGE             = 'Editor page'
+    PENDING_TAB_CATEGORY    = 'category - Pending tab'
 
 
 class EditEntryPageTabName(Enum):
