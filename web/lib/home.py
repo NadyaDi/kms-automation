@@ -22,7 +22,10 @@ class Home(Base):
     HOME_PLAYLIST_ENTRY                                 = ('xpath', '//img[contains(@alt,"ENTRY_NAME")]/ancestor::div[@class="photo-group featured_wrapper"]')
     HOME_CAROUSEL_ENTRY                                 = ('xpath', "//h1[@class='home__carousel-entry-title entryTitle tight' and contains(text(),'ENTRY_NAME')]")
     HOME_CAROUSEL_ENTRY_OLD_UI                          = ('xpath', "//img[@alt='ENTRY_NAME']")
-    
+    HOME_NAV_BAR_BUTTON                                 = ('xpath', "//a[@id='Kbtn-navbar']")
+    HOME_NAV_BAR                                        = ('xpath', "//ul[@id='menu' and contains(@class, 'nav dd-menu']")
+    HOME_LINK_IN_NAV_BAR                                = ('xpath', "//a[@class='navbar-link' and contains(text(),'LINK_NAME')]")
+    HOME_HORIZONTAL_MENU_NAV_BAR                        = ('xpath', "//div[@id='horizontalMenu']")
     #=============================================================================================================  
     # @Author: Inbar Willman / Michal Zomper
     # This method navigate to home page
@@ -77,7 +80,8 @@ class Home(Base):
         writeToLog("INFO","Success, entry'" + entryName + "' was verified")
         return True  
         
-
+        
+    # @Author: Michal Zomper
     def verifyEntryInHomePageCarousel(self, entryName, expectedQrResult, cropLeft, croTop, cropRight, cropBottom):  
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             tmpEntryName = (self.HOME_CAROUSEL_ENTRY_OLD_UI[0], self.HOME_CAROUSEL_ENTRY_OLD_UI[1].replace('ENTRY_NAME', entryName) + "/ancestor::div[@class='carmain']")
@@ -95,4 +99,54 @@ class Home(Base):
             return False  
         
         writeToLog("INFO","Success, entry'" + entryName + "' in  home page carousel  was verified")
+        return True
+    
+    
+    # @Author: Michal Zomper
+    def openVerticalNavigationBar(self):
+        if self.click(self.HOME_NAV_BAR_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on main menu button")
+            return False 
+        
+        if self.is_visible(self.HOME_NAV_BAR) == False:
+            writeToLog("INFO","FAILED to find main menu")
+            return False
+        
+        if self.is_visible(self.HOME_HORIZONTAL_MENU_NAV_BAR) == False:
+            writeToLog("INFO","FAILED to verify  vertical navigation bar is dispaly")
+            return False
+        
+        writeToLog("INFO","Success,main menu is open")
+        return True
+            
+            
+    # @Author: Michal Zomper       
+    def checklinkFormNavBarOnInNewWindow(self, linkName, expectedUrl, isExactUrl):
+        # Save current window driver
+        window_before = self.driver.window_handles[0]
+        
+        #open new window
+        linkNameTmp = (self.HOME_LINK_IN_NAV_BAR[0], self.HOME_LINK_IN_NAV_BAR[1].replace('LINK_NAME', linkName)) 
+        if self.click(linkNameTmp) == False:
+            writeToLog("INFO","FAILED to click on link in nav bar")
+            return False
+        sleep(2)   
+            
+        # Verify new window landing page URL
+        window_after = self.driver.window_handles[1]
+        self.driver.switch_to_window(window_after)
+        if isExactUrl == False:
+            if expectedUrl not in self.driver.current_url:
+                writeToLog("INFO","FAILED to verify new window landing page URL, expected: " + expectedUrl + "; Actual: " + self.driver.current_url)
+                return False
+        else:
+            if expectedUrl != self.driver.current_url:
+                writeToLog("INFO","FAILED to verify new window landing page URL, expected: " + expectedUrl + "; Actual: " + self.driver.current_url)
+                return False           
+       
+        # Close landing page
+        self.driver.close()
+        # Restore to original window driver
+        self.driver.switch_to_window(window_before)
+        
         return True

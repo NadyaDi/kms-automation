@@ -47,7 +47,7 @@ class Admin(Base):
     ADMIN_ADD_PRE_POST                              = ('xpath', "//a[@class='add' and contains(text(), '+ Add \"PRE_OR_POST\"')]")
     ADMIN_PRE_POST_ITEM_NAME                        = ('xpath', "//input[@data-name='name' and contains(@id, 'PRE_OR_POST')]")
     ADMIN_PRE_POST_ITEM_VALUE                       = ('xpath', "//input[@data-name='value' and contains(@id, 'PRE_OR_POST')]")
-    ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION          = ('xpath', "//select[@data-name='sameWindow']")
+    ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION          = ('xpath', "//select[contains(@id, 'PRE_OR_POST') and @data-name='sameWindow']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -67,7 +67,10 @@ class Admin(Base):
             username = localSettings.LOCAL_SETTINGS_ADMIN_USERNAME
         if password == 'default':
             password = localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD
-                       
+            
+        if self.verifyUrl("admin\/config" , True, 3) == True:
+                return True  
+                         
         if self.navigateToAdminPage() == False:
             return False
                 
@@ -760,7 +763,9 @@ class Admin(Base):
         asteriskElement = self.driver.find_element_by_xpath(".//legend[@class='num' and contains(text(), '*')]")
         parentAsteriskElement = asteriskElement.find_element_by_xpath("..")
         comboboxElement = parentAsteriskElement.find_element_by_tag_name("select")
-        Select(comboboxElement).select_by_visible_text("Link")   
+        if Select(comboboxElement).select_by_visible_text("Link") == False:
+            writeToLog("INFO","FAILED to select 'link' type")
+            return False
         
         
         if preOrPost == enums.NavigationPrePost.PRE:
@@ -776,19 +781,29 @@ class Admin(Base):
                 writeToLog("INFO","FAILED to insert link item value")
                 return False
                 
+            sameWindowTmp = (self.ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION[0], self.ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION[1].replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
+            elementLinkSameWindowTmp = parentAsteriskElement.find_elements_by_xpath(sameWindowTmp[1])[1]  
+            if Select(elementLinkSameWindowTmp).select_by_visible_text(sameWindow.value) == False:
+                writeToLog("INFO","FAILED to set '" + sameWindow.value + "' value in same window option")
+                return False
+            
         elif preOrPost == enums.NavigationPrePost.POST:
-            linkNameTmp= (self.ADMIN_PRE_POST_ITEM_NAME[0], self.ADMIN_PRE_POST_ITEM_NAME[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value)) 
-            if self.click_and_send_keys(linkNameTmp, name) == False:
+            linkNameTmp= (self.ADMIN_PRE_POST_ITEM_NAME[0], self.ADMIN_PRE_POST_ITEM_NAME[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
+            elementLinkNameTmp = parentAsteriskElement.find_elements_by_xpath(linkNameTmp[1])[1]
+            if self.send_keys_to_element(elementLinkNameTmp, name) == False:
                 writeToLog("INFO","FAILED to insert link item name")
                 return False
             
             linkValueTmp= (self.ADMIN_PRE_POST_ITEM_VALUE[0], self.ADMIN_PRE_POST_ITEM_VALUE[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
-            if self.click_and_send_keys(linkValueTmp, url) == False:
+            elementValueNameTmp = parentAsteriskElement.find_elements_by_xpath(linkValueTmp[1])[1]
+            if self.send_keys_to_element(elementValueNameTmp, url) == False:
                 writeToLog("INFO","FAILED to insert link item value")
                 return False 
-        
-        if self.select_from_combo_by_text(self.ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION, sameWindow.value) == False:
-            writeToLog("INFO","FAILED to change navigate style to: " + sameWindow.value)
-            return False 
-        
+            
+            sameWindowTmp = (self.ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION[0], self.ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
+            elementLinkSameWindowTmp = parentAsteriskElement.find_elements_by_xpath(sameWindowTmp[1])[1]
+            if Select(elementLinkSameWindowTmp).select_by_visible_text(sameWindow.value) == False:
+                writeToLog("INFO","FAILED to set '" + sameWindow.value + "' value in same window option")
+                return False
+
         return True  

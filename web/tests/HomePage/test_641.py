@@ -28,6 +28,10 @@ class Test:
     timeout_accured = "False"
     driver = None
     common = None
+    preLinkName = "Google"
+    preLinkValue = "https://www.google.co.il/"
+    postLinkName = "Mako"
+    postLinkValue = "https://www.mako.co.il/"
     # Test variables
     
     
@@ -49,15 +53,51 @@ class Test:
             self.common = Common(self.driver)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-#             writeToLog("INFO","Step 1: Going to set navigation style to: " + enums.NavigationStyle.VERTICAL)
-#             if self.common.admin.setNavigationStyle(navigationStyle=enums.NavigationStyle.VERTICAL) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to set navigation style to: " + enums.NavigationStyle.VERTICAL)
-#                 return
+            writeToLog("INFO","Step 1: Going to set navigation style to: " + enums.NavigationStyle.VERTICAL.value)
+            if self.common.admin.setNavigationStyle(navigationStyle=enums.NavigationStyle.VERTICAL) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to set navigation style to: " + enums.NavigationStyle.VERTICAL.value)
+                return
+ 
+            writeToLog("INFO","Step 2: Going to set pre link in admin page")    
+            if self.common.admin.addPrePostLinkItem(enums.NavigationPrePost.PRE, self.preLinkName, self.preLinkValue, enums.SameWindowPrePost.YES) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to set pre link in admin page")
+                return
+             
+            writeToLog("INFO","Step 3: Going to set post link in admin page")    
+            if self.common.admin.addPrePostLinkItem(enums.NavigationPrePost.POST, self.postLinkName, self.postLinkValue, enums.SameWindowPrePost.NO) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to set post link in admin page")
+                return
+             
+            writeToLog("INFO","Step 4: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED navigate to home page")
+                return
+            
+            writeToLog("INFO","Step 5: Going to verify that navigation bar is vertical")
+            if self.common.home.openVerticalNavigationBar() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to verify and open vertical navigate bar")
+                return
                 
-            self.common.admin.addPrePostLinkItem(enums.NavigationPrePost.PRE, "Ynet", "https://www.ynet.co.il/home/0,7340,L-8,00.html", enums.SameWindowPrePost.YES)
-
-                 
+            writeToLog("INFO","Step 6: Going to check pre link, open in same window: '" + enums.SameWindowPrePost.YES + "' in vertical navigation mode")    
+            if self.common.home.checklinkFormNavBarOnInNewWindow(self.postLinkName, self.postLinkValue, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify pre link open in different window and the url is correct in vertical navigation mode")
+                return
+            
+            writeToLog("INFO","Step 7: Going to check post link, open in same window: '" + enums.SameWindowPrePost.NO + "' in vertical navigation mode")    
+            if self.common.home.checklinkFormNavBarOnInNewWindow(self.postLinkName, self.postLinkValue, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify pre link open in different window and the url is correct in vertical navigation mode")
+                return
+            
+            
+            
+            
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Navigate' was done successfully")
         # if an exception happened we need to handle it and fail the test       
