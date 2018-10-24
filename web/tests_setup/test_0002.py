@@ -26,7 +26,7 @@ class Test:
     common = None
     
     # Test variables
-    serviceUrl = 'https://www.kaltura.com'
+    serviceUrl = 'https://pa-front-stg.kaltura.com'
     verifySSL = True
     
     #run test as different instances on all the supported platforms
