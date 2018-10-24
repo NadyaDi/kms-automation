@@ -30,10 +30,10 @@ class  GlobalSearch(Base):
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_OLDUI         = ('xpath', "//p[@class='normalWordBreak searchme hidden-phone']")
     GLOBAL_SEARCH_GO_TO_GALLERY_RESULTS_NEWUI           = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Gallery Results')]")
     GLOBAL_SEARCH_GO_TO_CHANNEL_RESULTS_NEWUI           = ('xpath', "//a[@class='CategorySearchResults__resultsLink' and contains(text(), 'Go to Channel Results')]")
-    GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI                  = ('xpath', "//a[@id='galleries-tab']")
+    GLOBAL_SEARCH_CATEGORIES_TAB_OLDUI                  = ('xpath', "//a[@id='SearchCategories-tab']")
     GLOBAL_SEARCH_RESULT_CATEGORY_NAME                  = ('xpath', "//span[@aria-label='CTEGORY_NAME']")
     GLOBAL_SEARCH_RESULT_CATEGORY_TABLE_OLDUI           = ('xpath', "//table[@id='galleryResultsTable']")
-    GLOBAL_SEARCH_CHANNEL_TAB_OLDUI                     = ('xpath', "//a[@id='channels-tab']")
+    GLOBAL_SEARCH_CHANNEL_TAB_OLDUI                     = ('xpath', "//a[@id='SearchChannels-tab']")
     GLOBAL_SEARCH_RESULT_CHANNELY_TABLE_OLDUI           = ('xpath', "//table[@id='channelResultsTable']")
     GLOBAL_SEARCH_IN_CAPTION_TAB_OLDUI                  = ('xpath', "//a[@id='captions-tab']")
     GLOBAL_SEARCH_CAPTION_TIME_RESULT_OLDUI             = ('xpath', "//a[@class='captions_search_result' and  contains(text(),'CAPTION_TIME')]")
@@ -232,13 +232,13 @@ class  GlobalSearch(Base):
             
         else:
             if self.click(self.GLOBAL_SEARCH_CHANNEL_TAB_OLDUI, timeout=15, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on categories tab")
+                writeToLog("INFO","FAILED to click on channels tab")
                 return False
             sleep(3)
             
             results = self.wait_elements(self.GLOBAL_SEARCH_RESULT_CHANNELY_TABLE_OLDUI, 30) 
             if results == False:
-                writeToLog("INFO","No categories found")
+                writeToLog("INFO","No channel found")
                 return False        
             
             for result in results:
