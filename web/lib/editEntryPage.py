@@ -33,7 +33,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
-    EDIT_ENTRY_DOWNLOADS_TAB                                    = ('id', 'downloads-tab-tab')
+    EDIT_ENTRY_DOWNLOADS_TAB                                    = ('id', 'Downloads-tab')
     EDIT_ENTRY_TIMELINE_TAB                                     = ('id', 'chapters-tab')
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
@@ -376,7 +376,7 @@ class EditEntryPage(Base):
             
         elif tabName == enums.EditEntryPageTabName.DOWNLOADS:
             if self.click(self.EDIT_ENTRY_DOWNLOADS_TAB, 30) == False:
-                writeToLog("INFO","FAILED to click on time-line tab")
+                writeToLog("INFO","FAILED to click on downloads tab")
                 return False  
             
         elif tabName == enums.EditEntryPageTabName.REPLACE_VIDEO:
