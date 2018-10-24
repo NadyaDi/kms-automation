@@ -224,6 +224,7 @@ class Category(Base):
         writeToLog("INFO","Success, media was added to category successfully")
         return True
     
+    
     # Author: Michal Zomper
     #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
     def addNewContentToCategoryWithoutNavigate(self, uploadEntry):
