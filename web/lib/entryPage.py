@@ -30,9 +30,9 @@ class EntryPage(Base):
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
     ENTRY_PAGE_PLAYER_IFRAME2                              = ('id','kplayer_ifp')
     ENTRY_PAGE_CHAPTER_MENU_ON_THE_PLAYER                  = ('id', 'sideBarContainerReminderContainer') # This is the icon on the top left of the player that show all the slides that were added 
-    ENTRY_PAGE_SHARE_TAB                                   = ('xpath', '//a[@id="tab-share-tab" and @class="btn responsiveSizePhone tab-share-tab"]')
+    ENTRY_PAGE_SHARE_TAB                                   = ('xpath', '//a[@id="tab-Share"]')
     ENTRY_PAGE_SHARE_LINK_TO_MEDIA_OPTION                  = ('xpath', '//li[@id="directLink-tab" and @class="active"]')
-    ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'embedTextArea-pane-tab')
+    ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'Embed-tab')
     ENTRY_PAGE_SHARE_EMAIL_OPTION                          = ('id', 'emailLink-tab')
     ENTRY_PAGE_LOADING                                     = ('xpath', '//div[@class="message" and text()="Loading..."]')
     ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea')
@@ -301,8 +301,8 @@ class EntryPage(Base):
 
     # @Author: Inbar Willman    
     def clickOnShareTab(self):
-        if self.click(self.ENTRY_PAGE_SHARE_TAB, 30) == False:
-            writeToLog("INFO","FAILED to click on download tab")
+        if self.click(self.ENTRY_PAGE_SHARE_TAB, 30, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on share tab")
             return False
     
     
@@ -333,17 +333,22 @@ class EntryPage(Base):
         if self.clickOnShareTab() == False:
             writeToLog("INFO","FAILED to click on share tab")
             return False  
+        
         if self.chooseShareOption() == False:
             writeToLog("INFO","FAILED to click on embed tab")
             return False
         sleep(3)
+        
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         if self.wait_while_not_visible(self.ENTRY_PAGE_LOADING) == False:
             writeToLog("INFO","FAILED - Loading message is still displayed")
-            return False   
+            return False  
+         
         embed_text = self.get_element_text(self.ENTRY_PAGE_EMBED_TEXT_AREA)
         if embed_text == None:
             return False
+        
+        sleep(3)
         return embed_text
     
     
