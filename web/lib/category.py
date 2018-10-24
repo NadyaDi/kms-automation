@@ -72,6 +72,7 @@ class Category(Base):
     CATEGORY_INHERIT_PERMISSIONS_BUTTON                         = ('xpath', "//input[@id='inherit']")
     CATEGORY_COMFIRM_INHERIT_PERMISSIONS                        = ('xpath', "//a[@class='btn btn-danger' and text()='Yes']")
     CATEGORY_GALLEY_ALL_MEDIA_TABLE                             = ('xpath', "//div[@id='galleryGrid']")
+    CATEGORY_ADD_TO_CATEGORY_BUTTON                             = ('xpath', "//a[@id='tab-AddtoGallery']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -228,7 +229,7 @@ class Category(Base):
     # Author: Michal Zomper
     #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
     def addNewContentToCategoryWithoutNavigate(self, uploadEntry):
-        if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+        if self.click(self.clsCommon.category.CATEGORY_ADD_TO_CATEGORY_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to Gallery button")
             return False     
             
