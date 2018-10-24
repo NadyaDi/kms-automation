@@ -762,10 +762,19 @@ class Category(Base):
             writeToLog("INFO","Failed to click on add button")
             return False  
         
-        # Wait until add member modal isn't displayed
+        # Wait until add member window isn't displayed
         if self.wait_while_not_visible(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
-            writeToLog("INFO","Failed to display add member modal")
-            return False    
+            writeToLog("INFO","Failed to display add member window")
+            return False
+        sleep(3)
+        # Refresh page
+        self.driver.refresh()
+        
+        # Navigate to members tab
+        if self.navigateToCategoryMembersTab() == False:
+            writeToLog("INFO","Failed to click on members tab")
+            return False  
+        sleep(2)
         
         #Verify new member is added to member table
         tmp_member_row = (self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))

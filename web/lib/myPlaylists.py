@@ -221,7 +221,7 @@ class MyPlaylists(Base):
     def addEntriesToPlaylist(self, entriesName, playlistName, toCreateNewPlaylist):
         try:
             if self.addSingleEntryToPlaylist(entriesName, playlistName, toCreateNewPlaylist, currentLocation = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","FAILED to add the entries to play-list")
+                writeToLog("INFO","FAILED to add the entries to playlist")
                 return False
                 
         except NoSuchElementException:
