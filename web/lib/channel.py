@@ -63,7 +63,7 @@ class Channel(Base):
     CHANNEL_PLAYLISTS_TAG                               = ('id', 's2id_StaticPlaylist-tags')
     CHANNEL_PLAYLISTS_ADD_MEDIA_URL                     = ('xpath', "//a[@class='accordion-toggle collapsed' and @data-toggle= 'collapse']")
     CHANNEL_PLAYLISTS_HEADER                            = ('xpath', "//h3[ text()= 'Create a Manual Playlist']")
-    CHANNEL_ADD_TO_CHANNEL_BUTTON                       = ('xpath', "//a[@id='tab-addcontent']")
+    CHANNEL_ADD_TO_CHANNEL_BUTTON                       = ('xpath', "//a[@id='tab-AddtoGallery']")
     CHANNEL_LOADING_MSG                                 = ('xpath', "//div[contains(.,'Loading')]")
     CHANNEL_PUBLISH_BUTTON                              = ('xpath', "//a[contains(@class,'btn tight btn-primary addMedia')]")
     CHANNEL_MODARATE_PUBLISH_MSG                        = ('xpath', "//div[text() ='All media was published successfully. Note that your media will not be listed until a moderator approves it.']")
