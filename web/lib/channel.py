@@ -1412,18 +1412,9 @@ class Channel(Base):
         #Verify new member is added to member table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
         if self.is_visible(tmp_member_row) == False:
-            writeToLog("INFO","Failed to add new member to table")
+            writeToLog("INFO","Failed new member was NOT added to members table")
             return False
         sleep(3)
-        
-        # Refresh page
-        self.driver.refresh()
-        
-        # Navigate to members tab
-        if self.navigateToMembersTab() == False:
-            writeToLog("INFO","Failed to click on members tab")
-            return False  
-        sleep(2)        
         
         return True                                         
                            
