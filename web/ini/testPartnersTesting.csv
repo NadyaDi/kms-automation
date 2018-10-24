@@ -106,10 +106,10 @@ test_739,Channel - Members tab,2373952-1,qakmstest.dev.kaltura.com,inbar.willman
 test_703,Entry page - Replace media,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_692,Entry page - Side My Media,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_736,Remove entry from Channel,2378481,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,autoded,123456
-test_767,Create Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
-test_768,Filter in Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
-test_769,Embed Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_736,Remove entry from Channel,2378481-1,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,autoded,123456
+test_767,Create Channel Playlist,2378481-1,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_768,Filter in Channel Playlist,2378481-1,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_769,Embed Channel Playlist,2378481-1,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_662,My Media - Publish to category - single,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_664,My Media - Publish to category - multiple,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_663,My Media - Publish to channel - multiple,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -137,3 +137,4 @@ test_2697,Watch History - Filter media type - video,2373952-1,qakmstest.dev.kalt
 test_2702,Watch History - Filter by watch status,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_674,Playlists - Delete playlist,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_1592,Custom data,2378481-3,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_0002,Set service url,2378481-3,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
