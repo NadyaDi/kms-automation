@@ -62,13 +62,14 @@ class Admin(Base):
 
               
     # @Author: Oleg Sigalov           
-    def loginToAdminPage(self, username='default', password='default'):
+    def loginToAdminPage(self, username='default', password='default', forceNavigate=False):
         if username == 'default':
             username = localSettings.LOCAL_SETTINGS_ADMIN_USERNAME
         if password == 'default':
             password = localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD
-            
-        if self.verifyUrl("admin\/config" , True, 3) == True:
+        
+        if forceNavigate == False:    
+            if self.verifyUrl("admin\/config" , True, 3) == True:
                 return True  
                          
         if self.navigateToAdminPage() == False:
@@ -639,7 +640,7 @@ class Admin(Base):
         baseUrlSplit = localSettings.LOCAL_SETTINGS_TEST_BASE_URL.split('.')
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL = 'http://' + instance + '.' + '.'.join(baseUrlSplit[1:])
         localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/admin'
-        if self.loginToAdminPage(username, password) == False:
+        if self.loginToAdminPage(username, password, True) == False:
             writeToLog("INFO","FAILED to login to admin page")
             return False
         
@@ -806,4 +807,11 @@ class Admin(Base):
                 writeToLog("INFO","FAILED to set '" + sameWindow.value + "' value in same window option")
                 return False
 
-        return True  
+        return True
+    
+    
+    def logoutAdmin(self):
+        if self.click(self.ADMIN_LOGOUT_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on logout from admin page")
+            return False
+        
