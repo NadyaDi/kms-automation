@@ -81,7 +81,7 @@ class Test:
                 return
                  
             sleep(2)     
-            writeToLog("INFO","Step 4: Going to publish the entry so the add user as a collaborator can see it")            
+            writeToLog("INFO","Step 4: Going to publish the entry so the added user as a collaborator can see it")            
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
@@ -124,7 +124,7 @@ class Test:
 
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Entry Collaboration co edit' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Collaboration negative test' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

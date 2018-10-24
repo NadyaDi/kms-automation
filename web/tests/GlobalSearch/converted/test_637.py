@@ -66,7 +66,7 @@ class Test:
             writeToLog("INFO","Step 2: Going to search and verify channel in global search")
             if self.common.globalSearch.serchAndVerifyChannelInGlobalSearch(self.channelName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to search category'" + self.channelName + "' in global search")
+                writeToLog("INFO","Step 2: FAILED to search channel'" + self.channelName + "' in global search")
                 return 
              
             ##################################################################
