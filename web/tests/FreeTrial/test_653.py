@@ -43,7 +43,8 @@ class Test:
     categoryList = [("About Kaltura")]
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
     if clsTestService.isAutomationEnv() == True:
-        instanceNumberFilePath = '/home/local/KALTURA/oleg.sigalov/FreeTrial/FreeTrial.txt'
+        instanceNumberFilePath = '/home/local/KALTURA/oleg.sigalov/q/QA-App/Automation/FreeTrial/FreeTrial.txt'
+        
     else:
         instanceNumberFilePath = r'Q:\FreeTrial\FreeTrial.txt'
 
