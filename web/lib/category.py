@@ -58,7 +58,7 @@ class Category(Base):
     EDIT_CATEGORY_BACK_TO_CATEGORY_BUTTON                       = ('xpath', "//a[@class='btn btn-link' and contains(text(), 'Back to Category')]")
     CATEGORY_DESCRIPTION                                        = ('xpath', "//div[@class='js-description' and contains(text(), 'CATEGORY_DESCRIPTION')]")
     CATEGORY_TAGS                                               = ('xpath', "//a[@class='badge badge-info' and contains(text(), 'CATEGORY_TAGS')]")
-    CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD                        = ('xpath', "//a[text()='Go To Category']")
+    CATEGORY_GO_TO_CATEGORY_AFTER_UPLOAD                        = ('xpath', "//a[@id='next' and text()='Go To Category']")
     CATEGORIES_TABLE_SIZE                                       = ('xpath', '//li[@class="gallery-result row-fluid"]')
     CATEGORIES_NO_MORE_GALLERIES_ALERT                          = ('xpath', '//div[@class="message__text" and text()="No more galleries found."]')
     CATEGORIES_PAGE_ALL_GALLERIES_LIST                          = ('xpath', '//ul[@class="galleries-results-list row-fluid span12"]')                                       
