@@ -48,7 +48,7 @@ class EntryPage(Base):
     ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA                     = ('xpath', '//textarea[@id="commentsbox" and @title="Add a Reply"]')
     ENTRY_PAGE_REPLY_COMMENT_ADD_BUTTON                    = ('xpath', '//form[@id="addComment_COMMENT_ID"]/div[@class="pull-right"]')
     ENTRY_PAGE_RELATED_MEDIA                               = ('xpath', '//div[@id="sideSelectWrap"]')
-    ENTRY_PAGE_MY_MEDIA_OPTION                             = ('xpath', '//a[@id="tab-entrySideBarPane-Sidemymedia-3"]')
+    ENTRY_PAGE_MY_MEDIA_OPTION                             = ('xpath', "//a[@id='tab-MyMedia']")
     ENTRY_PAGE_ELATED_MEDIA_OPTION                         = ('xpath', '//a[@id="tab-entrySideBarPane-Sidemymedia-2"]')
     ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES                   = ('xpath', '//div[@class="photo-group thumb_wrapper" and @title="ENTRY_NAME"]')
     ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab" and @class="btn responsiveSizePhone tab-attachments-tab"]')
