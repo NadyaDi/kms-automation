@@ -73,7 +73,7 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
                          
-            writeToLog("INFO","Step 3: Going to add custom data fields")
+            writeToLog("INFO","Step 3: Going to try and publish entry and then add custom data fields")
             if self.common.myMedia.addCustomDataAndPublish(self.entryName, self.customfield1, customFieldDropdwon=enums.DepartmentDivision.ENGINEERING) == False: 
                 self.status = "Fail"        
                 writeToLog("INFO","Step 3: FAILED to add custom data fields")

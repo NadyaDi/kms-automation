@@ -103,10 +103,10 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return                         
             
-            writeToLog("INFO","Step 4: Going to verify count of entries in related section, expected:" + str(self.relatedLimit))
+            writeToLog("INFO","Step 5: Going to verify count of entries in related section, expected:" + str(self.relatedLimit))
             if self.common.entryPage.verifyRelatedMediaCount(self.relatedLimit) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED displayed correct count of entries in related section")
+                writeToLog("INFO","Step 5: FAILED displayed correct count of entries in related section")
                 return                                                                                                  
             #########################################################################
             writeToLog("INFO","TEST PASSED")
