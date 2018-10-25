@@ -2362,7 +2362,7 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Show all entries in pending tab
-    def showAllEntriesPendingTab(self, timeOut=10):
+    def showAllEntriesPendingTab(self, timeOut=60):
         tmp_table_size = self.CHANNEL_PENDING_TAB_TABLE_SIZE
         loading_message = self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG
         no_entries_page_msg = self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG                       
