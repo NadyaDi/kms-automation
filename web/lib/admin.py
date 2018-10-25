@@ -48,6 +48,7 @@ class Admin(Base):
     ADMIN_PRE_POST_ITEM_NAME                        = ('xpath', "//input[@data-name='name' and contains(@id, 'PRE_OR_POST')]")
     ADMIN_PRE_POST_ITEM_VALUE                       = ('xpath', "//input[@data-name='value' and contains(@id, 'PRE_OR_POST')]")
     ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION          = ('xpath', "//select[contains(@id, 'PRE_OR_POST') and @data-name='sameWindow']")
+    ADMIN_DELETE_PRE_POST_LINK_NAME                 = ('xpath', "//input[@value='LINK_NAME' and contains(@id, 'PRE_OR_POST')]")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -815,3 +816,47 @@ class Admin(Base):
             writeToLog("INFO","FAILED to click on logout from admin page")
             return False
         
+    
+    def deletePrePostLink(self, preOrPost, linkName):
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/navigation') == False:
+            writeToLog("INFO","FAILED to load navigation page in admin")
+            return False
+        sleep(1) 
+        
+        if preOrPost == enums.NavigationPrePost.PRE:
+            linkNameTmp= (self.ADMIN_DELETE_PRE_POST_LINK_NAME[0], self.ADMIN_DELETE_PRE_POST_LINK_NAME[1].replace('LINK_NAME',linkName).replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
+        if preOrPost == enums.NavigationPrePost.POST:
+            linkNameTmp= (self.ADMIN_DELETE_PRE_POST_LINK_NAME[0], self.ADMIN_DELETE_PRE_POST_LINK_NAME[1].replace('LINK_NAME',linkName).replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
+        
+        try:
+            linkName = self.get_element(linkNameTmp).get_attribute("id")
+        
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get link name attribute id")
+            return False
+        
+        tmp = linkName.split('-')
+        
+        if tmp[1] == '':
+            writeToLog("INFO","FAILED to get link attribute id")
+            return False
+        
+        tmpDeleteButon = (self.ADMIN_DELETE_PLAYLIST_BUTTON[0], self.ADMIN_DELETE_PLAYLIST_BUTTON[1].replace('ID', tmp[1]))
+        
+        if self.click(tmpDeleteButon, 20) == False:
+            writeToLog("INFO","FAILED to click on delete playlist button")
+            return False
+        
+        sleep(2)
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in home page")
+            return False 
+        
+        writeToLog("INFO","Success, Pre / Post link was deleted from admin")
+        return True  
