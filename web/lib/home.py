@@ -136,7 +136,7 @@ class Home(Base):
         if self.click(linkNameTmp) == False:
             writeToLog("INFO","FAILED to click on link in nav bar")
             return False
-        sleep(2)   
+        sleep(5)   
             
         # Verify new window landing page URL
         window_after = self.driver.window_handles[1]
@@ -148,8 +148,9 @@ class Home(Base):
         else:
             if expectedUrl != self.driver.current_url:
                 writeToLog("INFO","FAILED to verify new window landing page URL, expected: " + expectedUrl + "; Actual: " + self.driver.current_url)
-                return False           
-       
+                return False         
+              
+        sleep(3)
         # Close landing page
         self.driver.close()
         # Restore to original window driver

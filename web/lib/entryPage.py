@@ -428,7 +428,7 @@ class EntryPage(Base):
         # like the page
         if isLike == True:
             if int(prev_likeAmount) >= int(after_likeAmount):
-                writeToLog("INFO","FAILED to click on like button, the number of likes are: " + int(after_likeAmount) + " and need to be: " + int(prev_likeAmount))
+                writeToLog("INFO","FAILED to click on like button, the number of likes are: " + str(after_likeAmount) + " and need to be: " + str(prev_likeAmount))
                 return False
             writeToLog("INFO","Success, entry was liked successfully")
             return True

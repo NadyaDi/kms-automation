@@ -228,6 +228,8 @@ class Common():
     # Check which search bar do we have: old or new (elastic)
     def isElasticSearchOnPage(self):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+                return True
             if len(self.base.get_elements(self.myMedia.MY_MEDIA_ELASTIC_SEARCH_BAR)) > 1:
                 return True
             else:

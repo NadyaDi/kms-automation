@@ -68,7 +68,7 @@ test_712,Categories - Members tab,1756201,mediaspace.kaltura.com,oleg.sigalov@ka
 test_721,Categories - Import Mermbers,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_719,Categories - Enable / Disable Inherit permissions,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1025,Categories - Sort media on category page,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
-test_641,Navigation,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_641,Navigation,2370151-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_1594,Entry required field,2373952,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2565,Watch History - Add entry (Private) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,Watch History - Add entry (Published to channel- public) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

@@ -90,7 +90,10 @@ class MyMedia(Base):
         try:
             # Check which search bar do we have: old or new (elastic)
             if self.clsCommon.isElasticSearchOnPage():
-                return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
+                if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+                    return self.get_element(self.MY_MEDIA_ELASTIC_SEARCH_BAR)
+                else:
+                    return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
             else:
                 return self.wait_visible(self.MY_MEDIA_SEARCH_BAR, 30, True)
         except:
