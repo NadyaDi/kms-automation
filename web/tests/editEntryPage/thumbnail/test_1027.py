@@ -83,7 +83,8 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 self.status = "Fail"
                 return
-             
+            sleep(4)
+            
             writeToLog("INFO","Step 5: Going to upload thumbnail in edit Entry Page")
             if self.common.editEntryPage.uploadThumbnail(self.uploadThumbnailFliePath, self.uploadThumbnailExpectedResult) == False:
                 self.status = "Fail"

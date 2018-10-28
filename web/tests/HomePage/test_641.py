@@ -89,7 +89,7 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to verify that pre/post links display in the correct place in vertical nav bar")
                 return
                  
-            writeToLog("INFO","Step 7: Going to check pre link, open in same window: '" + enums.SameWindowPrePost.NO.value + "' in vertical navigation mode")    
+            writeToLog("INFO","Step 7: Going to check pre link, open in different window in vertical navigation mode")    
             if self.common.home.verifylinkFormNavBarInNewWindow(enums.NavigationStyle.VERTICAL, self.preLinkName, self.preLinkValue, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify pre link open in different window and that the url is correct in vertical navigation mode")
@@ -104,7 +104,7 @@ class Test:
                 return
             sleep(2)  
              
-            writeToLog("INFO","Step 9: Going to check post link, open in same window: '" + enums.SameWindowPrePost.YES.value + "' in vertical navigation mode")    
+            writeToLog("INFO","Step 9: Going to check post link, open in same window in vertical navigation mode")    
             if self.common.base.verifyUrl(self.postLinkValue , False, 3) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify post link open in same window and that the url is correct in vertical navigation mode")
@@ -141,10 +141,10 @@ class Test:
                 return
             sleep(3)  
             
-            writeToLog("INFO","Step 15: Going to check pre link, open in same window: '" + enums.SameWindowPrePost.NO.value + "' in vertical navigation mode")    
+            writeToLog("INFO","Step 15: Going to check pre link, open in different window in horizontal navigation mode")    
             if self.common.home.verifylinkFormNavBarInNewWindow(enums.NavigationStyle.HORIZONTAL, self.preLinkName, self.preLinkValue, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to verify pre link open in different window and that the url is correct in vertical navigation mode")
+                writeToLog("INFO","Step 15: FAILED to verify pre link open in different window and that the url is correct in horizontal navigation mode")
                 return
              
             writeToLog("INFO","Step 16: Going to click on post link")
@@ -155,10 +155,10 @@ class Test:
                 return
             sleep(2)  
             
-            writeToLog("INFO","Step 17: Going to check post link, open in same window: '" + enums.SameWindowPrePost.YES.value + "' in vertical navigation mode")    
+            writeToLog("INFO","Step 17: Going to check post link, open in same window in horizontal navigation mode")    
             if self.common.base.verifyUrl(self.postLinkValue , False, 3) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to verify post link open in same window and that the url is correct in vertical navigation mode")
+                writeToLog("INFO","Step 17: FAILED to verify post link open in same window and that the url is correct in horizontal navigation mode")
                 return
             
             ##################################################################

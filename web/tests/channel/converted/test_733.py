@@ -48,40 +48,35 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('add to', self.testNum)
             self.channelName = clsTestService.addGuidToString('add to media', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
-                return    
-            
-            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 1: FAILED failed to upload entry Video")
                 return
            
-            writeToLog("INFO","Step 3: Going to create new channel")            
+            writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to create Channel#1")
+                writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
             
-            writeToLog("INFO","Step 4: Going to navigate to channel page")
+            writeToLog("INFO","Step 3: Going to navigate to channel page")
             if self.common.channel.navigateToChannel(self.channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE) == False:
-                writeToLog("INFO","Step 4: FAILED - could not navigate to channel page")
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - could not navigate to channel page")
                 return         
            
-            writeToLog("INFO","Step 5: Going to add content to channel")            
+            writeToLog("INFO","Step 4: Going to add content to channel")            
             if self.common.channel.addContentToChannel(self.channelName, self.entryName1, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to add content to channel: '" + self.entryName1 + "'")
+                writeToLog("INFO","Step 4: FAILED to add content to channel: '" + self.entryName1 + "'")
                 return     
             #########################################################################
             writeToLog("INFO","TEST PASSED")
