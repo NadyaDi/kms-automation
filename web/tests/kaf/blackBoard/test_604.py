@@ -22,7 +22,7 @@ class Test:
     #  
     # 
     #================================================================================================================================
-    testNum     = "603"
+    testNum     = "604"
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
