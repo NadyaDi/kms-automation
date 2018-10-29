@@ -564,7 +564,7 @@ class EntryPage(Base):
     # Click on attachments tab
     def clickOnAttachmentTab(self):        
         # Click on attachment tab   
-        if self.click(self.ENTRY_PAGE_ATTACHMENTS_TAB) == False:
+        if self.click(self.ENTRY_PAGE_ATTACHMENTS_TAB, 30) == False:
             writeToLog("INFO","FAILED to click on attachments tab")       
             return False              
     
@@ -578,7 +578,7 @@ class EntryPage(Base):
             return False   
         
         # Click on download icon   
-        if self.click(self.ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON) == False:
+        if self.click(self.ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON, 30) == False:
             writeToLog("INFO","FAILED to click on download attachments icon")       
             return False   
         
