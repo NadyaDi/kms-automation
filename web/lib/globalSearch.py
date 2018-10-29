@@ -362,9 +362,6 @@ class  GlobalSearch(Base):
     # @Author: Inbar Willman
     # Sort entries in global page and verify that they are sorted by the correct order
     def verifySortInGlobalPage(self, sortBy, entriesList):
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            sortBy = sortBy.value
-            
         if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
@@ -398,11 +395,11 @@ class  GlobalSearch(Base):
                     return False             
                        
                 if prevEntryIndex > currentEntryIndex:
-                    writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct. entry '" + entry + "' isn't in the right place" )
+                    writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. entry '" + entry + "' isn't in the right place" )
                     return False
                 prevEntryIndex = currentEntryIndex
                     
-            writeToLog("INFO","Success, Global page sort by '" + sortBy + "' was successful")
+            writeToLog("INFO","Success, Global page sort by '" + sortBy.value + "' was successful")
             return True   
         else:
             for entry in entriesList:

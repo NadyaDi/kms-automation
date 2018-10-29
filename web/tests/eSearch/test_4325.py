@@ -52,8 +52,8 @@ class Test:
             self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver) 
             
-            self.searchInAddToChannel = "C160E832-1-Sort by"
-            self.gallery = "Apps Automation Category"
+            self.searchInAddToChannel = "Sort by"
+            self.gallery = "eSearch category"
             self.sortEntriesByCreationDateDescending = ("C160E832-1-Sort by - Sort H", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort E", "C160E832-1-Sort by - Sort D", 
                                                         "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort A")
             self.sortEntriesByCreationDateAscending  = ("C160E832-1-Sort by - Sort A", "C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort E",

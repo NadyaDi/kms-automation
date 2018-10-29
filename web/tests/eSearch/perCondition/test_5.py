@@ -59,17 +59,19 @@ class Test:
             self.common = Common(self.driver)
             
             # Entries for sort by in my media/global search/add to channel/channel/gallery/new video quiz
-            self.entryForSortBy1 = clsTestService.addGuidToString("Sort by - Sort A", self.testNum)
-            self.entryForSortBy2 = clsTestService.addGuidToString("Sort by - Sort B", self.testNum)
-            self.entryForSortBy3 = clsTestService.addGuidToString("Sort by - Sort C", self.testNum)
-            self.entryForSortBy4 = clsTestService.addGuidToString("Sort by - Sort D", self.testNum)
-            self.entryForSortBy5 = clsTestService.addGuidToString("Sort by - Sort E", self.testNum)
-            self.entryForSortBy6 = clsTestService.addGuidToString("Sort by - Sort F", self.testNum)
-            self.entryForSortBy7 = clsTestService.addGuidToString("Sort by - Sort G", self.testNum)
-            self.entryForSortBy8 = clsTestService.addGuidToString("Sort by - Sort H", self.testNum)
-            self.entryForSortBy9 = clsTestService.addGuidToString("Sort by Scheduling - Future", self.testNum)
-            self.entryForSortBy10 = clsTestService.addGuidToString("Sort by Scheduling - In scheduling", self.testNum)
-            self.entryForSortBy11 = clsTestService.addGuidToString("Sort by Scheduling - Past", self.testNum)
+            self.entryForSortBy1 = "Sort by - Sort A"
+            self.entryForSortBy2 = "Sort by - Sort B"
+            self.entryForSortBy3 = "Sort by - Sort C"
+            self.entryForSortBy4 = "Sort by - Sort D"
+            self.entryForSortBy5 = "Sort by - Sort E"
+            self.entryForSortBy6 = "Sort by - Sort F"
+            self.entryForSortBy7 = "Sort by - Sort G"
+            self.entryForSortBy8 = "Sort by - Sort H"
+            self.entryForSortBy9 = "Sort by Scheduling - Future"
+            self.entryForSortBy10 = "Sort by Scheduling - In scheduling"
+            self.entryForSortBy11 = "Sort by Scheduling - Past"
+            
+            self.categoryForEsearch = 'eSearch category'
   
             # List of expected results for entries sort by
             self.sortEntriesByCreationDateDescending = (self.entryForSortBy8, self.entryForSortBy7, self.entryForSortBy6,self.entryForSortBy5, self.entryForSortBy4, 
@@ -91,7 +93,7 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #############################################################
             writeToLog("INFO","Going to add likes and comment to entries as instance users")
             writeToLog("INFO","Step 1: Going to login with user " + self.userName2)
-            if self.common.login.loginToKMS(self.userName2, self.userPass1) == False:
+            if self.common.login.loginToKMS(self.userName2, self.userPass2) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login with " + self.userName2)
                 return
@@ -176,7 +178,7 @@ class Test:
                 return  
                                              
             writeToLog("INFO","Step 15: Going to login with user " + self.userName3)
-            if self.common.login.loginToKMS(self.userName3, self.userPass2) == False:
+            if self.common.login.loginToKMS(self.userName3, self.userPass3) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to login with " + self.userName3)
                 return    
@@ -249,7 +251,7 @@ class Test:
                 return  
                                              
             writeToLog("INFO","Step 27: Going to login with user " + self.userName4)
-            if self.common.login.loginToKMS(self.userName4, self.userPass3) == False:
+            if self.common.login.loginToKMS(self.userName4, self.userPass4) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 27: FAILED to login with " + self.userName4)
                 return    
@@ -310,7 +312,7 @@ class Test:
                 return  
                                              
             writeToLog("INFO","Step 37: Going to login with user " + self.userName5)
-            if self.common.login.loginToKMS(self.userName5, self.userPass4) == False:
+            if self.common.login.loginToKMS(self.userName5, self.userPass5) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 37: FAILED to login with " + self.userName5)
                 return    
@@ -359,7 +361,7 @@ class Test:
                 return  
                                              
             writeToLog("INFO","Step 45: Going to login with user " + self.userName6)
-            if self.common.login.loginToKMS(self.userName6, self.userPass5) == False:
+            if self.common.login.loginToKMS(self.userName6, self.userPass6) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 45: FAILED to login with " + self.userName6)
                 return    
@@ -396,7 +398,7 @@ class Test:
                 return  
                                              
             writeToLog("INFO","Step 51: Going to login with user " + self.userName7)
-            if self.common.login.loginToKMS(self.userName7, self.userPass6) == False:
+            if self.common.login.loginToKMS(self.userName7, self.userPass7) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 51: FAILED to login with " + self.userName7)
                 return    

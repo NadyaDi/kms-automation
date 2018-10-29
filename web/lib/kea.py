@@ -231,10 +231,7 @@ class Kea(Base):
     
     # @Author: Inbar Willman
     # The function check and verify that the entries sort in my media are in the correct order 
-    def verifySortInEditor(self, sortBy, entriesList):
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            sortBy = sortBy.value
-            
+    def verifySortInEditor(self, sortBy, entriesList): 
         if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
@@ -252,12 +249,8 @@ class Kea(Base):
         entriesInMyMedia = entriesInMyMedia.split("\n")
         
         if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInMyMedia) == False:
-            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
             return False
         
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
-            return True
-        else:
-            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-            return True
+        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+        return True

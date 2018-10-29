@@ -672,16 +672,16 @@ class MyMedia(Base):
                 return False
                 
             if self.click(tmplocator, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on: " + str(dropDownListName) + " in my media")
+                writeToLog("INFO","FAILED to click on: " + dropDownListName.value + " in my media")
                 return False
             
-            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI, "DROPDOWNLIST_ITEM", str(dropDownListItem)) 
+            tmpEntry = self.replaceInLocator(self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI, "DROPDOWNLIST_ITEM", dropDownListItem.value) 
             if self.click(tmpEntry, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on the drop-down list item: " + str(dropDownListItem))
+                writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                 return False
 
         self.clsCommon.general.waitForLoaderToDisappear()    
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + str(dropDownListItem) + " was set successfully")
+        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
     
@@ -1190,10 +1190,7 @@ class MyMedia(Base):
     #  @Author: Michal Zomper    
     # The function check and verify that the entries sort in my media are in the correct order 
     def verifySortInMyMedia(self, sortBy, entriesList):
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            sortBy = sortBy.value
-            
-        if self.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+        if self.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
                 
@@ -1210,15 +1207,11 @@ class MyMedia(Base):
         entriesInMyMedia = entriesInMyMedia.split("\n")
         
         if self.verifySortOrder(entriesList, entriesInMyMedia) == False:
-            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
             return False
         
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
-            return True
-        else:
-            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-            return True
+        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+        return True
 
     
     # @Author: Michal Zomper

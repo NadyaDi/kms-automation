@@ -2195,9 +2195,6 @@ class Channel(Base):
     #  @Author: Inbar Willman     
     # The function check the the entries add to channel (my media and SR tab) are filter correctly
     def verifySortInAddToChannel(self, sortBy, entriesList, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            sortBy = sortBy.value
-            
         if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
@@ -2219,15 +2216,11 @@ class Channel(Base):
         entriesInPage = entriesInPage.split("\n")
         
         if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInPage) == False:
-            writeToLog("INFO","FAILED ,sort by '" + sortBy + "' isn't correct")
+            writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
             return False
-        
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            writeToLog("INFO","Success, My media sort by '" + sortBy + "' was successful")
-            return True
-        else:
-            writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
-            return True
+
+        writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
+        return True
         
         
     # @Author: Inbar Willman 
@@ -2300,12 +2293,8 @@ class Channel(Base):
             writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
             return False
         
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            writeToLog("INFO","Success, Pending sort by '" + sortBy.value + "' was successful")
-            return True
-        else:
-            writeToLog("INFO","Success, Pending sort by '" + sortBy.value + "' was successful")
-            return True
+        writeToLog("INFO","Success, Pending sort by '" + sortBy.value + "' was successful")
+        return True
         
         
     # @Author: Inbar Willman
