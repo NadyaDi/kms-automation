@@ -97,6 +97,7 @@ test_2742,Watch History - Entry appear in both continue watch and recently watch
 test_687,Entry page - Embed Entry,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_673,Playlists - Embed playlist,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_594,KAF BlackBoard Entry Thumbnail,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_604,KAF BB - Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_695,Entry page - Add caption,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_697,Entry page - Add comment,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -137,4 +138,3 @@ test_2697,Watch History - Filter media type - video,2373952-1,qakmstest.dev.kalt
 test_2702,Watch History - Filter by watch status,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_674,Playlists - Delete playlist,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_1592,Custom data,2378481-3,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
-test_0002,Set service url,2378481-3,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
