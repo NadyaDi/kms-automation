@@ -601,3 +601,67 @@ class EntryPage(Base):
             return False   
         
         return True 
+    
+    
+    # @Author: Michal Zomper
+    # The function check that the correct media display in the player via type
+    def verifyEntryViaType(self, entryType, entryLangth='', timeToStop='', entryQRResult=''):
+        self.clsCommon.player.switchToPlayerIframe()
+        if entryType == enums.MediaType.VIDEO:
+            try:
+                videoLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
+            except NoSuchElementException:
+                writeToLog("INFO","Failed to get video length element")
+                return False
+            
+            if (entryLangth in videoLangth) == False:
+                writeToLog("INFO","Failed, video length is NOT correct")
+                return False
+            
+            if self.clsCommon.player.clickPlayAndPause(timeToStop, timeout=45) == False:
+                writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
+                return False
+            
+            qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
+            if qrCodeSc == False:
+                writeToLog("INFO","FAILED to take qr screen shot")
+                return False
+            
+            result = self.clsCommon.qrcode.resolveQrCode(qrCodeSc)
+            if result == None:
+                writeToLog("INFO","FAILED to resolve qr code")
+                return False
+            
+            if str(entryQRResult) != result:
+                writeToLog("INFO","FAILED to verify video, QR code isn't correct: the Qr code in the player is " + str(result) + "' but need to be '" + str(entryQRResult) + "'")
+                return False
+        
+        if entryType == enums.MediaType.AUDIO:
+            try:
+                audioLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
+            except NoSuchElementException:
+                writeToLog("INFO","Failed to get audio length element")
+                return False
+            
+            if (entryLangth in audioLangth) == False:
+                writeToLog("INFO","Failed, audio length is NOT correct")
+                return False
+            
+        if entryType == enums.MediaType.IMAGE:
+            qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
+            if qrCodeSc == False:
+                writeToLog("INFO","FAILED to take qr screen shot")
+                return False
+            
+            result = self.clsCommon.qrcode.resolveQrCode(qrCodeSc)
+            if result == None:
+                writeToLog("INFO","FAILED to resolve qr code")
+                return False
+            
+            if str(entryQRResult) != result:
+                writeToLog("INFO","FAILED to verify image, QR code isn't correct: the Qr code in the player is " + str(result) + "' but need to be '" + str(entryQRResult) + "'")
+                return False
+        
+        self.clsCommon.base.switch_to_default_content()
+        writeToLog("INFO","Success, entry type '" + entryType.value + "' was verify successfully")
+        return True

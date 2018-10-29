@@ -8,6 +8,7 @@ test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
 test_641,1,0,0,0,General - Navigation
 test_643,1,0,0,0,Home Page Carousel
+test_644,1,0,0,0,Upload media from desktop and verify player
 test_651,1,0,0,0,Navigate to entry page from upload page
 test_653,1,0,0,0,Free trial
 test_655,1,0,0,0,My Media - Add to existing playlist - multiple

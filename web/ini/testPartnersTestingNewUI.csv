@@ -59,6 +59,7 @@ test_721,Categories - Import Mermbers,2370151,qakmstest.dev.kaltura.com,pythonau
 test_719,Categories - Enable / Disable Inherit permissions,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1025,Categories - Sort media on category page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_641,Navigation,2370151-2,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_644,Upload media from desktop and verify player,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1558,Disclaimer - Before publish (agreeRequired = No),2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_876,Scheduling media - add media to channel via upload page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
