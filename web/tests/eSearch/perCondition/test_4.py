@@ -59,17 +59,17 @@ class Test:
             self.common = Common(self.driver)
             
             # Entries for sort by in my media/global search/add to channel/channel/gallery/new video quiz
-            self.entryForSortBy1 = clsTestService.addGuidToString("Sort by - Sort A", self.testNum)
-            self.entryForSortBy2 = clsTestService.addGuidToString("Sort by - Sort B", self.testNum)
-            self.entryForSortBy3 = clsTestService.addGuidToString("Sort by - Sort C", self.testNum)
-            self.entryForSortBy4 = clsTestService.addGuidToString("Sort by - Sort D", self.testNum)
-            self.entryForSortBy5 = clsTestService.addGuidToString("Sort by - Sort E", self.testNum)
-            self.entryForSortBy6 = clsTestService.addGuidToString("Sort by - Sort F", self.testNum)
-            self.entryForSortBy7 = clsTestService.addGuidToString("Sort by - Sort G", self.testNum)
-            self.entryForSortBy8 = clsTestService.addGuidToString("Sort by - Sort H", self.testNum)
-            self.entryForSortBy9 = clsTestService.addGuidToString("Sort by Scheduling - Future", self.testNum)
-            self.entryForSortBy10 = clsTestService.addGuidToString("Sort by Scheduling - In scheduling", self.testNum)
-            self.entryForSortBy11 = clsTestService.addGuidToString("Sort by Scheduling - Past", self.testNum)
+            self.entryForSortBy1 = "Sort by - Sort A"
+            self.entryForSortBy2 = "Sort by - Sort B"
+            self.entryForSortBy3 = "Sort by - Sort C"
+            self.entryForSortBy4 = "Sort by - Sort D"
+            self.entryForSortBy5 = "Sort by - Sort E"
+            self.entryForSortBy6 = "Sort by - Sort F"
+            self.entryForSortBy7 = "Sort by - Sort G"
+            self.entryForSortBy8 = "Sort by - Sort H"
+            self.entryForSortBy9 = "Sort by Scheduling - Future"
+            self.entryForSortBy10 = "Sort by Scheduling - In scheduling"
+            self.entryForSortBy11 = "Sort by Scheduling - Past"
   
             # List of expected results for entries sort by
             self.sortEntriesByCreationDateDescending = (self.entryForSortBy8, self.entryForSortBy7, self.entryForSortBy6,self.entryForSortBy5, self.entryForSortBy4, 
@@ -97,119 +97,119 @@ class Test:
                 return
                                   
             writeToLog("INFO","Step 2: Going navigate to entry '" + self.entryForSortBy1 + "'")    
-            if self.common.entryPage.navigateToEntry("QR_Code_10sec.mp4", enums.Location.MY_MEDIA) == False:
+            if self.common.entryPage.navigateToEntry(self.entryForSortBy1, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to entry: " + self.entryForSortBy1)
                 return 
-                        
-            writeToLog("INFO","Step 3: Going to like entry: " +"QR_Code_10sec.mp4")            
+                         
+            writeToLog("INFO","Step 3: Going to like entry: " + self.entryForSortBy1)            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to like entry: " + self.entryForSortBy1)
                 return   
-                      
+                       
             sleep(2) 
             writeToLog("INFO","Step 4: Going to add comments to entry: " + self.entryForSortBy1)  
             if self.common.entryPage.addComments(["Comment 1", "Comment 2"]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add comments to entry: " + self.entryForSortBy1)
                 return    
-                     
+                      
             writeToLog("INFO","Step 5: Going navigate to entry: " + self.entryForSortBy2)    
             if self.common.entryPage.navigateToEntry(self.entryForSortBy2, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to entry: " + self.entryForSortBy2)
                 return 
-            
+             
             sleep(2)         
             writeToLog("INFO","Step 6: Going to add comments to entry: " + self.entryForSortBy2)            
             if self.common.entryPage.addComments(["Comment 1", "Comment 2", "Comment 3"]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to add comment to entry: " + self.entryForSortBy2)
                 return   
-                     
+                      
             writeToLog("INFO","Step 7: Going navigate to entry: " + self.entryForSortBy3)    
             if self.common.entryPage.navigateToEntry(self.entryForSortBy3, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED navigate to entry: " + self.entryForSortBy3)
                 return 
-            
+             
             writeToLog("INFO","Step 8: Going to like entry: " + self.entryForSortBy3)            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to like entry: " + self.entryForSortBy3)
                 return               
-                     
+                      
             sleep(2) 
             writeToLog("INFO","Step 9: Going to add comments to entry: " + self.entryForSortBy3)  
             if self.common.entryPage.addComments(["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5"]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to add comments to entry: " + self.entryForSortBy3)
                 return    
-                     
+                      
             writeToLog("INFO","Step 10: Going navigate to entry: " + self.entryForSortBy4)    
             if self.common.entryPage.navigateToEntry(self.entryForSortBy4, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED navigate to entry: " + self.entryForSortBy4)
                 return 
-                     
+                      
             writeToLog("INFO","Step 11: Going to like entry: " + self.entryForSortBy4)            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to like entry: " + self.entryForSortBy4)
                 return 
-                     
+                      
             sleep(2) 
             writeToLog("INFO","Step 12: Going to add comment to entry: " + self.entryForSortBy4)  
-            if self.common.entryPage.addComment(["Comment 1"]) == False:
+            if self.common.entryPage.addComment("Comment 1") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to add comment to entry: " + self.entryForSortBy4)
                 return   
-             
+              
             writeToLog("INFO","Step 13: Going navigate to entry: " + self.entryForSortBy5)    
             if self.common.entryPage.navigateToEntry(self.entryForSortBy5, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED navigate to entry: " + self.entryForSortBy5)
                 return     
-             
+              
             writeToLog("INFO","Step 14: Going to like entry: " + self.entryForSortBy5)            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to like entry: " + self.entryForSortBy5)
                 return 
-                     
+                      
             sleep(2) 
             writeToLog("INFO","Step 15: Going to add comment to entry: " + self.entryForSortBy5)  
-            if self.common.entryPage.addComment(["Comment 1", "Comment 2", "Comment 3", "Comment 4"]) == False:
+            if self.common.entryPage.addComments(["Comment 1", "Comment 2", "Comment 3", "Comment 4"]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add comment to entry: " + self.entryForSortBy5)
                 return
-            
+             
             writeToLog("INFO","Step 16: Going navigate to entry: " + self.entryForSortBy6)    
             if self.common.entryPage.navigateToEntry(self.entryForSortBy6, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED navigate to entry: " + self.entryForSortBy6)
                 return     
-             
+              
             writeToLog("INFO","Step 17: Going to like entry: " + self.entryForSortBy6)            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to like entry: " + self.entryForSortBy6)
                 return 
-                     
+                      
             sleep(2) 
             writeToLog("INFO","Step 18: Going to add comment to entry: " + self.entryForSortBy6)  
-            if self.common.entryPage.addComment(["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5", "Comment 6"]) == False:
+            if self.common.entryPage.addComments(["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5", "Comment 6"]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to add comment to entry: " + self.entryForSortBy6)
                 return            
-             
+              
             writeToLog("INFO","Step 19: Going navigate to entry: " + self.entryForSortBy7)    
             if self.common.entryPage.navigateToEntry(self.entryForSortBy7, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED navigate to entry: " + self.entryForSortBy7)
                 return     
-             
+              
             writeToLog("INFO","Step 20: Going to like entry: " + self.entryForSortBy7)            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
@@ -218,7 +218,7 @@ class Test:
             
             sleep(2) 
             writeToLog("INFO","Step 21: Going to add comment to entry: " + self.entryForSortBy7)  
-            if self.common.entryPage.addComment(["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5", "Comment 6", "Comment 7"]) == False:
+            if self.common.entryPage.addComments(["Comment 1", "Comment 2", "Comment 3", "Comment 4", "Comment 5", "Comment 6", "Comment 7"]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 21: FAILED to add comment to entry: " + self.entryForSortBy7)
                 return                        

@@ -34,6 +34,18 @@ class Test:
     channelTags = "Tags,"
     userName1 = "inbar.willman@kaltura.com" # main user
     userPass1 = "Kaltura1!"
+    userName2 = "private"
+    userPass2 = "123456"
+    userName3 = "admin"
+    userPass3 = "123456"
+    userName4 = "unmod"
+    userPass4 = "123456"
+    userName5 = "adminForEsearch"
+    userPass5 = "123456" 
+    userName6 = "privateForEsearch"
+    userPass6 = "123456"    
+    userName7 = "unmodForEsearch"
+    userPass7 = "123456"  
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -78,33 +90,33 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
                 return
-                   
+                    
             for i in range(1,5):
                 writeToLog("INFO","Step " + str(i+1) + ": Going to create new channel '" + eval('self.channelName'+str(i)))            
                 if self.common.channel.createChannel(eval('self.channelName'+str(i)), self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(i+1) + ": FAILED create new channel: " + eval('self.channelName'+str(i)))
                     return
-                         
+                          
             for i in range(1,4):
                 writeToLog("INFO","Step " + str(i+5) + ": Going to upload new entry '" + eval('self.entryName'+str(i)))            
                 if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.entryDescription, self.entryTags) == None:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(i+5) + ": FAILED to upload new entry: " + eval('self.entryName'+str(i)))
                     return
-                      
+                       
             writeToLog("INFO","Step 9: Going to publish entry: " + self.entryName1)            
             if self.common.myMedia.publishSingleEntry(self.entryName1, "", (self.channelName1, self.channelName2, self.channelName4)) == False: 
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to publish entry: " + self.entryName1)
                 return
-                    
+                     
             writeToLog("INFO","Step 10: Going to publish entry: " + self.entryName2)            
             if self.common.myMedia.publishSingleEntry(self.entryName2, "", (self.channelName2, self.channelName4)) == False: 
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to publish entry: " + self.entryName2)
                 return
-                    
+                     
             writeToLog("INFO","Step 11: Going to publish entry: " + self.entryName3)            
             if self.common.myMedia.publishSingleEntry(self.entryName3, "", [(self.channelName2)]) == False: 
                 self.status = "Fail"

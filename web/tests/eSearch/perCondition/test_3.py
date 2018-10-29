@@ -95,7 +95,7 @@ class Test:
             # Channel for tests in channel/ add to channel tabs
             self.channelForEsearch  = "Channel for eSearch"
             self.channelForModerator = 'channel moderator for eSearch'
-            self.SrChannelForEsearch = "SR Channel for eSearch"
+            self.SrChannelForEsearch = "SR-Channel for eSearch"
             
             self.channelForEsearchDescription = "channel for eSearch tests"
             self.channelForEsearchTags = 'channel tag,'
@@ -125,66 +125,66 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to enable like module")
                 return
-                    
+                      
             writeToLog("INFO","Step 2: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to home page")
                 return
-              
+               
             writeToLog("INFO","Step 3: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to login with " + self.userName1)
                 return
-                           
+                            
             writeToLog("INFO","Step 4: Going to create open channel")            
             if self.common.channel.createChannel(self.channelForEsearch, self.channelForEsearchDescription, self.channelForEsearchTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create open channel")
                 return  
-   
+     
             writeToLog("INFO","Step 5: Going to create SR channel")
             if self.common.channel.createChannel(self.SrChannelForEsearch, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.SHAREDREPOSITORY, False, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create SR channel")
                 return         
-               
+                
             step = 6
-                    
+                     
             for i in range(1,12):
                 writeToLog("INFO","Step " + str(step) + ": Going to upload new entry '" + eval('self.entryForSortBy'+str(i)))            
                 if self.common.upload.uploadEntry(self.filePathForSortBy, eval('self.entryForSortBy'+str(i)), self.entryDescription, self.entryTags) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to upload new entry " + eval('self.entryForSortBy'+str(i)))
                     return
-                   
+                    
                 step = step + 1
-                   
-                writeToLog("INFO","Step " + str(step) + ": Going to publish entry '" + eval('self.entryForSortBy'+str(i)) + "to eSearch categories and channels")            
+                    
+                writeToLog("INFO","Step " + str(step) + ": Going to publish entry '" + eval('self.entryForSortBy'+str(i)) + " to eSearch categories and channels")            
                 if self.common.myMedia.publishSingleEntry(eval('self.entryForSortBy'+str(i)), [self.categoryForEsearch, self.categoryForModerator], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.UPLOAD_PAGE) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to upload new entry " + eval('self.entryForSortBy'+str(i)))
                     return
-                   
+                    
                 step = step + 1
                     
-            writeToLog("INFO","Step 31: Going to add future scheduling to '" + self.entryForSortBy10 + "'")    
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName="C160E832-1-Sort by Scheduling - Future") == False:
+            writeToLog("INFO","Step 28: Going to add future scheduling to '" + self.entryForSortBy9 + "'")    
+            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName=self.entryForSortBy9) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 31: FAILED to add future scheduling to" + self.entryForSortBy10)
+                writeToLog("INFO","Step 28: FAILED to add future scheduling to" + self.entryForSortBy9)
                 return 
               
-            writeToLog("INFO","Step 32: Going to add present scheduling to '" + self.entryForSortBy11 + "'")    
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryFutureStartDate,endTime=self.entryFutureStartTime, entryName="C160E832-1-Sort by Scheduling - In scheduling") == False:
+            writeToLog("INFO","Step 29: Going to add present scheduling to '" + self.entryForSortBy10 + "'")    
+            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryFutureStartDate,endTime=self.entryFutureStartTime, entryName=self.entryForSortBy10) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 32: FAILED to add present scheduling to: " + self.entryForSortBy11)
+                writeToLog("INFO","Step 29: FAILED to add present scheduling to: " + self.entryForSortBy10)
                 return  
               
-            writeToLog("INFO","Step 33: Going to add past scheduling to '" + self.entryForSortBy12 + "'")    
-            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryPastStartDate, endTime=self.entryPastStartTime, entryName="C160E832-1-Sort by Scheduling - Past") == False:
+            writeToLog("INFO","Step 30: Going to add past scheduling to '" + self.entryForSortBy11 + "'")    
+            if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, endDate=self.entryPastStartDate, endTime=self.entryPastStartTime, entryName=self.entryForSortBy11) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 33: FAILED to past scheduling to: " + self.entryForSortBy12)
+                writeToLog("INFO","Step 30: FAILED to past scheduling to: " + self.entryForSortBy11)
                 return                                                    
                                  
             writeToLog("INFO","TEST PASSED: All entries and channels for sort by were created successfully") 

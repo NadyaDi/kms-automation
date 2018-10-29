@@ -15,9 +15,9 @@ class Test:
     #  @Author: Inbar Willman
     # Test Name : Setup test for eSearch
     # Test description:
-    # Going to update entries for update sort as inbar.willman@kaltura.com - entries owner
+    # Create entries for search in tests
     #================================================================================================================================
-    testNum = "6"
+    testNum = "7"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -48,17 +48,12 @@ class Test:
             self.common = Common(self.driver)
             
             # Entries for sort by in my media/global search/add to channel/channel/gallery/new video quiz
-            self.entryForSortBy1 = "Sort by - Sort A"
-            self.entryForSortBy2 = "Sort by - Sort B"
-            self.entryForSortBy3 = "Sort by - Sort C"
-            self.entryForSortBy4 = "Sort by - Sort D"
-            self.entryForSortBy5 = "Sort by - Sort E"
-            self.entryForSortBy6 = "Sort by - Sort F"
-            self.entryForSortBy7 = "Sort by - Sort G"
-            self.entryForSortBy8 = "Sort by - Sort H"
-            self.entryForSortBy9 = "Sort by Scheduling - Future"
-            self.entryForSortBy10 = "Sort by Scheduling - In scheduling"
-            self.entryForSortBy11 = "Sort by Scheduling - Past"
+            self.entryForSearchIn1 = "Search in - Captions"
+            self.entryForSearchIn2 = "Search in - All field"
+            self.entryForSearchIn3 = "Search in - Details"
+            self.entryForSearchIn4 = "Search in - Chapters/Slides"
+            self.entryForSearchIn5 = "Search in - Quiz"
+            self.entryForSearchIn6 = "Search in - Polls"
   
             # List of expected results for entries sort by
             self.sortEntriesByCreationDateDescending = (self.entryForSortBy8, self.entryForSortBy7, self.entryForSortBy6,self.entryForSortBy5, self.entryForSortBy4, 
