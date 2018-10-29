@@ -14,6 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
+    # Test Name : Slide Deck Upload - delete slides
     # Test description:
     # 
     # 
