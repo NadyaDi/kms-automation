@@ -61,36 +61,64 @@ class Test:
             self.entryName = clsTestService.addGuidToString('add custom data', self.testNum)
             self.channelName = clsTestService.addGuidToString('custom data', self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################  
-            writeToLog("INFO","Step 1: Going to upload entry")
+            
+            writeToLog("INFO","Step 1: Going navigate to admin page") 
+            if self.common.admin.enableCustomMetadata(True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED navigate to admin page")
+                return
+           
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
+            
+            writeToLog("INFO","Step 3: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
             
-            writeToLog("INFO","Step 2: Going to create new channel")            
+            writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create Channel#1")
+                writeToLog("INFO","Step 4: FAILED to create Channel#1")
                 return
+           
+            writeToLog("INFO","Step 5: Going to check entry in my media")          
+            if self.common.myMedia.serachAndCheckSingleEntryInMyMedia(self.entryName) == False:
+                writeToLog("INFO","FAILED to Check for Entry: '" + self.entryName + "' something went wrong")
+                return False
+            
+            writeToLog("INFO","Step 6: Going to publish entry") 
+            if self.common.myMedia.clickActionsAndPublishFromMyMedia() == False:
+                writeToLog("INFO","FAILED to click on Action button, Entry: '" + self.entryName + "' something went wrong")
+                return False
+            
+            writeToLog("INFO","Step 7: Going to wait for massage to display") 
+            if self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_DISCLAIMER_MSG) == False:
+                writeToLog("INFO","FAILED, Disclaimer alert (before publish) wasn't presented although Disclaimer module is turned on")
+                return False                         
                          
-            writeToLog("INFO","Step 3: Going to try and publish entry and then add custom data fields")
-            if self.common.myMedia.addCustomDataAndPublish(self.entryName, self.customfield1, customFieldDropdwon=enums.DepartmentDivision.ENGINEERING) == False: 
+            writeToLog("INFO","Step 8: Going to add customdata and publish")
+            if self.common.myMedia.addCustomDataAndPublish(self.customfield1, customFieldDropdwon=enums.DepartmentDivision.ENGINEERING) == False: 
                 self.status = "Fail"        
-                writeToLog("INFO","Step 3: FAILED to add custom data fields")
+                writeToLog("INFO","Step 8: FAILED to add custom data fields")
                 return    
             
-            writeToLog("INFO","Step 4: Going to publish entry")
+            writeToLog("INFO","Step 9: Going to publish entry")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 4: FAILED - could not publish Video to channel")
+                writeToLog("INFO","Step 9: FAILED - could not publish Video to channel")
                 return
             
-            writeToLog("INFO","Step 5: Going to search entry in channel page")
+            writeToLog("INFO","Step 10: Going to search entry in channel page")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName) == False:
                 self.status = "Fail"        
-                writeToLog("INFO","Step 5: FAILED to find entry in channel")
+                writeToLog("INFO","Step 10: FAILED to find entry in channel")
                 return                         
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Search in my media' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Add custom metadata' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -102,6 +130,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName)
+            self.common.admin.enableCustomMetadata(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

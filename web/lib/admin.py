@@ -860,3 +860,32 @@ class Admin(Base):
         
         writeToLog("INFO","Success, Pre / Post link was deleted from admin")
         return True  
+    
+    # @Author: Oded berihon
+    # This function enables the custom metadata module 
+    def enableCustomMetadata(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Custometadata module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/customdata') == False:
+            writeToLog("INFO","FAILED to load customdata page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable custometadata module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set category scheduling module as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+            
+        writeToLog("INFO","Success, category scheduling module was set to: " + str(selection) + "'")
+        return True   
+    
+    

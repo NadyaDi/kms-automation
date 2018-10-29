@@ -1117,19 +1117,7 @@ class MyMedia(Base):
                 
                      
     #  @Author: Oded berihon                 
-    def addCustomDataAndPublish(self, entryName, customfield, customFieldDropdwon=enums.DepartmentDivision.FINANCE):  
-        if self.serachAndCheckSingleEntryInMyMedia(entryName) == False:
-            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
-            return False
-        
-        if self.clickActionsAndPublishFromMyMedia() == False:
-            writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
-            return False
-        
-        if self.wait_visible(self.MY_MEDIA_DISCLAIMER_MSG) == False:
-            writeToLog("INFO","FAILED, Disclaimer alert (before publish) wasn't presented although Disclaimer module is turned on")
-            return False  
-        
+    def addCustomDataAndPublish(self, customfield, customFieldDropdwon=enums.DepartmentDivision.FINANCE):        
         if self.click(self.EDIT_BUTTON_REQUIRED_FIELD_MASSAGE) == False:
             writeToLog("INFO","FAILED to click on edit button")
             return False  
