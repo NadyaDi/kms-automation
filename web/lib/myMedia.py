@@ -625,14 +625,12 @@ class MyMedia(Base):
         if self.clsCommon.isElasticSearchOnPage() == True:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
                 tmpSortlocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_NEW_UI
-                
                 if self.click(tmpSortlocator, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on :" + dropDownListItem.value + " filter in my media")
                     return False
                 
                 # only sort filter use the locater of the dropdownlist_item_old_ui
-#                 tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
-                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem)) 
+                tmpSortBy = (self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
                 if self.click(tmpSortBy, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem.value + " filter in my media")
                     return False

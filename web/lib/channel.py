@@ -5,6 +5,7 @@ from base import *
 import clsTestService
 import enums
 from general import General
+from enums import Location
 
 
 class Channel(Base):
@@ -1331,8 +1332,8 @@ class Channel(Base):
                    
             sleep(2)
             
-            if self.clsCommon.isElasticSearchOnPage() == True:
-                    sortBy = sortBy.value
+#             if self.clsCommon.isElasticSearchOnPage() == True:
+#                     sortBy = sortBy.value
                     
             if sortBy != '':
                 if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
@@ -2197,7 +2198,7 @@ class Channel(Base):
         if self.clsCommon.isElasticSearchOnPage() == True:
             sortBy = sortBy.value
             
-        if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY,sortBy) == False:
+        if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
                 
@@ -2278,8 +2279,8 @@ class Channel(Base):
     # @Author: Inbar Willamn
     # The function check and verify that the entries sort in the correct order in pending tab in channel and category 
     # Default location is channel page
-    def verifySortAndFiltersInPendingTab(self, sortBy='', filterMediaType='',channelName ='',entriesList='', navigate = False, location = enums.Location.CHANNEL_PAGE):
-        if self.sortAndFilterInPendingTab(sortBy, filterMediaType, channelName, entriesList) == False:
+    def verifySortAndFiltersInPendingTab(self, sortBy='', filterMediaType='',channelName ='',entriesList='', navigate=False, location=enums.Location.CHANNEL_PAGE):
+        if self.sortAndFilterInPendingTab(sortBy, filterMediaType, channelName, navigate, location) == False:
             writeToLog("INFO","FAILED to sort entries")
             return False
          
@@ -2362,7 +2363,7 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Show all entries in pending tab
-    def showAllEntriesPendingTab(self, timeOut=60):
+    def showAllEntriesPendingTab(self, timeOut=30):
         tmp_table_size = self.CHANNEL_PENDING_TAB_TABLE_SIZE
         loading_message = self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG
         no_entries_page_msg = self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG                       
