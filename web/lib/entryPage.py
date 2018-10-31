@@ -24,7 +24,7 @@ class EntryPage(Base):
     ENTRY_PAGE_PUBLISH_BUTTON                              = ('id', "tab-Publish")
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON          = ('id', "tab-Delete")
     ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
-    ENTRY_PAGE_DOWNLOAD_TAB                                = ('xpath', "//a[contains(@class,'btn responsiveSizePhone tab-Download')]")
+    ENTRY_PAGE_DOWNLOAD_TAB                                = ('xpath', "//a[@id='tab-download-tab']")
     ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//h3[@class='muted' and contains(text(), 'Media is being processed')]")
     ENTRY_PAGE_PLAYER_IFRAME                               = ('xpath',"//iframe[@id='kplayer_ifp' and @class='mwEmbedKalturaIframe']") 
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
@@ -32,7 +32,7 @@ class EntryPage(Base):
     ENTRY_PAGE_CHAPTER_MENU_ON_THE_PLAYER                  = ('id', 'sideBarContainerReminderContainer') # This is the icon on the top left of the player that show all the slides that were added 
     ENTRY_PAGE_SHARE_TAB                                   = ('xpath', '//a[@id="tab-share-tab"]')
     ENTRY_PAGE_SHARE_LINK_TO_MEDIA_OPTION                  = ('xpath', '//li[@id="directLink-tab" and @class="active"]')
-    ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'Embed-tab')
+    ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'embedTextArea-pane-tab')
     ENTRY_PAGE_SHARE_EMAIL_OPTION                          = ('id', 'emailLink-tab')
     ENTRY_PAGE_LOADING                                     = ('xpath', '//div[@class="message" and text()="Loading..."]')
     ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea')
@@ -258,7 +258,7 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to navigate to entry page, Entry name: " + entryName)
                 return False
             
-            if self.click(self.ENTRY_PAGE_DOWNLOAD_TAB, 30) == False:
+            if self.click(self.ENTRY_PAGE_DOWNLOAD_TAB, 30, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on download tab")
                 return False
             
@@ -309,8 +309,7 @@ class EntryPage(Base):
     # @Author: Inbar Willman     
     def chooseShareOption(self, shareOption = enums.EntryPageShareOptions.EMBED):
         if shareOption == enums.EntryPageShareOptions.EMBED:
-            embed_tab = self.get_elements(self.ENTRY_PAGE_SHARE_EMBED_OPTION)[1]
-            if embed_tab.click() == False:
+            if self.click(self.ENTRY_PAGE_SHARE_EMBED_OPTION, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on embed tab option")
                 return False
         elif shareOption == enums.EntryPageShareOptions.LINK_TO_MEDIA_PAGE:
