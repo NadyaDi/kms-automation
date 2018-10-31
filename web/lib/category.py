@@ -22,7 +22,7 @@ class Category(Base):
     CATEGORY_SEARCH_RESULT                                      = ('class_name', 'entryTitle')
     CATEGORY_ENTRY_SEARCH_RESULT                                = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL                          = ("//a[@href='javascript:;' and contains(text(),'...')]")
-    CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='addnew-tab']")
+    CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='tab-addcontent']")
     CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON                        = ('xpath', "//a[@class='MediaUpload-tab']")
     CATEGORY_PENDING_TAB                                        = ('xpath', "//a[@id='categorymoderation-tab']")
     CATEGORY_ENTRY_THUMBNAIL                                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
@@ -72,17 +72,16 @@ class Category(Base):
     CATEGORY_INHERIT_PERMISSIONS_BUTTON                         = ('xpath', "//input[@id='inherit']")
     CATEGORY_COMFIRM_INHERIT_PERMISSIONS                        = ('xpath', "//a[@class='btn btn-danger' and text()='Yes']")
     CATEGORY_GALLEY_ALL_MEDIA_TABLE                             = ('xpath', "//div[@id='galleryGrid']")
-    CATEGORY_ADD_TO_CATEGORY_BUTTON                             = ('xpath', "//a[@id='tab-AddtoGallery']")
+    CATEGORY_ADD_TO_CATEGORY_BUTTON                             = ('xpath', "//a[@id='tab-addcontent']")
+    
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             tmpEntrySearchName = (self.CATEGORY_ENTRY_SEARCH_RESULT[0], self.CATEGORY_ENTRY_SEARCH_RESULT[1].replace('ENTRY_NAME', entryName))
-            try:
-                self.get_elements(tmpEntrySearchName)[2].click()
-                sleep(3)
-                return True
-            except:
+            if self.click(tmpEntrySearchName, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on Thumbnail of entry name '" + entryName + "' after search")
                 return False
+            sleep(3)    
         else:
             return self.clsCommon.myMedia.clickResultEntryAfterSearch(entryName)
             
