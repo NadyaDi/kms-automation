@@ -143,3 +143,7 @@ test_674,Playlists - Delete playlist,2362001-2,mediaspace.kaltura.com,orifl@mail
 test_1592,Custom data,2378481-3,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_594,KAF BB - Entry Thumbnail,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_604,KAF BB - Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_589,KAF BB - Edit Entry Metadata,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_590,KAF BB - Edit Entry page - Disable comments,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_591,KAF BB -  Edit Entry page - Close discussion,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_593,KAF BB -  Entry page - Add captions And Search,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
