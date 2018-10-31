@@ -1,7 +1,11 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_0002,1,0,0,0,Set service url
 test_16,1,0,0,0,Download Source File
-test_594,1,0,0,0,KAF BlackBoard entry thumbnail
+test_589,1,0,0,0,KAF BB - Edit Entry Metadata
+test_590,0,1,0,0,KAF BB - Edit Entry page - Disable comments
+test_591,0,1,0,0,KAF BB - Edit Entry page - Close discussion
+test_593,1,0,0,0,KAF BB - Entry page - Add captions And Search
+test_594,1,0,0,0,KAF BB - Entry thumbnail
 test_604,1,0,0,0,KAF BB - Upload media from desktop
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media

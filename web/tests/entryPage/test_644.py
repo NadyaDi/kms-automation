@@ -91,7 +91,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
             
-            writeToLog("INFO","Step 4: Going to upload 2 entries: Video / Audio / Image")   
+            writeToLog("INFO","Step 4: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to upload 3 entries")
@@ -130,7 +130,7 @@ class Test:
             writeToLog("INFO","Step 10: Going navigate to video entry: "+ self.videoEntryName)    
             if self.common.entryPage.navigateToEntry(self.videoEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 101: FAILED navigate to entry: " + self.videoEntryName)
+                writeToLog("INFO","Step 10: FAILED navigate to entry: " + self.videoEntryName)
                 return 
                   
             writeToLog("INFO","Step 11: Going to wait until media will finish processing")

@@ -2,6 +2,10 @@ case,test_name,partner,base_url,admin_username,admin_password,login_username,log
 test_0002,Set service url,2438361,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_594,KAF BlackBoard Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_604,KAF BB - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_589,KAF BB - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_590,KAF BB - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_591,KAF BB - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_593,KAF BB - Entry page - Add captions And Search,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!

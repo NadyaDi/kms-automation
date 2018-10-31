@@ -64,6 +64,8 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + ''
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/myMediaLTI.jsp'
+        localSettings.LOCAL_SETTINGS_GALLERIES_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_2_1'
+        
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Home.aspx'

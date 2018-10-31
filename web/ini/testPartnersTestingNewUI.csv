@@ -106,7 +106,11 @@ test_2742,Watch History - Entry appear in both continue watch and recently watch
 test_687,Entry page - Embed Entry,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_673,Playlists - Embed playlist,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_604,KAF BB -Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
-test_594,KAF BlackBoard Entry Thumbnail,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_594,KAF BB - Entry Thumbnail,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_589,KAF BB - Edit Entry Metadata,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_590,KAF BB - Edit Entry page - Disable comments,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_591,KAF BB - Edit Entry page - Close discussion,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_593,KAF BB - Entry page - Add captions And Searchussion,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2882,KAF Sharepoint Upload media from desktop,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_699,Entry page - Disable comments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

@@ -397,7 +397,7 @@ class EditEntryPage(Base):
 
       
     # Author: Michal Zomper 
-    def changeEntryOptions(self, isEnableComments, isEnableCloseDiscussion, isEnableEveryoneToCreateClip):
+    def changeEntryOptions(self, isEnableComments, isEnableCloseDiscussion, isEnableEveryoneToCreateClip, entryType=enums.MediaType.VIDEO):
         if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
             writeToLog("INFO","FAILED to click on options tab")
             return False
@@ -409,13 +409,14 @@ class EditEntryPage(Base):
                    
         # Close Discussion 
         if self.check_element(self.EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX, isEnableCloseDiscussion) == False:
-            writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
+            writeToLog("INFO","FAILED to check/uncheck 'Close Discussion' option")
             return False
-                   
-        # Enable Everyone To Create Clip
-        if self.check_element(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX, isEnableEveryoneToCreateClip) == False:
-            writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
-            return False
+        
+        if entryType == enums.MediaType.VIDEO:       
+            # Enable Everyone To Create Clip
+            if self.check_element(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX, isEnableEveryoneToCreateClip) == False:
+                writeToLog("INFO","FAILED to check/uncheck 'Enable everyone to create clips from this video' option")
+                return False
                                     
         if self.click(self.EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
@@ -453,11 +454,12 @@ class EditEntryPage(Base):
         if self.is_element_checked(self.EDIT_ENTRY_CLOSED_COMMENTS_CHECKBOX) != isEnableCloseDiscussion:
             writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
             return False
-                   
-        # Verify Enable Everyone To Create Clip
-        if self.is_element_checked(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX) != isEnableEveryoneToCreateClip:
-            writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
-            return False
+        
+        if entryType == enums.MediaType.VIDEO:            
+            # Verify Enable Everyone To Create Clip
+            if self.is_element_checked(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX) != isEnableEveryoneToCreateClip:
+                writeToLog("INFO","FAILED to verify check/uncheck 'Disable comments' option")
+                return False
         
         return True
      
@@ -725,6 +727,7 @@ class EditEntryPage(Base):
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
         self.clsCommon.sendKeysToBodyElement(Keys.END)
+        sleep(2)
         if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
