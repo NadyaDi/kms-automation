@@ -30,7 +30,7 @@ class EntryPage(Base):
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
     ENTRY_PAGE_PLAYER_IFRAME2                              = ('id','kplayer_ifp')
     ENTRY_PAGE_CHAPTER_MENU_ON_THE_PLAYER                  = ('id', 'sideBarContainerReminderContainer') # This is the icon on the top left of the player that show all the slides that were added 
-    ENTRY_PAGE_SHARE_TAB                                   = ('xpath', '//a[@id="tab-Share"]')
+    ENTRY_PAGE_SHARE_TAB                                   = ('xpath', '//a[@id="tab-share-tab"]')
     ENTRY_PAGE_SHARE_LINK_TO_MEDIA_OPTION                  = ('xpath', '//li[@id="directLink-tab" and @class="active"]')
     ENTRY_PAGE_SHARE_EMBED_OPTION                          = ('id', 'Embed-tab')
     ENTRY_PAGE_SHARE_EMAIL_OPTION                          = ('id', 'emailLink-tab')
