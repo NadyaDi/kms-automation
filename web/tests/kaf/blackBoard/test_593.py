@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name: Entry page - Add captions And Search
+    # Test Name: BB : Entry page - Add captions And Search - remove caption
     # Test description:
     # Upload entry ->Go to edit entry ->  'Captions' tab -> Upload a captions file -> Fill out the relevant fields-> 
     # Go back to the entry page and search caption
@@ -31,6 +31,11 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+    captionLanguage = "English (American)"
+    captionLabel = None
+    captionText = '- Caption search 2'
+    filePathCaption = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\captions\testcaption1.srt'
+    filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     
     
     #run test as different instances on all the supported platforms
@@ -48,7 +53,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Entry page - Add captions And Search", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Add captions And Search", self.testNum)
+            self.captionLabel = clsTestService.addGuidToString("English", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
                  
             writeToLog("INFO","Step 1: Going to upload entry")   
@@ -57,45 +63,50 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
                     
-            writeToLog("INFO","Step 2: Going navigate to entry page")    
-            if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom =enums.Location.MY_MEDIA) == False:
+            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED navigate to  entry '" + self.entryName + "' page")
-                return 
-                
-            writeToLog("INFO","Step 3: Going to add new comment to entry")
-            if self.common.entryPage.addComment(self.commnet) == False:
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+              
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 34: FAILED to add new comment")
-                return 
-            
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+              
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
-                return    
+                return                
             
-            writeToLog("INFO","Step 5: Going to click on option tab and enable - disabled comment")
-            if self.common.editEntryPage.changeEntryOptions(False, True, False) == False:
+            writeToLog("INFO","Step 5: Going to add caption")
+            if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to click on option tab and enable disabled comments option")
-                return    
+                writeToLog("INFO","Step 5: FAILED to upload caption")
+                return     
             
-            writeToLog("INFO","Step 6: Going to navigate to entry page")
-            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
+            writeToLog("INFO","Step 6: Navigate to entry page and play entry")
+            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:06') == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to entry page")
-                return   
+                writeToLog("INFO","Step 6: FAILED to upload caption")
+                return     
+            self.common.blackBoard.switchToBlackboardIframe()
             
-            writeToLog("INFO","Step 7: Going to verify that comments section isn't displayed in entry page")
-            if self.common.entryPage.checkEntryCommentsSection(self.commnet, False, True) == False:
+            writeToLog("INFO","Step 7: Going navigate to edit entry page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED - Comments section still displayed in entry page")
-                return   
+                writeToLog("INFO","Step 7: FAILED navigate to edit entry page")
+                return              
             
-            
+            writeToLog("INFO","Step 8: Going to remove added caption")
+            if self.common.editEntryPage.removeCaption(self.captionLabel) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to remove added caption to entry '" + self.entryName + "'")
+                return
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Entry page - Add captions And Search' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Add captions And Search' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

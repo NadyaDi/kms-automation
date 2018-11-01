@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : Edit Entry Metadata 
+    # Test Name : BB: Edit Entry Metadata 
     # Test description:
     # upload media
     # go to media edit page and change media: name / description / tags 

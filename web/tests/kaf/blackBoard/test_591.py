@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name: Edit Entry page - Close discussion
+    # Test Name: BB :Edit Entry page - Close discussion
     # Test description:
     # Upload entry -> Go to entry page > Add comments
     # Go to edit entry page -> option tab and  disabled comments option

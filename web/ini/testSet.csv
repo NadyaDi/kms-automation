@@ -6,6 +6,7 @@ test_590,0,1,0,0,KAF BB - Edit Entry page - Disable comments
 test_591,0,1,0,0,KAF BB - Edit Entry page - Close discussion
 test_593,1,0,0,0,KAF BB - Entry page - Add captions And Search
 test_594,1,0,0,0,KAF BB - Entry thumbnail
+test_597,1,0,0,0,KAF BB - Delete through my media
 test_604,1,0,0,0,KAF BB - Upload media from desktop
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
