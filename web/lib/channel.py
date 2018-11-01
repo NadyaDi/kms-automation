@@ -2009,11 +2009,7 @@ class Channel(Base):
         sleep(4)
         self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
         
-        tmpLocator = self.clsCommon.category.CATEGORY_ADD_NEW_BUTTON
-        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            tmpLocator = self.clsCommon.category.CATEGORY_ADD_NEW_BUTTON_OLD_UI        
-        
-        if self.click(tmpLocator) == False:
+        if self.click(self.clsCommon.category.CATEGORY_ADD_NEW_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Add New at channel page")
             return False
         sleep(2)
