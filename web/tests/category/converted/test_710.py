@@ -77,6 +77,10 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to category page")
                 return   
+            
+            # Additional sleep - do not delete
+            sleep(5)
+            self.common.base.refresh()
                              
             writeToLog("INFO","Step 5: Going to navigate to entry's edit page")            
             if self.common.category.navigateToEditEntryPageFromCategoryWhenNoSearchIsMade(self.entryName) == False:
