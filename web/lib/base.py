@@ -886,3 +886,7 @@ class Base:
             return True
         except Exception:
             return True
+        
+        
+    def refresh(self):
+        self.driver.refresh()  
