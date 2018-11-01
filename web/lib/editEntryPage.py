@@ -143,6 +143,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
+        sleep(2)
         #Open "Actions" drop-down list 
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on Actions button")

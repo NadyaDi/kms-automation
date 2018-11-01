@@ -77,7 +77,7 @@ class MyMedia(Base):
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
-    SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]/ancestor::span[@class="searchme"]')
+    SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]')
     EDIT_BUTTON_REQUIRED_FIELD_MASSAGE                          = ('xpath', '//a[@class="hidden-phone" and text()="Edit"]')
     CUSTOM_FIELD                                                = ('xpath', '//input[@id="customdata-DepartmentName"]')
     CUSTOM_FIELD_DROP_DOWN                                      = ('xpath', '//select[@id="customdata-DepartmentDivision"]')
@@ -252,6 +252,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
                 return False
         return True
+    
     
     
     # This method for Elastic Search (new UI), returns the result element.         
@@ -949,18 +950,18 @@ class MyMedia(Base):
         if self.searchEntryMyMedia(searchKey) == False:
             writeToLog("INFO","FAILED to search entry: '" + searchKey + "' in my media")
             return False 
-        
+         
         try: 
             searchedEntries = self.get_elements(self.MY_MEDIA_TABLE_SIZE)
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get entries list")
             return False
-        
+         
         # Check that number of entries that display is correct 
         if len(searchedEntries) != entriesCount:
             writeToLog("INFO","FAILED, number of entries after search is '" + str(len(self.get_elements(self.MY_MEDIA_TABLE_SIZE))) + "' but need to be '" + str(entriesCount) + "'")
             return False 
-            
+        
         if self.clsCommon.isElasticSearchOnPage() == False:
             if type(entriesList) is list:
                 i=1 
@@ -994,6 +995,8 @@ class MyMedia(Base):
         writeToLog("INFO","Success, All searched entries were found after search")
         return True  
         
+        
+    
         
     # Author: Michal Zomper 
     def clearSearch(self):
@@ -1529,4 +1532,17 @@ class MyMedia(Base):
             
         writeToLog("INFO","Success, my media '" + viewType.value + " view' was verified")
         return True     
+            
+            
+    def verifyNoResultAfterSearchInMyMedia(self, entryName, forceNavigate=False):
+        if self.searchEntryMyMedia(entryName, forceNavigate) == False:
+            writeToLog("INFO","FAILED to search entry '" + entryName + "' in my media")
+            return False   
+        
+        if self.wait_visible(self.MY_MEDIA_NO_ENTRIES_FOUND, timeout=15) == False:
+            writeToLog("INFO","FAILED to verify 'No Result' text was found after search")
+            return False 
+        
+        writeToLog("INFO","Success, 'No Result' text display after search")
+        return True
             

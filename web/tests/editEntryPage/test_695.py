@@ -55,7 +55,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('addCaptions', self.testNum)
+            self.entryName = clsTestService.addGuidToString('Add Captions', self.testNum)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
