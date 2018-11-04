@@ -773,12 +773,14 @@ class Admin(Base):
         if preOrPost == enums.NavigationPrePost.PRE:
             linkNameTmp= (self.ADMIN_PRE_POST_ITEM_NAME[0], self.ADMIN_PRE_POST_ITEM_NAME[1].replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
             elementLinkNameTmp = parentAsteriskElement.find_elements_by_xpath(linkNameTmp[1])[1]
+            elementLinkNameTmp.clear() 
             if self.send_keys_to_element(elementLinkNameTmp, name) == False:
                 writeToLog("INFO","FAILED to insert link item name")
                 return False
             
             linkValueTmp= (self.ADMIN_PRE_POST_ITEM_VALUE[0], self.ADMIN_PRE_POST_ITEM_VALUE[1].replace('PRE_OR_POST', enums.NavigationPrePost.PRE.value))
             elementValueNameTmp = parentAsteriskElement.find_elements_by_xpath(linkValueTmp[1])[1]
+            elementValueNameTmp.clear()
             if self.send_keys_to_element(elementValueNameTmp, url) == False:
                 writeToLog("INFO","FAILED to insert link item value")
                 return False
@@ -792,12 +794,14 @@ class Admin(Base):
         elif preOrPost == enums.NavigationPrePost.POST:
             linkNameTmp= (self.ADMIN_PRE_POST_ITEM_NAME[0], self.ADMIN_PRE_POST_ITEM_NAME[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
             elementLinkNameTmp = parentAsteriskElement.find_elements_by_xpath(linkNameTmp[1])[1]
+            elementLinkNameTmp.clear()
             if self.send_keys_to_element(elementLinkNameTmp, name) == False:
                 writeToLog("INFO","FAILED to insert link item name")
                 return False
             
             linkValueTmp= (self.ADMIN_PRE_POST_ITEM_VALUE[0], self.ADMIN_PRE_POST_ITEM_VALUE[1].replace('PRE_OR_POST', enums.NavigationPrePost.POST.value))
             elementValueNameTmp = parentAsteriskElement.find_elements_by_xpath(linkValueTmp[1])[1]
+            elementValueNameTmp.clear()
             if self.send_keys_to_element(elementValueNameTmp, url) == False:
                 writeToLog("INFO","FAILED to insert link item value")
                 return False 
@@ -860,6 +864,7 @@ class Admin(Base):
         
         writeToLog("INFO","Success, Pre / Post link was deleted from admin")
         return True  
+    
     
     # @Author: Oded berihon
     # This function enables the custom metadata module 
