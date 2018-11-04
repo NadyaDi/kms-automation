@@ -42,11 +42,11 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.sortByMostReccentList = ["4 - forth gallery", "3 - third gallery", "2 - second gallery", "1 - First gallery"]
+            self.sortByMostRecentList = ["4 - forth gallery", "3 - third gallery", "2 - second gallery", "1 - First gallery"]
             self.sortByAlphabeticalAToZList = ["1 - First gallery", "2 - second gallery", "3 - third gallery", "4 - forth gallery"]
             self.sortByAlphabeticalZToAList = ["4 - forth gallery", "3 - third gallery", "2 - second gallery", "1 - First gallery"]
-            self.sortByMembersAndSubscribers = ["3 - third gallery","4 - forth gallery", "2 - second gallery", "1 - First gallery"]
-            self.sortByMediaCount = ["4 - forth gallery", "1 - First gallery", "3 - third gallery", "2 - second gallery"]
+            self.sortByMembersAndSubscribers = ["2 - second gallery", "1 - First gallery", "3 - third gallery", "4 - forth gallery"]
+            self.sortByMediaCount = ["2 - second gallery", "4 - forth gallery", "1 - First gallery", "3 - third gallery"]
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to navigate to galleries page")
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_KMS_GALLERIES_URL) == False:
@@ -61,7 +61,7 @@ class Test:
                 return 
 
             writeToLog("INFO","Step 3: Going to sort galleries by most recent")
-            if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostReccentList) == False:
+            if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostRecentList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to sort galleries by most recent")
                 return   

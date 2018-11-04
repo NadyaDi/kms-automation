@@ -248,6 +248,10 @@ class Kea(Base):
             return False
         entriesInMyMedia = entriesInMyMedia.split("\n")
         
+        # run over the list and delete tab before the entry name
+        for idx, entry in enumerate(entriesInMyMedia):
+            entriesInMyMedia[idx] = entry.lstrip()
+                
         if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesInMyMedia) == False:
             writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
             return False

@@ -657,7 +657,7 @@ class Category(Base):
             if prevChannelIndex > galleryCurrentIndex:
                 writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct. gallery '" + gallery + "' isn't in the right place" )
                 return False
-            prevChannelIndex = galleryCurrentIndex + 2
+            prevChannelIndex = galleryCurrentIndex
                 
         writeToLog("INFO","Success, verify sort galleries by '" + sortBy.value + "' was successful")
         return True   
