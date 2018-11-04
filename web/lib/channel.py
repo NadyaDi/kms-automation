@@ -2287,6 +2287,10 @@ class Channel(Base):
             return False
         entriesIncategory = entriesIncategory.split("\n")
         
+        # run over the list and delete tab before the entry name
+        for idx, entry in enumerate(entriesIncategory):
+            entriesIncategory[idx] = entry.lstrip()
+        
         if self.clsCommon.myMedia.verifySortOrder(entriesList, entriesIncategory) == False:
             writeToLog("INFO","FAILED ,sort by '" + sortBy.value + "' isn't correct")
             return False

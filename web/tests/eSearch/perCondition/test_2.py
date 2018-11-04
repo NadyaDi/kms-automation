@@ -67,7 +67,7 @@ class Test:
             self.channelName2 = "My Channels - Sort Channels B"
             self.channelName3 = "My Channels - Sort Channels C"
             self.channelName4 = "My Channels - Sort Channels D"
-            
+
             # Entries to publish to channels for sort by in Channels/My channels 
             self.entryName1 = "My Channels - Sort Channels 1"
             self.entryName2 = "My Channels - Sort Channels 2"

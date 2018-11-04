@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Sort by - My Channels - when search is made
+    # Test Name : Sort by - My Channels 
     # Test description:
     # create several channel and add them member / subscriber/ media
     # go to my channels page, make a search and sort the channels :
