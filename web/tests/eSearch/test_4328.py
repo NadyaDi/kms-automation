@@ -81,10 +81,10 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login to KMS")
                 return 
                         
-            writeToLog("INFO","Step 2: Going to navigate to channel page - pending tab")
+            writeToLog("INFO","Step 2: Going to navigate to gallery page - pending tab")
             if self.common.channel.navigateToPendingaTab(self.gallery, location=enums.Location.CATEGORY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to go to navigate channel page")
+                writeToLog("INFO","Step 2: FAILED to go to navigate gallery page")
                 return      
                                       
             writeToLog("INFO","Step 3: Going to verify default sort before making a search")
@@ -93,10 +93,10 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to displayed correct default sort before making a search")
                 return   
                
-            writeToLog("INFO","Step 4: Going to make a search in channel - media tab")
+            writeToLog("INFO","Step 4: Going to make a search in gallery - pending tab")
             if self.common.channel.makeSearchInPending(self.searchInGalleryPending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to make a search in in channel - media tab")
+                writeToLog("INFO","Step 4: FAILED to make a search in in gallery - pending tab")
                 return 
                 
             writeToLog("INFO","Step 5: Going to verify default sort after making a search")
