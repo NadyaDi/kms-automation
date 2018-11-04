@@ -54,24 +54,24 @@ class Test:
             
             self.searchInAddToChannel = "Sort by"
             self.gallery = "eSearch category"
-            self.sortEntriesByCreationDateDescending = ("C160E832-1-Sort by - Sort H", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort E", "C160E832-1-Sort by - Sort D", 
-                                                        "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort A")
-            self.sortEntriesByCreationDateAscending  = ("C160E832-1-Sort by - Sort A", "C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort E",
-                                                        "C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort H")
-            self.sortEntriesByUpdateDateDescending   = ("C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort E", "C160E832-1-Sort by - Sort A",
-                                                        "C160E832-1-Sort by - Sort H", "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort B")
-            self.sortEntriesByUpdateDateAscending    = ("C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort H", "C160E832-1-Sort by - Sort A", "C160E832-1-Sort by - Sort E",
-                                                        "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort F")
-            self.sortEntriesByAlphabeticalAToZ       = ("C160E832-1-Sort by - Sort A", "C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort E",
-                                                       "C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort H")
-            self.sortEntriesByAlphabeticalZToA       = ("C160E832-1-Sort by - Sort H", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort F","C160E832-1-Sort by - Sort E", "C160E832-1-Sort by - Sort D", 
-                                                        "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort B", "C160E832-1-Sort by - Sort A")
-            self.sortEntriesByLikes                  = ("C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort H", "C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort C", 
-                                                        "C160E832-1-Sort by - Sort E", "C160E832-1-Sort by - Sort A", "C160E832-1-Sort by - Sort B")
-            self.SortEntriesByComments               = ("C160E832-1-Sort by - Sort G", "C160E832-1-Sort by - Sort F", "C160E832-1-Sort by - Sort C", "C160E832-1-Sort by - Sort E", "C160E832-1-Sort by - Sort B", 
-                                                        "C160E832-1-Sort by - Sort A", "C160E832-1-Sort by - Sort D", "C160E832-1-Sort by - Sort H")
-            self.sortEntriesBySchedulingAscending    = ("C160E832-1-Sort by Scheduling - Past", "C160E832-1-Sort by Scheduling - In scheduling", "C160E832-1-Sort by Scheduling - Future")
-            self.sortEntriesBySchedulingDescending   = ("C160E832-1-Sort by Scheduling - Future", "C160E832-1-Sort by Scheduling - In scheduling", "C160E832-1-Sort by Scheduling - Past")
+            self.sortEntriesByCreationDateDescending = ("Sort by - Sort H", "Sort by - Sort G", "Sort by - Sort F", "Sort by - Sort E", "Sort by - Sort D", 
+                                                        "Sort by - Sort C", "Sort by - Sort B", "Sort by - Sort A")
+            self.sortEntriesByCreationDateAscending  = ("Sort by - Sort A", "Sort by - Sort B", "Sort by - Sort C", "Sort by - Sort D", "Sort by - Sort E",
+                                                        "Sort by - Sort F", "Sort by - Sort G", "Sort by - Sort H")
+            self.sortEntriesByUpdateDateDescending   = ("Sort by - Sort F", "Sort by - Sort G", "Sort by - Sort D", "Sort by - Sort E", "Sort by - Sort A",
+                                                        "Sort by - Sort H", "Sort by - Sort C", "Sort by - Sort B")
+            self.sortEntriesByUpdateDateAscending    = ("Sort by - Sort B", "Sort by - Sort C", "Sort by - Sort H", "Sort by - Sort A", "Sort by - Sort E",
+                                                        "Sort by - Sort D", "Sort by - Sort G", "Sort by - Sort F")
+            self.sortEntriesByAlphabeticalAToZ       = ("Sort by - Sort A", "Sort by - Sort B", "Sort by - Sort C", "Sort by - Sort D", "Sort by - Sort E",
+                                                       "Sort by - Sort F", "Sort by - Sort G", "Sort by - Sort H")
+            self.sortEntriesByAlphabeticalZToA       = ("Sort by - Sort H", "Sort by - Sort G", "Sort by - Sort F","Sort by - Sort E", "Sort by - Sort D", 
+                                                        "Sort by - Sort C", "Sort by - Sort B", "Sort by - Sort A")
+            self.sortEntriesByLikes                   = ("Sort by - Sort F", "Sort by - Sort D", "Sort by - Sort H", "Sort by - Sort G", "Sort by - Sort C", 
+                                                        "Sort by - Sort E", "Sort by - Sort A", "Sort by - Sort B")
+            self.SortEntriesByComments               = ("Sort by - Sort G", "Sort by - Sort F", "Sort by - Sort C", "Sort by - Sort E", "Sort by - Sort B", 
+                                                        "Sort by - Sort A", "Sort by - Sort D", "Sort by - Sort H")
+            self.sortEntriesBySchedulingAscending    = ("Sort by Scheduling - Past", "Sort by Scheduling - In scheduling", "Sort by Scheduling - Future")
+            self.sortEntriesBySchedulingDescending   = ("Sort by Scheduling - Future", "Sort by Scheduling - In scheduling", "Sort by Scheduling - Past")
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to enable category scheduling module")
             if self.common.admin.enableCategoryScheduling(True) == False:

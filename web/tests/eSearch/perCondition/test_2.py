@@ -128,64 +128,64 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to add user '" + self.userName2 + "' as member to channel '" + self.channelName2 + "'")
                 return
-                    
+                     
             writeToLog("INFO","Step 13: Going to add user '" + self.userName2 +"' as manager to channel '" + self.channelName3 + "'")
             if self.common.channel.addMembersToChannel(self.channelName3, self.userName2, permission=enums.ChannelMemberPermission.MEMBER) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to add user '" + self.userName2 + "' as member to channel '" + self.channelName3 + "'")
                 return
-                    
+                     
             sleep(3)
             writeToLog("INFO","Step 14: Going to logout from " + self.userName1 + " user")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to logout from " + self.userName1 + " user")
                 return  
-                                          
+                                           
             writeToLog("INFO","Step 15: Going to login with user " + self.userName3)
             if self.common.login.loginToKMS(self.userName3, self.userPass3) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to login with " + self.userName3)
                 return
-                    
+                     
             writeToLog("INFO","Step 16: Going to add user '" + self.userName3 +"' as channel subscriber in '" + self.channelName1 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName1, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to add user '" + self.userName3 + "' as channel subscriber in '" + self.channelName1 + "'")
                 return
-                  
+                   
             sleep(2) 
             writeToLog("INFO","Step 17: Going to add user '" + self.userName3 +"' as channel subscriber in '" + self.channelName2 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName2, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to add user '" + self.userName3 + "' as channel subscriber in '" + self.channelName2 + "'")
                 return
-                    
+                     
             writeToLog("INFO","Step 18: Going to add user '" + self.userName3 +"' as channel subscriber in '" + self.channelName3 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName3, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to add user '" + self.userName3 + "' as channel subscriber in '" + self.channelName3 + "'")
                 return
-                    
+                     
             sleep(3)
             writeToLog("INFO","Step 19: Going to logout from " + self.userName3)
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to logout from " + self.userName3)
                 return  
-                                         
+                                          
             writeToLog("INFO","Step 20: Going to login with : " + self.userName4)
             if self.common.login.loginToKMS(self.userName4, self.userPass4) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED to login with " + self.userName4)
                 return
-        
+         
             writeToLog("INFO","Step 21: Going to add user '" + self.userName4 +"' as channel subscriber in '" + self.channelName3 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName3, "2" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to add user '" + self.userName4 + "' as channel subscriber in '" + self.channelName4 + "'")
                 return
-                      
+                       
             sleep(3)
             writeToLog("INFO","Step 22: Going to logout from " + self.userName4)
             if self.common.login.logOutOfKMS() == False:
