@@ -142,18 +142,76 @@ class MyPlaylists(Base):
             
         return True
     
-        # @Author: Ori Flchtman
+    # @Author: Ori Flchtman
+    # Create new playlist in Select playlist screen
+    def createNewPlaylistAfterAddToPlaylistAction(self, playlistName=''):
+        self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName)
+        sleep(1)
+    
+        if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on create playlist Button")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        sleep(1)
+        if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on create playlist Button")
+            return False
+        
+        if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+            writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+            return False                    
+        
+        writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
+        return True
+    
+    #TODO Dont remove next code - under construction
+    # @Auther: Ori Flchtman
+    # Verify messages:
+    # Create New Playlist; Media Added to Playlist; Media Removed from Playlist
+
+#     def addRemoveToPlaylistConfirmMSGs(self, playlistName, entryName, currentLocation = enums.Location.MY_MEDIA):  
+#             if currentLocation == enums.Location.MY_MEDIA:     
+#                 if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+#                     writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+#                     return False
+#                 
+#             if currentLocation == enums.Location.MY_MEDIA: 
+#                 if self.wait_visible(self.ADD_TO_PLAYLIST_CONFIRM_MSG_PLAYLIST_PG, 10) == False:
+#                     writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+#                     return False 
+                
+#             if currentLocation == enums.Location.MY_MEDIA: 
+#                 if self.wait_visible(self.REMOVE_FROM_PLAYLIST_CONFIRM_MSG_PLAYLIST_PG, 10) == False:
+#                     writeToLog("INFO","FAILED to remove entry: " + entryName + " to Playlists")
+#                     return False     
+#Need to find the correct locator and add to locators list            
+
+
+# @Author: Ori Flchtman
+#         Fוun#1- checkOrUncheckPlaylists- Receives a map of playlistד with False/True to check or uncheck
+#         Fun#2- Create new playlist. Receives list of Playlists and create a new playlist out of the list
+#         Fun#3- moveEntriesToPlaylist. Combines Fun#1 and Fun#2
+#         Need to add Verify in order to make sure entries removed from playlist and added to new playlist
 #         Unchecking current playlists which the entries are in and create and move the entries to the new playlist:
 #         Can't force Location since Add to Playlist screen is called 'My Media'
 #         Taking in account that current location is Add to Playlist screen
 #         Go over the list OfPlaylist and uncheck the checked Playlist
 #         And cretae a new Play list and move the entries to the new created playlist
 #        
-#         def checkOrUncheckPlaylists(self, listOfPlaylists'', toCreateNewPlaylist = False):
-#         try:
-#                 for playlist in listOfPlaylists:
+#         def checkOrUncheckPlaylists(self, playlistChechUnCheckList):
+#             for playlist in playlistChechUnCheckList:
 #                 tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlist))   
 #                 if self.click(tmp_playlist_name) == False:
+#                     writeToLog("INFO","FAILED to Check for playlist: '" + playlistName + "' something went wrong")
+#                     return False
+#                 
+#                 if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
+#                     writeToLog("INFO","FAILED to click on create playlist Button")
+#                     return False
+#                 
+#             return True      
 #                     writeToLog("INFO","FAILED to unCheck for playlists, something went wrong")
 #                     return False
 
