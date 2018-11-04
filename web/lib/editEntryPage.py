@@ -108,6 +108,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_EDIT_ATTACHMENT_MODAL_BODY                       = ('xpath', '//form[@id="changeAttachment"]')
     EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty"]')
     EDIT_ENTRY_DELETE_ATTACHMENT_MODAL                          = ('xpath', '//a[@class="close" and text()="Delete Confirmation"]')
+    EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtnForm']")
     #=============================================================================================================
     
     
@@ -1424,4 +1425,21 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to displayed 'No attachments' message")
             return False                         
         
-        return True    
+        return True
+    
+    
+    # @Author: Michal Zomper
+    def deleteEnteyFromEditEntryPage(self):
+        if self.click(self.EDIT_ENTRY_DELETE_ENTRY_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on delete button")
+            return False
+        
+        # Click on confirm delete
+        if self.click(self.clsCommon.myMedia.MY_MEDIA_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        writeToLog("INFO","Entry Was Deleted")
+        return True
+                

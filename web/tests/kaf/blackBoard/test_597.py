@@ -34,7 +34,7 @@ class Test:
     description = "Description"
     tags = "Tags,"
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
+    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomationTools.jpg'
     
     
     #run test as different instances on all the supported platforms
@@ -52,8 +52,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName1 = clsTestService.addGuidToString("Delete through my media 1", self.testNum)
-            self.entryName1 = clsTestService.addGuidToString("Delete through my media 2", self.testNum)
+            self.entryName1 = clsTestService.addGuidToString("Delete through my media one", self.testNum)
+            self.entryName2 = clsTestService.addGuidToString("Delete through my media two", self.testNum)
             
             self.entriesToUpload = {
             self.entryName1: self.filePath1, 
@@ -92,7 +92,7 @@ class Test:
                 return     
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Delete through my media l tab' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Delete through my media' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
