@@ -68,23 +68,32 @@ def initialize(test,driverFix,duration=60):
 #if we want to run the tests locally the default browser is firefox, we can give a different browser value. 
 #if we don't want to run the functions locally then host contains the host address and hostBrowser contains the requested browser.    
 def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
-    # This code for Firefox browser profile (remote and local)
-    fp = webdriver.FirefoxProfile()
-    fp.set_preference('browser.download.folderList', 2) # custom location
-    fp.set_preference('browser.download.manager.showWhenStarting', False)
-    fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
-    fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'video/mpeg,video/avi,video/MP2T,video/3gpp,' +
-                        'video/quicktime,video/x-msvideo,video/x-flv,video/mp4,application/x-mpegURL,video/x-ms-wmv,' +
-                        'video/x-ms-asf,image/bmp,image/x-png,image/gif,audio/wav,image/png,image/jpg,audio/x-ms-wma,application/vnd.ms-asf')
-    fp.update_preferences()
+    if(hostBrowser == PC_BROWSER_FIREFOX):
+        # This code for Firefox browser profile (remote and local)
+        fp = webdriver.FirefoxProfile()
+        fp.set_preference('browser.download.folderList', 2) # custom location
+        fp.set_preference('browser.download.manager.showWhenStarting', False)
+        fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
+        fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'video/mpeg,video/avi,video/MP2T,video/3gpp,' +
+                            'video/quicktime,video/x-msvideo,video/x-flv,video/mp4,application/x-mpegURL,video/x-ms-wmv,' +
+                            'video/x-ms-asf,image/bmp,image/x-png,image/gif,audio/wav,image/png,image/jpg,audio/x-ms-wma,application/vnd.ms-asf')
+        fp.update_preferences()
+        
+    elif(hostBrowser == PC_BROWSER_CHROME):
+        chromeOptions = webdriver.ChromeOptions()
+        prefs = {'download.default_directory' : localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS,
+                 'download.prompt_for_download': False,
+                 'download.directory_upgrade': True,
+                 'safebrowsing.enabled': False,
+                 'safebrowsing.disable_download_protection': True}    
+        chromeOptions.add_experimental_option('prefs', prefs)  
+    
     
     if(LOCAL_SETTINGS_RUN_MDOE == LOCAL_RUN_MODE):
         if(hostBrowser == PC_BROWSER_FIREFOX):
             return webdriver.Firefox(firefox_profile=fp)
         elif(hostBrowser == PC_BROWSER_CHROME):
-            chrome_options = webdriver.ChromeOptions()
-            chrome_options.add_argument("download.default_directory=" + localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
-            return webdriver.Chrome(localSettings.LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH)
+            return webdriver.Chrome(executable_path=localSettings.LOCAL_SETTINGS_WEBDRIVER_LOCAL_CHROME_PATH, chrome_options=chromeOptions)
         elif(hostBrowser == PC_BROWSER_IE):
             return webdriver.Ie(localSettings.LOCAL_SETTINGS_WEBDRIVER_LOCAL_IE_PATH,capabilities={'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True})
         elif (hostBrowser == ANDROID_CHROME):
@@ -101,7 +110,7 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
         elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_FIREFOX):
             return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
         elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_CHROME):
-            return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'setNoProxy': '' , 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
+            return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'setNoProxy': '' , 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL},options=chromeOptions)
 
 
 # The function checks if a time out happened and writes it to the log  
