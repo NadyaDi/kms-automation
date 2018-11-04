@@ -86,13 +86,13 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString("Channels - Sort Channels 2", self.testNum)
             self.entryName3 = clsTestService.addGuidToString("Channels - Sort Channels 3", self.testNum)
             
-            self.searchInMyChannels = ("49965420-1-My Channels - Sort Channels")
+            self.searchInMyChannels = ("My Channels - Sort Channels")
             
-            self.sortByMostRecent = ("49965420-1-My Channels - Sort Channels D", "49965420-1-My Channels - Sort Channels C", "49965420-1-My Channels - Sort Channels B", "49965420-1-My Channels - Sort Channels A")
-            self.sortByAlphabetical = ("49965420-1-My Channels - Sort Channels A", "49965420-1-My Channels - Sort Channels B", "49965420-1-My Channels - Sort Channels C", "49965420-1-My Channels - Sort Channels D")
-            self.sortByMembersAndSubscribers = ("49965420-1-My Channels - Sort Channels C", "49965420-1-My Channels - Sort Channels B", "49965420-1-My Channels - Sort Channels A", "49965420-1-My Channels - Sort Channels D")
-            self.sortByMediaCount = ("49965420-1-My Channels - Sort Channels B", "49965420-1-My Channels - Sort Channels D", "49965420-1-My Channels - Sort Channels A", "49965420-1-My Channels - Sort Channels C")
-            self.sortByAlphabeticalZToA = ("49965420-1-My Channels - Sort Channels D", "49965420-1-My Channels - Sort Channels C", "49965420-1-My Channels - Sort Channels B", "49965420-1-My Channels - Sort Channels A")
+            self.sortByMostRecent = ("My Channels - Sort Channels D", "My Channels - Sort Channels C", "My Channels - Sort Channels B", "My Channels - Sort Channels A")
+            self.sortByAlphabetical = ("My Channels - Sort Channels A", "My Channels - Sort Channels B", "My Channels - Sort Channels C", "My Channels - Sort Channels D")
+            self.sortByMembersAndSubscribers = ("49965420-1-My Channels - Sort Channels C", "My Channels - Sort Channels B", "My Channels - Sort Channels A", "My Channels - Sort Channels D")
+            self.sortByMediaCount = ("My Channels - Sort Channels B", "My Channels - Sort Channels D", "My Channels - Sort Channels A", "My Channels - Sort Channels C")
+            self.sortByAlphabeticalZToA = ("My Channels - Sort Channels D", "My Channels - Sort Channels C", "My Channels - Sort Channels B", "My Channels - Sort Channels A")
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
