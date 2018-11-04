@@ -7,7 +7,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import enums
-
+import collections.abc
 
 class Test:
     
@@ -61,7 +61,8 @@ class Test:
             self.entryForSearchIn5 = "Search in" # Will be quiz
             self.entryForSearchIn6 = "Search in - Polls" # Created manually
             self.entryForSearchIn7 = "Search in - Quiz" # name of searchIn5 after creating quiz
-            self.slidesQrCodeAndTimeList = [('0', '00:00'), ('1', '00:05'), ('2', '00:10'), ('3', '00:15'), ('4', '00:20'), ('5', ('00:25'))]
+            self.slidesQrCodeAndTimeList = [('0', '00:00'), ('1', '00:05'), ('2', '00:10'), ('3', '00:16'), ('4', '00:20'), ('5', ('00:25'))]
+            self.slidesQrCodeAndTimeList = collections.OrderedDict(self.slidesQrCodeAndTimeList)
             self.chaptersList = [('searchIn Chapters 1','00:01'), ('searchIn Chapters 2','00:03'), ('searchIn Chapters 3','00:06'),
                                  ('searchIn Chapters 4','00:09'), ('searchIn Chapters 5','00:12'), ('searchIn Chapters 6','00:15')]
             
@@ -96,17 +97,17 @@ class Test:
 #                 
 #                 step = step + 1
       
-            writeToLog("INFO","Step 13: Going to navigate to edit entry page for the next entry: " + self.entryForSearchIn1)    
-            if self.common.editEntryPage.navigateToEditEntry(self.entryForSearchIn1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to navigate to edit entry page of the next entry: " + self.entryForSearchIn1)
-                return         
-           
-            writeToLog("INFO","Step 6: Going to add captions for " + self.entryForSearchIn1)    
-            if self.common.editEntryPage.addCaptions(self.captionsFile, "Afar", "captions") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to add captions to: " +  self.entryForSearchIn1)
-                return 
+#             writeToLog("INFO","Step 13: Going to navigate to edit entry page for the next entry: " + self.entryForSearchIn1)    
+#             if self.common.editEntryPage.navigateToEditEntry(self.entryForSearchIn1) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 13: FAILED to navigate to edit entry page of the next entry: " + self.entryForSearchIn1)
+#                 return         
+#            
+#             writeToLog("INFO","Step 6: Going to add captions for " + self.entryForSearchIn1)    
+#             if self.common.editEntryPage.addCaptions(self.captionsFile, "Afar", "captions") == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 6: FAILED to add captions to: " +  self.entryForSearchIn1)
+#                 return 
             
             writeToLog("INFO","Step 7: Going to navigate to edit entry page for the next entry: " + self.entryForSearchIn2)    
             if self.common.editEntryPage.navigateToEditEntry(self.entryForSearchIn2) == False:
@@ -114,11 +115,11 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to navigate to edit entry page of the next entry: " + self.entryForSearchIn2)
                 return  
             
-            writeToLog("INFO","Step 8: Going to add captions to " + self.entryForSearchIn2)    
-            if self.common.editEntryPage.addCaptions(self.captionsFile, "Afar", "captions") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to add captions to: " +  self.entryForSearchIn2)
-                return  
+#             writeToLog("INFO","Step 8: Going to add captions to " + self.entryForSearchIn2)    
+#             if self.common.editEntryPage.addCaptions(self.captionsFile, "Afar", "captions") == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 8: FAILED to add captions to: " +  self.entryForSearchIn2)
+#                 return  
             
             writeToLog("INFO","Step 9: Going to add slides to " + self.entryForSearchIn2)    
             if self.common.editEntryPage.uploadSlidesDeck(self.slidesFile, self.slidesQrCodeAndTimeList) == False:
