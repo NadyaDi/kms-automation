@@ -221,7 +221,8 @@ class Test:
             
             if self.common.isElasticSearchOnPage() == True:
                 writeToLog("INFO","Step 26: Going verify sort channels by 'Media Count'")
-                if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI,  self.sortByMediaCount) == False:
+#                 if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI,  self.sortByMediaCount) == False:
+                if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT,  self.sortByMediaCount) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 26: FAILED sort channels by 'Media Count'")
                     return 
@@ -242,7 +243,8 @@ class Test:
                                 
             else:
                 writeToLog("INFO","Step 26: Going verify sort channels by 'Media Count'")
-                if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT_OLDUI,  self.sortByMediaCount) == False:
+#                 if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT_OLDUI,  self.sortByMediaCount) == False:
+                if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT,  self.sortByMediaCount) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 26: FAILED sort channels by 'Media Count'")
                     return 

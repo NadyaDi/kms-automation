@@ -85,7 +85,8 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 7: Going to sort galleries by media count")
-            if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI, self.sortByMediaCount) == False:
+#             if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI, self.sortByMediaCount) == False:
+            if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.MEDIA_COUNT, self.sortByMediaCount) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to sort galleries by media count")
                 return                                    
