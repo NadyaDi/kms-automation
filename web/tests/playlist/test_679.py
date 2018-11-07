@@ -69,7 +69,7 @@ class Test:
                 self.entryName3: self.filePathAudio,
                 self.entryName4: self.filePathImage}
             
-            self.playlistChechUnCheckList = [self.playlistName2, self.playlistName3]
+            self.playlistChechUnCheckList = [self.playlistName1, self.playlistName2]
                                                   
             
             writeToLog("INFO","Step 1: Going to upload 4 entries")
@@ -92,7 +92,7 @@ class Test:
                 return
             
 #             writeToLog("INFO","Step 4: Going to check and uncheck playlists")
-#             if self.common.base.check_element() == False:
+#             if self.common.base.check_element() == False: (Should I add self.playlistChechUnCheckList?)
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 4: FAILED to check and uncheck playlists")
 #                 return            
