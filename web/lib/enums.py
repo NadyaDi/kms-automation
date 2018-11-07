@@ -1,4 +1,5 @@
 from enum import Enum
+#from selectors import PollSelector
 
 
 class Application(Enum):
@@ -332,3 +333,26 @@ class SameWindowPrePost(Enum):
     
     YES                         = 'Yes'
     NO                          = 'No'   
+    
+    
+class CustomdataType(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    TEXT_SINGLE                 = 'Text Single'
+    DATE                        = 'Date'
+    TEXT_UNLIMITED              = 'Text Unlimited'
+    LIST                        = 'List'    
+    
+    
+class SearchInDropDown(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    ALL_FIELDS                 = 'All Fields'
+    DETAILS                    = 'Details'
+    CHAPTERS_AND_SLIDES        = 'Chapters/Slides'
+    CAPTIONS                   = 'Captions'    
+    POLLS                      = 'Polls'             
+    QUIZ                       = 'Quiz'
+    COMMENTS                   = 'Comments'

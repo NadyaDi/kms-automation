@@ -173,3 +173,14 @@ test_4325,1,0,0,0,eSearch - Sort by - Gallery - media tab
 test_4326,1,0,0,0,eSearch - Sort by - Add new quiz
 test_4327,1,0,0,0,eSearch - Sort by - Channel - pending tab
 test_4328,1,0,0,0,eSearch - Sort by - Gallery - pending tab
+test_4343,1,0,0,0,eSearch - Search In - My media
+test_4345,1,0,0,0,eSearch - Search In - Global page
+test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
+test_4347,1,0,0,0,eSearch - Search In - Add to channel - SR tab
+test_4348,1,0,0,0,eSearch - Search In - Add to Gallery - My media tab
+test_4349,1,0,0,0,eSearch - Search In - Add to Gallery - SR tab
+test_4350,1,0,0,0,eSearch - Search In - channel - media tab
+test_4351,1,0,0,0,eSearch - Search In - Gallery - media tab
+test_4352,1,0,0,0,eSearch - Search In - channel - pending tab
+test_4353,1,0,0,0,eSearch - Search In - gallery - pending tab
+test_4357,1,0,0,0,eSearch - Search In - Add new quiz

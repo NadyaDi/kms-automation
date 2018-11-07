@@ -49,6 +49,8 @@ class Admin(Base):
     ADMIN_PRE_POST_ITEM_VALUE                       = ('xpath', "//input[@data-name='value' and contains(@id, 'PRE_OR_POST')]")
     ADMIN_PRE_POST_ITEM_SAME_WINDOW_OPTION          = ('xpath', "//select[contains(@id, 'PRE_OR_POST') and @data-name='sameWindow']")
     ADMIN_DELETE_PRE_POST_LINK_NAME                 = ('xpath', "//input[@value='LINK_NAME' and contains(@id, 'PRE_OR_POST')]")
+    ADMIN_CUSTOM_DATA_PROFILE_ID_DROPDOWN           = ('xpath', '//dd[@id="profileId-element"]')
+    ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION             = ('xpath', '//option[@value="PROFILE_ID"]')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -894,3 +896,24 @@ class Admin(Base):
         return True   
     
     
+    # @Author: Inbar Willman
+    # Choose customdata profile id
+    def selectCustomdataProfileId(self, profileId):
+        #Click on profile id dropdown
+        if self.click(self.ADMIN_CUSTOM_DATA_PROFILE_ID_DROPDOWN) == False:
+            writeToLog("INFO","FAILED to click on customdata profile id dropdown")
+            return False
+        
+        # Click on custom profile id dropdown option
+        tmp_selection = (self.ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION[0], self.ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION[1].replace('PROFILE_ID', profileId))
+        if self.click(tmp_selection) == False:
+            writeToLog("INFO","FAILED to click on customdata profile id dropdown option")
+            return False  
+        
+        # Save customdata profile id
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False  
+        
+        writeToLog("INFO","Success, customdata profile id:" + profileId + " was set successfully")
+        return True        
