@@ -633,17 +633,17 @@ class Upload(Base):
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")
             return False
-             
+              
         # Click youtube
         if self.clickWebcastEvent() == False:
             writeToLog("DEBUG","FAILED to click on 'Webcast Event' button")
             return False
-     
+      
         if self.wait_visible(self.WEBCAST_PAGE_TITLE, 30) == False:
             writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
             return False
-     
-    return True
+      
+        return True
  
     #@Auther: Ori Flchtman
     # Add new Webcast Event for Filter tests
