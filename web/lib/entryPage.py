@@ -54,6 +54,9 @@ class EntryPage(Base):
     ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab" and @class="btn responsiveSizePhone tab-attachments-tab"]')
     ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON                   = ('xpath', '//i[@class="icon-download icon-large"]')
     ENTRY_PAGE_RELATED_MEDIA_TABLE                         = ('xpath', '//table[@class="table table-hover table-bordered thumbnails table-condensed"]/tbody/tr')
+    ENTRY_PAGE_CAPTION_SEARCH_BAR                          = ('xpath', "//input[@id='captionSearch']")
+    ENTRY_PAGE_CAPTION_TIME_RESULT                         = ('xpath', "//a[@class='results__result-item--time cursor-pointer' and contains(text(), 'CAPTION_TIME')]") 
+    ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI                  = ('xpath', "//a[@class='captions_search_result' and contains(text(), 'CAPTION_TIME')]") 
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -664,3 +667,22 @@ class EntryPage(Base):
         self.clsCommon.base.switch_to_default_content()
         writeToLog("INFO","Success, entry type '" + entryType.value + "' was verify successfully")
         return True
+    
+    
+    def searchAndVerifyCpation(self, entryName, captionTime, captionText):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
+        
+        else:
+            
+            if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to insert caption search")
+                return False
+            
+            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[1].replace('CAPTION_TIME', captionTime))
+            if self.wait_visible(tmpCaptionTime, timeout=15, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to find caption time in caption search result")
+                return False
+                
+            
+            writeToLog("INFO","FAILED to insert caption search")
