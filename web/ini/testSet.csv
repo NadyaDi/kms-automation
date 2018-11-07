@@ -161,6 +161,7 @@ test_4,1,0,0,0,Setup test for eSearch
 test_5,1,0,0,0,Setup test for eSearch
 test_6,1,0,0,0,Setup test for eSearch
 test_7,1,0,0,0,Setup test for eSearch
+test_9,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media
 test_4313,1,0,0,0,eSearch - Sort by - Global search
