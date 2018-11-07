@@ -109,6 +109,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty"]')
     EDIT_ENTRY_DELETE_ATTACHMENT_MODAL                          = ('xpath', '//a[@class="close" and text()="Delete Confirmation"]')
     EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtnForm']")
+    EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD                           = ('xpath', '//input[@id="customdata-FIELD_NAME"]')  
+    EDIT_ENTRY_CUSTOM_LIST_FIELD                                = ('xpath', '//select[@id="customdata-FIELD_NAME"]')   
+    EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')                          
     #=============================================================================================================
     
     
@@ -1443,3 +1446,52 @@ class EditEntryPage(Base):
         writeToLog("INFO","Entry Was Deleted")
         return True
                 
+                
+    # @Author: Inbar Willman
+    # Set custom data fields
+    # Field input can be single value or list in case filling unlimited text field
+    def setCustomDataField(self, fieldName, fieldInput, fieldBtn ="", fieldType = enums.CustomdataType.TEXT_SINGLE):
+        # Set element
+        tmp_field = (self.EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD[0], self.EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD[1].replace('FIELD_NAME', fieldName))
+        
+        # If field is single text field
+        if fieldType == enums.CustomdataType.TEXT_SINGLE:
+            if self.send_keys(tmp_field, fieldInput) == False:
+                writeToLog("INFO","FAILED to fill single text customdata field")
+                return False                
+        
+        # If field is unlimited text field
+        elif fieldType == enums.CustomdataType.TEXT_UNLIMITED:
+            for idx, text in enumerate(fieldInput):
+                # Get field elements list - After clicking add button there are more than one elements (the new field)
+                tmp_list = self.get_elements(tmp_field)
+                
+                # Send input
+                tmp_list[idx].send_keys(text)
+
+                # Click on add button
+                tmp_add_btn = (self.EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD[0], self.EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD[1].replace('FIELD_NAME', fieldBtn))
+                if self.click(tmp_add_btn) == False:
+                    writeToLog("INFO","FAILED to add new field box to text unlimited field")
+                    return False                     
+      
+        elif fieldType == enums.CustomdataType.LIST:
+            tmp_field = (self.EDIT_ENTRY_CUSTOM_LIST_FIELD[0], self.EDIT_ENTRY_CUSTOM_LIST_FIELD[1].replace('FIELD_NAME', fieldName))
+            self.select_from_combo_by_value(tmp_field, fieldInput)
+        
+        #TO DO    
+        elif fieldType == enums.CustomdataType.DATE:
+            return True
+        
+        # Save changes
+        if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button ")
+            return False
+        
+        if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+            writeToLog("INFO","FAILED to find save massage")
+            return False
+        sleep(3)
+        
+        writeToLog("INFO","Success customdata were change successfully")
+        return True     

@@ -442,3 +442,44 @@ class  GlobalSearch(Base):
              
         writeToLog("INFO","FAILED to show all media")
         return False    
+    
+    # @Author: Inbar Willman
+    # The function check the the entries in my media are filter correctly
+    def verifyFiltersInGlobalPage(self, entriesDict):
+        if self.showAllEntriesInGloablPage() == False:
+            writeToLog("INFO","FAILED to show all entries in global page")
+            return False
+             
+        try:
+            # Get list of all entries element in results
+            entriesInGlobalPage = self.get_elements(self.GLOBAL_SEARCH_ENTRY_RESUTLT_NAME)
+            listOfEntriesInResults = []
+            
+            # Get text of each entry element and add to a new list
+            for entry in entriesInGlobalPage:
+                entry.text.lower()
+                listOfEntriesInResults.append(entry.text.lower())
+                
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list")
+            return False
+         
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInMyMedia == False:
+                if (entry.lower() in listOfEntriesInResults) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in global page results although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInMyMedia == True:
+                if (entry.lower() in listOfEntriesInResults) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in global page results although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in global page")
+        return True
+    
+   

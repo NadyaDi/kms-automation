@@ -2380,3 +2380,72 @@ class Channel(Base):
         else:
             writeToLog("INFO","FAILED to show all media")
             return False  
+        
+    
+    # @Author: Inbar Willman
+    # Verify filter in channel - media tab    
+    def verifyFiltersInAddToChannel(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+        if self.clsCommon.myMedia.showAllEntries(searchIn) == False:
+            writeToLog("INFO","FAILED to show all entries in Add to channel")
+            return False
+        
+        try:
+            if searchIn == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:
+                entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
+                
+            elif searchIn == enums.Location.ADD_TO_CHANNEL_SR:
+                entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_SR_TABLE).text.lower() 
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in channel")
+            return False
+             
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInAddToChannel == False:
+                if (entry.lower() in entriesInAddToChannel) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in add to channel although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInAddToChannel == True:
+                if (entry.lower() in entriesInAddToChannel) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in add to channel although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in add to channel")
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Verify filter in channel - pending tab    
+    def verifyFiltersInPendingTab(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+        if self.showAllEntriesPendingTab() == False:
+            writeToLog("INFO","FAILED to show all entries in pending tab page")
+            return False
+        sleep(10)
+        
+        try:
+            entriesIncategory = self.wait_visible(self.CHANNEL_PENDING_TAB_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in channel")
+            return False
+             
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInAddToChannel == False:
+                if (entry.lower() in entriesIncategory) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in channel - pending tab although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInAddToChannel == True:
+                if (entry.lower() in entriesIncategory) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in channel - pending tab although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in channel - pending tab")
+        return True    

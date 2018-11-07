@@ -85,6 +85,10 @@ class MyMedia(Base):
     EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY                         = ('xpath', "//td[@class='today day']")
     CLICK_ON_CALENDAR                                           = ('xpath', "//i[@class='icon-th']")
     CLICK_ON_CALENDAR_DATE_ESTABLISHED                          = ('xpath', "//div[@class='input-append date datepicker']") 
+    SEARCH_IN_DROPDOWN_DISABLED                                 = ('xpath', '//a[@id="fields-menu-toggle" and @class="  disabled dropdown-toggle DropdownFilter__toggle "]')
+    SEARCH_IN_DROPDOWN_ENABLED                                  = ('xpath', '//a[@id="fields-menu-toggle" and @class="  dropdown-toggle DropdownFilter__toggle "]')
+    SEARCH_IN_DROP_DOWN_OPTION                                  = ('xpath', '//a[@role="menuitem" and text()="FIELD_NAME"]')
+    ENTRY_FIELD_IN_RESULTS                                      = ('xpath', '//span[@class="hidden-phone" and contains(text(),"FIELD_NAME")]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1549,4 +1553,95 @@ class MyMedia(Base):
         
         writeToLog("INFO","Success, 'No Result' text display after search")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # Verify if 'Search in' drop down in enabled or disabled  
+    def verifySearchInDropDownState(self, isEnabled=True): 
+        # If search in dropdown should be visible   
+        if isEnabled == True:
+            if self.is_visible(self.SEARCH_IN_DROPDOWN_ENABLED, True) == False:
+                writeToLog("INFO","FAILED to enabled 'search in' dropdown")
+                return False 
+             
+        # If search in dropdown should be disabled   
+        elif isEnabled == False:
+            if self.is_visible(self.SEARCH_IN_DROPDOWN_DISABLED, True) == False:
+                writeToLog("INFO","FAILED to disabled 'search in' dropdown")
+                return False      
+              
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Select search in value
+    def selectSearchInDropDownOption(self, option=enums.SearchInDropDown.ALL_FIELDS, location=enums.Location.MY_MEDIA):
+        # Click on 'Search in' drop down
+        if self.click(self.SEARCH_IN_DROPDOWN_ENABLED) == False:      
+            writeToLog("INFO","FAILED to click on 'search in' dropdown")
+            return False 
+        
+        sleep(2)                      
+        
+        #Get option locator
+        tmp_option = (self.SEARCH_IN_DROP_DOWN_OPTION[0], self.SEARCH_IN_DROP_DOWN_OPTION[1].replace('FIELD_NAME', option.value))
+        
+        # Check if we are in add to channel page - media tab
+        if location == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:
+            # If option is comments choose the third element in page
+            if option == enums.SearchInDropDown.COMMENTS:
+                tmp_option = self.get_elements(tmp_option)[2]
+            else:
+                tmp_option = self.get_elements(tmp_option)[1]
+                
+            if tmp_option.click() == False:
+                writeToLog("INFO","FAILED to select " + option.value + " option")
+                return False  
+         
+        # Check if we are in add to channel page - pending tab       
+        elif location == enums.Location.ADD_TO_CHANNEL_SR:
+            # If option is comments choose the third element in page
+            if option == enums.SearchInDropDown.COMMENTS:
+                tmp_option = self.get_elements(tmp_option)[4]
+            else:
+                tmp_option = self.get_elements(tmp_option)[2]
+                 
+            if tmp_option.click() == False:
+                writeToLog("INFO","FAILED to select " + option.value + " option")
+                return False    
+             
+        else:
+            if self.click(tmp_option) == False:
+                writeToLog("INFO","FAILED to select " + option.value + " option")
+                return False 
+
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    #To Do
+    # Check entries fields in results
+    # IsDisplayed = True - the field should be displayed in results
+    # IsDisplayed = False - the field shouldn't be displayed in results
+    def checkEntriesFieldsInResults(self, fieldDict):
+        for field in fieldDict:
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', field))
+            field_list = self.get_elements(tmp_field)
             
+            #if field[1] == True:
+            # Check length of list of field displayed
+            if fieldDict[field] == True:
+                if len(field_list) == 0:
+                    writeToLog("INFO","FAILED to displayed " + str(field) + " in results, although field should be displayed")
+                    return False 
+            
+            #if field[1] == False:
+            # Check length of list of field displayed
+            if fieldDict[field] == False:
+                if len(field_list) > 0:
+                    writeToLog("INFO","FAILED, " + str(field) + " is displayed in results, although it shouldn't be displayed")
+                    return False 
+        
+        writeToLog("Success, Fields display in results is correct")   
+        return True            

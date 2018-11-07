@@ -93,9 +93,9 @@ class Kea(Base):
     
     # @Author: Inbar Willman   
     def addQuizQuestion(self, questionText, answerText, additionalAnswerList): 
-        if self.startQuiz() == False:
-            writeToLog("INFO","FAILED to click start quiz")
-            return False 
+#         if self.startQuiz() == False:
+#             writeToLog("INFO","FAILED to click start quiz")
+#             return False 
                     
         self.switchToKeaIframe()    
           
@@ -143,9 +143,9 @@ class Kea(Base):
     
     # @Author: Inbar Willman  
     def keaQuizClickButton(self, buttonName): 
-        tmpButton = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', str(buttonName)))
+        tmpButton = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', buttonName.value))
         if self.click(tmpButton) == False:
-            writeToLog("INFO","FAILED to click on " + buttonName + " button")
+            writeToLog("INFO","FAILED to click on " + buttonName.value + " button")
             return False
         
         return True
@@ -258,3 +258,36 @@ class Kea(Base):
         
         writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
         return True
+
+
+    # @Author: Inbar Willman
+    # The function check and verify that the entries sort in my media are in the correct order 
+    def verifyFiltersInEditor(self, entriesDict):    
+        if self.clsCommon.myMedia.showAllEntries(searchIn=enums.Location.EDITOR_PAGE) == False:
+            writeToLog("INFO","FAILED to show all entries in editor page")
+            return False
+        sleep(10)
+        
+        try:
+            entriesInEditor = self.wait_visible(self.EDITOR_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in galley")
+            return False
+        
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInAddToChannel == False:
+                if (entry.lower() in entriesInEditor) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in editor page although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInAddToChannel == True:
+                if (entry.lower() in entriesInEditor) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in editor page although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in channel - pending tab")
+        return True            

@@ -81,30 +81,30 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
                 return      
                           
-#             for i in range(1,4):
-#                 writeToLog("INFO","Step " + str(i+1) + ": Going to upload new entry '" + eval('self.entryName'+str(i)))            
-#                 if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.entryDescription, self.entryTags) == None:
-#                     self.status = "Fail"
-#                     writeToLog("INFO","Step " + str(i+1) + ": FAILED to upload new entry: " + eval('self.entryName'+str(i)))
-#                     return
-#                        
-#             writeToLog("INFO","Step 5: Going to publish entry: " + self.entryName1)            
-#             if self.common.myMedia.publishSingleEntry(self.entryName1, (self.galleryName1, self.galleryName2, self.galleryName4), "") == False: 
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 5: FAILED to publish entry: " + self.entryName1)
-#                 return
-#                      
-#             writeToLog("INFO","Step 6: Going to publish entry: " + self.entryName2)            
-#             if self.common.myMedia.publishSingleEntry(self.entryName2, (self.galleryName2, self.galleryName4), "") == False: 
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 6: FAILED to publish entry: " + self.entryName2)
-#                 return
-#                      
-#             writeToLog("INFO","Step 7: Going to publish entry: " + self.entryName3)            
-#             if self.common.myMedia.publishSingleEntry(self.entryName3, [(self.galleryName2)], "") == False: 
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 7: FAILED to publish entry: " + self.entryName2)
-#                 return
+            for i in range(1,4):
+                writeToLog("INFO","Step " + str(i+1) + ": Going to upload new entry '" + eval('self.entryName'+str(i)))            
+                if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.entryDescription, self.entryTags) == None:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step " + str(i+1) + ": FAILED to upload new entry: " + eval('self.entryName'+str(i)))
+                    return
+                        
+            writeToLog("INFO","Step 5: Going to publish entry: " + self.entryName1)            
+            if self.common.myMedia.publishSingleEntry(self.entryName1, (self.galleryName1, self.galleryName2, self.galleryName4), "") == False: 
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to publish entry: " + self.entryName1)
+                return
+                      
+            writeToLog("INFO","Step 6: Going to publish entry: " + self.entryName2)            
+            if self.common.myMedia.publishSingleEntry(self.entryName2, (self.galleryName2, self.galleryName4), "") == False: 
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to publish entry: " + self.entryName2)
+                return
+                      
+            writeToLog("INFO","Step 7: Going to publish entry: " + self.entryName3)            
+            if self.common.myMedia.publishSingleEntry(self.entryName3, [(self.galleryName2)], "") == False: 
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to publish entry: " + self.entryName2)
+                return
                         
             writeToLog("INFO","Step 8: Going to add user " + self.userName2+  " as members in gallery " + self.galleryName2)
             if self.common.category.addMemberToCategory(self.galleryName2, self.userName2) == False:
