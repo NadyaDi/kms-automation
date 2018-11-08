@@ -262,10 +262,8 @@ class ChannelsSortBy(Enum):
 
     MOST_RECENT               = 'Most Recent'  
     ALPHABETICAL_NEWUI        = "Alphabetically A-Z"
-    ALPHABETICAL_OLDUI        = "Alphabetically"
+    ALPHABETICAL_OLDUI        = "Alphabetical"
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
-   # MEDIA_COUNT_NEWUI         = "Media Count"
-    #MEDIA_COUNT_OLDUI         = "Media Count"
     MEDIA_COUNT               = "Media Count"
     ALPHABETICAL_Z_A_NEWUI    = "Alphabetically Z-A"
     RELEVANCE                 = 'Relevance'
