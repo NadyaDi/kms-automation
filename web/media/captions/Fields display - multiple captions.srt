@@ -1,0 +1,34 @@
+1
+00:00:00,000 --> 00:00:05,500
+- Fields display - multiple captions 1
+-00:00:00,000  00:00:05,500
+
+2
+00:00:05,500 --> 00:00:06,500
+- Fields display - multiple captions 2
+-00:00:05,500  00:00:06,500
+
+3
+00:00:07,000 --> 00:00:15,000
+- Fields display - multiple captions 3
+-00:00:07,000  00:00:15,000
+
+4
+00:01:00,000 --> 00:01:15,000
+- Fields display - multiple captions 4
+-00:01:00,000  00:01:15,000
+
+5
+00:01:16,000 --> 00:01:30,000
+- Fields display - multiple captions 5
+-00:01:16,000  00:01:30,000
+
+6
+00:02:00,000 --> 00:02:31,000
+- Fields display - multiple captions 6
+-00:02:00,000  00:02:31,000
+
+7
+00:02:32,000 --> 00:03:00,000
+- Fields display - multiple captions 7
+-00:02:00,000  00:02:31,000

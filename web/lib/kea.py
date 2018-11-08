@@ -32,6 +32,7 @@ class Kea(Base):
     EDITOR_TABLE                                  = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
     EDITOR_TABLE_SIZE                             = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
+    EDITOR_TIMELINE                               = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -60,6 +61,8 @@ class Kea(Base):
         self.clsCommon.myMedia.getSearchBarElement().click()
         self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
         self.clsCommon.general.waitForLoaderToDisappear()
+        
+        sleep(6)
         
         # Click on select button in order to open KEA
         if self.click(self.KEA_SELECT_VIDEO_FOR_EDIT) == False:
@@ -96,28 +99,30 @@ class Kea(Base):
 #         if self.startQuiz() == False:
 #             writeToLog("INFO","FAILED to click start quiz")
 #             return False 
-                    
+        
+        sleep(60)
+                     
         self.switchToKeaIframe()    
-          
+           
         # Click add new question button
         if self.click(self.KEA_ADD_NEW_QUESTION_BUTTON) == False:
             writeToLog("INFO","FAILED to click add question button")
             return False 
-
+ 
         # Add question fields
         if self.fillQuizFields(questionText, answerText, additionalAnswerList) == False:
             writeToLog("INFO","FAILED to fill question fields")
             return False 
-        
+         
         # Save Question
         if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
             writeToLog("INFO","FAILED to Save question")
             return False  
-        
+         
         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
             writeToLog("INFO","FAILED to wait until spinner isn't visible")
             return False  
-        
+         
         return True
     
     
@@ -157,11 +162,11 @@ class Kea(Base):
         if self.click(self.KEA_QUIZ_QUESTION_FIELD) == False:
             writeToLog("INFO","FAILED to click on question text field")
             return False
-        
+         
         if self.send_keys(self.KEA_QUIZ_QUESTION_FIELD, questionText) == False:
             writeToLog("INFO","FAILED to fill question field")
             return False
-        
+         
         # Fill First answer
         tmpFirstAnswer = (self.KEA_QUIZ_ANSWER[0], self.KEA_QUIZ_ANSWER[1].replace('ANSWER_NUMBER', 'answer-text0'))
         if self.click(tmpFirstAnswer) == False:
@@ -170,7 +175,7 @@ class Kea(Base):
         if self.send_keys(tmpFirstAnswer, answerText) == False:
             writeToLog("INFO","FAILED to fill first answer text field")
             return False
-        
+         
         # Fill second answer if there are just two answers
         if len(additionalAnswerList) == 1:
             tmpSecondAnswer = (self.KEA_QUIZ_ANSWER[0], self.KEA_QUIZ_ANSWER[1].replace('ANSWER_NUMBER', 'answer-text1'))
@@ -180,7 +185,7 @@ class Kea(Base):
             if self.send_keys(tmpSecondAnswer, additionalAnswerList[0]) == False:
                 writeToLog("INFO","FAILED to fill second answer text field")
                 return False                
-        
+         
         else:
             i = 1
             for answer in additionalAnswerList:
@@ -197,8 +202,9 @@ class Kea(Base):
                         writeToLog("INFO","FAILED click add answer button")
                         return False                           
                 i = i + 1
-                              
+                               
         return True
+    
     
     # @Author: Inbar Willman
     # After creating quiz, click done.
@@ -290,4 +296,4 @@ class Kea(Base):
                     return False
                  
         writeToLog("INFO","Success, Only the correct media display in channel - pending tab")
-        return True            
+        return True    

@@ -89,6 +89,13 @@ class MyMedia(Base):
     SEARCH_IN_DROPDOWN_ENABLED                                  = ('xpath', '//a[@id="fields-menu-toggle" and @class="  dropdown-toggle DropdownFilter__toggle "]')
     SEARCH_IN_DROP_DOWN_OPTION                                  = ('xpath', '//a[@role="menuitem" and text()="FIELD_NAME"]')
     ENTRY_FIELD_IN_RESULTS                                      = ('xpath', '//span[@class="hidden-phone" and contains(text(),"FIELD_NAME")]')
+    ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[@class="v2ui-cc-icon icon icon--vertical-align-sub search-results-icon" and @title="FIELD_NAME"]')
+    ENTRY_TAG_VALUES_IN_RESULTS                                 = ('xpath', '//span[@class="search-results__tag"]')
+    ENTRY_FIELD_VALUES_IN_RESULTS                               = ('xpath', '//span[@class="results__result-item--text"]')
+    ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN                        = ('xpath', '//span[@aria-label="Show More"]')
+    ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN                        = ('xpath', '//a[@aria-label="Show Less"]') 
+    ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN                         = ('xpath', '//a[@aria-label="Show All"]')
+    ENTRY_FIELD_VALUES_SCETION                                  = ('xpath', '//div[@class="results-details-container"]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1620,28 +1627,176 @@ class MyMedia(Base):
     
     
     # @Author: Inbar Willman
-    #To Do
     # Check entries fields in results
-    # IsDisplayed = True - the field should be displayed in results
-    # IsDisplayed = False - the field shouldn't be displayed in results
+    # fieldDict = True - the field should be displayed in results
+    # fieldDict = False - the field shouldn't be displayed in results
     def checkEntriesFieldsInResults(self, fieldDict):
         for field in fieldDict:
             tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', field))
-            field_list = self.get_elements(tmp_field)
             
             #if field[1] == True:
-            # Check length of list of field displayed
+            # Check if field is visible - should be visible
             if fieldDict[field] == True:
-                if len(field_list) == 0:
+                if self.is_visible(tmp_field) == False:
                     writeToLog("INFO","FAILED to displayed " + str(field) + " in results, although field should be displayed")
-                    return False 
-            
+                    return False    
+             
             #if field[1] == False:
-            # Check length of list of field displayed
-            if fieldDict[field] == False:
-                if len(field_list) > 0:
-                    writeToLog("INFO","FAILED, " + str(field) + " is displayed in results, although it shouldn't be displayed")
-                    return False 
+            # Check if field is visible - shouldn't be visible              
+            else:                  
+                if self.is_present(tmp_field, timeout=3) == True:
+                    writeToLog("INFO","FAILED to displayed " + str(field) + " in results, although it shouldn't be displayed")
+                    return False         
+                
+        writeToLog("INFO", "Success, Fields display in results is correct")   
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    # Verify that field display is correct:
+    # isSingle=True - there is just single display of the field
+    # isSingle=False - There is more than single display of the field
+    def verifyFieldDisplayInResultAfterClickingOnField(self, isSingle, field, numOfDisplay=1):  
+        # Click on field in order to see field values 
+        if self.clickOnFieldInResults(isSingle, field, numOfDisplay) == False:
+            writeToLog("INFO","FAILED to click on field in 'keyword found in:'")
+            return False             
         
-        writeToLog("Success, Fields display in results is correct")   
-        return True            
+        # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
+        if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=False) == False:
+            writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
+            return False  
+        
+        # Click again on field in order to close field values section 
+        if self.clickOnFieldInResults(isSingle, field, numOfDisplay) == False:
+            writeToLog("INFO","FAILED to click on field in 'keyword found in:'")
+            return False 
+        
+        #Verify that values section isn't display anymore
+        if self.is_visible(self.ENTRY_FIELD_VALUES_SCETION) == True:
+            writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
+            return False             
+        
+        return True
+        
+    
+    # @Author: Inbar Willman
+    # Verify that field display is correct:
+    # Single - there is just single display of the field
+    # Multiple - There is more than 5 display of the field
+    def verifyFieldDisplayInResultAfterClickingOnShowMore(self, isSingle, field, numOfDisplay=1):  
+        # Click on show more button
+        if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Show more' button")
+            return False             
+        
+        # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
+        if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=False) == False:
+            writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
+            return False  
+
+        # Click on show less in order to close section
+        if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Show less' button")
+            return False  
+        
+        #Verify that values section isn't display anymore
+        if self.is_visible(self.ENTRY_FIELD_VALUES_SCETION) == True:
+            writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
+            return False         
+        
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    # Verify that field display is correct:
+    # Single - there is just single display of the field - There is no option to click 'show all'
+    # Multiple - More than one matching value per field
+    def verifyFieldDisplayInResultAfterClickingOnShowAll(self, isSingle, field, numOfDisplay=1):  
+        # Click on show more button
+        if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Show more' button")
+            return False
+        
+        # If there are less than 5 values
+        if isSingle == True or numOfDisplay < 5:
+            if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
+                writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
+                return False 
+             
+        else:
+            sleep(2)
+            if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Show All' button")
+                return False                                         
+        
+            # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
+            if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=True) == False:
+                writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
+                return False  
+        
+        return True               
+
+        
+    # @Author: Inbar Willman
+    # Click on field in 'keyword found in:'
+    def clickOnFieldInResults(self, isSingle, field, numOfDisplay):    
+        if isSingle == True:
+            # Get field element in 'keyword found in:' - single value per field
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', "1 " + field))
+        else:
+            # Get field element in 'keyword found in:' - multiple values per field
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', str(numOfDisplay) + " "  + field))  
+            
+        # Click on field element in 'keyword found in:'
+        if self.click(tmp_field) == False:
+            writeToLog("INFO","FAILED to click on " + field + " field")
+            return False            
+        
+        writeToLog("INFO", "Success, field was clicked in 'keyword found in:'")
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    # Verify the correct icon is displayed after clicking on field
+    # Verify that correct number of fields value is displayed
+    def verifyFieldIconAndNumberOfDisplayInResults(self, isSingle, field, numOfDisplay, showAll):
+        if isSingle == False and field !='Quiz':
+            field = field[:-1]
+
+        tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', field))
+        tmp_field_icon_num_of_display = self.get_elements(tmp_field_icon) 
+        
+        # Check that field icon is visible
+        if self.is_visible(tmp_field_icon) == False:
+            writeToLog("INFO","FAILED to display correct icon field")
+            return False 
+        
+        if isSingle == True:
+            # Check that icon is displayed just once
+            if len(tmp_field_icon_num_of_display) !=1:
+                writeToLog("INFO","FAILED to display correct number of icon display")
+                return False
+            
+        else:
+            # Tags icon is display just once in multiple tags value per field
+            if field == 'Tag':                  
+                if len(tmp_field_icon_num_of_display) !=1:
+                    writeToLog("INFO","FAILED to display correct number of icon display")
+                    return False
+            
+            else:
+                # If num of display is bigger than 5, just 5 values should be displayed before clicking 'Show All'
+                if numOfDisplay > 5 and showAll == False:
+                    if len(tmp_field_icon_num_of_display) !=5:
+                        writeToLog("INFO","FAILED to display correct number of field values display")
+                        return False
+
+                # If num of display is smaller than 5, or that all field values should be display          
+                else:
+                    if len(tmp_field_icon_num_of_display) != numOfDisplay:
+                        writeToLog("INFO","FAILED to display correct number of field values display")
+                        return False 
+        
+        writeToLog("INFO", "Success, field values display is correct")            
+        return True                                 
