@@ -107,7 +107,7 @@ class Test:
                     return
                       
             for i in range(1,4):
-                writeToLog("INFO","Step " + str(i+5) + ": Going to upload new entey '" + eval('self.entryName'+str(i)))            
+                writeToLog("INFO","Step " + str(i+5) + ": Going to upload new entry '" + eval('self.entryName'+str(i)))            
                 if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.entryDescription, self.entryTags) == None:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(i+5) + ": FAILED to upload new entry: " + eval('self.entryName'+str(i)))
