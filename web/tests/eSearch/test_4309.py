@@ -108,7 +108,8 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 3: Going to verify default sort before making a search")
-            if self.common.channel.verifyChannelsDefaultSort(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI) == False:
+#             if self.common.channel.verifyChannelsDefaultSort(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI) == False:
+            if self.common.channel.verifyChannelsDefaultSort(enums.ChannelsSortBy.MEDIA_COUNT) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to displayed correct default sort before making a search")
                 return
@@ -132,7 +133,8 @@ class Test:
                 return 
 
             writeToLog("INFO","Step 7: Going verify sort channels by 'Media Count'")
-            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI,  self.sortByMediaCount) == False:
+#             if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT_NEWUI,  self.sortByMediaCount) == False:
+            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MEDIA_COUNT,  self.sortByMediaCount) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED sort channels by 'Media Count'")
                 return 

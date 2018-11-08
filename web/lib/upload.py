@@ -66,6 +66,7 @@ class Upload(Base):
     UPLOAD_UPLOADBOX                            = ('xpath', "//div[@id='uploadbox[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@id='back' and contains(text(), 'Go To Media')]")
+    WEBCAST_PAGE_TITLE                          = ('xpath', "//h1[text()='Schedule a Webcast Event']")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -624,4 +625,29 @@ class Upload(Base):
         sleep(2)
         writeToLog("INFO","Success, entry page was open successfully")
         return True
-        
+    
+    # @Auther: Ori Flchtman
+    # Click on Add New Webcast Event for Filter tests
+    def clickAddNewWebcast(self):
+    # Click Add New
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on 'Add New' button")
+            return False
+              
+        # Click youtube
+        if self.clickWebcastEvent() == False:
+            writeToLog("DEBUG","FAILED to click on 'Webcast Event' button")
+            return False
+      
+        if self.wait_visible(self.WEBCAST_PAGE_TITLE, 30) == False:
+            writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
+            return False
+      
+        return True
+ 
+    #@Auther: Ori Flchtman
+    # Add new Webcast Event for Filter tests
+#     def addWebcastEntry(self, entryName, description, tags, disclaimer=False):
+#         if self.send_keys(uploadBoxElement, self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
+#             writeToLog("INFO","FAILED to fill an entry name:'" + name + "'")
+#             return False

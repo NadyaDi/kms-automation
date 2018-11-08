@@ -33,6 +33,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     captionLanguage = "English (American)"
     captionLabel = None
+    captionTime = '0:05'
     captionText = '- Caption search 2'
     filePathCaption = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\captions\testcaption1.srt'
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
@@ -56,7 +57,8 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Add captions And Search", self.testNum)
             self.captionLabel = clsTestService.addGuidToString("English", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                 
+            self.common.entryPage.searchAndVerifyCpation(self.entryName, self.captionTime, self.captionText)
+            
             writeToLog("INFO","Step 1: Going to upload entry")   
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -84,26 +86,32 @@ class Test:
             writeToLog("INFO","Step 5: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to upload caption")
+                writeToLog("INFO","Step 5: FAILED to add caption")
                 return     
             
             writeToLog("INFO","Step 6: Navigate to entry page and play entry")
-            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:06') == False:
+            if self.common.player.navigateToEntryClickPlayPause(self.entryName, self.captionTime) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return     
+            
+            writeToLog("INFO","Step 7: Verify that correct caption text is displayed")
+            if self.common.player.verifyCaptionText(self.captionText) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to displayed correct captions text")
+                return   
             self.common.blackBoard.switchToBlackboardIframe()
             
-            writeToLog("INFO","Step 7: Going navigate to edit entry page")
+            writeToLog("INFO","Step 8: Going navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED navigate to edit entry page")
+                writeToLog("INFO","Step 8: FAILED navigate to edit entry page")
                 return              
             
-            writeToLog("INFO","Step 8: Going to remove added caption")
+            writeToLog("INFO","Step 9: Going to remove added caption")
             if self.common.editEntryPage.removeCaption(self.captionLabel) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to remove added caption to entry '" + self.entryName + "'")
+                writeToLog("INFO","Step 89: FAILED to remove added caption to entry '" + self.entryName + "'")
                 return
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Add captions And Search' was done successfully")

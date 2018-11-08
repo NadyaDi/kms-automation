@@ -261,12 +261,13 @@ class ChannelsSortBy(Enum):
         return str(self.value)
 
     MOST_RECENT               = 'Most Recent'  
-    ALPHABETICAL_NEWUI        = "Alphabetical A-Z"
-    ALPHABETICAL_OLDUI        = "Alphabetical"
+    ALPHABETICAL_NEWUI        = "Alphabetically A-Z"
+    ALPHABETICAL_OLDUI        = "Alphabetically"
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
-    MEDIA_COUNT_NEWUI         = "Media count"
-    MEDIA_COUNT_OLDUI         = "Media Count"
-    ALPHABETICAL_Z_A_NEWUI    = "Alphabetical Z-A"
+   # MEDIA_COUNT_NEWUI         = "Media Count"
+    #MEDIA_COUNT_OLDUI         = "Media Count"
+    MEDIA_COUNT               = "Media Count"
+    ALPHABETICAL_Z_A_NEWUI    = "Alphabetically Z-A"
     RELEVANCE                 = 'Relevance'
 
 class MyHistoryFilters(Enum):

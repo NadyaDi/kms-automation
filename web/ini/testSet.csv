@@ -130,7 +130,7 @@ test_2673,1,0,0,0,Watch History - Entry Viewed in Embed
 test_2679,0,1,0,0,Watch History - Resume playback
 test_2693,1,0,0,0,Watch History - Search by name
 test_2694,1,0,0,0,Watch History - Search by Description
-test_2697,0,1,0,0,Watch History - Filter – media type - video
+test_2697,0,1,0,0,Watch History - Filter â€“ media type - video
 test_2702,1,0,0,0,Watch History - Filter by watch status
 test_2728,1,0,0,0,Watch History - Continue Watching playlist in home page
 test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recently watched playlists - Replay
@@ -161,6 +161,8 @@ test_4,1,0,0,0,Setup test for eSearch
 test_5,1,0,0,0,Setup test for eSearch
 test_6,1,0,0,0,Setup test for eSearch
 test_7,1,0,0,0,Setup test for eSearch
+test_8,1,0,0,0,Setup test for eSearch
+test_9,1,0,0,0,Setup test for eSearch
 test_11,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media
