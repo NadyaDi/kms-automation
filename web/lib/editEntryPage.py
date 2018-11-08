@@ -108,7 +108,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_EDIT_ATTACHMENT_MODAL_BODY                       = ('xpath', '//form[@id="changeAttachment"]')
     EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty"]')
     EDIT_ENTRY_DELETE_ATTACHMENT_MODAL                          = ('xpath', '//a[@class="close" and text()="Delete Confirmation"]')
-    EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtnForm']")
+    EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtn']")
     EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD                           = ('xpath', '//input[@id="customdata-FIELD_NAME"]')  
     EDIT_ENTRY_CUSTOM_LIST_FIELD                                = ('xpath', '//select[@id="customdata-FIELD_NAME"]')   
     EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')                          

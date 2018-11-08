@@ -54,9 +54,13 @@ class EntryPage(Base):
     ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab" and @class="btn responsiveSizePhone tab-attachments-tab"]')
     ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON                   = ('xpath', '//i[@class="icon-download icon-large"]')
     ENTRY_PAGE_RELATED_MEDIA_TABLE                         = ('xpath', '//table[@class="table table-hover table-bordered thumbnails table-condensed"]/tbody/tr')
-    ENTRY_PAGE_CAPTION_SEARCH_BAR                          = ('xpath', "//input[@id='captionSearch']")
+    ENTRY_PAGE_CAPTION_SEARCH_BAR_OLD_UI                   = ('xpath', "//input[@id='captionSearch']")
+    ENRTY_PAGE_SEARCH_ICON                                 = ('xpath', "//div[@id='entryeSearchForm']") 
+    ENTRY_PAGE_CAPTION_SEARCH_BAR                          = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search in video']")
     ENTRY_PAGE_CAPTION_TIME_RESULT                         = ('xpath', "//a[@class='results__result-item--time cursor-pointer' and contains(text(), 'CAPTION_TIME')]") 
     ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI                  = ('xpath', "//a[@class='captions_search_result' and contains(text(), 'CAPTION_TIME')]") 
+    ENTRY_PAGE_CAPTION_SEARCH_RESULT_OLD_UI                = ('xpath', "//ul[@id='kitems']")
+    ENTRY_PAGE_CAPTION_SEARCH_RESULT                       = ('xpath', "//div[@class='results-details-container__group']")  
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -669,20 +673,102 @@ class EntryPage(Base):
         return True
     
     
-    def searchAndVerifyCpation(self, entryName, captionTime, captionText):
+    # Author: Michal Zomper
+    # The function search and verify caption in the caption section in entry page
+    def verifyCaptionsSearchResult(self, captionTime, captionText):
         if self.clsCommon.isElasticSearchOnPage() == True:
-            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
-        
-        else:
+            if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
+                writeToLog("INFO","FAILED to click on search icon")
+                return False
             
             if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText, multipleElements=False) == False:
                 writeToLog("INFO","FAILED to insert caption search")
                 return False
-            
-            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[1].replace('CAPTION_TIME', captionTime))
-            if self.wait_visible(tmpCaptionTime, timeout=15, multipleElements=False) == False:
-                writeToLog("INFO","FAILED to find caption time in caption search result")
+            sleep(4)
+         
+            try:
+                captionResult = self.get_element(self.ENTRY_PAGE_CAPTION_SEARCH_RESULT).text
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to get caption search result element")
                 return False
-                
+        else:
+            if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR_OLD_UI, captionText, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to insert caption search")
+                return False
+            sleep(4)
             
-            writeToLog("INFO","FAILED to insert caption search")
+            try:
+                captionResult = self.get_element(self.ENTRY_PAGE_CAPTION_SEARCH_RESULT_OLD_UI).text
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to get caption search result element")
+                return False
+            
+        captionResult = captionResult.split("\n")
+        for result in captionResult:
+            if (captionTime in result) and (captionText in result) == True:
+                writeToLog("INFO","Success, caption was found and verified in caption search results section")
+                return True
+            
+        writeToLog("INFO","FAILED to find caption search result")
+        return False        
+        
+            
+    # Author: Michal Zomper
+    # The function click on the caption time in the caption section in entry page and the verify that the caption appear on the player with the correct time              
+    def clickOnCaptionSearchResult(self, captionTime, captionText):
+        if self.clsCommon.isElasticSearchOnPage() == True:
+            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
+            if self.click(tmpCaptionTime, timeout=15) == False:
+                writeToLog("INFO","FAILED to click on caption time in caption search result")
+                return False
+            sleep(2)
+        else:
+            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[1].replace('CAPTION_TIME', captionTime))
+            if self.click(tmpCaptionTime, timeout=15) == False:
+                writeToLog("INFO","FAILED to click on caption time in caption search result")
+                return False
+            sleep(2)
+            
+        if self.clsCommon.player.switchToPlayerIframe() == False:
+            writeToLog("INFO","FAILED to switch to player frame in order to check caption on the player ")
+            return False
+        
+        if self.clsCommon.player.verifyCaptionText(captionText) == False:
+            writeToLog("INFO","FAILED to find caption in the player")
+            return False
+        
+        try:
+            playerTime = self.get_element_text(self.clsCommon.player.PLAYER_CURRENT_TIME_LABEL)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get player current time label")
+            return False
+        
+        if playerTime != captionTime[1:]:
+            writeToLog("INFO","FAILED, caption time in the player isn't correct")
+            return False
+            
+        self.common.blackBoard.switchToBlackboardIframe()
+        
+        writeToLog("INFO","Success, caption was found and verified in the player")
+        return True
+      
+        
+    # Author: Michal Zomper
+    # The function search the caption in the caption section in entry page, then clicking on the caption time in the caption section and check the caption in the player 
+    # captionText - the search caption
+    # expectedCaptionAfterSearch - after clicking on the time in the caption section the player jump to the expected time but move back a few milliseconds so we see the caption befor the one that we are looking for
+    def verifyAndClickCaptionSearchResult(self, captionTime, captionText, expectedCaptionAfterSearch):
+        if self.verifyCaptionsSearchResult(captionTime, captionText) == False:
+            writeToLog("INFO","FAILED to verify caption in  entry caption search section")
+            return False
+        
+        if self.clickOnCaptionSearchResult(captionTime, expectedCaptionAfterSearch) == False:
+            writeToLog("INFO","FAILED to find and verify caption in the player")
+            return False
+        
+        writeToLog("INFO","Success, caption was found and verified")
+        return True
+        
+            
+            
+        
