@@ -64,6 +64,12 @@ class Test:
             self.searchInChaptersAndSlides = {self.entryForSearchIn1:False, self.entryForSearchIn2:True, self.entryForSearchIn3:False, self.entryForSearchIn4:True, self.entryForSearchIn6:False, self.entryForSearchIn7:False}
             self.SearchIncaptions = {self.entryForSearchIn1:True, self.entryForSearchIn2:True,self.entryForSearchIn3:False, self.entryForSearchIn4:False, self.entryForSearchIn6:False, self.entryForSearchIn7:False}
             self.searchInComments = {self.entryForSearchIn1:False, self.entryForSearchIn2:True, self.entryForSearchIn3:False, self.entryForSearchIn4:False, self.entryForSearchIn6:False, self.entryForSearchIn7:False}
+            
+            self.fieldsForAllFields = {'Captions':True, 'Tags':True, 'Quiz':False, 'Slides':True, 'Details':True, 'Chapters':True, 'Comments':True, 'Poll':False}
+            self.fieldsForDetails = {'Captions':False, 'Tags':True, 'Quiz':False, 'Slides':False, 'Details':True, 'Chapters':False, 'Comments':False, 'Poll':False}
+            self.fieldsForChaptersAndSlides = {'Captions':False, 'Tags':False, 'Quiz':False, 'Slides':True, 'Details':False, 'Chapters':True, 'Comments':False, 'Poll':False}
+            self.fieldsForCaptions = {'Captions':True, 'Tags':False, 'Quiz':False, 'Slides':False, 'Details':False, 'Chapters':False, 'Comments':False, 'Poll':False}
+            self.fieldsForComments = {'Captions':False, 'Tags':False, 'Quiz':False, 'Slides':False, 'Details':False, 'Chapters':False, 'Comments':True, 'Poll':False}                                    
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going navigate to add new quiz page")
             if self.common.kea.navigateToEditorMediaSelection(forceNavigate=True) == False:
@@ -113,76 +119,106 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED to displayed correct entries in results")
                 return    
             
-            writeToLog("INFO","Step 9: Going to select 'search in' option: " + enums.SearchInDropDown.DETAILS.value)
+            writeToLog("INFO","Step 9: Going to verify fields display for search in" + enums.SearchInDropDown.ALL_FIELDS.value +" in results")
+            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForAllFields) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to displayed correct fields for " + enums.SearchInDropDown.ALL_FIELDS.value)
+                return               
+            
+            writeToLog("INFO","Step 10: Going to select 'search in' option: " + enums.SearchInDropDown.DETAILS.value)
             if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.DETAILS) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to select 'search in' option: " + enums.SearchInDropDown.DETAILS.value)
+                writeToLog("INFO","Step 10: FAILED to select 'search in' option: " + enums.SearchInDropDown.DETAILS.value)
                 return              
             
-            writeToLog("INFO","Step 10: Going to verify the correct entries are displayed in results")
+            writeToLog("INFO","Step 11: Going to verify the correct entries are displayed in results")
             if self.common.kea.verifyFiltersInEditor(self.searchInDeatails) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to displayed correct entries in results")
-                return               
+                writeToLog("INFO","Step 11: FAILED to displayed correct entries in results")
+                return   
             
-            writeToLog("INFO","Step 11: Going to select 'search in' option: " + enums.SearchInDropDown.CHAPTERS_AND_SLIDES.value)
+            writeToLog("INFO","Step 12: Going to verify fields display for search in" + enums.SearchInDropDown.DETAILS.value +" in results")
+            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForDetails) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to displayed correct fields for " + enums.SearchInDropDown.DETAILS.value)
+                return                         
+            
+            writeToLog("INFO","Step 13: Going to select 'search in' option: " + enums.SearchInDropDown.CHAPTERS_AND_SLIDES.value)
             if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.CHAPTERS_AND_SLIDES) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to select 'search in' option: " + enums.SearchInDropDown.CHAPTERS_AND_SLIDES.value)
-                return              
-            
-            writeToLog("INFO","Step 12: Going to verify the correct entries are displayed in results")
-            if self.common.kea.verifyFiltersInEditor(self.searchInChaptersAndSlides) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to displayed correct entries in results")
-                return               
-                        
-            writeToLog("INFO","Step 13: Going to select 'search in' option: " + enums.SearchInDropDown.CAPTIONS.value)
-            if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.CAPTIONS) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to select 'search in' option: " + enums.SearchInDropDown.CAPTIONS.value)
+                writeToLog("INFO","Step 13: FAILED to select 'search in' option: " + enums.SearchInDropDown.CHAPTERS_AND_SLIDES.value)
                 return              
             
             writeToLog("INFO","Step 14: Going to verify the correct entries are displayed in results")
-            if self.common.kea.verifyFiltersInEditor(self.SearchIncaptions) == False:
+            if self.common.kea.verifyFiltersInEditor(self.searchInChaptersAndSlides) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to displayed correct entries in results")
                 return      
-
-            writeToLog("INFO","Step 15: Going to verify that there is no " + enums.SearchInDropDown.POLLS.value + " option in search in")
-            if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.POLLS) == True:
-                self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED " + enums.SearchInDropDown.POLLS.value + " OPtion is displayed in search in")
-                return 
-            writeToLog("INFO","Step 15: Failed as expected")  
             
-            writeToLog("INFO","Step 16: Going to click on 'search in' drop down in order to close menu") 
-            if self.common.base.click(self.common.myMedia.SEARCH_IN_DROPDOWN_ENABLED) == False:      
-                writeToLog("INFO","Step 16: FAILED to click on 'search in' dropdown")
-                return False                   
-            
-            writeToLog("INFO","Step 17: Going to select 'search in' option: " + enums.SearchInDropDown.COMMENTS.value)
-            if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.COMMENTS) == False:
+            writeToLog("INFO","Step 15: Going to verify fields display for search in" + enums.SearchInDropDown.CHAPTERS_AND_SLIDES.value +" in results")
+            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForChaptersAndSlides) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to select 'search in' option: " + enums.SearchInDropDown.COMMENTS.value)
+                writeToLog("INFO","Step 15: FAILED to displayed correct fields for " + enums.SearchInDropDown.CHAPTERS_AND_SLIDES.value)
+                return                       
+                        
+            writeToLog("INFO","Step 16: Going to select 'search in' option: " + enums.SearchInDropDown.CAPTIONS.value)
+            if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.CAPTIONS) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 16: FAILED to select 'search in' option: " + enums.SearchInDropDown.CAPTIONS.value)
                 return              
             
-            writeToLog("INFO","Step 18: Going to verify the correct entries are displayed in results")
+            writeToLog("INFO","Step 17: Going to verify the correct entries are displayed in results")
+            if self.common.kea.verifyFiltersInEditor(self.SearchIncaptions) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 17: FAILED to displayed correct entries in results")
+                return      
+            
+            writeToLog("INFO","Step 18: Going to verify fields display for search in" + enums.SearchInDropDown.CAPTIONS.value +" in results")
+            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForCaptions) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 18: FAILED to displayed correct fields for " + enums.SearchInDropDown.CAPTIONS.value)
+                return             
+
+            writeToLog("INFO","Step 19: Going to verify that there is no " + enums.SearchInDropDown.POLLS.value + " option in search in")
+            if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.POLLS) == True:
+                self.status = "Fail"
+                writeToLog("INFO","Step 19: FAILED " + enums.SearchInDropDown.POLLS.value + " OPtion is displayed in search in")
+                return 
+            writeToLog("INFO","Step 19: Failed as expected")  
+            
+            writeToLog("INFO","Step 20: Going to click on 'search in' drop down in order to close menu") 
+            if self.common.base.click(self.common.myMedia.SEARCH_IN_DROPDOWN_ENABLED) == False:      
+                writeToLog("INFO","Step 20: FAILED to click on 'search in' dropdown")
+                return False                   
+            
+            writeToLog("INFO","Step 21: Going to select 'search in' option: " + enums.SearchInDropDown.COMMENTS.value)
+            if self.common.myMedia.selectSearchInDropDownOption(option=enums.SearchInDropDown.COMMENTS) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 21: FAILED to select 'search in' option: " + enums.SearchInDropDown.COMMENTS.value)
+                return              
+            
+            writeToLog("INFO","Step 22: Going to verify the correct entries are displayed in results")
             if self.common.kea.verifyFiltersInEditor(self.searchInComments) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 18: FAILED to displayed correct entries in results")
+                writeToLog("INFO","Step 22: FAILED to displayed correct entries in results")
                 return   
             
-            writeToLog("INFO","Step 19: Going to clear search")
+            writeToLog("INFO","Step 23: Going to verify fields display for search in" + enums.SearchInDropDown.COMMENTS.value +" in results")
+            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForComments) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 23: FAILED to displayed correct fields for " + enums.SearchInDropDown.COMMENTS.value)
+                return             
+            
+            writeToLog("INFO","Step 24: Going to clear search")
             if self.common.myMedia.clearSearch() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 19: FAILED to clear search")
+                writeToLog("INFO","Step 24: FAILED to clear search")
                 return   
             
-            writeToLog("INFO","Step 20: Going to verify 'search in' dropdown is disabled after clearing search")
+            writeToLog("INFO","Step 25: Going to verify 'search in' dropdown is disabled after clearing search")
             if self.common.myMedia.verifySearchInDropDownState(False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 20: FAILED to disabled 'search in' dropdown is disabled after clearing search")
+                writeToLog("INFO","Step 25: FAILED to disabled 'search in' dropdown is disabled after clearing search")
                 return                          
             ##################################################################
             writeToLog("INFO","TEST PASSED: Search in Add new quiz done successfully")
