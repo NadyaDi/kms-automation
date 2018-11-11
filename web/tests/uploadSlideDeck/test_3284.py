@@ -100,7 +100,7 @@ class Test:
             writeToLog("INFO","Step 5: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName1)
+                writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName)
                 return  
             
             writeToLog("INFO","Step 6: Going to search slides in slides menu bar")
@@ -115,15 +115,15 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to click and open slides bar menu")
                 return
             
-#             sleep(3)
-#             index = 0
-#             writeToLog("INFO","Step 8: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
-#             for i in range(2):
-#                 sleep(2)
-#                 index = index + i + 4 
-#                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
-#                     self.status = "Fail"
-#                     writeToLog("INFO","Step 8: FAILED to verify slide") 
+            sleep(3)
+            index = 0
+            writeToLog("INFO","Step 8: Going to check 4 slide (slide from the start / 2 in the middle / end of the video) and see that they appear at the correct time and did not deleted with the chapter")
+            for i in range(2):
+                sleep(2)
+                index = index + i + 4 
+                if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 8: FAILED to verify slide") 
                   
               
             #########################################################################
@@ -139,7 +139,6 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)
             writeToLog("INFO","**************** Ended: teardown_method *******************")  
         except:
             pass       
