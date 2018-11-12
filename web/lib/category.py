@@ -686,7 +686,7 @@ class Category(Base):
     # Go to members tab 
     def navigateToCategoryMembersTab(self):
         if self.click(self.CATEGORY_MEMBERS_TAB) == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","FAILED to click on members tab")
             return False     
         return True
     
@@ -695,19 +695,19 @@ class Category(Base):
     # membersList need to be like: [(userName, permission), (userName, permission) ......]
     def addMembersToCategory(self, categoryName, membersList):
         if self.navigateToEditCategoryPage(categoryName) == False:
-            writeToLog("INFO","Failed to navigate to edit category page")
+            writeToLog("INFO","FAILED to navigate to edit category page")
             return False  
         sleep(1)   
         
         if self.navigateToCategoryMembersTab() == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","FAILED to click on members tab")
             return False  
         sleep(2)
         
         if type(membersList) is list:
             for member in membersList:
                 if self.addMemberToCategory(categoryName, member[0], member[1], forceNavigate=False) == False:
-                    writeToLog("INFO","Failed to add user '" + member[0] + "' to category")
+                    writeToLog("INFO","FAILED to add user '" + member[0] + "' to category")
                     return False
                 sleep(4)
         
@@ -715,70 +715,132 @@ class Category(Base):
         return True
 
 
+#     # @Author: Michal Zomper
+#     def addMemberToCategory(self, categoryName, username, permission=enums.CategoryMemberPermission.MEMBER, forceNavigate=True):
+#         if forceNavigate:
+#             if self.navigateToEditCategoryPage(categoryName) == False:
+#                 writeToLog("INFO","Failed to navigate to edit category page")
+#                 return False  
+#             sleep(1)   
+#              
+#             # Navigate to members tab
+#             if self.navigateToCategoryMembersTab() == False:
+#                 writeToLog("INFO","Failed to click on members tab")
+#                 return False  
+#             sleep(2)
+#         
+#         # Wait until page contains add member button
+#         if self.wait_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
+#             writeToLog("INFO","Failed to display add member tab content")
+#             return False           
+#         
+#         # Click on add member button
+#         if self.click(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
+#             writeToLog("INFO","Failed to click on add members button")
+#             return False   
+#         
+#         # Wait until add member modal is displayed
+#         sleep(3)
+#         
+#         #Click on username field
+#         if self.click(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
+#             writeToLog("INFO","Failed to click on username field")
+#             return False             
+#                     
+#         # Insert username to field
+#         if self.send_keys(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
+#             writeToLog("INFO","Failed to insert username")
+#             return False 
+#         
+#         # Set permission
+#         if self.chooseMemberPermissionInCategory(permission) == False:
+#             writeToLog("INFO","Failed to set permission")
+#             return False   
+#         
+#         #Click add button
+#         if self.click(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON) == False:
+#             writeToLog("INFO","Failed to click on add button")
+#             return False  
+#         
+#         # Wait until add member window isn't displayed
+#         if self.wait_while_not_visible(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+#             writeToLog("INFO","Failed to display add member window")
+#             return False
+#         sleep(3)
+#         
+#         
+#         #Verify new member is added to member table
+#         tmp_member_row = (self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
+#         if self.is_visible(tmp_member_row) == False:
+#             writeToLog("INFO","Failed to add new member to table")
+#             return False
+#          
+#         sleep(3)
+#         writeToLog("INFO","Success, member '" + username + "' was added to category")
+#         return True
+
+
     # @Author: Michal Zomper
     def addMemberToCategory(self, categoryName, username, permission=enums.CategoryMemberPermission.MEMBER, forceNavigate=True):
         if forceNavigate:
             if self.navigateToEditCategoryPage(categoryName) == False:
-                writeToLog("INFO","Failed to navigate to edit category page")
+                writeToLog("INFO","FAILED to navigate to edit category page")
                 return False  
             sleep(1)   
-             
+              
             # Navigate to members tab
             if self.navigateToCategoryMembersTab() == False:
-                writeToLog("INFO","Failed to click on members tab")
+                writeToLog("INFO","FAILED to click on members tab")
                 return False  
             sleep(2)
-        
+         
         # Wait until page contains add member button
         if self.wait_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
-            writeToLog("INFO","Failed to display add member tab content")
+            writeToLog("INFO","FAILED to display add member tab content")
             return False           
-        
+         
         # Click on add member button
         if self.click(self.clsCommon.channel.CHANNEL_ADD_MEMBER_BUTTON) == False:
-            writeToLog("INFO","Failed to click on add members button")
+            writeToLog("INFO","FAILED to click on add members button")
             return False   
-        
+         
         # Wait until add member modal is displayed
         sleep(3)
         
-        #Click on username field
-        if self.click(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
-            writeToLog("INFO","Failed to click on username field")
-            return False             
-                    
         # Insert username to field
-        if self.send_keys(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
-            writeToLog("INFO","Failed to insert username")
-            return False 
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
+            writeToLog("INFO","FAILED to insert username")
+            return False
+        
+        sleep(3)
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, Keys.RETURN) == False:
+            writeToLog("INFO","FAILED to press Enter after username was typed")
+            return False         
         
         # Set permission
-        if self.chooseMemberPermissionInCategory(permission) == False:
-            writeToLog("INFO","Failed to set permission")
+        if self.clsCommon.channel.chooseMemberPermissionInChannel(permission) == False:
+            writeToLog("INFO","FAILED to set permission")
             return False   
         
         #Click add button
         if self.click(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON) == False:
-            writeToLog("INFO","Failed to click on add button")
-            return False  
-        
-        # Wait until add member window isn't displayed
-        if self.wait_while_not_visible(self.CATEGORY_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
-            writeToLog("INFO","Failed to display add member window")
-            return False
-        sleep(3)
-        
+            writeToLog("INFO","FAILED to click on add button")
+            return False 
+         
+        sleep(2)
+        # Wait until add member modal isn't displayed
+        if self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+            writeToLog("INFO","FAILED to display add member popup")
+            return False    
         
         #Verify new member is added to member table
         tmp_member_row = (self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.clsCommon.channel.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
-        if self.is_visible(tmp_member_row) == False:
-            writeToLog("INFO","Failed to add new member to table")
+        if self.wait_visible(tmp_member_row) == False:
+            writeToLog("INFO","FAILED new member was NOT added to members table")
             return False
-         
         sleep(3)
-        writeToLog("INFO","Success, member '" + username + "' was added to category")
-        return True
-    
+        
+        return True      
     
     # @Author: Michal Zomper 
     # Choose permission from drop down list
@@ -786,25 +848,25 @@ class Category(Base):
         # If permission is member click on member option       
         if permission ==  enums.CategoryMemberPermission.MEMBER:
             if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Member') == False:
-                writeToLog("INFO","Failed to click on member option")
+                writeToLog("INFO","FAILED to click on member option")
                 return False                    
        
         # If permission is contributor click on member option       
         elif permission ==  enums.CategoryMemberPermission.CONTRIBUTOR:
             if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Contributor') == False:
-                writeToLog("INFO","Failed to click on contributor option")
+                writeToLog("INFO","FAILED to click on contributor option")
                 return False  
             
         # If permission is moderator click on member option       
         elif permission ==  enums.CategoryMemberPermission.MODERATOR:
             if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Moderator') == False:
-                writeToLog("INFO","Failed to click on moderator option")
+                writeToLog("INFO","FAILED to click on moderator option")
                 return False 
         
         # If permission is manager click on member option       
         elif permission ==  enums.CategoryMemberPermission.MANAGER:
             if self.select_from_combo_by_text(self.CATEGORY_ADD_MEMBER_MODAL_SET_PERMISSION, 'Manager') == False:
-                writeToLog("INFO","Failed to click on manager option")
+                writeToLog("INFO","FAILED to click on manager option")
                 return False   
             
         return True    
@@ -833,17 +895,17 @@ class Category(Base):
             return False
         
         if self.click(tmp_edit_button) == False:
-            writeToLog("INFO","Failed to click on edit button")
+            writeToLog("INFO","FAILED to click on edit button")
             return False               
                          
         # Set new permission
         if self.chooseMemberPermissionInCategory(permission) == False:
-            writeToLog("INFO","Failed to set new permission")
+            writeToLog("INFO","FAILED to set new permission")
             return False   
         
         # Save new permission
         if self.click(tmp_edit_button) == False:
-                writeToLog("INFO","Failed to click on save button")
+                writeToLog("INFO","FAILED to click on save button")
                 return False                  
         
         return True
@@ -851,12 +913,12 @@ class Category(Base):
         
     def importMemberFormCategory(self):
         if self.navigateToCategoryMembersTab() == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","FAILED to click on members tab")
             return False  
         sleep(2)
         
         if self.click(self.CATEGORY_IMPORT_MEMBER_BUTTON) == False:
-            writeToLog("INFO","Failed to click on import member button")
+            writeToLog("INFO","FAILED to click on import member button")
             return False
         
         sleep(4)
@@ -867,7 +929,7 @@ class Category(Base):
     def verifyMemberPermissionsInMemberTable(self, userId, permission):
         # Navigate to members tab
         if self.navigateToCategoryMembersTab() == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","FAILED to click on members tab")
             return False  
         sleep(2)
             
@@ -875,15 +937,15 @@ class Category(Base):
         try:
             memberText = self.get_element_text(tmpMember, timeout=20)
             if memberText == None:
-                writeToLog("INFO","Failed to find member '" + userId +"' in members table")
+                writeToLog("INFO","FAILED to find member '" + userId +"' in members table")
                 return False
                 
         except NoSuchElementException:
-            writeToLog("INFO","Failed to find member '" + userId +"' in members table")
+            writeToLog("INFO","FAILED to find member '" + userId +"' in members table")
             return False
         
         if (permission.value in memberText) == False:
-            writeToLog("INFO","Failed, member '" + userId +"' permission does NOT match")
+            writeToLog("INFO","FAILED, member '" + userId +"' permission does NOT match")
             return False
         
         writeToLog("INFO","Success, member '" + userId + "' was found in member table with the right permissions")
@@ -894,13 +956,13 @@ class Category(Base):
     # membersList need to be like: [(userName, permission), (userName, permission) ......]
     def verifyMembersPermissionsInMemberTable(self, membersList):
         if self.navigateToCategoryMembersTab() == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","FAILED to click on members tab")
             return False  
         sleep(2)
         
         for member in membersList:
             if self.verifyMemberPermissionsInMemberTable(member[0], member[1]) == False:
-                writeToLog("INFO","Failed verify that user '" + member[0] + "' and permissions was found in members table")
+                writeToLog("INFO","FAILED verify that user '" + member[0] + "' and permissions was found in members table")
                 return False
             sleep(3)
         
@@ -911,17 +973,17 @@ class Category(Base):
     # @Author: Michal Zomper 
     def inheritPermissionsFormCategory(self):
         if self.navigateToCategoryMembersTab() == False:
-            writeToLog("INFO","Failed to click on members tab")
+            writeToLog("INFO","FAILED to click on members tab")
             return False  
         sleep(2)
         
         if self.click(self.CATEGORY_INHERIT_PERMISSIONS_BUTTON) == False:
-            writeToLog("INFO","Failed to click on inherit permissions button")
+            writeToLog("INFO","FAILED to click on inherit permissions button")
             return False
         sleep(2)
         
         if self.click(self.CATEGORY_COMFIRM_INHERIT_PERMISSIONS) == False:
-            writeToLog("INFO","Failed to click  on confirm inherit permissions button")
+            writeToLog("INFO","FAILED to click  on confirm inherit permissions button")
             return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
