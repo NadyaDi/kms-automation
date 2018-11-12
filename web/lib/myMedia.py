@@ -96,6 +96,12 @@ class MyMedia(Base):
     ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN                        = ('xpath', '//a[@aria-label="Show Less"]') 
     ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN                         = ('xpath', '//a[@aria-label="Show All"]')
     ENTRY_FIELD_VALUES_SCETION                                  = ('xpath', '//div[@class="results-details-container"]')
+    ENTRY_OWNER_DETAILS                                         = ('xpath', '//a[contains(@href,"/createdby/") and text()="OWNER_NAME"]')
+    ENTRY_CREATION_DETAILS                                      = ('xpath', '//span[@class="from-now hidden-phone"]')
+    ENTRY_CATEGORIES_DETAILS                                    = ('xpath', '//a[@class="results-preview__category"]')
+    ENTRY_DETAILS_COMMENTS_ICON                                 = ('xpath', '//i[@class="stat_data__stat__icon icon-comment"]')
+    ENTRY_DETAILS_HEART_ICON                                    = ('xpath', '//i[@class="stat_data__stat__icon icon-heart"]')
+    ENTRY_DETAILS_EYE_ICON                                      = ('xpath', '//i[@class="stat_data__stat__icon icon-eye-open"]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1682,9 +1688,9 @@ class MyMedia(Base):
     
     # @Author: Inbar Willman
     # Verify that field display is correct:
-    # Single - there is just single display of the field
-    # Multiple - There is more than 5 display of the field
-    def verifyFieldDisplayInResultAfterClickingOnShowMore(self, isSingle, field, numOfDisplay=1):  
+    # iSingle=True - There is just once matching value of the field
+    # iSingle=False - There is more than one matching value of the field
+    def verifyFieldDisplayInResultAfterClickingOnShowMore(self, isSingle, field, entryOwner, categoriesList, numOfDisplay=1):  
         # Click on show more button
         if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
             writeToLog("INFO","FAILED to click on 'Show more' button")
@@ -1693,7 +1699,17 @@ class MyMedia(Base):
         # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
         if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=False) == False:
             writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
-            return False  
+            return False
+        
+        # Verify that correct entry details are displayed
+        if self.verifyEntryDetailsAfterClickingShowMore(entryOwner, categoriesList) == False:
+            writeToLog("INFO","FAILED to display correct entry's details")
+            return False
+        
+        # Verify that correct icons are displayed
+        if self.verifyEntryIconsAfterClickingShowMore()== False:
+            writeToLog("INFO","FAILED to display correct entry icons")
+            return False             
 
         # Click on show less in order to close section
         if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN) == False:
@@ -1761,7 +1777,7 @@ class MyMedia(Base):
     # Verify the correct icon is displayed after clicking on field
     # Verify that correct number of fields value is displayed
     def verifyFieldIconAndNumberOfDisplayInResults(self, isSingle, field, numOfDisplay, showAll):
-        if isSingle == False and field !='Quiz':
+        if isSingle == False and field !='Quiz' and field != 'Details' and field !='Tags':
             field = field[:-1]
 
         tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', field))
@@ -1779,24 +1795,121 @@ class MyMedia(Base):
                 return False
             
         else:
-            # Tags icon is display just once in multiple tags value per field
-            if field == 'Tag':                  
+            # Check that tag icon is displayed just once although there are more than one matching tag value
+            if field == 'Tags':                  
                 if len(tmp_field_icon_num_of_display) !=1:
-                    writeToLog("INFO","FAILED to display correct number of icon display")
+                    writeToLog("INFO","FAILED to display tag icon just once")
                     return False
             
+                # Check that if number of matching tags is smaller than 7, all tags are displayed
+                tmp_tags_values = self.get_elements(self.ENTRY_TAG_VALUES_IN_RESULTS)
+                if numOfDisplay < 8:
+                    if len(tmp_tags_values) != numOfDisplay:
+                        writeToLog("INFO","FAILED to display correct number of tags values when there are less than 8 tag values")
+                        return False 
+                    
+                # If number of matching tags is bigger than 7, just 7 tags are displayed    
+                else:
+                    if len(tmp_tags_values) != 7:                       
+                        writeToLog("INFO","FAILED to display correct number of tags values when there are more than 7 tag values")
+                        return False 
+                    
+            elif field == 'Details':
+                # Check that if number of matching details is smaller than 11, all details are displayed before clicking show all are displayed
+                if numOfDisplay > 11 and showAll == False:
+                    if len(tmp_field_icon_num_of_display) != 10:
+                        writeToLog("INFO","FAILED to display correct number of details values when there are more than 10 details")
+                        return False  
+                else:
+                    # All matching details should be displayed when there are less than 10 matching details or that 'Show All' was clicked
+                    if len(tmp_field_icon_num_of_display) != numOfDisplay:
+                        writeToLog("INFO","FAILED to display correct number of details values when there are less than 11 details")
+                        return False                   
+                                
             else:
-                # If num of display is bigger than 5, just 5 values should be displayed before clicking 'Show All'
+                # If number of display is bigger than 5, 'Show All' wasn't clicked and field is different than 'Details' 
                 if numOfDisplay > 5 and showAll == False:
                     if len(tmp_field_icon_num_of_display) !=5:
-                        writeToLog("INFO","FAILED to display correct number of field values display")
+                        writeToLog("INFO","FAILED to display correct number of field values")
                         return False
 
-                # If num of display is smaller than 5, or that all field values should be display          
+                # If number of display is smaller than 5, or that all field values should be display          
                 else:
                     if len(tmp_field_icon_num_of_display) != numOfDisplay:
-                        writeToLog("INFO","FAILED to display correct number of field values display")
+                        writeToLog("INFO","FAILED to display correct number of field values")
                         return False 
         
         writeToLog("INFO", "Success, field values display is correct")            
-        return True                                 
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Verify that correct entry details are displayed below thumbnail when clicking show more
+    def verifyEntryDetailsAfterClickingShowMore(self, entryOwner, categoriesList):    
+        # Check entry's owner details
+        if self.verifyEntryOwnerDetails(entryOwner) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's owner details")            
+            return False
+        
+        # Check entry's creation date
+        if self.verifyEntryCreationDetails() == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's creation details")            
+            return False  
+        
+        if self.verifyEntryCategories(categoriesList) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's categories details")            
+            return False  
+        
+        return True                 
+   
+    
+    # @Author: Inbar Willman
+    # Verify that correct owner is displayed
+    def verifyEntryOwnerDetails(self, entryOwner):   
+        tmp_entry_owner = (self.ENTRY_OWNER_DETAILS[0], self.ENTRY_OWNER_DETAILS[1].replace('OWNER_NAME', entryOwner))    
+        if self.is_visible(tmp_entry_owner) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's owner details")            
+            return False
+        
+        return True
+    
+
+    # @Author: Inbar Willman
+    # Verify that creation details are displayed
+    def verifyEntryCreationDetails(self):
+        if self.is_visible(self.ENTRY_CREATION_DETAILS) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's creation details")            
+            return False  
+        
+        return True
+      
+    
+    # @Author: Inbar Willman
+    # Verify that correct categories that entry is published in are displayed
+    def verifyEntryCategories(self, categoriesList):
+        tmp_categoriesList = self.get_elements(self.ENTRY_CATEGORIES_DETAILS)
+        for dx, category in enumerate(categoriesList):
+            tmp_category= tmp_categoriesList[dx]
+            if tmp_category.text != category:
+                writeToLog("INFO", "FAILED to displayed correct entry's categories details")            
+                return False    
+        
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # verify entry icons after clicking show more
+    def verifyEntryIconsAfterClickingShowMore(self):
+        if self.is_visible(self.ENTRY_DETAILS_COMMENTS_ICON) == False:
+            writeToLog("INFO", "FAILED to displayed comment icon")            
+            return False   
+        
+        if self.is_visible(self.ENTRY_DETAILS_EYE_ICON) == False:
+            writeToLog("INFO", "FAILED to displayed eye icon")            
+            return False 
+        
+        if self.is_visible(self.ENTRY_DETAILS_HEART_ICON) == False:
+            writeToLog("INFO", "FAILED to displayed eye icon")            
+            return False    
+        
+        return True
