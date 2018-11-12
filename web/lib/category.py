@@ -804,7 +804,7 @@ class Category(Base):
             writeToLog("INFO","FAILED to click on add members button")
             return False   
          
-        # Wait until add member modal is displayed
+        # Wait until add member popup is displayed
         sleep(3)
         
         # Insert username to field
