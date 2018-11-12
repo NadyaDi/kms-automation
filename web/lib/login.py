@@ -122,7 +122,7 @@ class Login(Base):
     
     def getLoginUserName(self):
         try:
-            userName=self.get_element_text(self.USER_NAME)
+            userName = self.get_element_text(self.USER_NAME)
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get user name element")
             return False

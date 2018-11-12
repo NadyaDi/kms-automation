@@ -490,7 +490,7 @@ class MyMedia(Base):
             if self.clickActionsAndPublishFromMyMedia() == False:
                 writeToLog("INFO","FAILED to click on action button")
                 return False
-                sleep(7)   
+            sleep(5)   
 
             if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
