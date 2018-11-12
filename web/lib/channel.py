@@ -1415,7 +1415,7 @@ class Channel(Base):
         
         #Verify new member is added to member table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
-        if self.is_visible(tmp_member_row) == False:
+        if self.wait_visible(tmp_member_row) == False:
             writeToLog("INFO","Failed new member was NOT added to members table")
             return False
         sleep(3)
