@@ -83,6 +83,10 @@ class Test:
             self.commentsNumOfDisplay = 6
             self.pollsNumOfDisplay = 6
             
+            # Entry details
+            self.entryOwner = "Inbar will"
+            self.categoriesList = ["eSearch category", "Channel for eSearch", "SR-Channel for eSearch"]
+            
             # Entries
             self.entryForFieldsDisplay1 = "Fields display - Name"
             self.entryForFieldsDisplay2 = "Fields display - Description"
@@ -93,83 +97,103 @@ class Test:
             # Fields display
             self.fieldsForSearchInEntryName = {'Captions':False, 'Tags':False, 'Quiz':False, 'Slides':False, 'Details':False, 'Chapters':False, 'Comments':False, 'Poll':False}                
             ##################### TEST STEPS - MAIN FLOW ##################### 
-#             writeToLog("INFO","Step 1: Going navigate to 'My Media' page")
-#             if self.common.myMedia.navigateToMyMedia(forceNavigate=True) == False:
+#             writeToLog("INFO","Step 2: Going to make a search in My Media that matches entry name")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInEntryName) == False:
 #                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED navigate to 'My Media' page")
+#                 writeToLog("INFO","Step 2: FAILED to make a search in My Media that matches entry name")
 #                 return 
 #              
-            writeToLog("INFO","Step 2: Going to make a search in My Media that matches entry name")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInEntryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to make a search in My Media that matches entry name")
-                return 
-             
-            writeToLog("INFO","Step 3: Going to verify fields display in results for search in entry name")
-            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForSearchInEntryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to displayed correct fields for search in entry name")
-                return  
-             
-            writeToLog("INFO","Step 4: Going to make a search in My Media that matches entry description")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInEntryDescription) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to make a search in My Media that matches entry description")
-                return  
-             
-            writeToLog("INFO","Step 5: Going to verify fields display in results for search in entry description")
-            if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForSearchInEntryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to displayed correct fields for search in entry description")
-                return  
+#             writeToLog("INFO","Step 3: Going to verify fields display in results for search in entry name")
+#             if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForSearchInEntryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 3: FAILED to displayed correct fields for search in entry name")
+#                 return  
+#              
+#             writeToLog("INFO","Step 4: Going to make a search in My Media that matches entry description")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInEntryDescription) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 4: FAILED to make a search in My Media that matches entry description")
+#                 return  
+#              
+#             writeToLog("INFO","Step 5: Going to verify fields display in results for search in entry description")
+#             if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForSearchInEntryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 5: FAILED to displayed correct fields for search in entry description")
+#                 return  
+#              
+#             writeToLog("INFO","Step 6: Going to make a search in My Media that matches single caption")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInSingleCaption) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 6: FAILED to make a search in My Media that matches single caption")
+#                 return   
+#              
+#             writeToLog("INFO","Step 7: Going to verify single captions field display after clicking on field name")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, 'Caption') == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 7: FAILED to verify single captions field display after clicking on field name")
+#                 return  
+#              
+#             writeToLog("INFO","Step 8: Going to verify single captions field display after clicking on show more button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, 'Caption', entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 8: FAILED to verify single captions field display after clicking on show more button")
+#                 return  
+#              
+#             writeToLog("INFO","Step 9: Going to verify single captions field display after clicking on show all button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, 'Caption') == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 9: FAILED to verify single captions field display after clicking on show all button")
+#                 return 
+#             
+#             writeToLog("INFO","Step 10: Going to make a search in My Media that matches multiple captions")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleCaptions) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 10: FAILED to make a search in My Media that matches multiple captions")
+#                 return   
+#             
+#             writeToLog("INFO","Step 11: Going to verify multiple captions field display after clicking on field name")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 11: FAILED to verify multiple captions field display after clicking on field name")
+#                 return  
+#              
+#             writeToLog("INFO","Step 12: Going to verify multiple captions field display after clicking on show more button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 12: FAILED to verify multiple captions field display after clicking on show more button")
+#                 return  
+#             
+#             writeToLog("INFO","Step 13: Going to verify multiple captions field display after clicking on show all button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 13: FAILED to verify multiple captions field display after clicking on show all button")
+#                 return    
+
              
             writeToLog("INFO","Step 6: Going to make a search in My Media that matches single caption")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleCaption) == False:
+            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleTag) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to make a search in My Media that matches single caption")
                 return   
              
             writeToLog("INFO","Step 7: Going to verify single captions field display after clicking on field name")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, 'Caption') == False:
+            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, 'Tags') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify single captions field display after clicking on field name")
                 return  
              
             writeToLog("INFO","Step 8: Going to verify single captions field display after clicking on show more button")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, 'Caption') == False:
+            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, 'Tags', entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to verify single captions field display after clicking on show more button")
                 return  
              
             writeToLog("INFO","Step 9: Going to verify single captions field display after clicking on show all button")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, 'Caption') == False:
+            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, 'Tags') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify single captions field display after clicking on show all button")
                 return 
-            
-            writeToLog("INFO","Step 10: Going to make a search in My Media that matches multiple captions")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleCaptions) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to make a search in My Media that matches multiple captions")
-                return   
-            
-            writeToLog("INFO","Step 11: Going to verify multiple captions field display after clicking on field name")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify multiple captions field display after clicking on field name")
-                return  
-             
-            writeToLog("INFO","Step 12: Going to verify multiple captions field display after clicking on show more button")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify multiple captions field display after clicking on show more button")
-                return  
-            
-            writeToLog("INFO","Step 13: Going to verify multiple captions field display after clicking on show all button")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to verify multiple captions field display after clicking on show all button")
-                return                                                                                                     
+                                                                                                             
      
             ##################################################################
             writeToLog("INFO","TEST PASSED: Search in 'My Media' done successfully")
