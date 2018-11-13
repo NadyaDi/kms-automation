@@ -31,7 +31,7 @@ class Test:
     channelName = None
     channelDescription = "Channel description"
     channelTags = "Channeltags1,Channeltags2,"  
-    username = 'private'
+    username = "Automation_User_1"
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
