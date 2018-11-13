@@ -21,11 +21,10 @@ class EditEntryPage(Base):
     EDIT_ENTRY_COLLABORATION_TAB                                = ('id', "collaboration-tab")
     EDIT_ENTRY_ADD_COLLABORATOR_BUTTON                          = ('xpath', "//i[@class='icon-plus icon-white']")  
     EDIT_ENTRY_ADD_USER_TEXTBOX                                 = ('id', "EditEntryCollaborator-userId")
-#     EDIT_ENTRY_CO_EDITOR_CHECKBOX                               = ('id', "EditEntryCollaborator-permissions-2")
-#     EDIT_ENTRY_CO_PUBLISHER_CHECKBOX                            = ('id', "EditEntryCollaborator-permissions-1")
     EDIT_ENTRY_CO_EDITOR_CHECKBOX                               = ('xpath', "//label[@class='checkbox-custom-label' and text()='Co-Editor']")
     EDIT_ENTRY_CO_PUBLISHER_CHECKBOX                            = ('xpath', "//label[@class='checkbox-custom-label' and text()='Co-Publisher']")
-#     EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON                     = ('xpath', "//a[@class='btn btn btn-primary' and contains(text(), 'Add')]")
+    EDIT_ENTRY_CO_EDITOR_CHECKBOX_OLD_UI                        = ('xpath', '//label[@class="checkbox" and text()="Co-Editor"]')
+    EDIT_ENTRY_CO_PUBLISHER_CHECKBOX_OLD_UI                     = ('xpath', '//label[@class="checkbox" and text()="Co-Publisher"]')
     EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON                     = ('xpath', "//a[contains(@class,'btn btn btn-primary')]")
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
@@ -197,14 +196,22 @@ class EditEntryPage(Base):
         # Check if need to add co editor
         if isCoEditor == True:
             # Click to add co editor
-            if self.click(self.EDIT_ENTRY_CO_EDITOR_CHECKBOX, 30) == False:
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                tmpPermissionLocator = self.EDIT_ENTRY_CO_EDITOR_CHECKBOX_OLD_UI
+            else:
+                tmpPermissionLocator = self.EDIT_ENTRY_CO_EDITOR_CHECKBOX
+            if self.click(tmpPermissionLocator, 30) == False:
                 writeToLog("INFO","FAILED to click on co editor checkbox")
                 return False  
             
         # Check if need to add co publisher
         if isCoPublisher == True:
             # Click to add co editor
-            if self.click(self.EDIT_ENTRY_CO_PUBLISHER_CHECKBOX, 30) == False:
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                tmpPermissionLocator = self.EDIT_ENTRY_CO_PUBLISHER_CHECKBOX_OLD_UI
+            else:
+                tmpPermissionLocator = self.EDIT_ENTRY_CO_PUBLISHER_CHECKBOX            
+            if self.click(tmpPermissionLocator, 30) == False:
                 writeToLog("INFO","FAILED to click on co publisher checkbox")
                 return False    
                
