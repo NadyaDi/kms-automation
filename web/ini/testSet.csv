@@ -8,6 +8,7 @@ test_593,1,0,0,0,KAF BB - Entry page - Add captions And Search
 test_594,1,0,0,0,KAF BB - Entry thumbnail
 test_597,1,0,0,0,KAF BB - Delete through my media
 test_598,1,0,0,0,KAF BB - Delete through edit entry page
+test_602,1,0,0,0,KAF BB - Preview all kinds of media from my media
 test_604,1,0,0,0,KAF BB - Upload media from desktop
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
