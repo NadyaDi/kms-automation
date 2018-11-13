@@ -813,10 +813,12 @@ class Category(Base):
             return False
         
         sleep(3)
-        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, Keys.RETURN) == False:
-            writeToLog("INFO","FAILED to press Enter after username was typed")
-            return False         
-        
+        tmpConfirmationLocator = (self.clsCommon.channel.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[0], self.clsCommon.channel.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[1].replace('USERNAME', username))
+        if self.click(tmpConfirmationLocator) == False:
+            writeToLog("INFO","FAILED to click on group search confirmation")
+            return False   
+                
+        sleep(3)
         # Set permission
         if self.clsCommon.channel.chooseMemberPermissionInChannel(permission) == False:
             writeToLog("INFO","FAILED to set permission")
@@ -841,6 +843,7 @@ class Category(Base):
         sleep(3)
         
         return True      
+    
     
     # @Author: Michal Zomper 
     # Choose permission from drop down list
