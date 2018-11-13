@@ -84,7 +84,8 @@ class Channel(Base):
     CHANNEL_MEMBERS_TAB                                 = ('xpath', '//a[@id="channelmembers-tab"]')  
     CHANNEL_ADD_MEMBER_BUTTON                           = ('xpath', '//a[@id="addmember"]') 
 #     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[@id="addChannelMember-userId"]')
-    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[@id="react-select-2-input"]')
+    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[contains(@id,"react-select-")]')
+    CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION               = ('xpath', "//span[@class='user-selection-option__label' and contains(text(),'USERNAME')]")
 #    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//select[@id="addChannelMember-permission"]')
     CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//span[text()="PERMISSION"]')
     CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON                 = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
@@ -1384,9 +1385,6 @@ class Channel(Base):
         
         # Wait until add member popup is displayed
         sleep(3)
-#         if self.send_keys(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, Keys.RETURN) == False:
-#             writeToLog("INFO","Failed to insert username")
-#             return False         
          
         # Insert username to field
         if self.send_keys(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
@@ -1394,9 +1392,10 @@ class Channel(Base):
             return False
         
         sleep(3)
-        if self.send_keys(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, Keys.RETURN) == False:
-            writeToLog("INFO","Failed to insert username")
-            return False         
+        tmpConfirmationLocator = (self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[0], self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[1].replace('USERNAME', username))
+        if self.click(tmpConfirmationLocator) == False:
+            writeToLog("INFO","FAILED to click on group search confirmation")
+            return False        
         
         # Set permission
         if self.chooseMemberPermissionInChannel(permission) == False:
