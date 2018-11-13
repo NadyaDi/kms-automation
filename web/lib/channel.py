@@ -86,7 +86,7 @@ class Channel(Base):
 #     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[@id="addChannelMember-userId"]')
     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[contains(@id,"react-select-")]')
     CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION               = ('xpath', "//span[@class='user-selection-option__label' and contains(text(),'USERNAME')]")
-#    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//select[@id="addChannelMember-permission"]')
+    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT             = ('xpath', '//select[@id="addChannelMember-permission"]')
     CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//span[text()="PERMISSION"]')
     CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON                 = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
     CHANNEL_ADD_MEMBER_MODAL_CONTENT                    = ('xpath', '//p[@class="help-block" and contains(text(),"Please input at least 3")]')
@@ -1422,35 +1422,35 @@ class Channel(Base):
         return True                                         
              
                            
-#    This method is deprecated, don't remove yet
-#     # @Author: Inbar Willman 
-#     # Choose permission from drop down list
-#     def chooseMemberPermissionInChannel(self, permission = enums.ChannelMemberPermission.MEMBER):    
-#         # If permission is member click on member option       
-#         if permission ==  enums.ChannelMemberPermission.MEMBER:
-#             if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Member') == False:
-#                 writeToLog("INFO","Failed to click on member option")
-#                 return False                    
-#        
-#         # If permission is contributor click on member option       
-#         elif permission ==  enums.ChannelMemberPermission.CONTRIBUTOR:
-#             if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Contributor') == False:
-#                 writeToLog("INFO","Failed to click on contributor option")
-#                 return False  
-#             
-#         # If permission is moderator click on member option       
-#         elif permission ==  enums.ChannelMemberPermission.MODERATOR:
-#             if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Moderator') == False:
-#                 writeToLog("INFO","Failed to click on moderator option")
-#                 return False 
-#         
-#         # If permission is manager click on member option       
-#         elif permission ==  enums.ChannelMemberPermission.MANAGER:
-#             if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Manager') == False:
-#                 writeToLog("INFO","Failed to click on manager option")
-#                 return False   
-#             
-#         return True
+    ##################################This method is deprecated, don't remove yet
+    # @Author: Inbar Willman 
+    # Edit permission from drop down list
+    def editMemberPermissionInChannel(self, permission = enums.ChannelMemberPermission.MEMBER):    
+        # If permission is member click on member option       
+        if permission ==  enums.ChannelMemberPermission.MEMBER:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Member') == False:
+                writeToLog("INFO","Failed to click on member option")
+                return False                    
+       
+        # If permission is contributor click on member option       
+        elif permission ==  enums.ChannelMemberPermission.CONTRIBUTOR:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Contributor') == False:
+                writeToLog("INFO","Failed to click on contributor option")
+                return False  
+            
+        # If permission is moderator click on member option       
+        elif permission ==  enums.ChannelMemberPermission.MODERATOR:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Moderator') == False:
+                writeToLog("INFO","Failed to click on moderator option")
+                return False 
+        
+        # If permission is manager click on member option       
+        elif permission ==  enums.ChannelMemberPermission.MANAGER:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Manager') == False:
+                writeToLog("INFO","Failed to click on manager option")
+                return False   
+            
+        return True
 
 
     # @Author: Oleg Sigalov
@@ -1460,7 +1460,7 @@ class Channel(Base):
         if self.click(tmpPermissionLocator) == False:
             writeToLog("INFO","Failed to click on " + permission.value + " option")
             return False                    
-             
+              
         return True    
     
     
@@ -1478,7 +1478,7 @@ class Channel(Base):
                 return False               
                          
         # Set new permission
-        if self.chooseMemberPermissionInChannel(permission) == False:
+        if self.editMemberPermissionInChannel(permission) == False:
             writeToLog("INFO","Failed to set new permission")
             return False   
         
@@ -1509,8 +1509,8 @@ class Channel(Base):
    
         # Click on 'Yes' in remove user modal
         if self.click(self.CHANNEL_YES_MODAL_BUTTON) == False:
-                writeToLog("INFO","Failed to click on yes button")
-                return False  
+            writeToLog("INFO","Failed to click on yes button")
+            return False  
         
         # Wait until remove modal isn't displayed
         if self.wait_while_not_visible(self.CHANNEL_REMOVE_USER_MODAL_CONTENT,timeout=30) == False:
