@@ -91,25 +91,25 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                               
+                                
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                      
+                       
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-                                 
+                                  
             writeToLog("INFO","Step 4: Going add chapters")
             if self.common.editEntryPage.addChapters(self.entryName, self.chaptersList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
                 return
-                    
+            
             writeToLog("INFO","Step 5: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
@@ -150,7 +150,7 @@ class Test:
                 return
                
             writeToLog("INFO","Step 11: Going to verify that chapter two is display correctly in the player (in entry page)")
-            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage("Second Chapter", self.secondChapterSlidesList) == False:
+            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage("Second Chapter", self.secondChapterSlidesList, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify chapter two and all of his slides")
                 return  
@@ -188,7 +188,6 @@ class Test:
                 except:
                     writeToLog("INFO","Step 15: The chapter '" +  chapter + "' was not found as expected")
                 
-                #if self.common.player.MoveToChapter(chapter, timeOut=5) == True:
             sleep(4)
             writeToLog("INFO","Step 16: Going to switch the player view so that the player will be in the big window and the slides in the small window")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
