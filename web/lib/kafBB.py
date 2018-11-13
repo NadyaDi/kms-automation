@@ -21,6 +21,7 @@ class BlackBoard(Base):
     USER_MENU_TOGGLE_BTN                = ('id', 'global-nav-link')
     USER_LOGOUT_BTN                     = ('id', 'topframe.logout.label')
     BB_MEDIA_SPACE_IFRAME               = ('xpath', "//iframe[contains(@src,'/webapps/osv-kaltura-BBLEARN/')]")
+    KAF_MEDIA_GALLERY_TITLE             = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -116,4 +117,48 @@ class BlackBoard(Base):
         if self.switchToBlackboardIframe() == False:
             return False
         
+        return True
+    
+    def navigateToGalleryBB(self, galleryName):
+        if self.wait_visible(self.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+            writeToLog("INFO","Success Already in my Gallery page")
+            return True
+        
+        if galleryName == "New1":
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to courses 'New1'")
+                return False
+        sleep(5)
+        
+        if self.wait_visible(self.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+            writeToLog("INFO","FAILED navigate to to courses 'New1'")
+            return False
+        
+        return True
+        
+        
+    def navigateToEntryPageFromBBGalleryPage(self, entryName, galleryName):
+        tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        if self.wait_visible(tmpEntryName, 5) != False:
+            writeToLog("INFO","Already in entry page: '" + entryName + "'")
+            return True
+        
+        if self.navigateToGalleryBB(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
+            return False             
+        sleep(2)
+           
+        if self.clsCommon.channel.searchEntryInChannel(entryName) == False:
+            writeToLog("INFO","FAILED to search entry'" + entryName + "' in gallery" + galleryName)
+            return False  
+            
+        # click on the entry
+        if self.clsCommon.myMedia.clickResultEntryAfterSearch(entryName) == False:
+            writeToLog("INFO","FAILED to click on entry " + entryName)
+            return False 
+        
+        if self.wait_visible(tmpEntryName, 15) == False:
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            return False
+           
         return True
