@@ -51,6 +51,7 @@ class Admin(Base):
     ADMIN_DELETE_PRE_POST_LINK_NAME                 = ('xpath', "//input[@value='LINK_NAME' and contains(@id, 'PRE_OR_POST')]")
     ADMIN_CUSTOM_DATA_PROFILE_ID_DROPDOWN           = ('xpath', '//dd[@id="profileId-element"]')
     ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION             = ('xpath', '//option[@value="PROFILE_ID"]')
+    ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -885,14 +886,14 @@ class Admin(Base):
         #Enable/Disable custometadata module
         selection = self.convertBooleanToYesNo(isEnabled)
         if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
-            writeToLog("INFO","FAILED to set category scheduling module as: " + str(selection))
+            writeToLog("INFO","FAILED to set custom metadata module as: " + str(selection))
             return False
          
         if self.adminSave() == False:
             writeToLog("INFO","FAILED to save changes in admin page")
             return False
             
-        writeToLog("INFO","Success, category scheduling module was set to: " + str(selection) + "'")
+        writeToLog("INFO","Success, custom metadata module was set to: " + str(selection) + "'")
         return True   
     
     
@@ -916,4 +917,32 @@ class Admin(Base):
             return False  
         
         writeToLog("INFO","Success, customdata profile id:" + profileId + " was set successfully")
-        return True        
+        return True
+    
+    
+    # @Author: Oleg Sigalov
+    # This function enables the playlist secure embed module 
+    def enableSecureEmbed(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Custometadata module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/embedplaylist#secureEmbed') == False:
+            writeToLog("INFO","FAILED to load Embed playlist page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable custometadata module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_SECURE_EMBED, selection) == False:
+            writeToLog("INFO","FAILED to set secureEmbed as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+            
+        writeToLog("INFO","Success, secureEmbed was set to: " + str(selection) + "'")
+        return True          
