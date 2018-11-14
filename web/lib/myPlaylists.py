@@ -496,12 +496,10 @@ class MyPlaylists(Base):
             writeToLog("INFO","FAILED to click on playlist embed button")
             return False
         
-        ## Next code should be deleted if no rejects - 01/11/18
+        ## Next code should be deleted if no rejects - 01/11/18. Not sure if the message should appear.
         # Click OK - "Note that the embedded playlist will not display any media that is private or restricted. Are you sure you want to continue?"
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            if self.click(self.PLAYLIST_EMBED_CONFIRM_MSG_OLD_UI) == False:
-                writeToLog("INFO","FAILED to click OK")
-                return False
+            self.click(self.PLAYLIST_EMBED_CONFIRM_MSG_OLD_UI)
             
         #Wait until text section will be visible 
         tmpEmbedTextArea = (self.PLAYLIST_EMBED_TEXTAREA [0], self.PLAYLIST_EMBED_TEXTAREA [1].replace('PLAYLIST_ID', playlist_id))
