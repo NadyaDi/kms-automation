@@ -57,7 +57,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)        
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('EmbedPlaylist1', self.testNum)
@@ -71,55 +71,67 @@ class Test:
             self.entriesToUpload = {
                 self.entryName1: self.filePath, 
                 self.entryName2: self.filePath,
-                self.entryName3: self.filePath }            
+                self.entryName3: self.filePath }
+              
+            writeToLog("INFO","Step 1: Going to enable secureEmbed in admin")
+            if self.common.admin.enableSecureEmbed(True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to Enable secure embed")
+                return                
+            
+            writeToLog("INFO","Step 2: Going to login to KMS")
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to login to KMS")
+                return              
                  
-            writeToLog("INFO","Step 1: Going to upload 3 entries")
+            writeToLog("INFO","Step 3: Going to upload 3 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload 3 entries")
+                writeToLog("INFO","Step 3: FAILED to upload 3 entries")
                 return
                
-            writeToLog("INFO","Step 2: Going to add  entries to playlist")
+            writeToLog("INFO","Step 4: Going to add  entries to playlist")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to add entries to playlist")
+                writeToLog("INFO","Step 4: FAILED to add entries to playlist")
                 return
                
-            writeToLog("INFO","Step 3: Click on 'Go to my playlist")
+            writeToLog("INFO","Step 5: Click on 'Go to my playlist")
             if self.common.base.click(self.common.myPlaylists.GO_TO_PLAYLIST_BUTTON) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate to my playlist")
+                writeToLog("INFO","Step 5: FAILED to navigate to my playlist")
                 return        
             
-            writeToLog("INFO","Step 4: Get playlist embed code")
+            writeToLog("INFO","Step 6: Get playlist embed code")
             self.embedLink = self.common.myPlaylists.clickEmbedPlaylistAndGetEmbedCode(self.playlistName)
             if self.embedLink == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to get playlist embed code")
+                writeToLog("INFO","Step 6: FAILED to get playlist embed code")
                 return                 
             
-            writeToLog("INFO","Step 5: Going to write embed code in file")
+            writeToLog("INFO","Step 7: Going to write embed code in file")
             if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to write embed code in file")
+                writeToLog("INFO","Step 7: FAILED to write embed code in file")
                 return     
              
-            writeToLog("INFO","Step 6: Going to navigate to embed entry page (by link)")
+            writeToLog("INFO","Step 8: Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to to embed entry page")
+                writeToLog("INFO","Step 8: FAILED to navigate to to embed entry page")
                 return  
             
-            writeToLog("INFO","Step 7: Going to check player layout")
+            writeToLog("INFO","Step 9: Going to check player layout")
             if self.common.myPlaylists.verifyEmbedPlayerSizes(self.playerWidth, self.playerHeight) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to get correct player layout")
+                writeToLog("INFO","Step 9: FAILED to get correct player layout")
                 return              
             
-            writeToLog("INFO","Step 8: navigate to My Media in order to come back to KMS")
+            writeToLog("INFO","Step 10: navigate to My Media in order to come back to KMS")
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to to my media")
+                writeToLog("INFO","Step 10: FAILED to navigate to to my media")
                 return                                                                             
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Playlists - Embed playlist' was done successfully")
