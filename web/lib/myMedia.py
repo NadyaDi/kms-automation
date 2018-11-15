@@ -19,6 +19,7 @@ class MyMedia(Base):
     #=============================================================================================================
     #My Media locators:
     #=============================================================================================================
+    MY_MEDIA_TITLE                                              = ('xpath', "//h1[@class='inline' and text()='My Media']")
     MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
     MY_MEDIA_SEARCH_BAR_OLD_UI                                  = ('id', 'searchBar')
     MY_MEDIA_ELASTIC_SEARCH_BAR                                 = ('xpath', "//input[@class='searchForm__text']")
@@ -470,7 +471,7 @@ class MyMedia(Base):
     # Author: Michal Zomper       
     # publishFrom - enums.Location
     # in categoryList / channelList will have all the names of the categories / channels to publish to
-    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.Location.MY_MEDIA, disclaimer=False):  
+    def publishSingleEntry(self, entryName, categoryList, channelList, galleryList='',  publishFrom = enums.Location.MY_MEDIA, disclaimer=False):  
         #checking if disclaimer is turned on for "Before publish"
         if disclaimer == True:
             if self.handleDisclaimerBeforePublish(entryName) == False:
@@ -545,7 +546,9 @@ class MyMedia(Base):
                 
         sleep(2)
         # Click if channel list is empty
-        if len(channelList) != 0:
+        if len(channelList) != 0 or len(galleryList) != 0:
+            if len(galleryList) != 0:
+                channelList = galleryList
             # Click on Publish in Channel
             if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in channel")
@@ -1043,7 +1046,7 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     #    in categoryList / channelList will have all the names of the categories / channels to publish to
     # Known limitation: entries MUST be presented on the first page of my media
-    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList='', disclaimer=False, showAllEntries=False):
+    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList='', galleryList='',  disclaimer=False, showAllEntries=False):
         if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
@@ -1103,7 +1106,9 @@ class MyMedia(Base):
                 
         sleep(2)
         # Click if channel list is empty
-        if len(channelList) != 0:
+        if len(channelList) != 0 or len(galleryList) != 0:
+            if len(galleryList) != 0:
+                channelList = galleryList
             # Click on Publish in Channel
             if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in channel")
@@ -1117,7 +1122,7 @@ class MyMedia(Base):
                 if self.click(tmpChannelName, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
-        
+
         sleep(1) 
         if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
@@ -1320,7 +1325,9 @@ class MyMedia(Base):
                 # go back to the top of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
-             
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                self.click(self.MY_MEDIA_TITLE)
             self.clsCommon.sendKeysToBodyElement(Keys.END)
              
         writeToLog("INFO","FAILED to show all media")

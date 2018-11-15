@@ -130,6 +130,7 @@ class BlackBoard(Base):
                 return False
         sleep(5)
         
+        self.clsCommon.blackBoard.switchToBlackboardIframe()
         if self.wait_visible(self.KAF_MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False

@@ -59,117 +59,114 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.videoEntryName = clsTestService.addGuidToString("Upload media and verify in player - Video", self.testNum)
+            self.videoEntryName1 = clsTestService.addGuidToString("Upload media and verify in player - Video1", self.testNum)
+            self.videoEntryName2 = clsTestService.addGuidToString("Upload media and verify in player - Video2", self.testNum)
             self.audioEntryName = clsTestService.addGuidToString("Upload media and verify in player - Audio", self.testNum)
             self.imageEntryName = clsTestService.addGuidToString("Upload media and verify in player - Image", self.testNum)
             
             self.entriesToUpload = {
-            self.videoEntryName: self.filePathVideo, 
+            self.videoEntryName1: self.filePathVideo,
+            self.videoEntryName2: self.filePathVideo, 
             self.audioEntryName: self.filePathAudio,
             self.imageEntryName: self.filePathImage }
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            self.common.channel.searchInChannelWithoutVerifyResults("Automation Entry - Published")
             
             writeToLog("INFO","Step 1: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
-                    
+                      
             writeToLog("INFO","Step 2: Going navigate to image entry: "+ self.imageEntryName)    
             if self.common.entryPage.navigateToEntry(self.imageEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to entry: " + self.imageEntryName)
-                return 
-                
+                  
+                   
             writeToLog("INFO","Step 3: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to verify the entry '" + self.imageEntryName + "' in player")
                 return   
-            
+               
             writeToLog("INFO","Step 4: Going navigate to audio entry: "+ self.audioEntryName)    
             if self.common.entryPage.navigateToEntry(self.audioEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED navigate to entry: " + self.audioEntryName)
                 return 
-                        
+                           
             writeToLog("INFO","Step 5: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED - New entry is still processing")
                 return 
-            
+               
             writeToLog("INFO","Step 6: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, self.audioLength, "", "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify the entry '" + self.audioEntryName + "' in player")
                 return   
-   
-            writeToLog("INFO","Step 7: Going navigate to video entry: "+ self.videoEntryName)    
-            if self.common.entryPage.navigateToEntry(self.videoEntryName, enums.Location.MY_MEDIA) == False:
+      
+            writeToLog("INFO","Step 7: Going navigate to video entry: "+ self.videoEntryName1)    
+            if self.common.entryPage.navigateToEntry(self.videoEntryName1, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED navigate to entry: " + self.videoEntryName)
+                writeToLog("INFO","Step 7: FAILED navigate to entry: " + self.videoEntryName1)
                 return 
-                  
+                     
             writeToLog("INFO","Step 8: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED - New entry is still processing")
                 return 
-            
+               
             writeToLog("INFO","Step 9: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to verify the entry '" + self.videoEntryName + "' in player")
+                writeToLog("INFO","Step 9: FAILED to verify the entry '" + self.videoEntryName1 + "' in player")
                 return   
-            
-            
-            
-            
-            
-            
-            writeToLog("INFO","Step 13: Going to publish entries to category")
-            if self.common.myMedia.publishEntriesFromMyMedia([self.videoEntryName,self.audioEntryName,self.imageEntryName], [self.galleryName], '', showAllEntries=True) == False:
+              
+            writeToLog("INFO","Step 13: Going to publish entries to gallery")
+            if self.common.myMedia.publishEntriesFromMyMedia([self.videoEntryName2,self.audioEntryName,self.imageEntryName], '', '', [self.galleryName], showAllEntries=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to publish entries to category")
+                writeToLog("INFO","Step 13: FAILED to publish entries to gallery")
                 return  
-            
+             
             writeToLog("INFO","Step 14: Going navigate to image entry: '" + self.imageEntryName + "' from gallery page")    
             if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.imageEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED navigate to entry: " + self.imageEntryName + " from gallery page")
                 return 
-                
+                 
             writeToLog("INFO","Step 15: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to verify the entry '" + self.imageEntryName + "' in player")
                 return   
-            
+             
             writeToLog("INFO","Step 16: Going navigate to audio entry: '" + self.audioEntryName + "' from gallery page")    
             if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.audioEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED navigate to entry: " + self.audioEntryName + " from gallery page")
                 return 
-            
+             
             writeToLog("INFO","Step 17: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, self.audioLength, "", "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to verify the entry '" + self.audioEntryName + "' in player")
                 return   
             
-            writeToLog("INFO","Step 18: Going navigate to video entry: '"+ self.videoEntryName + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.videoEntryName, self.galleryName) == False:
+            writeToLog("INFO","Step 18: Going navigate to video entry: '"+ self.videoEntryName2 + "' from gallery page")    
+            if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.videoEntryName2, self.galleryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 101: FAILED navigate to entry: " + self.videoEntryName + " from gallery page")
+                writeToLog("INFO","Step 18: FAILED navigate to entry: " + self.videoEntryName2 + " from gallery page")
                 return 
+            sleep(5)
             
             writeToLog("INFO","Step 19: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 19: FAILED to verify the entry '" + self.videoEntryName + "' in player")
+                writeToLog("INFO","Step 19: FAILED to verify the entry '" + self.videoEntryName2 + "' in player")
                 return 
               
             ##################################################################
@@ -183,7 +180,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName, self.audioEntryName, self.imageEntryName])
+            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName1, self.videoEntryName2,  self.audioEntryName, self.imageEntryName])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
