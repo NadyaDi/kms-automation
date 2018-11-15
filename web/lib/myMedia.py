@@ -89,7 +89,7 @@ class MyMedia(Base):
     SEARCH_IN_DROPDOWN_ENABLED                                  = ('xpath', '//a[@id="fields-menu-toggle" and @class="  dropdown-toggle DropdownFilter__toggle "]')
     SEARCH_IN_DROP_DOWN_OPTION                                  = ('xpath', '//a[@role="menuitem" and text()="FIELD_NAME"]')
     ENTRY_FIELD_IN_RESULTS                                      = ('xpath', '//span[@class="hidden-phone" and contains(text(),"FIELD_NAME")]')
-    ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[@class="v2ui-cc-icon icon icon--vertical-align-sub search-results-icon" and @title="FIELD_NAME"]')
+    ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[contains(@class,"vertical-align-sub search-results-icon") and @title="FIELD_NAME"]')
     ENTRY_TAG_VALUES_IN_RESULTS                                 = ('xpath', '//span[@class="search-results__tag"]')
     ENTRY_FIELD_VALUES_IN_RESULTS                               = ('xpath', '//span[@class="results__result-item--text"]')
     ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN                        = ('xpath', '//span[@aria-label="Show More"]')
@@ -1777,8 +1777,11 @@ class MyMedia(Base):
     # Verify the correct icon is displayed after clicking on field
     # Verify that correct number of fields value is displayed
     def verifyFieldIconAndNumberOfDisplayInResults(self, isSingle, field, numOfDisplay, showAll):
-        if isSingle == False and field !='Quiz' and field != 'Details' and field !='Tags':
+        if isSingle == False and field !='Quiz' and field != 'Details':
             field = field[:-1]
+            
+        if field == 'Tag':
+            field = field +"s"
 
         tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', field))
         tmp_field_icon_num_of_display = self.get_elements(tmp_field_icon) 
