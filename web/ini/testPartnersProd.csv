@@ -150,3 +150,4 @@ test_593,KAF BB -  Entry page - Add captions And Search,,,oleg.sigalov@kaltura.c
 test_597,KAF BB - Delete through my media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_598,KAF BB - Delete through edit entry page,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_602,KAF BB - Preview all kinds of media from my media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_600,KAF BB - Publish from my media (single and multi),,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!

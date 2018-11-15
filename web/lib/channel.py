@@ -1913,7 +1913,7 @@ class Channel(Base):
     # @Author: Michal Zomper
     # Search in category without verify results
     # noQuotationMarks = True will force and wont add quotation marks at the beginning and the end of searchText(when Elastic search is enabled)
-    def  searchInChannelWithoutVerifyResults(self, searchText, noQuotationMarks=False):
+    def searchInChannelWithoutVerifyResults(self, searchText, noQuotationMarks=False):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             # Click on the magnafine glass
             if self.click(self.CHANNEL_PAGE_SEARCH_TAB, 30) == False:
