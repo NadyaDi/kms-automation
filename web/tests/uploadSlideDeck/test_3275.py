@@ -91,31 +91,31 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                                
+                                 
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
-                       
+                        
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
-                                  
+                                   
             writeToLog("INFO","Step 4: Going add chapters")
             if self.common.editEntryPage.addChapters(self.entryName, self.chaptersList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
                 return
-            
+             
             writeToLog("INFO","Step 5: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName)
                 return  
-              
+            
             writeToLog("INFO","Step 6: Going to verify that all slides that aren't in chapters display in the slides side menu")
             if self.common.player.verifySlidesInPlayerSideBar(self.slidesWithoutChapter, checkSize=False) == False:
                 writeToLog("INFO","Step 6: FAILED to verify that all slides that aren't in chapters display in the slides side menu")
@@ -139,7 +139,11 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to click and open slides bar menu")
                 self.status = "Fail"
                 return
-               
+            
+            sleep(1)
+            # PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS button maybe not visible, next two command will resolve it
+            self.common.player.scrollInSlidesMenuBar(1)
+            self.common.player.scrollInSlidesMenuBar(-1)   
             # click on the EXPAND_COLLAPSE button in the slides menu bar in order to open all the chapters
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
@@ -150,7 +154,7 @@ class Test:
                 return
                
             writeToLog("INFO","Step 11: Going to verify that chapter two is display correctly in the player (in entry page)")
-            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage("Second Chapter", self.secondChapterSlidesList, True) == False:
+            if self.common.player.vrifyChapterAndSlidesInSlidesMenuBarInEntrypage("Second Chapter", self.secondChapterSlidesList) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify chapter two and all of his slides")
                 return  

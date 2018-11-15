@@ -354,11 +354,11 @@ class Player(Base):
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
     # checkSize parameter is to know when to check the slides list len 
     def verifySlidesInPlayerSideBar(self, mySlidesList, checkSize=True):
-        self.switchToPlayerIframe()
         sleep(2)
         self.get_body_element().send_keys(Keys.PAGE_UP)
-        sleep(3)
-        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+        sleep(2)
+        self.switchToPlayerIframe()
+        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on the sides bar menu")
             return False
         
