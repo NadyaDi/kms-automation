@@ -89,7 +89,7 @@ class MyMedia(Base):
     SEARCH_IN_DROPDOWN_ENABLED                                  = ('xpath', '//a[@id="fields-menu-toggle" and @class="  dropdown-toggle DropdownFilter__toggle "]')
     SEARCH_IN_DROP_DOWN_OPTION                                  = ('xpath', '//a[@role="menuitem" and text()="FIELD_NAME"]')
     ENTRY_FIELD_IN_RESULTS                                      = ('xpath', '//span[@class="hidden-phone" and contains(text(),"FIELD_NAME")]')
-    ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[contains(@class,"vertical-align-sub search-results-icon") and @title="FIELD_NAME"]')
+    ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[contains(@class,"icon icon icon--vertical-align-sub search-results-icon") and @title="FIELD_NAME"]')
     ENTRY_TAG_VALUES_IN_RESULTS                                 = ('xpath', '//span[@class="search-results__tag"]')
     ENTRY_FIELD_VALUES_IN_RESULTS                               = ('xpath', '//span[@class="results__result-item--text"]')
     ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN                        = ('xpath', '//span[@aria-label="Show More"]')
@@ -1670,7 +1670,7 @@ class MyMedia(Base):
         
         # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
         if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=False) == False:
-            writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
+            writeToLog("INFO","FAILED to display correct number of values for " + field.value + " field")
             return False  
         
         # Click again on field in order to close field values section 
@@ -1728,45 +1728,61 @@ class MyMedia(Base):
     # Verify that field display is correct:
     # Single - there is just single display of the field - There is no option to click 'show all'
     # Multiple - More than one matching value per field
+    # Field is enums
     def verifyFieldDisplayInResultAfterClickingOnShowAll(self, isSingle, field, numOfDisplay=1):  
         # Click on show more button
         if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
             writeToLog("INFO","FAILED to click on 'Show more' button")
             return False
         
-        # If there are less than 5 values
-        if isSingle == True or numOfDisplay < 5:
+        # If there is just single value  
+        if isSingle == True:
             if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
                 writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
                 return False 
+        
+        # If there is more single value, but lees than 5 displays    
+        elif isSingle == False and numOfDisplay < 5:
+            if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
+                writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
+                return False     
+        
+        # If there is more than single value, but the field is tag    
+        elif isSingle == False and field == enums.EntryFields.TAGS:                     
+            if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
+                writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
+                return False  
              
         else:
             sleep(2)
             if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Show All' button")
-                return False                                         
+                return False 
+            
+            sleep(2)                                        
         
             # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
             if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=True) == False:
-                writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
-                return False  
+                writeToLog("INFO","FAILED to display correct number of values for " + field.value + " field")
+                return False                 
         
         return True               
 
         
     # @Author: Inbar Willman
     # Click on field in 'keyword found in:'
+    # Field is enums
     def clickOnFieldInResults(self, isSingle, field, numOfDisplay):    
         if isSingle == True:
             # Get field element in 'keyword found in:' - single value per field
-            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', "1 " + field))
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', "1 " + field.value))
         else:
             # Get field element in 'keyword found in:' - multiple values per field
-            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', str(numOfDisplay) + " "  + field))  
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', str(numOfDisplay) + " "  + field.value))  
             
         # Click on field element in 'keyword found in:'
         if self.click(tmp_field) == False:
-            writeToLog("INFO","FAILED to click on " + field + " field")
+            writeToLog("INFO","FAILED to click on " + field.value + " field")
             return False            
         
         writeToLog("INFO", "Success, field was clicked in 'keyword found in:'")
@@ -1776,14 +1792,26 @@ class MyMedia(Base):
     # @Author: Inbar Willman
     # Verify the correct icon is displayed after clicking on field
     # Verify that correct number of fields value is displayed
+    # Field is enums
     def verifyFieldIconAndNumberOfDisplayInResults(self, isSingle, field, numOfDisplay, showAll):
-        if isSingle == False and field !='Quiz' and field != 'Details':
-            field = field[:-1]
+        if isSingle == False: 
+            if field == enums.EntryFields.QUIZ:
+                fieldName = field.value
+            elif field == enums.EntryFields.DETAILS:
+                fieldName = field.value
+            elif field == enums.EntryFields.TAGS:
+                fieldName = field.value
+        
+            else:
+                fieldName = field.value[:-1]
+                
+        elif field == enums.EntryFields.TAG:
+            fieldName = field.value +"s"
             
-        if field == 'Tag':
-            field = field +"s"
+        else:
+            fieldName = field.value
 
-        tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', field))
+        tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', fieldName))
         tmp_field_icon_num_of_display = self.get_elements(tmp_field_icon) 
         
         # Check that field icon is visible
@@ -1799,7 +1827,7 @@ class MyMedia(Base):
             
         else:
             # Check that tag icon is displayed just once although there are more than one matching tag value
-            if field == 'Tags':                  
+            if field == enums.EntryFields.TAGS:                  
                 if len(tmp_field_icon_num_of_display) !=1:
                     writeToLog("INFO","FAILED to display tag icon just once")
                     return False
@@ -1817,7 +1845,7 @@ class MyMedia(Base):
                         writeToLog("INFO","FAILED to display correct number of tags values when there are more than 7 tag values")
                         return False 
                     
-            elif field == 'Details':
+            elif field == enums.EntryFields.DETAILS:
                 # Check that if number of matching details is smaller than 11, all details are displayed before clicking show all are displayed
                 if numOfDisplay > 11 and showAll == False:
                     if len(tmp_field_icon_num_of_display) != 10:
