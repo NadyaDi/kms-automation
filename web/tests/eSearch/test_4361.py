@@ -7,7 +7,8 @@ import clsTestService
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
-import enums
+import enums 
+
 
 
 class Test:
@@ -102,119 +103,216 @@ class Test:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 1: FAILED to make a search in My Media that matches entry name")
 #                 return 
-#               
+#                  
 #             writeToLog("INFO","Step 2: Going to verify fields display in results for search in entry name")
 #             if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForSearchInEntryName) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 2: FAILED to displayed correct fields for search in entry name")
 #                 return  
-#               
+#                   
 #             writeToLog("INFO","Step 3: Going to make a search in My Media that matches entry description")
 #             if self.common.myMedia.searchEntryMyMedia(self.searchInEntryDescription) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 3: FAILED to make a search in My Media that matches entry description")
 #                 return  
-#               
+#                   
 #             writeToLog("INFO","Step 4: Going to verify fields display in results for search in entry description")
 #             if self.common.myMedia.checkEntriesFieldsInResults(self.fieldsForSearchInEntryName) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 4: FAILED to displayed correct fields for search in entry description")
 #                 return  
-#               
+#                   
 #             writeToLog("INFO","Step 5: Going to make a search in My Media that matches single caption")
 #             if self.common.myMedia.searchEntryMyMedia(self.searchInSingleCaption) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 5: FAILED to make a search in My Media that matches single caption")
 #                 return   
-#               
+#                   
 #             writeToLog("INFO","Step 6: Going to verify single captions field display after clicking on field name")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, 'Caption') == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, enums.EntryFields.CAPTION) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 6: FAILED to verify single captions field display after clicking on field name")
 #                 return  
-#               
+#                   
 #             writeToLog("INFO","Step 7: Going to verify single captions field display after clicking on show more button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, 'Caption', entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, enums.EntryFields.CAPTION, entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 7: FAILED to verify single captions field display after clicking on show more button")
 #                 return  
-#               
+#                   
 #             writeToLog("INFO","Step 8: Going to verify single captions field display after clicking on show all button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, 'Caption') == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, enums.EntryFields.CAPTION) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 8: FAILED to verify single captions field display after clicking on show all button")
 #                 return 
-#              
+#                
 #             writeToLog("INFO","Step 9: Going to make a search in My Media that matches multiple captions")
 #             if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleCaptions) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 9: FAILED to make a search in My Media that matches multiple captions")
 #                 return   
-#              
+#                 
 #             writeToLog("INFO","Step 10: Going to verify multiple captions field display after clicking on field name")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.CAPTIONS, numOfDisplay=self.captionsNumOfDisplay) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 10: FAILED to verify multiple captions field display after clicking on field name")
 #                 return  
-#               
+#                   
 #             writeToLog("INFO","Step 11: Going to verify multiple captions field display after clicking on show more button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, 'Captions', entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.captionsNumOfDisplay) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.CAPTIONS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.captionsNumOfDisplay) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 11: FAILED to verify multiple captions field display after clicking on show more button")
 #                 return  
-#              
+#                 
 #             writeToLog("INFO","Step 12: Going to verify multiple captions field display after clicking on show all button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, 'Captions', numOfDisplay=self.captionsNumOfDisplay) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.CAPTIONS, numOfDisplay=self.captionsNumOfDisplay) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 12: FAILED to verify multiple captions field display after clicking on show all button")
 #                 return    
-#              
+#                 
 #             writeToLog("INFO","Step 13: Going to make a search in My Media that matches single tag")
 #             if self.common.myMedia.searchEntryMyMedia(self.searchInSingleTag) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 13: FAILED to make a search in My Media that matches single tag")
 #                 return   
-#              
+#                 
 #             writeToLog("INFO","Step 14: Going to verify single tag field display after clicking on field name")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, 'Tag') == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, enums.EntryFields.TAG) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 14: FAILED to verify single tag field display after clicking on field name")
 #                 return  
-#              
+#                 
 #             writeToLog("INFO","Step 15: Going to verify single tag field display after clicking on show more button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, 'Tags', entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, enums.EntryFields.TAGS, entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 15: FAILED to verify single tag field display after clicking on show more button")
 #                 return  
-#              
+#                 
 #             writeToLog("INFO","Step 16: Going to verify single captions field display after clicking on show all button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, 'Tags') == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, enums.EntryFields.TAGS) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 16: FAILED to verify single captions field display after clicking on show all button")
 #                 return 
-
-            writeToLog("INFO","Step 17: Going to make a search in My Media that matches multiple tags")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleTags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to make a search in My Media that matches multiple tags")
-                return   
-              
+#  
+#             writeToLog("INFO","Step 17: Going to make a search in My Media that matches multiple tags")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleTags) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 17: FAILED to make a search in My Media that matches multiple tags")
+#                 return   
+#                
 #             writeToLog("INFO","Step 18: Going to verify multiple tags field display after clicking on field name")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, 'Tags', numOfDisplay=self.tagsNumOfDisplay) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.TAGS, numOfDisplay=self.tagsNumOfDisplay) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 18: FAILED to verify multiple tags field display after clicking on field name")
 #                 return  
-#                
+#                   
 #             writeToLog("INFO","Step 19: Going to verify multiple tags field display after clicking on show more button")
-#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, 'Tags', entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.tagsNumOfDisplay) == False:
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.TAGS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.tagsNumOfDisplay) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 19: FAILED to verify multiple tags field display after clicking on show more button")
 #                 return  
-              
-            writeToLog("INFO","Step 20: Going to verify multiple tags field display after clicking on show all button")
-            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, 'Tags', numOfDisplay=self.tagsNumOfDisplay) == False:
+#                
+#             writeToLog("INFO","Step 20: Going to verify multiple tags field display after clicking on show all button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.TAGS, numOfDisplay=self.tagsNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 20: FAILED to verify multiple tags field display after clicking on show all button")
+#                 return   
+# 
+#             writeToLog("INFO","Step 21: Going to make a search in My Media that matches single quiz")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInSingleQuiz) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 21: FAILED to make a search in My Media that matches single quiz")
+#                 return   
+#                 
+#             writeToLog("INFO","Step 22: Going to verify single quiz field display after clicking on field name")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, enums.EntryFields.QUIZ) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 22: FAILED to verify single quiz field display after clicking on field name")
+#                 return  
+#                 
+#             writeToLog("INFO","Step 23: Going to verify single quiz field display after clicking on show more button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, enums.EntryFields.QUIZ, entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 23: FAILED to verify single quiz field display after clicking on show more button")
+#                 return  
+#                 
+#             writeToLog("INFO","Step 24: Going to verify single quiz field display after clicking on show all button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, enums.EntryFields.QUIZ) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 24: FAILED to verify single quiz field display after clicking on show all button")
+#                 return 
+#  
+#             writeToLog("INFO","Step 25: Going to make a search in My Media that matches multiple quiz")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleQuiz) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 25: FAILED to make a search in My Media that matches multiple quiz")
+#                 return   
+#                
+#             writeToLog("INFO","Step 26: Going to verify multiple quiz field display after clicking on field name")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.QUIZ, numOfDisplay=self.quizNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 26: FAILED to verify multiple quiz field display after clicking on field name")
+#                 return  
+#                   
+#             writeToLog("INFO","Step 27: Going to verify multiple quiz field display after clicking on show more button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.QUIZ, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.tagsNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 27: FAILED to verify multiple quiz field display after clicking on show more button")
+#                 return  
+#                
+#             writeToLog("INFO","Step 28: Going to verify multiple tags field display after clicking on show all button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.QUIZ, numOfDisplay=self.quizNumOfDisplay) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 28: FAILED to verify multiple tags field display after clicking on show all button")
+#                 return    
+# 
+# 
+#             writeToLog("INFO","Step 29: Going to make a search in My Media that matches single slide")
+#             if self.common.myMedia.searchEntryMyMedia(self.searchInSingleSlide) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 29: FAILED to make a search in My Media that matches single slide")
+#                 return   
+#                 
+#             writeToLog("INFO","Step 30: Going to verify single slide field display after clicking on field name")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(True, enums.EntryFields.SLIDE) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 30: FAILED to verify single slide field display after clicking on field name")
+#                 return  
+#                 
+#             writeToLog("INFO","Step 31: Going to verify single slide field display after clicking on show more button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(True, enums.EntryFields.SLIDE, entryOwner=self.entryOwner, categoriesList=self.categoriesList) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 31: FAILED to verify single slide field display after clicking on show more button")
+#                 return  
+#                 
+#             writeToLog("INFO","Step 32: Going to verify single slide field display after clicking on show all button")
+#             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(True, enums.EntryFields.SLIDE) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 32: FAILED to verify single slide field display after clicking on show all button")
+#                 return 
+ 
+            writeToLog("INFO","Step 33: Going to make a search in My Media that matches multiple slides")
+            if self.common.myMedia.searchEntryMyMedia(self.searchInMultipleSlides) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 20: FAILED to verify multiple tags field display after clicking on show all button")
+                writeToLog("INFO","Step 33: FAILED to make a search in My Media that matches multiple slides")
+                return   
+               
+            writeToLog("INFO","Step 34: Going to verify multiple slides field display after clicking on field name")
+            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.SLIDES, numOfDisplay=self.slidesNumOfDisplay) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 34: FAILED to verify multiple slides field display after clicking on field name")
+                return  
+                  
+            writeToLog("INFO","Step 35: Going to verify multiple slides field display after clicking on show more button")
+            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.SLIDES, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.tagsNumOfDisplay) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 35: FAILED to verify multiple slides field display after clicking on show more button")
+                return  
+               
+            writeToLog("INFO","Step 36: Going to verify multiple slides field display after clicking on show all button")
+            if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.SLIDES, numOfDisplay=self.slidesNumOfDisplay) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 36: FAILED to verify multiple slides field display after clicking on show all button")
                 return    
                                                                                                              
             ##################################################################

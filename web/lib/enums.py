@@ -356,3 +356,23 @@ class SearchInDropDown(Enum):
     POLLS                      = 'Polls'             
     QUIZ                       = 'Quiz'
     COMMENTS                   = 'Comments'
+    
+    
+class EntryFields(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    DETAILS                    = 'Details'
+    CHAPTER                    = 'Chapter'
+    CHAPTERS                   = 'Chapters'
+    SLIDE                      = 'Slide'
+    SLIDES                     = 'Slides'
+    TAG                        = 'Tag'
+    TAGS                       = 'Tags'
+    QUIZ                       = 'Quiz'
+    COMMENT                    = 'Comment'
+    COMMENTS                   = 'Comments'
+    POLL                       = 'Poll'
+    POLLS                      = 'Polls'
+    CAPTION                    = 'Caption'
+    CAPTIONS                   = 'Captions'
