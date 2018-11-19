@@ -20,7 +20,7 @@ class Test:
     # upload 3 entries : video / Audio / Image
     # Navigate to each entry page and verify player is working 
     #================================================================================================================================
-    testNum     = "589"
+    testNum     = "604"
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
