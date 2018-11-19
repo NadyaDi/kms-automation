@@ -187,6 +187,11 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.MY_MEDIA))
                 return False  
             
+            tmpEntryName = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+            if self.wait_visible(tmpEntryName, 15) == False:
+                writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+                return False
+            
         elif navigateFrom == enums.Location.CATEGORY_PAGE:
             if self.navigateToEntryPageFromCategoryPage(entryName, categoryName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.CATEGORY_PAGE))
@@ -201,6 +206,11 @@ class EntryPage(Base):
             if self.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON, multipleElements=True) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.UPLOAD_PAGE))
                 return False  
+            
+            tmpEntryName = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+            if self.wait_visible(tmpEntryName, 15) == False:
+                writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+                return False
             
         elif navigateFrom == enums.Location.MY_HISTORY:
             if self.navigateToEntryPageFromMyHistory(entryName) == False:
