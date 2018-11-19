@@ -153,3 +153,4 @@ test_602,KAF BB - Preview all kinds of media from my media,,,oleg.sigalov@kaltur
 test_599,KAF BB - Publish after upload,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_600,KAF BB - Publish from my media (single and multi),,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_603,KAF BB - View Collapsed Expanded Modes,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_601,KAF BB - Publish From Entry Page,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
