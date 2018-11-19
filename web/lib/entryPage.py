@@ -747,7 +747,7 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED, caption time in the player isn't correct")
             return False
             
-        self.common.blackBoard.switchToBlackboardIframe()
+        self.clsCommon.blackBoard.switchToBlackboardIframe()
         
         writeToLog("INFO","Success, caption was found and verified in the player")
         return True
