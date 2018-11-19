@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : preview all kinds of media from My Media amd Category
+    # Test Name : preview all kinds of media from My Media and Category
     # Test description:
     # upload 3 entries : video / Audio / Image
     #  Navigate to each entry page and verify player is working  and that the video / audio / image  is correct
