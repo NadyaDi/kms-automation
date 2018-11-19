@@ -739,7 +739,7 @@ class EditEntryPage(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         sleep(2)
-        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
+        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
         sleep(3)
@@ -748,7 +748,8 @@ class EditEntryPage(Base):
         if leavePage == True:
             if self.click_leave_page() == False:
                 return False
-                
+        
+        sleep(3)       
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
         if self.wait_visible(tmp_entry_name, 15) == False:

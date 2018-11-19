@@ -11,6 +11,7 @@ test_598,1,0,0,0,KAF BB - Delete through edit entry page
 test_600,1,0,0,0,KAF BB - Publish from my media (single and multi)
 test_599,1,0,0,0,KAF BB - Publish after upload
 test_602,1,0,0,0,KAF BB - Preview all kinds of media from my media
+test_603,1,0,0,0,KAF BB - View Collapsed Expanded Modes
 test_604,1,0,0,0,KAF BB - Upload media from desktop
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media

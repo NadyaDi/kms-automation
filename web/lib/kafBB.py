@@ -119,6 +119,7 @@ class BlackBoard(Base):
         
         return True
     
+    
     def navigateToGalleryBB(self, galleryName):
         if self.wait_visible(self.KAF_MEDIA_GALLERY_TITLE, 5) != False:
             writeToLog("INFO","Success Already in my Gallery page")
