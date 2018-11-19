@@ -471,7 +471,7 @@ class MyMedia(Base):
     # Author: Michal Zomper       
     # publishFrom - enums.Location
     # in categoryList / channelList will have all the names of the categories / channels to publish to
-    def publishSingleEntry(self, entryName, categoryList, channelList, galleryList='',  publishFrom = enums.Location.MY_MEDIA, disclaimer=False):  
+    def publishSingleEntry(self, entryName, categoryList, channelList, galleryList='',  publishFrom=enums.Location.MY_MEDIA, disclaimer=False):  
         #checking if disclaimer is turned on for "Before publish"
         if disclaimer == True:
             if self.handleDisclaimerBeforePublish(entryName) == False:
