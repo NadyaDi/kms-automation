@@ -69,7 +69,7 @@ test_721,Categories - Import Mermbers,1756201,mediaspace.kaltura.com,oleg.sigalo
 test_719,Categories - Enable / Disable Inherit permissions,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1025,Categories - Sort media on category page,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_641,Navigation,2370151-4,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
-test_644,Upload media from desktop and verify player,2370151-2,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
+test_644,Upload media from desktop and verify player,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_1594,Entry required field,2373952,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2565,Watch History - Add entry (Private) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,Watch History - Add entry (Published to channel- public) to watch list history,2373952-1,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -150,4 +150,5 @@ test_593,KAF BB -  Entry page - Add captions And Search,,,oleg.sigalov@kaltura.c
 test_597,KAF BB - Delete through my media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_598,KAF BB - Delete through edit entry page,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_602,KAF BB - Preview all kinds of media from my media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_599,KAF BB - Publish after upload,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_600,KAF BB - Publish from my media (single and multi),,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!

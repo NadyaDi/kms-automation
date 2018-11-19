@@ -9,6 +9,7 @@ test_593,KAF BB - Entry page - Add captions And Search,,,pythonautomation1@maili
 test_597,KAF BB - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_598,KAF BB - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_602,KAF BB - Preview all kinds of media from my media,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_599,KAF BB - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_600,KAF BB - Publish from my media (single and multi),,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -17,12 +18,12 @@ test_3279,Add collaborator co edit - thumbnail tab,2370151,mediaspace.kaltura.co
 test_3280,Add collaborator co edit - cpation tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3281,Add collaborator co publish,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3282,Add collaborator co edit,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_3273,Slide Deck Upload,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_3274,Slide Deck Upload - delete slides,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_3275,Slide Deck Upload - add / remove chapters,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_3276,Slide Deck Upload - change slide location,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_3283,Slide Deck Upload- A-sync upload,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_3284,Slide Deck Upload- search slides,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_3273,Slide Deck Upload,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_3274,Slide Deck Upload - delete slides,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_3275,Slide Deck Upload - add / remove chapters,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_3276,Slide Deck Upload - change slide location,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_3283,Slide Deck Upload- A-sync upload,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_3284,Slide Deck Upload- search slides,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
