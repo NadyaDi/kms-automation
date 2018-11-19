@@ -198,7 +198,7 @@ class EntryPage(Base):
                 return False
             
         elif navigateFrom == enums.Location.UPLOAD_PAGE:
-            if self.clsCommon.upload.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON) == False:
+            if self.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON, multipleElements=True) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.UPLOAD_PAGE))
                 return False  
             

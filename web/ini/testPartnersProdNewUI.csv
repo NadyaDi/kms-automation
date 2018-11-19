@@ -11,6 +11,7 @@ test_598,KAF BB - Delete through edit entry page,,,pythonautomation1@mailinator.
 test_602,KAF BB - Preview all kinds of media from my media,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_599,KAF BB - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_600,KAF BB - Publish from my media (single and multi),,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_603,KAF BB - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
