@@ -28,16 +28,11 @@ class Test:
     # Test variables
     entryDescription = "description"
     entryTags = "tag,"
-    entriesNames = None
     channelDescription = "description"
     channelTags = "tag,"
     privacyType = ""
-    playlisTitle = None
-    playlistDescription = "playlist description"
     playlistTag = "playlisttag,"
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
-    filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\waves.mp3'
-    filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
     
     
     #run test as different instances on all the supported platforms
@@ -58,11 +53,7 @@ class Test:
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
-#             self.entryName2 = clsTestService.addGuidToString('Audio', self.testNum)
-#             self.entryName3 = clsTestService.addGuidToString('Video2', self.testNum)
-            self.channelName = clsTestService.addGuidToString('Channel playlist', self.testNum)
-#             self.playlisTitle = clsTestService.addGuidToString('Channel playlist', self.testNum)
-#             self.entriesNames = [self.entryName1, self.entryName2, self.entryName3]
+            self.channelName = clsTestService.addGuidToString('Remove Entry From Channel', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
@@ -71,10 +62,10 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return    
             
-            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            writeToLog("INFO","Step 2: Going to upload entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
             
             writeToLog("INFO","Step 3: Going to create new channel")            
@@ -91,10 +82,16 @@ class Test:
             writeToLog("INFO","Step 5: Going to add and remove entry from channel")                                     
             if self.common.channel.removeEntryFromChannel(self.channelName, self.entryName1)== False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED failed to create channel playlist")
+                writeToLog("INFO","Step 5: FAILED to remove entry form channel")
                 return 
-            sleep(3)   
-            
+            sleep(3)  
+             
+            writeToLog("INFO","Step 6: Going to verify that entry doesn't display in channel any more")                                     
+            if self.common.channel.searchEntryInChannel(self.entryName1) == True:    
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED entry '" + self.entryName1 + "' still display in channel although he was removed")
+                return 
+            writeToLog("INFO","Step 6: Preview step failed as expected - entry was removed from channel and should not be found")
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

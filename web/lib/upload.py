@@ -9,6 +9,7 @@ try:
     import win32com.client
 except:
     pass
+import collections
 
 
 # This class is for multiple upload
@@ -500,7 +501,7 @@ class Upload(Base):
     def uploadEntries(self, entriesDict, entryDescription, entryTags):
         try:
             # Checking if entriesNames list type
-            if type(entriesDict) is dict: 
+            if (type(entriesDict) is dict) or (type(entriesDict) is collections.OrderedDict): 
                 for entryName in entriesDict: 
                     if self.uploadEntry(entriesDict.get(entryName), entryName, entryDescription, entryTags) == None:
                         writeToLog("INFO","FAILED to upload entry: " + entryName)

@@ -669,7 +669,11 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                     return False
                 
-            self.clsCommon.general.waitForLoaderToDisappear()   
+            self.clsCommon.general.waitForLoaderToDisappear()  
+            if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
+                writeToLog("INFO","FAILED to show all entries")
+                return False
+            
             writeToLog("INFO","Success, Sort was set successfully")
             return True
         else:
@@ -701,7 +705,11 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                 return False
 
-        self.clsCommon.general.waitForLoaderToDisappear()    
+        self.clsCommon.general.waitForLoaderToDisappear()  
+        if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
+            writeToLog("INFO","FAILED to show all entries")
+            return False
+              
         writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
@@ -1027,9 +1035,14 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to find clear search icon")
                 return False
             
-            if self.clickElement(clear_button[1]) == False:
-                writeToLog("INFO","FAILED click on the remove search icon")
-                return False
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                if self.clickElement(clear_button[0]) == False:
+                    writeToLog("INFO","FAILED click on the remove search icon")
+                    return False
+            else:
+                if self.clickElement(clear_button[1]) == False:
+                    writeToLog("INFO","FAILED click on the remove search icon")
+                    return False
         else:
             if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI, 15, multipleElements=True) == False:
                 writeToLog("INFO","FAILED click on the remove search icon")

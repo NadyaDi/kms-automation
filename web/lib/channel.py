@@ -1029,33 +1029,44 @@ class Channel(Base):
             writeToLog("INFO","FAILED to Click on Channel name: '" + channelName + "'")
             return False   
         sleep(5)
+            
+        if self.removeEntry(entryName) == False:
+            writeToLog("INFO","FAILED to remove entry")
+            return False 
         
+        return True
+
+
+    #Author: Michal Zomper
+    def removeEntry(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             parent_entry = self.expandEntryDetails(entryName)
             if parent_entry == False:
                 return False
+            
         # If we are in old UI we need to click first on "+" icon on entry's thumbnail
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             if self.clickEntryPlusIcon(entryName) == False:
                 return False
             
         # Set Remove button locator for old UI
-        tmp_entry_remove_btn = (self.CHANNEL_ENTRY_DELETE_BUTTON[0], self.CHANNEL_ENTRY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))   
+        tmpEntryEemoveBtn = (self.CHANNEL_ENTRY_DELETE_BUTTON[0], self.CHANNEL_ENTRY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))   
 
         sleep(2)
-        if self.click(tmp_entry_remove_btn) == False:
+        if self.click(tmpEntryEemoveBtn) == False:
             writeToLog("INFO","FAILED to click on Remove button")
             return False 
-
-        sleep(3)
+        sleep(2)
         
         if self.click(self.CHANNEL_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
+        sleep(4)
         
+        self.clsCommon.general.waitForLoaderToDisappear()
         return True
-    
-
+        
+        
     #@Author: Oded Berihon
     def addCommentToEntryFromChannel(self, channelName, entryName, comment):
         if self.navigateToEntryFromChannel(channelName, entryName) == False:

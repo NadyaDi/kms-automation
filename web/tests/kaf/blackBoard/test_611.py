@@ -1,19 +1,20 @@
-import time, pytest
 import sys,os
 sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
+from enum import *
+import time, pytest
 from clsCommon import Common
 import clsTestService
+import enums
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
-import enums
+import ctypes
 
 
 class Test:
-    
     #================================================================================================================================
-    #  @Author: Michal Zomper
-    # Test Name : My Media - Filter by media Type
+    # @Author: Michal Zomper
+    # Test Name : BlackBoard: My Media - Filter by media Type
     # Test description:
     # upload sevearl entries from all types: image / audio / video
     # In the Media Type filter:
@@ -23,9 +24,10 @@ class Test:
     #    4. Filter by 'All Media' - All the user's entries should be displayed - from any media type..
     # *The compatible icon should be displayed on top of the entry's thumbnail - according to the media type.
     #================================================================================================================================
-    testNum = "667"
-    
+    testNum     = "611"
+    application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
+    
     
     status = "Pass"
     timeout_accured = "False"
@@ -55,9 +57,8 @@ class Test:
     
     def test_01(self,driverFix,env):
 
-        #write to log we started the test
-        logStartTest(self,driverFix)
         try:
+            logStartTest(self, driverFix, self.application)
             ########################### TEST SETUP ###########################
             #capture test start time
             self.startTime = time.time()
@@ -241,9 +242,9 @@ class Test:
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAllMedia) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to filter and verify my media entries  by '" + enums.MediaType.ALL_MEDIA.value + "'")
-                return 
+                return            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'My Media - Filter by media Type' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'BlackBoard: My Media - Filter by media Type' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
