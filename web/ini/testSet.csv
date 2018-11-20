@@ -170,17 +170,17 @@ test_8,1,0,0,0,Setup test for eSearch
 test_9,1,0,0,0,Setup test for eSearch
 test_11,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
-test_4311,1,0,0,0,eSearch - Sort by - My Media
-test_4314,1,0,0,0,eSearch - Sort by - Global search
-test_4315,1,0,0,0,eSearch - Sort by - Add to channel - My media tab
-test_4316,1,0,0,0,eSearch - Sort by - Add to channel - SR tab
-test_4318,1,0,0,0,eSearch - Sort by - Add to gallery - My media tab
-test_4319,1,0,0,0,eSearch - Sort by - Add to gallery - SR tab
-test_4322,1,0,0,0,eSearch - Sort by - Channel - media tab
-test_4325,1,0,0,0,eSearch - Sort by - Gallery - media tab
-test_4326,1,0,0,0,eSearch - Sort by - Add new quiz
-test_4327,1,0,0,0,eSearch - Sort by - Channel - pending tab
-test_4328,1,0,0,0,eSearch - Sort by - Gallery - pending tab
+test_4311,1,0,0,0,eSearch - Sort by - My Media - when search is made
+test_4314,1,0,0,0,eSearch - Sort by - Global search - when search is made
+test_4315,1,0,0,0,eSearch - Sort by - Add to channel - My media tab - when search is made
+test_4316,1,0,0,0,eSearch - Sort by - Add to channel - SR tab - when search is made
+test_4318,1,0,0,0,eSearch - Sort by - Add to gallery - My media tab - when search is made
+test_4319,1,0,0,0,eSearch - Sort by - Add to gallery - SR tab - when search is made
+test_4322,1,0,0,0,eSearch - Sort by - Channel - media tab - when search is made
+test_4325,1,0,0,0,eSearch - Sort by - Gallery - media tab - when search is made
+test_4326,1,0,0,0,eSearch - Sort by - Add new quiz - when search is made
+test_4327,1,0,0,0,eSearch - Sort by - Channel - pending tab - when search is made
+test_4328,1,0,0,0,eSearch - Sort by - Gallery - pending tab - when search is made
 test_4343,1,0,0,0,eSearch - Search In - My media
 test_4345,1,0,0,0,eSearch - Search In - Global page
 test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
@@ -193,3 +193,26 @@ test_4352,1,0,0,0,eSearch - Search In - channel - pending tab
 test_4353,1,0,0,0,eSearch - Search In - gallery - pending tab
 test_4357,1,0,0,0,eSearch - Search In - Add new quiz
 test_4361,1,0,0,0,eSearch - Fields display in results - My Media
+test_4395,1,0,0,0,eSearch - Fields display in results - Multiple - My Media
+test_4396,1,0,0,0,eSearch - Fields display in results - Single - Global page
+test_4397,1,0,0,0,eSearch - Fields display in results - Multiple - Global page
+test_4398,1,0,0,0,eSearch - Sort by - My Media - when no search is made
+test_4399,1,0,0,0,eSearch - Sort by - Add to channel - My media tab - when no search is made
+test_4400,1,0,0,0,eSearch - Sort by - Add to channel - SR tab - when no search is made
+test_4401,1,0,0,0,eSearch - Sort by - Add to gallery - My media tab - when no search is made
+test_4402,1,0,0,0,eSearch - Sort by - Add to gallery - SR tab - when no search is made
+test_4403,1,0,0,0,eSearch - Sort by - Channel - media tab - when search is made
+test_4404,1,0,0,0,eSearch - Sort by - Gallery - media tab - when no search is made
+test_4405,1,0,0,0,eSearch - Sort by - Add new quiz - when no search is made
+test_4406,1,0,0,0,eSearch - Sort by - Channel - pending tab - when no search is made
+test_4407,1,0,0,0,eSearch - Sort by - Gallery - pending tab - when no search is made
+test_4408,1,0,0,0,eSearch - Fields display in results - Single - Add to channel - My media tab
+test_4410,1,0,0,0,eSearch - Fields display in results - Multiple - Add to channel - My Media tab
+test_4411,1,0,0,0,eSearch - Fields display in results - Single - Add to channel - SR tab
+test_4412,1,0,0,0,eSearch - Fields display in results - Multiple - Add to channel - SR tab
+test_4418,1,0,0,0,eSearch - Fields display in results - Single - Add to gallery - My media tab
+test_4419,1,0,0,0,eSearch - Fields display in results - Multiple - Add to gallery - My media tab
+test_4420,1,0,0,0,eSearch - Fields display in results - Single - Add to gallery - SR tab
+test_4421,1,0,0,0,eSearch - Fields display in results - Multiple - Add to gallery - SR tab
+test_4422,1,0,0,0,eSearch - Fields display in results - Single - channel - media tab
+test_4423,1,0,0,0,eSearch - Fields display in results - Multiple - channel - media tab
