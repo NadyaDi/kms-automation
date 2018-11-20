@@ -14,6 +14,9 @@ test_601,1,0,0,0,KAF BB - Publish From Entry Page
 test_602,1,0,0,0,KAF BB - Preview all kinds of media from my media
 test_603,1,0,0,0,KAF BB - View Collapsed Expanded Modes
 test_604,1,0,0,0,KAF BB - Upload media from desktop
+test_608,1,0,0,0,KAF BB - My Media - Search by Name / Description / Tags
+test_609,0,1,0,0,KAF BB - My Media - Sort Media
+test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
@@ -159,6 +162,7 @@ test_3881,1,0,0,0,SAML Login
 test_3902,1,0,0,0,Sort by - Galleries page
 test_3901,1,0,0,0,Sort by - My Channels - when search is made
 test_4309,1,0,0,0,Sort by - Channels - when search is made
+test_4425,1,0,0,0,KAF BB - Remove Media From Media Gallery
 test_1,1,0,0,0,Setup test for eSearch
 test_2,1,0,0,0,Setup test for eSearch
 test_3,1,0,0,0,Setup test for eSearch
