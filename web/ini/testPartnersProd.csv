@@ -154,3 +154,7 @@ test_599,KAF BB - Publish after upload,,,oleg.sigalov@kaltura.com,Kaltura1!,apps
 test_600,KAF BB - Publish from my media (single and multi),,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_603,KAF BB - View Collapsed Expanded Modes,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_601,KAF BB - Publish From Entry Page,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_608,KAF BB - My Media - Search by Name / Description / Tags,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_609,KAF BB - My Media - Sort Media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_611,KAF BB - My Media - Filter by media Type,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_4225,KAF BB - Remove Media From Media Gallery,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
