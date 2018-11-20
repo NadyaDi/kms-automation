@@ -13,10 +13,10 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : eSearch - Sort by - My Media - when search is made
+    # Test Name : eSearch - Sort by - My Media - when no search is made
     # Test description:
     # Upload entries with different sort by values
-    # Go to my media page, make a search and sort entries:
+    # Go to my media page and sort entries:
     #    1. Creation Date - Descending -  The entries order should be from the last uploaded video to the first one.
     #    2. Creation Ascending - The entries order should be from the first uploaded video to the last one.
     #    3. Update Date - Descending -  The entries order should be from the last updated video to the first one.
@@ -28,7 +28,7 @@ class Test:
     #    9. Scheduling Descending - The entries order should be from the first scheduling date to the latest scheduling date
     #    10. Scheduling Ascending - The entries order should be from the latest scheduling date to the first scheduling date
     #================================================================================================================================
-    testNum = "4311"
+    testNum = "4398"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -90,79 +90,67 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to displayed correct default sort before making a search")
                 return   
               
-            writeToLog("INFO","Step 3: Going to make a search in 'My Media' page")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInMyMedia) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to make a search in 'My Media' page")
-                return 
-               
-            writeToLog("INFO","Step 4: Going to verify default sort after making a search")
-            if self.common.channel.verifyChannelsDefaultSort(enums.SortBy.RELEVANCE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to displayed correct default sort after making a search")
-                return                                                       
-                   
-            writeToLog("INFO","Step 5: Going verify sort entries by 'Creation date - ascending' - when search is made")
+            writeToLog("INFO","Step 3: Going verify sort entries by 'Creation date - ascending' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.CREATION_DATE_ASC, self.sortEntriesByCreationDateAscending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to sort entries by 'Creation date - ascending' - when search is made")
+                writeToLog("INFO","Step 3: FAILED to sort entries by 'Creation date - ascending' - when no search is made")
                 return 
-                
-            writeToLog("INFO","Step 6: Going verify sort entries by 'Creation date - descending' - when search is made")
+               
+            writeToLog("INFO","Step 4: Going verify sort entries by 'Creation date - descending' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.CREATION_DATE_DESC, self.sortEntriesByCreationDateDescending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to sort entries by 'Creation date - descending' - when search is made")
+                writeToLog("INFO","Step 4: FAILED to sort entries by 'Creation date - descending' - when no search is made")
                 return  
-                
-            writeToLog("INFO","Step 7: Going verify sort entries by 'Alphabetical A-Z' - when search is made")
+               
+            writeToLog("INFO","Step 5: Going verify sort entries by 'Alphabetical A-Z' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.ALPHABETICAL, self.sortEntriesByAlphabeticalAToZ) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to sort entries by 'Alphabetical A-Z' - when search is made")
+                writeToLog("INFO","Step 5: FAILED to sort entries by 'Alphabetical A-Z' - when no search is made")
                 return   
-                
-            writeToLog("INFO","Step 8: Going verify sort entries by 'Alphabetical Z-A' - when search is made")
+               
+            writeToLog("INFO","Step 6: Going verify sort entries by 'Alphabetical Z-A' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.ALPHABETICAL_Z_A, self.sortEntriesByAlphabeticalZToA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to sort entries by 'Alphabetical Z-A' - when search is made")
+                writeToLog("INFO","Step 6: FAILED to sort entries by 'Alphabetical Z-A' - when no search is made")
                 return                                      
-    
-            writeToLog("INFO","Step 9: Going verify sort entries by 'Likes' - when search is made")
+   
+            writeToLog("INFO","Step 7: Going verify sort entries by 'Likes' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.LIKES, self.sortEntriesByLikes) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to sort entries by 'Likes' - when search is made")
+                writeToLog("INFO","Step 7: FAILED to sort entries by 'Likes' - when no search is made")
                 return   
-                
-            writeToLog("INFO","Step 10: Going verify sort entries by 'Comments' - when search is made")
+               
+            writeToLog("INFO","Step 8: Going verify sort entries by 'Comments' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.COMMENTS, self.SortEntriesByComments) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to sort entries by 'Comments' - when search is made")
+                writeToLog("INFO","Step 8: FAILED to sort entries by 'Comments' - when no search is made")
                 return    
-               
-            writeToLog("INFO","Step 11: Going verify sort entries by 'Scheduling Ascending' - when search is made")
+             
+            writeToLog("INFO","Step 9: Going verify sort entries by 'Scheduling Ascending' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.SCHEDULING_ASC, self.sortEntriesBySchedulingAscending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to sort entries by 'Scheduling Ascending' - when search is made")
+                writeToLog("INFO","Step 9: FAILED to sort entries by 'Scheduling Ascending' - when no search is made")
                 return  
-               
-            writeToLog("INFO","Step 12: Going verify sort entries by 'Scheduling Descending' - when search is made")
+             
+            writeToLog("INFO","Step 10: Going verify sort entries by 'Scheduling Descending' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.SCHEDULING_DESC, self.sortEntriesBySchedulingDescending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to sort entries by 'Scheduling Descending' - when search is made")
+                writeToLog("INFO","Step 10: FAILED to sort entries by 'Scheduling Descending' - when no search is made")
                 return   
-              
-            writeToLog("INFO","Step 13: Going verify sort entries by 'Update - Descending' - when search is made")
+
+            writeToLog("INFO","Step 11: Going verify sort entries by 'Update - Descending' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.UPDATE_DESC, self.sortEntriesByUpdateDateDescending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to sort entries by 'Update - Descending' - when search is made")
+                writeToLog("INFO","Step 11: FAILED to sort entries by 'Update - Descending' - when no search is made")
                 return  
-              
-            writeToLog("INFO","Step 14: Going verify sort entries by 'Update - Ascending' - when search is made")
+            
+            writeToLog("INFO","Step 12: Going verify sort entries by 'Update - Ascending' - when no search is made")
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.UPDATE_ASC, self.sortEntriesByUpdateDateAscending) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to sort entries by 'Update - Ascending' - when search is made")
-                return                                                                        
+                writeToLog("INFO","Step 12: FAILED to sort entries by 'Update - Ascending' - when no search is made")
+                return                                                  
             ##################################################################
-            writeToLog("INFO","TEST PASSED: Sort by in 'My Media' - when search is made was done successfully")
+            writeToLog("INFO","TEST PASSED: Sort by in 'My Media' - when no search is made was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

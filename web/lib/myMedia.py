@@ -100,9 +100,9 @@ class MyMedia(Base):
     ENTRY_OWNER_DETAILS                                         = ('xpath', '//a[contains(@href,"/createdby/") and text()="OWNER_NAME"]')
     ENTRY_CREATION_DETAILS                                      = ('xpath', '//span[@class="from-now hidden-phone"]')
     ENTRY_CATEGORIES_DETAILS                                    = ('xpath', '//a[@class="results-preview__category"]')
-    ENTRY_DETAILS_COMMENTS_ICON                                 = ('xpath', '//i[@class="stat_data__stat__icon icon-comment"]')
-    ENTRY_DETAILS_HEART_ICON                                    = ('xpath', '//i[@class="stat_data__stat__icon icon-heart"]')
-    ENTRY_DETAILS_EYE_ICON                                      = ('xpath', '//i[@class="stat_data__stat__icon icon-eye-open"]')
+    ENTRY_DETAILS_COMMENTS_ICON                                 = ('xpath', '//i[@class="entryStatistics__stat__icon icon-comment"]')
+    ENTRY_DETAILS_HEART_ICON                                    = ('xpath', '//i[@class="entryStatistics__stat__icon icon-heart"]')
+    ENTRY_DETAILS_EYE_ICON                                      = ('xpath', '//i[@class="entryStatistics__stat__icon icon-eye-open"]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1697,7 +1697,7 @@ class MyMedia(Base):
     # Verify that field display is correct:
     # iSingle=True - There is just once matching value of the field
     # iSingle=False - There is more than one matching value of the field
-    def verifyFieldDisplayInResultAfterClickingOnShowMore(self, isSingle, field, entryOwner, categoriesList, numOfDisplay=1):  
+    def verifyFieldDisplayInResultAfterClickingOnShowMore(self, isSingle, field, entryOwner, categoriesList, numOfDisplay=1, isWebcast=False):  
         # Click on show more button
         if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
             writeToLog("INFO","FAILED to click on 'Show more' button")
@@ -1714,7 +1714,7 @@ class MyMedia(Base):
             return False
         
         # Verify that correct icons are displayed
-        if self.verifyEntryIconsAfterClickingShowMore()== False:
+        if self.verifyEntryIconsAfterClickingShowMore(isWebcast)== False:
             writeToLog("INFO","FAILED to display correct entry icons")
             return False             
 
@@ -1854,7 +1854,7 @@ class MyMedia(Base):
                     
             elif field == enums.EntryFields.DETAILS:
                 # Check that if number of matching details is smaller than 11, all details are displayed before clicking show all are displayed
-                if numOfDisplay > 11 and showAll == False:
+                if numOfDisplay > 10 and showAll == False:
                     if len(tmp_field_icon_num_of_display) != 10:
                         writeToLog("INFO","FAILED to display correct number of details values when there are more than 10 details")
                         return False  
@@ -1937,14 +1937,19 @@ class MyMedia(Base):
     
     # @Author: Inbar Willman
     # verify entry icons after clicking show more
-    def verifyEntryIconsAfterClickingShowMore(self):
+    def verifyEntryIconsAfterClickingShowMore(self, isWebcast=False):
         if self.is_visible(self.ENTRY_DETAILS_COMMENTS_ICON) == False:
             writeToLog("INFO", "FAILED to displayed comment icon")            
-            return False   
-        
-        if self.is_visible(self.ENTRY_DETAILS_EYE_ICON) == False:
-            writeToLog("INFO", "FAILED to displayed eye icon")            
             return False 
+          
+        if isWebcast == False:
+            if self.is_visible(self.ENTRY_DETAILS_EYE_ICON) == False:
+                writeToLog("INFO", "FAILED to displayed eye icon")            
+                return False 
+        else:
+            if self.is_visible(self.ENTRY_DETAILS_EYE_ICON) == True:
+                writeToLog("INFO", "FAILED - eye icon shouoldn't be displayed")            
+                return False             
         
         if self.is_visible(self.ENTRY_DETAILS_HEART_ICON) == False:
             writeToLog("INFO", "FAILED to displayed eye icon")            

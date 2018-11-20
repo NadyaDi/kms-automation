@@ -15,10 +15,10 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : eSearch - Fields display in results - Single - My Media
+    # Test Name : eSearch - Fields display in results - Single - Global page
     # Test description:
     # Upload entries with different cue points fields
-    # Go to My Media, make a search that matches single value in field, and check for field display in results
+    # Go to global page, make a search that matches single value in field, and check for field display in results
     #    1. Name
     #    2. Description
     #    3. Tag
@@ -30,7 +30,7 @@ class Test:
     #    9. Comments
     #    10. Polls
     #================================================================================================================================
-    testNum = "4361"
+    testNum = "4396"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -82,10 +82,10 @@ class Test:
             # Fields display
             self.fieldsForSearchInEntryName = {'Captions':False, 'Tags':False, 'Quiz':False, 'Slides':False, 'Details':False, 'Chapters':False, 'Comments':False, 'Poll':False}                
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to make a search in My Media that matches entry name")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInEntryName) == False:
+            writeToLog("INFO","Step 1: Going to make a search in global page that matches entry name")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInEntryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to make a search in My Media that matches entry name")
+                writeToLog("INFO","Step 1: FAILED to make a global search that matches entry name")
                 return 
                    
             writeToLog("INFO","Step 2: Going to verify fields display in results for search in entry name")
@@ -106,10 +106,10 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to displayed correct fields for search in entry description")
                 return  
                     
-            writeToLog("INFO","Step 5: Going to make a search in My Media that matches single caption")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleCaption) == False:
+            writeToLog("INFO","Step 5: Going to make a search in global page that matches single caption")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleCaption) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to make a search in My Media that matches single caption")
+                writeToLog("INFO","Step 5: FAILED to make a search in global page that matches single caption")
                 return   
                     
             writeToLog("INFO","Step 6: Going to verify single captions field display after clicking on field name")
@@ -130,10 +130,10 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED to verify single captions field display after clicking on show all button")
                 return 
                                 
-            writeToLog("INFO","Step 9: Going to make a search in My Media that matches single tag")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleTag) == False:
+            writeToLog("INFO","Step 9: Going to make a search in global page that matches single tag")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleTag) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to make a search in My Media that matches single tag")
+                writeToLog("INFO","Step 9: FAILED to make a search in global page that matches single tag")
                 return   
                   
             writeToLog("INFO","Step 10: Going to verify single tag field display after clicking on field name")
@@ -154,10 +154,10 @@ class Test:
                 writeToLog("INFO","Step 12: FAILED to verify single captions field display after clicking on show all button")
                 return 
   
-            writeToLog("INFO","Step 13: Going to make a search in My Media that matches single quiz")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleQuiz) == False:
+            writeToLog("INFO","Step 13: Going to make a search in global page that matches single quiz")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleQuiz) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to make a search in My Media that matches single quiz")
+                writeToLog("INFO","Step 13: FAILED to make a search in global page that matches single quiz")
                 return   
                   
             writeToLog("INFO","Step 14: Going to verify single quiz field display after clicking on field name")
@@ -178,10 +178,10 @@ class Test:
                 writeToLog("INFO","Step 16: FAILED to verify single quiz field display after clicking on show all button")
                 return 
    
-            writeToLog("INFO","Step 17: Going to make a search in My Media that matches single slide")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleSlide) == False:
+            writeToLog("INFO","Step 17: Going to make a search in global page that matches single slide")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleSlide) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to make a search in My Media that matches single slide")
+                writeToLog("INFO","Step 17: FAILED to make a search in global page that matches single slide")
                 return   
                   
             writeToLog("INFO","Step 18: Going to verify single slide field display after clicking on field name")
@@ -202,10 +202,10 @@ class Test:
                 writeToLog("INFO","Step 20: FAILED to verify single slide field display after clicking on show all button")
                 return 
    
-            writeToLog("INFO","Step 21: Going to make a search in My Media that matches single chapter")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleChapter) == False:
+            writeToLog("INFO","Step 21: Going to make a search in global page that matches single chapter")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleChapter) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 21: FAILED to make a search in My Media that matches single chapter")
+                writeToLog("INFO","Step 21: FAILED to make a search in global page that matches single chapter")
                 return   
                    
             writeToLog("INFO","Step 22: Going to verify single chapter field display after clicking on field name")
@@ -226,10 +226,10 @@ class Test:
                 writeToLog("INFO","Step 24: FAILED to verify single chapter field display after clicking on show all button")
                 return 
     
-            writeToLog("INFO","Step 25: Going to make a search in My Media that matches single comment")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleComment) == False:
+            writeToLog("INFO","Step 25: Going to make a search in global page that matches single comment")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleComment) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 25: FAILED to make a search in My Media that matches single comment")
+                writeToLog("INFO","Step 25: FAILED to make a search in global page that matches single comment")
                 return   
                    
             writeToLog("INFO","Step 26: Going to verify single comment field display after clicking on field name")
@@ -250,10 +250,10 @@ class Test:
                 writeToLog("INFO","Step 28: FAILED to verify single comment field display after clicking on show all button")
                 return 
  
-            writeToLog("INFO","Step 29: Going to make a search in My Media that matches single poll")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSinglePoll) == False:
+            writeToLog("INFO","Step 29: Going to make a search in global page that matches single poll")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSinglePoll) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 29: FAILED to make a search in My Media that matches single poll")
+                writeToLog("INFO","Step 29: FAILED to make a search in global page that matches single poll")
                 return   
                   
             writeToLog("INFO","Step 30: Going to verify single poll field display after clicking on field name")
@@ -274,10 +274,10 @@ class Test:
                 writeToLog("INFO","Step 32: FAILED to verify single poll field display after clicking on show all button")
                 return 
   
-            writeToLog("INFO","Step 33: Going to make a search in My Media that matches single detail")
-            if self.common.myMedia.searchEntryMyMedia(self.searchInSingleDetail) == False:
+            writeToLog("INFO","Step 33: Going to make a search in global page that matches single detail")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.searchInSingleDetail) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 33: FAILED to make a search in My Media that matches single detail")
+                writeToLog("INFO","Step 33: FAILED to make a search in global page that matches single detail")
                 return   
                   
             writeToLog("INFO","Step 34: Going to verify detail comment field display after clicking on field name")
