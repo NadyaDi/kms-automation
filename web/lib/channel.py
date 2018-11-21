@@ -1221,28 +1221,10 @@ class Channel(Base):
                     return False
                 self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
                 
-            # Checking if entriesNames list type
-            if type(entriesNames) is list: 
-                for entryName in entriesNames: 
-                    if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
-                        writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
-                        return False
-                    
-                    writeToLog("INFO","Going to publish Entry: " + entryName + " to: " + channelName)
-            else:
-                if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entriesNames) == False:
-                        writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
-                        return False
-                    
-                writeToLog("INFO","Going to publish Entry: " + entriesNames + " to: " + channelName)
+            if self.addContentFromMyMedia(entriesNames) == False:
+                writeToLog("INFO","FAILED to publish entries to channel: " + channelName)
+                return False
                 
-            if self.click(self.CHANNEL_PUBLISH_BUTTON) == False:
-                writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
-                return False             
-            
-            sleep(1)
-            self.clsCommon.general.waitForLoaderToDisappear()
-            
             published = False
             
             if isChannelModerate == True:
@@ -1272,54 +1254,99 @@ class Channel(Base):
         return True
     
     
-    #   @Author: Tzachi Guetta    
-    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
-        try:                
-            if navigate == True:
-                if self.navigateToChannel(channelName) == False:
-                    writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+    # Author: Michal Zomper
+    def addContentFromMyMedia(self, entriesNames):
+        # Checking if entriesNames list type
+        if type(entriesNames) is list: 
+            for entryName in entriesNames: 
+                if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
                     return False
                 
-                if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on channel's moderation tab")
-                    return False        
+                writeToLog("INFO","Going to publish Entry: " + entryName)
+        else:
+            if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entriesNames) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                    return False
+                
+            writeToLog("INFO","Going to publish Entry: " + entriesNames)
             
-            sleep(1)
-            self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
-            
-            if type(toRejectEntriesNames) is list:
-                for rejectEntry in toRejectEntriesNames:
-                    self.method_helper_rejectEntry(rejectEntry)
-                    self.clsCommon.general.waitForLoaderToDisappear()
-            else:
-                if toRejectEntriesNames != '':
-                    self.method_helper_rejectEntry(toRejectEntriesNames) 
-                    self.clsCommon.general.waitForLoaderToDisappear()               
-            
-            if type(toApproveEntriesNames) is list:
-                for approveEntry in toApproveEntriesNames:
-                    self.method_helper_approveEntry(approveEntry)
-                    self.clsCommon.general.waitForLoaderToDisappear()
-            else:
-                if toApproveEntriesNames != '':
-                    self.method_helper_approveEntry(toApproveEntriesNames)
-                    self.clsCommon.general.waitForLoaderToDisappear()
+        if self.click(self.CHANNEL_PUBLISH_BUTTON) == False:
+            writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+            return False             
         
-        except NoSuchElementException:
-            return False
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
         
         return True
     
+    
+    
+    #   @Author: Tzachi Guetta    
+    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
+                       
+        if navigate == True:
+            if self.navigateToChannel(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                return False
+            
+            if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on channel's moderation tab")
+                return False        
+        
+        sleep(1)
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
+        
+        if self.pandingAndRejectInPandingTab(toRejectEntriesNames, toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED to reject/approve entries")
+            return False  
+       
+        return True
+    
+    
+    # Author: Tzachi Guetta 
+    def pandingAndRejectInPandingTab(self, toRejectEntriesNames, toApproveEntriesNames):
+        if type(toRejectEntriesNames) is list:
+            for rejectEntry in toRejectEntriesNames:
+                if self.method_helper_rejectEntry(rejectEntry) == False:
+                    writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        else:
+            if toRejectEntriesNames != '':
+                if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
+                    writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()               
+        
+        if type(toApproveEntriesNames) is list:
+            for approveEntry in toApproveEntriesNames:
+                if self.method_helper_approveEntry(approveEntry) == False:
+                    writeToLog("INFO","FAILED to approve entry: " + toRejectEntriesNames)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        else:
+            if toApproveEntriesNames != '':
+                if self.method_helper_approveEntry(toApproveEntriesNames) == False:
+                    writeToLog("INFO","FAILED to approve entry: " + toRejectEntriesNames)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True
+                
     
     # Author: Tzachi Guetta     
     def method_helper_rejectEntry(self, rejectEntry):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
         tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+        
         if self.click(tmpRejectBtn) == False:
             writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
             return False 
+        
         writeToLog("INFO","The following entry was rejected : " + rejectEntry)  
+        return True
         
         
     # Author: Tzachi Guetta     
@@ -1327,11 +1354,13 @@ class Channel(Base):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
         tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
+        
         if self.click(tmpApproveBtn) == False:
             writeToLog("INFO","FAILED to approve entry: " + approveEntry)
             return False                    
         
         writeToLog("INFO","The following entry was approved : " + approveEntry)
+        return True
         
         
     # Author: Tzachi Guetta 

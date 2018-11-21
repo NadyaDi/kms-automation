@@ -27,6 +27,7 @@ from selenium.webdriver.common.keys import Keys
 from api import ApiClientSession
 from globalSearch import GlobalSearch
 import filecmp
+from kafGeneric import KafGeneric
 
 
     #============================================================================================================
@@ -57,10 +58,12 @@ class Common():
         self.home               = Home(self, driver)
         self.freeTrail          = FreeTrial(self, driver)
         self.apiClientSession   = ApiClientSession(self, driver)
+        self.globalSearch       = GlobalSearch(self, driver)
         ### KAF ###
+        self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
         self.sharePoint         = SharePoint(self, driver)
-        self.globalSearch       = GlobalSearch(self, driver)
+        
     #=============================================================================================================
     # Locators:
     #=============================================================================================================
