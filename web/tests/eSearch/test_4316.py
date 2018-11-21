@@ -74,112 +74,106 @@ class Test:
             self.sortEntriesBySchedulingAscending    = ("Sort by Scheduling - Past", "Sort by Scheduling - In scheduling", "Sort by Scheduling - Future")
             self.sortEntriesBySchedulingDescending   = ("Sort by Scheduling - Future", "Sort by Scheduling - In scheduling", "Sort by Scheduling - Past")
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to enable category scheduling module")
-            if self.common.admin.enableCategoryScheduling(True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to enable category scheduling module")
-                return 
-            
+#             writeToLog("INFO","Step 1: Going to enable category scheduling module")
+#             if self.common.admin.enableCategoryScheduling(True) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 1: FAILED to enable category scheduling module")
+#                 return 
+#             
             writeToLog("INFO","Step 2: Going to login to KMS")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to login to KMS")
                 return  
                         
-            writeToLog("INFO","Step 3: Going to channel page")
-            if self.common.channel.navigateToChannel(self.channel) == False:
+            writeToLog("INFO","Step 3: Going to navigate to add to channel - media tab")
+            if self.common.channel.navigateToAddToChannel(self.channel) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to go to channel page")
-                return 
+                writeToLog("INFO","Step 3: FAILED to to navigate to add to channel - media tab")
+                return            
             
-            writeToLog("INFO","Step 4: Going to click on 'Add to channel' button")
-            if self.common.base.click(self.common.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to to click on 'Add to channel' button")
-                return             
-            
-            writeToLog("INFO","Step 5: Going to navigate to SR tab")
+            writeToLog("INFO","Step 4: Going to navigate to SR tab")
             if self.common.channel.navigateToSrTabInAddToChannel(self.sRChannel) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to to navigate to SR tab")
+                writeToLog("INFO","Step 4: FAILED to to navigate to SR tab")
                 return    
             
-            writeToLog("INFO","Step 6: Going to verify default sort before making a search in SR tab")
+            writeToLog("INFO","Step 5: Going to verify default sort before making a search in SR tab")
             if self.common.channel.verifyChannelsDefaultSort(enums.SortBy.CREATION_DATE_DESC) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to displayed correct default sort before making a search in SR tab")
+                writeToLog("INFO","Step 5: FAILED to displayed correct default sort before making a search in SR tab")
                 return   
               
-            writeToLog("INFO","Step 7: Going to make a search in 'Add to channel' - 'SR' tab")
+            writeToLog("INFO","Step 6: Going to make a search in 'Add to channel' - 'SR' tab")
             if self.common.channel.searchInAddToChannel(self.searchInAddToChannel, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to make a search in 'Add to channel' - 'SR' tab")
+                writeToLog("INFO","Step 6: FAILED to make a search in 'Add to channel' - 'SR' tab")
                 return 
                
-            writeToLog("INFO","Step 8: Going to verify default sort after making a search")
-            if self.common.channel.verifyChannelsDefaultSort(enums.SortBy.RELEVANCE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to displayed correct default sort after making a search")
-                return                                                                                                           
-                    
-            writeToLog("INFO","Step 9: Going verify sort entries by 'Creation date - ascending' - when search is made")
-            if self.common.channel.verifySortInAddToChannel(enums.SortBy.CREATION_DATE_ASC, self.sortEntriesByCreationDateAscending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to sort entries by 'Creation date - ascending' - when search is made")
-                return 
-                 
-            writeToLog("INFO","Step 10: Going verify sort entries by 'Creation date - descending' - when search is made")
-            if self.common.channel.verifySortInAddToChannel(enums.SortBy.CREATION_DATE_DESC, self.sortEntriesByCreationDateDescending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to sort entries by 'Creation date - descending' - when search is made")
-                return  
-                 
-            writeToLog("INFO","Step 11: Going verify sort entries by 'Alphabetical A-Z' - when search is made")
-            if self.common.channel.verifySortInAddToChannel(enums.SortBy.ALPHABETICAL, self.sortEntriesByAlphabeticalAToZ, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to sort entries by 'Alphabetical A-Z' - when search is made")
-                return   
-                 
-            writeToLog("INFO","Step 12: Going verify sort entries by 'Alphabetical Z-A' - when search is made")
-            if self.common.channel.verifySortInAddToChannel(enums.SortBy.ALPHABETICAL_Z_A, self.sortEntriesByAlphabeticalZToA, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to sort entries by 'Alphabetical Z-A' - when search is made")
-                return                                      
-     
-            writeToLog("INFO","Step 13: Going verify sort entries by 'Likes' - when search is made")
-            if self.common.channel.verifySortInAddToChannel(enums.SortBy.LIKES, self.sortEntriesByLikes, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to sort entries by 'Likes' - when search is made")
-                return   
-                 
-            writeToLog("INFO","Step 14: Going verify sort entries by 'Comments' - when search is made")
-            if self.common.channel.verifySortInAddToChannel(enums.SortBy.COMMENTS, self.SortEntriesByComments, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to sort entries by 'Comments' - when search is made")
-                return
+#             writeToLog("INFO","Step 7: Going to verify default sort after making a search")
+#             if self.common.channel.verifyChannelsDefaultSort(enums.SortBy.RELEVANCE) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 7: FAILED to displayed correct default sort after making a search")
+#                 return                                                                                                           
+#                     
+#             writeToLog("INFO","Step 8: Going verify sort entries by 'Creation date - ascending' - when search is made")
+#             if self.common.channel.verifySortInAddToChannel(enums.SortBy.CREATION_DATE_ASC, self.sortEntriesByCreationDateAscending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 8: FAILED to sort entries by 'Creation date - ascending' - when search is made")
+#                 return 
+#                  
+#             writeToLog("INFO","Step 9: Going verify sort entries by 'Creation date - descending' - when search is made")
+#             if self.common.channel.verifySortInAddToChannel(enums.SortBy.CREATION_DATE_DESC, self.sortEntriesByCreationDateDescending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 9: FAILED to sort entries by 'Creation date - descending' - when search is made")
+#                 return  
+#                  
+#             writeToLog("INFO","Step 10: Going verify sort entries by 'Alphabetical A-Z' - when search is made")
+#             if self.common.channel.verifySortInAddToChannel(enums.SortBy.ALPHABETICAL, self.sortEntriesByAlphabeticalAToZ, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 10: FAILED to sort entries by 'Alphabetical A-Z' - when search is made")
+#                 return   
+#                  
+#             writeToLog("INFO","Step 11: Going verify sort entries by 'Alphabetical Z-A' - when search is made")
+#             if self.common.channel.verifySortInAddToChannel(enums.SortBy.ALPHABETICAL_Z_A, self.sortEntriesByAlphabeticalZToA, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 11: FAILED to sort entries by 'Alphabetical Z-A' - when search is made")
+#                 return                                      
+#      
+#             writeToLog("INFO","Step 12: Going verify sort entries by 'Likes' - when search is made")
+#             if self.common.channel.verifySortInAddToChannel(enums.SortBy.LIKES, self.sortEntriesByLikes, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 12: FAILED to sort entries by 'Likes' - when search is made")
+#                 return   
+#                  
+#             writeToLog("INFO","Step 13: Going verify sort entries by 'Comments' - when search is made")
+#             if self.common.channel.verifySortInAddToChannel(enums.SortBy.COMMENTS, self.SortEntriesByComments, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 13: FAILED to sort entries by 'Comments' - when search is made")
+#                 return
                
-            writeToLog("INFO","Step 15: Going verify sort entries by 'Scheduling Ascending' - when search is made")
+            writeToLog("INFO","Step 14: Going verify sort entries by 'Scheduling Ascending' - when search is made")
             if self.common.channel.verifySortInAddToChannel(enums.SortBy.SCHEDULING_ASC, self.sortEntriesBySchedulingAscending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to sort entries by 'Scheduling Ascending' - when search is made")
+                writeToLog("INFO","Step 14: FAILED to sort entries by 'Scheduling Ascending' - when search is made")
                 return  
                   
-            writeToLog("INFO","Step 16: Going verify sort entries by 'Scheduling Descending' - when search is made")
+            writeToLog("INFO","Step 15: Going verify sort entries by 'Scheduling Descending' - when search is made")
             if self.common.channel.verifySortInAddToChannel(enums.SortBy.SCHEDULING_DESC, self.sortEntriesBySchedulingDescending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 16: FAILED to sort entries by 'Scheduling Descending' - when search is made")
+                writeToLog("INFO","Step 15: FAILED to sort entries by 'Scheduling Descending' - when search is made")
                 return  
              
-            writeToLog("INFO","Step 17: Going verify sort entries by 'Update - Descending' - when search is made")
+            writeToLog("INFO","Step 16: Going verify sort entries by 'Update - Descending' - when search is made")
             if self.common.channel.verifySortInAddToChannel(enums.SortBy.UPDATE_DESC, self.sortEntriesByUpdateDateDescending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to sort entries by 'Update - Descending' - when search is made")
+                writeToLog("INFO","Step 16: FAILED to sort entries by 'Update - Descending' - when search is made")
                 return  
              
-            writeToLog("INFO","Step 18: Going verify sort entries by 'Update - Ascending' - when search is made")
+            writeToLog("INFO","Step 17: Going verify sort entries by 'Update - Ascending' - when search is made")
             if self.common.channel.verifySortInAddToChannel(enums.SortBy.UPDATE_ASC, self.sortEntriesByUpdateDateAscending, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 18: FAILED to sort entries by 'Update - Ascending' - when search is made")
+                writeToLog("INFO","Step 17: FAILED to sort entries by 'Update - Ascending' - when search is made")
                 return 
                                                              
             ##################################################################

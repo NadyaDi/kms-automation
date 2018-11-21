@@ -2291,6 +2291,7 @@ class Channel(Base):
             return False 
         
         sleep(2)
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
         return True       
     
     
@@ -2475,4 +2476,24 @@ class Channel(Base):
                     return False
                  
         writeToLog("INFO","Success, Only the correct media display in channel - pending tab")
-        return True    
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Navigate to add to category page
+    def navigateToAddToChannel(self, channelName):
+        # Navigate to category
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED  to navigate to: " + channelName)
+            return False   
+        
+        # Click on 'Add to channel'
+        if self.click(self.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click add to channel button")
+            return False           
+        
+        # wait until loading message disappear    
+        sleep(1)
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
+        
+        return True   

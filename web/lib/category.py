@@ -1019,3 +1019,24 @@ class Category(Base):
 
         writeToLog("INFO","Success, My media sort by '" + sortBy.value + "' was successful")
         return True
+
+
+
+    # @Author: Inbar Willman
+    # Navigate to add to category page
+    def navigateToAddToCategory(self, categoryName):
+        # Navigate to category
+        if self.navigateToCategory(categoryName) == False:
+            writeToLog("INFO","FAILED  to navigate to: " + categoryName)
+            return False   
+        
+        # Click on 'Add to gallery'
+        if self.click(self.CATEGORY_ADD_TO_CATEGORY_BUTTON) == False:
+            writeToLog("INFO","Step 2: FAILED to to click on 'Add to Gallery' button")
+            return 
+        
+        # wait until loading message disappear
+        sleep(1)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)  
+        
+        return True            

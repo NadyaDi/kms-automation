@@ -90,250 +90,244 @@ class Test:
             self.entryForFieldsDisplay5 = "Fields display - multiple polls" # Created manually  
             
             ##################### TEST STEPS - MAIN FLOW #####################   
-            writeToLog("INFO","Step 1: Going to navigate to channel page")
-            if self.common.channel.navigateToChannel(self.channel) == False:
+            writeToLog("INFO","Step 1: Going to navigate to add to channel - media tab")
+            if self.common.channel.navigateToAddToChannel(self.channel) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to navigate to channel page")
-                return 
-            
-            writeToLog("INFO","Step 2: Going to click on 'Add to channel' button")
-            if self.common.base.click(self.common.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to to click on 'Add to channel' button")
-                return             
+                writeToLog("INFO","Step 1: FAILED to navigate to add to channel - media tab")
+                return               
         
-            writeToLog("INFO","Step 4: Going to make a search in 'Add to channel - My media' tab that matches multiple caption values")
+            writeToLog("INFO","Step 2: Going to make a search in 'Add to channel - My media' tab that matches multiple caption values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleCaptions) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to make a search in 'Add to channel - My media' tab that matches multiple caption values")
+                writeToLog("INFO","Step 2: FAILED to make a search in 'Add to channel - My media' tab that matches multiple caption values")
                 return   
                    
-            writeToLog("INFO","Step 5: Going to verify multiple captions field display after clicking on field name")
+            writeToLog("INFO","Step 3: Going to verify multiple captions field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.CAPTIONS, numOfDisplay=self.captionsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to verify multiple captions field display after clicking on field name")
+                writeToLog("INFO","Step 3: FAILED to verify multiple captions field display after clicking on field name")
                 return  
                      
-            writeToLog("INFO","Step 6: Going to verify multiple captions field display after clicking on show more button")
+            writeToLog("INFO","Step 4: Going to verify multiple captions field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.CAPTIONS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.captionsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify multiple captions field display after clicking on show more button")
+                writeToLog("INFO","Step 4: FAILED to verify multiple captions field display after clicking on show more button")
                 return  
                    
-            writeToLog("INFO","Step 7: Going to verify multiple captions field display after clicking on show all button")
+            writeToLog("INFO","Step 5: Going to verify multiple captions field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.CAPTIONS, numOfDisplay=self.captionsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify multiple captions field display after clicking on show all button")
+                writeToLog("INFO","Step 5: FAILED to verify multiple captions field display after clicking on show all button")
                 return    
              
-            writeToLog("INFO","Step 8: Going to clear search")
+            writeToLog("INFO","Step 6: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to clear search")
+                writeToLog("INFO","Step 6: FAILED to clear search")
                 return              
   
-            writeToLog("INFO","Step 9: Going to make a search in 'Add to channel - My media' tab that matches multiple tags values")
+            writeToLog("INFO","Step 7: Going to make a search in 'Add to channel - My media' tab that matches multiple tags values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to make a search in 'Add to channel - My media' tab that matches multiple tags values")
+                writeToLog("INFO","Step 7: FAILED to make a search in 'Add to channel - My media' tab that matches multiple tags values")
                 return
                   
-            writeToLog("INFO","Step 10: Going to verify multiple tags field display after clicking on field name")
+            writeToLog("INFO","Step 8: Going to verify multiple tags field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.TAGS, numOfDisplay=self.tagsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to verify multiple tags field display after clicking on field name")
+                writeToLog("INFO","Step 8: FAILED to verify multiple tags field display after clicking on field name")
                 return  
                      
-            writeToLog("INFO","Step 11: Going to verify multiple tags field display after clicking on show more button")
+            writeToLog("INFO","Step 9: Going to verify multiple tags field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.TAGS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.tagsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify multiple tags field display after clicking on show more button")
+                writeToLog("INFO","Step 9: FAILED to verify multiple tags field display after clicking on show more button")
                 return  
                   
-            writeToLog("INFO","Step 12: Going to verify multiple tags field display after clicking on show all button")
+            writeToLog("INFO","Step 10: Going to verify multiple tags field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.TAGS, numOfDisplay=self.tagsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify multiple tags field display after clicking on show all button")
+                writeToLog("INFO","Step 10: FAILED to verify multiple tags field display after clicking on show all button")
                 return   
   
-            writeToLog("INFO","Step 13: Going to clear search")
+            writeToLog("INFO","Step 11: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to clear search")
+                writeToLog("INFO","Step 11: FAILED to clear search")
                 return              
   
-            writeToLog("INFO","Step 14: Going to make a search in 'Add to channel - My media' tab that matches multiple quiz values")
+            writeToLog("INFO","Step 12: Going to make a search in 'Add to channel - My media' tab that matches multiple quiz values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleQuiz) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to make a search in 'Add to channel - My media' tab that matches multiple quiz values")
+                writeToLog("INFO","Step 12: FAILED to make a search in 'Add to channel - My media' tab that matches multiple quiz values")
                 return 
                   
-            writeToLog("INFO","Step 15: Going to verify multiple quiz field display after clicking on field name")
+            writeToLog("INFO","Step 13: Going to verify multiple quiz field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.QUIZ, numOfDisplay=self.quizNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to verify multiple quiz field display after clicking on field name")
+                writeToLog("INFO","Step 13: FAILED to verify multiple quiz field display after clicking on field name")
                 return  
                      
-            writeToLog("INFO","Step 16: Going to verify multiple quiz field display after clicking on show more button")
+            writeToLog("INFO","Step 14: Going to verify multiple quiz field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.QUIZ, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.tagsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 16: FAILED to verify multiple quiz field display after clicking on show more button")
+                writeToLog("INFO","Step 14: FAILED to verify multiple quiz field display after clicking on show more button")
                 return  
                   
-            writeToLog("INFO","Step 17: Going to verify multiple quiz field display after clicking on show all button")
+            writeToLog("INFO","Step 15: Going to verify multiple quiz field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.QUIZ, numOfDisplay=self.quizNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to verify multiple quiz field display after clicking on show all button")
+                writeToLog("INFO","Step 15: FAILED to verify multiple quiz field display after clicking on show all button")
                 return   
              
-            writeToLog("INFO","Step 18: Going to clear search")
+            writeToLog("INFO","Step 16: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 18: FAILED to clear search")
+                writeToLog("INFO","Step 16: FAILED to clear search")
                 return              
   
-            writeToLog("INFO","Step 19: Going to make a search in 'Add to channel - My media' tab that matches multiple slide values")
+            writeToLog("INFO","Step 17: Going to make a search in 'Add to channel - My media' tab that matches multiple slide values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleSlides) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 19: FAILED to make a search in 'Add to channel - My media' tab that matches multiple slide values")
+                writeToLog("INFO","Step 17: FAILED to make a search in 'Add to channel - My media' tab that matches multiple slide values")
                 return             
                   
-            writeToLog("INFO","Step 20: Going to verify multiple slides field display after clicking on field name")
+            writeToLog("INFO","Step 18: Going to verify multiple slides field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.SLIDES, numOfDisplay=self.slidesNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 20: FAILED to verify multiple slides field display after clicking on field name")
+                writeToLog("INFO","Step 18: FAILED to verify multiple slides field display after clicking on field name")
                 return  
                      
-            writeToLog("INFO","Step 21: Going to verify multiple slides field display after clicking on show more button")
+            writeToLog("INFO","Step 19: Going to verify multiple slides field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.SLIDES, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.slidesNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 21: FAILED to verify multiple slides field display after clicking on show more button")
+                writeToLog("INFO","Step 19: FAILED to verify multiple slides field display after clicking on show more button")
                 return  
                   
-            writeToLog("INFO","Step 22: Going to verify multiple slides field display after clicking on show all button")
+            writeToLog("INFO","Step 20: Going to verify multiple slides field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.SLIDES, numOfDisplay=self.slidesNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 22: FAILED to verify multiple slides field display after clicking on show all button")
+                writeToLog("INFO","Step 20: FAILED to verify multiple slides field display after clicking on show all button")
                 return                                                       
      
-            writeToLog("INFO","Step 23: Going to clear search")
+            writeToLog("INFO","Step 21: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 23: FAILED to clear search")
+                writeToLog("INFO","Step 21: FAILED to clear search")
                 return              
  
-            writeToLog("INFO","Step 24: Going to make a search in 'Add to channel - My media' tab that matches multiple chapter values")
+            writeToLog("INFO","Step 22: Going to make a search in 'Add to channel - My media' tab that matches multiple chapter values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleChapters) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 24: FAILED to make a search in 'Add to channel - My media' tab that matches multiple chapter values")
+                writeToLog("INFO","Step 22: FAILED to make a search in 'Add to channel - My media' tab that matches multiple chapter values")
                 return
                   
-            writeToLog("INFO","Step 25: Going to verify multiple chapters field display after clicking on field name")
+            writeToLog("INFO","Step 23: Going to verify multiple chapters field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.CHAPTERS, numOfDisplay=self.chapersNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 25: FAILED to verify multiple chapters field display after clicking on field name")
+                writeToLog("INFO","Step 23: FAILED to verify multiple chapters field display after clicking on field name")
                 return  
                      
-            writeToLog("INFO","Step 26: Going to verify multiple chapters field display after clicking on show more button")
+            writeToLog("INFO","Step 24: Going to verify multiple chapters field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.CHAPTERS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.chapersNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 26: FAILED to verify multiple chapters field display after clicking on show more button")
+                writeToLog("INFO","Step 24: FAILED to verify multiple chapters field display after clicking on show more button")
                 return  
                   
-            writeToLog("INFO","Step 27: Going to verify multiple chapters field display after clicking on show all button")
+            writeToLog("INFO","Step 25: Going to verify multiple chapters field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.CHAPTERS, numOfDisplay=self.chapersNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 27: FAILED to verify multiple chapters field display after clicking on show all button")
+                writeToLog("INFO","Step 25: FAILED to verify multiple chapters field display after clicking on show all button")
                 return   
     
-            writeToLog("INFO","Step 28: Going to clear search")
+            writeToLog("INFO","Step 26: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 28: FAILED to clear search")
+                writeToLog("INFO","Step 26: FAILED to clear search")
                 return              
  
-            writeToLog("INFO","Step 29: Going to make a search in 'Add to channel - My media' tab that matches multiple comments values")
+            writeToLog("INFO","Step 27: Going to make a search in 'Add to channel - My media' tab that matches multiple comments values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleComments) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 29: FAILED to make a search in 'Add to channel - My media' tab that matches multiple comments values")
+                writeToLog("INFO","Step 27: FAILED to make a search in 'Add to channel - My media' tab that matches multiple comments values")
                 return
                   
-            writeToLog("INFO","Step 30: Going to verify multiple comments field display after clicking on field name")
+            writeToLog("INFO","Step 28: Going to verify multiple comments field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.COMMENTS, numOfDisplay=self.commentsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 30: FAILED to verify multiple comments field display after clicking on field name")
+                writeToLog("INFO","Step 28: FAILED to verify multiple comments field display after clicking on field name")
                 return  
                      
-            writeToLog("INFO","Step 31: Going to verify multiple comments field display after clicking on show more button")
+            writeToLog("INFO","Step 29: Going to verify multiple comments field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.COMMENTS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.commentsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 31: FAILED to verify multiple comments field display after clicking on show more button")
+                writeToLog("INFO","Step 29: FAILED to verify multiple comments field display after clicking on show more button")
                 return  
                   
-            writeToLog("INFO","Step 32: Going to verify multiple comment field display after clicking on show all button")
+            writeToLog("INFO","Step 30: Going to verify multiple comment field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.COMMENTS, numOfDisplay=self.commentsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 32: FAILED to verify multiple comment field display after clicking on show all button")
+                writeToLog("INFO","Step 30: FAILED to verify multiple comment field display after clicking on show all button")
                 return
    
-            writeToLog("INFO","Step 33: Going to clear search")
+            writeToLog("INFO","Step 31: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 33: FAILED to clear search")
+                writeToLog("INFO","Step 31: FAILED to clear search")
                 return              
  
-            writeToLog("INFO","Step 34: Going to make a search in 'Add to channel - My media' tab that matches multiple polls values")
+            writeToLog("INFO","Step 32: Going to make a search in 'Add to channel - My media' tab that matches multiple polls values")
             if self.common.channel.searchInAddToChannel(self.searchInMultiplePolls) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 34: FAILED to make a search in 'Add to channel - My media' tab that matches multiple polls values")
+                writeToLog("INFO","Step 32: FAILED to make a search in 'Add to channel - My media' tab that matches multiple polls values")
                 return   
                  
-            writeToLog("INFO","Step 35: Going to verify multiple polls field display after clicking on field name")
+            writeToLog("INFO","Step 33: Going to verify multiple polls field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.POLLS, numOfDisplay=self.pollsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 35: FAILED to verify multiple polls field display after clicking on field name")
+                writeToLog("INFO","Step 33: FAILED to verify multiple polls field display after clicking on field name")
                 return  
                     
-            writeToLog("INFO","Step 36: Going to verify multiple polls field display after clicking on show more button")
+            writeToLog("INFO","Step 34: Going to verify multiple polls field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.POLLS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.pollsNumOfDisplay, isWebcast=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 36: FAILED to verify multiple polls field display after clicking on show more button")
+                writeToLog("INFO","Step 34: FAILED to verify multiple polls field display after clicking on show more button")
                 return  
                  
-            writeToLog("INFO","Step 37: Going to verify multiple polls field display after clicking on show all button")
+            writeToLog("INFO","Step 35: Going to verify multiple polls field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.POLLS, numOfDisplay=self.pollsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 37: FAILED to verify multiple polls field display after clicking on show all button")
+                writeToLog("INFO","Step 35: FAILED to verify multiple polls field display after clicking on show all button")
                 return  
    
-            writeToLog("INFO","Step 38: Going to clear search")
+            writeToLog("INFO","Step 36: Going to clear search")
             if self.common.channel.clearSearchInAddToChannel() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 38: FAILED to clear search")
+                writeToLog("INFO","Step 36: FAILED to clear search")
                 return              
  
-            writeToLog("INFO","Step 39: Going to make a search in 'Add to channel - My media' tab that matches multiple details values")
+            writeToLog("INFO","Step 37: Going to make a search in 'Add to channel - My media' tab that matches multiple details values")
             if self.common.channel.searchInAddToChannel(self.searchInMultipleDetails) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 39: FAILED to make a search in 'Add to channel - My media' tab that matches multiple details values")
+                writeToLog("INFO","Step 37: FAILED to make a search in 'Add to channel - My media' tab that matches multiple details values")
                 return  
                  
-            writeToLog("INFO","Step 40: Going to verify multiple details field display after clicking on field name")
+            writeToLog("INFO","Step 38: Going to verify multiple details field display after clicking on field name")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnField(False, enums.EntryFields.DETAILS, numOfDisplay=self.detailsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 40: FAILED to verify multiple details field display after clicking on field name")
+                writeToLog("INFO","Step 38: FAILED to verify multiple details field display after clicking on field name")
                 return  
                     
-            writeToLog("INFO","Step 41: Going to verify multiple details field display after clicking on show more button")
+            writeToLog("INFO","Step 39: Going to verify multiple details field display after clicking on show more button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowMore(False, enums.EntryFields.DETAILS, entryOwner=self.entryOwner, categoriesList=self.categoriesList, numOfDisplay=self.detailsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 41: FAILED to verify multiple details field display after clicking on show more button")
+                writeToLog("INFO","Step 39: FAILED to verify multiple details field display after clicking on show more button")
                 return  
                  
-            writeToLog("INFO","Step 42: Going to verify multiple details field display after clicking on show all button")
+            writeToLog("INFO","Step 40: Going to verify multiple details field display after clicking on show all button")
             if self.common.myMedia.verifyFieldDisplayInResultAfterClickingOnShowAll(False, enums.EntryFields.DETAILS, numOfDisplay=self.detailsNumOfDisplay) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 42: FAILED to verify multiple details field display after clicking on show all button")
+                writeToLog("INFO","Step 40: FAILED to verify multiple details field display after clicking on show all button")
                 return                                                                                                                         
             ##################################################################
             writeToLog("INFO","TEST PASSED: verify multiple field values display in 'Add to channel - My media tab' done successfully")
