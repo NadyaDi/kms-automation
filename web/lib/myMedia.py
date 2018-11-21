@@ -1686,7 +1686,7 @@ class MyMedia(Base):
             return False 
         
         #Verify that values section isn't display anymore
-        if self.is_visible(self.ENTRY_FIELD_VALUES_SCETION) == True:
+        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) == True:
             writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
             return False             
         
@@ -1724,7 +1724,7 @@ class MyMedia(Base):
             return False  
         
         #Verify that values section isn't display anymore
-        if self.is_visible(self.ENTRY_FIELD_VALUES_SCETION) == True:
+        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) == True:
             writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
             return False         
         
