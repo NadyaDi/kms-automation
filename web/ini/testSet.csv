@@ -16,6 +16,7 @@ test_603,1,0,0,0,KAF BB - View Collapsed Expanded Modes
 test_604,1,0,0,0,KAF BB - Upload media from desktop
 test_608,1,0,0,0,KAF BB - My Media - Search by Name / Description / Tags
 test_609,0,1,0,0,KAF BB - My Media - Sort Media
+test_610,1,0,0,0,KAF BB - My Media - Filter Media View Different Statuses
 test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media

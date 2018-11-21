@@ -133,7 +133,7 @@ class Test:
                 return  
              
             writeToLog("INFO","Step 14: Going navigate to image entry: '" + self.imageEntryName + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.imageEntryName, self.galleryName) == False:
+            if self.common.blackBoard.navigateToEntryPageFromGalleryPage(self.imageEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED navigate to entry: " + self.imageEntryName + " from gallery page")
                 return 
@@ -145,7 +145,7 @@ class Test:
                 return   
              
             writeToLog("INFO","Step 16: Going navigate to audio entry: '" + self.audioEntryName + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.audioEntryName, self.galleryName) == False:
+            if self.common.blackBoard.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED navigate to entry: " + self.audioEntryName + " from gallery page")
                 return 
@@ -157,7 +157,7 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 18: Going navigate to video entry: '"+ self.videoEntryName2 + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromBBGalleryPage(self.videoEntryName2, self.galleryName) == False:
+            if self.common.blackBoard.navigateToEntryPageFromGalleryPage(self.videoEntryName2, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED navigate to entry: " + self.videoEntryName2 + " from gallery page")
                 return 

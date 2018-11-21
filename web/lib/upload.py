@@ -68,6 +68,8 @@ class Upload(Base):
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@id='back' and contains(text(), 'Go To Media')]")
     WEBCAST_PAGE_TITLE                          = ('xpath', "//h1[text()='Schedule a Webcast Event']")
+    UPLOAD_MODERATION_UPLOAD_MESSAGE            = ('xpath', "//div[contains(text(), 'Some media may not be published until approved by the media moderator.')]")
+    UPLOAD_PAGE_TITLE                           = ('xpath', "//h1[text()='Upload Media']")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -133,7 +135,7 @@ class Upload(Base):
     
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False):
         for i in range(retries):
             try:
                 if i > 0:
@@ -188,6 +190,13 @@ class Upload(Base):
                     self.get_body_element().send_keys(Keys.TAB) 
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                 
+                if verifyModerationWarning == True:
+                    self.click(self.UPLOAD_PAGE_TITLE)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)   
+                    if self.wait_visible(self.UPLOAD_MODERATION_UPLOAD_MESSAGE) == False:
+                        writeToLog("INFO","FAILED to find moderation upload message")
+                        return False
+                    
                 # Click Save
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
