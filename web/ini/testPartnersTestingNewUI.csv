@@ -221,3 +221,4 @@ test_4420,eSearch - Fields display in results - Single - Add to gallery - SR tab
 test_4421,eSearch - Fields display in results - Multiple - Add to gallery - SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4422,eSearch - Fields display in results - Single - channel - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4423,eSearch - Fields display in results - Multiple - channel - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4329,eSearch - Sort by media type - my media -,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
