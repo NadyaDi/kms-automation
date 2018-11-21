@@ -520,20 +520,38 @@ class EditEntryPage(Base):
         
         # Select a year
         if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[1].replace('YEAR', year))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            writeToLog("INFO","FAILED to select the year")
             return False        
         
         # Set Month
         if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[1].replace('MONTH', month))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the month")
+            writeToLog("INFO","FAILED to select the month")
             return False
         
         # Set Day
-        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
-            return False
-         
+        # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
+        # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'
+        if self.clickOnDayFromDatePicker(day) == False:
+            writeToLog("INFO","FAILED to select the day")
+            return False        
+        
+        return True
     
+    
+    # Author: Oleg Sigalov
+    # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
+    # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'    
+    # Help method for setScheduleDate or setScheduleEndDate
+    def clickOnDayFromDatePicker(self, day):
+        tmpDayLocator = (self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))
+        elements = self.wait_elements(tmpDayLocator)
+        for el in elements:
+            if el.get_attribute("class") != 'old day':
+                el.click()
+                return True
+        return False
+    
+        
     # Author: Michal Zomper
     def addCaptions(self, captionFilePath, captionLanguage, captionLabel):
         if self.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
