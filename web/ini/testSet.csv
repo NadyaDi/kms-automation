@@ -222,3 +222,11 @@ test_4420,1,0,0,0,eSearch - Fields display in results - Single - Add to gallery 
 test_4421,1,0,0,0,eSearch - Fields display in results - Multiple - Add to gallery - SR tab
 test_4422,1,0,0,0,eSearch - Fields display in results - Single - channel - media tab
 test_4423,1,0,0,0,eSearch - Fields display in results - Multiple - channel - media tab
+test_4428,1,0,0,0,eSearch - Fields display in results - Single - gallery - media tab
+test_4429,1,0,0,0,eSearch - Fields display in results - Multiple - gallery - media tab
+test_4430,1,0,0,0,eSearch - Fields display in results - Single - channel - pending tab
+test_4431,1,0,0,0,eSearch - Fields display in results - Multiple - channel - pending tab
+test_4432,1,0,0,0,eSearch - Fields display in results - Single - gallery - pending tab
+test_4433,1,0,0,0,eSearch - Fields display in results - Multiple - gallery - pending tab
+test_4434,1,0,0,0,eSearch - Fields display in results - Single - Add new quiz
+test_4435,1,0,0,0,eSearch - Fields display in results - Multiple - Add new quiz
