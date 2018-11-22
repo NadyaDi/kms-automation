@@ -73,7 +73,7 @@ class Category(Base):
     CATEGORY_COMFIRM_INHERIT_PERMISSIONS                        = ('xpath', "//a[@class='btn btn-danger' and text()='Yes']")
     CATEGORY_GALLEY_ALL_MEDIA_TABLE                             = ('xpath', "//div[@id='galleryGrid']")
     CATEGORY_ADD_TO_CATEGORY_BUTTON                             = ('xpath', "//a[@id='tab-addcontent']")
-    
+    CATEGORY_MODERATION_TAB                                     = ('xpath', "//a[@id='categorymoderation-tab']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -86,12 +86,13 @@ class Category(Base):
             return self.clsCommon.myMedia.clickResultEntryAfterSearch(entryName)
             
             
-    def navigateToCategory(self, categoryName):
+    def navigateToCategory(self, categoryName, forceNavigate=False):
         # Check if we are already in category page
         tmpCategoryName = (self.CATEGORY_TITLE_IN_CATEGORY_PAGE[0], self.CATEGORY_TITLE_IN_CATEGORY_PAGE[1].replace('CATEGORY_NAME', categoryName))
-        if self.wait_visible(tmpCategoryName, 5) != False:
-            writeToLog("INFO","Success Already in my category page")
-            return True
+        if forceNavigate == False:
+            if self.wait_visible(tmpCategoryName, 5) != False:
+                writeToLog("INFO","Success Already in my category page")
+                return True
         
         # Click on the category name in the nav bar
         tmpNavCategoryName = (self.CATEGORY_NAME_NAV_BAR[0], self.CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', categoryName))
@@ -1040,3 +1041,86 @@ class Category(Base):
         self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)  
         
         return True            
+    
+    
+    
+    #Author: Michal Zomper    
+    def handlePendingEntriesInCategory(self, categoryName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
+                       
+        if navigate == True:
+            if self.navigateToCategory(categoryName) == False:
+                writeToLog("INFO","FAILED to navigate to  category: " +  categoryName)
+                return False
+            
+            if self.click(self.CATEGORY_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on category moderation tab")
+                return False        
+        
+        sleep(1)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30) 
+        
+        if self.clsCommon.channel.approveEntriesInPandingTab(toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED to approve entries")
+            return False  
+        
+        self.refresh()
+        sleep(6)
+        self.click(self.CATEGORY_MODERATION_TAB, timeout=60, multipleElements=True)
+        
+        if self.clsCommon.channel.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
+            writeToLog("INFO","FAILED to reject entries")
+            return False 
+       
+        if self.navigateToCategory(categoryName, forceNavigate=True) == False:
+            writeToLog("INFO","FAILED navigate to category page")
+            return False  
+            
+        if self.verifyEntriesApprovedAndRejectedInCategory(toRejectEntriesNames, toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
+            return False 
+        
+        return True
+    
+    
+    def verifyEntriesApprovedAndRejectedInCategory(self, toRejectEntriesNames, toApproveEntriesNames):
+        if type(toRejectEntriesNames) is list:
+            for rejectEntry in toRejectEntriesNames:
+                if self.searchEntryInCategory(rejectEntry) == True:
+                    writeToLog("INFO","FAILED, reject entry '" + rejectEntry + "' exist in category page although the entry was rejected")
+                    return False 
+                writeToLog("INFO","Preview step failed as expected - entry was rejected and should not be found")
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        else:
+            if toRejectEntriesNames != '':
+                if self.searchEntryInCategory(toRejectEntriesNames) == True:
+                    writeToLog("INFO","FAILED, reject entry '" + toRejectEntriesNames + "' exist in category page although the entry was rejected")
+                    return False 
+                writeToLog("INFO","Preview step failed as expected - entry was rejected and should not be found")
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False               
+        
+        if type(toApproveEntriesNames) is list:
+            for approveEntry in toApproveEntriesNames:
+                if self.searchEntryInCategory(approveEntry) == False:
+                    writeToLog("INFO","FAILED, approved entry '" + approveEntry + "' doesn't exist in category page although the entry was approved")
+                    return False 
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        else:
+            if toApproveEntriesNames != '':
+                if self.searchEntryInCategory(toApproveEntriesNames) == False:
+                    writeToLog("INFO","FAILED, approved entry '" + toApproveEntriesNames + "' doesn't exist in category page although the entry was approved")
+                    return False 
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        
+        return True
