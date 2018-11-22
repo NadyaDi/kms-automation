@@ -17,6 +17,7 @@ class KafGeneric(Base):
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
     KAF_GALLERY_ADD_MEDIA_BUTTON                = ('xpath', "//a[@id='tab-addcontent']")
     KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next']")
+    KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -29,9 +30,9 @@ class KafGeneric(Base):
     #====================================================================================================================================
 
     # Author: Michal Zomper
-    def navigateToGallery(self, galleryName):
+    def navigateToGallery(self, galleryName, forceNavigate=False):
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
-            if self.clsCommon.blackBoard.navigateToGalleryBB(galleryName) == False:
+            if self.clsCommon.blackBoard.navigateToGalleryBB(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
         
@@ -143,6 +144,7 @@ class KafGeneric(Base):
                 if self.addNewContentToGalleryWithoutNavigate(entry, isGalleryModerate) == False:
                     writeToLog("INFO","FAILED to upload new media to gallery")
                     return False 
+                sleep(2)
         else:
             if self.addNewContentToGalleryWithoutNavigate(uploadEntrieList, isGalleryModerate) == False:
                 writeToLog("INFO","FAILED to upload new media to gallery")
@@ -212,11 +214,29 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on gallery moderation tab")
                 return False        
         
-        sleep(1)
-        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
+        sleep(2)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30) 
         
-        if self.pandingAndRejectInPandingTab(toRejectEntriesNames, toApproveEntriesNames) == False:
-            writeToLog("INFO","FAILED to reject/approve entries")
+        if self.clsCommon.channel.approveEntriesInPandingTab(toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED to approve entries")
             return False  
-       
+        
+        self.click(self.KAF_REFRSH_BUTTON)
+        sleep(6)
+        self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
+        sleep(2)
+        
+        if self.clsCommon.channel.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
+            writeToLog("INFO","FAILED to reject entries")
+            return False
+        
+        # verify that entry approve/ rejected in gallery 
+        if self.navigateToGallery(galleryName, forceNavigate=True) == False:
+            writeToLog("INFO","FAILED navigate to  gallery: " +  galleryName)
+            return False
+
+        if self.clsCommon.channel.verifyEntriesApprovedAndRejectedInChannelOrGallery(toRejectEntriesNames, toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
+            return False 
+        
         return True

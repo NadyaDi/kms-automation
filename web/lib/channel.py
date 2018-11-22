@@ -503,10 +503,10 @@ class Channel(Base):
     
     
     #  @Author: Tzachi Guetta  
-    def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE):
+    def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE, forceNavigate=False):
         try:                
             if navigateFrom == enums.Location.MY_CHANNELS_PAGE:
-                if self.navigateToMyChannels() == False:
+                if self.navigateToMyChannels(forceNavigate) == False:
                     writeToLog("INFO","FAILED navigate to my channels page")
                     return False
                     
@@ -515,7 +515,7 @@ class Channel(Base):
                     return False
                 
             elif navigateFrom == enums.Location.CHANNELS_PAGE:
-                if self.navigateToChannels() == False:
+                if self.navigateToChannels(forceNavigate) == False:
                     writeToLog("INFO","FAILED navigate to my channels page")
                     return False
                 
@@ -1297,21 +1297,56 @@ class Channel(Base):
         sleep(1)
         self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
         
-        if self.pandingAndRejectInPandingTab(toRejectEntriesNames, toApproveEntriesNames) == False:
-            writeToLog("INFO","FAILED to reject/approve entries")
+        if self.approveEntriesInPandingTab(toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED to approve entries")
             return False  
+        
+        self.refresh()
+        sleep(6)
+        self.click(self.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
+        
+        if self.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
+            writeToLog("INFO","FAILED to reject entries")
+            return False 
        
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED navigate to channel page")
+            return False  
+            
+        if self.verifyEntriesApprovedAndRejectedInChannelOrGallery(toRejectEntriesNames, toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
+            return False 
+        
         return True
     
     
     # Author: Tzachi Guetta 
-    def pandingAndRejectInPandingTab(self, toRejectEntriesNames, toApproveEntriesNames):
+    def approveEntriesInPandingTab(self, toApproveEntriesNames):
+        if type(toApproveEntriesNames) is list:
+            for approveEntry in toApproveEntriesNames:
+                if self.method_helper_approveEntry(approveEntry) == False:
+                    writeToLog("INFO","FAILED to approve entry: " + approveEntry)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        else:
+            if toApproveEntriesNames != '':
+                if self.method_helper_approveEntry(toApproveEntriesNames) == False:
+                    writeToLog("INFO","FAILED to approve entry: " + toApproveEntriesNames)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True
+    
+    
+        # Author: Tzachi Guetta 
+    def rejectEntriesInPandingTab(self, toRejectEntriesNames):
         if type(toRejectEntriesNames) is list:
             for rejectEntry in toRejectEntriesNames:
                 if self.method_helper_rejectEntry(rejectEntry) == False:
                     writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
                     return False 
                 self.clsCommon.general.waitForLoaderToDisappear()
+            
         else:
             if toRejectEntriesNames != '':
                 if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
@@ -1319,18 +1354,50 @@ class Channel(Base):
                     return False 
                 self.clsCommon.general.waitForLoaderToDisappear()               
         
+        return True
+    
+    
+    
+    def verifyEntriesApprovedAndRejectedInChannelOrGallery(self, toRejectEntriesNames, toApproveEntriesNames):
+        if type(toRejectEntriesNames) is list:
+            for rejectEntry in toRejectEntriesNames:
+                if self.searchEntryInChannel(rejectEntry) == True:
+                    writeToLog("INFO","FAILED, reject entry '" + rejectEntry + "' exist in gallery/channel page although the entry was rejected")
+                    return False 
+                writeToLog("INFO","Preview step failed as expected - entry was rejected and should not be found")
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        else:
+            if toRejectEntriesNames != '':
+                if self.searchEntryInChannel(toRejectEntriesNames) == True:
+                    writeToLog("INFO","FAILED, reject entry '" + toRejectEntriesNames + "' exist in gallery/channel page although the entry was rejected")
+                    return False 
+                writeToLog("INFO","Preview step failed as expected - entry was rejected and should not be found")
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False               
+        
         if type(toApproveEntriesNames) is list:
             for approveEntry in toApproveEntriesNames:
-                if self.method_helper_approveEntry(approveEntry) == False:
-                    writeToLog("INFO","FAILED to approve entry: " + toRejectEntriesNames)
+                if self.searchEntryInChannel(approveEntry) == False:
+                    writeToLog("INFO","FAILED, approved entry '" + approveEntry + "' doesn't exist in gallery/channel page although the entry was approved")
                     return False 
-                self.clsCommon.general.waitForLoaderToDisappear()
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
         else:
             if toApproveEntriesNames != '':
-                if self.method_helper_approveEntry(toApproveEntriesNames) == False:
-                    writeToLog("INFO","FAILED to approve entry: " + toRejectEntriesNames)
+                if self.searchEntryInChannel(toApproveEntriesNames) == False:
+                    writeToLog("INFO","FAILED, approved entry '" + toApproveEntriesNames + "' doesn't exist in gallery/channel page although the entry was approved")
                     return False 
-                self.clsCommon.general.waitForLoaderToDisappear()
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
         
         return True
                 

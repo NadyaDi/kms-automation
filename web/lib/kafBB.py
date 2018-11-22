@@ -120,10 +120,11 @@ class BlackBoard(Base):
     
     
     # Author: Michal Zomper
-    def navigateToGalleryBB(self, galleryName):
-        if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
-            writeToLog("INFO","Success Already in my Gallery page")
-            return True
+    def navigateToGalleryBB(self, galleryName, forceNavigate=False):
+        if forceNavigate == False:
+            if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+                writeToLog("INFO","Success Already in my Gallery page")
+                return True
         
         if galleryName == "New1":
             if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
