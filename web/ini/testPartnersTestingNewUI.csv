@@ -223,3 +223,11 @@ test_4421,eSearch - Fields display in results - Multiple - Add to gallery - SR t
 test_4422,eSearch - Fields display in results - Single - channel - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4423,eSearch - Fields display in results - Multiple - channel - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4329,eSearch - Sort by media type - my media -,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4428,eSearch - Fields display in results - Single - gallery - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4429,eSearch - Fields display in results - Multiple - gallery - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4430,eSearch - Fields display in results - Single - channel - pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4431,eSearch - Fields display in results - Multiple - channel - pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4432,eSearch - Fields display in results - Single - gallery - pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4433,eSearch - Fields display in results - Multiple - gallery - pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4434,eSearch - Fields display in results - Single - Add new quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4435,eSearch - Fields display in results - Multiple - Add new quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
