@@ -1699,7 +1699,7 @@ class MyMedia(Base):
             return False 
         
         #Verify that values section isn't display anymore
-        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) == True:
+        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) != False:
             writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
             return False             
         
@@ -1737,7 +1737,7 @@ class MyMedia(Base):
             return False  
         
         #Verify that values section isn't display anymore
-        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) == True:
+        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) != False:
             writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
             return False         
         
@@ -1784,7 +1784,12 @@ class MyMedia(Base):
             # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
             if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=True) == False:
                 writeToLog("INFO","FAILED to display correct number of values for " + field.value + " field")
-                return False                 
+                return False   
+            
+            #Verify that icons of other fields aren't displayed
+            if self.verifyIconsDisplay(field) == False:
+                writeToLog("INFO","FAILED to display just " + field + " icon")
+                return False          
         
         return True               
 
@@ -1968,4 +1973,19 @@ class MyMedia(Base):
             writeToLog("INFO", "FAILED to displayed eye icon")            
             return False    
         
+        return True
+    
+    
+    
+    # @Author: Inbar Willman
+    # Verify that when there is one matching field, after clicking 'show all' just the matching field values are displayed
+    def verifyIconsDisplay(self, fieldName):
+        fieldsList = ['Details', 'Tags', 'Caption', 'Chapter', 'Comment', 'Slide', 'Quiz', 'Poll']
+        for field in fieldsList:
+            if (field in fieldName.value) == False:
+                tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', field))
+                if self.wait_visible(tmp_field_icon, timeout=3) != False:
+                    writeToLog("INFO", "FAILED: Non matching fields are displayed after clicking show All")            
+                    return False 
+                
         return True
