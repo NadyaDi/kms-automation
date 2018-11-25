@@ -15,7 +15,7 @@ class Test:
     #  @Author: Ori Flchtman
     # Test Name : Setup test for eSearch
     # Test description:
-    # Going to upload entries for sort as admin - entries owner
+    # Going to upload entries for filter as admin - entries owner
     #================================================================================================================================
     testNum = "10"
     
@@ -71,7 +71,6 @@ class Test:
             self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver)
             ########################################################################
-            self.entryName1 = clsTestService.addGuidToString('Entry1', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('EntryVideo', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('EntryAudio', self.testNum)
             self.entryName4 = clsTestService.addGuidToString('EntryImage', self.testNum)             
@@ -79,9 +78,9 @@ class Test:
             self.playlistName1 = clsTestService.addGuidToString('emptyPlaylistTest#1', self.testNum)
             self.playlistName2 = clsTestService.addGuidToString('PlaylistTest#2', self.testNum)
             self.listOfPlaylists = [self.playlistName1, self.playlistName2]
+            self.youtuebLink = "https://www.youtube.com/watch?v=usNsCeOV4GM"
             ########################## TEST STEPS - MAIN FLOW ####################### 
             self.entriesToUpload = {
-                self.entryName1: self.filePath1, 
                 self.entryName2: self.filePathVideo,
                 self.entryName3: self.filePathAudio,
                 self.entryName4: self.filePathImage}     
@@ -92,11 +91,55 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
                 return    
             
-            writeToLog("INFO","Step 2: Going to upload 4 entries")
+            writeToLog("INFO","Step 2: Going to upload 3 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to upload 4 entries")
+                writeToLog("INFO","Step 2: FAILED to upload 3 entries")
                 return  
+            
+            writeToLog("INFO","Step 3: Going to create webcast event")
+            if self.common.upload.clickAddNewWebcast(self.entryDescription, self.entryTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to create webcast event")
+                return  
+            
+            #Create Video Quiz:
+            writeToLog("INFO","Step 4: Going to navigate to add new video quiz")
+            if self.common.upload.addNewVideoQuiz() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to click video quiz")
+                return  
+              
+            writeToLog("INFO","Step 5: Going to search the uploaded entry and open KEA")
+            if self.common.kea.searchAndSelectEntryInMediaSelection(self.entryName, False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to find entry and open KEA")
+                return  
+              
+            writeToLog("INFO","Step 6: Going to start quiz and add questions")
+            if self.common.kea.addQuizQuestion(self.QuizQuestion1, self.QuizQuestion1Answer1, self.QuizQuestion1AdditionalAnswers) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to start quiz and add questions")
+                return   
+              
+            writeToLog("INFO","Step 7: Going to save quiz and navigate to media page")
+            if self.common.kea.clickDone() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to save quiz and navigate to media page")
+                return         
+            
+            #Upload Youtube:
+            writeToLog("INFO","Step 8: Going to upload youtube entry")
+            if self.common.upload.clickAddYoutube() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to upload youtube entry")
+                return
+            
+            writeToLog("INFO","Step 9: Going to insert youtube link")
+            if self.common.upload.addYoutubeEntry(self.youtuebLink, self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to insert youtube link")
+                return                                            
                           
 #             
             #################################################################################
