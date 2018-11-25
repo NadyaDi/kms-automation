@@ -1,6 +1,8 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_0002,1,0,0,0,Set service url
 test_16,1,0,0,0,Download Source File
+test_111,1,0,0,0,KAF BB - Enable / Disable faculty repository
+test_222,1,0,0,0,KAF BB - Adding media to Faculty Repository From My Media
 test_589,1,0,0,0,KAF BB - Edit Entry Metadata
 test_590,0,1,0,0,KAF BB - Edit Entry page - Disable comments
 test_591,0,1,0,0,KAF BB - Edit Entry page - Close discussion

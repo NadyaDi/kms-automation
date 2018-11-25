@@ -2,6 +2,7 @@ from base import *
 from general import General
 import localSettings
 from logger import *
+from sqlite3.test.userfunctions import func_returntext
 
 
 class BlackBoard(Base):
@@ -14,12 +15,19 @@ class BlackBoard(Base):
     #====================================================================================================================================
     #Login locators:
     #====================================================================================================================================
-    LOGIN_USERNAME_FIELD                = ('id', 'user_id')
-    LOGIN_PASSWORD_FIELD                = ('id', 'password')
-    LOGIN_SIGN_IN_BTN                   = ('id', 'entry-login')
-    USER_MENU_TOGGLE_BTN                = ('id', 'global-nav-link')
-    USER_LOGOUT_BTN                     = ('id', 'topframe.logout.label')
-    BB_MEDIA_SPACE_IFRAME               = ('xpath', "//iframe[contains(@src,'/webapps/osv-kaltura-BBLEARN/')]")
+    LOGIN_USERNAME_FIELD                                = ('id', 'user_id')
+    LOGIN_PASSWORD_FIELD                                = ('id', 'password')
+    LOGIN_SIGN_IN_BTN                                   = ('id', 'entry-login')
+    USER_MENU_TOGGLE_BTN                                = ('id', 'global-nav-link')
+    USER_LOGOUT_BTN                                     = ('id', 'topframe.logout.label')
+    BB_MEDIA_SPACE_IFRAME                               = ('xpath', "//iframe[contains(@src,'/webapps/osv-kaltura-BBLEARN/')]")
+    BB_SHARED_REPOSITORY_BUTTON                         = ('xpath', "//a[contains(text(),'Faculty Repository')]")
+    BB_MODLUES_PAGE_BUTTON                              = ('xpath', "//a[contains(text(),'Add Module')]")
+    BB_ADD_MODULE_BUTTON                                = ('xpath', "//a[contains(@id,'IDaddButton') and contains(text(), 'Add')]")
+    BB_REMOVE_MODULE_BUTTON                             = ('xpath', "//a[contains(@id,'IDremoveButton') and contains(text(), 'Remove')]")
+    BB_SHARED_REPOSITORY_DISCLAIMER_MSG_BEFOR_PUBLISH   = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to shared repositories.')]")
+    BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON   = ('xpath', "//label[@class='inline sharedRepositoryMetadata collapsed']")
+    BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD        = ('xpath', "//span[@class='inline' and contains(text(), 'FIELD_NAME')]")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -139,4 +147,143 @@ class BlackBoard(Base):
         
         return True
         
-
+    
+    # Author: Michal Zomper
+    def navigateToSharedRepositoryInBB(self):
+        tmpGalleryTitle = (self.clsCommon.channel.CHANNEL_PAGE_TITLE[0], self.clsCommon.channel.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', "Shared Repository"))
+        if self.wait_visible(tmpGalleryTitle, 5) == True:
+            writeToLog("INFO","Success Already in Shared Repository page")
+            return False
+        
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_SHARED_REPOSITORY_URL) == False:
+                writeToLog("INFO","FAILED navigate to Shared Repository page")
+                return False
+        
+        if self.wait_visible(tmpGalleryTitle, 15) == True:
+            writeToLog("INFO","FAILED navigate to Shared Repository page")
+            return False
+        
+        return True
+        
+    
+    # Author: Michal Zomper
+    def addRemoveSharedRepositoryModule(self, isEnable):
+        self.clsCommon.base.switch_to_default_content()
+        tmpGalleryTitle = (self.clsCommon.channel.CHANNEL_PAGE_TITLE[0], self.clsCommon.channel.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', "Shared Repository"))
+        if isEnable == True:
+            #check if SR button already exist
+            if self.wait_visible(self.BB_SHARED_REPOSITORY_BUTTON, 5) != False:
+                writeToLog("INFO","Success Shared Repository button exist")
+                return True
+            
+            # SR button doesn't exist - going to add module 
+            else:
+                if self.click(self.BB_MODLUES_PAGE_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on add module button")
+                    return False   
+                try:
+                    sRElement = self.get_element(self.BB_SHARED_REPOSITORY_BUTTON)
+                    
+                    sRparentElement = sRElement.find_element_by_xpath("../../..")
+                    sRID = sRparentElement.get_attribute("id")
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to fined 'shared repository' module in modules page")
+                    return False   
+                
+                if sRID != '':
+                    tmpID = sRID.split(":")
+    
+                tmpAddButton = (self.BB_ADD_MODULE_BUTTON[0], self.BB_ADD_MODULE_BUTTON[1].replace('ID', tmpID[1] + ":" + tmpID[2]))
+                if self.click(tmpAddButton) == False:
+                    writeToLog("INFO","FAILED to click on 'add' shared repository module button")
+                    return False   
+                
+                if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL) == False:
+                    writeToLog("INFO","FAILED navigate to blackboard main page")
+                    return False
+                    
+                if self.wait_visible(self.BB_SHARED_REPOSITORY_BUTTON, 10) == False:
+                    writeToLog("INFO","FAILED, Shared Repository module doesn't exist in blackboard main page although the module was added")
+                    return False
+                
+            if self.click(self.BB_SHARED_REPOSITORY_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on Shared Repository button")
+                return False
+            
+            sleep(5)   
+            self.clsCommon.blackBoard.switchToBlackboardIframe()
+            if self.wait_visible(tmpGalleryTitle, 30) == False:
+                writeToLog("INFO","FAILED navigate to Shared Repository page")
+                return False
+            
+            writeToLog("INFO","Success Shared Repository module was added successfully")
+            return True
+            
+        elif isEnable == False:
+            #check if SR button dosn't exist
+            if self.wait_visible(self.BB_SHARED_REPOSITORY_BUTTON, 5) == False:
+                writeToLog("INFO","Success Shared Repository button doesn't exist")
+                return True
+            
+            else: 
+                # SR button exist - going to remove module 
+                if self.click(self.BB_MODLUES_PAGE_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on add module button")
+                    return False   
+                try:
+                    sRElement = self.get_element(self.BB_SHARED_REPOSITORY_BUTTON)
+                    
+                    sRparentElement = sRElement.find_element_by_xpath("../../..")
+                    sRID = sRparentElement.get_attribute("id")
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to fined 'shared repository' module in modules page")
+                    return False   
+                
+                if sRID != '':
+                    tmpID = sRID.split(":")
+                
+                tmpRemoveButton = (self.BB_REMOVE_MODULE_BUTTON[0], self.BB_REMOVE_MODULE_BUTTON[1].replace('ID', tmpID[1] + ":" + tmpID[2]))
+                if self.click(tmpRemoveButton) == False:
+                    writeToLog("INFO","FAILED to click on 'remove' shared repository module button")
+                    return False   
+                
+                if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL) == False:
+                    writeToLog("INFO","FAILED navigate to blackboard main page")
+                    return False
+                    
+                if self.wait_visible(self.BB_SHARED_REPOSITORY_BUTTON, 10) != False:
+                    writeToLog("INFO","FAILED, Shared Repository module exist in blackboard main page although the module was removed")
+                    return False
+                
+                writeToLog("INFO","Success Shared Repository module was removed successfully")
+                return True
+            
+    
+    # Author: Michal Zomper
+    def addSharedRepositoryMetadata(self, entryName, RequiredField):
+        if self.clsCommon.myMedia.navigateToEditEntryPageFromMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
+            return False  
+        
+        if self.click(self.BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
+            return False
+        
+        tmRequiredField = (self.BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD[0], self.BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD[1].replace('FIELD_NAME', RequiredField))
+        if self.check_element(tmRequiredField, True) == False:
+            writeToLog("INFO","FAILED to checked required metadata field for shared repository")
+            return False
+        
+        if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+        
+        if self.wait_visible(self.clsCommon.editEntryPage.EDIT_ENTRY_UPLOAD_SUCCESS_MSG) == False:
+            writeToLog("INFO","FAILED to find save success message")
+            return False
+        
+        writeToLog("INFO","Success required metadata was saved successfully")
+        return True
+            
+            
+    
