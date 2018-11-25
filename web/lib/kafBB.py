@@ -2,7 +2,6 @@ from base import *
 from general import General
 import localSettings
 from logger import *
-from sqlite3.test.userfunctions import func_returntext
 
 
 class BlackBoard(Base):
