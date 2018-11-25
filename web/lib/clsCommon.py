@@ -27,6 +27,7 @@ from selenium.webdriver.common.keys import Keys
 from api import ApiClientSession
 from globalSearch import GlobalSearch
 import filecmp
+from kafGeneric import KafGeneric
 
 
     #============================================================================================================
@@ -57,10 +58,12 @@ class Common():
         self.home               = Home(self, driver)
         self.freeTrail          = FreeTrial(self, driver)
         self.apiClientSession   = ApiClientSession(self, driver)
+        self.globalSearch       = GlobalSearch(self, driver)
         ### KAF ###
+        self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
         self.sharePoint         = SharePoint(self, driver)
-        self.globalSearch       = GlobalSearch(self, driver)
+        
     #=============================================================================================================
     # Locators:
     #=============================================================================================================
@@ -79,7 +82,17 @@ class Common():
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd4":
             autoitDr = self.autoit.autoitDriver4
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd5":
-            autoitDr = self.autoit.autoitDriver5                        
+            autoitDr = self.autoit.autoitDriver5
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd6":
+            autoitDr = self.autoit.autoitDriver6
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd7":
+            autoitDr = self.autoit.autoitDriver7    
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd8":
+            autoitDr = self.autoit.autoitDriver8    
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd9":
+            autoitDr = self.autoit.autoitDriver9    
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd10":
+            autoitDr = self.autoit.autoitDriver10                                        
             
         if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
             # TODO IE not implemented yet

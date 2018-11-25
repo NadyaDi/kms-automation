@@ -21,9 +21,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_COLLABORATION_TAB                                = ('id', "collaboration-tab")
     EDIT_ENTRY_ADD_COLLABORATOR_BUTTON                          = ('xpath', "//i[@class='icon-plus icon-white']")  
     EDIT_ENTRY_ADD_USER_TEXTBOX                                 = ('id', "EditEntryCollaborator-userId")
-    EDIT_ENTRY_CO_EDITOR_CHECKBOX                               = ('id', "EditEntryCollaborator-permissions-2")
-    EDIT_ENTRY_CO_PUBLISHER_CHECKBOX                            = ('id', "EditEntryCollaborator-permissions-1")
-    EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON                     = ('xpath', "//a[@class='btn btn btn-primary' and contains(text(), 'Add')]")
+    EDIT_ENTRY_CO_EDITOR_CHECKBOX                               = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Editor']")
+    EDIT_ENTRY_CO_PUBLISHER_CHECKBOX                            = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Publisher']")
+    EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON                     = ('xpath', "//a[contains(@class,'btn btn btn-primary')]")
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
@@ -108,7 +108,10 @@ class EditEntryPage(Base):
     EDIT_ENTRY_EDIT_ATTACHMENT_MODAL_BODY                       = ('xpath', '//form[@id="changeAttachment"]')
     EDIT_ENTRY_NO_ATTACHMENT_MSG                                = ('xpath', '//div[@id="empty"]')
     EDIT_ENTRY_DELETE_ATTACHMENT_MODAL                          = ('xpath', '//a[@class="close" and text()="Delete Confirmation"]')
-    EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtnForm']")
+    EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtn']")
+    EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD                           = ('xpath', '//input[@id="customdata-FIELD_NAME"]')  
+    EDIT_ENTRY_CUSTOM_LIST_FIELD                                = ('xpath', '//select[@id="customdata-FIELD_NAME"]')   
+    EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')                          
     #=============================================================================================================
     
     
@@ -162,7 +165,7 @@ class EditEntryPage(Base):
         
         return True
 
-        
+
     # Author: Michal Zomper   
     def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
         #Click on collaboration tab
@@ -177,11 +180,17 @@ class EditEntryPage(Base):
             return False       
         
         sleep(2)
-        # Enter user name 
-        if self.send_keys(self.EDIT_ENTRY_ADD_USER_TEXTBOX, userId) == False:
-            writeToLog("DEBUG","FAILED to type user name in collaborator textbox")
-            return False  
+        # Insert username to field
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, userId) == False:
+            writeToLog("INFO","FAILED to insert username")
+            return False
         
+        sleep(3)
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, Keys.RETURN) == False:
+            writeToLog("INFO","FAILED to press Enter after username was typed")
+            return False   
+                
+        sleep(3)
         # Check if need to add co editor
         if isCoEditor == True:
             # Click to add co editor
@@ -225,8 +234,8 @@ class EditEntryPage(Base):
         
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
+    
             
-        
     # Author: Michal Zomper                
     def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 
         if self.navigateToEditEntryPageFromEntryPage(entryName) == False:
@@ -511,20 +520,38 @@ class EditEntryPage(Base):
         
         # Select a year
         if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[1].replace('YEAR', year))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            writeToLog("INFO","FAILED to select the year")
             return False        
         
         # Set Month
         if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[1].replace('MONTH', month))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the month")
+            writeToLog("INFO","FAILED to select the month")
             return False
         
         # Set Day
-        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))) == False:
-            writeToLog("INFO","FAILED to click on the top of the calendar, to select the day")
-            return False
-         
+        # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
+        # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'
+        if self.clickOnDayFromDatePicker(day) == False:
+            writeToLog("INFO","FAILED to select the day")
+            return False        
+        
+        return True
     
+    
+    # Author: Oleg Sigalov
+    # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
+    # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'    
+    # Help method for setScheduleDate or setScheduleEndDate
+    def clickOnDayFromDatePicker(self, day):
+        tmpDayLocator = (self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))
+        elements = self.wait_elements(tmpDayLocator)
+        for el in elements:
+            if el.get_attribute("class") != 'old day':
+                el.click()
+                return True
+        return False
+    
+        
     # Author: Michal Zomper
     def addCaptions(self, captionFilePath, captionLanguage, captionLabel):
         if self.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
@@ -730,7 +757,7 @@ class EditEntryPage(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         sleep(2)
-        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20) == False:
+        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
         sleep(3)
@@ -739,7 +766,8 @@ class EditEntryPage(Base):
         if leavePage == True:
             if self.click_leave_page() == False:
                 return False
-                
+        
+        sleep(3)       
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
         if self.wait_visible(tmp_entry_name, 15) == False:
@@ -1443,3 +1471,52 @@ class EditEntryPage(Base):
         writeToLog("INFO","Entry Was Deleted")
         return True
                 
+                
+    # @Author: Inbar Willman
+    # Set custom data fields
+    # Field input can be single value or list in case filling unlimited text field
+    def setCustomDataField(self, fieldName, fieldInput, fieldBtn ="", fieldType = enums.CustomdataType.TEXT_SINGLE):
+        # Set element
+        tmp_field = (self.EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD[0], self.EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD[1].replace('FIELD_NAME', fieldName))
+        
+        # If field is single text field
+        if fieldType == enums.CustomdataType.TEXT_SINGLE:
+            if self.send_keys(tmp_field, fieldInput) == False:
+                writeToLog("INFO","FAILED to fill single text customdata field")
+                return False                
+        
+        # If field is unlimited text field
+        elif fieldType == enums.CustomdataType.TEXT_UNLIMITED:
+            for idx, text in enumerate(fieldInput):
+                # Get field elements list - After clicking add button there are more than one elements (the new field)
+                tmp_list = self.get_elements(tmp_field)
+                
+                # Send input
+                tmp_list[idx].send_keys(text)
+
+                # Click on add button
+                tmp_add_btn = (self.EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD[0], self.EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD[1].replace('FIELD_NAME', fieldBtn))
+                if self.click(tmp_add_btn) == False:
+                    writeToLog("INFO","FAILED to add new field box to text unlimited field")
+                    return False                     
+      
+        elif fieldType == enums.CustomdataType.LIST:
+            tmp_field = (self.EDIT_ENTRY_CUSTOM_LIST_FIELD[0], self.EDIT_ENTRY_CUSTOM_LIST_FIELD[1].replace('FIELD_NAME', fieldName))
+            self.select_from_combo_by_value(tmp_field, fieldInput)
+        
+        #TO DO    
+        elif fieldType == enums.CustomdataType.DATE:
+            return True
+        
+        # Save changes
+        if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button ")
+            return False
+        
+        if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
+            writeToLog("INFO","FAILED to find save massage")
+            return False
+        sleep(3)
+        
+        writeToLog("INFO","Success customdata were change successfully")
+        return True     

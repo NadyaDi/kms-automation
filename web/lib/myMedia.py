@@ -19,6 +19,7 @@ class MyMedia(Base):
     #=============================================================================================================
     #My Media locators:
     #=============================================================================================================
+    MY_MEDIA_TITLE                                              = ('xpath', "//h1[@class='inline' and text()='My Media']")
     MY_MEDIA_SEARCH_BAR                                         = ('id', 'searchBar')
     MY_MEDIA_SEARCH_BAR_OLD_UI                                  = ('id', 'searchBar')
     MY_MEDIA_ELASTIC_SEARCH_BAR                                 = ('xpath', "//input[@class='searchForm__text']")
@@ -77,7 +78,7 @@ class MyMedia(Base):
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
-    SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]')
+    SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]/ancestor::span[@class="searchme"]')
     EDIT_BUTTON_REQUIRED_FIELD_MASSAGE                          = ('xpath', '//a[@class="hidden-phone" and text()="Edit"]')
     CUSTOM_FIELD                                                = ('xpath', '//input[@id="customdata-DepartmentName"]')
     CUSTOM_FIELD_DROP_DOWN                                      = ('xpath', '//select[@id="customdata-DepartmentDivision"]')
@@ -85,6 +86,23 @@ class MyMedia(Base):
     EDIT_ENTRY_CUSTOM_DATA_CALENDAR_DAY                         = ('xpath', "//td[@class='today day']")
     CLICK_ON_CALENDAR                                           = ('xpath', "//i[@class='icon-th']")
     CLICK_ON_CALENDAR_DATE_ESTABLISHED                          = ('xpath', "//div[@class='input-append date datepicker']") 
+    SEARCH_IN_DROPDOWN_DISABLED                                 = ('xpath', '//a[@id="fields-menu-toggle" and @class="  disabled dropdown-toggle DropdownFilter__toggle "]')
+    SEARCH_IN_DROPDOWN_ENABLED                                  = ('xpath', '//a[@id="fields-menu-toggle" and @class="  dropdown-toggle DropdownFilter__toggle "]')
+    SEARCH_IN_DROP_DOWN_OPTION                                  = ('xpath', '//a[@role="menuitem" and text()="FIELD_NAME"]')
+    ENTRY_FIELD_IN_RESULTS                                      = ('xpath', '//span[@class="hidden-phone" and contains(text(),"FIELD_NAME")]')
+    ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[contains(@class,"icon icon icon--vertical-align-sub search-results-icon") and @title="FIELD_NAME"]')
+    ENTRY_TAG_VALUES_IN_RESULTS                                 = ('xpath', '//span[@class="search-results__tag"]')
+    ENTRY_FIELD_VALUES_IN_RESULTS                               = ('xpath', '//span[@class="results__result-item--text"]')
+    ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN                        = ('xpath', '//span[@aria-label="Show More"]')
+    ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN                        = ('xpath', '//a[@aria-label="Show Less"]') 
+    ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN                         = ('xpath', '//a[@aria-label="Show All"]')
+    ENTRY_FIELD_VALUES_SCETION                                  = ('xpath', '//div[@class="results-details-container"]')
+    ENTRY_OWNER_DETAILS                                         = ('xpath', '//a[contains(@href,"/createdby/") and text()="OWNER_NAME"]')
+    ENTRY_CREATION_DETAILS                                      = ('xpath', '//span[@class="from-now hidden-phone"]')
+    ENTRY_CATEGORIES_DETAILS                                    = ('xpath', '//a[@class="results-preview__category"]')
+    ENTRY_DETAILS_COMMENTS_ICON                                 = ('xpath', '//i[@class="entryStatistics__stat__icon icon-comment"]')
+    ENTRY_DETAILS_HEART_ICON                                    = ('xpath', '//i[@class="entryStatistics__stat__icon icon-heart"]')
+    ENTRY_DETAILS_EYE_ICON                                      = ('xpath', '//i[@class="entryStatistics__stat__icon icon-eye-open"]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -453,7 +471,7 @@ class MyMedia(Base):
     # Author: Michal Zomper       
     # publishFrom - enums.Location
     # in categoryList / channelList will have all the names of the categories / channels to publish to
-    def publishSingleEntry(self, entryName, categoryList, channelList, publishFrom = enums.Location.MY_MEDIA, disclaimer=False):  
+    def publishSingleEntry(self, entryName, categoryList, channelList, galleryList='',  publishFrom=enums.Location.MY_MEDIA, disclaimer=False):  
         #checking if disclaimer is turned on for "Before publish"
         if disclaimer == True:
             if self.handleDisclaimerBeforePublish(entryName) == False:
@@ -473,7 +491,7 @@ class MyMedia(Base):
             if self.clickActionsAndPublishFromMyMedia() == False:
                 writeToLog("INFO","FAILED to click on action button")
                 return False
-                sleep(7)   
+            sleep(5)   
 
             if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 30) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
@@ -528,7 +546,9 @@ class MyMedia(Base):
                 
         sleep(2)
         # Click if channel list is empty
-        if len(channelList) != 0:
+        if len(channelList) != 0 or len(galleryList) != 0:
+            if len(galleryList) != 0:
+                channelList = galleryList
             # Click on Publish in Channel
             if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in channel")
@@ -649,7 +669,11 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                     return False
                 
-            self.clsCommon.general.waitForLoaderToDisappear()   
+            self.clsCommon.general.waitForLoaderToDisappear()  
+            if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
+                writeToLog("INFO","FAILED to show all entries")
+                return False
+            
             writeToLog("INFO","Success, Sort was set successfully")
             return True
         else:
@@ -681,7 +705,11 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                 return False
 
-        self.clsCommon.general.waitForLoaderToDisappear()    
+        self.clsCommon.general.waitForLoaderToDisappear()  
+        if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
+            writeToLog("INFO","FAILED to show all entries")
+            return False
+              
         writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
@@ -1007,9 +1035,14 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to find clear search icon")
                 return False
             
-            if self.clickElement(clear_button[1]) == False:
-                writeToLog("INFO","FAILED click on the remove search icon")
-                return False
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                if self.clickElement(clear_button[0]) == False:
+                    writeToLog("INFO","FAILED click on the remove search icon")
+                    return False
+            else:
+                if self.clickElement(clear_button[1]) == False:
+                    writeToLog("INFO","FAILED click on the remove search icon")
+                    return False
         else:
             if self.click(self.MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI, 15, multipleElements=True) == False:
                 writeToLog("INFO","FAILED click on the remove search icon")
@@ -1026,7 +1059,7 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     #    in categoryList / channelList will have all the names of the categories / channels to publish to
     # Known limitation: entries MUST be presented on the first page of my media
-    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList='', disclaimer=False, showAllEntries=False):
+    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList='', galleryList='',  disclaimer=False, showAllEntries=False):
         if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
@@ -1086,7 +1119,9 @@ class MyMedia(Base):
                 
         sleep(2)
         # Click if channel list is empty
-        if len(channelList) != 0:
+        if len(channelList) != 0 or len(galleryList) != 0:
+            if len(galleryList) != 0:
+                channelList = galleryList
             # Click on Publish in Channel
             if self.click(self.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in channel")
@@ -1100,7 +1135,7 @@ class MyMedia(Base):
                 if self.click(tmpChannelName, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
                     return False
-        
+
         sleep(1) 
         if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
@@ -1303,7 +1338,9 @@ class MyMedia(Base):
                 # go back to the top of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
-             
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                self.click(self.MY_MEDIA_TITLE)
             self.clsCommon.sendKeysToBodyElement(Keys.END)
              
         writeToLog("INFO","FAILED to show all media")
@@ -1549,4 +1586,406 @@ class MyMedia(Base):
         
         writeToLog("INFO","Success, 'No Result' text display after search")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # Verify if 'Search in' drop down in enabled or disabled  
+    def verifySearchInDropDownState(self, isEnabled=True): 
+        # If search in dropdown should be visible   
+        if isEnabled == True:
+            if self.is_visible(self.SEARCH_IN_DROPDOWN_ENABLED, True) == False:
+                writeToLog("INFO","FAILED to enabled 'search in' dropdown")
+                return False 
+             
+        # If search in dropdown should be disabled   
+        elif isEnabled == False:
+            if self.is_visible(self.SEARCH_IN_DROPDOWN_DISABLED, True) == False:
+                writeToLog("INFO","FAILED to disabled 'search in' dropdown")
+                return False      
+              
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Select search in value
+    def selectSearchInDropDownOption(self, option=enums.SearchInDropDown.ALL_FIELDS, location=enums.Location.MY_MEDIA):
+        # Click on 'Search in' drop down
+        if self.click(self.SEARCH_IN_DROPDOWN_ENABLED) == False:      
+            writeToLog("INFO","FAILED to click on 'search in' dropdown")
+            return False 
+        
+        sleep(2)                      
+        
+        #Get option locator
+        tmp_option = (self.SEARCH_IN_DROP_DOWN_OPTION[0], self.SEARCH_IN_DROP_DOWN_OPTION[1].replace('FIELD_NAME', option.value))
+        
+        # Check if we are in add to channel page - media tab
+        if location == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:
+            # If option is comments choose the third element in page
+            if option == enums.SearchInDropDown.COMMENTS:
+                tmp_option = self.get_elements(tmp_option)[2]
+            else:
+                tmp_option = self.get_elements(tmp_option)[1]
+                
+            if tmp_option.click() == False:
+                writeToLog("INFO","FAILED to select " + option.value + " option")
+                return False  
+         
+        # Check if we are in add to channel page - pending tab       
+        elif location == enums.Location.ADD_TO_CHANNEL_SR:
+            # If option is comments choose the third element in page
+            if option == enums.SearchInDropDown.COMMENTS:
+                tmp_option = self.get_elements(tmp_option)[4]
+            else:
+                tmp_option = self.get_elements(tmp_option)[2]
+                 
+            if tmp_option.click() == False:
+                writeToLog("INFO","FAILED to select " + option.value + " option")
+                return False    
+             
+        else:
+            if self.click(tmp_option) == False:
+                writeToLog("INFO","FAILED to select " + option.value + " option")
+                return False 
+
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    # Check entries fields in results
+    # fieldDict = True - the field should be displayed in results
+    # fieldDict = False - the field shouldn't be displayed in results
+    def checkEntriesFieldsInResults(self, fieldDict):
+        for field in fieldDict:
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', field))
             
+            #if field[1] == True:
+            # Check if field is visible - should be visible
+            if fieldDict[field] == True:
+                if self.is_visible(tmp_field) == False:
+                    writeToLog("INFO","FAILED to displayed " + str(field) + " in results, although field should be displayed")
+                    return False    
+             
+            #if field[1] == False:
+            # Check if field is visible - shouldn't be visible              
+            else:                  
+                if self.is_present(tmp_field, timeout=3) == True:
+                    writeToLog("INFO","FAILED to displayed " + str(field) + " in results, although it shouldn't be displayed")
+                    return False         
+                
+        writeToLog("INFO", "Success, Fields display in results is correct")   
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    # Verify that field display is correct:
+    # isSingle=True - there is just single display of the field
+    # isSingle=False - There is more than single display of the field
+    def verifyFieldDisplayInResultAfterClickingOnField(self, isSingle, field, numOfDisplay=1):  
+        # Click on field in order to see field values 
+        if self.clickOnFieldInResults(isSingle, field, numOfDisplay) == False:
+            writeToLog("INFO","FAILED to click on field in 'keyword found in:'")
+            return False             
+        
+        # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
+        if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=False) == False:
+            writeToLog("INFO","FAILED to display correct number of values for " + field.value + " field")
+            return False  
+        
+        # Click again on field in order to close field values section 
+        if self.clickOnFieldInResults(isSingle, field, numOfDisplay) == False:
+            writeToLog("INFO","FAILED to click on field in 'keyword found in:'")
+            return False 
+        
+        #Verify that values section isn't display anymore
+        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) != False:
+            writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
+            return False             
+        
+        return True
+        
+    
+    # @Author: Inbar Willman
+    # Verify that field display is correct:
+    # iSingle=True - There is just once matching value of the field
+    # iSingle=False - There is more than one matching value of the field
+    def verifyFieldDisplayInResultAfterClickingOnShowMore(self, isSingle, field, entryOwner, categoriesList, numOfDisplay=1, isWebcast=False):  
+        # Click on show more button
+        if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Show more' button")
+            return False             
+        
+        # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
+        if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=False) == False:
+            writeToLog("INFO","FAILED to display correct number of values for " + field + " field")
+            return False
+        
+        # Verify that correct entry details are displayed
+        if self.verifyEntryDetailsAfterClickingShowMore(entryOwner, categoriesList) == False:
+            writeToLog("INFO","FAILED to display correct entry's details")
+            return False
+        
+        # Verify that correct icons are displayed
+        if self.verifyEntryIconsAfterClickingShowMore(isWebcast)== False:
+            writeToLog("INFO","FAILED to display correct entry icons")
+            return False             
+
+        # Click on show less in order to close section
+        if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Show less' button")
+            return False  
+        
+        #Verify that values section isn't display anymore
+        if self.wait_visible(self.ENTRY_FIELD_VALUES_SCETION, timeout=3) != False:
+            writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
+            return False         
+        
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    # Verify that field display is correct:
+    # Single - there is just single display of the field - There is no option to click 'show all'
+    # Multiple - More than one matching value per field
+    # Field is enums
+    def verifyFieldDisplayInResultAfterClickingOnShowAll(self, isSingle, field, numOfDisplay=1):  
+        # Click on show more button
+        if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Show more' button")
+            return False
+        
+        # If there is just single value  
+        if isSingle == True:
+            if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
+                writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
+                return False 
+        
+        # If there is more single value, but lees than 5 displays    
+        elif isSingle == False and numOfDisplay < 5:
+            if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
+                writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
+                return False     
+        
+        # If there is more than single value, but the field is tag    
+        elif isSingle == False and field == enums.EntryFields.TAGS:                     
+            if self.is_visible(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == True:
+                writeToLog("INFO","FAILED: 'Show All' button shouldn't be displayed")
+                return False  
+             
+        else:
+            sleep(2)
+            if self.click(self.ENTRY_FIELD_IN_RESULTS_SHOW_ALL_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Show All' button")
+                return False 
+            
+            sleep(2)                                        
+        
+            # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
+            if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=True) == False:
+                writeToLog("INFO","FAILED to display correct number of values for " + field.value + " field")
+                return False   
+            
+            #Verify that icons of other fields aren't displayed
+            if self.verifyIconsDisplay(field) == False:
+                writeToLog("INFO","FAILED to display just " + field + " icon")
+                return False          
+        
+        return True               
+
+        
+    # @Author: Inbar Willman
+    # Click on field in 'keyword found in:'
+    # Field is enums
+    def clickOnFieldInResults(self, isSingle, field, numOfDisplay):    
+        if isSingle == True:
+            # Get field element in 'keyword found in:' - single value per field
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', "1 " + field.value))
+        else:
+            # Get field element in 'keyword found in:' - multiple values per field
+            tmp_field = (self.ENTRY_FIELD_IN_RESULTS[0], self.ENTRY_FIELD_IN_RESULTS[1].replace('FIELD_NAME', str(numOfDisplay) + " "  + field.value))  
+            
+        # Click on field element in 'keyword found in:'
+        if self.click(tmp_field) == False:
+            writeToLog("INFO","FAILED to click on " + field.value + " field")
+            return False            
+        
+        writeToLog("INFO", "Success, field was clicked in 'keyword found in:'")
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    # Verify the correct icon is displayed after clicking on field
+    # Verify that correct number of fields value is displayed
+    # Field is enums
+    def verifyFieldIconAndNumberOfDisplayInResults(self, isSingle, field, numOfDisplay, showAll):
+        if isSingle == False: 
+            if field == enums.EntryFields.QUIZ:
+                fieldName = field.value
+            elif field == enums.EntryFields.DETAILS:
+                fieldName = field.value
+            elif field == enums.EntryFields.TAGS:
+                fieldName = field.value
+        
+            else:
+                fieldName = field.value[:-1]
+                
+        elif field == enums.EntryFields.TAG:
+            fieldName = field.value +"s"
+            
+        else:
+            fieldName = field.value
+
+        tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', fieldName))
+        tmp_field_icon_num_of_display = self.get_elements(tmp_field_icon) 
+        
+        # Check that field icon is visible
+        if self.is_visible(tmp_field_icon) == False:
+            writeToLog("INFO","FAILED to display correct icon field")
+            return False 
+        
+        if isSingle == True:
+            # Check that icon is displayed just once
+            if len(tmp_field_icon_num_of_display) !=1:
+                writeToLog("INFO","FAILED to display correct number of icon display")
+                return False
+            
+        else:
+            # Check that tag icon is displayed just once although there are more than one matching tag value
+            if field == enums.EntryFields.TAGS:                  
+                if len(tmp_field_icon_num_of_display) !=1:
+                    writeToLog("INFO","FAILED to display tag icon just once")
+                    return False
+            
+                # Check that if number of matching tags is smaller than 7, all tags are displayed
+                tmp_tags_values = self.get_elements(self.ENTRY_TAG_VALUES_IN_RESULTS)
+                if numOfDisplay < 8:
+                    if len(tmp_tags_values) != numOfDisplay:
+                        writeToLog("INFO","FAILED to display correct number of tags values when there are less than 8 tag values")
+                        return False 
+                    
+                # If number of matching tags is bigger than 7, just 7 tags are displayed    
+                else:
+                    if len(tmp_tags_values) != 7:                       
+                        writeToLog("INFO","FAILED to display correct number of tags values when there are more than 7 tag values")
+                        return False 
+                    
+            elif field == enums.EntryFields.DETAILS:
+                # Check that if number of matching details is smaller than 11, all details are displayed before clicking show all are displayed
+                if numOfDisplay > 10 and showAll == False:
+                    if len(tmp_field_icon_num_of_display) != 10:
+                        writeToLog("INFO","FAILED to display correct number of details values when there are more than 10 details")
+                        return False  
+                else:
+                    # All matching details should be displayed when there are less than 10 matching details or that 'Show All' was clicked
+                    if len(tmp_field_icon_num_of_display) != numOfDisplay:
+                        writeToLog("INFO","FAILED to display correct number of details values when there are less than 11 details")
+                        return False                   
+                                
+            else:
+                # If number of display is bigger than 5, 'Show All' wasn't clicked and field is different than 'Details' 
+                if numOfDisplay > 5 and showAll == False:
+                    if len(tmp_field_icon_num_of_display) !=5:
+                        writeToLog("INFO","FAILED to display correct number of field values")
+                        return False
+
+                # If number of display is smaller than 5, or that all field values should be display          
+                else:
+                    if len(tmp_field_icon_num_of_display) != numOfDisplay:
+                        writeToLog("INFO","FAILED to display correct number of field values")
+                        return False 
+        
+        writeToLog("INFO", "Success, field values display is correct")            
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Verify that correct entry details are displayed below thumbnail when clicking show more
+    def verifyEntryDetailsAfterClickingShowMore(self, entryOwner, categoriesList):    
+        # Check entry's owner details
+        if self.verifyEntryOwnerDetails(entryOwner) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's owner details")            
+            return False
+        
+        # Check entry's creation date
+        if self.verifyEntryCreationDetails() == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's creation details")            
+            return False  
+        
+        if self.verifyEntryCategories(categoriesList) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's categories details")            
+            return False  
+        
+        return True                 
+   
+    
+    # @Author: Inbar Willman
+    # Verify that correct owner is displayed
+    def verifyEntryOwnerDetails(self, entryOwner):   
+        tmp_entry_owner = (self.ENTRY_OWNER_DETAILS[0], self.ENTRY_OWNER_DETAILS[1].replace('OWNER_NAME', entryOwner))    
+        if self.is_visible(tmp_entry_owner) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's owner details")            
+            return False
+        
+        return True
+    
+
+    # @Author: Inbar Willman
+    # Verify that creation details are displayed
+    def verifyEntryCreationDetails(self):
+        if self.is_visible(self.ENTRY_CREATION_DETAILS) == False:
+            writeToLog("INFO", "FAILED to displayed correct entry's creation details")            
+            return False  
+        
+        return True
+      
+    
+    # @Author: Inbar Willman
+    # Verify that correct categories that entry is published in are displayed
+    def verifyEntryCategories(self, categoriesList):
+        tmp_categoriesList = self.get_elements(self.ENTRY_CATEGORIES_DETAILS)
+        for dx, category in enumerate(categoriesList):
+            tmp_category= tmp_categoriesList[dx]
+            if tmp_category.text != category:
+                writeToLog("INFO", "FAILED to displayed correct entry's categories details")            
+                return False    
+        
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # verify entry icons after clicking show more
+    def verifyEntryIconsAfterClickingShowMore(self, isWebcast=False):
+        if self.is_visible(self.ENTRY_DETAILS_COMMENTS_ICON) == False:
+            writeToLog("INFO", "FAILED to displayed comment icon")            
+            return False 
+          
+        if isWebcast == False:
+            if self.is_visible(self.ENTRY_DETAILS_EYE_ICON) == False:
+                writeToLog("INFO", "FAILED to displayed eye icon")            
+                return False 
+        else:
+            if self.is_visible(self.ENTRY_DETAILS_EYE_ICON) == True:
+                writeToLog("INFO", "FAILED - eye icon shouoldn't be displayed")            
+                return False             
+        
+        if self.is_visible(self.ENTRY_DETAILS_HEART_ICON) == False:
+            writeToLog("INFO", "FAILED to displayed eye icon")            
+            return False    
+        
+        return True
+    
+    
+    
+    # @Author: Inbar Willman
+    # Verify that when there is one matching field, after clicking 'show all' just the matching field values are displayed
+    def verifyIconsDisplay(self, fieldName):
+        fieldsList = ['Details', 'Tags', 'Caption', 'Chapter', 'Comment', 'Slide', 'Quiz', 'Poll']
+        for field in fieldsList:
+            if (field in fieldName.value) == False:
+                tmp_field_icon = (self.ENTRY_FIELD_ICON_IN_RESULTS[0], self.ENTRY_FIELD_ICON_IN_RESULTS[1].replace('FIELD_NAME', field))
+                if self.wait_visible(tmp_field_icon, timeout=3) != False:
+                    writeToLog("INFO", "FAILED: Non matching fields are displayed after clicking show All")            
+                    return False 
+                
+        return True

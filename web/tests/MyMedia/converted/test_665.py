@@ -18,6 +18,7 @@ class Test:
     # upload several entries, some with the same description / tags / part of the same entry name and some with different entry name / tags/ description
     # 1. In the search textbox insert entry name  which does not exist in my media - 'No entries found' message should be received.
     # 2. In the search textbox insert existing entry name / tags / description - The compatible results should be displayed in the page
+    # 3. In the search textbox insert non existing entry name  - entry was not found as expected 
     #================================================================================================================================
     testNum = "665"
     
@@ -29,7 +30,7 @@ class Test:
     common = None
     # Test variables
     entryName = None
-    entryName1 = None
+    entryNameDifferent = None
     notExistEntry = None
     entryDescription1 = None
     entryDescription = None
@@ -55,7 +56,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName1 = clsTestService.addGuidToString("Different Search in my media", self.testNum)
+            self.entryNameDifferent = clsTestService.addGuidToString("Different Search in my media", self.testNum)
             self.entryName = clsTestService.addGuidToString("search in my media ", self.testNum)
             self.notExistEntry = clsTestService.addGuidToString("negative test", self.testNum)
             self.entryDescription1 = clsTestService.addGuidToString("different description", self.testNum)
@@ -66,7 +67,7 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.entryDescription1, self.entryTags1) == None:
+            if self.common.upload.uploadEntry(self.filePath, self.entryNameDifferent, self.entryDescription1, self.entryTags1) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
@@ -81,7 +82,7 @@ class Test:
             
             sleep(2)                      
             writeToLog("INFO","Step 3: Going to search the different entry by entry name and verify that only this entry display after search in my media")  
-            if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryName1, self.entryName1, 1) == False:
+            if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryNameDifferent, self.entryNameDifferent, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to verify that only the different entry display after search by entry name in my media")
                 return
@@ -93,7 +94,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 5: Going to search the different entry by description and verify that only this entry display after search in my media")  
-            if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryDescription1, self.entryName1, 1) == False:
+            if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryDescription1, self.entryNameDifferent, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify that only the different entry display after search by description in my media")
                 return
@@ -105,7 +106,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 7: Going to search the different entry by tags and verify that only this entry display after search in my media")  
-            if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryTags1, self.entryName1, 1) == False:
+            if self.common.myMedia.verifyEntriesExistInMyMedia(self.entryTags1, self.entryNameDifferent, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify that only the different entry display after search by tags in my media")
                 return
@@ -140,9 +141,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)
-            for i in range(1,4):
-                self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName+str(i))
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryNameDifferent, self.entriesList[0], self.entriesList[1], self.entriesList[2]], showAllEntries=True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

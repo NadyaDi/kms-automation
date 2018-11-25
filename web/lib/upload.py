@@ -9,6 +9,7 @@ try:
     import win32com.client
 except:
     pass
+import collections
 
 
 # This class is for multiple upload
@@ -67,6 +68,8 @@ class Upload(Base):
     UPLOAD_MULTIPLE_CHOOSE_A_FILE_BUTTON        = ('xpath', "//label[@for='fileinput[ID]']") #Replace [ID] with uploadbox ID
     UPLOAD_GO_TO_MEDIA_BUTTON                   = ('xpath', "//a[@id='back' and contains(text(), 'Go To Media')]")
     WEBCAST_PAGE_TITLE                          = ('xpath', "//h1[text()='Schedule a Webcast Event']")
+    UPLOAD_MODERATION_UPLOAD_MESSAGE            = ('xpath', "//div[contains(text(), 'Some media may not be published until approved by the media moderator.')]")
+    UPLOAD_PAGE_TITLE                           = ('xpath', "//h1[text()='Upload Media']")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -132,7 +135,7 @@ class Upload(Base):
     
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False):
         for i in range(retries):
             try:
                 if i > 0:
@@ -187,6 +190,13 @@ class Upload(Base):
                     self.get_body_element().send_keys(Keys.TAB) 
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                 
+                if verifyModerationWarning == True:
+                    self.click(self.UPLOAD_PAGE_TITLE)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)   
+                    if self.wait_visible(self.UPLOAD_MODERATION_UPLOAD_MESSAGE) == False:
+                        writeToLog("INFO","FAILED to find moderation upload message")
+                        return False
+                    
                 # Click Save
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
@@ -500,7 +510,7 @@ class Upload(Base):
     def uploadEntries(self, entriesDict, entryDescription, entryTags):
         try:
             # Checking if entriesNames list type
-            if type(entriesDict) is dict: 
+            if (type(entriesDict) is dict) or (type(entriesDict) is collections.OrderedDict): 
                 for entryName in entriesDict: 
                     if self.uploadEntry(entriesDict.get(entryName), entryName, entryDescription, entryTags) == None:
                         writeToLog("INFO","FAILED to upload entry: " + entryName)
@@ -626,19 +636,18 @@ class Upload(Base):
         writeToLog("INFO","Success, entry page was open successfully")
         return True
     
-    # @Auther: Ori Flchtman
+    # @Auther: Ori Flchtman TODO: UNDER CONSTRUCTION, DON'T USE IT
     # Click on Add New Webcast Event for Filter tests
     def clickAddNewWebcast(self, name, description, disclaimer=False, tags):
     # Click Add New
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")
             return False
-             
-        # Click webcast event
+
         if self.clickWebcastEvent() == False:
             writeToLog("DEBUG","FAILED to click on 'Webcast Event' button")
             return False
-     
+      
         if self.wait_visible(self.WEBCAST_PAGE_TITLE, 30) == False:
             writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
             return False
@@ -657,6 +666,6 @@ class Upload(Base):
             writeToLog("DEBUG","FAILED to click on 'Save' button")
             continue
         sleep(3)        
-     
+
         return True
  

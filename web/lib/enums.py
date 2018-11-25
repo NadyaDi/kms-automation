@@ -1,4 +1,5 @@
 from enum import Enum
+#from selectors import PollSelector
 
 
 class Application(Enum):
@@ -39,23 +40,24 @@ class Location(Enum):
     def __str__(self):
         return str(self.value)
     
-    MY_MEDIA                = 'my media'
-    ENTRY_PAGE              = 'entry page'
-    UPLOAD_PAGE             = 'upload page'
-    CHANNEL_PAGE            = 'channel page'
-    CATEGORY_PAGE           = 'category page'
-    MY_CHANNELS_PAGE        = 'my channels page'
-    CHANNELS_PAGE           = 'channels page'
-    MY_PLAYLISTS            = 'my playlists'
-    EDIT_ENTRY_PAGE         = 'edit entry page'
-    MY_HISTORY              = 'my history'
-    PENDING_TAB             = 'channel - Pending tab' 
-    HOME                    = 'home'
-    CHANNEL_PLAYLIST        = 'channel playlist'
-    ADD_TO_CHANNEL_MY_MEDIA = 'Add to channel My Media'
-    ADD_TO_CHANNEL_SR       = 'Add to channel SR'
-    EDITOR_PAGE             = 'Editor page'
-    PENDING_TAB_CATEGORY    = 'category - Pending tab'
+    MY_MEDIA                    = 'my media'
+    ENTRY_PAGE                  = 'entry page'
+    UPLOAD_PAGE                 = 'upload page'
+    CHANNEL_PAGE                = 'channel page'
+    CATEGORY_PAGE               = 'category page'
+    MY_CHANNELS_PAGE            = 'my channels page'
+    CHANNELS_PAGE               = 'channels page'
+    MY_PLAYLISTS                = 'my playlists'
+    EDIT_ENTRY_PAGE             = 'edit entry page'
+    MY_HISTORY                  = 'my history'
+    PENDING_TAB                 = 'channel - Pending tab' 
+    HOME                        = 'home'
+    CHANNEL_PLAYLIST            = 'channel playlist'
+    ADD_TO_CHANNEL_MY_MEDIA     = 'Add to channel My Media'
+    ADD_TO_CHANNEL_SR           = 'Add to channel SR'
+    EDITOR_PAGE                 = 'Editor page'
+    PENDING_TAB_CATEGORY        = 'category - Pending tab'
+    MEDIA_GALLARY               = 'channel page'
 
 
 class EditEntryPageTabName(Enum):
@@ -260,12 +262,11 @@ class ChannelsSortBy(Enum):
         return str(self.value)
 
     MOST_RECENT               = 'Most Recent'  
-    ALPHABETICAL_NEWUI        = "Alphabetical A-Z"
+    ALPHABETICAL_NEWUI        = "Alphabetically A-Z"
     ALPHABETICAL_OLDUI        = "Alphabetical"
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
-    MEDIA_COUNT_NEWUI         = "Media count"
-    MEDIA_COUNT_OLDUI         = "Media Count"
-    ALPHABETICAL_Z_A_NEWUI    = "Alphabetical Z-A"
+    MEDIA_COUNT               = "Media Count"
+    ALPHABETICAL_Z_A_NEWUI    = "Alphabetically Z-A"
     RELEVANCE                 = 'Relevance'
 
 class MyHistoryFilters(Enum):
@@ -332,3 +333,46 @@ class SameWindowPrePost(Enum):
     
     YES                         = 'Yes'
     NO                          = 'No'   
+    
+    
+class CustomdataType(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    TEXT_SINGLE                 = 'Text Single'
+    DATE                        = 'Date'
+    TEXT_UNLIMITED              = 'Text Unlimited'
+    LIST                        = 'List'    
+    
+    
+class SearchInDropDown(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    ALL_FIELDS                 = 'All Fields'
+    DETAILS                    = 'Details'
+    CHAPTERS_AND_SLIDES        = 'Chapters/Slides'
+    CAPTIONS                   = 'Captions'    
+    POLLS                      = 'Polls'             
+    QUIZ                       = 'Quiz'
+    COMMENTS                   = 'Comments'
+    
+    
+class EntryFields(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    DETAILS                    = 'Details'
+    CHAPTER                    = 'Chapter'
+    CHAPTERS                   = 'Chapters'
+    SLIDE                      = 'Slide'
+    SLIDES                     = 'Slides'
+    TAG                        = 'Tag'
+    TAGS                       = 'Tags'
+    QUIZ                       = 'Quiz'
+    COMMENT                    = 'Comment'
+    COMMENTS                   = 'Comments'
+    POLL                       = 'Poll'
+    POLLS                      = 'Polls'
+    CAPTION                    = 'Caption'
+    CAPTIONS                   = 'Captions'

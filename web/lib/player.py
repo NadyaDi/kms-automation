@@ -44,7 +44,7 @@ class Player(Base):
     PLAYER_SLIDE_DECK_CHAPTER_PARENT                            = ('xpath', "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']/ancestor::div[@class='boxInfo']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
     PLAYER_SLIDE_DECK_CHAPTER                                   = ("xpath", "//span[@class='k-chapter-title' and @title='CHAPTER_NAME']")# When using this locator, replace 'CHAPTER_NAME' string with your real chapter name
     PLAYER_SLIDE_NUMBER                                         = ('xpath', "//div[@class='slideNumber' and @title='Slide number' and contains(text(),'SLIDE_NUMBER')]") # When using this locator, replace 'SLIDE_NUMBER' string with your real slide number
-    PLAYER_OPEN_CHAPTER_ICON                                    = ('xpath', "//div[@class='slideBoxToggle icon-toggle' and @title='Expand/collapse chapter']")
+    PLAYER_OPEN_CHAPTER_ICON                                    = ('xpath', "//button[@class='slideBoxToggle icon-toggle' and @tabindex='TABINDEXID']")
     PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS                         = ('xpath', "//span[@class='toggleAll icon-toggleAll']")
     PLAYER_QUIZ_CONTINUE_BUTTON                                 = ('xpath', "//div[@class='confirm-box' and text()='Continue']")
     PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON                             = ('xpath', "//div[@class='ftr-right' and text()='SKIP FOR NOW']")
@@ -349,16 +349,16 @@ class Player(Base):
         return True    
     
     
-    # creator: Michal zomper
+    # Author: Michal zomper
     # The function verify the slides in the menu slide bar
     # checking that the total number of slides is correct + verify that the time for each slide is correct 
     # checkSize parameter is to know when to check the slides list len 
     def verifySlidesInPlayerSideBar(self, mySlidesList, checkSize=True):
-        self.switchToPlayerIframe()
         sleep(2)
         self.get_body_element().send_keys(Keys.PAGE_UP)
-        sleep(3)
-        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+        sleep(2)
+        self.switchToPlayerIframe()
+        if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on the sides bar menu")
             return False
         
@@ -382,7 +382,7 @@ class Player(Base):
         return True
     
     
-    # creator: Michal zomper
+    # Author: Michal zomper
     # The Function go over the slides in the slide menu bar and verify that the time is correct 
     def checkSlidesTimeInSlideBarMenu(self, mySlidesList, isVerifySlideNumber=False):
         sleep(2)
@@ -410,7 +410,7 @@ class Player(Base):
         return True
         
         
-    # creator: Michal zomper
+    # Author: Michal zomper
     # The function move the scroller in the slides menu bar according to the size that the function get
     # size - the number of slides that need to scroll to get to the right point (in order to scroll down size need to be positive / in order to scroll up size need to be negative )
     def scrollInSlidesMenuBar(self, size):
@@ -422,7 +422,7 @@ class Player(Base):
         action.move_to_element(scroller).click_and_hold().move_by_offset(0, 35*size).release().perform()
         
         
-    # creator: Michal zomper
+    # Author: Michal zomper
     def changePlayerView(self, playerView = enums.PlayerView.PIP):
         self.switchToPlayerIframe()
         #self.hover_on_element(self.PLAYER_LAYOUT)
@@ -452,7 +452,7 @@ class Player(Base):
         return True
         
         
-    # creator: Michal zomper
+    # Author: Michal zomper
     # The function check that the slides display at the correct time when the player is running
     # The function check the QR code in the video, ptt are much and that they both much to the player time
     def verifySlideDisplayAtTheCorrctTime(self, timeToStop, qrResult):
@@ -485,7 +485,7 @@ class Player(Base):
         return True
 
 
-    # creator: Michal zomper
+    # Author: Michal zomper
     def verifySlidesDisplayAtTheCorrctTime(self, mySlidesList):
         self.switchToPlayerIframe()
         
@@ -498,12 +498,13 @@ class Player(Base):
         return True
                 
     
-    # creator: Michal zomper
+    # Author: Michal zomper & Oleg Sigalov
     # The function checking all the info in the slides menu bar  
     # The function check that the chapters are display in the correct time + all the slides that need to be in the chapters display correctly
     def vrifyChapterAndSlidesInSlidesMenuBarInEntrypage(self, chapterName, slidesListInChapter, chapterIsclose=False): 
         self.switchToPlayerIframe() 
         sleep(2)
+        
         if self.click(self.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
             writeToLog("INFO","FAILED to click and open slides bar menu")
             return False
@@ -518,6 +519,7 @@ class Player(Base):
 
         chapterDetailsList = (details.text).split('\n')
         sleep(1)
+        
         # check chapter details
         if chapterDetailsList[1] != chapterName:
             writeToLog("INFO","FAILED, chapter name is not correct")
@@ -534,24 +536,27 @@ class Player(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to find chapter '" + chapterName + "' in slides menu bar")
             return False
+        
         self.scrollInSlidesMenuBar(2)
-#         sleep(2)
-#         if self.MoveToChapter(chapterName) == False:
-#             writeToLog("INFO","FAILED to hover chapter in slides menu bar")
-#             return False
-#         
         sleep(2)
+        
         if chapterIsclose == True:
-            el = details.find_element_by_xpath("..")
-            child = self.get_child_element(el,self.PLAYER_OPEN_CHAPTER_ICON)
+            try: 
+                el = details.find_element_by_xpath("..")
+                # get tabindex from 'li' object, we will use it to locate the 'Expand/collapse chapter' button
+                tabindexId = el.get_attribute("tabindex")
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to get child element of self.PLAYER_OPEN_CHAPTER_ICON")
+                return False                
+            tmpTabindexIdLocator = (self.PLAYER_OPEN_CHAPTER_ICON[0], self.PLAYER_OPEN_CHAPTER_ICON[1].replace('TABINDEXID', tabindexId))
             sleep(2)
-            self.scrollInSlidesMenuBar(1)
+            self.scrollInSlidesMenuBar(2)
+            
             # open chapter in order to see all the slides
-            if self.clickElement(child) == False:
-                writeToLog("INFO","FAILED to open chapter in order to see all the slides")
+            if self.click(tmpTabindexIdLocator) == False:
+                writeToLog("INFO","FAILED to open chapter in order to see all the slides in chapter")
                 return False
-         
-        sleep(1)   
+     
         # Verify that all the slides in the chapter are correct
         if self.checkSlidesTimeInSlideBarMenu(slidesListInChapter, isVerifySlideNumber=True) == False:
             writeToLog("INFO","FAILED, can NOT verify that all the needed slides are display under chapter: " + chapterName)
@@ -567,7 +572,7 @@ class Player(Base):
         return True
     
     
-        # creator: Michal zomper
+    # Author: Michal zomper
     # The function move the scroller in the slides menu bar so that the needed chapter is now display
     def MoveToChapter(self, chapterName, timeOut=10):
         tmpLocator = (self.PLAYER_SLIDE_DECK_CHAPTER[0], self.PLAYER_SLIDE_DECK_CHAPTER[1].replace('CHAPTER_NAME', chapterName))
@@ -579,7 +584,7 @@ class Player(Base):
         self.scrollInSlidesMenuBar(1)
         return True
         
-    # creator: Michal zomper
+    # Author: Michal zomper
     # The function only! check slides that changed their location in time line   
     def verifyslidesThatChangedLocationInTimeLine(self, changeTimeOfSlidesList):
         for slide in changeTimeOfSlidesList:
@@ -603,7 +608,7 @@ class Player(Base):
         writeToLog("INFO","SUCCESS, verify all slides changes")
         return True
       
-    # creator: Michal zomper   
+    # Author: Michal zomper   
     # totalNumberOfslides - the total number of slides that were uploaded to the entry    
     def searchSlideInSlidesBarMenu(self, slidesForSearchList, totalNumberOfslides):   
         self.switchToPlayerIframe() 

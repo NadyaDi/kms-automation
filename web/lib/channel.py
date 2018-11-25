@@ -83,8 +83,11 @@ class Channel(Base):
     CHANNEL_PLAYLIST_DELETE_ICON_TABLE                  = ('xpath', "//a[@onclick=\"channelPlaylistsjs.deletePlaylist('PLAYLIST_ID')\"]")   
     CHANNEL_MEMBERS_TAB                                 = ('xpath', '//a[@id="channelmembers-tab"]')  
     CHANNEL_ADD_MEMBER_BUTTON                           = ('xpath', '//a[@id="addmember"]') 
-    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[@id="addChannelMember-userId"]')   
-    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//select[@id="addChannelMember-permission"]')     
+#     CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[@id="addChannelMember-userId"]')
+    CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD             = ('xpath', '//input[contains(@id,"react-select-")]')
+    CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION               = ('xpath', "//span[@class='user-selection-option__label' and contains(text(),'USERNAME')]")
+    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT             = ('xpath', '//select[@id="addChannelMember-permission"]')
+    CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION             = ('xpath', '//span[text()="PERMISSION"]')
     CHANNEL_ADD_MEMBER_MODAL_ADD_BUTTON                 = ('xpath', '//a[@data-handler="1" and @class="btn btn-primary" and text()="Add"]')   
     CHANNEL_ADD_MEMBER_MODAL_CONTENT                    = ('xpath', '//p[@class="help-block" and contains(text(),"Please input at least 3")]')
     CHANNEL_SET_MEMBER_PERMISSION                       = ('xpath', '//option[@value="3" and text()="Member"]')        
@@ -500,10 +503,10 @@ class Channel(Base):
     
     
     #  @Author: Tzachi Guetta  
-    def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE):
+    def navigateToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE, forceNavigate=False):
         try:                
             if navigateFrom == enums.Location.MY_CHANNELS_PAGE:
-                if self.navigateToMyChannels() == False:
+                if self.navigateToMyChannels(forceNavigate) == False:
                     writeToLog("INFO","FAILED navigate to my channels page")
                     return False
                     
@@ -512,7 +515,7 @@ class Channel(Base):
                     return False
                 
             elif navigateFrom == enums.Location.CHANNELS_PAGE:
-                if self.navigateToChannels() == False:
+                if self.navigateToChannels(forceNavigate) == False:
                     writeToLog("INFO","FAILED navigate to my channels page")
                     return False
                 
@@ -1026,33 +1029,44 @@ class Channel(Base):
             writeToLog("INFO","FAILED to Click on Channel name: '" + channelName + "'")
             return False   
         sleep(5)
+            
+        if self.removeEntry(entryName) == False:
+            writeToLog("INFO","FAILED to remove entry")
+            return False 
         
+        return True
+
+
+    #Author: Michal Zomper
+    def removeEntry(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             parent_entry = self.expandEntryDetails(entryName)
             if parent_entry == False:
                 return False
+            
         # If we are in old UI we need to click first on "+" icon on entry's thumbnail
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             if self.clickEntryPlusIcon(entryName) == False:
                 return False
             
         # Set Remove button locator for old UI
-        tmp_entry_remove_btn = (self.CHANNEL_ENTRY_DELETE_BUTTON[0], self.CHANNEL_ENTRY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))   
+        tmpEntryEemoveBtn = (self.CHANNEL_ENTRY_DELETE_BUTTON[0], self.CHANNEL_ENTRY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))   
 
         sleep(2)
-        if self.click(tmp_entry_remove_btn) == False:
+        if self.click(tmpEntryEemoveBtn) == False:
             writeToLog("INFO","FAILED to click on Remove button")
             return False 
-
-        sleep(3)
+        sleep(2)
         
         if self.click(self.CHANNEL_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
             return False
+        sleep(4)
         
+        self.clsCommon.general.waitForLoaderToDisappear()
         return True
-    
-
+        
+        
     #@Author: Oded Berihon
     def addCommentToEntryFromChannel(self, channelName, entryName, comment):
         if self.navigateToEntryFromChannel(channelName, entryName) == False:
@@ -1207,28 +1221,10 @@ class Channel(Base):
                     return False
                 self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
                 
-            # Checking if entriesNames list type
-            if type(entriesNames) is list: 
-                for entryName in entriesNames: 
-                    if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
-                        writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
-                        return False
-                    
-                    writeToLog("INFO","Going to publish Entry: " + entryName + " to: " + channelName)
-            else:
-                if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entriesNames) == False:
-                        writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
-                        return False
-                    
-                writeToLog("INFO","Going to publish Entry: " + entriesNames + " to: " + channelName)
+            if self.addContentFromMyMedia(entriesNames) == False:
+                writeToLog("INFO","FAILED to publish entries to channel: " + channelName)
+                return False
                 
-            if self.click(self.CHANNEL_PUBLISH_BUTTON) == False:
-                writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
-                return False             
-            
-            sleep(1)
-            self.clsCommon.general.waitForLoaderToDisappear()
-            
             published = False
             
             if isChannelModerate == True:
@@ -1258,54 +1254,166 @@ class Channel(Base):
         return True
     
     
-    #   @Author: Tzachi Guetta    
-    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
-        try:                
-            if navigate == True:
-                if self.navigateToChannel(channelName) == False:
-                    writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+    # Author: Michal Zomper
+    def addContentFromMyMedia(self, entriesNames):
+        # Checking if entriesNames list type
+        if type(entriesNames) is list: 
+            for entryName in entriesNames: 
+                if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
                     return False
                 
-                if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on channel's moderation tab")
-                    return False        
+                writeToLog("INFO","Going to publish Entry: " + entryName)
+        else:
+            if self.clsCommon.myMedia.checkSingleEntryInMyMedia(entriesNames) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                    return False
+                
+            writeToLog("INFO","Going to publish Entry: " + entriesNames)
             
-            sleep(1)
-            self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
-            
-            if type(toRejectEntriesNames) is list:
-                for rejectEntry in toRejectEntriesNames:
-                    self.method_helper_rejectEntry(rejectEntry)
-                    self.clsCommon.general.waitForLoaderToDisappear()
-            else:
-                if toRejectEntriesNames != '':
-                    self.method_helper_rejectEntry(toRejectEntriesNames) 
-                    self.clsCommon.general.waitForLoaderToDisappear()               
-            
-            if type(toApproveEntriesNames) is list:
-                for approveEntry in toApproveEntriesNames:
-                    self.method_helper_approveEntry(approveEntry)
-                    self.clsCommon.general.waitForLoaderToDisappear()
-            else:
-                if toApproveEntriesNames != '':
-                    self.method_helper_approveEntry(toApproveEntriesNames)
-                    self.clsCommon.general.waitForLoaderToDisappear()
+        if self.click(self.CHANNEL_PUBLISH_BUTTON) == False:
+            writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+            return False             
         
-        except NoSuchElementException:
-            return False
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
         
         return True
     
+    
+    
+    #   @Author: Tzachi Guetta    
+    def handlePendingEntriesInChannel(self, channelName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
+                       
+        if navigate == True:
+            if self.navigateToChannel(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)
+                return False
+            
+            if self.click(self.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on channel's moderation tab")
+                return False        
+        
+        sleep(1)
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) 
+        
+        if self.approveEntriesInPandingTab(toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED to approve entries")
+            return False  
+        
+        self.refresh()
+        sleep(6)
+        self.click(self.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
+        
+        if self.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
+            writeToLog("INFO","FAILED to reject entries")
+            return False 
+       
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED navigate to channel page")
+            return False  
+            
+        if self.verifyEntriesApprovedAndRejectedInChannelOrGallery(toRejectEntriesNames, toApproveEntriesNames) == False:
+            writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
+            return False 
+        
+        return True
+    
+    
+    # Author: Tzachi Guetta 
+    def approveEntriesInPandingTab(self, toApproveEntriesNames):
+        if type(toApproveEntriesNames) is list:
+            for approveEntry in toApproveEntriesNames:
+                if self.method_helper_approveEntry(approveEntry) == False:
+                    writeToLog("INFO","FAILED to approve entry: " + approveEntry)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        else:
+            if toApproveEntriesNames != '':
+                if self.method_helper_approveEntry(toApproveEntriesNames) == False:
+                    writeToLog("INFO","FAILED to approve entry: " + toApproveEntriesNames)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True
+    
+    
+        # Author: Tzachi Guetta 
+    def rejectEntriesInPandingTab(self, toRejectEntriesNames):
+        if type(toRejectEntriesNames) is list:
+            for rejectEntry in toRejectEntriesNames:
+                if self.method_helper_rejectEntry(rejectEntry) == False:
+                    writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()
+            
+        else:
+            if toRejectEntriesNames != '':
+                if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
+                    writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
+                    return False 
+                self.clsCommon.general.waitForLoaderToDisappear()               
+        
+        return True
+    
+    
+    
+    def verifyEntriesApprovedAndRejectedInChannelOrGallery(self, toRejectEntriesNames, toApproveEntriesNames):
+        if type(toRejectEntriesNames) is list:
+            for rejectEntry in toRejectEntriesNames:
+                if self.searchEntryInChannel(rejectEntry) == True:
+                    writeToLog("INFO","FAILED, reject entry '" + rejectEntry + "' exist in gallery/channel page although the entry was rejected")
+                    return False 
+                writeToLog("INFO","Preview step failed as expected - entry was rejected and should not be found")
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        else:
+            if toRejectEntriesNames != '':
+                if self.searchEntryInChannel(toRejectEntriesNames) == True:
+                    writeToLog("INFO","FAILED, reject entry '" + toRejectEntriesNames + "' exist in gallery/channel page although the entry was rejected")
+                    return False 
+                writeToLog("INFO","Preview step failed as expected - entry was rejected and should not be found")
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False               
+        
+        if type(toApproveEntriesNames) is list:
+            for approveEntry in toApproveEntriesNames:
+                if self.searchEntryInChannel(approveEntry) == False:
+                    writeToLog("INFO","FAILED, approved entry '" + approveEntry + "' doesn't exist in gallery/channel page although the entry was approved")
+                    return False 
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        else:
+            if toApproveEntriesNames != '':
+                if self.searchEntryInChannel(toApproveEntriesNames) == False:
+                    writeToLog("INFO","FAILED, approved entry '" + toApproveEntriesNames + "' doesn't exist in gallery/channel page although the entry was approved")
+                    return False 
+                
+                if self.clsCommon.myMedia.clearSearch() == False:
+                    writeToLog("INFO","FAILED to clear search")
+                    return False 
+        
+        return True
+                
     
     # Author: Tzachi Guetta     
     def method_helper_rejectEntry(self, rejectEntry):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
         tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+        
         if self.click(tmpRejectBtn) == False:
             writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
             return False 
+        
         writeToLog("INFO","The following entry was rejected : " + rejectEntry)  
+        return True
         
         
     # Author: Tzachi Guetta     
@@ -1313,11 +1421,13 @@ class Channel(Base):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
         tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
+        
         if self.click(tmpApproveBtn) == False:
             writeToLog("INFO","FAILED to approve entry: " + approveEntry)
             return False                    
         
         writeToLog("INFO","The following entry was approved : " + approveEntry)
+        return True
         
         
     # Author: Tzachi Guetta 
@@ -1380,18 +1490,19 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on add members button")
             return False   
         
-        # Wait until add member modal is displayed
+        # Wait until add member popup is displayed
         sleep(3)
-        
-        #Click on username field
-        if self.click(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD) == False:
-            writeToLog("INFO","Failed to click on username field")
-            return False             
-                    
+         
         # Insert username to field
         if self.send_keys(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, username) == False:
             writeToLog("INFO","Failed to insert username")
-            return False 
+            return False
+        
+        sleep(3)
+        tmpConfirmationLocator = (self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[0], self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[1].replace('USERNAME', username))
+        if self.click(tmpConfirmationLocator) == False:
+            writeToLog("INFO","FAILED to click on group search confirmation")
+            return False        
         
         # Set permission
         if self.chooseMemberPermissionInChannel(permission) == False:
@@ -1410,41 +1521,53 @@ class Channel(Base):
         
         #Verify new member is added to member table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
-        if self.is_visible(tmp_member_row) == False:
+        if self.wait_visible(tmp_member_row) == False:
             writeToLog("INFO","Failed new member was NOT added to members table")
             return False
         sleep(3)
         
         return True                                         
+             
                            
-                                
+    ##################################This method is deprecated, don't remove yet
     # @Author: Inbar Willman 
-    # Choose permission from drop down list
-    def chooseMemberPermissionInChannel(self, permission = enums.ChannelMemberPermission.MEMBER):    
+    # Edit permission from drop down list
+    def editMemberPermissionInChannel(self, permission = enums.ChannelMemberPermission.MEMBER):    
         # If permission is member click on member option       
         if permission ==  enums.ChannelMemberPermission.MEMBER:
-            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Member') == False:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Member') == False:
                 writeToLog("INFO","Failed to click on member option")
                 return False                    
        
         # If permission is contributor click on member option       
         elif permission ==  enums.ChannelMemberPermission.CONTRIBUTOR:
-            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Contributor') == False:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Contributor') == False:
                 writeToLog("INFO","Failed to click on contributor option")
                 return False  
             
         # If permission is moderator click on member option       
         elif permission ==  enums.ChannelMemberPermission.MODERATOR:
-            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Moderator') == False:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Moderator') == False:
                 writeToLog("INFO","Failed to click on moderator option")
                 return False 
         
         # If permission is manager click on member option       
         elif permission ==  enums.ChannelMemberPermission.MANAGER:
-            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION, 'Manager') == False:
+            if self.select_from_combo_by_text(self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION_EDIT, 'Manager') == False:
                 writeToLog("INFO","Failed to click on manager option")
                 return False   
             
+        return True
+
+
+    # @Author: Oleg Sigalov
+    # Choose permission from combo box list
+    def chooseMemberPermissionInChannel(self, permission=enums.ChannelMemberPermission.MEMBER):    
+        tmpPermissionLocator = (self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION[0], self.CHANNEL_ADD_MEMBER_MODAL_SET_PERMISSION[1].replace('PERMISSION', permission.value))
+        if self.click(tmpPermissionLocator) == False:
+            writeToLog("INFO","Failed to click on " + permission.value + " option")
+            return False                    
+              
         return True    
     
     
@@ -1462,7 +1585,7 @@ class Channel(Base):
                 return False               
                          
         # Set new permission
-        if self.chooseMemberPermissionInChannel(permission) == False:
+        if self.editMemberPermissionInChannel(permission) == False:
             writeToLog("INFO","Failed to set new permission")
             return False   
         
@@ -1493,8 +1616,8 @@ class Channel(Base):
    
         # Click on 'Yes' in remove user modal
         if self.click(self.CHANNEL_YES_MODAL_BUTTON) == False:
-                writeToLog("INFO","Failed to click on yes button")
-                return False  
+            writeToLog("INFO","Failed to click on yes button")
+            return False  
         
         # Wait until remove modal isn't displayed
         if self.wait_while_not_visible(self.CHANNEL_REMOVE_USER_MODAL_CONTENT,timeout=30) == False:
@@ -1897,7 +2020,7 @@ class Channel(Base):
     # @Author: Michal Zomper
     # Search in category without verify results
     # noQuotationMarks = True will force and wont add quotation marks at the beginning and the end of searchText(when Elastic search is enabled)
-    def  searchInChannelWithoutVerifyResults(self, searchText, noQuotationMarks=False):
+    def searchInChannelWithoutVerifyResults(self, searchText, noQuotationMarks=False):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             # Click on the magnafine glass
             if self.click(self.CHANNEL_PAGE_SEARCH_TAB, 30) == False:
@@ -2264,6 +2387,7 @@ class Channel(Base):
             return False 
         
         sleep(2)
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
         return True       
     
     
@@ -2380,3 +2504,92 @@ class Channel(Base):
         else:
             writeToLog("INFO","FAILED to show all media")
             return False  
+        
+    
+    # @Author: Inbar Willman
+    # Verify filter in channel - media tab    
+    def verifyFiltersInAddToChannel(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+        if self.clsCommon.myMedia.showAllEntries(searchIn) == False:
+            writeToLog("INFO","FAILED to show all entries in Add to channel")
+            return False
+        
+        try:
+            if searchIn == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:
+                entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
+                
+            elif searchIn == enums.Location.ADD_TO_CHANNEL_SR:
+                entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_SR_TABLE).text.lower() 
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in channel")
+            return False
+             
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInAddToChannel == False:
+                if (entry.lower() in entriesInAddToChannel) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in add to channel although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInAddToChannel == True:
+                if (entry.lower() in entriesInAddToChannel) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in add to channel although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in add to channel")
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Verify filter in channel - pending tab    
+    def verifyFiltersInPendingTab(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+        if self.showAllEntriesPendingTab() == False:
+            writeToLog("INFO","FAILED to show all entries in pending tab page")
+            return False
+        sleep(10)
+        
+        try:
+            entriesIncategory = self.wait_visible(self.CHANNEL_PENDING_TAB_TABLE).text.lower()
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list in channel")
+            return False
+             
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInAddToChannel == False:
+                if (entry.lower() in entriesIncategory) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in channel - pending tab although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInAddToChannel == True:
+                if (entry.lower() in entriesIncategory) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in channel - pending tab although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in channel - pending tab")
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    # Navigate to add to category page
+    def navigateToAddToChannel(self, channelName):
+        # Navigate to category
+        if self.navigateToChannel(channelName) == False:
+            writeToLog("INFO","FAILED  to navigate to: " + channelName)
+            return False   
+        
+        # Click on 'Add to channel'
+        if self.click(self.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click add to channel button")
+            return False           
+        
+        # wait until loading message disappear    
+        sleep(1)
+        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
+        
+        return True   

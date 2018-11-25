@@ -105,7 +105,7 @@ class Test:
                 return                                  
              
             writeToLog("INFO","Step 8: Going to publish entry with added as Collaborator user")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelList, enums.Location.ENTRY_PAGE) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelList, publishFrom=enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to publish entry '" + self.entryName + "' with Collaborator user")
                 return

@@ -13,10 +13,10 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Upload media from desktop and verify in player
+    # Test Name : preview all kinds of media from My Media and Category
     # Test description:
     # upload 3 entries : video / Audio / Image
-    # Navigate to each entry page and verify player is working 
+    #  Navigate to each entry page and verify player is working  and that the video / audio / image  is correct
     # Publish the entries to category. navigate to entries form the category and verify the player  
     #================================================================================================================================
     testNum = "644"
@@ -70,7 +70,7 @@ class Test:
             self.imageEntryName: self.filePathImage }
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                 
+            
             writeToLog("INFO","Step 1: Going to create parent category") 
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
@@ -181,13 +181,13 @@ class Test:
                 writeToLog("INFO","Step 101: FAILED navigate to entry: " + self.videoEntryName + " from category page")
                 return 
             
-            writeToLog("INFO","Step 12: Going to verify the entry in player")            
+            writeToLog("INFO","Step 19: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify the entry '" + self.videoEntryName + "' in player")
-                return   
+                writeToLog("INFO","Step 19: FAILED to verify the entry '" + self.videoEntryName + "' in player")
+                return 
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Upload media from desktop and verify player' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Preview all kinds of media from My Media and category' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

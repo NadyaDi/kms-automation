@@ -29,7 +29,7 @@ class Test:
     userName1 = "inbar.willman@kaltura.com" # main user
     userPass1 = "Kaltura1!" 
     newDescription = 'Description'
-    newTag = 'tag2,'
+    newTag = '   ,'
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -82,7 +82,7 @@ class Test:
             self.sortEntriesByUpdatedAscending       = (self.entryForSortBy6, self.entryForSortBy7, self.entryForSortBy4, self.entryForSortBy5, self.entryForSortBy1,
                                                         self.entryForSortBy8, self.entryForSortBy3, self.entryForSortBy2)
             ##################### TEST STEPS - MAIN FLOW #############################################################
-            writeToLog("INFO","Going to add likes and comments to entries as: " + self.userName1 + " entries owner") 
+            writeToLog("INFO","Going to update entries as: " + self.userName1 + " entries owner") 
             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"

@@ -2,7 +2,6 @@ from base import *
 from general import General
 import localSettings
 from logger import *
-from upload import Upload
 
 
 class BlackBoard(Base):
@@ -103,6 +102,7 @@ class BlackBoard(Base):
             return False
         return True
     
+    
     def navigateToMyMediaBlackBoard(self):
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
             writeToLog("INFO","FAILED navigate to My Media")
@@ -117,3 +117,26 @@ class BlackBoard(Base):
             return False
         
         return True
+    
+    
+    # Author: Michal Zomper
+    def navigateToGalleryBB(self, galleryName, forceNavigate=False):
+        if forceNavigate == False:
+            if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+                writeToLog("INFO","Success Already in my Gallery page")
+                return True
+        
+        if galleryName == "New1":
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to courses 'New1'")
+                return False
+        sleep(5)
+        
+        self.clsCommon.blackBoard.switchToBlackboardIframe()
+        if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+            writeToLog("INFO","FAILED navigate to to courses 'New1'")
+            return False
+        
+        return True
+        
+
