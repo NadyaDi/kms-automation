@@ -636,15 +636,14 @@ class Upload(Base):
         writeToLog("INFO","Success, entry page was open successfully")
         return True
     
-    # @Auther: Ori Flchtman
+    # @Auther: Ori Flchtman TODO: UNDER CONSTRUCTION, DON'T USE IT
     # Click on Add New Webcast Event for Filter tests
-    def clickAddNewWebcast(self):
+    def clickAddNewWebcast(self, name, description, disclaimer=False, tags):
     # Click Add New
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")
             return False
-              
-        # Click youtube
+
         if self.clickWebcastEvent() == False:
             writeToLog("DEBUG","FAILED to click on 'Webcast Event' button")
             return False
@@ -652,12 +651,21 @@ class Upload(Base):
         if self.wait_visible(self.WEBCAST_PAGE_TITLE, 30) == False:
             writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
             return False
-      
+        
+        if self.fillFileUploadEntryDetails(name, description, tags) == False:
+            continue
+        
+        #checking if disclaimer is turned on for "Before upload"
+        if disclaimer == True:
+            if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
+                    writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
+                    continue        
+        
+        # Click Save
+        if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on 'Save' button")
+            continue
+        sleep(3)        
+
         return True
  
-    #@Auther: Ori Flchtman
-    # Add new Webcast Event for Filter tests
-#     def addWebcastEntry(self, entryName, description, tags, disclaimer=False):
-#         if self.send_keys(uploadBoxElement, self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME, name) == False:
-#             writeToLog("INFO","FAILED to fill an entry name:'" + name + "'")
-#             return False
