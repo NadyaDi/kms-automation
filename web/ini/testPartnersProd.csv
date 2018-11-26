@@ -161,3 +161,5 @@ test_4225,KAF BB - Remove Media From Media Gallery,,,oleg.sigalov@kaltura.com,Ka
 test_610,KAF BB - My Media - Filter Media View Different Statuses,,,oleg.sigalov@kaltura.com,Kaltura1!,kstudent,12346
 test_111,KAF BB - Enable / Disable faculty repository,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_222,KAF BB - Adding media to Faculty Repository From My Media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_114,KAF BB - Add Remove Featured Media Module,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
