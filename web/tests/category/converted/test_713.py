@@ -116,7 +116,7 @@ class Test:
                 return
                     
             writeToLog("INFO","Step 9: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
-            if self.common.channel.handlePendingEntriesInChannel("KMS-Automation_Moderate_Channel", self.entryName1, self.entryName2, False) == False:
+            if self.common.category.handlePendingEntriesInCategory("KMS-Automation_Moderate_Category", self.entryName1, self.entryName2, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to handle entries in Pending tab")
                 return

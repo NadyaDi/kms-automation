@@ -17,7 +17,9 @@ test_608,KAF BB - My Media - Search by Name / Description / Tags,,,pythonautomat
 test_609,KAF BB - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_611,KAF BB - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_4225,KAF BB - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_610,KAF BB - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_610,KAF BB - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,kstudent,123456
+test_111,KAF BB - Enable / Disable faculty repository,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_222,KAF BB - Adding media to Faculty Repository From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
