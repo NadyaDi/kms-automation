@@ -2,6 +2,7 @@ from base import *
 from general import General
 import localSettings
 from logger import *
+from _ast import Is
 
 
 class BlackBoard(Base):
@@ -27,6 +28,16 @@ class BlackBoard(Base):
     BB_SHARED_REPOSITORY_DISCLAIMER_MSG_BEFOR_PUBLISH   = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to shared repositories.')]")
     BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON   = ('xpath', "//label[@class='inline sharedRepositoryMetadata collapsed']")
     BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD        = ('xpath', "//span[@class='inline' and contains(text(), 'FIELD_NAME')]")
+    BB_COURSE_HOME_PAGE                                 = ('xpath', '//span[@title="Home Page" and text()="Home Page"]')
+    BB_ADD_COURSE_MODAL                                 = ('xpath', '//a[contains(@href,"/webapps/portal/execute/tabs/tabManageModules") and text()="Add Course Module"]')
+    BB_COURSE_ADD_MODULE_SEARCH_FIELD                   = ('xpath','//input[@id="txtSearch"]')
+    BB_COURSE_ADD_MODULE_SEARCH_SUBMIN_BTN              = ('xpath', '//input[@type="submit" and @value="Go"]')
+    ADD_COURSE_MODULE_BTN                               = ('xpath', '//a[@id="MODULE_ID:-1addButton"]')
+    REMOVE_COURSE_MODULE_BTN                            = ('xpath', '//a[@id="MODULE_ID:-1removeButton"]')     
+    COURSE_MODULE_NAME                                  = ('xpath','//span[@class="moduleTitle" and text()="MODULE_NAME"]')   
+    BB_MEDIA_GALLERY_ENTRY_NAME                         = ('xpath', '//a[@class="item_link" and text()="ENTRY_NAME"]')  
+    FEATURED_MEDIA_ICON                                 = ('xpath', '//a[@id="featured_ENTRY_NAME"]')   
+    DETAILED_VIEW                                       = ('xpath', '//i[@class="icon-th-list"]') 
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -146,6 +157,110 @@ class BlackBoard(Base):
         
         return True
         
+
+    # @Author: Inbar Willman
+    # enable = True - enable module
+    # enable = false - disable  media
+    # searchTerm = module name
+    def enableDisableCourseModule(self, galleryName, searchTerm, moduleId, enable=True, isDisplay=True):
+        if self.navigateToGalleryBB(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to to courses 'New1'")
+            return False
+        
+        if self.clsCommon.base.switch_to_default_content() == False:
+            writeToLog("INFO","FAILED to switch to BB frame")
+            return False               
+        
+        if self.click(self.BB_COURSE_HOME_PAGE) == False:
+            writeToLog("INFO","FAILED to click on home page")
+            return False 
+        
+        if self.click(self.BB_ADD_COURSE_MODAL) == False:
+            writeToLog("INFO","FAILED to click on 'Add course module'")
+            return False 
+        
+        if self.searchInAddModule(searchTerm) == False:
+            writeToLog("INFO","FAILED to make a search in 'Add module'")
+            return False 
+        
+        if enable == True:
+            tmp_add_module_element = (self.ADD_COURSE_MODULE_BTN[0], self.ADD_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId)) 
+            if self.click(tmp_add_module_element) == False:
+                writeToLog("INFO","FAILED to add " + searchTerm)
+                return False 
+        else:
+            tmp_remove_module_element = (self.REMOVE_COURSE_MODULE_BTN[0], self.REMOVE_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId)) 
+            if self.click(tmp_remove_module_element) == False:
+                writeToLog("INFO","FAILED to remove " + searchTerm)
+                return False 
+            
+        if self.veifyModuleDisplay(searchTerm, isDisplay) == False:
+            writeToLog("INFO","FAILED verify " + searchTerm + " displayed")
+            return False   
+        
+        return True                                      
+             
+        
+    # @Author: Inbar Willman
+    # Make a search in 'Add module'
+    def searchInAddModule(self, searchTerm):                        
+        if self.click(self.BB_COURSE_ADD_MODULE_SEARCH_FIELD) == False:
+            writeToLog("INFO","FAILED to click on search field")
+            return False  
+        
+        if self.send_keys(self.BB_COURSE_ADD_MODULE_SEARCH_FIELD, searchTerm) == False:
+            writeToLog("INFO","FAILED to insert search term in search field")
+            return False  
+        
+        if self.click(self.BB_COURSE_ADD_MODULE_SEARCH_SUBMIN_BTN) == False:
+            writeToLog("INFO","FAILED to click on submit search button")
+            return False  
+        
+        return True     
+    
+    
+    # @Author: Inbar Willman
+    # Verify if featured media is displayed in media gallery home page
+    # isDisplay = True - Featured media should be displayed
+    # isDisplay = False - Featured media shouldn't be displayed
+    def veifyModuleDisplay(self, moduleName, isDisplay=True):      
+        if self.click(self.BB_COURSE_HOME_PAGE) == False:
+            writeToLog("INFO","FAILED to click on home page")
+            return False 
+        
+        tmp_module_name = (self.COURSE_MODULE_NAME[0], self.COURSE_MODULE_NAME[1].replace('MODULE_NAME', moduleName)) 
+        if isDisplay == True:
+            if self.is_visible(tmp_module_name) == False:
+                writeToLog("INFO","FAILED to display " + moduleName)
+                return False  
+        else:
+            if self.wait_visible(tmp_module_name, 3) != False:
+                writeToLog("INFO","FAILED " + moduleName + " is displayed altough it shouldn't be")
+                return False  
+            
+            
+    # @Author: Inbar Willman
+    # Click on 'featured media' icon for entry
+    def clickOnFeaturedMediaIcon(self, entryName): 
+        if self.click(self.DETAILED_VIEW) == False:
+            writeToLog("INFO","FAILED to click on detailed view button")
+            return False  
+        
+        # Get entry element 
+        tmp_entry = (self.BB_MEDIA_GALLERY_ENTRY_NAME[0], self.BB_MEDIA_GALLERY_ENTRY_NAME[1].replace('ENTRY_NAME', entryName))      
+        entry_element = self.wait_visible(tmp_entry)
+        
+        # Get entry id      
+        tmp_entry_id = entry_element.get_attribute("href").split("/")
+        entry_id= tmp_entry_id[5]
+        
+        featuredMediaIcon =  (self.FEATURED_MEDIA_ICON[0], self.FEATURED_MEDIA_ICON[1].replace('ENTRY_NAME', entry_id))
+        if self.click(featuredMediaIcon) == False:
+            writeToLog("INFO","FAILED to click on featured media button")
+            return False  
+            
+        return True                                                   
+      
     
     # Author: Michal Zomper
     def navigateToSharedRepositoryInBB(self):
@@ -285,4 +400,4 @@ class BlackBoard(Base):
         return True
             
             
-    
+
