@@ -71,7 +71,6 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
     if(hostBrowser == PC_BROWSER_FIREFOX):
         # This code for Firefox browser profile (remote and local)
         fp = webdriver.FirefoxProfile()
-        fp.set_preference('marionette', False) # custom location
         fp.set_preference('browser.download.folderList', 2) # custom location
         fp.set_preference('browser.download.manager.showWhenStarting', False)
         fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
@@ -109,7 +108,7 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
         if (localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_IE):
             return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL,desired_capabilities={'unexpectedAlertBehaviour':'accept','browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,'ignoreZoomSetting':True,"nativeEvents": False,"unexpectedAlertBehaviour": "accept","ignoreProtectedModeSettings": True,"disable-popup-blocking": True,"enablePersistentHover": True,"applicationName": LOCAL_SETTINGS_SELENIUM_GRID_POOL})
         elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_FIREFOX):
-            return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
+            return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'marionette:False','browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
         elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_CHROME):
             return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'setNoProxy': '' , 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL},options=chromeOptions)
 
