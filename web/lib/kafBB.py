@@ -3,7 +3,8 @@ from general import General
 import localSettings
 from logger import *
 from _ast import Is
-
+from selenium.webdriver.common.keys import Keys
+import enums
 
 class BlackBoard(Base):
     driver = None
@@ -28,7 +29,7 @@ class BlackBoard(Base):
     BB_SHARED_REPOSITORY_DISCLAIMER_MSG_BEFOR_PUBLISH   = ('xpath', "//div[@class='alert ' and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to shared repositories.')]")
     BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON   = ('xpath', "//label[@class='inline sharedRepositoryMetadata collapsed']")
     BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD        = ('xpath', "//span[@class='inline' and contains(text(), 'FIELD_NAME')]")
-    BB_COURSE_HOME_PAGE                                 = ('xpath', '//span[@title="Home Page" and text()="Home Page"]')
+    BB_COURSE_PAGE                                      = ('xpath', '//span[@title="COURSE_PAGE" and text()="COURSE_PAGE"]')
     BB_ADD_COURSE_MODAL                                 = ('xpath', '//a[contains(@href,"/webapps/portal/execute/tabs/tabManageModules") and text()="Add Course Module"]')
     BB_COURSE_ADD_MODULE_SEARCH_FIELD                   = ('xpath','//input[@id="txtSearch"]')
     BB_COURSE_ADD_MODULE_SEARCH_SUBMIN_BTN              = ('xpath', '//input[@type="submit" and @value="Go"]')
@@ -38,6 +39,13 @@ class BlackBoard(Base):
     BB_MEDIA_GALLERY_ENTRY_NAME                         = ('xpath', '//a[@class="item_link" and text()="ENTRY_NAME"]')  
     FEATURED_MEDIA_ICON                                 = ('xpath', '//a[@id="featured_ENTRY_NAME"]')   
     DETAILED_VIEW                                       = ('xpath', '//i[@class="icon-th-list"]') 
+    FEATURED_MEDIA_ENTRY                                = ('xpath', '//img[@class="playerPoster fill-width" and @alt="Video thumbnail for ENTRY_NAME"]')
+    BB_CONTENT_PAGE_MENU                                = ('xpath', '//a[contains(@id, "Menu_actionButton") and contains(text(),"MENU_NAME")]')
+    BB_CONTENT_PAGE_MENU_OPTION                         = ('xpath', '//a[contains(@id, "content-handler") and text()="MENU_OPTION"]')
+    CONTENT_TYPE_TITLE                                  = ('xpath', '//span[@id="pageTitleText" and (contains(text(), "Create CONTENT_TYPE"))]')
+    BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@id="htmlData_text_bb_mashupbutton_action"]')
+    BB_EMBED_KALTURA_MEDIA_OPTION                       = ('xpath', '//span[@class="mceText" and @title="Kaltura Media"]')
+    KAF_SUBMIT_BUTTON                                   = ('xpath', '//input[@type="submit"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -163,17 +171,9 @@ class BlackBoard(Base):
     # enable = false - disable  media
     # searchTerm = module name
     def enableDisableCourseModule(self, galleryName, searchTerm, moduleId, enable=True, isDisplay=True):
-        if self.navigateToGalleryBB(galleryName) == False:
-            writeToLog("INFO","FAILED navigate to to courses 'New1'")
-            return False
-        
-        if self.clsCommon.base.switch_to_default_content() == False:
-            writeToLog("INFO","FAILED to switch to BB frame")
-            return False               
-        
-        if self.click(self.BB_COURSE_HOME_PAGE) == False:
-            writeToLog("INFO","FAILED to click on home page")
-            return False 
+        if self.navigateToCoursePage(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to course home page")
+            return False             
         
         if self.click(self.BB_ADD_COURSE_MODAL) == False:
             writeToLog("INFO","FAILED to click on 'Add course module'")
@@ -241,7 +241,15 @@ class BlackBoard(Base):
             
     # @Author: Inbar Willman
     # Click on 'featured media' icon for entry
-    def clickOnFeaturedMediaIcon(self, entryName): 
+    def clickOnFeaturedMediaIcon(self, entryName):
+        #Refresh the page
+#         if self.clsCommon.kafGeneric.clickOnMediaGalleryRefreshNowButton() == False:
+#             writeToLog("INFO","FAILED to click on 'refresh now' button")
+#             return False
+        
+        self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON)
+        sleep(6)
+        
         if self.click(self.DETAILED_VIEW) == False:
             writeToLog("INFO","FAILED to click on detailed view button")
             return False  
@@ -254,10 +262,16 @@ class BlackBoard(Base):
         tmp_entry_id = entry_element.get_attribute("href").split("/")
         entry_id= tmp_entry_id[5]
         
-        featuredMediaIcon =  (self.FEATURED_MEDIA_ICON[0], self.FEATURED_MEDIA_ICON[1].replace('ENTRY_NAME', entry_id))
+        featuredMediaIcon = (self.FEATURED_MEDIA_ICON[0], self.FEATURED_MEDIA_ICON[1].replace('ENTRY_NAME', entry_id))
+        if self.hover_on_element(featuredMediaIcon) == False:
+            writeToLog("INFO","FAILED to hover on featured media button")
+            return False  
+                
         if self.click(featuredMediaIcon) == False:
             writeToLog("INFO","FAILED to click on featured media button")
             return False  
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
             
         return True                                                   
       
@@ -401,3 +415,117 @@ class BlackBoard(Base):
             
             
 
+    # @Author: Inbar Willman
+    # Navigate to home page in course
+    def navigateToCoursePage(self, galleryName, BBCoursePages=enums.BBCoursePages.HOME_PAGE):
+        if self.navigateToGalleryBB(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to to courses 'New1'")
+            return False
+        
+        if self.clsCommon.base.switch_to_default_content() == False:
+            writeToLog("INFO","FAILED to switch to BB frame")
+            return False  
+        
+        tmpCoursePage = (self.BB_COURSE_PAGE[0], self.BB_COURSE_PAGE[1].replace('COURSE_PAGE', BBCoursePages.value))           
+        
+        if self.click(tmpCoursePage) == False:
+            writeToLog("INFO","FAILED to click on " + BBCoursePages.value + " page")
+            return False 
+        
+        return True
+        
+    
+    # @Author: Inbar Willman
+    # Verify that featured entry is displayed under featured media section   
+    # shouldBeDisplayed=True - Entry should be displayed in featured media
+    # shouldBeDisplayed=False Entry shouldn't be displayed in featured media
+    def verifyEntryInFeaturedMedia(self, galleryName, entryName, shouldBeDisplayed=True):
+        if self.navigateToCoursePage(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to course: " + galleryName + " home page")   
+            return False  
+        
+        self.clsCommon.player.switchToPlayerIframe(False)
+        
+        # Verify that entry is displayed in featured media section
+        tmp_featured_media_entry =  (self.FEATURED_MEDIA_ENTRY[0], self.FEATURED_MEDIA_ENTRY[1].replace('ENTRY_NAME', entryName)) 
+        if shouldBeDisplayed == False:
+            if self.wait_visible(tmp_featured_media_entry, timeout=3) != False:
+                writeToLog("INFO","FAILED: Entry shouldn't be displayed in featured media")   
+                return False 
+            else:
+                writeToLog("INFO","Success: Entry isn't displayed in featured media")
+                return True  
+            
+        # shouldBeDisplayed == True     
+        else:        
+            if self.wait_visible(tmp_featured_media_entry) == False:
+                writeToLog("INFO","FAILED to display" + entryName + " in course featured media")   
+                return False 
+        
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+        
+            sleep(2)
+        
+            # Verify that entry is played in featured media section
+            if self.clsCommon.player.clickPlayPauseAndVerify('0:09', clickPlayFromBarline=True) == False:
+                writeToLog("INFO","FAILED to play and verify entry")
+                return  False
+        
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    # Navigate to content embed page
+    # menu - bulid content, assessments or tools
+    # menu option (Enum) - one of the menu options from the menus above
+    def navigateToContentEmbedPage(self,galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.ITEM):  
+        #Navigate to content page 
+        if self.navigateToCoursePage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:
+            writeToLog("INFO","FAILED to navigate to " + galleryName + "Content page")
+            return  False
+        
+        # Choose menu 
+        tmpMenu = (self.BB_CONTENT_PAGE_MENU[0], self.BB_CONTENT_PAGE_MENU[1].replace('MENU_NAME', menu.value))
+        if self.click(tmpMenu) == False:
+            writeToLog("INFO","FAILED to click on " + menu.value + " menu")
+            return  False 
+         
+        # Choose menu option   
+        tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', menuOption.value))  
+        if self.click(tmpMenuOption) == False:
+            writeToLog("INFO","FAILED to click on " + menuOption.value + " option")
+            return  False  
+        
+        # Verify that we are in the right page    
+        tmpContentTypeTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', menuOption.value))
+        if self.is_visible(tmpContentTypeTitle) == False:
+            writeToLog("INFO","FAILED to displayed " + menuOption.value + " page")
+            return  False                  
+            
+        return True
+        
+    
+    # @Author: Inbar Willman
+    # Create embed item
+    def createEmbedItem(self, galleryName, entryName, embedFrom=enums.Location.MY_MEDIA):
+        if self.navigateToContentEmbedPage(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to content item page")
+            return  False 
+        
+        if self.click(self.BB_EMBED_MASHUPS_BTN) == False:
+            writeToLog("INFO","FAILED to click on mashups button")
+            return  False 
+        
+        if self.click(self.BB_EMBED_KALTURA_MEDIA_OPTION) == False:
+            writeToLog("INFO","FAILED to click on kaltura media option")
+            return  False 
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:
+            writeToLog("INFO","FAILED to embed item in item page")
+            return  False             
+        
+        if self.click(self.KAF_SUBMIT_BUTTON)  == False:
+            writeToLog("INFO","FAILED to click on 'submit' button")
+            return  False      
+        
+        return True            
