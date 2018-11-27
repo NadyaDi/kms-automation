@@ -71,7 +71,7 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
     if(hostBrowser == PC_BROWSER_FIREFOX):
         # This code for Firefox browser profile (remote and local)
         fp = webdriver.FirefoxProfile()
-        fp.set_preference('marionette', True) # custom location
+        fp.set_preference('marionette', False) # custom location
         fp.set_preference('browser.download.folderList', 2) # custom location
         fp.set_preference('browser.download.manager.showWhenStarting', False)
         fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
