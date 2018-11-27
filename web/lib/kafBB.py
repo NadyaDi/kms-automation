@@ -6,6 +6,7 @@ from _ast import Is
 from selenium.webdriver.common.keys import Keys
 import enums
 
+
 class BlackBoard(Base):
     driver = None
     clsCommon = None
@@ -30,8 +31,11 @@ class BlackBoard(Base):
     BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON   = ('xpath', "//label[@class='inline sharedRepositoryMetadata collapsed']")
     BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD        = ('xpath', "//span[@class='inline' and contains(text(), 'FIELD_NAME')]")
     BB_COURSE_PAGE                                      = ('xpath', '//span[@title="COURSE_PAGE" and text()="COURSE_PAGE"]')
+    #BB_SHARED_REPOSITORY_DISCLAIMER_MSG_BEFOR_PUBLISH   = ('xpath', "//div[contains(@class, 'alert') and contains(text(), 'Complete all the required fields and save the entry before you can select to publish it to shared repositories.')]")
+    #BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON   = ('xpath', "//label[@class='collapsed inline sharedRepositoryMetadata']")
+    #BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD        = ('xpath', "//span[@class='inline']")
     BB_ADD_COURSE_MODAL                                 = ('xpath', '//a[contains(@href,"/webapps/portal/execute/tabs/tabManageModules") and text()="Add Course Module"]')
-    BB_COURSE_ADD_MODULE_SEARCH_FIELD                   = ('xpath','//input[@id="txtSearch"]')
+    BB_COURSE_ADD_MODULE_SEARCH_FIELD                   = ('xpath', '//input[@id="txtSearch"]')
     BB_COURSE_ADD_MODULE_SEARCH_SUBMIN_BTN              = ('xpath', '//input[@type="submit" and @value="Go"]')
     ADD_COURSE_MODULE_BTN                               = ('xpath', '//a[@id="MODULE_ID:-1addButton"]')
     REMOVE_COURSE_MODULE_BTN                            = ('xpath', '//a[@id="MODULE_ID:-1removeButton"]')     
@@ -388,31 +392,45 @@ class BlackBoard(Base):
             
     
     # Author: Michal Zomper
-    def addSharedRepositoryMetadata(self, entryName, RequiredField):
-        if self.clsCommon.myMedia.navigateToEditEntryPageFromMyMedia(entryName) == False:
+    def addSharedRepositoryMetadata(self, entryName, requiredField):
+        if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
             writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
             return False  
-        
+         
         if self.click(self.BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON) == False:
             writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
             return False
         
-        tmRequiredField = (self.BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD[0], self.BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD[1].replace('FIELD_NAME', RequiredField))
-        if self.check_element(tmRequiredField, True) == False:
-            writeToLog("INFO","FAILED to checked required metadata field for shared repository")
+        try:
+            tmpRequiredMetadata = self.get_elements(self.BB_SHARED_REPOSITORY_REQUIRED_METADATA_FIELD)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to find required metadata field element for shared repository")
             return False
         
+        isElementFound = False
+        for tmpMetadata in tmpRequiredMetadata:
+            if requiredField == tmpMetadata.text:
+                if self.clickElement(tmpMetadata) == False:
+                    writeToLog("INFO","FAILED to click required metadata field for shared repository")
+                    return False
+                isElementFound = True
+                break
+            
+        if isElementFound == False:
+            writeToLog("INFO","FAILED to find required metadata field for shared repository")
+            return False
+            
         if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False
         
+        self.clsCommon.general.waitForLoaderToDisappear()
         if self.wait_visible(self.clsCommon.editEntryPage.EDIT_ENTRY_UPLOAD_SUCCESS_MSG) == False:
             writeToLog("INFO","FAILED to find save success message")
             return False
         
         writeToLog("INFO","Success required metadata was saved successfully")
         return True
-            
             
 
     # @Author: Inbar Willman
