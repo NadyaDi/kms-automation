@@ -58,6 +58,7 @@ class Location(Enum):
     EDITOR_PAGE                 = 'Editor page'
     PENDING_TAB_CATEGORY        = 'category - Pending tab'
     MEDIA_GALLARY               = 'channel page'
+    SHARED_REPOSITORY           = 'Shared Repository'
 
 
 class EditEntryPageTabName(Enum):
@@ -376,3 +377,28 @@ class EntryFields(Enum):
     POLLS                      = 'Polls'
     CAPTION                    = 'Caption'
     CAPTIONS                   = 'Captions'
+    
+    
+class BBCoursePages(Enum):
+    def __str__(self):
+        return str(self.value)    
+    
+    HOME_PAGE                 = 'Home Page'
+    CONTENT                   = 'Content'
+    
+    
+class BBContentPageMenus(Enum):
+    def __str__(self):
+        return str(self.value)  
+    
+    BUILD_CONTENT             = 'Build Content' 
+    ASSESSMENTS               = 'Assessments'   
+    TOOLS                     = 'Tools'
+    
+    
+class BBContentPageMenusOptions(Enum):
+    def __str__(self):
+        return str(self.value)     
+    
+    ITEM                      = 'Item'
+    FILE                      = 'File'

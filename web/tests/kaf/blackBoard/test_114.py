@@ -58,39 +58,59 @@ class Test:
             
             ######################### TEST STEPS - MAIN FLOW #######################
             
-#             writeToLog("INFO","Step 1: Going to enable featured media in media gallery")  
-#             if self.common.blackBoard.enableDisableCourseModule(self.galleryName, self.module, self.moduleId)== False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to enable featured media in media gallery")
-#                 return 
-#             
-#             writeToLog("INFO","Step 2: Going to add new media to media gallery")  
-#             if self.common.kafGeneric.addNewContentToGallery(self.galleryName, self.uploadEntrieList, isGalleryModerate=False)== False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to add new media to media gallery")
-#                 return 
-            
+            writeToLog("INFO","Step 1: Going to enable featured media in media gallery")  
+            if self.common.blackBoard.enableDisableCourseModule(self.galleryName, self.module, self.moduleId)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to enable featured media in media gallery")
+                return 
+              
+            writeToLog("INFO","Step 2: Going to add new media to media gallery")  
+            if self.common.kafGeneric.addNewContentToGallery(self.galleryName, self.uploadEntrieList, isGalleryModerate=False)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to add new media to media gallery")
+                return 
+              
             writeToLog("INFO","Step 3: Going to navigate media gallery")  
-            if self.common.kafGeneric.navigateToGallery(self.galleryName)== False:
+            if self.common.kafGeneric.navigateToGallery(self.galleryName, forceNavigate=True)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate media gallery")
                 return 
-            
-            writeToLog("INFO","Step 4: Going to click on entry's featured media icon")  
+              
+            writeToLog("INFO","Step 4: Going to add entry to featured media")  
             if self.common.blackBoard.clickOnFeaturedMediaIcon(self.entryName)== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to click on entry's featured media icon")
-                return                   
+                writeToLog("INFO","Step 4: FAILED to add entry to featured media")
+                return    
+             
+            writeToLog("INFO","Step 5: Going to verify entry display in featured media")  
+            if self.common.blackBoard.verifyEntryInFeaturedMedia(self.galleryName, self.entryName)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to verify entry display in featured media")
+                return     
             
-                     
+            writeToLog("INFO","Step 6: Going to navigate media gallery")  
+            if self.common.kafGeneric.navigateToGallery(self.galleryName)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to navigate media gallery")
+                return                                     
             
+            writeToLog("INFO","Step 7: Going to remove entry from featured media")  
+            if self.common.blackBoard.clickOnFeaturedMediaIcon(self.entryName)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to remove entry from featured media")
+                return  
             
-            
-#             writeToLog("INFO","Step 1: Going to enable featured media in media gallery")  
-#             if self.common.blackBoard.enableDisableCourseModule(self.galleryName, self.module, self.moduleId, False, False)== False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to enable featured media in media gallery")
-#                 return                          
+            writeToLog("INFO","Step 8: Going to verify entry display in featured media")  
+            if self.common.blackBoard.verifyEntryInFeaturedMedia(self.galleryName, self.entryName, shouldBeDisplayed=False)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to verify entry display in featured media")
+                return                      
+
+            writeToLog("INFO","Step 9: Going to disable featured media in media gallery")  
+            if self.common.blackBoard.enableDisableCourseModule(self.galleryName, self.module, self.moduleId, enable=False, isDisplay=False)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to disable featured media in media gallery")
+                return                        
             
             #########################################################################
             writeToLog("INFO","TEST PASSED: Add new media to media gallery was done successfully")
@@ -103,7 +123,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-#            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

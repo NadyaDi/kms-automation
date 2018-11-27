@@ -199,8 +199,4 @@ class Home(Base):
             return False
             
         writeToLog("INFO","Success, Pre/Post links display in the correct place in nav bar")
-        return True
-        
-    
-
-        
+        return True            

@@ -2,6 +2,8 @@ from base import *
 from general import General
 import localSettings
 from logger import *
+from selenium.webdriver.common.keys import Keys
+import enums
 
 
 class KafGeneric(Base):
@@ -17,7 +19,12 @@ class KafGeneric(Base):
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
     KAF_GALLERY_ADD_MEDIA_BUTTON                = ('xpath', "//a[@id='tab-addcontent']")
     KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next']")
-    KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']")
+    KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']") 
+    KAF_EMBED_FROM_MY_MEDIA_PAGE                = ('xpath', "//a[@id='media-tab']")
+    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE           = ('xpath', "//a[@id='MediaGalleries-tab']")
+    KAF_EMBED_FROM_SR_PAGE                      = ('xpath', "//a[contains(@id,'courseGallery') and text()='Shared Repository']")
+    KAF_EMBED_FROM_MEDIA_GALLERY_NAME           = ('xpath', '//a[contains(@id, "courseGallery") and text()="MEDIA_GALLERY_NAME"]')
+    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[@class="btn btn-small btn-primary" and text()="Select"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -239,4 +246,38 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
             return False 
         
-        return True
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    # To Do
+    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA):
+        if embedFrom == enums.Location.MY_MEDIA:
+            if self.click(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
+                writeToLog("INFO","FAILED to click on embed from my media tab")
+                return False  
+              
+        elif embedFrom == enums.Location.SHARED_REPOSITORY:   
+            if self.click(self.KAF_EMBED_FROM_SR_PAGE) == False:    
+                writeToLog("INFO","FAILED to click on embed from SR tab")
+                return False        
+        
+        elif embedFrom == enums.Location.MEDIA_GALLARY: 
+            if self.click(self.KAF_EMBED_FROM_MEDIA_GALLERY_PAGE) == False:
+                writeToLog("INFO","FAILED to click on embed from media gallery tab")
+                return False   
+            
+            tmpMediaGallery = (self.KAF_EMBED_FROM_MEDIA_GALLERY_NAME[0], self.KAF_EMBED_FROM_MEDIA_GALLERY_NAME[1].replace('MEDIA_GALLERY_NAME', mediaGalleryName))          
+            if self.click(tmpMediaGallery) == False:
+                writeToLog("INFO","FAILED to click on media gallery name in dropdown")
+                return False 
+            
+        if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
+            writeToLog("INFO","FAILED to make a search in embed page")
+            return False 
+        
+        if self.click(self.KAF_EMBED_SELECT_MEDIA_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'select' media button")
+            return False
+        
+        return True   
