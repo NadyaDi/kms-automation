@@ -70,7 +70,7 @@ def initialize(test,driverFix,duration=60):
 def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
     if(hostBrowser == PC_BROWSER_FIREFOX):
         # This code for Firefox browser profile (remote and local)
-        fp = webdriver.FirefoxProfile()
+        fp = webdriver.FirefoxProfile('C:\\Users\\kaltura.gen\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\2iei80oc.autoProfile')
         fp.set_preference('browser.download.folderList', 2) # custom location
         fp.set_preference('browser.download.manager.showWhenStarting', False)
         fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
