@@ -191,6 +191,7 @@ test_4326,1,0,0,0,eSearch - Sort by - Add new quiz - when search is made
 test_4327,1,0,0,0,eSearch - Sort by - Channel - pending tab - when search is made
 test_4328,1,0,0,0,eSearch - Sort by - Gallery - pending tab - when search is made
 test_4329,1,0,0,0,eSearch - Sort by media type - my media
+test_4330,1,0,0,0,eSearch - Sort by media type - channel page
 test_4343,1,0,0,0,eSearch - Search In - My media
 test_4345,1,0,0,0,eSearch - Search In - Global page
 test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
