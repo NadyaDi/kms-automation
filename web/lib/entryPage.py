@@ -60,7 +60,18 @@ class EntryPage(Base):
     ENTRY_PAGE_CAPTION_TIME_RESULT                         = ('xpath', "//a[@class='results__result-item--time cursor-pointer' and contains(text(), 'CAPTION_TIME')]") 
     ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI                  = ('xpath', "//a[@class='captions_search_result' and contains(text(), 'CAPTION_TIME')]") 
     ENTRY_PAGE_CAPTION_SEARCH_RESULT_OLD_UI                = ('xpath', "//ul[@id='kitems']")
-    ENTRY_PAGE_CAPTION_SEARCH_RESULT                       = ('xpath', "//div[@class='results-details-container__group']")  
+    ENTRY_PAGE_CAPTION_SEARCH_RESULT                       = ('xpath', "//div[@class='results-details-container__group']")
+    ENTRY_SEARCH_HEADER                                    = ('xpath', "//a[@id='HeaderAccordion-toggle0']//span[contains(@class,'hidden-tablet')][contains(text(),'Search')]")
+    ENTRY_SEARCH_HEADER_INPUT                              = ('xpath', "//form[contains(@class,'headerSearchForm__searchForm searchForm')]//div[contains(@class,'input-prepend input-append searchForm__prepend')]//div//div//input[contains(@placeholder,'Search all media')]")
+    ENTRY_SEARCH_HEADER_CONFIRM                            = ('xpath', "//form[contains(@class,'headerSearchForm__searchForm searchForm')]//div//div//i[contains(@class,'icon-search')]")
+    ENTRY_SELECT_FROM_SEARCH                               = ('xpath', "//a[contains(@href,'ENTRY_ID')]")
+    ENTRY_SEARCH_CLOSE_ICON                                = ('xpath', "//form[contains(@class,'noBorder searchForm')]//div//div//i[contains(@class,'v2ui-close-icon')]")
+    ENTRY_SEARCH_NO_RESULTS_TEXT                           = ('xpath', "//div[@class='results-details-container' and text()='No results found']")
+    ENTRY_FIELD_ICON_IN_RESULTS                            = ('xpath', '//i[contains(@title,"FIELD_NAME")]')
+    ENTRY_SEARCH_SHOW_LESS                                 = ('xpath', "//a[contains(@aria-label,'Show Less')]")
+    ENTRY_SEARCH_TRIGGER                                   = ('xpath', "//form[contains(@class,'noBorder searchForm')]//div//div//i[contains(@class,'icon-search')]")
+    ENTRY_SEARCH_SHOW_MORE                                 = ('xpath', "//span[contains(@class,'results-summary__show-more--text hidden-phone')]")
+    ENTRY_SEARCH_SHOW_ALL                                  = ('xpath', "//a[contains(@aria-label,'Show All')]")
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -778,7 +789,103 @@ class EntryPage(Base):
         
         writeToLog("INFO","Success, caption was found and verified")
         return True
+           
+    
+    # Author: Cus Horia
+    # The function verifies that the entryName and description are not displayed in the search results
+    # expectedCaptionAfterSearch - after clicking on the time in the caption section the player jump to the expected time but move back a few milliseconds so we see the caption befor the one that we are looking for
+    def verifyEntryNameAndDescriptionInSearch(self, searchElement):          
+        if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
+            writeToLog("INFO","FAILED to click on search icon")
+            return False
         
-            
-            
+        if self.click_and_send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, '"' + searchElement + '"') == False:
+            writeToLog("INFO", "Failed to search for the " + searchElement + "element")
+            return False
         
+        if self.click(self.ENTRY_SEARCH_TRIGGER) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "Failed to upload the search results screen")
+            return False
+
+        if self.is_visible(self.ENTRY_SEARCH_NO_RESULTS_TEXT) == False:
+            writeToLog("INFO", "Description is displayed in the search results")
+            return False
+        
+        if self.click(self.ENTRY_SEARCH_CLOSE_ICON) == False:
+            writeToLog("INFO", "Failed to close the search bar")
+            return False
+                    
+        writeToLog("INFO","Success, caption was found and verified")
+        return True
+    
+    
+    # Author: Cus Horia
+    # The function verifies that the proper elements are displayed while being in show more or show less screen
+    def verifyFieldDisplayInEntryPage(self, field, number):
+        if self.clsCommon.myMedia.verifyFieldIconAndNumberOfDisplayInResults(False, field, number, True) == False:
+            writeToLog("INFO", "Failed to display the" '"' + field + '"' "values")
+            return False
+         
+        if self.is_visible(self.ENTRY_SEARCH_SHOW_LESS) == False:
+            writeToLog("INFO", "Search show less option is missing")
+            return False
+        
+        if self.is_visible(self.ENTRY_SEARCH_SHOW_ALL) == True:
+            writeToLog("INFO", "Show all option is displayed")
+            return False
+         
+        if self.click(self.ENTRY_SEARCH_SHOW_LESS) == False:
+            writeToLog("INFO", "Failed to click on the show less button")
+            return False
+          
+        if self.wait_visible(self.clsCommon.myMedia.ENTRY_FIELD_VALUES_SCETION, timeout=3) != False:
+            writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
+            return False
+        
+        return True
+    
+    
+    # Author: Cus Horia
+    # The function searches for a specific term and then verifies that proper elements are displayed while being in show less and show more screen   
+    def verifyFieldDisplayInEntryPageAfterMakingASearch(self, searchTerm, field, number):
+        if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
+            writeToLog("INFO","FAILED to click on search icon")
+            return False
+        
+        if self.click_and_send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, '"' + searchTerm + '"') == False:
+            writeToLog("INFO", "Failed to search for the description")
+            return False
+        
+        if self.click(self.ENTRY_SEARCH_TRIGGER) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "Failed to upload the search results screen")
+            return False
+        
+        if self.verifyFieldDisplayInEntryPage(field, number) == False:
+            writeToLog("INFO", "Failed to verify field display after making a search")
+            return False 
+          
+        if self.is_visible(self.ENTRY_SEARCH_SHOW_MORE) == False:
+            writeToLog("INFO", "Search show more option is missing")
+            return False
+         
+        if self.click(self.ENTRY_SEARCH_SHOW_MORE) == False:
+            writeToLog("INFO", "Failed to click on the show more button")
+            return False
+        
+        if self.clsCommon.myMedia.verifyFieldIconAndNumberOfDisplayInResults(False, field, number, True) == False:
+            writeToLog("INFO", "Failed to display the" + searchTerm + "values")
+            return False
+        
+        if self.click(self.ENTRY_SEARCH_CLOSE_ICON) == False:
+            writeToLog("INFO", "Failed to close the search bar")
+            return False       
+        
+        return True           
