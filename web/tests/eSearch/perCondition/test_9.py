@@ -31,6 +31,7 @@ class Test:
     filePath1 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\automation.jpg'
     filePath2 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\WhyAutomatedTesting.mp4'
     filePath3 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\waves.mp3'
+    filePath5 = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\WhyAutomatedTesting.mp4'
     entryName4= None
     entryNameQuiz=None
     youtuebLink = "https://www.youtube.com/watch?v=usNsCeOV4GM"
@@ -40,7 +41,7 @@ class Test:
     
     channelDescription = "Description"
     channelTags = "Tags,"
-    userName1 = "inbar.willman@kaltura.com" # main user
+    userName1 = "Free@mailinator.com" # main user
     userPass1 = "Kaltura1!"
     userName2 = "private"
     userPass2 = "123456"
@@ -77,10 +78,10 @@ class Test:
             self.entryName2 = "Sort by media type - video"
             self.entryName3 = "Sort by media type - audio"
             self.entryName4 = "Sort by media type - youtube"
-            self.entryNameQuiz = self.entryName2 + " - Quiz"
+            self.entryName5 = "Sort by media type"
+            self.entryNameQuiz = "Sort by media type - Quiz"
 
-            
-            
+                      
             # Category tests in gallery/add to gallery tabs 
             self.categoryForEsearch = 'eSearch category'
             self.categoryForModerator = 'category for eSearch moderator' 
@@ -104,12 +105,12 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
                 return
                               
-            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            writeToLog("INFO","Step 2: Going to upload image type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 2: FAILED failed to upload entry image")
                 return
-             
+              
             writeToLog("INFO","Step 3: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName1, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 3: FAILED - could not publish Video to channel")
@@ -119,19 +120,25 @@ class Test:
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED failed to upload entry audio")
-                return 
-              
+                return
+            
             writeToLog("INFO","Step 5: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName2, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 5: FAILED - could not publish Video to channel")
-                return
-                 
+                return           
+            
+            writeToLog("INFO","Step 4: Going to upload video type entry for quiz")
+            if self.common.upload.uploadEntry(self.filePath5, self.entryName5, self.entryDescription, self.entryTags) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED failed to upload entry audio")
+                return    
+                    
             writeToLog("INFO","Step 6: Going to upload video type entry")            
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED failed to upload entry video")
                 return     
-             
+              
             writeToLog("INFO","Step 7: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName3, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 7: FAILED - could not publish Video to channel")
@@ -144,7 +151,7 @@ class Test:
                 return  
                  
             writeToLog("INFO","Step 9: Going to search the uploaded entry and open KEA")
-            if self.common.kea.searchAndSelectEntryInMediaSelection(self.entryName2, False) == False:
+            if self.common.kea.searchAndSelectEntryInMediaSelection(self.entryName5, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to find entry and open KEA")
                 return  
