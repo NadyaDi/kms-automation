@@ -14,10 +14,10 @@ test_3281,Add collaborator co publish,2370151-1,qakmstest.dev.kaltura.com,python
 test_3282,Add collaborator co edit,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_3273,Slide Deck Upload,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
 test_3274,Slide Deck Upload - delete slides,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
-test_3275,Slide Deck Upload - add / remove chapters,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
+test_3275,Slide Deck Upload - add / remove chapters,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura!1,python_automation1,Kaltura1!
 test_3283,Slide Deck Upload- A-sync upload,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
 test_328,Slide Deck Upload- search slides,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
-test_3276,Slide Deck Upload - change slide location,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
+test_3276,Slide Deck Upload - change slide location,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura!1,python_automation1,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_653,Free trial,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_1573,Home Page Playlist,2370151-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!

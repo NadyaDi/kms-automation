@@ -23,7 +23,7 @@ test_3282,Add collaborator co edit,1756201,mediaspace.kaltura.com,oleg.sigalov@k
 test_3273,Slide Deck Upload,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_3274,Slide Deck Upload - delete slides,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_3275,Slide Deck Upload - add / remove chapters,2370151-2,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
-test_3276,Slide Deck Upload - change slide location,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
+test_3276,Slide Deck Upload - change slide location,2370151-2,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura!1,python_automation1,Kaltura1!
 test_3283,Slide Deck Upload- A-sync upload,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
 test_3284,Slide Deck Upload- search slides,2370151-2,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation1,Kaltura1!
 test_643,Home Page Carousel,1756201,mediaspace.kaltura.com,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,qa%Auto1234
