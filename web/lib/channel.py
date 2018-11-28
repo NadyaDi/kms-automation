@@ -161,6 +161,7 @@ class Channel(Base):
     CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG               = ('xpath', '//div[@class="alert alert-info endlessScrollAlert"]')
     CHANNEL_PENDING_TAB_SEARCH_BAR                      = ('xpath', '//input[@placeholder="Search in Pending" and @class="searchForm__text"]')
     CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG             = ('xpath', '//div[@class="message" and text()="Loading..."]')
+    CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem visible-v2ui hidden-phone")]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -2493,18 +2494,17 @@ class Channel(Base):
             if self.wait_while_not_visible(loading_message, 10) == True:
                     self.clsCommon.sendKeysToBodyElement(Keys.END)
             
-
         if self.is_present(no_entries_page_msg, 5) == True:
             writeToLog("INFO","Success, All media is display")
             sleep(1)
             # go back to the top of the page
             self.clsCommon.sendKeysToBodyElement(Keys.HOME)
             return True    
-         
         else:
             writeToLog("INFO","FAILED to show all media")
             return False  
         
+        return True
     
     # @Author: Inbar Willman
     # Verify filter in channel - media tab    
@@ -2513,16 +2513,18 @@ class Channel(Base):
             writeToLog("INFO","FAILED to show all entries in Add to channel")
             return False
         
-        try:
-            if searchIn == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:
-                entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
-                
-            elif searchIn == enums.Location.ADD_TO_CHANNEL_SR:
-                entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_SR_TABLE).text.lower() 
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to get entries list in channel")
-            return False
-             
+        if searchIn == enums.Location.ADD_TO_CHANNEL_MY_MEDIA:            
+            entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_MY_MEDIA_TABLE).text.lower()
+            if entriesInAddToChannel == False:
+                writeToLog("INFO","FAILED to get entries list in channel")
+                return False                
+            
+        elif searchIn == enums.Location.ADD_TO_CHANNEL_SR:
+            entriesInAddToChannel = self.wait_visible(self.ADD_TO_CHANNEL_SR_TABLE).text.lower()
+            if entriesInAddToChannel == False:
+                writeToLog("INFO","FAILED to get entries list in channel")
+                return False 
+
         for entry in entriesDict:
             #if entry[1] == True:
             if entriesDict[entry] == True:
@@ -2550,9 +2552,8 @@ class Channel(Base):
             return False
         sleep(10)
         
-        try:
-            entriesIncategory = self.wait_visible(self.CHANNEL_PENDING_TAB_TABLE).text.lower()
-        except NoSuchElementException:
+        entriesIncategory = self.wait_visible(self.CHANNEL_PENDING_TAB_TABLE).text.lower()
+        if entriesIncategory == False:
             writeToLog("INFO","FAILED to get entries list in channel")
             return False
              
@@ -2575,6 +2576,42 @@ class Channel(Base):
         return True   
     
     
+    # @Author: Oded.berihon
+    # Verify filter in channel - channel page   
+    def verifyEntriesDisplay(self, entriesDict, verifyIn=enums.Location.CHANNEL_PAGE):
+        if self.showAllEntriesInChannelCategoryPage() == False:
+            writeToLog("INFO","FAILED to show all entries in pending tab page")
+            return False
+        sleep(10)
+        
+        if verifyIn == enums.Location.CHANNEL_PAGE or verifyIn == enums.Location.CATEGORY_PAGE:
+            entriesTable = self.wait_visible(self.clsCommon.category.CATEGORY_GALLEY_ALL_MEDIA_TABLE).text.lower()
+        else:
+            writeToLog("INFO","Wrong enum page type")    
+            
+        if entriesTable == False:
+            writeToLog("INFO","FAILED to get entries list in channel")
+            return False
+             
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInAddToChannel == False:
+                if (entry.lower() in entriesTable) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in gallery page although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInAddToChannel == True:
+                if (entry.lower() in entriesTable) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in gallery page although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in gallery page")
+        return True
+        
+    
     # @Author: Inbar Willman
     # Navigate to add to category page
     def navigateToAddToChannel(self, channelName):
@@ -2593,3 +2630,35 @@ class Channel(Base):
         self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
         
         return True   
+    
+    
+    # @Author: Oded.berihon
+    # Show all entries both in channel and category page    
+    def showAllEntriesInChannelCategoryPage(self, timeOut=30):
+        tmp_table_size = self.CHANNEL_CHANNEL_PAGE_TABLE_SIZE
+        loading_message = self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG
+        no_entries_page_msg = self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG                       
+                
+        if len(self.get_elements(tmp_table_size)) < 4:
+            writeToLog("INFO","Success, All media is display")
+            return True 
+              
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
+        while wait_until > datetime.datetime.now():                       
+            if self.wait_while_not_visible(loading_message, 10) == True:
+                    self.clsCommon.sendKeysToBodyElement(Keys.END)
+            
+        if self.is_present(no_entries_page_msg, 5) == True:
+            writeToLog("INFO","Success, All media is display")
+            sleep(1)
+            # go back to the top of the page
+            self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+            return True    
+        else:
+            writeToLog("INFO","FAILED to show all media")
+            return False  
+        
+        return True  
+    
+    
