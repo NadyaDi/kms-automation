@@ -145,7 +145,7 @@ class Test:
                 return   
              
             writeToLog("INFO","Step 16: Going navigate to audio entry: '" + self.audioEntryName + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName) == False:
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED navigate to entry: " + self.audioEntryName + " from gallery page")
                 return 
@@ -157,7 +157,7 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 18: Going navigate to video entry: '"+ self.videoEntryName2 + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromGalleryPage(self.videoEntryName2, self.galleryName) == False:
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.videoEntryName2, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED navigate to entry: " + self.videoEntryName2 + " from gallery page")
                 return 

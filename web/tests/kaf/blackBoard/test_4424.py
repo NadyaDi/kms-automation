@@ -17,7 +17,7 @@ class Test:
     # Test Name : BlackBoard upload media from media gallery page
     # Test description:
     # Upload entry
-    # Go to course page > Click tool - media gallery -> Upload media -> Verify entry dispplay in media gallery
+    # Go to course page > Click tool - media gallery -> Upload media -> Verify entry display in media gallery
     #================================================================================================================================
     testNum     = "4424"
     application = enums.Application.BLACK_BOARD
@@ -64,8 +64,10 @@ class Test:
             if self.common.kafGeneric.navigateToGallery(self.galleryName)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate media gallery")
-                return             
-            
+                return     
+                    
+            self.common.base.click(self.common.kafGeneric.KAF_REFRSH_BUTTON)
+            sleep(5)
             writeToLog("INFO","Step 3: Going to make a search in media gallery and verify that entry is displayed in media gallery")  
             if self.common.channel.searchEntryInChannel(self.entryName)== False:
                 self.status = "Fail"
