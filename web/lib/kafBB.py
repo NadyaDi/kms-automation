@@ -85,7 +85,7 @@ class BlackBoard(Base):
         try:
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Navigate to login page
-            self.clsCommon.login.navigateToLoginPage(url)
+#             self.clsCommon.login.navigateToLoginPage(url)
             # Enter test partner username
             self.send_keys(self.LOGIN_USERNAME_FIELD, username)
             # Enter test partner password
