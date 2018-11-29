@@ -48,6 +48,8 @@ class BlackBoard(Base):
     BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@id="htmlData_text_bb_mashupbutton_action"]')
     BB_EMBED_KALTURA_MEDIA_OPTION                       = ('xpath', '//span[@class="mceText" and @title="Kaltura Media"]')
     KAF_SUBMIT_BUTTON                                   = ('xpath', '//input[@type="submit"]')
+    CONTENT_ITEM_NAME_FIELD                             = ('xpath', '//input[@id="user_title" and @name="user_title"]')
+    SUCCESS_CREATE_EMBED_MEDIA_MESSAGE                  = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME created."]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -173,7 +175,7 @@ class BlackBoard(Base):
     # enable = false - disable  media
     # searchTerm = module name
     def enableDisableCourseModule(self, galleryName, searchTerm, moduleId, enable=True, isDisplay=True):
-        if self.navigateToCoursePage(galleryName) == False:
+        if self.navigateToCourseMenuOptionPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to course home page")
             return False             
         
@@ -433,7 +435,7 @@ class BlackBoard(Base):
 
     # @Author: Inbar Willman
     # Navigate to home page in course
-    def navigateToCoursePage(self, galleryName, BBCoursePages=enums.BBCoursePages.HOME_PAGE):
+    def navigateToCourseMenuOptionPage(self, galleryName, BBCoursePages=enums.BBCoursePages.HOME_PAGE):
         if self.navigateToGalleryBB(galleryName) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False
@@ -456,7 +458,7 @@ class BlackBoard(Base):
     # shouldBeDisplayed=True - Entry should be displayed in featured media
     # shouldBeDisplayed=False Entry shouldn't be displayed in featured media
     def verifyEntryInFeaturedMedia(self, galleryName, entryName, shouldBeDisplayed=True):
-        if self.navigateToCoursePage(galleryName) == False:
+        if self.navigateToCourseMenuOptionPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to course: " + galleryName + " home page")   
             return False  
         
@@ -496,7 +498,7 @@ class BlackBoard(Base):
     # menu option (Enum) - one of the menu options from the menus above
     def navigateToContentEmbedPage(self,galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.ITEM):  
         #Navigate to content page 
-        if self.navigateToCoursePage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:
+        if self.navigateToCourseMenuOptionPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:
             writeToLog("INFO","FAILED to navigate to " + galleryName + "Content page")
             return  False
         
@@ -523,11 +525,23 @@ class BlackBoard(Base):
     
     # @Author: Inbar Willman
     # Create embed item
-    def createEmbedItem(self, galleryName, entryName, embedFrom=enums.Location.MY_MEDIA):
+    def createEmbedItem(self, galleryName, entryName, itemName, embedFrom=enums.Location.MY_MEDIA):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
             return  False 
         
+        #Insert item name
+        if self.click(self.CONTENT_ITEM_NAME_FIELD) == False:
+            writeToLog("INFO","FAILED to click on item name field")
+            return  False  
+        
+        if self.send_keys(self.CONTENT_ITEM_NAME_FIELD, itemName) == False:
+            writeToLog("INFO","FAILED to add item name")
+            return  False                        
+
+        # Get window before opening embed window
+        window_before = self.clsCommon.base.driver.window_handles[0]
+          
         if self.click(self.BB_EMBED_MASHUPS_BTN) == False:
             writeToLog("INFO","FAILED to click on mashups button")
             return  False 
@@ -536,12 +550,28 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to click on kaltura media option")
             return  False 
         
-        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:
+        sleep(2)
+        
+        # Get window after opening embed window and switch to this window
+        window_after = self.clsCommon.base.driver.window_handles[1]
+        self.clsCommon.base.driver.switch_to_window(window_after)
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName, embedFrom) == False:
             writeToLog("INFO","FAILED to embed item in item page")
-            return  False             
+            return  False  
+        
+        self.clsCommon.base.driver.switch_to_window(window_before)           
         
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
-            return  False      
+            return  False    
         
-        return True            
+        # Verify that Success message is displayed
+        successMsg = (self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', itemName))
+        if self.is_visible(successMsg) == False:
+            writeToLog("INFO","FAILED to display correct success message")
+            return  False  
+        
+        # To Do: Need to add verify that entry is played
+                    
+        return True     

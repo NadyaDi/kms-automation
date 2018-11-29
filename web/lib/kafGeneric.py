@@ -250,8 +250,12 @@ class KafGeneric(Base):
     
     
     # @Author: Inbar Willman
-    # To Do
+    # Before and after calling this function need to call switch window
     def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA):
+        if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
+                writeToLog("INFO","FAILED to display embed page")
+                return False  
+                        
         if embedFrom == enums.Location.MY_MEDIA:
             if self.click(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to click on embed from my media tab")
@@ -272,7 +276,7 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on media gallery name in dropdown")
                 return False 
             
-        if self.clsCommon.myMedia.searchEntryMyMedia(entryName) == False:
+        if self.searchInEmbedPage(entryName) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
             return False 
         
@@ -281,3 +285,34 @@ class KafGeneric(Base):
             return False
         
         return True   
+    
+    
+    # @Author: Inbar Willman
+    # Make a search in embed page
+    def searchInEmbedPage(self, entryName, exactSearch=False):
+        searchBarElement = self.clsCommon.myMedia.getSearchBarElement()
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get search bar element")
+            return False
+        
+        searchBarElement.click()
+        
+        if exactSearch == True:
+            searchLine = '"' + entryName + '"'
+        else:
+            if self.clsCommon.isElasticSearchOnPage():
+                searchLine = '"' + entryName + '"'
+            else:
+                searchLine = entryName
+            
+        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True      
+    
+    
+    # @Author: Inbar Willman TO DO
+    # Verify embed entry (video/image) in page
+    def verifyEmbedEntry(self, type=enums.MediaType.VIDEO):
+        self.clsCommon.base.switchToPlayerIframe()
+        return True
