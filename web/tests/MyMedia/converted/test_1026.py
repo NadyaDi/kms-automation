@@ -34,7 +34,7 @@ class Test:
     tags = "tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
     categoryName = [("Apps Automation Category")]
-    channelName = [("Test1")]
+    channelName = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -53,44 +53,50 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName1 = clsTestService.addGuidToString("Publish from upload page", self.testNum)
+            self.channelName = clsTestService.addGuidToString("Channel Publish from upload page", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            writeToLog("INFO","Step 1: Going to create new channel")  
+            if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, False) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to create new channel")
+                return 
                
-            writeToLog("INFO","Step 1: Going to upload entry")  
+            writeToLog("INFO","Step 2: Going to upload entry")  
             if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.description, self.tags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName1)
+                writeToLog("INFO","Step 2: FAILED to upload entry' " + self.entryName1)
                 return 
                                  
-            writeToLog("INFO","Step 2: Going to publish entry from upload page")  
-            if self.common.myMedia.publishSingleEntry(self.entryName1, self.categoryName, self.channelName, publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
+            writeToLog("INFO","Step 3: Going to publish entry from upload page")  
+            if self.common.myMedia.publishSingleEntry(self.entryName1, self.categoryName, [self.channelName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to publish entry' " + self.entryName1 + " to category and channel from upload page")
+                writeToLog("INFO","Step 3: FAILED to publish entry' " + self.entryName1 + " to category and channel from upload page")
                 return 
             sleep(3)
-            writeToLog("INFO","Step 3: Going navigate to category page")
+            writeToLog("INFO","Step 4: Going navigate to category page")
             if self.common.category.navigateToCategory(self.categoryName[0]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to category: " + self.categoryName[0])
+                writeToLog("INFO","Step 4: FAILED navigate to category: " + self.categoryName[0])
                 return
                 
-            writeToLog("INFO","Step 4: Going to verify entry published to category ")
+            writeToLog("INFO","Step 5: Going to verify entry published to category ")
             if self.common.category.searchEntryInCategory(self.entryName1) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to find entry ' " + self.entryName1 + "' in category: " + self.categoryName)
+                writeToLog("INFO","Step 5: FAILED to find entry ' " + self.entryName1 + "' in category: " + self.categoryName)
                 return 
             
             sleep(3)
-            writeToLog("INFO","Step 5: Going navigate to channel page")
-            if self.common.channel.navigateToChannel(self.channelName[0]) == False:
+            writeToLog("INFO","Step 6: Going navigate to channel page")
+            if self.common.channel.navigateToChannel(self.channelName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED navigate to channel: " + self.channelName[0])
+                writeToLog("INFO","Step 6: FAILED navigate to channel: " + self.channelName)
                 return
                 
-            writeToLog("INFO","Step 6: Going to verify entry published to channel")
+            writeToLog("INFO","Step 7: Going to verify entry published to channel")
             if self.common.channel.searchEntryInChannel(self.entryName1) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to find entry ' " + self.entryName1 + "' in channel: " + self.channelName[0])
+                writeToLog("INFO","Step 7: FAILED to find entry ' " + self.entryName1 + "' in channel: " + self.channelName)
                 return 
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Publish from upload page' was done successfully")
@@ -104,6 +110,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1)
+            self.common.channel.deleteChannel(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

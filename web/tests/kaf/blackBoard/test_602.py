@@ -133,7 +133,7 @@ class Test:
                 return  
              
             writeToLog("INFO","Step 14: Going navigate to image entry: '" + self.imageEntryName + "' from gallery page")    
-            if self.common.blackBoard.navigateToEntryPageFromGalleryPage(self.imageEntryName, self.galleryName) == False:
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.imageEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED navigate to entry: " + self.imageEntryName + " from gallery page")
                 return 
