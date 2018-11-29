@@ -118,6 +118,7 @@ test_111,KAF BB - Enable / Disable faculty repository,,,oleg.sigalov@kaltura.com
 test_610,KAF BB - My Media - Filter Media View Different Statuses,,,oleg.sigalov@kaltura.com,Kaltura1!,kstudent,123456
 test_222,KAF BB - Adding media to Faculty Repository From My Media,,,oleg.sigalov@kaltura.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_114,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_695,Entry page - Add caption,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

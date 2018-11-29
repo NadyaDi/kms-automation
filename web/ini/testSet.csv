@@ -21,6 +21,7 @@ test_608,1,0,0,0,KAF BB - My Media - Search by Name / Description / Tags
 test_609,0,1,0,0,KAF BB - My Media - Sort Media
 test_610,1,0,0,0,KAF BB - My Media - Filter Media View Different Statuses
 test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
+test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video

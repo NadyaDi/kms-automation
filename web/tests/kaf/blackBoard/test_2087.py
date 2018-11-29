@@ -33,6 +33,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     galleryName = "New1"
     module = "embed media from wysiwyg"
+    item = "Embed from my media page"
     
     
     #run test as different instances on all the supported platforms
@@ -63,13 +64,13 @@ class Test:
 #                 return 
             
             writeToLog("INFO","Step 2: Going to create embed entry")  
-            if self.common.blackBoard.createEmbedItem(self.galleryName, 'qrcode_middle_4.png')== False:
+            if self.common.blackBoard.createEmbedItem(self.galleryName, 'qrcode_middle_4.png 123', self.item)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create embed entry")
                 return            
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: Add new media to media gallery was done successfully")
+            writeToLog("INFO","TEST PASSED: Create embed media from my media page was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
