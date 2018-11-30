@@ -2029,7 +2029,11 @@ class Channel(Base):
                 return False
             sleep(2)
             # Search Entry     
-            self.clsCommon.myMedia.getSearchBarElement().click()
+            try:
+                self.clsCommon.myMedia.getSearchBarElement().click()
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to click on search bar element")
+                return False
         if noQuotationMarks == False:   
             if self.clsCommon.isElasticSearchOnPage() == True:
                 searchLine = '"' + searchText + '"'

@@ -74,6 +74,7 @@ class Home(Base):
             writeToLog("INFO","FAILED to find entry '" + entryName + "' in playlist")
             return False
         
+        sleep(3)
         qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropBottom, tmp_entry)
         
         if qrResult != str(expectedQrResult):

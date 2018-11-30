@@ -1144,7 +1144,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on thumbnail auto generate button")
             return False
         
-        sleep(5)
+        sleep(10)
         chosenThumbnail = (self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[0], self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[1].replace('SLOCE_NUMBER', str(chosenThumbnailNumber)))
         if self.click(chosenThumbnail, timeout=20) == False:
             writeToLog("INFO","FAILED to choose thumbnail number '" + str(chosenThumbnailNumber) + "' from auto generate")
