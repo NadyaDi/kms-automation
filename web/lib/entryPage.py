@@ -51,7 +51,6 @@ class EntryPage(Base):
     ENTRY_PAGE_RELATED_MEDIA_OPTION                        = ('xpath', "//a[contains(@id,'Related')]")
     ENTRY_PAGE_MY_MEDIA_OPTION                             = ('xpath', "//a[contains(@id,'Sidemymedia')]")
     ENTRY_PAGE_MY_MEDIA_SIDE_BAR_ENTRIES                   = ('xpath', '//div[@class="photo-group thumb_wrapper" and @title="ENTRY_NAME"]')
-    #ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab" and @class="btn responsiveSizePhone tab-attachments-tab attachments-tab-tab"]')
     ENTRY_PAGE_ATTACHMENTS_TAB                             = ('xpath', '//a[@id="tab-attachments-tab"]')
     ENTRY_PAGE_DOWNLOAD_ATTACHMENTS_ICON                   = ('xpath', '//i[@class="icon-download icon-large"]')
     ENTRY_PAGE_RELATED_MEDIA_TABLE                         = ('xpath', '//table[@class="table table-hover table-bordered thumbnails table-condensed"]/tbody/tr')
