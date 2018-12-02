@@ -90,7 +90,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
     EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and text()="Your media was successfully replaced."]') 
     EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
-    EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[@id="attachments-tab-tab"]')
+    EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[contains(@id,"attachments-tab")]')# USE multipleElements=True
     EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
     EDIT_ENTRY_ATTACHMENTS_SELECT_FILE                          = ('xpath', '//label[@for="attachments_fileinput"]')
     EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE                         = ('xpath', '//input[@id="title"]')
@@ -396,7 +396,7 @@ class EditEntryPage(Base):
                 return False 
             
         elif tabName == enums.EditEntryPageTabName.ATTACHMENTS:
-            if self.click(self.EDIT_ENTRY_ATTACHMENTS_TAB, 30) == False:
+            if self.click(self.EDIT_ENTRY_ATTACHMENTS_TAB, 30, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on attachment tab")
                 return False             
                                   
