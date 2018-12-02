@@ -139,19 +139,19 @@ class Test:
              
             elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
                 writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 3.7, 10.2, 1.53, 1.37)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 0.96, 2.65, 0.63, 0.91)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval + 1) 
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 3.7, 10.2, 1.38, 1.32)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 0.96, 2.65, 0.63, 0.91)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
                     return
                  
                 sleep(self.carouselInterval - 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 3.7, 10.2, 1.38, 1.32)  == False:
+                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 0.96, 2.65, 0.63, 0.91)  == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
                     return
