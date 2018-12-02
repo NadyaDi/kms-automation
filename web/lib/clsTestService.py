@@ -117,8 +117,9 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
                     # Convert path for Windows
                     return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
                 except Exception:
-                    sleep(5)
                     writeToLog("INFO","FAILED to start Firefox, retry number " + str(i))
+                    writeToLog("INFO","Going to wait 5 seconds and try again")
+                    sleep(5)                    
                     pass
         elif(localSettings.LOCAL_RUNNING_BROWSER == PC_BROWSER_CHROME):
             return webdriver.Remote(command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'setNoProxy': '' , 'browserName': hostBrowser.split("_")[1],'requireWindowFocus':True,"applicationName": localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL},options=chromeOptions)

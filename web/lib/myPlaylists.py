@@ -85,7 +85,7 @@ class MyPlaylists(Base):
             
             if toCreateNewPlaylist != False:
                 self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName)
-                sleep(1)
+                sleep(3)
             
                 if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on create playlist Button")
@@ -93,7 +93,7 @@ class MyPlaylists(Base):
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
                 
-                sleep(1)
+                sleep(2)
                 if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on create playlist Button")
                     return False
