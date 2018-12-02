@@ -33,7 +33,8 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     galleryName = "New1"
     module = "embed media from wysiwyg"
-    item = "Embed from my media page"
+    itemName = None
+    delay = "0:08"
     
     
     #run test as different instances on all the supported platforms
@@ -54,7 +55,7 @@ class Test:
             self.entryName = clsTestService.addGuidToString("feature media entry", self.testNum)  
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
             self.uploadEntrieList = [self.entryToUpload] 
-            
+            self.itemName = clsTestService.addGuidToString("Embed from my media page", self.testNum)  
             ######################### TEST STEPS - MAIN FLOW #######################
  
 #             writeToLog("INFO","Step 1: Going to add new media to media gallery")  
@@ -62,12 +63,14 @@ class Test:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 1: FAILED to add new media to media gallery")
 #                 return 
+#             
+#             writeToLog("INFO","Step 2: Going to create embed entry")  
+#             if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemName, '', self.delay)== False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 2: FAILED to create embed entry")
+#                 return   
             
-            writeToLog("INFO","Step 2: Going to create embed entry")  
-            if self.common.blackBoard.createEmbedItem(self.galleryName, 'qrcode_middle_4.png 123', self.item)== False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create embed entry")
-                return            
+            self.common.blackBoard.selectEmbedItemOption(self.galleryName, 'Delete', '7D6F606C-2087-Embed from my media page item options')  
             
             #########################################################################
             writeToLog("INFO","TEST PASSED: Create embed media from my media page was done successfully")

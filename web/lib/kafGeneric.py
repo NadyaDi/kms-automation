@@ -311,8 +311,31 @@ class KafGeneric(Base):
         return True      
     
     
-    # @Author: Inbar Willman TO DO
+    # @Author: Inbar Willman
     # Verify embed entry (video/image) in page
-    def verifyEmbedEntry(self, type=enums.MediaType.VIDEO):
-        self.clsCommon.base.switchToPlayerIframe()
-        return True
+    def verifyEmbedEntry(self, imageThumbnail='', delay='', type=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD):
+        # Switch to player iFrame
+        self.clsCommon.player.switchToPlayerIframe()
+        
+        if type == enums.MediaType.VIDEO:
+            # If we are in blackboard need to click on play icon in order to get the player
+            if application == enums.Application.BLACK_BOARD:
+                if self.click(self.clsCommon.blackBoard.EMBED_ENTRY_PLAY_ICON) == False:
+                    writeToLog("INFO","FAILED to click on play icon")
+                    return False  
+                
+                sleep(6)
+                self.clsCommon.blackBoard.switchToBlackboardIframe()
+                self.clsCommon.player.switchToPlayerIframe()
+                               
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                writeToLog("INFO","FAILED to play and verify video")
+                return False                
+            
+        else:
+            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                writeToLog("INFO","FAILED to display correct image thumbnail")
+                return False   
+        
+        writeToLog("INFO","Embed media was successfully verified")    
+        return True               

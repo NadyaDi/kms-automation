@@ -50,6 +50,9 @@ class BlackBoard(Base):
     KAF_SUBMIT_BUTTON                                   = ('xpath', '//input[@type="submit"]')
     CONTENT_ITEM_NAME_FIELD                             = ('xpath', '//input[@id="user_title" and @name="user_title"]')
     SUCCESS_CREATE_EMBED_MEDIA_MESSAGE                  = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME created."]')
+    EMBED_ENTRY_PLAY_ICON                               = ('xpath', '//div[@class="play_image"]')
+    EMBED_CONTENT_DROP_DOWN                             = ('xpath', '//a[@href="#contextMenu" and @title="CONTENT_NAME"]')
+    EMBED_CONTENT_MENU_OPTION                           = ('xpath', '//a[@title="OPTION" and text()="OPTION"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -487,7 +490,7 @@ class BlackBoard(Base):
             # Verify that entry is played in featured media section
             if self.clsCommon.player.clickPlayPauseAndVerify('0:09', clickPlayFromBarline=True) == False:
                 writeToLog("INFO","FAILED to play and verify entry")
-                return  False
+                return False
         
         return True    
     
@@ -500,78 +503,104 @@ class BlackBoard(Base):
         #Navigate to content page 
         if self.navigateToCourseMenuOptionPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:
             writeToLog("INFO","FAILED to navigate to " + galleryName + "Content page")
-            return  False
+            return False
         
         # Choose menu 
         tmpMenu = (self.BB_CONTENT_PAGE_MENU[0], self.BB_CONTENT_PAGE_MENU[1].replace('MENU_NAME', menu.value))
         if self.click(tmpMenu) == False:
             writeToLog("INFO","FAILED to click on " + menu.value + " menu")
-            return  False 
+            return False 
          
         # Choose menu option   
         tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', menuOption.value))  
         if self.click(tmpMenuOption) == False:
             writeToLog("INFO","FAILED to click on " + menuOption.value + " option")
-            return  False  
+            return False  
         
         # Verify that we are in the right page    
         tmpContentTypeTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', menuOption.value))
         if self.is_visible(tmpContentTypeTitle) == False:
             writeToLog("INFO","FAILED to displayed " + menuOption.value + " page")
-            return  False                  
+            return False                  
             
         return True
         
     
     # @Author: Inbar Willman
     # Create embed item
-    def createEmbedItem(self, galleryName, entryName, itemName, embedFrom=enums.Location.MY_MEDIA):
+    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
-            return  False 
-        
+            return False 
+         
         #Insert item name
         if self.click(self.CONTENT_ITEM_NAME_FIELD) == False:
             writeToLog("INFO","FAILED to click on item name field")
-            return  False  
-        
+            return False  
+         
         if self.send_keys(self.CONTENT_ITEM_NAME_FIELD, itemName) == False:
             writeToLog("INFO","FAILED to add item name")
-            return  False                        
-
+            return False                        
+ 
         # Get window before opening embed window
         window_before = self.clsCommon.base.driver.window_handles[0]
-          
+           
         if self.click(self.BB_EMBED_MASHUPS_BTN) == False:
             writeToLog("INFO","FAILED to click on mashups button")
-            return  False 
-        
+            return False 
+         
         if self.click(self.BB_EMBED_KALTURA_MEDIA_OPTION) == False:
             writeToLog("INFO","FAILED to click on kaltura media option")
-            return  False 
-        
+            return False 
+         
         sleep(2)
-        
+         
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
-        
+         
         if self.clsCommon.kafGeneric.embedMedia(entryName, embedFrom) == False:
             writeToLog("INFO","FAILED to embed item in item page")
-            return  False  
-        
+            return False  
+         
         self.clsCommon.base.driver.switch_to_window(window_before)           
-        
+         
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
-            return  False    
-        
+            return False    
+         
         # Verify that Success message is displayed
         successMsg = (self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', itemName))
         if self.is_visible(successMsg) == False:
             writeToLog("INFO","FAILED to display correct success message")
-            return  False  
+            return False  
         
-        # To Do: Need to add verify that entry is played
+        if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
+            writeToLog("INFO","FAILED to played and verify embedded entry")
+            return False             
                     
         return True     
+    
+    
+    # @Author: Inbar Willman
+    # Choose option for embed entry
+    # menuOption - Delete/Edit/Move etc...
+    def selectEmbedItemOption(self, galleryName, menuOption, contentName, BBCoursePages=enums.BBCoursePages.CONTENT):
+        if self.navigateToCourseMenuOptionPage(galleryName, BBCoursePages) == False:
+            writeToLog("INFO","FAILED to navigate to content item page")
+            return False
+        
+        tmpEmbedContentMenu = (self.EMBED_CONTENT_DROP_DOWN[0], self.EMBED_CONTENT_DROP_DOWN[1].replace('CONTENT_NAME', contentName))
+        
+        if self.click(tmpEmbedContentMenu) == False:
+            writeToLog("INFO","FAILED to click on embed item dropdown in content page")
+            return  False  
+        
+        tmpEmbedOption = (self.EMBED_CONTENT_MENU_OPTION[0], self.EMBED_CONTENT_MENU_OPTION[1].replace('OPTION', menuOption))  
+        if self.click(tmpEmbedOption) == False:
+            writeToLog("INFO","FAILED to click on " + menuOption + " option")
+            return False    
+        
+        self.hover_on_element(locator) 
+        
+        return True               
