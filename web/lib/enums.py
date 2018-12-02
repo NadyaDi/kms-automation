@@ -88,6 +88,7 @@ class IframeName(Enum):
     EMBED_PLAYER                        = 'EMBED_PLAYER'
     KAF_BLACKBOARD                      = 'KAF_BLACKBOARD'
     KAF_SHAREPOINT                      = 'KAF_SHAREPOINT'
+    KAF_MOODLE                          = 'KAF_MOODLE'
     
     
 class PlayerView(Enum):

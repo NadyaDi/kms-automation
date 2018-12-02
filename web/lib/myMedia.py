@@ -126,6 +126,10 @@ class MyMedia(Base):
             if self.clsCommon.blackBoard.navigateToMyMediaBlackBoard() == False:
                 writeToLog("INFO","FAILED navigate to my media in blackboard")
                 return False
+        elif application == enums.Application.MOODLE:
+            if self.clsCommon.moodle.navigateToMyMediaMoodle() == False:
+                writeToLog("INFO","FAILED navigate to my media in moodle")
+                return False
         
         else:    
             # Check if we are already in my media page

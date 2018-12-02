@@ -122,6 +122,7 @@ test_1558,1,0,0,0,Disclaimer - before upload
 test_1573,1,0,0,0,Home page playlist
 test_1592,1,0,0,0,Custom data
 test_1594,1,0,0,0,Entry required field
+test_2109,1,0,0,0,Moodle - Preview all kinds of media from My Media and Gallery
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history

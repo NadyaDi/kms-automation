@@ -770,7 +770,7 @@ class EditEntryPage(Base):
         sleep(3)       
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 15) == False:
+        if self.wait_visible(tmp_entry_name, 25) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
             return False
         sleep(3)

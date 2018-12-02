@@ -246,7 +246,7 @@ class Category(Base):
             return False
         sleep(3)
         
-        if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None) == False:
+        if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None) == None:
             writeToLog("INFO","FAILED to upload media from category page: " + uploadEntry.name)
             return False
         

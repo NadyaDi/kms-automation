@@ -28,6 +28,7 @@ from api import ApiClientSession
 from globalSearch import GlobalSearch
 import filecmp
 from kafGeneric import KafGeneric
+from kafMoodle import Moodle
 
 
     #============================================================================================================
@@ -63,6 +64,7 @@ class Common():
         self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
         self.sharePoint         = SharePoint(self, driver)
+        self.moodle             = Moodle(self, driver)
         
     #=============================================================================================================
     # Locators:
@@ -112,7 +114,9 @@ class Common():
         elif self.base.getAppUnderTest() == enums.Application.BLACK_BOARD:
             return self.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
         elif self.base.getAppUnderTest() == enums.Application.SHARE_POINT:
-            return self.sharePoint.loginToSharepoint(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)        
+            return self.sharePoint.loginToSharepoint(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)      
+        elif self.base.getAppUnderTest() == enums.Application.MOODLE:
+            return self.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)   
     
     
     # Author: Tzachi Guetta     
