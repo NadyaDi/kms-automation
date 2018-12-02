@@ -1,5 +1,6 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_0002,Set service url,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
+test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_677,Add Entry from My Media to Several Playlists,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
