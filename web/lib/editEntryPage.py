@@ -111,7 +111,8 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtn']")
     EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD                           = ('xpath', '//input[@id="customdata-FIELD_NAME"]')  
     EDIT_ENTRY_CUSTOM_LIST_FIELD                                = ('xpath', '//select[@id="customdata-FIELD_NAME"]')   
-    EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')                          
+    EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')
+    EDIT_ENTRY_POP_UP_CANCEL_BUTTON                             = ('xpath', "//a[@class='btn null']")                          
     #=============================================================================================================
     
     
@@ -1519,4 +1520,4 @@ class EditEntryPage(Base):
         sleep(3)
         
         writeToLog("INFO","Success customdata were change successfully")
-        return True     
+        return True 

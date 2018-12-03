@@ -61,10 +61,6 @@ class EntryPage(Base):
     ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI                  = ('xpath', "//a[@class='captions_search_result' and contains(text(), 'CAPTION_TIME')]") 
     ENTRY_PAGE_CAPTION_SEARCH_RESULT_OLD_UI                = ('xpath', "//ul[@id='kitems']")
     ENTRY_PAGE_CAPTION_SEARCH_RESULT                       = ('xpath', "//div[@class='results-details-container__group']")
-    ENTRY_SEARCH_HEADER                                    = ('xpath', "//a[@id='HeaderAccordion-toggle0']//span[contains(@class,'hidden-tablet')][contains(text(),'Search')]")
-    ENTRY_SEARCH_HEADER_INPUT                              = ('xpath', "//form[contains(@class,'headerSearchForm__searchForm searchForm')]//div[contains(@class,'input-prepend input-append searchForm__prepend')]//div//div//input[contains(@placeholder,'Search all media')]")
-    ENTRY_SEARCH_HEADER_CONFIRM                            = ('xpath', "//form[contains(@class,'headerSearchForm__searchForm searchForm')]//div//div//i[contains(@class,'icon-search')]")
-    ENTRY_SELECT_FROM_SEARCH                               = ('xpath', "//a[contains(@href,'ENTRY_ID')]")
     ENTRY_SEARCH_CLOSE_ICON                                = ('xpath', "//form[contains(@class,'noBorder searchForm')]//div//div//i[contains(@class,'v2ui-close-icon')]")
     ENTRY_SEARCH_NO_RESULTS_TEXT                           = ('xpath', "//div[@class='results-details-container' and text()='No results found']")
     ENTRY_FIELD_ICON_IN_RESULTS                            = ('xpath', '//i[contains(@title,"FIELD_NAME")]')
@@ -72,6 +68,9 @@ class EntryPage(Base):
     ENTRY_SEARCH_TRIGGER                                   = ('xpath', "//form[contains(@class,'noBorder searchForm')]//div//div//i[contains(@class,'icon-search')]")
     ENTRY_SEARCH_SHOW_MORE                                 = ('xpath', "//span[contains(@class,'results-summary__show-more--text hidden-phone')]")
     ENTRY_SEARCH_SHOW_ALL                                  = ('xpath', "//a[contains(@aria-label,'Show All')]")
+    ENTRY_SEARCH_DROP_DOWN_MENU                            = ('xpath', "//span[contains(@class,'hidden-phone hidden-tablet')]")
+    ENTRY_SEARCH_DROP_DOWN_MENU_LIST                       = ('xpath', "//a[@role='menuitem' and text()='LABEL']")  
+    ENTRY_SEARCH_RESULTS_CONTAINER                         = ('xpath', "//div[contains(@class,'results-details-container__group')]//div[2]//span[contains(., 'TEXT')]")
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -824,7 +823,7 @@ class EntryPage(Base):
     
     
     # Author: Cus Horia
-    # The function verifies that the proper elements are displayed while being in show more or show less screen
+    # The function verifies that the proper elements are displayed while being in show more and show less screen
     def verifyFieldDisplayInEntryPage(self, field, number):
         if self.clsCommon.myMedia.verifyFieldIconAndNumberOfDisplayInResults(False, field, number, True) == False:
             writeToLog("INFO", "Failed to display the" '"' + field + '"' "values")
@@ -846,34 +845,23 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED: Field values section shouldn't be displayed anymore")
             return False
         
+        writeToLog("INFO","Success, all the proper elements are displayed in the show more and show less screen")
         return True
     
     
     # Author: Cus Horia
     # The function searches for a specific term and then verifies that proper elements are displayed while being in show less and show more screen   
     def verifyFieldDisplayInEntryPageAfterMakingASearch(self, searchTerm, field, number):
-        if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
-            writeToLog("INFO","FAILED to click on search icon")
-            return False
-        
-        if self.click_and_send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, '"' + searchTerm + '"') == False:
-            writeToLog("INFO", "Failed to search for the description")
-            return False
-        
-        if self.click(self.ENTRY_SEARCH_TRIGGER) == False:
-            writeToLog("INFO", "Failed to perform a search within the entry")
-            return False
-        
-        if self.clsCommon.general.waitForLoaderToDisappear() == False:
-            writeToLog("INFO", "Failed to upload the search results screen")
-            return False
+        if self.searchForAnEntryTerm(searchTerm) == False:
+            writeToLog("INFO", "Failed to verify field display after making a search")
+            return False 
         
         if self.verifyFieldDisplayInEntryPage(field, number) == False:
             writeToLog("INFO", "Failed to verify field display after making a search")
             return False 
           
         if self.is_visible(self.ENTRY_SEARCH_SHOW_MORE) == False:
-            writeToLog("INFO", "Search show more option is missing")
+            writeToLog("INFO", "Failed, search show more option is missing")
             return False
          
         if self.click(self.ENTRY_SEARCH_SHOW_MORE) == False:
@@ -886,6 +874,103 @@ class EntryPage(Base):
         
         if self.click(self.ENTRY_SEARCH_CLOSE_ICON) == False:
             writeToLog("INFO", "Failed to close the search bar")
-            return False       
+            return False      
         
-        return True           
+        writeToLog("INFO","Success, all the proper elements for the searchTerm are displayed in the show more and show less screen")        
+        return True       
+    
+    
+    # Author: Cus Horia
+    # The function searches for a specific entry term  
+    def searchForAnEntryTerm(self, searchTerm):
+        if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
+            writeToLog("INFO","FAILED to click on search icon")
+            return False
+        
+        if self.click_and_send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, '"' + searchTerm + '"') == False:
+            writeToLog("INFO", "Failed to search for the " + searchTerm + " element")
+            return False
+        
+        if self.click(self.ENTRY_SEARCH_TRIGGER) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "Failed to upload the search results screen")
+            return False
+        
+        writeToLog("INFO","Success, the search term has been successfully displayed")                
+        return True
+    
+
+    # Author: Cus Horia
+    # The function verifies that all the search label list elements are displayed in the drop down menu
+    def verifySearchDropDownLabels(self, searchTerm, labelList):
+        if self.searchForAnEntryTerm(searchTerm) == False:
+            writeToLog("INFO", "Failed to verify field display after making a search")
+            return False 
+        
+        if self.click(self.ENTRY_SEARCH_DROP_DOWN_MENU) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+        
+        for label in labelList:
+            tmpLabel = (self.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[0], self.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[1].replace('LABEL', label))
+            if self.is_visible(tmpLabel) == False:
+                writeToLog("INFO", "Failed, a specific label is not displayed in the drop down menu")
+                return False
+        
+        if self.click(self.ENTRY_SEARCH_DROP_DOWN_MENU) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+        
+        if self.click(self.ENTRY_SEARCH_CLOSE_ICON) == False:
+            writeToLog("INFO", "Failed to close the search bar")
+            return False
+        
+        writeToLog("INFO","Success, all the labels are displayed in the drop down menu")                
+        return True 
+                
+
+    # Author: Cus Horia
+    # The function selects a specific search label from the drop down menu
+    def selectLabelFromDropDown(self, labelNumber):       
+        if self.click(self.ENTRY_SEARCH_DROP_DOWN_MENU) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+         
+        if self.click(labelNumber) == False:
+            writeToLog("INFO", "Failed to perform a search within the entry")
+            return False
+        
+        writeToLog("INFO","Success, the specific label has been successfully selected")                        
+        return True
+    
+    
+    # Author: Cus Horia
+    # The function verifies that all the specific elements for the selected label are displayed in the search results and no other elements are displayed
+    def searchLabelElements(self, searchTerm, labelNumber, elementsNumber, searchElement, allElements):
+        if self.searchForAnEntryTerm(searchTerm) == False:
+            writeToLog("INFO", "Failed to search for " + searchTerm + "element")
+            return False 
+         
+        if self.selectLabelFromDropDown(labelNumber) == False:
+            writeToLog("INFO", "Failed to select a label number from the drop down menu")
+            return False
+
+        searchName = (self.ENTRY_SEARCH_RESULTS_CONTAINER[0], self.ENTRY_SEARCH_RESULTS_CONTAINER[1].replace('TEXT', allElements))
+        tmpSearch = self.get_elements(searchName)
+        if len(tmpSearch) != elementsNumber == False:
+            writeToLog("INFO", "Failed, more than the specific entries are displayed")
+            
+        searchName = (self.ENTRY_SEARCH_RESULTS_CONTAINER[0], self.ENTRY_SEARCH_RESULTS_CONTAINER[1].replace('TEXT', searchElement))
+        if self.is_visible(searchName) == False:
+            writeToLog("INFO", "Failed, elements that should be displayed in the search results are missing")
+            return False
+        
+        if self.click(self.ENTRY_SEARCH_CLOSE_ICON) == False:
+            writeToLog("INFO", "Failed to close the search bar")
+            return False
+        
+        writeToLog("INFO","Success, only the specific elements for the selected label are displayed")                                
+        return True             
