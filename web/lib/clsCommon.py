@@ -123,43 +123,53 @@ class Common():
     def navigateTo(self, navigateTo, navigateFrom='', nameValue='', forceNavigate=False):
         if navigateTo == enums.Location.ENTRY_PAGE:
             if self.entryPage.navigateToEntry(nameValue, navigateFrom) == False:
-                raise Exception("INFO","FAILED navigate to entry: '" + nameValue)
+                writeToLog("INFO","FAILED navigate to entry: '" + nameValue)
+                return False
                 
         elif navigateTo == enums.Location.EDIT_ENTRY_PAGE:
             if self.editEntryPage.navigateToEditEntry(nameValue, navigateFrom) == False:
-                raise Exception("INFO","FAILED navigate to edit entry: '" + nameValue)
+                writeToLog("INFO","FAILED navigate to edit entry: '" + nameValue)
+                return False
 
         elif navigateTo == enums.Location.MY_MEDIA:
             if self.myMedia.navigateToMyMedia(forceNavigate) == False:
-                raise Exception("INFO","FAILED navigate to my media")
+                writeToLog("INFO","FAILED navigate to my media")
+                return False
         
         elif navigateTo == enums.Location.CHANNELS_PAGE:
             if self.channel.navigateToChannels() == False:
-                raise Exception("INFO","FAILED navigate to Channels page")
+                writeToLog("INFO","FAILED navigate to Channels page")
+                return False
             
         elif navigateTo == enums.Location.MY_CHANNELS_PAGE:
             if self.channel.navigateToMyChannels() == False:
-                raise Exception("INFO","FAILED navigate to my Channels")
+                writeToLog("INFO","FAILED navigate to my Channels")
+                return False
             
         elif navigateTo == enums.Location.CHANNEL_PAGE:
             if self.channel.navigateToChannel(nameValue, navigateFrom) == False:
-                raise Exception("INFO","FAILED navigate to Channel: " + nameValue)
+                writeToLog("INFO","FAILED navigate to Channel: " + nameValue)
+                return False
             
         elif navigateTo == enums.Location.MY_PLAYLISTS:
             if self.myPlaylists.navigateToMyPlaylists(forceNavigate) == False:
-                raise Exception("INFO","FAILED navigate to my Playlists")
+                writeToLog("INFO","FAILED navigate to my Playlists")
+                return False
 
         elif navigateTo == enums.Location.CATEGORY_PAGE:
             if self.category.navigateToCategory(nameValue) == False:
-                raise Exception("INFO","FAILED navigate to Category: " + str(nameValue))
+                writeToLog("INFO","FAILED navigate to Category: " + str(nameValue))
+                return False
 
         elif navigateTo == enums.Location.MY_HISTORY:
             if self.myHistory.navigateToMyHistory(forceNavigate) == False:
-                raise Exception("INFO","FAILED navigate to my history")
+                writeToLog("INFO","FAILED navigate to my history")
+                return False
             
         elif navigateTo == enums.Location.HOME:
             if self.myHistory.navigateToHomePage(forceNavigate) == False:
-                raise Exception("INFO","FAILED navigate to home page")        
+                writeToLog("INFO","FAILED navigate to home page")
+                return False      
                                                             
         return True 
     
