@@ -180,6 +180,7 @@ test_7,1,0,0,0,Setup test for eSearch
 test_8,1,0,0,0,Setup test for eSearch
 test_9,1,0,0,0,Setup test for eSearch
 test_11,1,0,0,0,Setup test for eSearch
+test_12,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media - when search is made
 test_4314,1,0,0,0,eSearch - Sort by - Global search - when search is made
@@ -240,3 +241,4 @@ test_4435,1,0,0,0,eSearch - Fields display in results - Multiple - Add new quiz
 test_4436,1,0,0,0,eSearch - Fields display in results - Search in entry page - Video
 test_4437,1,0,0,0,eSearch - Fields display in results - Search in entry page - Quiz
 test_4438,1,0,0,0,eSearch - Fields display in results - Search in entry page - Polls - webcast
+test_4439,1,0,0,0,eSearch - Search in entry page - Captions
