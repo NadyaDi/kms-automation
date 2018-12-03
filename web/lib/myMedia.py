@@ -121,16 +121,12 @@ class MyMedia(Base):
     
     # This method, clicks on the menu and My Media
     def navigateToMyMedia(self, forceNavigate = False):
-        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
-        if application == enums.Application.BLACK_BOARD:
-            if self.clsCommon.blackBoard.navigateToMyMediaBlackBoard() == False:
-                writeToLog("INFO","FAILED navigate to my media in blackboard")
+        # KAF
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            if self.clsCommon.kafGeneric.navigateToMyMediaKAF() == False:
+                writeToLog("INFO","FAILED navigate to my media in " + localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST.value)
                 return False
-        elif application == enums.Application.MOODLE:
-            if self.clsCommon.moodle.navigateToMyMediaMoodle() == False:
-                writeToLog("INFO","FAILED navigate to my media in moodle")
-                return False
-        
+
         else:    
             # Check if we are already in my media page
             if forceNavigate == False:
