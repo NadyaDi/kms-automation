@@ -51,8 +51,10 @@ class BlackBoard(Base):
     CONTENT_ITEM_NAME_FIELD                             = ('xpath', '//input[@id="user_title" and @name="user_title"]')
     SUCCESS_CREATE_EMBED_MEDIA_MESSAGE                  = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME created."]')
     EMBED_ENTRY_PLAY_ICON                               = ('xpath', '//div[@class="play_image"]')
-    EMBED_CONTENT_DROP_DOWN                             = ('xpath', '//a[@href="#contextMenu" and @title="CONTENT_NAME"]')
+    EMBED_CONTENT_DROP_DOWN                             = ('xpath', '//a[@href="#contextMenu" and contains(@title,"CONTENT_NAME")]')
     EMBED_CONTENT_MENU_OPTION                           = ('xpath', '//a[@title="OPTION" and text()="OPTION"]')
+    SUCCESS_DELETE_EMBED_MEDIA_MESSAGE                  = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME deleted."]')
+    CONTENT_KALTURA_MEDIA_NAME_FIELD                    = ('xpath', '//input[@id="title" and @name="title"]') 
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -71,7 +73,7 @@ class BlackBoard(Base):
                 return False
             localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD
             return True
-                    
+                   
         if self.wait_visible(self.BB_MEDIA_SPACE_IFRAME, 3) == False:
             localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD
             return True
@@ -79,10 +81,10 @@ class BlackBoard(Base):
             if self.swith_to_iframe(self.BB_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
                 return False
-            
+           
         localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD
         return True
-            
+   
                 
     def loginToBlackBoard(self, username, password, url=''):
         try:
@@ -177,7 +179,7 @@ class BlackBoard(Base):
     # enable = True - enable module
     # enable = false - disable  media
     # searchTerm = module name
-    def enableDisableCourseModule(self, galleryName, searchTerm, moduleId, enable=True, isDisplay=True):
+    def enableDisableCourseModule(self, galleryName, searchTerm, moduleId, enable=True, isDisplay=True): 
         if self.navigateToCourseMenuOptionPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to course home page")
             return False             
@@ -190,13 +192,28 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to make a search in 'Add module'")
             return False 
         
+        tmp_add_module_element = (self.ADD_COURSE_MODULE_BTN[0], self.ADD_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId))
+        tmp_remove_module_element = (self.REMOVE_COURSE_MODULE_BTN[0], self.REMOVE_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId))
+        
         if enable == True:
-            tmp_add_module_element = (self.ADD_COURSE_MODULE_BTN[0], self.ADD_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId)) 
+            #If 'remove' button is visible, click on remove and then add
+            if self.wait_visible(tmp_remove_module_element, timeout=3) != False:
+                if self.click(tmp_remove_module_element) == False:
+                    writeToLog("INFO","FAILED to remove " + searchTerm)
+                    return False 
+            
+            # Click on 'add' button    
             if self.click(tmp_add_module_element) == False:
-                writeToLog("INFO","FAILED to add " + searchTerm)
-                return False 
+                    writeToLog("INFO","FAILED to add " + searchTerm)
+                    return False                 
+    
         else:
-            tmp_remove_module_element = (self.REMOVE_COURSE_MODULE_BTN[0], self.REMOVE_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId)) 
+            #if 'add' button is is visible, click on add and then remove
+            if self.wait_visible(tmp_add_module_element) != False:
+                if self.click(tmp_add_module_element) == False:
+                    writeToLog("INFO","FAILED to add " + searchTerm)
+                    return False 
+
             if self.click(tmp_remove_module_element) == False:
                 writeToLog("INFO","FAILED to remove " + searchTerm)
                 return False 
@@ -205,7 +222,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED verify " + searchTerm + " displayed")
             return False   
         
-        return True                                      
+        return True                                                                        
              
         
     # @Author: Inbar Willman
@@ -230,8 +247,9 @@ class BlackBoard(Base):
     # Verify if featured media is displayed in media gallery home page
     # isDisplay = True - Featured media should be displayed
     # isDisplay = False - Featured media shouldn't be displayed
-    def veifyModuleDisplay(self, moduleName, isDisplay=True):      
-        if self.click(self.BB_COURSE_HOME_PAGE) == False:
+    def veifyModuleDisplay(self, moduleName, isDisplay=True): 
+        tmpHomePageOption = (self.BB_COURSE_PAGE[0], self.BB_COURSE_PAGE[1].replace('COURSE_PAGE', 'Home Page'))  
+        if self.click(tmpHomePageOption) == False:
             writeToLog("INFO","FAILED to click on home page")
             return False 
         
@@ -501,7 +519,7 @@ class BlackBoard(Base):
     # menu option (Enum) - one of the menu options from the menus above
     def navigateToContentEmbedPage(self,galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.ITEM):  
         #Navigate to content page 
-        if self.navigateToCourseMenuOptionPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:
+        if self.navigateToCourseMenuOptionPage(galleryName, BBCoursePages) == False:
             writeToLog("INFO","FAILED to navigate to " + galleryName + "Content page")
             return False
         
@@ -510,25 +528,34 @@ class BlackBoard(Base):
         if self.click(tmpMenu) == False:
             writeToLog("INFO","FAILED to click on " + menu.value + " menu")
             return False 
-         
-        # Choose menu option   
+        
+        # If announcements option is chosen need to click 'more tools' before clicking announcements option
+        if menuOption == enums.BBContentPageMenusOptions.ANNOUNCEMENTS:
+            tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', enums.BBContentPageMenusOptions.MORE_TOOLS.value)) 
+            if self.click(tmpMenuOption) == False:
+                writeToLog("INFO","FAILED to click on " + menuOption.value + " option")
+                return False
+                        
         tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', menuOption.value))  
         if self.click(tmpMenuOption) == False:
             writeToLog("INFO","FAILED to click on " + menuOption.value + " option")
-            return False  
+            return False 
         
-        # Verify that we are in the right page    
-        tmpContentTypeTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', menuOption.value))
-        if self.is_visible(tmpContentTypeTitle) == False:
-            writeToLog("INFO","FAILED to displayed " + menuOption.value + " page")
-            return False                  
+        # Verify that we are in the right page 
+        if menuOption!= enums.BBContentPageMenusOptions.KALTURA_MEDIA: 
+            tmpContentTypeTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', menuOption.value))
+            if self.is_visible(tmpContentTypeTitle) == False:
+                writeToLog("INFO","FAILED to displayed " + menuOption.value + " page")
+                return False                  
             
         return True
         
     
     # @Author: Inbar Willman
     # Create embed item
-    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA):
+    # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
+    # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
+    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
             return False 
@@ -558,13 +585,15 @@ class BlackBoard(Base):
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
-         
-        if self.clsCommon.kafGeneric.embedMedia(entryName, embedFrom) == False:
+        
+        # Select media in embed page 
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False  
          
         self.clsCommon.base.driver.switch_to_window(window_before)           
-         
+        
+        #Submit item 
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
             return False    
@@ -575,6 +604,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to display correct success message")
             return False  
         
+        # Verify that embed entry is displayed and that it plays correctly
         if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
             writeToLog("INFO","FAILED to played and verify embedded entry")
             return False             
@@ -597,10 +627,77 @@ class BlackBoard(Base):
             return  False  
         
         tmpEmbedOption = (self.EMBED_CONTENT_MENU_OPTION[0], self.EMBED_CONTENT_MENU_OPTION[1].replace('OPTION', menuOption))  
+        
+        self.clsCommon.base.hover_on_element(tmpEmbedOption)
         if self.click(tmpEmbedOption) == False:
             writeToLog("INFO","FAILED to click on " + menuOption + " option")
-            return False    
+            return False                        
         
-        self.hover_on_element(locator) 
+        return True       
+    
+    
+    # @Author: Inbar Willman
+    # Create embed kaltura media
+    # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
+    # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
+    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False):
+        if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.KALTURA_MEDIA) == False:
+            writeToLog("INFO","FAILED to navigate to content kaltura media page")
+            return False 
+         
+        self.switchToBlackboardEmbedKaltruaMedia()
+ 
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
+            writeToLog("INFO","FAILED to embed item in item page")
+            return False 
+         
+        self.switch_to_default_content()
+ 
+        #Insert kaltura media name
+        if self.click(self.CONTENT_KALTURA_MEDIA_NAME_FIELD) == False:
+            writeToLog("INFO","FAILED to click on item name field")
+            return False  
+          
+        if self.send_keys(self.CONTENT_KALTURA_MEDIA_NAME_FIELD, itemName) == False:
+            writeToLog("INFO","FAILED to add item name")
+            return False
+         
+        if self.click(self.KAF_SUBMIT_BUTTON)  == False:
+            writeToLog("INFO","FAILED to click on 'submit' button")
+            return False  
         
-        return True               
+        if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
+            writeToLog("INFO","FAILED to played and verify embedded entry")
+            return False             
+                    
+        return True      
+    
+    
+    # @Author: Inbar Willman
+    # Delete embed item
+    def deleteEmbedItem(self, galleryName, menuOption, contentName, BBCoursePages=enums.BBCoursePages.CONTENT):
+        if self.selectEmbedItemOption(galleryName, menuOption, contentName, BBCoursePages) == False:
+            writeToLog("INFO","FAILED to select delete option")
+            return False 
+        
+        sleep(2)
+       
+        if self.clsCommon.base.click_dialog_accept() == False:
+            writeToLog("INFO","FAILED click accept dialog")
+            return False 
+        
+        tmpDeleteMessage = (self.SUCCESS_DELETE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_DELETE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', contentName)) 
+        if self.is_visible(tmpDeleteMessage) == False:
+            writeToLog("INFO","FAILED display delete message")
+            return False                        
+        
+        return True     
+    
+    
+    # @Author: Inbar Willman
+    def createEmbedAnnouncemnets(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.SHARED_REPOSITORY, chooseMediaGalleryinEmbed=False):
+        if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.TOOLS, menuOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
+            writeToLog("INFO","FAILED to navigate to announcements page")
+            return False 
+        
+        return True     

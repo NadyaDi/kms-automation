@@ -21,10 +21,12 @@ class KafGeneric(Base):
     KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next']")
     KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']") 
     KAF_EMBED_FROM_MY_MEDIA_PAGE                = ('xpath', "//a[@id='media-tab']")
-    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE           = ('xpath', "//a[@id='MediaGalleries-tab']")
+    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_MULTIPLE  = ('xpath', "//a[@id='MediaGalleries-tab']")
     KAF_EMBED_FROM_SR_PAGE                      = ('xpath', "//a[contains(@id,'courseGallery') and text()='Shared Repository']")
     KAF_EMBED_FROM_MEDIA_GALLERY_NAME           = ('xpath', '//a[contains(@id, "courseGallery") and text()="MEDIA_GALLERY_NAME"]')
-    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[@class="btn btn-small btn-primary" and text()="Select"]')
+#    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//div[@class="btn-group singleSizeButton pull-right"]')
+    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[contains(@aria-label, "ENTRY_NAME") and text()="Select"]')
+    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE    = ('xpath', "//a[@data-original-title='Media Gallery']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -82,12 +84,12 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to navigate to  gallery: " +  galleryName)
             return False
         
-        if self.click(self.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to gallery button")
             return False           
         
         sleep(1)
-        self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
         
 #         if channelType == enums.ChannelPrivacyType.SHAREDREPOSITORY:
 #             # open shared repository list
@@ -102,17 +104,17 @@ class KafGeneric(Base):
 #                 return False
 #             self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
             
-        if self.addContentFromMyMedia(entriesNames) == False:
+        if self.clsCommon.channel.addContentFromMyMedia(entriesNames) == False:
             writeToLog("INFO","FAILED to publish entries to gallery: " + galleryName)
             return False
             
         published = False
         
         if isGalleryModerate == True:
-            if self.wait_visible(self.CHANNEL_MODARATE_PUBLISH_MSG, 30) != False:
+            if self.wait_visible(self.clsCommon.channel.CHANNEL_MODARATE_PUBLISH_MSG, 30) != False:
                 published = True
         else:
-            if self.wait_visible(self.CHANNEL_PUBLISH_MSG, 30) != False:
+            if self.wait_visible(self.clsCommon.channel.CHANNEL_PUBLISH_MSG, 30) != False:
                 published = True
         
         if published == True:
@@ -251,7 +253,7 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA):
+    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
         if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
@@ -266,21 +268,29 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on embed from SR tab")
                 return False        
         
-        elif embedFrom == enums.Location.MEDIA_GALLARY: 
-            if self.click(self.KAF_EMBED_FROM_MEDIA_GALLERY_PAGE) == False:
-                writeToLog("INFO","FAILED to click on embed from media gallery tab")
-                return False   
+        elif embedFrom == enums.Location.MEDIA_GALLARY:
+            if chooseMediaGalleryinEmbed == True:
+                if self.click(self.KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_MULTIPLE) == False:
+                    writeToLog("INFO","FAILED to click on embed from media gallery tab")
+                    return False   
             
-            tmpMediaGallery = (self.KAF_EMBED_FROM_MEDIA_GALLERY_NAME[0], self.KAF_EMBED_FROM_MEDIA_GALLERY_NAME[1].replace('MEDIA_GALLERY_NAME', mediaGalleryName))          
-            if self.click(tmpMediaGallery) == False:
-                writeToLog("INFO","FAILED to click on media gallery name in dropdown")
-                return False 
+                tmpMediaGallery = (self.KAF_EMBED_FROM_MEDIA_GALLERY_NAME[0], self.KAF_EMBED_FROM_MEDIA_GALLERY_NAME[1].replace('MEDIA_GALLERY_NAME', mediaGalleryName))          
+                if self.click(tmpMediaGallery) == False:
+                    writeToLog("INFO","FAILED to click on media gallery name in dropdown")
+                    return False 
+            else:
+                if self.click(self.KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE) == False:
+                    writeToLog("INFO","FAILED to click on embed from media gallery tab")
+                    return False 
+                
+                self.clsCommon.general.waitForLoaderToDisappear()
             
-        if self.searchInEmbedPage(entryName) == False:
+        if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
             return False 
         
-        if self.click(self.KAF_EMBED_SELECT_MEDIA_BTN) == False:
+        tmpSelectBtn = (self.KAF_EMBED_SELECT_MEDIA_BTN[0], self.KAF_EMBED_SELECT_MEDIA_BTN[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmpSelectBtn, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on 'select' media button")
             return False
         
@@ -289,12 +299,16 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Make a search in embed page
-    def searchInEmbedPage(self, entryName, exactSearch=False):
-        searchBarElement = self.clsCommon.myMedia.getSearchBarElement()
+    def searchInEmbedPage(self, entryName, exactSearch=False, embedPage = enums.Location.MY_MEDIA):
+        if self.clsCommon.isElasticSearchOnPage():    
+            searchBarElement = self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_ELASTIC_SEARCH_BAR, multipleElements=True)
+        else:
+            searchBarElement = self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SEARCH_BAR, multipleElements=True)
+            
         if searchBarElement == False:
             writeToLog("INFO","FAILED to get search bar element")
-            return False
-        
+            return False         
+
         searchBarElement.click()
         
         if exactSearch == True:
@@ -305,7 +319,7 @@ class KafGeneric(Base):
             else:
                 searchLine = entryName
             
-        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
+        searchBarElement.send_keys(searchLine + Keys.ENTER)
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True      
@@ -313,13 +327,11 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Verify embed entry (video/image) in page
-    def verifyEmbedEntry(self, imageThumbnail='', delay='', type=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD):
-        # Switch to player iFrame
-        self.clsCommon.player.switchToPlayerIframe()
-        
-        if type == enums.MediaType.VIDEO:
+    def verifyEmbedEntry(self, imageThumbnail='', delay='', mediaType=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD): 
+        if mediaType == enums.MediaType.VIDEO:
             # If we are in blackboard need to click on play icon in order to get the player
             if application == enums.Application.BLACK_BOARD:
+                self.clsCommon.blackBoard.switchToBlackboardIframe()
                 if self.click(self.clsCommon.blackBoard.EMBED_ENTRY_PLAY_ICON) == False:
                     writeToLog("INFO","FAILED to click on play icon")
                     return False  
@@ -338,4 +350,4 @@ class KafGeneric(Base):
                 return False   
         
         writeToLog("INFO","Embed media was successfully verified")    
-        return True               
+        return True   

@@ -34,7 +34,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     galleryName = "New1"
     module = "Featured Media Gallery"
-    moduleId = "_158_1"
+    moduleId = "_233_1"
     
     
     #run test as different instances on all the supported platforms
@@ -69,12 +69,18 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add new media to media gallery")
                 return 
+            
+            self.common.base.click(self.common.kafGeneric.KAF_REFRSH_BUTTON)
+            sleep(5)
               
             writeToLog("INFO","Step 3: Going to navigate media gallery")  
             if self.common.kafGeneric.navigateToGallery(self.galleryName, forceNavigate=True)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate media gallery")
                 return 
+            
+            self.common.base.click(self.common.kafGeneric.KAF_REFRSH_BUTTON)
+            sleep(5)
               
             writeToLog("INFO","Step 4: Going to add entry to featured media")  
             if self.common.blackBoard.clickOnFeaturedMediaIcon(self.entryName)== False:
