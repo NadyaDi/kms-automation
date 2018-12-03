@@ -80,14 +80,17 @@ class EditEntryPageTabName(Enum):
 class IframeName(Enum):
     def __str__(self):
         return str(self.value)
- 
+      
     DEFAULT                                 = 'DEFAULT'
     PLAYER                                  = 'PLAYER'
     KEA                                     = 'KEA'
     KEA_QUIZ_PLAYER                         = 'KEA_QUIZ_PLAYER'
     EMBED_PLAYER                            = 'EMBED_PLAYER'
     KAF_BLACKBOARD                          = 'KAF_BLACKBOARD'
+    KAF_BLACKBOARD_EMBED_KALTURA_MEDIA      = 'KAF_BLACKBOARD_EMBED_KALTURA_MEDIA'
     KAF_SHAREPOINT                          = 'KAF_SHAREPOINT'
+    KAF_MOODLE                              = 'KAF_MOODLE'
+
     
     
 class PlayerView(Enum):

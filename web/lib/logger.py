@@ -87,6 +87,8 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.BLACK_BOARD
     elif application == enums.Application.SHARE_POINT:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.SHARE_POINT
+    elif application == enums.Application.MOODLE:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MOODLE
     else:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
             

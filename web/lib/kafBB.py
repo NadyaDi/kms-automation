@@ -55,6 +55,8 @@ class BlackBoard(Base):
     EMBED_CONTENT_MENU_OPTION                           = ('xpath', '//a[@title="OPTION" and text()="OPTION"]')
     SUCCESS_DELETE_EMBED_MEDIA_MESSAGE                  = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME deleted."]')
     CONTENT_KALTURA_MEDIA_NAME_FIELD                    = ('xpath', '//input[@id="title" and @name="title"]') 
+    BB_EMBED_KALTURA_MEDIA_IFRAME                       = ('xpath', "//iframe[contains(@src,'../LtiMashup?course_id=_51_1&content_id=_472_1&mode=sa')]")
+
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -66,7 +68,7 @@ class BlackBoard(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     def switchToBlackboardIframe(self):
-        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
+        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER or localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.KAF_BLACKBOARD_EMBED_KALTURA_MEDIA:
             self.switch_to_default_content()
             if self.swith_to_iframe(self.BB_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
@@ -84,7 +86,29 @@ class BlackBoard(Base):
            
         localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD
         return True
-   
+
+    
+    def switchToBlackboardEmbedKaltruaMedia(self):
+        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
+            self.switch_to_default_content()
+            if self.swith_to_iframe(self.BB_EMBED_KALTURA_MEDIA_IFRAME) == False:
+                writeToLog("INFO","FAILED to switch to iframe")
+                return False
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD_EMBED_KALTURA_MEDIA
+            return True
+                    
+        if self.wait_visible(self.BB_EMBED_KALTURA_MEDIA_IFRAME, 3) == False:
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD_EMBED_KALTURA_MEDIA
+            return True
+        else:
+            if self.swith_to_iframe(self.BB_EMBED_KALTURA_MEDIA_IFRAME) == False:
+                writeToLog("INFO","FAILED to switch to iframe")
+                return False
+            
+        localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD_EMBED_KALTURA_MEDIA
+        return True    
+            
+
                 
     def loginToBlackBoard(self, username, password, url=''):
         try:
@@ -127,30 +151,6 @@ class BlackBoard(Base):
             return False
          
         writeToLog("INFO","Success user was logout")   
-        return True
-    
-    
-    def navigateToUploadPageBlackBoard(self):
-        if self.navigateToMyMediaBlackBoard() == False:
-            return False
-        if self.switchToBlackboardIframe() == False:
-            return False
-        return True
-    
-    
-    def navigateToMyMediaBlackBoard(self):
-        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-        
-        sleep(2)
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-        
-        if self.switchToBlackboardIframe() == False:
-            return False
-        
         return True
     
     

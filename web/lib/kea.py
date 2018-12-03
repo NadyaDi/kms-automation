@@ -7,6 +7,8 @@ import enums
 from base import *
 import clsTestService
 from general import General
+from selenium.webdriver.common.keys import Keys
+
 
 
 class Kea(Base):
@@ -21,6 +23,7 @@ class Kea(Base):
     #=============================================================================================================
     KEA_ADD_NEW_QUESTION_BUTTON                   = ('xpath', "//button[@class='question-type-button question-types-icon multiple-options-question-type active ng-star-inserted']")  
     KEA_SELECT_VIDEO_FOR_EDIT                     = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
+    KEA_LAUNCH                                    = ('xpath', "//i[@class='icon-editor']")
     KEA_APP_DISPLAY                               = ('id', 'kea-anchor')
     KEA_IFRAME                                    = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
     KEA_QUIZ_PLAYER                               = ('id', 'quiz-player_ifp')
@@ -33,6 +36,7 @@ class Kea(Base):
     EDITOR_TABLE_SIZE                             = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     EDITOR_TIMELINE                               = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
+    EDITOR_TIME_PICKER                            = ('id', 'jump-to__input')
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -297,3 +301,50 @@ class Kea(Base):
                  
         writeToLog("INFO","Success, Only the correct media display in channel - pending tab")
         return True    
+    
+    
+    # @Author: Tzachi guetta    
+    def launchKEA(self, entryName, navigateTo, navigateFrom):
+        if self.clsCommon.navigateTo(navigateTo, navigateFrom, entryName) == False:
+            return False
+        
+        if navigateTo == enums.Location.EDIT_ENTRY_PAGE:
+            if self.click(self.KEA_LAUNCH) == False:
+                writeToLog("INFO","FAILED to click on KEA launch button")
+                return False
+            
+        elif navigateTo == enums.Location.ENTRY_PAGE:
+            if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+                writeToLog("INFO","FAILED to click on Actions button (at entry page)")
+                return False
+            
+            if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_KEA_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on Actions -> Launch KEA button (at entry page)")
+                return False
+            
+        # Verify that we are in KEA page and app is displayed
+        if self.wait_visible(self.KEA_APP_DISPLAY, 40) == False:
+            writeToLog("INFO","FAILED to display KEA page")
+            return False              
+        
+        writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
+        return True
+    
+    
+    # TODO NOT FINISHED 
+    # @Author: Tzachi guetta    
+    def trimEntry(self, entryName, startTime, endTime, navigateTo, navigateFrom):
+        if self.launchKEA(entryName, navigateTo, navigateFrom) == False:
+            writeToLog("INFO","Failed to launch KEA for: " + entryName)
+            return False
+        
+        self.switchToKeaIframe()
+        
+        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, startTime + Keys.ENTER) == False:
+            writeToLog("INFO","FAILED to insert start time into editor input field")
+            return False
+        
+        
+        writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
+        return True
+    
