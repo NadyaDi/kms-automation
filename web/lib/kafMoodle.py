@@ -104,28 +104,6 @@ class Moodle(Base):
         return True
      
      
-    def navigateToUploadPageBlackBoard(self):
-        if self.navigateToMyMediaBlackBoard() == False:
-            return False
-        if self.switchToBlackboardIframe() == False:
-            return False
-        return True
-     
-     
-    def navigateToMyMediaMoodle(self):
-        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-         
-        sleep(2)
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-         
-        if self.switchToMoodleIframe()() == False:
-            return False
-         
-        return True
      
      
 #     # Author: Michal Zomper

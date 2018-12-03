@@ -35,6 +35,54 @@ class KafGeneric(Base):
     # because you need to switch to blackboard media space iframe. And...!!! use 'self.switch_to_default_content' (Basic class) method
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
+    
+    def navigateToMyMediaKAF(self):
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
+            writeToLog("INFO","FAILED navigate to My Media")
+            return False
+         
+        sleep(2)
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
+            writeToLog("INFO","FAILED navigate to My Media")
+            return False
+         
+        if self.switchToKAFIframeGeneric()== False:
+            writeToLog("INFO","FAILED switch to iframe")
+            return False
+         
+        return True
+
+
+    def switchToKAFIframeGeneric(self):
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            if self.clsCommon.blackBoard.switchToBlackboardIframe() == False:
+                writeToLog("INFO","FAILED to switch to blackboard iframe")
+                return False
+        
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            if self.clsCommon.moodle.switchToMoodleIframe() == False:
+                writeToLog("INFO","FAILED to switch to moodle iframe")
+                return False
+        
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            if self.clsCommon.sharePoint.switchToSharepointIframe() == False:
+                writeToLog("INFO","FAILED to switch to sharepoint iframe")
+                return False
+        
+        return True
+    
+    
+    def navigateToUploadPageKAF(self):
+        if self.navigateToMyMediaKAF() == False:
+            writeToLog("INFO","FAILED navigate to My Media")
+            return False
+        
+        if self.switchToKAFIframeGeneric() == False:
+            writeToLog("INFO","FAILED switch to iframe")
+            return False
+        
+        return True
+    
 
     # Author: Michal Zomper
     def navigateToGallery(self, galleryName, forceNavigate=False):
