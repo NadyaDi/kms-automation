@@ -80,7 +80,7 @@ class EditEntryPageTabName(Enum):
 class IframeName(Enum):
     def __str__(self):
         return str(self.value)
-
+      
     DEFAULT                                 = 'DEFAULT'
     PLAYER                                  = 'PLAYER'
     KEA                                     = 'KEA'
@@ -90,6 +90,7 @@ class IframeName(Enum):
     KAF_BLACKBOARD_EMBED_KALTURA_MEDIA      = 'KAF_BLACKBOARD_EMBED_KALTURA_MEDIA'
     KAF_SHAREPOINT                          = 'KAF_SHAREPOINT'
     KAF_MOODLE                              = 'KAF_MOODLE'
+
     
     
 class PlayerView(Enum):
@@ -404,3 +405,6 @@ class BBContentPageMenusOptions(Enum):
     
     ITEM                      = 'Item'
     FILE                      = 'File'
+    KALTURA_MEDIA             = 'Kaltura Media' 
+    MORE_TOOLS                = 'More Tools'
+    ANNOUNCEMENTS             = 'Announcements'

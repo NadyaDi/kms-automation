@@ -888,5 +888,29 @@ class Base:
             return True
         
         
+    def click_dialog_accept(self):
+        try:
+            self.driver.switch_to.alert.accept()
+            if self.wait_for_page_readyState() == False:
+                writeToLog("INFO","FAILED to click accept")
+                return False
+            return True
+        except Exception:
+            writeToLog("INFO","FAILED to click accept")
+            return False
+        
+        
+    def click_dialog_dismiss(self):
+        try:
+            self.driver.switch_to.alert.dismiss()
+            if self.wait_for_page_readyState() == False:
+                writeToLog("INFO","FAILED to click dismiss")
+                return False
+            return True
+        except Exception:
+            writeToLog("INFO","FAILED to click dismiss")
+            return False            
+
+
     def refresh(self):
         self.driver.refresh()  
