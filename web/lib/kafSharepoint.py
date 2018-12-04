@@ -99,20 +99,20 @@ class SharePoint(Base):
         return True
     
     
-    def navigateToUploadPageSharePoint(self):
-        if self.navigateToMyMediaSharepoint() == False:
-            return False
-        if self.switchToSharepointIframe() == False:
-            return False
-        return True
-    
-    def navigateToMyMediaSharepoint(self):
-        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-        
-        return True
+#     def navigateToUploadPageSharePoint(self):
+#         if self.navigateToMyMediaSharepoint() == False:
+#             return False
+#         if self.switchToSharepointIframe() == False:
+#             return False
+#         return True
+#     
+#     def navigateToMyMediaSharepoint(self):
+#         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
+#             writeToLog("INFO","FAILED navigate to My Media")
+#             return False
+# 
+#         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
+#             writeToLog("INFO","FAILED navigate to My Media")
+#             return False
+#         
+#         return True

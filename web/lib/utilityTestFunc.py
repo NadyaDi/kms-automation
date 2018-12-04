@@ -65,12 +65,19 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + ''
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/myMediaLTI.jsp'
         localSettings.LOCAL_SETTINGS_GALLERIES_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/portal/execute/tabs/tabAction?tab_tab_group_id=_2_1'
-        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/courseGalleryLTI.jsp?url=/hosted/index/course-gallery&course_id=_12_1'
+        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/courseGalleryLTI.jsp?url=/hosted/index/course-gallery&course_id=_51_1'
+        localSettings.LOCAL_SETTINGS_SHARED_REPOSITORY_URL      = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/sharedRepository.jsp'
         
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Home.aspx'
-        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/My%20Media.aspx'        
+        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/My%20Media.aspx'   
+        
+    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_MOODLE_BASE_URL
+        localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/login/index.php'
+        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/local/mymedia/mymedia.php'
+        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + 'local/kalturamediagallery/index.php?courseid=10'
     return
 
 

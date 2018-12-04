@@ -90,7 +90,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
     EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and text()="Your media was successfully replaced."]') 
     EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
-    EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[@id="attachments-tab-tab"]')
+    EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[contains(@id,"attachments-tab")]')# USE multipleElements=True
     EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
     EDIT_ENTRY_ATTACHMENTS_SELECT_FILE                          = ('xpath', '//label[@for="attachments_fileinput"]')
     EDIT_ENTRY_UPLOAD_ATTACHMENTS_TITLE                         = ('xpath', '//input[@id="title"]')
@@ -111,7 +111,8 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DELETE_ENTRY_BUTTON                              = ('xpath', "//a[@id='deleteMediaBtn']")
     EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD                           = ('xpath', '//input[@id="customdata-FIELD_NAME"]')  
     EDIT_ENTRY_CUSTOM_LIST_FIELD                                = ('xpath', '//select[@id="customdata-FIELD_NAME"]')   
-    EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')                          
+    EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')
+    EDIT_ENTRY_POP_UP_CANCEL_BUTTON                             = ('xpath', "//a[@class='btn null']")                          
     #=============================================================================================================
     
     
@@ -396,7 +397,7 @@ class EditEntryPage(Base):
                 return False 
             
         elif tabName == enums.EditEntryPageTabName.ATTACHMENTS:
-            if self.click(self.EDIT_ENTRY_ATTACHMENTS_TAB, 30) == False:
+            if self.click(self.EDIT_ENTRY_ATTACHMENTS_TAB, 30, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on attachment tab")
                 return False             
                                   
@@ -770,7 +771,7 @@ class EditEntryPage(Base):
         sleep(3)       
         tmp_entry_name = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         # Wait page load - wait for entry title
-        if self.wait_visible(tmp_entry_name, 15) == False:
+        if self.wait_visible(tmp_entry_name, 25) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
             return False
         sleep(3)
@@ -1144,7 +1145,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on thumbnail auto generate button")
             return False
         
-        sleep(5)
+        sleep(10)
         chosenThumbnail = (self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[0], self.EDIT_ENTRY_CHOOSE_AUTO_GENERATE_THUMBNAIL[1].replace('SLOCE_NUMBER', str(chosenThumbnailNumber)))
         if self.click(chosenThumbnail, timeout=20) == False:
             writeToLog("INFO","FAILED to choose thumbnail number '" + str(chosenThumbnailNumber) + "' from auto generate")
@@ -1519,4 +1520,4 @@ class EditEntryPage(Base):
         sleep(3)
         
         writeToLog("INFO","Success customdata were change successfully")
-        return True     
+        return True 

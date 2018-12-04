@@ -1,6 +1,11 @@
 case,pc_firefox,pc_chrome,pc_internet explorer,android_chrome,Title
 test_0002,1,0,0,0,Set service url
 test_16,1,0,0,0,Download Source File
+test_109,1,0,0,0,KAF BB - Embed Media As Standalone From Kaltura media
+test_111,1,0,0,0,KAF BB - Enable / Disable faculty repository
+test_113,1,0,0,0,KAF BB - Embed Media From SR - Add New Announcements
+test_114,1,0,0,0,KAF BB - Add Remove Featured Media Module
+test_222,1,0,0,0,KAF BB - Adding media to Faculty Repository From My Media
 test_589,1,0,0,0,KAF BB - Edit Entry Metadata
 test_590,0,1,0,0,KAF BB - Edit Entry page - Disable comments
 test_591,0,1,0,0,KAF BB - Edit Entry page - Close discussion
@@ -18,6 +23,7 @@ test_608,1,0,0,0,KAF BB - My Media - Search by Name / Description / Tags
 test_609,0,1,0,0,KAF BB - My Media - Sort Media
 test_610,1,0,0,0,KAF BB - My Media - Filter Media View Different Statuses
 test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
+test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
@@ -118,6 +124,7 @@ test_1558,1,0,0,0,Disclaimer - before upload
 test_1573,1,0,0,0,Home page playlist
 test_1592,1,0,0,0,Custom data
 test_1594,1,0,0,0,Entry required field
+test_2109,1,0,0,0,Moodle - Preview all kinds of media from My Media and Gallery
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
@@ -146,6 +153,7 @@ test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recent
 test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page
 test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
+test_2869,1,0,0,0,KEA trim
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
@@ -163,6 +171,7 @@ test_3881,1,0,0,0,SAML Login
 test_3902,1,0,0,0,Sort by - Galleries page
 test_3901,1,0,0,0,Sort by - My Channels - when search is made
 test_4309,1,0,0,0,Sort by - Channels - when search is made
+test_4424,1,0,0,0,KAF BB - upload media from media gallery page
 test_4425,1,0,0,0,KAF BB - Remove Media From Media Gallery
 test_1,1,0,0,0,Setup test for eSearch
 test_2,1,0,0,0,Setup test for eSearch
@@ -174,6 +183,7 @@ test_7,1,0,0,0,Setup test for eSearch
 test_8,1,0,0,0,Setup test for eSearch
 test_9,1,0,0,0,Setup test for eSearch
 test_11,1,0,0,0,Setup test for eSearch
+test_12,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media - when search is made
 test_4314,1,0,0,0,eSearch - Sort by - Global search - when search is made
@@ -187,6 +197,11 @@ test_4326,1,0,0,0,eSearch - Sort by - Add new quiz - when search is made
 test_4327,1,0,0,0,eSearch - Sort by - Channel - pending tab - when search is made
 test_4328,1,0,0,0,eSearch - Sort by - Gallery - pending tab - when search is made
 test_4329,1,0,0,0,eSearch - Sort by media type - my media
+test_4330,1,0,0,0,eSearch - Sort by media type - channel page
+test_4331,1,0,0,0,eSearch - Sort by media type - my media with search
+test_4332,1,0,0,0,eSearch - Sort by media type - channel page with search
+test_4333,1,0,0,0,eSearch - Sort by media type - category page 
+test_4334,1,0,0,0,eSearch - Sort by media type - category page with search
 test_4343,1,0,0,0,eSearch - Search In - My media
 test_4345,1,0,0,0,eSearch - Search In - Global page
 test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
@@ -230,3 +245,7 @@ test_4432,1,0,0,0,eSearch - Fields display in results - Single - gallery - pendi
 test_4433,1,0,0,0,eSearch - Fields display in results - Multiple - gallery - pending tab
 test_4434,1,0,0,0,eSearch - Fields display in results - Single - Add new quiz
 test_4435,1,0,0,0,eSearch - Fields display in results - Multiple - Add new quiz
+test_4436,1,0,0,0,eSearch - Fields display in results - Search in entry page - Video
+test_4437,1,0,0,0,eSearch - Fields display in results - Search in entry page - Quiz
+test_4438,1,0,0,0,eSearch - Fields display in results - Search in entry page - Polls - webcast
+test_4439,1,0,0,0,eSearch - Search in entry page - Captions

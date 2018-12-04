@@ -58,6 +58,7 @@ class Location(Enum):
     EDITOR_PAGE                 = 'Editor page'
     PENDING_TAB_CATEGORY        = 'category - Pending tab'
     MEDIA_GALLARY               = 'channel page'
+    SHARED_REPOSITORY           = 'Shared Repository'
 
 
 class EditEntryPageTabName(Enum):
@@ -79,14 +80,17 @@ class EditEntryPageTabName(Enum):
 class IframeName(Enum):
     def __str__(self):
         return str(self.value)
+      
+    DEFAULT                                 = 'DEFAULT'
+    PLAYER                                  = 'PLAYER'
+    KEA                                     = 'KEA'
+    KEA_QUIZ_PLAYER                         = 'KEA_QUIZ_PLAYER'
+    EMBED_PLAYER                            = 'EMBED_PLAYER'
+    KAF_BLACKBOARD                          = 'KAF_BLACKBOARD'
+    KAF_BLACKBOARD_EMBED_KALTURA_MEDIA      = 'KAF_BLACKBOARD_EMBED_KALTURA_MEDIA'
+    KAF_SHAREPOINT                          = 'KAF_SHAREPOINT'
+    KAF_MOODLE                              = 'KAF_MOODLE'
 
-    DEFAULT                             = 'DEFAULT'
-    PLAYER                              = 'PLAYER'
-    KEA                                 = 'KEA'
-    KEA_QUIZ_PLAYER                     = 'KEA_QUIZ_PLAYER'
-    EMBED_PLAYER                        = 'EMBED_PLAYER'
-    KAF_BLACKBOARD                      = 'KAF_BLACKBOARD'
-    KAF_SHAREPOINT                      = 'KAF_SHAREPOINT'
     
     
 class PlayerView(Enum):
@@ -376,3 +380,31 @@ class EntryFields(Enum):
     POLLS                      = 'Polls'
     CAPTION                    = 'Caption'
     CAPTIONS                   = 'Captions'
+    
+    
+class BBCoursePages(Enum):
+    def __str__(self):
+        return str(self.value)    
+    
+    HOME_PAGE                 = 'Home Page'
+    CONTENT                   = 'Content'
+    
+    
+class BBContentPageMenus(Enum):
+    def __str__(self):
+        return str(self.value)  
+    
+    BUILD_CONTENT             = 'Build Content' 
+    ASSESSMENTS               = 'Assessments'   
+    TOOLS                     = 'Tools'
+    
+    
+class BBContentPageMenusOptions(Enum):
+    def __str__(self):
+        return str(self.value)     
+    
+    ITEM                      = 'Item'
+    FILE                      = 'File'
+    KALTURA_MEDIA             = 'Kaltura Media' 
+    MORE_TOOLS                = 'More Tools'
+    ANNOUNCEMENTS             = 'Announcements'

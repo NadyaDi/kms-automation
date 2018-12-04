@@ -20,6 +20,7 @@ LOCAL_RUNNING_BROWSER                       = ''
 LOCAL_QR_DECODER_PATH                       = "C:\\Program Files (x86)\\Kaltura\\QRCodeDetector\\QRCodeDetector.exe"
 
 LOCAL_SETTINGS_IMPLICITLY_WAIT              = 30
+LOCAL_SETTINGS_WEBDRIVER_START_FF_RETRIES   = 5
 LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY        = "il-AutoKmsHub-qa.dev.kaltura.com"
 LOCAL_SETTINGS_SELENIUM_HUB_URL             = "http://" + LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":4444/wd/hub" #hub address
 LOCAL_SETTINGS_BROWSER_PROXY                = LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":9090" #proxy server address and port.    
@@ -108,5 +109,6 @@ LOCAL_SETTINGS_APPLICATION_UNDER_TEST       = enums.Application.MEDIA_SPACE
 TEST_CURRENT_IFRAME_ENUM                    = enums.IframeName.DEFAULT
 
 # KAF Variables
-LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL      = 'https://qa-bb-16.dev.kaltura.com:8443'
+LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL      = 'https://il-qa-blackboard-q2-2018.dev.kaltura.com:8443'
 LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL      = 'https://kalturasp2013.sharepoint.com/sites/QA/QAtesting/automation/SitePages'
+LOCAL_SETTINGS_KAF_MOODLE_BASE_URL          = 'https://extqa4.dev.kaltura.com/moodle3.2vs4.0.10new/moodle'

@@ -14,13 +14,13 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard - Preview all kinds of media from My Media and Gallery
+    # Test Name : Moodle - Preview all kinds of media from My Media and Gallery
     # Test description:
     # upload 3 entries : video / Audio / Image
     # Navigate to each entry page and verify player is working  and that the video / audio / image  is correct
     #================================================================================================================================
-    testNum     = "602"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2109"
+    application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -43,6 +43,7 @@ class Test:
     audioLength = "0:30"
     vidoeTimeToStop = "0:07"
     galleryName = "New1"
+
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -69,7 +70,7 @@ class Test:
             self.videoEntryName2: self.filePathVideo, 
             self.audioEntryName: self.filePathAudio,
             self.imageEntryName: self.filePathImage }
-            
+
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload 3 entries: Video / Audio / Image")   
@@ -168,9 +169,9 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to verify the entry '" + self.videoEntryName2 + "' in player")
                 return 
-              
+         
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard - Preview all kinds of media from My Media and Gallery' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle - Preview all kinds of media from My Media and Gallery' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -179,8 +180,8 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName1, self.videoEntryName2,  self.audioEntryName, self.imageEntryName])
+            writeToLog("INFO","**************** Starting: teardown_method ****************")  
+            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName1, self.videoEntryName2,  self.audioEntryName, self.imageEntryName])    
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

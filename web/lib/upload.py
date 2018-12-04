@@ -428,6 +428,8 @@ class Upload(Base):
                 self.clsCommon.sharePoint.switchToSharepointIframe()
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
                 sleep(1)
+            elif self.getAppUnderTest() == enums.Application.MOODLE:
+                self.clsCommon.moodle.switchToMoodleIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
@@ -592,13 +594,12 @@ class Upload(Base):
             
             
     def navigateToUploadPage(self):
-        # Get the application under test and use each application right method
-        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
-        if application == enums.Application.BLACK_BOARD:
-            self.clsCommon.blackBoard.navigateToUploadPageBlackBoard()
-        elif application == enums.Application.SHARE_POINT:
-            self.clsCommon.sharePoint.navigateToUploadPageSharePoint()
-                      
+        # KAF
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            if self.clsCommon.kafGeneric.navigateToUploadPageKAF() == False:
+                writeToLog("INFO","FAILED navigate to upload page in " + localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST.value)
+                return False
+                  
         # Click Add New
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")

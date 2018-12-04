@@ -1,8 +1,8 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
-test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_0002,Set service url,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
+test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
-test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_713,Category moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -122,7 +122,12 @@ test_608,KAF BB - My Media - Search by Name / Description / Tags,,,oleg.sigalov@
 test_609,KAF BB - My Media - Sort Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_611,KAF BB - My Media - Filter by media Type,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4225,KAF BB - Remove Media From Media Gallery,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_111,KAF BB - Enable / Disable faculty repository,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_610,KAF BB - My Media - Filter Media View Different Statuses,,,oleg.sigalov@kaltura.com,Kaltura!1,kstudent,123456
+test_222,KAF BB - Adding media to Faculty Repository From My Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_114,KAF BB - Add Remove Featured Media Module,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2882,KAF Sharepoint Upload media from desktop,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_699,Entry page - Disable comments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -164,6 +169,7 @@ test_2702,Watch History - Filter by watch status,2373952,qakmstest.dev.kaltura.c
 test_3902,Sort by - Galleries page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3901,Sort by - My Channels - when search is made,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4309,Sort by - Channels - when search is made,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_2869,KEA trim,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -174,6 +180,7 @@ test_7,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@ka
 test_8,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_9,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_11,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_12,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4310,Sort by - Channels - when no search is made,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_674,Playlists - Delete playlist,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_4311,eSearch - Sort by - My Media - when search is made,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -222,7 +229,12 @@ test_4420,eSearch - Fields display in results - Single - Add to gallery - SR tab
 test_4421,eSearch - Fields display in results - Multiple - Add to gallery - SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4422,eSearch - Fields display in results - Single - channel - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4423,eSearch - Fields display in results - Multiple - channel - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4329,eSearch - Sort by media type - my media -,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4329,eSearch - Sort by media type - my media,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4330,eSearch - Sort by media type - channel,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4331,eSearch - Sort by media type with search - my media,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4332,eSearch - Sort by media type with search - channel,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4333,eSearch - Sort by media type - category,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4334,eSearch - Sort by media type with search - category,2378481,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4428,eSearch - Fields display in results - Single - gallery - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4429,eSearch - Fields display in results - Multiple - gallery - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4430,eSearch - Fields display in results - Single - channel - pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -231,3 +243,7 @@ test_4432,eSearch - Fields display in results - Single - gallery - pending tab,2
 test_4433,eSearch - Fields display in results - Multiple - gallery - pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4434,eSearch - Fields display in results - Single - Add new quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4435,eSearch - Fields display in results - Multiple - Add new quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4436,eSearch - Fields display in results - Search in entry page - Video,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4437,eSearch - Fields display in results - Search in entry page - Quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4438,eSearch - Fields display in results - Search in entry page - Polls - webcast - Quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4439,eSearch - Fields display in results - Search in entry page - Captions,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
