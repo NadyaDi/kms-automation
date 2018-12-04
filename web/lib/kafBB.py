@@ -45,7 +45,8 @@ class BlackBoard(Base):
     BB_CONTENT_PAGE_MENU                                = ('xpath', '//a[contains(@id, "Menu_actionButton") and contains(text(),"MENU_NAME")]')
     BB_CONTENT_PAGE_MENU_OPTION                         = ('xpath', '//a[contains(@id, "content-handler") and text()="MENU_OPTION"]')
     CONTENT_TYPE_TITLE                                  = ('xpath', '//span[@id="pageTitleText" and (contains(text(), "Create CONTENT_TYPE"))]')
-    BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@id="htmlData_text_bb_mashupbutton_action"]')
+    #BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@id="htmlData_text_bb_mashupbutton_action"]')
+    BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@class="mceAction mce_bb_mashupbutton"]')
     BB_EMBED_KALTURA_MEDIA_OPTION                       = ('xpath', '//span[@class="mceText" and @title="Kaltura Media"]')
     KAF_SUBMIT_BUTTON                                   = ('xpath', '//input[@type="submit"]')
     CONTENT_ITEM_NAME_FIELD                             = ('xpath', '//input[@id="user_title" and @name="user_title"]')
@@ -56,7 +57,9 @@ class BlackBoard(Base):
     SUCCESS_DELETE_EMBED_MEDIA_MESSAGE                  = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME deleted."]')
     CONTENT_KALTURA_MEDIA_NAME_FIELD                    = ('xpath', '//input[@id="title" and @name="title"]') 
     BB_EMBED_KALTURA_MEDIA_IFRAME                       = ('xpath', "//iframe[contains(@src,'../LtiMashup?course_id=_51_1&content_id=_472_1&mode=sa')]")
-
+    BB_CONTENT_TOOLS_MENU_MORE_TOOLS_OPTION             = ('xpath', '//a[@class="donotclose slideoutLink"]')
+    BB_CONTENT_ANNOUNCEMENTS_OPTION                     = ('xpath', '//a[@id="tool-announcements" and text()="Announcements"]')
+    CONTENT_ANNOUNCEMENTS_NAME_FIELD                    = ('xpath', '//input[@id="specific_link_name"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -531,12 +534,15 @@ class BlackBoard(Base):
         
         # If announcements option is chosen need to click 'more tools' before clicking announcements option
         if menuOption == enums.BBContentPageMenusOptions.ANNOUNCEMENTS:
-            tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', enums.BBContentPageMenusOptions.MORE_TOOLS.value)) 
-            if self.click(tmpMenuOption) == False:
+            if self.click(self.BB_CONTENT_TOOLS_MENU_MORE_TOOLS_OPTION) == False:
                 writeToLog("INFO","FAILED to click on " + menuOption.value + " option")
                 return False
-                        
-        tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', menuOption.value))  
+            
+            tmpMenuOption = self.BB_CONTENT_ANNOUNCEMENTS_OPTION
+            
+        else:
+            tmpMenuOption = (self.BB_CONTENT_PAGE_MENU_OPTION[0], self.BB_CONTENT_PAGE_MENU_OPTION[1].replace('MENU_OPTION', menuOption.value))          
+          
         if self.click(tmpMenuOption) == False:
             writeToLog("INFO","FAILED to click on " + menuOption.value + " option")
             return False 
@@ -698,6 +704,48 @@ class BlackBoard(Base):
     def createEmbedAnnouncemnets(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.SHARED_REPOSITORY, chooseMediaGalleryinEmbed=False):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.TOOLS, menuOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
             writeToLog("INFO","FAILED to navigate to announcements page")
+            return False
+        
+        if self.clear_and_send_keys(self.CONTENT_ANNOUNCEMENTS_NAME_FIELD) == False:
+            writeToLog("INFO","FAILED clear name field and send new name")
+            return False  
+        
+        # Get window before opening embed window
+        window_before = self.clsCommon.base.driver.window_handles[0]
+        
+        if self.click(self.BB_EMBED_MASHUPS_BTN) == False:
+            writeToLog("INFO","FAILED to click on mashups button")
+            return False 
+         
+        if self.click(self.BB_EMBED_KALTURA_MEDIA_OPTION) == False:
+            writeToLog("INFO","FAILED to click on kaltura media option")
+            return False 
+         
+        sleep(2)
+         
+        # Get window after opening embed window and switch to this window
+        window_after = self.clsCommon.base.driver.window_handles[1]
+        self.clsCommon.base.driver.switch_to_window(window_after)
+        
+        # Select media in embed page 
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
+            writeToLog("INFO","FAILED to embed item in item page")
+            return False  
+         
+        self.clsCommon.base.driver.switch_to_window(window_before)          
+        
+        if self.click(self.KAF_SUBMIT_BUTTON)  == False:
+            writeToLog("INFO","FAILED to click on 'submit' button")
+            return False  
+        
+        # Verify that Success message is displayed
+        successMsg = (self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', itemName))
+        if self.is_visible(successMsg) == False:
+            writeToLog("INFO","FAILED to display correct success message")
             return False 
         
-        return True     
+        if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
+            writeToLog("INFO","FAILED to played and verify embedded entry")
+            return False             
+                    
+        return True       
