@@ -121,6 +121,8 @@ test_222,KAF BB - Adding media to Faculty Repository From My Media,,,oleg.sigalo
 test_114,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_113,KAF BB - Embed Media From SR - Add New Announcements,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_695,Entry page - Add caption,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_697,Entry page - Add comment,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
