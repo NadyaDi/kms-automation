@@ -36,7 +36,14 @@ class Kea(Base):
     EDITOR_TABLE_SIZE                             = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     EDITOR_TIMELINE                               = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
-    EDITOR_TIME_PICKER                            = ('id', 'jump-to__input')
+    EDITOR_TIME_PICKER                            = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
+    EDITORT_TIMELINE_SPLIT_ICON                   = ('xpath', "//button[@aria-label='Split']")
+    EDITOR_TIMELINE_DELETE_BUTTON                 = ('xpath', "//button[@aria-label='Delete']")
+    EDITOR_SAVE_BUTTON                            = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVE_BUTTON_CONF                       = ('xpath', "//button[@class='button modal-footer-buttons__save branded-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVED_MSG                              = ('xpath', "//strong[contains(.,'Media was successfully saved.')]")
+    EDITOR_SAVED_OK_MSG                           = ('xpath', "//button[contains(.,'OK')]")
+    EDITOR_TOTAL_TIME                             = ('xpath', "//span[@class='total-time']")
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -330,21 +337,65 @@ class Kea(Base):
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
     
-    
-    # TODO NOT FINISHED 
+
     # @Author: Tzachi guetta    
-    def trimEntry(self, entryName, startTime, endTime, navigateTo, navigateFrom):
+    def trimEntry(self, entryName, startTime, endTime, expectedEntryDuration, navigateTo, navigateFrom):
         if self.launchKEA(entryName, navigateTo, navigateFrom) == False:
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         
+        sleep(15)
+        self.refresh()
+        sleep(2)
         self.switchToKeaIframe()
         
         if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, startTime + Keys.ENTER) == False:
             writeToLog("INFO","FAILED to insert start time into editor input field")
             return False
         
+        sleep(1)
+        if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
+                writeToLog("INFO","FAILED to click Split icon (time-line)")
+                return False
+        sleep(1)
+        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, endTime + Keys.ENTER) == False:
+            writeToLog("INFO","FAILED to insert start time into editor input field")
+            return False
         
-        writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
-        return True
+        sleep(1)
+        if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
+            writeToLog("INFO","FAILED to click Split icon (time-line)")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_TIMELINE_DELETE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click delete icon (time-line)")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Save")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_SAVE_BUTTON_CONF, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on Save confirmation button")
+            return False
+        
+        if self.wait_element(self.EDITOR_SAVED_MSG, 360) == False:
+            writeToLog("INFO","FAILED, ""Media was successfully saved."" - msg is missing")
+            return False
+        
+        if self.click(self.EDITOR_SAVED_OK_MSG, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'OK' after trimmed msg")
+            return False
+        
+        entryDuration = self.get_element_text(self.EDITOR_TOTAL_TIME, 10)
+        
+        if expectedEntryDuration in entryDuration:
+            writeToLog("INFO","Success,  Entry: " + entryName +", was trimmed, the new entry Duration is: " + expectedEntryDuration) 
+            return True
+        
+        writeToLog("INFO","FAILED,  Entry: " + entryName +", was trimmed, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
+        return False
     
