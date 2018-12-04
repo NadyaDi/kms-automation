@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: oded berihon
-    # Test Name : eSearch - Sort by media type in channel page  
+    # Test Name : eSearch - Sort by media type in category page  
     # Test description:
     # Upload all types of entries and sort them by their type
     # Go to my media page and sort the entries (with and without search):
@@ -24,7 +24,7 @@ class Test:
     #    5. Sort by webcast type - only webcast type should be displayed in the results
     #
     #================================================================================================================================
-    testNum = "4330"
+    testNum = "4333"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -55,7 +55,7 @@ class Test:
             self.entryName3 = "Sort by media type - video"
             self.entryNameQuiz = "Sort by media type - Quiz"
             
-            self.channelForEsearch  = "Channel for eSearch"
+            self.channelForEsearch  = "eSearch category"
             
             self.filterByImage = {self.entryName1: True, self.entryName2: False, self.entryName3: False, self.entryNameQuiz: False}
             self.filterByAudio = {self.entryName1: False, self.entryName2: True, self.entryName3: False, self.entryNameQuiz: False}
@@ -69,7 +69,7 @@ class Test:
                 return 
                         
             writeToLog("INFO","Step 2: Going to navigate to my media page")
-            if self.common.channel.navigateToChannel(self.channelForEsearch) == False:
+            if self.common.category.navigateToCategory(self.channelForEsearch) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to go to navigate my media page")
                 return      

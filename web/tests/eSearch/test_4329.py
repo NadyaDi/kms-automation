@@ -73,7 +73,7 @@ class Test:
                 return      
                                     
             sleep(1)
-            # New UI only !! this parameter will be clicked after every filter search so each filter will only have only the chosen type 
+            # New UI only !! this parameter will be clicked after every filter search so each filter will only have only the chosen type          
             tmpType = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.MediaType.ALL_MEDIA.value))
             writeToLog("INFO","Step 3: Going to filter my media entries by: " + enums.MediaType.IMAGE.value) 
             if self.common.isElasticSearchOnPage() == True:
@@ -89,7 +89,7 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 5: Going to verify that only entries with " + enums.MediaType.IMAGE.value + " icon display")  
-            if self.common.myMedia.verifyEntryTypeIcon((self.entryName1, []), enums.MediaType.IMAGE) == False:
+            if self.common.myMedia.verifyEntryTypeIcon([self.entryName1], enums.MediaType.IMAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to filter and verify my media entries  by '" + enums.MediaType.IMAGE.value + "'")
                 return  
@@ -118,7 +118,13 @@ class Test:
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAudio) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
-                return        
+                return
+
+            writeToLog("INFO","Step 8: Going to verify that only entries with " + enums.MediaType.AUDIO.value + " icon display")  
+            if self.common.myMedia.verifyEntryTypeIcon([self.entryName2], enums.MediaType.AUDIO) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to filter and verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
+                return                    
             
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:
@@ -133,18 +139,24 @@ class Test:
                     return False
                 
             sleep(1)
-            writeToLog("INFO","Step 8: Going to filter my media entries by: " + enums.MediaType.VIDEO.value) 
+            writeToLog("INFO","Step 9: Going to filter my media entries by: " + enums.MediaType.VIDEO.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.VIDEO) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 8: FAILED to filter my media entries  by '" + enums.MediaType.VIDEO.value + "'")
+                    writeToLog("INFO","Step 9: FAILED to filter my media entries  by '" + enums.MediaType.VIDEO.value + "'")
                     return
                 
-            writeToLog("INFO","Step 9: Going to verify my media entries filter by: " + enums.MediaType.VIDEO.value)  
+            writeToLog("INFO","Step 10: Going to verify my media entries filter by: " + enums.MediaType.VIDEO.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByVideo) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
-                return                     
+                writeToLog("INFO","Step 10: FAILED to verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
+                return
+
+            writeToLog("INFO","Step 11: Going to verify that only entries with " + enums.MediaType.VIDEO.value + " icon display")  
+            if self.common.myMedia.verifyEntryTypeIcon([self.entryName3], enums.MediaType.VIDEO) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to filter and verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
+                return                                  
                 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:
@@ -159,18 +171,24 @@ class Test:
                     return False            
             
             sleep(1)
-            writeToLog("INFO","Step 10: Going to filter my media entries by: " + enums.MediaType.QUIZ.value) 
+            writeToLog("INFO","Step 12: Going to filter my media entries by: " + enums.MediaType.QUIZ.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.QUIZ) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 10: FAILED to filter my media entries  by '" + enums.MediaType.QUIZ.value + "'")
+                    writeToLog("INFO","Step 12: FAILED to filter my media entries  by '" + enums.MediaType.QUIZ.value + "'")
                     return
                 
-            writeToLog("INFO","Step 11: Going to verify my media entries filter by: " + enums.MediaType.QUIZ.value)  
+            writeToLog("INFO","Step 13: Going to verify my media entries filter by: " + enums.MediaType.QUIZ.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByQuiz) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify my media entries  by '" + enums.MediaType.QUIZ.value + "'")
-                return                       
+                writeToLog("INFO","Step 13: FAILED to verify my media entries  by '" + enums.MediaType.QUIZ.value + "'")
+                return
+            
+            writeToLog("INFO","Step 14: Going to verify that only entries with " + enums.MediaType.QUIZ.value + " icon display")  
+            if self.common.myMedia.verifyEntryTypeIcon([self.entryNameQuiz], enums.MediaType.QUIZ) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to filter and verify my media entries  by '" + enums.MediaType.QUIZ.value + "'")
+                return                                    
                 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:

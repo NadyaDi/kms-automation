@@ -70,8 +70,11 @@ class MyMedia(Base):
     MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath',"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
+    MY_MEDIA_IMAGE_ICON_AFTER_SEARCH                            = ('xpath', "//i[@class='entryThumbnail__icon v2ui-photo2-icon']")
     MY_MEDIA_AUDIO_ICON                                         = ('xpath', "//i[@class='icon-music icon-white']")
+    MY_MEDIA_AUDIO_ICON_AFTER_SEARCH                            = ('xpath', "//i[@class='entryThumbnail__icon v2ui-audio2-icon']")
     MY_MEDIA_QUIZ_ICON                                          = ('xpath', "//i[@class='icomoon-quiz icon-white']")
+    MY_MEDIA_QUIZ_ICON_AFTER_SEARCH                             = ('xpath', "//i[@class='entryThumbnail__icon icomoon-quiz']")
     MY_MEDIA_VIDEO_ICON_OLD_UI                                  = ('xpath', "//i[@class='icon-film icon-white']")
     MY_MEDIA_EXPEND_MEDIA_DETAILS                               = ('xpath', "//div[@class='accordion-body in collapse contentLoaded' and @id='collapse_ENTRY_ID']")
     MY_MEDIA_COLLAPSED_VIEW_BUTTON                              = ('xpath', "//button[@id='MyMediaList' and @data-original-title='Collapsed view']")
@@ -1428,7 +1431,53 @@ class MyMedia(Base):
             return False
                 
         writeToLog("INFO","Success, All entry '" + entry + "' " + entryType.value + "  icon was verify")
-        return True       
+        return True 
+    
+    
+    #@Author: Oded berihon 
+    # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter
+    def verifyEntryTypeIconAferSearch(self, entriesList, entryType):
+        for entry in entriesList:
+            entryThumbnail = self.wait_element(self.MY_MEDIA_ENTRY_THUMBNAIL_ELASTIC_SEARCH)
+            if entryThumbnail == False:   
+                writeToLog("INFO","FAILED to find entry '" + entry + "' element")
+                return False
+
+            if entryType == enums.MediaType.IMAGE:
+                try: 
+                    self.get_child_element(entryThumbnail, self.MY_MEDIA_IMAGE_ICON_AFTER_SEARCH)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' Image icon")
+                    return False
+                 
+            if entryType == enums.MediaType.AUDIO:
+                try:
+                    self.get_child_element(entryThumbnail, self.MY_MEDIA_AUDIO_ICON_AFTER_SEARCH)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' Audio icon")
+                    return False
+                
+            if entryType == enums.MediaType.QUIZ:
+                try:
+                    self.get_child_element(entryThumbnail, self.MY_MEDIA_QUIZ_ICON_AFTER_SEARCH)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' Quiz icon")
+                    return False                
+            
+            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
+                if entryType == enums.MediaType.VIDEO:
+                    try:
+                        self.get_child_element(entryThumbnail, self.MY_MEDIA_VIDEO_ICON_OLD_UI)
+                    except NoSuchElementException:
+                        writeToLog("INFO","FAILED to find entry '" + entry + "' Video icon")
+                        return False
+            
+        if self.verifyFilterUniqueIconType(entryType) == False:
+            writeToLog("INFO","FAILED entries from different types display although the filter set to " + entryType.value)
+            return False
+                
+        writeToLog("INFO","Success, All entry '" + entry + "' " + entryType.value + "  icon was verify")
+        return True      
     
     
     #@Author: Michal Zomper 
