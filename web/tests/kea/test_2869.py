@@ -62,7 +62,7 @@ class Test:
             self.videoEntryName: self.filePathVideo, 
             self.audioEntryName: self.filePathAudio,
             self.imageEntryName: self.filePathImage }
-            
+            expectedEntryDuration = "00:20"
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload entry - to be trimmed")  
@@ -72,7 +72,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 2: Going to Launch KEA for the uploaded entry")  
-            if self.common.kea.launchKEA(self.videoEntryName, enums.Location.ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
+            if self.common.kea.trimEntry(self.videoEntryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to Launch KEA for the uploaded entry")
                 return
