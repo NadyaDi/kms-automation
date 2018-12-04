@@ -58,32 +58,32 @@ class Test:
             self.itemNameEmbedMediaGallery = clsTestService.addGuidToString("Embed from media gallery page", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
  
-#             writeToLog("INFO","Step 1: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return
-#             
-#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
-#                 return
-#             
-#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-#                 return
-#             
-#             writeToLog("INFO","Step 4: Going to publish entry to gallery")    
-#             if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, False) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to publish entry to gallery")
-#                 return
+            writeToLog("INFO","Step 1: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return
+             
+            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                return
+             
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                return
+             
+            writeToLog("INFO","Step 4: Going to publish entry to gallery")    
+            if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to publish entry to gallery")
+                return
 
             writeToLog("INFO","Step 5: Going to create embed kaltura media from media gallery")  
-            if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, '4B46F972-109-embed entry', self.itemNameEmbedMediaGallery, '', '0:08')== False:
+            if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, self.entryName, self.itemNameEmbedMediaGallery, '', '0:08')== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create embed kaltura media from media gallery")
                 return   

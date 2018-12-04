@@ -377,6 +377,7 @@ class KafGeneric(Base):
     # @Author: Inbar Willman
     # Verify embed entry (video/image) in page
     def verifyEmbedEntry(self, imageThumbnail='', delay='', mediaType=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD): 
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         if mediaType == enums.MediaType.VIDEO:
             # If we are in blackboard need to click on play icon in order to get the player
             if application == enums.Application.BLACK_BOARD:

@@ -34,7 +34,7 @@ class Test:
     galleryName = "New1"
     itemNameEmbedSharedRepository = None
     delay = "0:08"
-    galleryName = "Shared Repository"
+    galleryNameSharedrepository = "Shared Repository"
     SR_RequiredField = "Humanities"
     uploadThumbnailExpectedResult = 5
     
@@ -74,15 +74,14 @@ class Test:
 #                 return
 #  
 #             writeToLog("INFO","Step 4: Going to publish entry from upload page")  
-#             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
+#             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryNameSharedrepository], publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 4: FAILED to publish entry' " + self.entryName + " to gallery upload page")
 #                 return
 #             
-            self.common.base.switch_to_default_content() 
              
             writeToLog("INFO","Step 3: Going to create embed kaltura media from media gallery")  
-            if self.common.blackBoard.createEmbedAnnouncemnets(self.galleryName, self.entryName, self.itemNameEmbedMediaGallery, self.uploadThumbnailExpectedResult)== False:
+            if self.common.blackBoard.createEmbedAnnouncemnets(self.galleryName, 'dafsdfs', self.itemNameEmbedMediaGallery, self.uploadThumbnailExpectedResult)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create embed kaltura media from media gallery")
                 return   
