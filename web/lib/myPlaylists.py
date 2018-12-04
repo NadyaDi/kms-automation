@@ -44,7 +44,7 @@ class MyPlaylists(Base):
     # If 'entryName' is a list of entries names, it will check them in my media and then add to playlist at once. Better use 'addEntriesToPlaylist' method for multiple.
     # If you want to create new playlist pass 'playlistName' and toCreateNewPlaylist = True
     # If you want to add to existing playlist pass 'playlistName' and toCreateNewPlaylist = False
-    def addSingleEntryToPlaylist(self, entryName, playlistName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
+    def addSingleEntryToPlaylist(self, entryName, playlistName='', toCreateNewPlaylist = False, currentLocation=enums.Location.MY_MEDIA):
         try:
             if currentLocation == enums.Location.MY_MEDIA: 
                 if self.clsCommon.myMedia.navigateToMyMedia(forceNavigate=True) == False:
@@ -810,4 +810,75 @@ class MyPlaylists(Base):
                 writeToLog("INFO","FAILED to delete:" + playlist)
                 return False  
                
-        return True          
+        return True 
+    
+    
+    # @Author:Ori Flchtman
+    # Select an Entry and Click on Add to Playlist
+    def selectEntriesAndClickAddToPlaylist(self, entriesName):   
+        if type(entriesName) is list: 
+            if self.clsCommon.myMedia.navigateToMyMedia(forceNavigate=True) == False:
+                writeToLog("INFO","FAILED to navigate to my media")
+                return False      
+                  
+            if self.clsCommon.myMedia.checkEntriesInMyMedia(entriesName) == False:
+                writeToLog("INFO","FAILED to check entries in My-Media")
+                return False
+        else: 
+            if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entriesName) == False:
+                writeToLog("INFO","FAILED to check entry '" + entriesName + "' check box")
+                return False
+        
+        if self.clsCommon.myMedia.clickActionsAndAddToPlaylistFromMyMedia() == False:
+            writeToLog("INFO","FAILED to click on action button")
+            return False
+            sleep(7)       
+
+
+    # @Author:Ori Flchtman
+    # Create new Playlist from Add To Playlist screen
+    def typeNewPalylistNameAndClickCreate(self, playlistsName, currentLocation=enums.Location.MY_MEDIA):
+        for playlistName in playlistsName:
+            if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName) == False:
+                writeToLog("INFO","FAILED to enter playlist name")
+                return False
+                sleep(1)     
+         
+            if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on create playlist Button")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            sleep(1)
+            
+        if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on create playlist Button")
+            return False
+            
+        if currentLocation == enums.Location.MY_MEDIA:     
+            if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                return False
+        
+        else:
+            tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', playlistName))
+            if self.wait_visible(tmp_success_msg, 10) == False:
+                writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                return False
+        
+        writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
+        return True
+
+
+    # @Author:Ori Flchtman
+    # Join above 2 functions- typeNewPalylistNameAndClickCreate with selectEntriesAndClickAddToPlaylist
+    def removeAddEntriesToPlaylistsAtSameTime(self, entriesName, addRemoveExistingPlalists, newPlaylists):
+        if self.selectEntriesAndClickAddToPlaylist(entriesName) == False:
+            writeToLog("INFO","FAILED to select entries")
+            return False
+        
+        if self.typeNewPalylistNameAndClickCreate(newPlaylists, currentLocation=enums.Location.MY_MEDIA) == False:
+            writeToLog("INFO","FAILED to create new playlists")
+            return False
+        
+        # To do- Implement method addRemoveExistingPlaylistswhen bus ### and ### are fixed 

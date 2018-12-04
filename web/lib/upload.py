@@ -636,9 +636,10 @@ class Upload(Base):
         writeToLog("INFO","Success, entry page was open successfully")
         return True
     
+    
     # @Auther: Ori Flchtman TODO: UNDER CONSTRUCTION, DON'T USE IT
     # Click on Add New Webcast Event for Filter tests
-    def clickAddNewWebcast(self, name, description, disclaimer=False, tags):
+    def clickAddNewWebcast(self, name, description, tags, disclaimer=False):
     # Click Add New
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
             writeToLog("DEBUG","FAILED to click on 'Add New' button")
@@ -653,18 +654,19 @@ class Upload(Base):
             return False
         
         if self.fillFileUploadEntryDetails(name, description, tags) == False:
-            continue
+            writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
+            return False
         
         #checking if disclaimer is turned on for "Before upload"
         if disclaimer == True:
             if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
-                    writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
-                    continue        
+                writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
+                return False        
         
         # Click Save
         if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
             writeToLog("DEBUG","FAILED to click on 'Save' button")
-            continue
+            return False
         sleep(3)        
 
         return True
