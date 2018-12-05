@@ -792,7 +792,6 @@ class EntryPage(Base):
     
     # Author: Cus Horia
     # The function verifies that the entryName and description are not displayed in the search results
-    # expectedCaptionAfterSearch - after clicking on the time in the caption section the player jump to the expected time but move back a few milliseconds so we see the caption befor the one that we are looking for
     def verifyEntryNameAndDescriptionInSearch(self, searchElement):          
         if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
             writeToLog("INFO","FAILED to click on search icon")
