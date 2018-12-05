@@ -92,6 +92,11 @@ class KafGeneric(Base):
             if self.clsCommon.blackBoard.navigateToGalleryBB(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
+            
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            if self.clsCommon.moodle.navigateToGalleryMoodle(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
+                return False 
         
         return True
         

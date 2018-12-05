@@ -24,7 +24,11 @@ class Moodle(Base):
     USER_MENU_TOGGLE_BTN                                = ('xpath', "//span[@class='userbutton']")
     USER_LOGOUT_BTN                                     = ('xpath', "//span[contains(@id,'actionmenuaction') and  contains(text(), 'Log out')]")
     MOODLE_MEDIA_SPACE_IFRAME                           = ('xpath', "//iframe[@id='contentframe']")
-
+    MOODLE_SITE_HOME_BUTTON                             = ('xpath', "//li[@class='type_setting depth_2 contains_branch']")
+    MOODLE_MY_MEDIA_BUTTON_IN_NAVIGATION_MENU           = ('xpath', "//span[@class='item-content-wrap' and  contains(text(), 'My Media')]")
+    MOODLE_MEDIA_GALLERY_BUTTON_IN_NAVIGATION_MENU      = ('xpath', "//span[@class='item-content-wrap' and  contains(text(), 'Kaltura Media Gallery')]")
+    MOODLE_MY_COURSES_BUTTON                            = ('xpath', "//li[@class='type_system depth_2 contains_branch']")
+    MOODLE_COURSE_BUTTON_IN_MENU_BAR                    = ('xpath', "//a[@title='New1']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -104,27 +108,23 @@ class Moodle(Base):
         return True
      
      
-     
-     
-#     # Author: Michal Zomper
-#     def navigateToGalleryBB(self, galleryName, forceNavigate=False):
-#         if forceNavigate == False:
-#             if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
-#                 writeToLog("INFO","Success Already in my Gallery page")
-#                 return True
-#         
-#         if galleryName == "New1":
-#             if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
-#                 writeToLog("INFO","FAILED navigate to courses 'New1'")
-#                 return False
-#         sleep(5)
-#         
-#         self.clsCommon.blackBoard.switchToBlackboardIframe()
-#         if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
-#             writeToLog("INFO","FAILED navigate to to courses 'New1'")
-#             return False
-#         
-#         return True
+ # Author: Michal Zomper
+    def navigateToGalleryMoodle(self, galleryName, forceNavigate=False):
+        if forceNavigate == False:
+            if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+                writeToLog("INFO","Success Already in my Gallery page")
+                return True
         
-
+        if galleryName == "New1":
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to courses 'New1'")
+                return False
+        sleep(5)
+        
+        self.clsCommon.moodle.switchToMoodleIframe()
+        if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+            writeToLog("INFO","FAILED navigate to to courses 'New1'")
+            return False
+        
+        return True
             
