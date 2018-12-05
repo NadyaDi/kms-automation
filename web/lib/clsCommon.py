@@ -243,6 +243,8 @@ class Common():
             return self.base.switch_to_default_content() 
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
             return self.blackBoard.switchToBlackboardIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            return self.moodle.switchToMoodleIframe()
         else:
             self.base.switch_to_default_content()
             
