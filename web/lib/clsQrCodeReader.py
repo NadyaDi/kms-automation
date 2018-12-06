@@ -24,11 +24,13 @@ class QrCodeReader(Base):
         self.driver = driver
         self.clsCommon = clsCommon
                
+               
     # Take screenshot of the whole page, return the full file path of the screenshot 
-    def takeQrCodeScreenshot(self):
+    def takeQrCodeScreenshot(self, showLog=True):
         filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
         if self.takeScreeshot(filePath) == True:
-            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+            if showLog == True:
+                writeToLog("INFO","Screenshot of the page save to: " + filePath)
             return filePath
         else:
             writeToLog("INFO","FAILED to take screenshot of the page")
