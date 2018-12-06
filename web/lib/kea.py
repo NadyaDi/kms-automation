@@ -40,10 +40,14 @@ class Kea(Base):
     EDITORT_TIMELINE_SPLIT_ICON                   = ('xpath', "//button[@aria-label='Split']")
     EDITOR_TIMELINE_DELETE_BUTTON                 = ('xpath', "//button[@aria-label='Delete']")
     EDITOR_SAVE_BUTTON                            = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVE_A_COPY_BUTTON                     = ('xpath', "//button[@class='save-as-button branded-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ng-star-inserted']")
     EDITOR_SAVE_BUTTON_CONF                       = ('xpath', "//button[@class='button modal-footer-buttons__save branded-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
     EDITOR_SAVED_MSG                              = ('xpath', "//strong[contains(.,'Media was successfully saved.')]")
     EDITOR_SAVED_OK_MSG                           = ('xpath', "//button[contains(.,'OK')]")
+    EDITOR_CREATE_BUTTON                          = ('xpath', "//button[contains(.,'Create')]")
+    EDITOR_SUCCESS_MSG                            = ('xpath', "//p-header[contains(.,'Success')]")
     EDITOR_TOTAL_TIME                             = ('xpath', "//span[@class='total-time']")
+    EDITOR_GO_TO_MEDIA_PAGE_BUTTON                = ('xpath', "//a[contains(.,'Media Page')]")
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -408,5 +412,48 @@ class Kea(Base):
             return True
         
         writeToLog("INFO","FAILED,  Entry: " + entryName +", was trimmed, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
+        return False
+    
+    
+    # @Author: Tzachi guetta  
+    # Currently support split only     
+    # expectedEntryDuration = the duration of the new entry  
+    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom)
+        
+        sleep(1)
+        if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Save")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_CREATE_BUTTON, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on Save confirmation button")
+            return False
+        
+        if self.wait_element(self.EDITOR_SUCCESS_MSG, 360) == False:
+            writeToLog("INFO","FAILED, ""Your media has been saved in My Media"" - message is missing")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_GO_TO_MEDIA_PAGE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Go to Media Page' button")
+            return False
+        
+        self.switch_to_default_content()
+        
+        if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+            writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+            return False
+        
+        self.clsCommon.player.switchToPlayerIframe()
+        entryDuration = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
+        self.switch_to_default_content()
+        
+        if expectedEntryDuration in entryDuration:
+            writeToLog("INFO","Success,  Entry: " + entryName +", was clipped, the new entry Duration is: " + expectedEntryDuration) 
+            return True
+        
+        writeToLog("INFO","FAILED,  Entry: " + entryName +", was clipped, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
         return False
     
