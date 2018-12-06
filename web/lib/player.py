@@ -22,6 +22,7 @@ class Player(Base):
     PLAYER_EMBED_IFRAME_2                                       = ('id', 'kaltura_player')
     PLAYER_SCREEN                                               = ('id', 'kplayer')
     PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER                       = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-play')]")
+    PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER                      = ('xpath', "//button[@class='btn comp playPauseBtn display-high icon-pause']")
     #PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder' and @aria-label='Play clip']")
     PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder']")
     PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER                      = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-pause')]")
@@ -135,6 +136,90 @@ class Player(Base):
             return False
         
         return True 
+    
+    
+    # @ Author: Tzachi Guetta
+    # This function will play the player from start to end - and collect all the QR codes that were presented on the player - and return list of QR codes (filters the duplicates)     
+    def collectQrTimestampsFromPlayer(self, entryName):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False
+            
+            if self.clickPlay(False, True) == False:
+                return False       
+            
+            QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            QRcodeList = [];
+            
+            while QRcode != False:
+                
+                qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(showLog=False)
+                if qrPath == False:
+                    writeToLog("INFO","FAILED to take QR code screen shot")
+                    return self.removeDuplicate(QRcodeList)              
+                
+                qrResolve = self.clsCommon.qrcode.resolveQrCode(qrPath)
+                if qrResolve == False:
+                    writeToLog("INFO","FAILED to resolve QR code")
+                    return self.removeDuplicate(QRcodeList)  
+                
+                QRcodeList.append(qrResolve)
+                QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                sleep(0.5)
+            
+            return self.removeDuplicate(QRcodeList)
+            
+        except Exception:
+            return False
+    
+    
+    # @ Author: Tzachi Guetta    
+    def removeDuplicate(self, duplicateList): 
+        try:
+            final_list = [] 
+            for num in duplicateList: 
+                if num not in final_list: 
+                    final_list.append(num)
+                    
+            writeToLog("INFO","The found QR codes on player: " + str(final_list))
+            return final_list
+                
+        except Exception:
+            return False        
+    
+            
+    # @ Author: Tzachi Guetta    
+    # this method is checking 2 things:
+    # checking if "isExistList" is exist on qrList - and return True in case all of the values were found
+    # checking if "isAbsentList" is NOT exist on qrList - and return True in case all of the values were NOT found
+    def compareQRlists(self, qrList, isExistList, isAbsentList):
+        try:     
+            for qr1 in isExistList:
+                if qr1 in qrList:
+                    writeToLog("INFO","As Expected: the QR code of second " + qr1 +" found on player")
+                    
+                else:
+                    writeToLog("INFO","NOT Expected: the QR code of second " + qr1 +" Not found on player")
+                    return False
+                
+            for qr2 in isAbsentList:
+                if qr2 not in qrList:
+                    writeToLog("INFO","As Expected: the QR code of second " + qr2 +" not found on player")
+                    
+                else:
+                    writeToLog("INFO","NOT Expected: the QR code of second " + qr2 +" found on player")
+                    return False            
+                
+        except Exception:
+            return False
+      
+        return True
     
     
     # Author: Inbar Willman
