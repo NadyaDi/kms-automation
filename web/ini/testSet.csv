@@ -161,6 +161,8 @@ test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page
 test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
 test_2869,1,0,0,0,KEA trim
+test_4455,1,0,0,0,KEA clip
+test_4458,1,0,0,0,KEA trim with slides
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
@@ -210,6 +212,10 @@ test_4331,1,0,0,0,eSearch - Sort by media type - my media with search
 test_4332,1,0,0,0,eSearch - Sort by media type - channel page with search
 test_4333,1,0,0,0,eSearch - Sort by media type - category page 
 test_4334,1,0,0,0,eSearch - Sort by media type - category page with search
+test_4335,1,0,0,0,eSearch - Sort by media type - add to channel
+test_4336,1,0,0,0,eSearch - Sort by media type - add to category
+test_4337,1,0,0,0,eSearch - Sort by media type - add to channel with search
+test_4338,1,0,0,0,eSearch - Sort by media type - add to category page with search
 test_4343,1,0,0,0,eSearch - Search In - My media
 test_4345,1,0,0,0,eSearch - Search In - Global page
 test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
@@ -264,4 +270,14 @@ test_4442,1,0,0,0,eSearch - Search in entry page - Captions
 test_4443,1,0,0,0,eSearch - Search in entry page - Captions
 test_4444,1,0,0,0,eSearch - Search in entry page - Captions
 test_4445,1,0,0,0,eSearch - Search in entry page - Captions
-
+test_4446,1,0,0,0,eSearch - Filter by Captions
+test_4447,1,0,0,0,eSearch - Filter by Captions
+test_4448,1,0,0,0,eSearch - Filter by Captions
+test_4449,1,0,0,0,eSearch - Filter by Captions
+test_4450,1,0,0,0,eSearch - Filter by Captions
+test_4451,1,0,0,0,eSearch - Filter by Captions
+test_4452,1,0,0,0,eSearch - Filter by Captions
+test_4453,1,0,0,0,eSearch - Filter by Captions
+test_4454,1,0,0,0,eSearch - Filter by Captions
+test_4456,1,0,0,0,eSearch - Filter by Captions
+test_4457,1,0,0,0,eSearch - Filter by Captions
