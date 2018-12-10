@@ -39,12 +39,12 @@ class KafGeneric(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     
-    def navigateToMyMediaKAF(self):
+    def navigateToMyMediaKAF(self):         
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
             writeToLog("INFO","FAILED navigate to My Media")
             return False
          
-        sleep(2)
+        self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON, timeout=30)
         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
             writeToLog("INFO","FAILED navigate to My Media")
             return False
@@ -93,17 +93,22 @@ class KafGeneric(Base):
             if self.clsCommon.blackBoard.navigateToGalleryBB(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
+            
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            if self.clsCommon.moodle.navigateToGalleryMoodle(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
+                return False 
         return True
         
     
     # Author: Michal Zomper    
-    def navigateToEntryPageFromGalleryPage(self, entryName, galleryName):
+    def navigateToEntryPageFromGalleryPage(self, entryName, galleryName, forceNavigate=False):
         tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         if self.wait_visible(tmpEntryName, 5) != False:
             writeToLog("INFO","Already in entry page: '" + entryName + "'")
             return True
         
-        if self.navigateToGallery(galleryName) == False:
+        if self.navigateToGallery(galleryName, forceNavigate) == False:
             writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
             return False             
         sleep(2)

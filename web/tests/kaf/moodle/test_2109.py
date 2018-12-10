@@ -72,13 +72,13 @@ class Test:
             self.imageEntryName: self.filePathImage }
 
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
             writeToLog("INFO","Step 1: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
              
+            self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 2: Going navigate to My Media not using a url navigation")  
             if self.common.base.wait_visible(self.common.moodle.MOODLE_MY_MEDIA_BUTTON_IN_NAVIGATION_MENU, timeout=10) == False:
                 writeToLog("INFO", "Site home isn't open and need to open it")
@@ -86,66 +86,67 @@ class Test:
                     self.status = "Fail"
                     writeToLog("INFO","Step 2: FAILED to click on site home button in the navigation menu")
                     return
-
+ 
             #click on My Media button        
             if self.common.base.click(self.common.moodle.MOODLE_MY_MEDIA_BUTTON_IN_NAVIGATION_MENU, multipleElements=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to click on site home button in the navigation menu")
                 return
-                       
+            sleep(5)  
+                    
             if self.common.base.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED verify My Media page URL")
                 return 
-             
+              
             self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_ACTIONS_BUTTON)
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED switch to moodle iframe")
                 return  
-             
+              
             writeToLog("INFO","Step 3: Going navigate to image entry: "+ self.imageEntryName)    
             if self.common.entryPage.navigateToEntry(self.imageEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to entry: " + self.imageEntryName)
                 return
-                    
+                     
             writeToLog("INFO","Step 4: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the entry '" + self.imageEntryName + "' in player")
                 return   
-                
+                 
             writeToLog("INFO","Step 5: Going navigate to audio entry: "+ self.audioEntryName)    
             if self.common.entryPage.navigateToEntry(self.audioEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to entry: " + self.audioEntryName)
                 return 
-                            
+                             
             writeToLog("INFO","Step 6: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED - New entry is still processing")
                 return 
-                
+                 
             writeToLog("INFO","Step 7: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, self.audioLength, "", "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify the entry '" + self.audioEntryName + "' in player")
                 return   
-       
+        
             writeToLog("INFO","Step 8: Going navigate to video entry: "+ self.videoEntryName1)    
             if self.common.entryPage.navigateToEntry(self.videoEntryName1, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to entry: " + self.videoEntryName1)
                 return 
-                      
+                       
             writeToLog("INFO","Step 9: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED - New entry is still processing")
                 return 
-                
+                 
             writeToLog("INFO","Step 10: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
                 self.status = "Fail"
@@ -158,6 +159,7 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED to publish entries to gallery")
                 return  
             
+            self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 12: Going navigate to Media Gallery not using a url navigation")  
             if self.common.base.wait_visible(self.common.moodle.MOODLE_MEDIA_GALLERY_BUTTON_IN_NAVIGATION_MENU, timeout=10) == False:
                 writeToLog("INFO", "My Courses isn't open and need to open it")
@@ -173,6 +175,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to click on media gallery button in the navigation menu")
                 return
+            sleep(5)
             
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
                 self.status = "Fail"
@@ -198,7 +201,7 @@ class Test:
                 return   
              
             writeToLog("INFO","Step 15: Going navigate to audio entry: '" + self.audioEntryName + "' from gallery page")    
-            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName) == False:
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName, forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED navigate to entry: " + self.audioEntryName + " from gallery page")
                 return 
@@ -210,7 +213,7 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 17: Going navigate to video entry: '"+ self.videoEntryName2 + "' from gallery page")    
-            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.videoEntryName2, self.galleryName) == False:
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.videoEntryName2, self.galleryName, forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED navigate to entry: " + self.videoEntryName2 + " from gallery page")
                 return 
