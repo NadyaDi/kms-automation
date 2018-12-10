@@ -54,46 +54,45 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("embed entry", self.testNum)  
-            self.itemNameEmbedMediaGallery = clsTestService.addGuidToString("Embed from shared repository page", self.testNum) 
+            self.itemNameEmbedSharedRepository = clsTestService.addGuidToString("Embed from shared repository page", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
-#             writeToLog("INFO","Step 1: Going to add shared repository module")     
-#             if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to add shared repository module")
-#                 
-#             writeToLog("INFO","Step 2: Going to upload entry")   
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to upload entry")
-#                 return
-#             
-#             writeToLog("INFO","Step 3: Going to completed the required fields order to publish")
-#             if self.common.blackBoard.addSharedRepositoryMetadata(self.entryName, self.SR_RequiredField) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to add required fields")
-#                 return
-#  
-#             writeToLog("INFO","Step 4: Going to publish entry from upload page")  
-#             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryNameSharedrepository], publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to publish entry' " + self.entryName + " to gallery upload page")
-#                 return
-#             
-             
-            writeToLog("INFO","Step 3: Going to create embed kaltura media from media gallery")  
-            if self.common.blackBoard.createEmbedAnnouncemnets(self.galleryName, 'dafsdfs', self.itemNameEmbedMediaGallery, self.uploadThumbnailExpectedResult)== False:
+            writeToLog("INFO","Step 1: Going to add shared repository module")     
+            if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to create embed kaltura media from media gallery")
+                writeToLog("INFO","Step 1: FAILED to add shared repository module")
+                  
+            writeToLog("INFO","Step 2: Going to upload entry")   
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to upload entry")
+                return
+              
+            writeToLog("INFO","Step 3: Going to completed the required fields order to publish")
+            if self.common.blackBoard.addSharedRepositoryMetadata(self.entryName, self.SR_RequiredField) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to add required fields")
+                return
+   
+            writeToLog("INFO","Step 4: Going to publish entry from upload page")  
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryNameSharedrepository], publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to publish entry' " + self.entryName + " to gallery upload page")
+                return
+             
+            writeToLog("INFO","Step 5: Going to create embed kaltura media from media gallery")  
+            if self.common.blackBoard.createEmbedAnnouncemnets(self.galleryName, self.entryName, self. itemNameEmbedSharedRepository, self.uploadThumbnailExpectedResult, mediaType=enums.MediaType.IMAGE)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to create embed kaltura media from media gallery")
                 return   
             
-            writeToLog("INFO","Step 3: Going to delete embed content from media gallery")  
-            if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery) == False:
+            writeToLog("INFO","Step 6: Going to delete embed content from media gallery")  
+            if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedSharedRepository, embedOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 6: FAILED to delete embed content from my media")
                 return                      
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: Create embed kaltura media from media gallery page was done successfully")
+            writeToLog("INFO","TEST PASSED: Create embed announcements from SR page was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -104,6 +103,7 @@ class Test:
             self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedSharedRepository, embedOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

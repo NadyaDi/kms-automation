@@ -96,13 +96,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to displayed correct default sort after making a search")
                 return                                                                                                           
-                    
+                     
             writeToLog("INFO","Step 5: Going verify sort entries by 'Creation date - ascending' - when search is made")
             if self.common.channel.verifySortInAddToChannel(enums.SortBy.CREATION_DATE_ASC, self.sortEntriesByCreationDateAscending) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to sort entries by 'Creation date - ascending' - when search is made")
                 return 
-                 
+                  
             writeToLog("INFO","Step 6: Going verify sort entries by 'Creation date - descending' - when search is made")
             if self.common.channel.verifySortInAddToChannel(enums.SortBy.CREATION_DATE_DESC, self.sortEntriesByCreationDateDescending) == False:
                 self.status = "Fail"

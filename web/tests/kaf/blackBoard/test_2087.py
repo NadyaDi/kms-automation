@@ -98,6 +98,7 @@ class Test:
             self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMyMedia)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
