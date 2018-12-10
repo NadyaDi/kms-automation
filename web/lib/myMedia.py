@@ -1342,6 +1342,10 @@ class MyMedia(Base):
             
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
                 self.click(self.MY_MEDIA_TITLE)
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+                self.click(self.MY_MEDIA_ACTIONS_BUTTON)
+                
             self.clsCommon.sendKeysToBodyElement(Keys.END)
              
         writeToLog("INFO","FAILED to show all media")

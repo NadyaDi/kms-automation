@@ -29,6 +29,7 @@ class Moodle(Base):
     MOODLE_MEDIA_GALLERY_BUTTON_IN_NAVIGATION_MENU      = ('xpath', "//span[@class='item-content-wrap' and  contains(text(), 'Kaltura Media Gallery')]")
     MOODLE_MY_COURSES_BUTTON                            = ('xpath', "//li[@class='type_system depth_2 contains_branch']")
     MOODLE_COURSE_BUTTON_IN_MENU_BAR                    = ('xpath', "//a[@title='New1']")
+    MOODLE__MEDIA_GALLERY_TITLE                         = ('xpath', "//h1[contains(text(), 'Kaltura Media Gallery')]")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -110,21 +111,22 @@ class Moodle(Base):
      
  # Author: Michal Zomper
     def navigateToGalleryMoodle(self, galleryName, forceNavigate=False):
+        self.clsCommon.base.switch_to_default_content()
         if forceNavigate == False:
-            if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+            if self.wait_visible(self.MOODLE__MEDIA_GALLERY_TITLE, 5) != False:
                 writeToLog("INFO","Success Already in my Gallery page")
+                self.clsCommon.moodle.switchToMoodleIframe()
                 return True
         
         if galleryName == "New1":
             if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
                 writeToLog("INFO","FAILED navigate to courses 'New1'")
                 return False
-        sleep(5)
+        self.wait_visible(self.clsCommon.channel.CHANNEL_ACTION_BUTTON, timeout=30)
         
-        self.clsCommon.moodle.switchToMoodleIframe()
-        if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+        if self.wait_visible(self.MOODLE__MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False
-        
+        self.clsCommon.moodle.switchToMoodleIframe()
         return True
             
