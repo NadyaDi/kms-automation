@@ -143,18 +143,18 @@ class Upload(Base):
                 # Convert path for Windows
                 filePath = filePath.replace("/", "\\")
                 filePath = filePath.replace("\\\\", "\\")
-                
+                 
                 # Navigate to upload page
-                if uploadFrom == enums.Location.UPLOAD_PAGE:
-                    if self.navigateToUploadPage() == False:
+                if uploadFrom == enums.Location.UPLOAD_PAGE or uploadFrom == enums.Location.UPLOAD_PAGE_EMBED:
+                    if self.navigateToUploadPage(uploadFrom) == False:
                         continue
-
+ 
                 #checking if disclaimer is turned on for "Before upload"
                 if disclaimer == True:
                     if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
                         writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
                         continue
-                    
+                     
                 # Wait page load
                 self.wait_for_page_readyState()
                 # If running on remote node
@@ -162,50 +162,50 @@ class Upload(Base):
                     # Because of miltiple run at same time, we apply random wait
                     timeDelay = random.uniform(1.1, 2.9)
                     sleep(timeDelay)      
-                             
+                              
                 # Click Choose a file to upload
                 if self.click(self.CHOOSE_A_FILE_TO_UPLOAD_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
                     continue
-                
+                 
                 sleep(3)
                 # Type in a file path
                 if self.typeIntoFileUploadDialog(filePath) == False:
                     continue
-                
+                 
                 # Wait for success message "Upload Completed"
                 startTime = datetime.datetime.now().replace(microsecond=0)
                 if self.waitUploadCompleted(startTime, timeout) == False:
                     continue
-                
+                 
                 if self.isErrorUploadMessage() == True:# TODO verify it doesn't take time when there is no error
                     writeToLog("INFO","FAILED to upload entry, error message appeared on the screen: 'Oops! Entry could not be created.'")
                     continue
-                   
+                    
                 # Fill entry details: name, description, tags
                 if self.fillFileUploadEntryDetails(name, description, tags) == False:
                     continue
-                
+                 
                 if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
                     self.get_body_element().send_keys(Keys.TAB) 
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
-                
+                 
                 if verifyModerationWarning == True:
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)   
                     if self.wait_visible(self.UPLOAD_MODERATION_UPLOAD_MESSAGE) == False:
                         writeToLog("INFO","FAILED to find moderation upload message")
                         return False
-                    
+                     
                 # Click Save
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
                     continue
                 sleep(3)
-                
+                 
                 # Wait for loader to disappear
                 self.clsCommon.general.waitForLoaderToDisappear()
-                
+                 
                 # Wait for 'Your changes have been saved.' message
                 if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False:                
                     entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
@@ -215,11 +215,11 @@ class Upload(Base):
                 else:
                     writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
                     continue
-    
+     
             except Exception:
                 writeToLog("INFO","FAILED to upload entry, retry number " + str(i))
                 pass
-        
+    
     
     def uploadMulitple(self, uploadEntrieList, disclaimer=False, uploadFrom=enums.Location.UPLOAD_PAGE):
         uploadboxCount = 1
@@ -593,12 +593,13 @@ class Upload(Base):
                 return False      
             
             
-    def navigateToUploadPage(self):
+    def navigateToUploadPage(self, uploadFrom=enums.Location.UPLOAD_PAGE):
         # KAF
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
-            if self.clsCommon.kafGeneric.navigateToUploadPageKAF() == False:
-                writeToLog("INFO","FAILED navigate to upload page in " + localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST.value)
-                return False
+            if uploadFrom!=enums.Location.UPLOAD_PAGE_EMBED:
+                if self.clsCommon.kafGeneric.navigateToUploadPageKAF() == False:
+                    writeToLog("INFO","FAILED navigate to upload page in " + localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST.value)
+                    return False
                   
         # Click Add New
         if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:

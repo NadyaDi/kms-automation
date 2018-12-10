@@ -1,6 +1,11 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_0002,Set service url,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2104,Moodle - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2105,Moodle - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2106,Moodle - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2114,Moodle -Search Media (by entry name),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2115,Moodle -Search Media (by entry tag),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_677,Add Entry from My Media to Several Playlists,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura!1,admin,123456
@@ -123,6 +128,8 @@ test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura
 test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_113,KAF BB - Embed Media From SR - Add New Announcements,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_2088,KAF BB - Upload From Embed As Standalone,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_1648,KAF BB - Upload new media to Faculty Repository and then publish entries to course,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_695,Entry page - Add caption,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_697,Entry page - Add comment,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

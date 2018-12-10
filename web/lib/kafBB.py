@@ -44,7 +44,7 @@ class BlackBoard(Base):
     FEATURED_MEDIA_ENTRY                                = ('xpath', '//img[@class="playerPoster fill-width" and @alt="Video thumbnail for ENTRY_NAME"]')
     BB_CONTENT_PAGE_MENU                                = ('xpath', '//a[contains(@id, "Menu_actionButton") and contains(text(),"MENU_NAME")]')
     BB_CONTENT_PAGE_MENU_OPTION                         = ('xpath', '//a[contains(@id, "content-handler") and text()="MENU_OPTION"]')
-    CONTENT_TYPE_TITLE                                  = ('xpath', '//span[@id="pageTitleText" and (contains(text(), "Create CONTENT_TYPE"))]')
+    CONTENT_TYPE_TITLE                                  = ('xpath', '//span[@id="pageTitleText" and contains(text(), "CONTENT_TYPE")]')
     #BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@id="htmlData_text_bb_mashupbutton_action"]')
     BB_EMBED_MASHUPS_BTN                                = ('xpath', '//a[@class="mceAction mce_bb_mashupbutton"]')
     BB_EMBED_KALTURA_MEDIA_OPTION                       = ('xpath', '//span[@class="mceText" and @title="Kaltura Media"]')
@@ -60,6 +60,9 @@ class BlackBoard(Base):
     BB_CONTENT_TOOLS_MENU_MORE_TOOLS_OPTION             = ('xpath', '//a[@class="donotclose slideoutLink"]')
     BB_CONTENT_ANNOUNCEMENTS_OPTION                     = ('xpath', '//a[@id="tool-announcements" and text()="Announcements"]')
     CONTENT_ANNOUNCEMENTS_NAME_FIELD                    = ('xpath', '//input[@id="specific_link_name"]')
+    SUCCESS_DELETE_EMBED_ANNOUNCEMENTS_MESSAGE          = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME Deleted."]')
+    BB_ADD_MEDIA_TO_SR_BTN                              = ('xpath', '//a[@id="tab-addcontent"]')
+    BB_ADD_NEW_MEDIA_TO_SR_BTN                          = ('xpath', '//a[@id="add-new-tab"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -416,10 +419,11 @@ class BlackBoard(Base):
             
     
     # Author: Michal Zomper
-    def addSharedRepositoryMetadata(self, entryName, requiredField):
-        if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
-            writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
-            return False  
+    def addSharedRepositoryMetadata(self, entryName, requiredField, location=enums.Location.EDIT_ENTRY_PAGE):
+        if location == enums.Location.EDIT_ENTRY_PAGE:
+            if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
+                return False  
          
         if self.click(self.BB_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON) == False:
             writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
@@ -449,9 +453,16 @@ class BlackBoard(Base):
             return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
-        if self.wait_visible(self.clsCommon.editEntryPage.EDIT_ENTRY_UPLOAD_SUCCESS_MSG) == False:
-            writeToLog("INFO","FAILED to find save success message")
-            return False
+        
+        if location == enums.Location.EDIT_ENTRY_PAGE:
+            if self.wait_visible(self.clsCommon.editEntryPage.EDIT_ENTRY_UPLOAD_SUCCESS_MSG) == False:
+                writeToLog("INFO","FAILED to find publish success message")
+                return False
+            
+        elif location == enums.Location.SHARED_REPOSITORY:
+            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM) == False:
+                writeToLog("INFO","FAILED to find save success message")
+                return False
         
         writeToLog("INFO","Success required metadata was saved successfully")
         return True
@@ -561,7 +572,7 @@ class BlackBoard(Base):
     # Create embed item
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
+    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags=''):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
             return False 
@@ -593,7 +604,7 @@ class BlackBoard(Base):
         self.clsCommon.base.driver.switch_to_window(window_after)
         
         # Select media in embed page 
-        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False  
          
@@ -611,7 +622,7 @@ class BlackBoard(Base):
             return False  
         
         # Verify that embed entry is displayed and that it plays correctly
-        if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
+        if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime) == False:
             writeToLog("INFO","FAILED to played and verify embedded entry")
             return False             
                     
@@ -646,14 +657,14 @@ class BlackBoard(Base):
     # Create embed kaltura media
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False):
+    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags=''):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.KALTURA_MEDIA) == False:
             writeToLog("INFO","FAILED to navigate to content kaltura media page")
             return False 
          
         self.switchToBlackboardEmbedKaltruaMedia()
  
-        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False 
          
@@ -672,7 +683,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to click on 'submit' button")
             return False  
         
-        if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
+        if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime) == False:
             writeToLog("INFO","FAILED to played and verify embedded entry")
             return False             
                     
@@ -681,7 +692,7 @@ class BlackBoard(Base):
     
     # @Author: Inbar Willman
     # Delete embed item
-    def deleteEmbedItem(self, galleryName, menuOption, contentName, BBCoursePages=enums.BBCoursePages.CONTENT):
+    def deleteEmbedItem(self, galleryName, menuOption, contentName, BBCoursePages=enums.BBCoursePages.CONTENT, embedOption=enums.BBContentPageMenusOptions.ITEM):
         if self.selectEmbedItemOption(galleryName, menuOption, contentName, BBCoursePages) == False:
             writeToLog("INFO","FAILED to select delete option")
             return False 
@@ -691,22 +702,26 @@ class BlackBoard(Base):
         if self.clsCommon.base.click_dialog_accept() == False:
             writeToLog("INFO","FAILED click accept dialog")
             return False 
-        
-        tmpDeleteMessage = (self.SUCCESS_DELETE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_DELETE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', contentName)) 
+        if embedOption == enums.BBContentPageMenusOptions.ANNOUNCEMENTS:
+            tmpDeleteMessage = (self.SUCCESS_DELETE_EMBED_ANNOUNCEMENTS_MESSAGE[0], self.SUCCESS_DELETE_EMBED_ANNOUNCEMENTS_MESSAGE[1].replace('ITEM_NAME', contentName))
+        else:
+            tmpDeleteMessage = (self.SUCCESS_DELETE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_DELETE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', contentName))
+             
         if self.is_visible(tmpDeleteMessage) == False:
             writeToLog("INFO","FAILED display delete message")
+            
             return False                        
         
         return True     
     
     
     # @Author: Inbar Willman
-    def createEmbedAnnouncemnets(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.SHARED_REPOSITORY, chooseMediaGalleryinEmbed=False):
+    def createEmbedAnnouncemnets(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.SHARED_REPOSITORY, chooseMediaGalleryinEmbed=False, mediaType=enums.MediaType.VIDEO):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.TOOLS, menuOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
             writeToLog("INFO","FAILED to navigate to announcements page")
             return False
         
-        if self.clear_and_send_keys(self.CONTENT_ANNOUNCEMENTS_NAME_FIELD) == False:
+        if self.clear_and_send_keys(self.CONTENT_ANNOUNCEMENTS_NAME_FIELD, itemName) == False:
             writeToLog("INFO","FAILED clear name field and send new name")
             return False  
         
@@ -736,16 +751,42 @@ class BlackBoard(Base):
         
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
-            return False  
-        
-        # Verify that Success message is displayed
-        successMsg = (self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', itemName))
+            return False         
+            
+        successMsg = (self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', "Link " +itemName))
         if self.is_visible(successMsg) == False:
             writeToLog("INFO","FAILED to display correct success message")
             return False 
         
-        if self.clsCommon.kafGeneric.verifyEmbedEntry(delay=delayTime) == False:
+        if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime, mediaType) == False:
             writeToLog("INFO","FAILED to played and verify embedded entry")
             return False             
                     
-        return True       
+        return True  
+    
+    
+         
+    # @Author: Inbar Willman
+    # Navigate to upload page via SR page
+    def navigateToUploadMediaInSR(self):
+        if self.navigateToSharedRepositoryInBB() == False:
+            writeToLog("INFO","FAILED to navigate to SR page")
+            return False 
+            
+        self.switchToBlackboardIframe()
+        
+        if self.click(self.BB_ADD_MEDIA_TO_SR_BTN, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'add media' button in SR page")
+            return False 
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.click(self.BB_ADD_NEW_MEDIA_TO_SR_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'add new media' button in SR page")
+            return False 
+        
+        if self.click(self.clsCommon.upload.DROP_DOWN_MEDIA_UPLOAD_BUTTON)  == False:
+            writeToLog("INFO","FAILED to click on 'media upload' option")
+            return False      
+        
+        return True                                   

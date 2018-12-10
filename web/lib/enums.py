@@ -59,6 +59,7 @@ class Location(Enum):
     PENDING_TAB_CATEGORY        = 'category - Pending tab'
     MEDIA_GALLARY               = 'channel page'
     SHARED_REPOSITORY           = 'Shared Repository'
+    UPLOAD_PAGE_EMBED           = 'Upload page embed'
 
 
 class EditEntryPageTabName(Enum):
@@ -407,4 +408,4 @@ class BBContentPageMenusOptions(Enum):
     FILE                      = 'File'
     KALTURA_MEDIA             = 'Kaltura Media' 
     MORE_TOOLS                = 'More Tools'
-    ANNOUNCEMENTS             = 'Announcements'
+    ANNOUNCEMENTS             = 'Announcements' 

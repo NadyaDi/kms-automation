@@ -27,6 +27,7 @@ class KafGeneric(Base):
 #    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//div[@class="btn-group singleSizeButton pull-right"]')
     KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[contains(@aria-label, "ENTRY_NAME") and text()="Select"]')
     KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE    = ('xpath', "//a[@data-original-title='Media Gallery']")
+    KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -92,7 +93,7 @@ class KafGeneric(Base):
             if self.clsCommon.blackBoard.navigateToGalleryBB(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
-        
+         
         return True
         
     
@@ -302,7 +303,7 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
+    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='' ):
         if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
@@ -333,6 +334,22 @@ class KafGeneric(Base):
                     return False 
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
+                
+        elif embedFrom == enums.Location.UPLOAD_PAGE_EMBED:
+            # Upload entry
+            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED) == False:
+                writeToLog("INFO","FAILED to upload new entry to embed page embed page")
+                return False  
+            
+            sleep(2)
+            
+            # Click Save and embed
+            if self.click(self.KAF_SAVE_AND_EMBED_UPLOAD_MEDIA) == False:
+                writeToLog("INFO","FAILED to click on save and embed button")
+                return False    
+            
+            self.clsCommon.general.waitForLoaderToDisappear()  
+            return True                                
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
@@ -377,27 +394,27 @@ class KafGeneric(Base):
     # @Author: Inbar Willman
     # Verify embed entry (video/image) in page
     def verifyEmbedEntry(self, imageThumbnail='', delay='', mediaType=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD): 
-        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-        if mediaType == enums.MediaType.VIDEO:
+        if application == enums.Application.BLACK_BOARD:
+            self.refresh()
+            self.clsCommon.blackBoard.switchToBlackboardIframe()
             # If we are in blackboard need to click on play icon in order to get the player
-            if application == enums.Application.BLACK_BOARD:
-                self.clsCommon.blackBoard.switchToBlackboardIframe()
-                if self.click(self.clsCommon.blackBoard.EMBED_ENTRY_PLAY_ICON) == False:
-                    writeToLog("INFO","FAILED to click on play icon")
-                    return False  
-                
-                sleep(6)
+            if self.click(self.clsCommon.blackBoard.EMBED_ENTRY_PLAY_ICON) == False:
+                writeToLog("INFO","FAILED to click on play icon")
+                return False 
+             
+            sleep(8)
+            if delay != '':
                 self.clsCommon.blackBoard.switchToBlackboardIframe()
                 self.clsCommon.player.switchToPlayerIframe()
                                
-            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
-                writeToLog("INFO","FAILED to play and verify video")
-                return False                
+                if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                    writeToLog("INFO","FAILED to play and verify video")
+                    False                
             
-        else:
-            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
-                writeToLog("INFO","FAILED to display correct image thumbnail")
-                return False   
+            else:
+                if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                    writeToLog("INFO","FAILED to display correct image thumbnail")
+                    return False   
         
         writeToLog("INFO","Embed media was successfully verified")    
         return True   

@@ -23,7 +23,9 @@ test_608,1,0,0,0,KAF BB - My Media - Search by Name / Description / Tags
 test_609,0,1,0,0,KAF BB - My Media - Sort Media
 test_610,1,0,0,0,KAF BB - My Media - Filter Media View Different Statuses
 test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
+test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publish entries to course
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
+test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
@@ -124,7 +126,12 @@ test_1558,1,0,0,0,Disclaimer - before upload
 test_1573,1,0,0,0,Home page playlist
 test_1592,1,0,0,0,Custom data
 test_1594,1,0,0,0,Entry required field
+test_2104,1,0,0,0,Moodle - Delete through my media
+test_2105,1,0,0,0,Moodle - Delete through edit entry page
+test_2106,1,0,0,0,Moodle - Publish after upload
 test_2109,1,0,0,0,Moodle - Preview all kinds of media from My Media and Gallery
+test_2114,1,0,0,0,Moodle - Search Media (by entry name)
+test_2115,1,0,0,0,Moodle - Search Media (by entry tag)
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history

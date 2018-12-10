@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: oded berihon
-    # Test Name : eSearch - Sort by media type in my media page after search
+    # Test Name : eSearch - Filter by media type in my media page after search
     # Test description:
     # Upload all types of entries and sort them by their type
     # Go to my media page and sort the entries (with and without search):
