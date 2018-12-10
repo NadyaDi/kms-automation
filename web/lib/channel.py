@@ -122,6 +122,8 @@ class Channel(Base):
     CHANNEL_NO_RESULT_FOR_CHANNEL_SEARCH                = ('xpath', "//div[@class='alert alert-info fade in out alert-block']")
     CHANNELS_PAGE_ALL_CHANNELS_LIST                     = ('xpath', "//ul[@id='channelGallery']")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON             = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
+    MODERATION_CHANNELS_FILTER_BUTTON                   = ('xpath', "//div[@id='channel-moderation-eSearchForm']//div[contains(@class,'filterBar__filters')]//button[contains(@class,'')]")
+    MODERATION_CHANNELS_FILTER_CLEAR_ALL_BUTTON         = ('xpath', "//div[@id='channel-moderation-eSearchForm']//div[contains(@class,'SearchFormWrapper')]//div[contains(@class,'filterBar')]//div//a[contains(@class,'filters__clear-all')][contains(text(),'Clear All')]")
     MY_CHANNELS_SORT_CHANNELS_FILTER_BUTTON_NEWUI       = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
     MY_CHANNELS_SORTBY_BUTTON_OLDUI                     = ('xpath', "//a[@id='sort-btn' and @class='dropdown-toggle responsiveSize']")
     MY_CHANNELS_SORTBY_BUTTON_NEWUI                     = ('xpath', "//a[@id='sortBy-menu-toggle' and @class='  dropdown-toggle DropdownFilter__toggle ']")
@@ -162,6 +164,10 @@ class Channel(Base):
     CHANNEL_PENDING_TAB_SEARCH_BAR                      = ('xpath', '//input[@placeholder="Search in Pending" and @class="searchForm__text"]')
     CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG             = ('xpath', '//div[@class="message" and text()="Loading..."]')
     CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem visible-v2ui hidden-phone")]')
+    CHANNEL_ADD_TO_CHANNEL_FILTER_BUTTON                = ('xpath', "//div[@id='addContent-myMedia-eSearchForm']//div[contains(@class,'filterBar__filters')]//button[contains(@class,'')]")
+    CHANNEL_ADD_TO_CHANNEL_CLEAR_ALL_BUTTON             = ('xpath', "//div[@id='addContent-myMedia-eSearchForm']//div[contains(@class,'SearchFormWrapper')]//div[contains(@class,'filterBar')]//div//a[contains(@class,'filters__clear-all')][contains(text(),'Clear All')]")
+    CHANNEL_SR_ADD_TO_CHANNEL_FILTER_BUTTON             = ('xpath', "//div[contains(@id,'addContent-sharedRepo')]//div[contains(@class,'filterBar__filters')]//button[contains(@class,'')]")
+    CHANNEL_SR_ADD_TO_CHANNEL_CLEAR_ALL_BUTTON          = ('xpath', "//div[contains(@id,'addContent-sharedRepo')]//div[contains(@class,'SearchFormWrapper')]//div[contains(@class,'filterBar')]//div//a[contains(@class,'filters__clear-all')][contains(text(),'Clear All')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    

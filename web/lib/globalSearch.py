@@ -46,6 +46,7 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_ENTRY_RESUTLT_ROW                     = ('xpath', "//div[@class='results-entry__container']")
     GLOBAL_SEARCH_NO_RESULTS_ALERT                      = ('xpath', '//div[@class="no-results alert alert-info" and text()="No more media found."]')
     GLOBAL_SEARCH_ENTRY_RESUTLT_NAME                    = ('xpath', '//span[@class="results-entry__name"]')
+    GLOBAL_SEARCH_NO_RESULTS_ALERT_QUIZ                 = ('xpath', "//div[@id='quizMyMedia_scroller_alert']")
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -412,6 +413,7 @@ class  GlobalSearch(Base):
             writeToLog("INFO","Success, Global page sort by '" + sortBy.value + "' was successful")
             return True
         
+        
     # @Author: Inbar Willman
     # Show all entries in global page    
     def showAllEntriesInGloablPage(self, timeOut=60):
@@ -438,10 +440,11 @@ class  GlobalSearch(Base):
                     self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                     return True 
              
-            self.clsCommon.sendKeysToBodyElement(Keys.END)
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
              
         writeToLog("INFO","FAILED to show all media")
         return False    
+    
     
     # @Author: Inbar Willman
     # The function check the the entries in my media are filter correctly
@@ -481,5 +484,3 @@ class  GlobalSearch(Base):
                  
         writeToLog("INFO","Success, Only the correct media display in global page")
         return True
-    
-   

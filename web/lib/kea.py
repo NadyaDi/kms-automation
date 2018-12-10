@@ -415,6 +415,78 @@ class Kea(Base):
         return False
     
     
+    # @Author: Horia Cus
+    # Show all entries in quiz page   
+    def showAllEntriesInAddQuizPage(self, timeOut=60):
+        # Get all entries in results
+        try:
+            tmpResultsList = self.get_elements(self.clsCommon.globalSearch.GLOBAL_SEARCH_ENTRY_RESUTLT_ROW)
+            
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries in results")
+            return False
+        
+        if len(tmpResultsList) < 4:
+            writeToLog("INFO","Success, All media in global page are displayed")
+            return True 
+        
+        else:      
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+            wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
+            while wait_until > datetime.datetime.now():                       
+                if self.is_present(self.clsCommon.globalSearch.GLOBAL_SEARCH_NO_RESULTS_ALERT_QUIZ, 2) == True:
+                    writeToLog("INFO","Success, All media in global page are displayed")
+                    sleep(1)
+                    # go back to the top of the page
+                    self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+                    return True 
+             
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
+             
+        writeToLog("INFO","FAILED to show all media")
+        return False
+    
+    
+    # @Author: Horia Cus
+    # The function check the the entries in my media are filter correctly
+    def verifyFiltersInAddQuizPage(self, entriesDict):
+        if self.showAllEntriesInAddQuizPage() == False:
+            writeToLog("INFO","FAILED to show all entries in global page")
+            return False
+             
+        try:
+            # Get list of all entries element in results
+            entriesInGlobalPage = self.get_elements(self.clsCommon.globalSearch.GLOBAL_SEARCH_ENTRY_RESUTLT_NAME)
+            listOfEntriesInResults = []
+            
+            # Get text of each entry element and add to a new list
+            for entry in entriesInGlobalPage:
+                entry.text.lower()
+                listOfEntriesInResults.append(entry.text.lower())
+                
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list")
+            return False
+         
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInMyMedia == False:
+                if (entry.lower() in listOfEntriesInResults) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in global page results although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInMyMedia == True:
+                if (entry.lower() in listOfEntriesInResults) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in global page results although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in global page")
+        return True    
+
+      
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
@@ -456,4 +528,4 @@ class Kea(Base):
         
         writeToLog("INFO","FAILED,  Entry: " + entryName +", was clipped, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
         return False
-    
+
