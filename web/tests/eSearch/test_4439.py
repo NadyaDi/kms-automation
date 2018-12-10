@@ -80,14 +80,11 @@ class Test:
             self.entryForFieldsDisplay5 = "Fields display - multiple polls" # Created manually  
             
             ##################### TEST STEPS - MAIN FLOW #####################
-            
             labelNumber1 = (self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[0], self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[1].replace('LABEL', 'EN'))
             labelNumber2 = (self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[0], self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[1].replace('LABEL', 'LT'))
             labelNumber3 = (self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[0], self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[1].replace('LABEL', 'DE'))
             labelNumber4 = (self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[0], self.common.entryPage.ENTRY_SEARCH_DROP_DOWN_MENU_LIST[1].replace('LABEL', 'IT'))
             labelList= ["EN", "LT", "DE", "IT"]
-            labelEntries = [labelNumber1, labelNumber2, labelNumber3, labelNumber4]
-            searchlist = ["search 1", "search 2", "search 3", "search 4"] 
             searchElement1= "search 1"
             searchElement2= "search 2"
             searchElement3 = "search 3"
@@ -112,14 +109,18 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO", "Step 3: FAILED to display each caption label in the drop down menu")
                 return
-         
+            
             i = 4
-            writeToLog("INFO", "Step " + str(i) + ": Verify that each caption label is displayed in the drop down menu")            
             for entry in labelEntriesMap:
+                i = i
+                writeToLog("INFO", "Step " + str(i) + ": Verify that each caption label for " + str(entry) + " is displayed in the drop down menu") 
                 if self.common.entryPage.searchLabelElements(self.captionName, entry, 4, labelEntriesMap[entry], allElements) == False:
                     self.status = "Fail"
-                    writeToLog("INFO", "TEST FAILED")
-                    return                                                                     
+                    writeToLog("INFO", "Step" + str(i) + ": Failed to display all the label caption for " + str(entry) + " in the container results")
+                else:
+                    i = i + 1
+                    continue
+                return                                                                     
             ##################################################################
             writeToLog("INFO","TEST PASSED: Verify that the specific label captions elements are displayed in the search results")
         # if an exception happened we need to handle it and fail the test       

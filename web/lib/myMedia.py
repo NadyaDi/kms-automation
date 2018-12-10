@@ -58,7 +58,7 @@ class MyMedia(Base):
     MY_MEDIA_FILTER_BY_COLLABORATION_DROPDOWNLIST               = ('xpath', "//a[@id='mediaCollaboration-btn']")
     MY_MEDIA_FILTER_BY_SCHEDULING_DROPDOWNLIST                  = ('xpath', "//a[@id='sched-btn']")
     MY_MEDIA_DROPDOWNLIST_ITEM_OLD_UI                           = ('xpath', "//a[@role='menuitem' and contains(text(), 'DROPDOWNLIST_ITEM')]")
-    MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI                           = ('xpath', "//span[@class='filter-checkbox__label' and contains(text(), 'DROPDOWNLIST_ITEM')]")
+    MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI                           = ('xpath', "//span[@class='filter-checkbox__label' and text()='DROPDOWNLIST_ITEM']")
     MY_MEDIA_ENTRY_TOP                                          = ('xpath', "//span[@class='entry-name' and text()='ENTRY_NAME']")
     MY_MEDIA_END_OF_PAGE                                        = ('xpath', "//div[@class='alert alert-info endlessScrollAlert']")
     MY_MEDIA_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']/tbody/tr")
@@ -106,6 +106,8 @@ class MyMedia(Base):
     ENTRY_DETAILS_COMMENTS_ICON                                 = ('xpath', '//i[@class="entryStatistics__stat__icon icon-comment"]')
     ENTRY_DETAILS_HEART_ICON                                    = ('xpath', '//i[@class="entryStatistics__stat__icon icon-heart"]')
     ENTRY_DETAILS_EYE_ICON                                      = ('xpath', '//i[@class="entryStatistics__stat__icon icon-eye-open"]')
+    FILTERS_CLEAR_ALL_BUTTON                                    = ('xpath', "//a[@class='filters__clear-all']")
+    CAPTION_FILTER_INACTIVE                                     = ('xpath', '//a[@aria-checked="false" and  @aria-label="DROPDOWNLIST_ITEM"]')
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -672,13 +674,6 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                     return False
                 
-            self.clsCommon.general.waitForLoaderToDisappear()  
-            if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
-                writeToLog("INFO","FAILED to show all entries")
-                return False
-            
-            writeToLog("INFO","Success, Sort was set successfully")
-            return True
         else:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
                 tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
@@ -708,12 +703,15 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                 return False
 
+
         self.clsCommon.general.waitForLoaderToDisappear()  
-        if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
-            writeToLog("INFO","FAILED to show all entries")
-            return False
+        # If there is any problem regarding the next block, please talk to Oleg or Inbar             
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            if self.showAllEntries(searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
+                writeToLog("INFO","FAILED to show all entries") 
+                return False 
               
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+        writeToLog("INFO","Success, sort/filter by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
     

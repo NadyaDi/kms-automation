@@ -143,7 +143,8 @@ class MediaType(Enum):
     VIDEO                   = 'Video'      
     QUIZ                    = "Quiz"
     AUDIO                   = "Audio"
-    IMAGE                   = "Image"
+    IMAGE                   = "Image" 
+    WEBCAST_EVENTS          = "Webcast Events"
     
     
 class Collaboration(Enum):
@@ -165,6 +166,15 @@ class Scheduling(Enum):
     PAST_SCHEDULING           = "Past Scheduling" 
 
 
+class Captions(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    ALL                     = "All"  
+    AVAILABLE               = "Available"      
+    NOT_AVAILABLE           = "Not Available"  
+    
+    
 class SortAndFilter(Enum):
     def __str__(self):
         return str(self.value)
@@ -174,6 +184,7 @@ class SortAndFilter(Enum):
     MEDIA_TYPE                = "MediaType"
     COLLABORATION             = "Collaboration"
     SCHEDULING                = 'Scheduling'
+    CAPTIONS                  = 'Captions'
     
 
 class KeaQuizButtons(Enum):

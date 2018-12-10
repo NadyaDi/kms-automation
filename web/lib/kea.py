@@ -36,7 +36,18 @@ class Kea(Base):
     EDITOR_TABLE_SIZE                             = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     EDITOR_TIMELINE                               = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
-    EDITOR_TIME_PICKER                            = ('id', 'jump-to__input')
+    EDITOR_TIME_PICKER                            = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
+    EDITORT_TIMELINE_SPLIT_ICON                   = ('xpath', "//button[@aria-label='Split']")
+    EDITOR_TIMELINE_DELETE_BUTTON                 = ('xpath', "//button[@aria-label='Delete']")
+    EDITOR_SAVE_BUTTON                            = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVE_A_COPY_BUTTON                     = ('xpath', "//button[@class='save-as-button branded-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ng-star-inserted']")
+    EDITOR_SAVE_BUTTON_CONF                       = ('xpath', "//button[@class='button modal-footer-buttons__save branded-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVED_MSG                              = ('xpath', "//strong[contains(.,'Media was successfully saved.')]")
+    EDITOR_SAVED_OK_MSG                           = ('xpath', "//button[contains(.,'OK')]")
+    EDITOR_CREATE_BUTTON                          = ('xpath', "//button[contains(.,'Create')]")
+    EDITOR_SUCCESS_MSG                            = ('xpath', "//p-header[contains(.,'Success')]")
+    EDITOR_TOTAL_TIME                             = ('xpath', "//span[@class='total-time']")
+    EDITOR_GO_TO_MEDIA_PAGE_BUTTON                = ('xpath', "//a[contains(.,'Media Page')]")
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -303,7 +314,7 @@ class Kea(Base):
         return True    
     
     
-    # @Author: Tzachi guetta    
+    # @Author: Tzachi guetta
     def launchKEA(self, entryName, navigateTo, navigateFrom):
         if self.clsCommon.navigateTo(navigateTo, navigateFrom, entryName) == False:
             return False
@@ -330,21 +341,191 @@ class Kea(Base):
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
     
-    
-    # TODO NOT FINISHED 
-    # @Author: Tzachi guetta    
-    def trimEntry(self, entryName, startTime, endTime, navigateTo, navigateFrom):
+
+    # @Author: Tzachi guetta
+    #     interface to KEA's timeline functionalities: split, (set IN\out, delete, Fade IN\out - TBD)
+    def keaTimelinefunc(self,entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom):
         if self.launchKEA(entryName, navigateTo, navigateFrom) == False:
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         
+        sleep(15)
+        self.refresh()
+        sleep(2)
         self.switchToKeaIframe()
         
-        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, startTime + Keys.ENTER) == False:
+        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, splitStartTime + Keys.ENTER) == False:
             writeToLog("INFO","FAILED to insert start time into editor input field")
             return False
         
+        sleep(1)
+        if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
+                writeToLog("INFO","FAILED to click Split icon (time-line)")
+                return False
+        sleep(1)
+        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, splitEndTime + Keys.ENTER) == False:
+            writeToLog("INFO","FAILED to insert start time into editor input field")
+            return False
         
-        writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
+        sleep(1)
+        if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
+            writeToLog("INFO","FAILED to click Split icon (time-line)")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_TIMELINE_DELETE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click delete icon (time-line)")
+            return False
+        
         return True
     
+        
+    # @Author: Tzachi guetta  
+    # Currently support split only     
+    # expectedEntryDuration = the duration of the new entry  
+    def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom)
+        
+        sleep(1)
+        if self.click(self.EDITOR_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Save")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_SAVE_BUTTON_CONF, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on Save confirmation button")
+            return False
+        
+        if self.wait_element(self.EDITOR_SAVED_MSG, 360) == False:
+            writeToLog("INFO","FAILED, ""Media was successfully saved."" - msg is missing")
+            return False
+        
+        if self.click(self.EDITOR_SAVED_OK_MSG, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'OK' after trimmed msg")
+            return False
+        
+        entryDuration = self.get_element_text(self.EDITOR_TOTAL_TIME, 10)
+        self.switch_to_default_content()
+        
+        if expectedEntryDuration in entryDuration:
+            writeToLog("INFO","Success,  Entry: " + entryName +", was trimmed, the new entry Duration is: " + expectedEntryDuration) 
+            return True
+        
+        writeToLog("INFO","FAILED,  Entry: " + entryName +", was trimmed, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
+        return False
+    
+    
+    # @Author: Horia Cus
+    # Show all entries in quiz page   
+    def showAllEntriesInAddQuizPage(self, timeOut=60):
+        # Get all entries in results
+        try:
+            tmpResultsList = self.get_elements(self.clsCommon.globalSearch.GLOBAL_SEARCH_ENTRY_RESUTLT_ROW)
+            
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries in results")
+            return False
+        
+        if len(tmpResultsList) < 4:
+            writeToLog("INFO","Success, All media in global page are displayed")
+            return True 
+        
+        else:      
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+            wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
+            while wait_until > datetime.datetime.now():                       
+                if self.is_present(self.clsCommon.globalSearch.GLOBAL_SEARCH_NO_RESULTS_ALERT_QUIZ, 2) == True:
+                    writeToLog("INFO","Success, All media in global page are displayed")
+                    sleep(1)
+                    # go back to the top of the page
+                    self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+                    return True 
+             
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
+             
+        writeToLog("INFO","FAILED to show all media")
+        return False
+    
+    
+    # @Author: Horia Cus
+    # The function check the the entries in my media are filter correctly
+    def verifyFiltersInAddQuizPage(self, entriesDict):
+        if self.showAllEntriesInAddQuizPage() == False:
+            writeToLog("INFO","FAILED to show all entries in global page")
+            return False
+             
+        try:
+            # Get list of all entries element in results
+            entriesInGlobalPage = self.get_elements(self.clsCommon.globalSearch.GLOBAL_SEARCH_ENTRY_RESUTLT_NAME)
+            listOfEntriesInResults = []
+            
+            # Get text of each entry element and add to a new list
+            for entry in entriesInGlobalPage:
+                entry.text.lower()
+                listOfEntriesInResults.append(entry.text.lower())
+                
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get entries list")
+            return False
+         
+        for entry in entriesDict:
+            #if entry[1] == True:
+            if entriesDict[entry] == True:
+                #if entry[0].lower() in entriesInMyMedia == False:
+                if (entry.lower() in listOfEntriesInResults) == False:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' wasn't found in global page results although he need to be found")
+                    return False
+                 
+            #elif entry[1] == False:
+            if entriesDict[entry] == False:
+                # if entry[0].lower() in entriesInMyMedia == True:
+                if (entry.lower() in listOfEntriesInResults) == True:
+                    writeToLog("INFO","FAILED, entry '" + entry + "' was found in global page results although he doesn't need to be found")
+                    return False
+                 
+        writeToLog("INFO","Success, Only the correct media display in global page")
+        return True    
+
+      
+    # @Author: Tzachi guetta  
+    # Currently support split only     
+    # expectedEntryDuration = the duration of the new entry  
+    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom)
+        
+        sleep(1)
+        if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on Save")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_CREATE_BUTTON, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on Save confirmation button")
+            return False
+        
+        if self.wait_element(self.EDITOR_SUCCESS_MSG, 360) == False:
+            writeToLog("INFO","FAILED, ""Your media has been saved in My Media"" - message is missing")
+            return False
+        
+        sleep(1)
+        if self.click(self.EDITOR_GO_TO_MEDIA_PAGE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Go to Media Page' button")
+            return False
+        
+        self.switch_to_default_content()
+        
+        if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+            writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+            return False
+        
+        self.clsCommon.player.switchToPlayerIframe()
+        entryDuration = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
+        self.switch_to_default_content()
+        
+        if expectedEntryDuration in entryDuration:
+            writeToLog("INFO","Success,  Entry: " + entryName +", was clipped, the new entry Duration is: " + expectedEntryDuration) 
+            return True
+        
+        writeToLog("INFO","FAILED,  Entry: " + entryName +", was clipped, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
+        return False
+

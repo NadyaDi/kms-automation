@@ -78,7 +78,7 @@ class EntryPage(Base):
         tmp_entry_name = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         #Check if we already in edit entry page
         if self.wait_visible(tmp_entry_name, 5) != False:
-            writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
+            writeToLog("INFO","Already in entry page, Entry name: '" + entryName + "'")
             return True      
         
         self.clsCommon.myMedia.searchEntryMyMedia(entryName)
@@ -793,7 +793,6 @@ class EntryPage(Base):
     
     # Author: Cus Horia
     # The function verifies that the entryName and description are not displayed in the search results
-    # expectedCaptionAfterSearch - after clicking on the time in the caption section the player jump to the expected time but move back a few milliseconds so we see the caption befor the one that we are looking for
     def verifyEntryNameAndDescriptionInSearch(self, searchElement):          
         if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
             writeToLog("INFO","FAILED to click on search icon")

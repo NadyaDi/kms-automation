@@ -93,7 +93,6 @@ class KafGeneric(Base):
             if self.clsCommon.blackBoard.navigateToGalleryBB(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
-         
         return True
         
     
