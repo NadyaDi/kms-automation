@@ -349,7 +349,7 @@ class Kea(Base):
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         
-        sleep(15)
+        sleep(10)
         self.refresh()
         sleep(2)
         self.switchToKeaIframe()
