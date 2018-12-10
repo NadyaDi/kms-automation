@@ -1,6 +1,14 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_0002,Set service url,2438361,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_594,KAF BlackBoard Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2104,Moodle - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2105,Moodle - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2106,Moodle - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2114,Moodle -Search Media (by entry name),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2115,Moodle -Search Media (by entry tag),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_109,KAF BB - Embed Media As Standalone From Kaltura media,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_113,KAF BB - Embed Media From SR - Add New Announcements,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_604,KAF BB - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_589,KAF BB - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_590,KAF BB - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
@@ -20,6 +28,7 @@ test_4225,KAF BB - Remove Media From Media Gallery,,,pythonautomation1@mailinato
 test_610,KAF BB - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,kstudent,123456
 test_111,KAF BB - Enable / Disable faculty repository,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_222,KAF BB - Adding media to Faculty Repository From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_1648,KAF BB - Upload new media to Faculty Repository and then publish entries to course,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_114,KAF BB - Add Remove Featured Media Module,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB -upload media from media gallery page,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
@@ -37,6 +46,9 @@ test_3275,Slide Deck Upload - add / remove chapters,2370151,mediaspace.kaltura.c
 test_3276,Slide Deck Upload - change slide location,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3283,Slide Deck Upload- A-sync upload,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3284,Slide Deck Upload- search slides,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_2869,KEA trim,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_4455,KEA clip,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_4458,KEA trim with slides,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -200,6 +212,17 @@ test_4442,eSearch - Filter by Captions - with search - Channel page - media tab,
 test_4443,eSearch - Filter by Captions - no search - Channel page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4444,eSearch - Filter by Captions - with search - Category page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4445,eSearch - Filter by Captions - no search - Category page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4446,Filter by Captions - with search - Global page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4447,Filter by Captions - with search - Channel page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4448,Filter by Captions - no search - Channel page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4449,Filter by Captions - with search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4450,Filter by Captions - no search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4451,Filter by Captions - with search - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4452,Filter by Captions - no search - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4453,Filter by Captions - with search - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4454,Filter by Captions - no search - Add to channel - SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4456,Filter by Captions - no search - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4457,Filter by Captions - with search - Add to channel - SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_1,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
