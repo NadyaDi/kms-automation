@@ -535,6 +535,45 @@ class Player(Base):
         writeToLog("INFO","SUCCESS to change player view")
         self.clsCommon.base.switch_to_default_content()
         return True
+    
+        
+    # @ Author: Tzachi Guetta
+    # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)     
+    def collectQrOfSlidesFromPlayer(self, entryName):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False
+                
+            # The QR codes of the slides needs to be presented on the bottom right of the player  - in order to capture them. then the following function will switch the player view to that position
+            self.changePlayerView(enums.PlayerView.SWITCHVIEW)
+            
+            if self.clickPlay(False, True) == False:
+                return False       
+            
+            QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            QRcodeList = [];
+            
+            while QRcode != False:       
+                
+                qrResolve = self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
+                if qrResolve == False:
+                    writeToLog("INFO","FAILED to resolve QR code")
+                    return self.removeDuplicate(QRcodeList)  
+                
+                QRcodeList.append(qrResolve)
+                QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                sleep(0.3)
+            
+            return self.removeDuplicate(QRcodeList)
+            
+        except Exception:
+            return False
         
         
     # Author: Michal zomper
