@@ -14,11 +14,11 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Filter by Captions - with search - Category page - media tab
+    # Test Name : Filter by Captions - with search - Global page 
     # Test description:
-    # Verify that category entries are properly displayed while using a search term and filter them by captions
+    # Verify that category entries are properly displayed while using no search term and filter them by captions
     #================================================================================================================================
-    testNum = "4444"
+    testNum = "4446"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -61,82 +61,76 @@ class Test:
             self.filterByAll = {self.entryName1: True, self.entryName2: True, self.entryName3: True, self.entryName4: True, self.entryName5: True, self.entryName6: True, self.entryName7: True, self.entryName8: True}
 
             ##################### TEST STEPS - MAIN FLOW #####################               
-            writeToLog("INFO","Step 1: Going to navigate to the channel")
-            if self.common.category.navigateToCategory(self.categoryName, forceNavigate=True) == False:
+            writeToLog("INFO","Step 1: Going to navigate to the category page")
+            if self.common.globalSearch.makeAGloablSearchForEsearch(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to navigate to the channel")
+                writeToLog("INFO","Step 1: FAILED to navigate to the category page")
                 return
             
-            writeToLog("INFO","Step 2: Going to navigate to search by " + self.entryName + " in category")
-            if self.common.category.searchInCategoryWithoutVerifyResults(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to search by " + self.entryName + " in category")
-                return
-            
-            writeToLog("INFO","Step 3: Going to filter category entries by: " + enums.Captions.ALL.value) 
+            writeToLog("INFO","Step 2: Going to filter global entries by: " + enums.Captions.ALL.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.CAPTIONS, enums.Captions.ALL) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 3: FAILED to filter category entries  by '" + enums.Captions.ALL.value + "'")
+                    writeToLog("INFO","Step 2: FAILED to filter global entries  by '" + enums.Captions.ALL.value + "'")
                     return
-                
-            writeToLog("INFO","Step 4: Going to verify category entries filter by: " + enums.Captions.ALL.value)  
+               
+            writeToLog("INFO","Step 3: Going to verify global entries filter by: " + enums.Captions.ALL.value)  
             if self.common.globalSearch.verifyFiltersInGlobalPage(self.filterByAll) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to verify category entries  by '" + enums.Captions.ALL.value + "'")
+                writeToLog("INFO","Step 3: FAILED to verify global entries  by '" + enums.Captions.ALL.value + "'")
                 return
             
-            writeToLog("INFO","Step 5: Going to close down the filters drop down menu") 
+            writeToLog("INFO","Step 4: Going to close down the filters drop down menu") 
             if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-                writeToLog("INFO","Step 5: FAILED to close the filters drop down menu")
+                writeToLog("INFO","Step 4: FAILED to close the filters drop down menu")
                 self.status = "Fail"
                 return False       
                 
-            writeToLog("INFO","Step 6: Going to filter category entries by: " + enums.Captions.AVAILABLE.value) 
+            writeToLog("INFO","Step 5: Going to filter global entries by: " + enums.Captions.AVAILABLE.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.CAPTIONS, enums.Captions.AVAILABLE) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 6: FAILED to filter category entries  by '" + enums.Captions.AVAILABLE.value + "'")
+                    writeToLog("INFO","Step 5: FAILED to filter global entries  by '" + enums.Captions.AVAILABLE.value + "'")
                     return
                 
-            writeToLog("INFO","Step 7: Going to verify category entries filter by: " + enums.Captions.AVAILABLE.value)  
+            writeToLog("INFO","Step 6: Going to verify global entries filter by: " + enums.Captions.AVAILABLE.value)  
             if self.common.globalSearch.verifyFiltersInGlobalPage(self.filterByAvailable) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify category entries  by '" + enums.Captions.AVAILABLE.value + "'")
+                writeToLog("INFO","Step 6: FAILED to verify global entries  by '" + enums.Captions.AVAILABLE.value + "'")
                 return
             
-            writeToLog("INFO","Step 8: Going to clear all the search filters") 
+            writeToLog("INFO","Step 7: Going to clear all the search filters") 
             if self.common.base.click(self.common.myMedia.FILTERS_CLEAR_ALL_BUTTON, 20) == False:
-                writeToLog("INFO","Step 8: FAILED to clear all the search filters")
+                writeToLog("INFO","Step 7: FAILED to clear all the search filters")
                 self.status = "Fail"
                 return False 
             
-            writeToLog("INFO", "Step 9: Going to wait for the filter changes")
+            writeToLog("INFO", "Step 8: Going to wait for the filter changes")
             if self.common.general.waitForLoaderToDisappear() == False:
-                writeToLog("INFO", "Step 9: FAILED to clear the filter changes")
+                writeToLog("INFO", "Step 8: FAILED to clear the filter changes")
                 self.status = "Fail"
                 return
              
-            writeToLog("INFO","Step 10: Going to close down the filters drop down menu") 
+            writeToLog("INFO","Step 9: Going to close down the filters drop down menu") 
             if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-                writeToLog("INFO","Step 10: FAILED to close the filters drop down menu")
+                writeToLog("INFO","Step 9: FAILED to close the filters drop down menu")
                 self.status = "Fail"
                 return
 
-            writeToLog("INFO","Step 11: Going to filter category entries by: " + enums.Captions.NOT_AVAILABLE.value) 
+            writeToLog("INFO","Step 10: Going to filter global entries by: " + enums.Captions.NOT_AVAILABLE.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.CAPTIONS, enums.Captions.NOT_AVAILABLE) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 11: FAILED to filter category entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
+                    writeToLog("INFO","Step 10: FAILED to filter global entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
                     return
                 
-            writeToLog("INFO","Step 12: Going to verify category entries filter by: " + enums.Captions.NOT_AVAILABLE.value)  
+            writeToLog("INFO","Step 11: Going to verify global entries filter by: " + enums.Captions.NOT_AVAILABLE.value)  
             if self.common.globalSearch.verifyFiltersInGlobalPage(self.filterByNotAvailable) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify category entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
-                return    
+                writeToLog("INFO","Step 11: FAILED to verify global entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
+                return      
             ##################################################################
-            writeToLog("INFO","TEST PASSED: All the entries are properly displayed in category while using caption filters with a search term")
+            writeToLog("INFO","TEST PASSED: All the entries are properly displayed in global search")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
