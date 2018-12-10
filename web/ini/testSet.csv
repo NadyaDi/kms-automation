@@ -24,6 +24,7 @@ test_609,0,1,0,0,KAF BB - My Media - Sort Media
 test_610,1,0,0,0,KAF BB - My Media - Filter Media View Different Statuses
 test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
+test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
@@ -250,3 +251,10 @@ test_4436,1,0,0,0,eSearch - Fields display in results - Search in entry page - V
 test_4437,1,0,0,0,eSearch - Fields display in results - Search in entry page - Quiz
 test_4438,1,0,0,0,eSearch - Fields display in results - Search in entry page - Polls - webcast
 test_4439,1,0,0,0,eSearch - Search in entry page - Captions
+test_4051,1,0,0,0,eSearch - Search in entry page - Captions
+test_4440,1,0,0,0,eSearch - Search in entry page - Captions
+test_4441,1,0,0,0,eSearch - Search in entry page - Captions
+test_4442,1,0,0,0,eSearch - Search in entry page - Captions
+test_4443,1,0,0,0,eSearch - Search in entry page - Captions
+test_4444,1,0,0,0,eSearch - Search in entry page - Captions
+test_4445,1,0,0,0,eSearch - Search in entry page - Captions

@@ -674,13 +674,6 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                     return False
                 
-            self.clsCommon.general.waitForLoaderToDisappear()  
-            if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
-                writeToLog("INFO","FAILED to show all entries")
-                return False
-            
-            writeToLog("INFO","Success, Sort was set successfully")
-            return True
         else:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
                 tmplocator = self.MY_MEDIA_SORT_BY_DROPDOWNLIST_OLD_UI
@@ -710,12 +703,15 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                 return False
 
+
         self.clsCommon.general.waitForLoaderToDisappear()  
-        if self.showAllEntries( searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
-            writeToLog("INFO","FAILED to show all entries")
-            return False
+        # If there is any problem regarding the next block, please talk to Oleg or Inbar             
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            if self.showAllEntries(searchIn = enums.Location.MY_MEDIA, timeOut=60) == False:
+                writeToLog("INFO","FAILED to show all entries") 
+                return False 
               
-        writeToLog("INFO","Success, sort by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+        writeToLog("INFO","Success, sort/filter by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
         return True
     
     

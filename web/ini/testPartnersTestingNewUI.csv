@@ -127,6 +127,7 @@ test_610,KAF BB - My Media - Filter Media View Different Statuses,,,oleg.sigalov
 test_222,KAF BB - Adding media to Faculty Repository From My Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_114,KAF BB - Add Remove Featured Media Module,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_2088,KAF BB - Upload From Embed As Standalone,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2882,KAF Sharepoint Upload media from desktop,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,Kaltura1!
 test_676,Playlists - Add to playlist Entry already existing inside,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -248,3 +249,10 @@ test_4436,eSearch - Fields display in results - Search in entry page - Video,244
 test_4437,eSearch - Fields display in results - Search in entry page - Quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4438,eSearch - Fields display in results - Search in entry page - Polls - webcast - Quiz,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4439,eSearch - Fields display in results - Search in entry page - Captions,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4051,eSearch - Filter by Captions - with search - My Media,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4440,Filter by Captions - no search - My Media,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4441,Filter by Captions - Dependency with other filters - My Media,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4442,Filter by Captions - with search - Channel page - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4443,Filter by Captions - no search - Channel page - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4444,Filter by Captions - with search - Category page - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4445,Filter by Captions - no search - Category page - media tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
