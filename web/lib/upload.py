@@ -198,6 +198,10 @@ class Upload(Base):
                         return False
                      
                 # Click Save
+                if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                    self.click(self.UPLOAD_PAGE_TITLE)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)  
+                     
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
                     continue
