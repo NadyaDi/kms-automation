@@ -162,7 +162,8 @@ test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
 test_2869,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
-test_4458,1,0,0,0,KEA trim with slides
+test_4458,1,0,0,0,KEA trim entry with slides
+test_4465,1,0,0,0,KEA clip entry with slides
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
