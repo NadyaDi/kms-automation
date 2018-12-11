@@ -88,8 +88,8 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to set Future time-frame publishing to entry")
                 return
             
-            writeToLog("INFO","Step 5: Verify if the entry is presented inside the palylist from step #2 (Expected: should NOT be presented)")
-            if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName, isExpected=False) == False:
+            writeToLog("INFO","Step 5: Verify if the entry is presented inside the palylist from step #2 (Expected: should be presented according https://kaltura.atlassian.net/browse/PSVAMB-4991)")
+            if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName, isExpected=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED, Entry is  presented although it shouldn't")
                 return 
