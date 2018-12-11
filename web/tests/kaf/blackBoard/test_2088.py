@@ -62,10 +62,16 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to create embed item media from upload entry")
                 return
             
-            writeToLog("INFO","Step 2: Going to delete embed content from media gallery")  
+            writeToLog("INFO","Step 2: Going to verify embed media")  
+            if self.common.kafGeneric.verifyEmbedEntry(self.uploadThumbnailExpectedResult, '', mediaType=enums.MediaType.IMAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to verify embed media")
+                return               
+            
+            writeToLog("INFO","Step 3: Going to delete embed content from media gallery")  
             if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedUpload) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 3: FAILED to delete embed content from my media")
                 return                      
             
             #########################################################################

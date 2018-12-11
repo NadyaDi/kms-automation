@@ -198,7 +198,7 @@ class Upload(Base):
                         return False
                      
                 # Click Save
-                if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+                if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
                     continue
                 sleep(3)

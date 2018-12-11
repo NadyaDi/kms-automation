@@ -9,7 +9,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import ctypes
-
+from selenium.webdriver.common.keys import Keys
 
 class Test:
     #================================================================================================================================
@@ -54,7 +54,7 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             writeToLog("INFO","Step 1: Going to upload video entry")   
-            if self.common.upload.uploadEntry(self.filePathVideo,self.videoEntryName, self.description, self.tags) == False:
+            if self.common.upload.uploadEntry(self.filePathVideo, self.videoEntryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload video entry")
                 return
@@ -65,11 +65,20 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED navigate to edit entry page")
                 return
             
+            self.common.moodle.switchToMoodleIframe()
+            sleep(5)
+
             writeToLog("INFO","Step 3: Going to delete entry from edit entry page")    
             if self.common.editEntryPage.deleteEnteyFromEditEntryPage() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to delete entry from edit entry page")
-                return            
+                return    
+            
+            writeToLog("INFO","Step 4: Going to verify that entry '" + self.videoEntryName + "'  doesn't display in my media")
+            if self.common.myMedia.verifyNoResultAfterSearchInMyMedia(self.videoEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED entry '" + self.videoEntryName + "' still display in my media although it was deleted")
+                return          
          
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Moodle - Delete through edit entry page' was done successfully")
@@ -82,7 +91,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")  
-   
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.videoEntryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

@@ -88,10 +88,16 @@ class Test:
                 writeToLog("INFO","Step 5: FAILED to create embed kaltura media from media gallery")
                 return   
             
-            writeToLog("INFO","Step 6: Going to delete embed content from media gallery")  
+            writeToLog("INFO","Step 6: Going to create embed kaltura media from media gallery")  
+            if self.common.kafGeneric.verifyEmbedEntry('', '0:08')== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to create embed kaltura media from media gallery")
+                return              
+            
+            writeToLog("INFO","Step 7: Going to delete embed content from media gallery")  
             if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 7: FAILED to delete embed content from my media")
                 return                      
             
             #########################################################################
