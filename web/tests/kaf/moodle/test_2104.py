@@ -63,8 +63,13 @@ class Test:
             if self.common.myMedia.deleteSingleEntryFromMyMedia(self.videoEntryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to my media and delete entry")
+                
+            writeToLog("INFO","Step 3: Going to verify that entry '" + self.videoEntryName + "'  doesn't display in my media")
+            if self.common.myMedia.verifyNoResultAfterSearchInMyMedia(self.videoEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED entry '" + self.videoEntryName + "' still display in my media although it was deleted")
+                return 
 
-         
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Moodle - Delete through my media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
@@ -76,7 +81,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")  
-            
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.videoEntryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

@@ -80,10 +80,16 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to create embed entry from my media")
                 return
             
-            writeToLog("INFO","Step 5: Going to delete embed content from my media")  
+            writeToLog("INFO","Step 5: Going to verify embed media")  
+            if self.common.kafGeneric.verifyEmbedEntry('', self.delay) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to verify embed media")
+                return            
+            
+            writeToLog("INFO","Step 6: Going to delete embed content from my media")  
             if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMyMedia) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 6: FAILED to delete embed content from my media")
                 return                         
             
             #########################################################################

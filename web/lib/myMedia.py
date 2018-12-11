@@ -26,7 +26,8 @@ class MyMedia(Base):
     MY_MEDIA_NO_RESULTS_ALERT                                   = ('xpath', "//div[@id='myMedia_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_MEDIA_ENRTY_DELETE_BUTTON                                = ('xpath', '//*[@title = "Delete ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
     MY_MEDIA_ENRTY_EDIT_BUTTON                                  = ('xpath', '//*[@title = "Edit ENTRY_NAME"]')# When using this locator, replace 'ENTRY_NAME' string with your real entry name
-    MY_MEDIA_CONFIRM_ENTRY_DELETE                               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
+#    MY_MEDIA_CONFIRM_ENTRY_DELETE                               = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
+    MY_MEDIA_CONFIRM_ENTRY_DELETE                               = ('xpath', "//a[@data-handler='1' and text()='Delete']")
     MY_MEDIA_ENTRY_CHECKBOX                                     = ('xpath', '//*[@title = "ENTRY_NAME"]')
     MY_MEDIA_ACTIONS_BUTTON                                     = ('id', 'actionsDropDown')
     MY_MEDIA_ACTIONS_BUTTON_PUBLISH_BUTTON                      = ('id', 'Publish')

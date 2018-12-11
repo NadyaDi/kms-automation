@@ -83,12 +83,18 @@ class Test:
             if self.common.blackBoard.createEmbedAnnouncemnets(self.galleryName, self.entryName, self. itemNameEmbedSharedRepository, self.uploadThumbnailExpectedResult, mediaType=enums.MediaType.IMAGE)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create embed kaltura media from media gallery")
-                return   
+                return 
             
-            writeToLog("INFO","Step 6: Going to delete embed content from media gallery")  
+            writeToLog("INFO","Step 6: Going to verify embed media")  
+            if self.common.kafGeneric.verifyEmbedEntry(self.uploadThumbnailExpectedResult, '', mediaType=enums.MediaType.IMAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify embed media")
+                return               
+            
+            writeToLog("INFO","Step 7: Going to delete embed content from media gallery")  
             if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedSharedRepository, embedOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 7: FAILED to delete embed content from my media")
                 return                      
             
             #########################################################################

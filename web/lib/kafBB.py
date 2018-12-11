@@ -619,11 +619,6 @@ class BlackBoard(Base):
         successMsg = (self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[0], self.SUCCESS_CREATE_EMBED_MEDIA_MESSAGE[1].replace('ITEM_NAME', itemName))
         if self.is_visible(successMsg) == False:
             writeToLog("INFO","FAILED to display correct success message")
-            return False  
-        
-        # Verify that embed entry is displayed and that it plays correctly
-        if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime) == False:
-            writeToLog("INFO","FAILED to played and verify embedded entry")
             return False             
                     
         return True     
@@ -681,11 +676,7 @@ class BlackBoard(Base):
          
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
-            return False  
-        
-        if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime) == False:
-            writeToLog("INFO","FAILED to played and verify embedded entry")
-            return False             
+            return False              
                     
         return True      
     
