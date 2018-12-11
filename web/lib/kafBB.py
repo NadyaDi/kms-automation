@@ -63,6 +63,12 @@ class BlackBoard(Base):
     SUCCESS_DELETE_EMBED_ANNOUNCEMENTS_MESSAGE          = ('xpath', '//span[@id="goodMsg1" and text()="Success: ITEM_NAME Deleted."]')
     BB_ADD_MEDIA_TO_SR_BTN                              = ('xpath', '//a[@id="tab-addcontent"]')
     BB_ADD_NEW_MEDIA_TO_SR_BTN                          = ('xpath', '//a[@id="add-new-tab"]')
+    BB_MY_INSTITUTION_BUTTON_IN_NAV_BAR                 = ('xpath', "//span[contains(text(), 'My Institution')]")
+    BB_MY_MEDIA_BUTTON_IN_MY_INSTITUTION_PAGE           = ('xpath', "//a[contains(text(), 'My Media')]")
+    BB_COURSES_BUTTON_IN_NAV_BAR                        = ('xpath', "//span[contains(text(), 'Courses')]")
+    BB_COURSE_NEW1_BUTTON_IN_COURSES_PAGE               = ('xpath', "//a[contains(text(), 'New1: New1')]")
+    BB_TOOLS_OPTION_UNDER_TOOLS_MENU_IN_COURSE_PAGE     = ('xpath', "//span[@title= 'Tools' and contains(text(), 'Tools')]")
+    BB_MEDIA_GALLEY_OPTION_IN_TOOLS_PAGE                = ('xpath', "//a[contains(text(), 'Media Gallery')]")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
