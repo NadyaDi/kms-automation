@@ -199,7 +199,7 @@ class EntryPage(Base):
                 return False  
             
             tmpEntryName = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
-            if self.wait_visible(tmpEntryName, 15) == False:
+            if self.wait_element(tmpEntryName, 15) == False:
                 writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
                 return False
             
@@ -219,7 +219,7 @@ class EntryPage(Base):
                 return False  
             
             tmpEntryName = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
-            if self.wait_visible(tmpEntryName, 15) == False:
+            if self.wait_element(tmpEntryName, 15) == False:
                 writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
                 return False
             
