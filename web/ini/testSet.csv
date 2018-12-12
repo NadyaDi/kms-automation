@@ -164,6 +164,7 @@ test_2869,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
 test_4458,1,0,0,0,KEA trim entry with slides
 test_4465,1,0,0,0,KEA clip entry with slides
+test_4482,1,0,0,0,KEA trim Quiz entry
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
