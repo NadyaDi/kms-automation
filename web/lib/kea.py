@@ -21,7 +21,7 @@ class Kea(Base):
     #=============================================================================================================
     #Upload locators:
     #=============================================================================================================
-    KEA_ADD_NEW_QUESTION_BUTTON                   = ('xpath', "//button[@class='question-type-button question-types-icon multiple-options-question-type active ng-star-inserted']")  
+    KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON          = ('xpath', "//button[contains(@class,'question-type-button question-types-icon multiple-options-question-type')]")
     KEA_SELECT_VIDEO_FOR_EDIT                     = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
     KEA_LAUNCH                                    = ('xpath', "//i[@class='icon-editor']")
     KEA_APP_DISPLAY                               = ('id', 'kea-anchor')
@@ -120,7 +120,7 @@ class Kea(Base):
         self.switchToKeaIframe()    
            
         # Click add new question button
-        if self.click(self.KEA_ADD_NEW_QUESTION_BUTTON) == False:
+        if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
             writeToLog("INFO","FAILED to click add question button")
             return False 
  
@@ -529,3 +529,53 @@ class Kea(Base):
         writeToLog("INFO","FAILED,  Entry: " + entryName +", was clipped, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
         return False
 
+    # NOT FINISHED:
+    def quizCreation(self, entryName, dictQuestions): #TBD: dictDetails, dictScores, dictExperience
+        sleep(30)
+        self.searchAndSelectEntryInMediaSelection(entryName)
+        sleep(10) 
+                   
+        for questionNumber in dictQuestions:
+            questionDetails = dictQuestions[questionNumber]
+            
+            self.switchToKeaIframe() 
+                    
+            timestamp = questionDetails[0]
+            if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
+                writeToLog("INFO","FAILED to insert the time-stamp of question # " + questionNumber)
+                return False
+            
+            qestionType = questionDetails[1]
+            if qestionType == enums.QuizQuestionType.Multiple:
+                
+                # Click on add new multiple option question type button
+                if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
+                        writeToLog("INFO","FAILED to click on add new multiple option question type button")
+                        return False                 
+         
+                # Add question fields
+                QuizQuestion1AdditionalAnswers = [questionDetails[4], questionDetails[5], questionDetails[6]]
+                if self.fillQuizFields(questionDetails[2], questionDetails[3], QuizQuestion1AdditionalAnswers) == False:
+                    writeToLog("INFO","FAILED to fill question fields")
+                    return False 
+                 
+                # Save Question
+                if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
+                    writeToLog("INFO","FAILED to Save question")
+                    return False  
+                 
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+                    writeToLog("INFO","FAILED to wait until spinner isn't visible")
+                    return False 
+                sleep(2)
+                
+            elif qestionType == enums.QuizQuestionType.REFLECTION:
+                    return False
+            else:
+                    return False
+                
+        self.switchToKeaIframe() 
+        self.clickDone()
+                        
+        
+        

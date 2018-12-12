@@ -27,6 +27,14 @@ class ChannelPrivacyType(Enum):
     PUBLIC              = "public"
     UNLISTED            = "Unlisted"
     
+class QuizQuestionType(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    Multiple            = 'Multiple Choice'       
+    TRUEANDFALSE        = "True/False"
+    REFLECTION          = "Reflection Point"
+    
     
 class DisclaimerDisplayArea(Enum):
     def __str__(self):

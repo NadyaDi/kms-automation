@@ -13,9 +13,9 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Tzachi Guetta
-    # Test Name : Trimming a entry
+    # Test Name : Trimming a  Quiz entry
     # Test description:
-    # Trimming an entry and then checking the entry's QR codes - in order to verify that the missing part is no longer presented
+    # 
     #================================================================================================================================
     testNum = "2869"
     
