@@ -80,11 +80,11 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to verify channel pending tab entries  by '" + enums.Captions.ALL.value + "'")
                 return
             
-            writeToLog("INFO","Step 4: Going to close down the filters drop down menu") 
-            if self.common.base.click(self.common.channel.MODERATION_CHANNELS_FILTER_BUTTON, 20) == False:
-                writeToLog("INFO","Step 4: FAILED to close the filters drop down menu")
+            writeToLog("INFO", "STEP 4: Going to clear the filter search menu")
+            if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
-                return False       
+                writeToLog("INFO", "STEP 4: Failed to clear the search menu")
+                return     
                 
             writeToLog("INFO","Step 5: Going to filter channel pending tab entries by: " + enums.Captions.AVAILABLE.value) 
             if self.common.isElasticSearchOnPage() == True:
@@ -99,35 +99,23 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to verify channel pending tab entries  by '" + enums.Captions.AVAILABLE.value + "'")
                 return
             
-            writeToLog("INFO","Step 7: Going to clear all the search filters") 
-            if self.common.base.click(self.common.channel.MODERATION_CHANNELS_FILTER_CLEAR_ALL_BUTTON, 20) == False:
-                writeToLog("INFO","Step 7: FAILED to clear all the search filters")
+            writeToLog("INFO", "STEP 7: Going to clear the filter search menu")
+            if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
-                return False 
-            
-            writeToLog("INFO", "Step 8: Going to wait for the filter changes")
-            if self.common.general.waitForLoaderToDisappear() == False:
-                writeToLog("INFO", "Step 8: FAILED to clear the filter changes")
-                self.status = "Fail"
-                return
-             
-            writeToLog("INFO","Step 9: Going to close down the filters drop down menu") 
-            if self.common.base.click(self.common.channel.MODERATION_CHANNELS_FILTER_BUTTON, 20) == False:
-                writeToLog("INFO","Step 9: FAILED to close the filters drop down menu")
-                self.status = "Fail"
+                writeToLog("INFO", "STEP 7: Failed to clear the search menu")
                 return
 
-            writeToLog("INFO","Step 10: Going to filter channel pending tab entries by: " + enums.Captions.NOT_AVAILABLE.value) 
+            writeToLog("INFO","Step 8: Going to filter channel pending tab entries by: " + enums.Captions.NOT_AVAILABLE.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.CAPTIONS, enums.Captions.NOT_AVAILABLE) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 10: FAILED to filter channel pending tab entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
+                    writeToLog("INFO","Step 8: FAILED to filter channel pending tab entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
                     return
                 
-            writeToLog("INFO","Step 11: Going to verify channel pending tab entries filter by: " + enums.Captions.NOT_AVAILABLE.value)  
+            writeToLog("INFO","Step 9: Going to verify channel pending tab entries filter by: " + enums.Captions.NOT_AVAILABLE.value)  
             if self.common.channel.verifyFiltersInPendingTab(self.filterByNotAvailable) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify channel pending tab entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
+                writeToLog("INFO","Step 9: FAILED to verify channel pending tab entries  by '" + enums.Captions.NOT_AVAILABLE.value + "'")
                 return      
             ##################################################################
             writeToLog("INFO","TEST PASSED: All the entries are properly displayed in channel pending tab while using no search term")

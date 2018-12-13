@@ -74,8 +74,6 @@ class Category(Base):
     CATEGORY_GALLEY_ALL_MEDIA_TABLE                             = ('xpath', "//div[@id='galleryGrid']")
     CATEGORY_ADD_TO_CATEGORY_BUTTON                             = ('xpath', "//a[@id='tab-addcontent']")
     CATEGORY_MODERATION_TAB                                     = ('xpath', "//a[@id='categorymoderation-tab']")
-    CATEGORY_PENDING_TAB_FILTER_BUTTON                          = ('xpath', "//div[@id='gallery-pending-eSearchForm']//div[contains(@class,'filterBar__filters')]//button[contains(@class,'')]")
-    CATEGORY_PENDING_TAB_FILTER_CLEAR_ALL_BUTTON                = ('xpath', "//div[@id='gallery-pending-eSearchForm']//div[contains(@class,'SearchFormWrapper')]//div[contains(@class,'filterBar')]//div//a[contains(@class,'filters__clear-all')][contains(text(),'Clear All')]")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:

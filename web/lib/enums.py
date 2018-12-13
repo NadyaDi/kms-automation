@@ -182,6 +182,26 @@ class Captions(Enum):
     AVAILABLE               = "Available"      
     NOT_AVAILABLE           = "Not Available"  
     
+class Duration(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    ANY_DURATION             = "Any Duration"  
+    TEN_MINUTES              = "00:00-10:00 min"      
+    THIRTY_MINUTES           = "10:00-30:00 min"
+    SIXTY_MINUTES            = "30:00-60:00 min"      
+    CUSTOM                   = "Custom"
+    
+    
+class Creation(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    ANY_DATE          = "Any Date"  
+    LAST_SEVEN        = "Last 7 days"      
+    LAST_THIRTY       = "Last 30 days"
+    CUSTOM            = "Custom"      
+    
     
 class SortAndFilter(Enum):
     def __str__(self):
@@ -193,6 +213,8 @@ class SortAndFilter(Enum):
     COLLABORATION             = "Collaboration"
     SCHEDULING                = 'Scheduling'
     CAPTIONS                  = 'Captions'
+    DURATION                  = 'Duration'
+    CREATION_DATE             = 'Creation Date'
     
 
 class KeaQuizButtons(Enum):

@@ -7,31 +7,29 @@ import clsTestService
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
-import enums 
+import enums
 
 
 class Test:
-    
+
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Filter by Captions - Dependency with other filters - My Media
+    # Test Name : Filter by Duration - Dependency with other filters - My Media 
     # Test description:
-    # Verify that the caption filters are available when proper media type is selected
+    # Verify that the Duration filter can be used only when specific media types are selected
     #================================================================================================================================
-    testNum = "4441"
-    
+    testNum = "4463"
+
     supported_platforms = clsTestService.updatePlatforms(testNum)
-    
+
     status = "Pass"
     timeout_accured = "False"
     driver = None
     common = None
-    userName = "admin"
-    userPass = "123456"
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
         return request.param
-    
+
     def test_01(self,driverFix,env):
 
         #write to log we started the test
@@ -42,22 +40,24 @@ class Test:
             self.startTime = time.time()
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
-            self.common = Common(self.driver) 
-            ##################### TEST STEPS - MAIN FLOW #####################
+            self.common = Common(self.driver)
+
+            self.search = "Filter by caption"
+            self.sRChannel = "SR-Channel for eSearch"
+            self.gallery = "category for eSearch moderator"
+
+            # Entries and dictionaries            
             entryName1 = enums.MediaType.QUIZ
             entryName2 = enums.MediaType.AUDIO
             entryName3 = enums.MediaType.VIDEO
             entryName4 = enums.MediaType.IMAGE
             entryName5 = enums.MediaType.WEBCAST_EVENTS
-            entryName1Value = enums.MediaType.QUIZ.value
-            entryName2Value = enums.MediaType.AUDIO.value
-            entryName3Value = enums.MediaType.VIDEO.value
-            entryName4Value = enums.MediaType.IMAGE.value
-            entryName5Value = enums.MediaType.WEBCAST_EVENTS.value     
-            entriesWithCaptions = {entryName1:entryName1Value, entryName2:entryName2Value, entryName3:entryName3Value, entryName5:entryName5Value}
-            entrieWithoutCaptions = {entryName4:entryName4Value}
-            checkBoxLabelValue = "Not Available undefined"
-               
+                 
+            entryListWithFilters = [entryName1, entryName2, entryName3, entryName5]
+            entryListWithoutFilters = [entryName4]
+            checkBoxLabelValue = "00:00-10:00 min undefined"
+
+            ##################### TEST STEPS - MAIN FLOW #####################            
             writeToLog("INFO","Step 1: Going to navigate to my media page")
             if self.common.myMedia.navigateToMyMedia(forceNavigate=True) == False:
                 self.status = "Fail"
@@ -65,40 +65,40 @@ class Test:
                 return
             
             i = 0
-            for entry in entriesWithCaptions:
+            for entry in entryListWithFilters:
                 i = i + 1
                 writeToLog("INFO","Step: " + str(i + 1) + ": Going to verify that specific media types have filter option enabled") 
-                if self.common.myMedia.verifyFilterCheckBox(entry,checkBoxLabelValue, status=True) == False:
+                if self.common.myMedia.verifyFilterCheckBox(entry, checkBoxLabelValue, status=True) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step: " + str(i + 1) + " FAILED, the specific media type has filter option disabled")
                     return
                 i = i
                 
-            i = i 
-            for entry in entrieWithoutCaptions:
+            i = 0 
+            for entry in entryListWithoutFilters:
                 i = i + 1
                 writeToLog("INFO","Step: " + str(i + 1) + ": Going to verify that filter option for the specific media type is disabled") 
-                if self.common.myMedia.verifyFilterCheckBox(entry,checkBoxLabelValue, status=False) == False:
+                if self.common.myMedia.verifyFilterCheckBox(entry, checkBoxLabelValue, status=False) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step: " + str(i + 1) + " FAILED, the specific media type has filter enabled")
-                    return  
+                    return        
             ##################################################################
-            writeToLog("INFO","TEST PASSED: All the entries are properly displayed while using caption filters without a search term")
-        # if an exception happened we need to handle it and fail the test       
+            writeToLog("INFO","TEST PASSED: All the media types have proper filters when selected")
+        # if an exception happened we need to handle it and fail the test
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
-            
-    ########################### TEST TEARDOWN ###########################    
+
+    ########################### TEST TEARDOWN ###########################
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************") 
-            writeToLog("INFO","**************** Ended: teardown_method *******************")            
+            writeToLog("INFO","**************** Starting: teardown_method ****************")
+            writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
-            pass            
+            pass
         clsTestService.basicTearDown(self)
         #write to log we finished the test
         logFinishedTest(self,self.startTime)
-        assert (self.status == "Pass")    
+        assert (self.status == "Pass")
 
     pytest.main('test_' + testNum  + '.py --tb=line')
