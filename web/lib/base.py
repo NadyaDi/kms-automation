@@ -432,12 +432,12 @@ class Base:
     def click(self, locator, timeout=10, multipleElements=False):
         try:
             if multipleElements == True:
-                el = self.wait_visible(locator, timeout, multipleElements=True)
+                el = self.wait_element(locator, timeout, multipleElements=True)
                 if el != False:
                     el.click()
                     return True
                 return False
-            element = self.wait_visible(locator, timeout)
+            element = self.wait_element(locator, timeout)
             if element == False:
                 return False
             else:

@@ -188,7 +188,7 @@ class Upload(Base):
                  
                 if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
                     self.get_body_element().send_keys(Keys.TAB) 
-                    self.get_body_element().send_keys(Keys.PAGE_DOWN)  
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
                  
                 if verifyModerationWarning == True:
                     self.click(self.UPLOAD_PAGE_TITLE)
@@ -201,7 +201,8 @@ class Upload(Base):
                 if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
-                     
+                    sleep(3)
+                    
                 if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
                     writeToLog("DEBUG","FAILED to click on 'Save' button")
                     continue
@@ -209,6 +210,7 @@ class Upload(Base):
                  
                 # Wait for loader to disappear
                 self.clsCommon.general.waitForLoaderToDisappear()
+                sleep(3)
                  
                 # Wait for 'Your changes have been saved.' message
                 if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False:                
