@@ -40,8 +40,8 @@ class BlackBoard(Base):
     COURSE_MODULE_NAME                                  = ('xpath','//span[@class="moduleTitle" and text()="MODULE_NAME"]')   
     BB_MEDIA_GALLERY_ENTRY_NAME                         = ('xpath', '//a[@class="item_link" and text()="ENTRY_NAME"]')  
     FEATURED_MEDIA_ICON                                 = ('xpath', '//a[@id="featured_ENTRY_NAME"]')   
-    DETAILED_VIEW                                       = ('xpath', '//i[@class="icon-th-list"]') 
-    FEATURED_MEDIA_ENTRY                                = ('xpath', '//img[@class="playerPoster fill-width" and @alt="Video thumbnail for ENTRY_NAME"]')
+    DETAILED_VIEW                                       = ('xpath', '//i[@class="icon-th-list"]')
+    FEATURED_MEDIA_ENTRY                                = ('xpath', '//div[@class="hfm-carousel-item js-hfm-carousel-item slick-slide slick-current slick-active slick-center"]')
     BB_CONTENT_PAGE_MENU                                = ('xpath', '//a[contains(@id, "Menu_actionButton") and contains(text(),"MENU_NAME")]')
     BB_CONTENT_PAGE_MENU_OPTION                         = ('xpath', '//a[contains(@id, "content-handler") and text()="MENU_OPTION"]')
     CONTENT_TYPE_TITLE                                  = ('xpath', '//span[@id="pageTitleText" and contains(text(), "CONTENT_TYPE")]')
@@ -287,24 +287,28 @@ class BlackBoard(Base):
         self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON)
         sleep(6)
         
-        if self.click(self.DETAILED_VIEW) == False:
+        if self.click(self.DETAILED_VIEW, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on detailed view button")
-            return False  
+            return False
+        sleep(2)
         
         # Get entry element 
         tmp_entry = (self.BB_MEDIA_GALLERY_ENTRY_NAME[0], self.BB_MEDIA_GALLERY_ENTRY_NAME[1].replace('ENTRY_NAME', entryName))      
-        entry_element = self.wait_visible(tmp_entry)
-        
+        entry_element = self.wait_element(tmp_entry)
+        if entry_element == False:
+            writeToLog("INFO","FAILED to get BB_MEDIA_GALLERY_ENTRY_NAME element")
+            return False
+             
         # Get entry id      
         tmp_entry_id = entry_element.get_attribute("href").split("/")
-        entry_id= tmp_entry_id[5]
+        entry_id = tmp_entry_id[5]
         
         featuredMediaIcon = (self.FEATURED_MEDIA_ICON[0], self.FEATURED_MEDIA_ICON[1].replace('ENTRY_NAME', entry_id))
         if self.hover_on_element(featuredMediaIcon) == False:
             writeToLog("INFO","FAILED to hover on featured media button")
             return False  
                 
-        if self.click(featuredMediaIcon) == False:
+        if self.click(featuredMediaIcon, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on featured media button")
             return False  
         
@@ -492,7 +496,7 @@ class BlackBoard(Base):
             return False 
         
         return True
-        
+    
     
     # @Author: Inbar Willman
     # Verify that featured entry is displayed under featured media section   
@@ -503,23 +507,45 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to navigate to course: " + galleryName + " home page")   
             return False  
         
-        self.clsCommon.player.switchToPlayerIframe(False)
+        # We don't use 'self.clsCommon.player.switchToPlayerIframe(False)' method because it's different player iframe locator.
+        # Because we have only one iframe on the page, we can locate the iframe by 'tag_name'
+        if self.swith_to_iframe(('tag_name','iframe')) == False:
+            writeToLog("INFO","FAILED to switch to featured media player iframe")   
+            return False
+        else:
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
         
-        # Verify that entry is displayed in featured media section
-        tmp_featured_media_entry =  (self.FEATURED_MEDIA_ENTRY[0], self.FEATURED_MEDIA_ENTRY[1].replace('ENTRY_NAME', entryName)) 
+        # Verify that entry is displayed or not displayed in featured media section
         if shouldBeDisplayed == False:
-            if self.wait_visible(tmp_featured_media_entry, timeout=3) != False:
-                writeToLog("INFO","FAILED: Entry shouldn't be displayed in featured media")   
-                return False 
+            carouselItemEl = self.wait_element(self.FEATURED_MEDIA_ENTRY, timeout=3)
+            if carouselItemEl != False:
+                if entryName in carouselItemEl.text:
+                    writeToLog("INFO","FAILED: Entry shouldn't be displayed " + entryName + " in featured media")
+                    return False                 
+                else:
+                    writeToLog("INFO","Success: Entry isn't displayed in featured media")
+                    return True 
             else:
-                writeToLog("INFO","Success: Entry isn't displayed in featured media")
-                return True  
+                if not entryName in carouselItemEl.text:
+                    writeToLog("INFO","Success: Entry isn't displayed in featured media")
+                    return True 
+                else:
+                    writeToLog("INFO","FAILED: Entry shouldn't be displayed " + entryName + " in featured media")   
+                    return False                      
             
         # shouldBeDisplayed == True     
         else:        
-            if self.wait_visible(tmp_featured_media_entry) == False:
-                writeToLog("INFO","FAILED to display" + entryName + " in course featured media")   
-                return False 
+            carouselItemEl = self.wait_element(self.FEATURED_MEDIA_ENTRY, timeout=3)
+            if carouselItemEl == False:
+                writeToLog("INFO","FAILED to display " + entryName + " in course featured media")   
+                return False
+            else:
+                if entryName in carouselItemEl.text:
+                    writeToLog("INFO","Success: Entry is displayed in featured media")
+                    return True 
+                else:
+                    writeToLog("INFO","FAILED to display " + entryName + " in course featured media")   
+                    return False                  
         
             self.clsCommon.sendKeysToBodyElement(Keys.END)
         
@@ -530,7 +556,7 @@ class BlackBoard(Base):
                 writeToLog("INFO","FAILED to play and verify entry")
                 return False
         
-        return True    
+        return True     
     
     
     # @Author: Inbar Willman
