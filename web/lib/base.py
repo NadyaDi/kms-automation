@@ -218,10 +218,7 @@ class Base:
                 for el in elements:
                     if el.size['width']!=0 and el.size['height']!=0:
                         if el.is_displayed() == True:
-                            return True
-                        
-                            return False
-            
+                            return True            
             else:
                 if self.get_element(locator).is_displayed() == True:
                     return True

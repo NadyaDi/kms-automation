@@ -6,6 +6,7 @@ from editEntryPage import EditEntryPage
 import enums
 from selenium.webdriver.common.keys import Keys
 import re
+from selenium.webdriver.common import action_chains
 
 
 
@@ -106,8 +107,13 @@ class MyMedia(Base):
     ENTRY_DETAILS_COMMENTS_ICON                                 = ('xpath', '//i[@class="entryStatistics__stat__icon icon-comment"]')
     ENTRY_DETAILS_HEART_ICON                                    = ('xpath', '//i[@class="entryStatistics__stat__icon icon-heart"]')
     ENTRY_DETAILS_EYE_ICON                                      = ('xpath', '//i[@class="entryStatistics__stat__icon icon-eye-open"]')
-    FILTERS_CLEAR_ALL_BUTTON                                    = ('xpath', "//a[@class='filters__clear-all']")
     CAPTION_FILTER_INACTIVE                                     = ('xpath', '//a[@aria-checked="false" and  @aria-label="DROPDOWNLIST_ITEM"]')
+    FILTER_BUTTON_DROPDOWN_MENU                                 = ('xpath', "//div[contains(@class,'filterBar__filters')]//button[contains(@class,'')]")
+    FILTER_CLEAR_ALL_BUTTON                                     = ('xpath', "//div//a[contains(@class,'filters__clear-all')][contains(text(),'Clear All')]")    
+    FILTER_CHECKBOX_INACTIVE                                    = ('xpath', '//a[@aria-checked="false" and  @aria-label="DROPDOWNLIST_ITEM"]')
+    FILTER_NEXT_ARROW                                           = ('xpath', "//button[@class='search-filters__arrow search-filters__arrow--next']")
+    FILTER_PREVIOUS_ARROW                                       = ('xpath', "//button[contains(@class,'search-filters__arrow search-filters__arrow--previous')]")
+    FILTER_CUSTOM_DURATION                                      = ('xpath', "//div[@class='input-range__slider' and @aria-valuenow='VALUE_TO_REPLACE']")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -669,10 +675,23 @@ class MyMedia(Base):
                     return False
                 sleep(2)
                 
-                tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value)) 
-                if self.click(tmpEntry, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
-                    return False
+                if dropDownListItem == enums.SortAndFilter.DURATION or enums.SortAndFilter.CREATION_DATE:
+                    tmpLocator = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
+                    if self.is_visible(tmpLocator, multipleElements=True) != True:
+                        if self.click(self.FILTER_NEXT_ARROW, multipleElements=True) != False:
+                            if self.click(tmpLocator, multipleElements=True) == False:
+                                writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
+                                return False                          
+                    else:
+                        if self.click(tmpLocator, multipleElements=True) == False:
+                            writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
+                            return False
+                                        
+                else:                
+                    tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value)) 
+                    if self.click(tmpEntry, multipleElements=True) == False:
+                        writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
+                        return False
                 
         else:
             if dropDownListName == enums.SortAndFilter.SORT_BY:
@@ -778,7 +797,7 @@ class MyMedia(Base):
         return False
 
         # Author: Tzachi Guetta 
-    def getTop(self, entryName, location):
+    def getTop(self, entryName, location=enums.Location.MY_MEDIA):
         try: 
             if location == enums.Location.MY_MEDIA:
                 tmpEntry = self.replaceInLocator(self.clsCommon.myMedia.MY_MEDIA_ENTRY_TOP, "ENTRY_NAME", entryName)
@@ -2023,7 +2042,6 @@ class MyMedia(Base):
         return True
     
     
-    
     # @Author: Inbar Willman
     # Verify that when there is one matching field, after clicking 'show all' just the matching field values are displayed
     def verifyIconsDisplay(self, fieldName):
@@ -2035,4 +2053,113 @@ class MyMedia(Base):
                     writeToLog("INFO", "FAILED: Non matching fields are displayed after clicking show All")            
                     return False 
                 
+        return True
+    
+    
+    # @Author: Horia Cus
+    # Verify that the specific filter option is available on the first or second screen, only when the right media type is selected
+    # If status=True, the checkbox is enabled
+    # If status=False, the checkbox is disabled
+    def verifyFilterCheckBox(self, mediaType, checkBoxLabelValue, status=True):
+        if self.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, mediaType) == False:
+                writeToLog("INFO","FAILED to filter my media entries")
+                return False    
+        
+        tmpEntry = (self.FILTER_CHECKBOX_INACTIVE[0], self.FILTER_CHECKBOX_INACTIVE[1].replace('DROPDOWNLIST_ITEM', checkBoxLabelValue))
+        if self.is_visible(tmpEntry, multipleElements=True) != True:
+            if self.click(self.FILTER_NEXT_ARROW, multipleElements=True) == False:
+                writeToLog("INFO", "Failed to enter on the second page ")
+                return False
+            
+            if self.click(tmpEntry, timeout=3) == False:
+                self.status = "Fail"
+                writeToLog("INFO","FAILED to identify captions filters")
+                return False
+            
+            if status == True:
+                if self.wait_visible(tmpEntry, timeout=3) != False:
+                    writeToLog("INFO","FAILED, the caption filter option is disabled")
+                    return False
+            else:
+                if self.wait_visible(tmpEntry, timeout=3) == False:
+                    writeToLog("INFO","FAILED, the caption filter option is enabled")
+                    return False
+              
+            if self.click(self.FILTER_CLEAR_ALL_BUTTON, 20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to clear all the search filters")
+                return False
+            
+            if self.click(self.FILTER_PREVIOUS_ARROW) == False:
+                writeToLog("INFO", "Failed to enter on the second page ")
+                return False
+    
+            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to close the filters drop down menu")
+                return False
+        else:
+            if self.click(tmpEntry, timeout=3) == False:
+                self.status = "Fail"
+                writeToLog("INFO","FAILED to identify captions filters")
+                return False
+    
+            if status == True:
+                if self.wait_visible(tmpEntry, timeout=3) != False:
+                    writeToLog("INFO","FAILED, the caption filter option is disabled")
+                    return False
+            else:
+                if self.wait_visible(tmpEntry, timeout=3) == False:
+                    writeToLog("INFO","FAILED, the caption filter option is enabled")
+                    return False
+              
+            if self.click(self.FILTER_CLEAR_ALL_BUTTON, 20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to clear all the search filters")
+                return False
+
+            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to close the filters drop down menu")
+                return False  
+                    
+        return True
+    
+    
+    # @Author: Horia Cus
+    # The function clears all the filter option while the filter menu is opened and then closes it
+    def filterClearAllWhenOpened(self):
+        if self.click(self.FILTER_CLEAR_ALL_BUTTON, 20, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to clear all the search filters")
+            return False
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "FAILED to process the clear all request")
+            return False
+           
+        if self.click(self.FILTER_BUTTON_DROPDOWN_MENU, 20, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to close the filters drop down menu")
+            return False       
+                
+        return True 
+    
+    
+    # @Author: Horia Cus
+    # The function selects a specific element and moves it by width
+    def filterCustomDuration(self, size, value='0'):
+        tmpLocator = (self.FILTER_CUSTOM_DURATION[0], self.FILTER_CUSTOM_DURATION[1].replace('VALUE_TO_REPLACE', value))
+        
+        elementToBeMoved = self.wait_element(tmpLocator, multipleElements=True)
+        if elementToBeMoved == False:
+            writeToLog("INFO", "Failed to get " + tmpLocator[1] + "'")
+            return False
+        
+        action = ActionChains(self.driver)
+        
+        try:
+            action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(1*size, 0).release().perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to move the specific element")
+            return False   
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "FAILED to save the filter changes")
+            return False
+                 
         return True
