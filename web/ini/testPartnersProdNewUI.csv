@@ -6,9 +6,13 @@ test_2105,Moodle - Delete through edit entry page,,,pythonautomation1@mailinator
 test_2106,Moodle - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2114,Moodle -Search Media (by entry name),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2115,Moodle -Search Media (by entry tag),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2107,Moodle - Publish from my media (single and multiple),,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2108,Moodle - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2111,Moodle - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2127,Moodle - Embed media in site blogs from my media,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_109,KAF BB - Embed Media As Standalone From Kaltura media,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
-test_113,KAF BB - Embed Media From SR - Add New Announcements,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_109,KAF BB - Embed Media As Standalone From Kaltura media,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!,,
+test_113,KAF BB - Embed Media From SR - Add New Announcements,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!,,
 test_604,KAF BB - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_589,KAF BB - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_590,KAF BB - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
@@ -28,7 +32,7 @@ test_4225,KAF BB - Remove Media From Media Gallery,,,pythonautomation1@mailinato
 test_610,KAF BB - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,kstudent,123456
 test_111,KAF BB - Enable / Disable faculty repository,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_222,KAF BB - Adding media to Faculty Repository From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_1648,KAF BB - Upload new media to Faculty Repository and then publish entries to course,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_1648,KAF BB - Upload new media to Faculty Repository and then publish entries to course,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!,,
 test_114,KAF BB - Add Remove Featured Media Module,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB -upload media from media gallery page,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
