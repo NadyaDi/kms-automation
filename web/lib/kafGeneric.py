@@ -28,6 +28,7 @@ class KafGeneric(Base):
     KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[contains(@aria-label, "ENTRY_NAME") and text()="Select"]')
     KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE    = ('xpath', "//a[@data-original-title='Media Gallery']")
     KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
+    KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -257,15 +258,14 @@ class KafGeneric(Base):
         if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None, verifyModerationWarning=isGalleryModerate) == None:
             writeToLog("INFO","FAILED to upload media from gallery page: " + uploadEntry.name)
             return False
-        sleep(3)
+        sleep(5)
         
         # Click 'Go To media gallery'
         if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on 'Go To gallery'")
             return False
-        
+        sleep(5)
         return True
-    
     
     def handlePendingEntriesIngallery(self, galleryName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
         if navigate == True:
@@ -397,20 +397,51 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Verify embed entry (video/image) in page
-    def verifyEmbedEntry(self, imageThumbnail='', delay='', mediaType=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD): 
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', mediaType=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD): 
         if application == enums.Application.BLACK_BOARD:
             self.refresh()
-            self.clsCommon.blackBoard.switchToBlackboardIframe()
+            self.clsCommon.base.switch_to_default_content()
+            
+            tmpEmbedTitle= (self.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[0], self.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[1].replace('EMBED_TITLE', embedTitle))
+            try:
+                embedNameElment = self.get_element(tmpEmbedTitle) 
+                embedContainer = embedNameElment.find_element_by_xpath("../../..")
+                
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find embed container")
+                return False
+            
+            parentId = embedContainer.get_attribute("id")
+            if parentId == "":
+                writeToLog("INFO","FAILED to get id attribute from embed container")
+                return False 
+                
+            parentId = parentId.split(":")
+            iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + parentId[1] + "')]"))
+            
+            if iframeElment == False:
+                writeToLog("INFO","FAILED to get player iframe")
+                return False 
+             
+            try:    
+                self.driver.switch_to.frame(iframeElment)
+            except Exception:
+                writeToLog("INFO","FAILED to switch to player iframe")
+                return False
+            
             # If we are in blackboard need to click on play icon in order to get the player
             if self.click(self.clsCommon.blackBoard.EMBED_ENTRY_PLAY_ICON) == False:
                 writeToLog("INFO","FAILED to click on play icon")
                 return False 
              
-            sleep(8)
+            sleep(10)
             if delay != '':
-                self.clsCommon.blackBoard.switchToBlackboardIframe()
-                self.clsCommon.player.switchToPlayerIframe()
-                               
+                self.switch_to_default_content()
+                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/content/') and contains(@src, 'content_id=" + parentId[1] + "')]"))
+                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + parentId[1] + "')]"))
+                self.driver.switch_to.frame(self.wait_element(self.clsCommon.player.PLAYER_IFRAME, 60))
+                localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
+                
                 if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
                     writeToLog("INFO","FAILED to play and verify video")
                     False                

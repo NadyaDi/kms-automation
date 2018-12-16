@@ -61,19 +61,19 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-            
+             
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-            
+             
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-
+ 
             writeToLog("INFO","Step 4: Going to create embed entry from my media")  
             if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedMyMedia, '', self.delay) == False:
                 self.status = "Fail"
@@ -81,7 +81,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 5: Going to verify embed media")  
-            if self.common.kafGeneric.verifyEmbedEntry('', self.delay) == False:
+            if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedMyMedia, '', self.delay) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify embed media")
                 return            

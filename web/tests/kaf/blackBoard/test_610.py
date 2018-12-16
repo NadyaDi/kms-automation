@@ -338,6 +338,7 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
+            writeToLog("INFO","**************** Starting: teardown_method ****************")
             if self.common.login.getLoginUserName() != localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN :
                 self.common.base.switch_to_default_content()
                 self.common.blackBoard.logOutOfBlackBoard()

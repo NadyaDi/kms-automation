@@ -319,16 +319,19 @@ class BlackBoard(Base):
     
     # Author: Michal Zomper
     def navigateToSharedRepositoryInBB(self):
+        self.switchToBlackboardIframe()
         tmpGalleryTitle = (self.clsCommon.channel.CHANNEL_PAGE_TITLE[0], self.clsCommon.channel.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', "Shared Repository"))
-        if self.wait_visible(tmpGalleryTitle, 5) == True:
+        if self.wait_element(tmpGalleryTitle, 5) == True:
             writeToLog("INFO","Success Already in Shared Repository page")
             return False
         
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_SHARED_REPOSITORY_URL) == False:
                 writeToLog("INFO","FAILED navigate to Shared Repository page")
                 return False
+        sleep(5)
         
-        if self.wait_visible(tmpGalleryTitle, 15) == True:
+        self.switchToBlackboardIframe()
+        if self.wait_element(tmpGalleryTitle, 15) == False:
             writeToLog("INFO","FAILED navigate to Shared Repository page")
             return False
         

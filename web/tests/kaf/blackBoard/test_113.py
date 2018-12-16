@@ -86,7 +86,7 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 6: Going to verify embed media")  
-            if self.common.kafGeneric.verifyEmbedEntry(self.uploadThumbnailExpectedResult, '', mediaType=enums.MediaType.IMAGE) == False:
+            if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedSharedRepository, self.uploadThumbnailExpectedResult, '', mediaType=enums.MediaType.IMAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify embed media")
                 return               
