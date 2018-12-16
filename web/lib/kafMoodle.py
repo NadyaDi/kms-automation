@@ -30,6 +30,11 @@ class Moodle(Base):
     MOODLE_MY_COURSES_BUTTON                            = ('xpath', "//li[@class='type_system depth_2 contains_branch']")
     MOODLE_COURSE_BUTTON_IN_MENU_BAR                    = ('xpath', "//a[@title='New1']")
     MOODLE__MEDIA_GALLERY_TITLE                         = ('xpath', "//h1[contains(text(), 'Kaltura Media Gallery')]")
+    MOODLE_SITE_BLOG_TITLE                              = ('xpath', '//h2[contains(text(), "Site blog")]')
+    MOODLE_SITE_BLOG_ADD_NEW_ENTRY                      = ('xpath', '//a[contains(@href, "moodle/blog") and text()="Add a new entry"]')
+    MOODLE_SITE_BLOG_ENTRY_TITLE                        = ('xpath', '//input[@id="id_subject"]')
+    MOODLE_SITE_BLOG_WYSIWYG                            = ('xpath', '//button[@class="atto_kalturamedia_button"]')
+    MOODLE_SITE_BLOG_SUBMIT_BTN                         = ('xpath', '//input[@id="id_submitbutton"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -129,4 +134,64 @@ class Moodle(Base):
             return False
         self.clsCommon.moodle.switchToMoodleIframe()
         return True
+    
+    
+    # @Author: Inbar Willmam
+    def navigateToSiteBlog(self, forceNavigate=False):      
+        self.clsCommon.base.switch_to_default_content()
+        if forceNavigate == False:
+            if self.wait_visible(self.MOODLE_SITE_BLOG_TITLE, 5) != False:
+                writeToLog("INFO","Success Already in site blog page")
+                self.clsCommon.moodle.switchToMoodleIframe()
+                return True
             
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_SITE_BLOG_URL) == False:
+                writeToLog("INFO","FAILED navigate to site blog page")
+                return False            
+        
+        if self.wait_visible(self.MOODLE_SITE_BLOG_TITLE, 15) == False:
+            writeToLog("INFO","FAILED navigate to to site blog page")
+            return False
+        
+        self.clsCommon.moodle.switchToMoodleIframe()
+        return True
+    
+    
+    # @Author: Inbar Willman
+    def createEmbedSiteBlog(self, entryName, siteBlogTitle, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
+        if self.navigateToSiteBlog() == False:
+            writeToLog("INFO","FAILED navigate to to site blog page")
+            return False
+        
+        if self.click(self.MOODLE_SITE_BLOG_ADD_NEW_ENTRY) == False:
+            writeToLog("INFO","FAILED to click on 'Add a new entry'")
+            return False     
+        
+        if self.send_keys(self.MOODLE_SITE_BLOG_ENTRY_TITLE, siteBlogTitle) == False:
+            writeToLog("INFO","FAILED to insert site blog entry title")
+            return False   
+        
+        # Get window before opening embed window
+        window_before = self.clsCommon.base.driver.window_handles[0]  
+        
+        if self.click(self.MOODLE_SITE_BLOG_WYSIWYG) == False:
+            writeToLog("INFO","FAILED to click on wysiwyg")
+            return False  
+        
+        sleep(2)
+        
+        # Get window after opening embed window and switch to this window
+        window_after = self.clsCommon.base.driver.window_handles[1]
+        self.clsCommon.base.driver.switch_to_window(window_after)
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False  
+                
+        self.clsCommon.base.driver.switch_to_window(window_before) 
+        
+        if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
+            writeToLog("INFO","FAILED to click on submit button")
+            return False  
+                    
+        return True                                  
