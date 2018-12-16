@@ -14,11 +14,13 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Moodle - Publish after upload
+    # Test Name : Moodle - Publish From Entry Page
     # Test description:
-    # Upload video entry -> publish entry from upload page -> Verify entry is published to the course
+    # Upload entry
+    # Go to the entry page that was uploaded and publish it to course
+    # Go to the course that the entry was published to and verify that the entry display their
     #================================================================================================================================
-    testNum     = "2106"
+    testNum     = "2108"
     application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -28,10 +30,11 @@ class Test:
     driver = None
     common = None
     # Test variables
+    entryName = None
     description = "Description" 
     tags = "Tags,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
-    galleryName = 'New1'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
+    galleryName = "New1"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -48,35 +51,47 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Publish from upload page", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Publish From Entry Page", self.testNum)
+        
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            writeToLog("INFO","Step 1: Going to upload entry")  
+            writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName)
-                return 
-            
-            writeToLog("INFO","Step 2: Going to publish entry from upload page")  
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return      
+              
+            writeToLog("INFO","Step 2: Going navigate to entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to publish entry' " + self.entryName + " to gallery upload page")
-                return 
-            sleep(3)
-            writeToLog("INFO","Step 3: Going navigate to gallery page")
+                writeToLog("INFO","Step 2: FAILED  navigate to entry page: " + self.entryName)
+                return           
+              
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+                  
+            writeToLog("INFO","Step 5: Going to publish entry to gallery from entry page")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.ENTRY_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "' to gallery '" + self.galleryName + "' from entry page")
+                return                 
+            
+            writeToLog("INFO","Step 6: Going navigate to gallery page")
             if self.common.moodle.navigateToGalleryMoodle(self.galleryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to gallery: " + self.galleryName)
-                return
-                
-            writeToLog("INFO","Step 4: Going to verify entry published to gallery")
+                writeToLog("INFO","Step 6: FAILED navigate to gallery: " + self.galleryName)
+                return             
+                          
+            writeToLog("INFO","Step 7: Going to search entry in gallery")
             if self.common.channel.searchEntryInChannel(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to find entry ' " + self.entryName + "' in gallery: " + self.galleryName)
-                return                     
-         
+                writeToLog("INFO","Step 7: FAILED to find entry entry '" + self.entryName + "' in gallery '" + self.galleryName)
+                return               
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Moodle - Publish after upload' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle - Publish From Entry Page' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -85,9 +100,9 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")  
+            writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            writeToLog("INFO","**************** Ended: teardown_method *******************")            
+            writeToLog("INFO","**************** Ended: teardown_method *******************")               
         except:
             pass            
         clsTestService.basicTearDown(self)

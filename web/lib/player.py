@@ -362,6 +362,8 @@ class Player(Base):
                 if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
+                
+                sleep(3)
                  
                 if toVerify == True:  
                     if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:

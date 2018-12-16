@@ -781,13 +781,12 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to display correct success message")
             return False 
         
-        if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime, mediaType) == False:
-            writeToLog("INFO","FAILED to played and verify embedded entry")
-            return False             
+#         if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime, mediaType) == False:
+#             writeToLog("INFO","FAILED to played and verify embedded entry")
+#             return False             
                     
         return True  
-    
-    
+       
          
     # @Author: Inbar Willman
     # Navigate to upload page via SR page
