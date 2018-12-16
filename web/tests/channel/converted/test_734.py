@@ -104,7 +104,7 @@ class Test:
             writeToLog("INFO","Step 8: Going to publish entry to category")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelName, publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName)
+                writeToLog("INFO","Step 8: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName[0])
                 return
              
             writeToLog("INFO","Step 9: Going navigate to my channels page")  
