@@ -40,7 +40,8 @@ class MyMedia(Base):
     MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG                          = ('xpath', "//div[contains(.,'Media successfully set to Unlisted')]")
     MY_MEDIA_PUBLISHED_AS_PRIVATE_MSG                           = ('xpath', "//div[contains(.,'Media successfully set to Private')]")
     MY_MEDIA_PAGE_TITLE                                         = ('xpath', "//h1[@class='inline' and contains(text(), 'My Media')]")
-    MY_MEDIA_PUBLISHED_RADIO_BUTTON                             = ('id', 'published') #This refers to the publish radio button after clicking action > publish
+#     MY_MEDIA_PUBLISHED_RADIO_BUTTON                             = ('id', 'published') #This refers to the publish radio button after clicking action > publish
+    MY_MEDIA_PUBLISHED_RADIO_BUTTON                             = ('xpath', "//input[@id='published']") #This refers to the publish radio button after clicking action > publish
     MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION                         = ('class_name', 'pblTabCategory')
     MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION                          = ('class_name', 'pblTabChannel')
     MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH                         = ('xpath', "//span[contains(.,'PUBLISHED_CATEGORY')]")# When using this locator, replace 'PUBLISHED_CATEGORY' string with your real category/channel name
@@ -526,6 +527,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
             
+            sleep(5)
             if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
                 return False      
