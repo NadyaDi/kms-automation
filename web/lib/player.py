@@ -82,7 +82,7 @@ class Player(Base):
             else:
                 self.clsCommon.switch_to_default_iframe_generic()
                 localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
-                self.wait_visible(self.PLAYER_IFRAME, 60)
+                self.wait_element(self.PLAYER_IFRAME, 60)
                 self.swith_to_iframe(self.PLAYER_IFRAME)
                 return True
     

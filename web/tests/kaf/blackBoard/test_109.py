@@ -89,7 +89,7 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 6: Going to create embed kaltura media from media gallery")  
-            if self.common.kafGeneric.verifyEmbedEntry('', '0:08')== False:
+            if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedMediaGallery,'', '0:08')== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to create embed kaltura media from media gallery")
                 return              
