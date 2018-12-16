@@ -44,7 +44,7 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED navigate to My Media")
             return False
          
-        self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON, timeout=30)
+        self.wait_element(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON, timeout=15)
         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
             writeToLog("INFO","FAILED navigate to My Media")
             return False
@@ -104,7 +104,7 @@ class KafGeneric(Base):
     # Author: Michal Zomper    
     def navigateToEntryPageFromGalleryPage(self, entryName, galleryName, forceNavigate=False):
         tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
-        if self.wait_visible(tmpEntryName, 5) != False:
+        if self.wait_element(tmpEntryName, 5) != False:
             writeToLog("INFO","Already in entry page: '" + entryName + "'")
             return True
         
@@ -122,7 +122,7 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to click on entry " + entryName)
             return False 
         
-        if self.wait_visible(tmpEntryName, 15) == False:
+        if self.wait_element(tmpEntryName, 15) == False:
             writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
             return False
            
