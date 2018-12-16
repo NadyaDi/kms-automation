@@ -526,7 +526,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
             
-            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
+            if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
                 return False      
 
