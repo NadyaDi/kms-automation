@@ -37,10 +37,6 @@ class Test:
     commentReply1User1 = 'Comment 1 replay 1'
     comment2User2 = 'Second comment'
     commenReply2User2 = 'Comment 1 replay 2'
-    channelMemberUserId = 'private'
-    channelMemberPass = '123456'
-    user1 = 'inbar.willman@kaltura.com'
-    user1Pass = 'Kaltura1!!'
     channelList = ['Public Channel']
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     #run test as different instances on all the supported platforms
@@ -60,6 +56,10 @@ class Test:
             self.common = Common(self.driver)
             ########################################################################
             self.entryName = clsTestService.addGuidToString('replyComments', self.testNum)
+            self.channelMemberUserId = localSettings.LOCAL_SETTINGS_ADMIN_USERNAME
+            self.channelMemberPass = localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD
+            self.user1 = localSettings.LOCAL_SETTINGS_LOGIN_USERNAME
+            self.user1Pass = localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
@@ -84,12 +84,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add new comment as user 1")
                 return  
-#             writeToLog("INFO","Step 4: Going to naviagte to entry page")
-#             if self.common.entryPage.navigateToEntryPageFromMyMedia('DD700AA0-697-disableComments') == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to replay the added comment")
-#                 return   
-          
               
             writeToLog("INFO","Step 5: Going to replay the added comment")
             if self.common.entryPage.replyComment(self.commentReply1User1) == False:
