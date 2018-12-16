@@ -518,6 +518,10 @@ class MyMedia(Base):
             
             sleep(5)
             # Click on publish button
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)  
+               
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
@@ -585,7 +589,11 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to find confirm save message")
                 return False
         else:
-            if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON) == False:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                self.click(self.UPLOAD_PAGE_TITLE)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN) 
+                
+            if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on 'Save' button")
                 return None
             sleep(2)

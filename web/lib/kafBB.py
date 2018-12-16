@@ -169,7 +169,7 @@ class BlackBoard(Base):
     # Author: Michal Zomper
     def navigateToGalleryBB(self, galleryName, forceNavigate=False):
         if forceNavigate == False:
-            if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+            if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
                 writeToLog("INFO","Success Already in my Gallery page")
                 return True
         
@@ -180,7 +180,7 @@ class BlackBoard(Base):
         sleep(5)
         
         self.clsCommon.blackBoard.switchToBlackboardIframe()
-        if self.wait_visible(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+        if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False
         
