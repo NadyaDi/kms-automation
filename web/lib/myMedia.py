@@ -511,21 +511,21 @@ class MyMedia(Base):
 
         elif publishFrom == enums.Location.ENTRY_PAGE:
             sleep(1)
+            # Click on publish button
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                self.click((self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName)))
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)  
+            
             # Click on action tab
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
                 writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
                 return False  
-            
-            sleep(5)
-            # Click on publish button
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
-                self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
-                self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
-            
+
+            sleep(5)
             if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
                 return False      
@@ -590,7 +590,7 @@ class MyMedia(Base):
                 return False
         else:
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
-                self.click(self.UPLOAD_PAGE_TITLE)
+                self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN) 
                 
             if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
