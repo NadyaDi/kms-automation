@@ -503,20 +503,21 @@ class EntryPage(Base):
     
        
     # @Author: Inbar Willman
-    def replyComment(self, replyComment):  
+    def replyComment(self, replyComment):
+        sleep(2)
         # Get comment Id
         tmp_comment_id = self.get_element(self.ENTRY_PAGE_COMMENT_ID)
         comment_id = tmp_comment_id.get_attribute("data-comment-id")
         
         # Click on replay button
         tmp_replay_btn = (self.ENTRY_PAGE_REPLY_COMMENT[0], self.ENTRY_PAGE_REPLY_COMMENT[1].replace('COMMENT_ID', comment_id))
-        if self.click(tmp_replay_btn) == False:
+        if self.click(tmp_replay_btn, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on replay button")
             return False   
-        
+        sleep(1)
         # Add new replay comment
         # Click on replay comment area
-        if self.click(self. ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA, 5) == False:
+        if self.click(self. ENTRY_PAGE_REPLY_COMMENT_TEXT_AREA, 5, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click in the comment text box area")
             return False
         
@@ -542,10 +543,8 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to find added comment")
             return False
            
-        writeToLog("INFO","Success, comment: '" + replyComment +"'  was added to entry")       
-        return True        
-        
-        return True  
+        writeToLog("INFO","Success, comment: '" + replyComment +"'  was added to entry")
+        return True
     
     
     # @Author: Inbar Willman
