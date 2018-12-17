@@ -30,6 +30,7 @@ class Kea(Base):
     KEA_LOADING_SPINNER                           = ('class_name', 'spinner')
     KEA_QUIZ_QUESTION_FIELD                       = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                               = ('id', 'ANSWER_NUMBER')
+    KEA_EDITOR_TAB                                = ('xpath', "//a[@aria-label='Video Editor']") 
     KEA_QUIZ_ADD_ANSWER_BUTTON                    = ('xpath', '//div[@class="add-answer-btn"]') 
     KEA_QUIZ_BUTTON                               = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="BUTTON_NAME"]')
     EDITOR_TABLE                                  = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
@@ -343,17 +344,22 @@ class Kea(Base):
     
 
     # @Author: Tzachi guetta
-    #     interface to KEA's timeline functionalities: split, (set IN\out, delete, Fade IN\out - TBD)
-    def keaTimelinefunc(self,entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom):
+    # interface to KEA's timeline functionalities: split, (set IN\out, delete, Fade IN\out - TBD)
+    def keaTimelinefunc(self,entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab):
         if self.launchKEA(entryName, navigateTo, navigateFrom) == False:
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         
-        sleep(10)
-        self.refresh()
         sleep(2)
+        self.refresh()
+        sleep(3)
         self.switchToKeaIframe()
         
+        if openEditorTab == True:
+            if self.click(self.KEA_EDITOR_TAB) == False:
+                    writeToLog("INFO","FAILED to click on Editor Tab")
+                    return False
+                   
         if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, splitStartTime + Keys.ENTER) == False:
             writeToLog("INFO","FAILED to insert start time into editor input field")
             return False
@@ -383,8 +389,8 @@ class Kea(Base):
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
-    def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom):
-        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom)
+    def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
         
         sleep(1)
         if self.click(self.EDITOR_SAVE_BUTTON) == False:
@@ -529,9 +535,12 @@ class Kea(Base):
         writeToLog("INFO","FAILED,  Entry: " + entryName +", was clipped, but the new entry Duration is not as expected : " + entryDuration + " instead of :" + expectedEntryDuration) 
         return False
 
+
     # NOT FINISHED:
+    # the following function will create a Quiz (within the given dictQuestions)
+    # Currently support question type=Multiple ONLY     
     def quizCreation(self, entryName, dictQuestions): #TBD: dictDetails, dictScores, dictExperience
-        sleep(30)
+        sleep(15)
         self.searchAndSelectEntryInMediaSelection(entryName)
         sleep(10) 
                    
@@ -570,9 +579,9 @@ class Kea(Base):
                 sleep(2)
                 
             elif qestionType == enums.QuizQuestionType.REFLECTION:
-                    return False
+                return False
             else:
-                    return False
+                return False
                 
         self.switchToKeaIframe() 
         self.clickDone()
