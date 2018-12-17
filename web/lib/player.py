@@ -52,6 +52,13 @@ class Player(Base):
     PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU                    = ('xpath', "//input[@id='searchBox' and @placeholder='Search']")
     PLAYER_CAPTIONS_SECTION                                     = ('xpath', '//span[@style="position: relative;" and contains(text(),"CAPTION_TEXT")]')
     PLAYER_TOTAL_VIDEO_LENGTH                                   = ('xpath', "//div[@class='timers comp durationLabel display-medium']")
+    PLAYER_CURRENT_PLAYBACK_TIME                                = ('xpath', "//div[@class='timers comp currentTimeLabel display-high disabled']")
+    PLAYER_QUIZ_ALMOST_DONE_SCREEN                              = ('xpath', "//div[@class='title-text padding20']")
+    PLAYER_QUIZ_QUESTION_TITLE                                  = ('xpath', "//div[@class='display-question padding7']")
+    PLAYER_QUIZ_ANSWER_NO_1                                     = ('xpath', "//p[@id='answer-0-text']")
+    PLAYER_QUIZ_ANSWER_NO_2                                     = ('xpath', "//p[@id='answer-1-text']")
+    PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
+    PLAYER_QUIZ_ANSWER_NO_4                                     = ('xpath', "//p[@id='answer-3-text']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -179,6 +186,114 @@ class Player(Base):
             return False
     
     
+    # @ Author: Tzachi Guetta
+    # This function will play the player from start to end - and collect all the Quiz Questions that were presented on the player - and return dictionary of Questions details
+    # Currently support question type=Multiple ONLY     
+    def collectQuizQuestionsFromPlayer(self, entryName, expectedQuestionCount=0):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False 
+            
+            self.switchToPlayerIframe()
+            if self.clickPlay() == False:
+                return False  
+            
+            #Click continue button
+            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on Welcome Screen's continue button (Quiz Entry)")
+                return False  
+
+            replay = self.wait_element(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            questionList = {}
+            key = 1
+            
+            while replay != False:      
+                
+                question = self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, timeout=30)
+                if question != False:
+                    
+                    questiondetails = self.extractQuizQuestionDetails()
+                    questionList.update({str(key):questiondetails})
+                    key = key + 1
+                    
+                    # Default is 0, will wait till player will stop play
+                    if expectedQuestionCount != 0:
+                        if key > expectedQuestionCount:
+                            break
+                    
+                    if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON) == False:
+                        writeToLog("INFO","FAILED to click quiz skip for now button")
+                        return False
+                    else:
+                        continue
+                
+                else:
+                    if self.wait_element(self.PLAYER_QUIZ_ALMOST_DONE_SCREEN, timeout=3) != False:
+                        replay = False
+                        
+            writeToLog("INFO","Passed;")
+            self.clsCommon.base.switch_to_default_content()
+            return questionList
+            
+        except Exception:
+            writeToLog("INFO","FAILED to extract the question's text")
+            return False    
+        
+    
+    # @ Author: Tzachi Guetta
+    #  
+    def extractQuizQuestionDetails(self): 
+        try:
+            questionDetails = []
+            timestamp  =  self.wait_element(self.clsCommon.player.PLAYER_CURRENT_PLAYBACK_TIME).text
+            if  timestamp == False:
+                writeToLog("INFO","FAILED to extract player's current time")
+                return False
+            questionDetails.append("0" + timestamp)
+            
+            questionDetails.append(enums.QuizQuestionType.Multiple)           
+            
+            questionTitle= self.wait_element(self.clsCommon.player.PLAYER_QUIZ_QUESTION_TITLE).text
+            if  questionTitle == False:
+                writeToLog("INFO","FAILED to extract the Question's title")
+                return False
+            questionDetails.append(questionTitle)
+                        
+            questionAnswer1= self.wait_element(self.clsCommon.player.PLAYER_QUIZ_ANSWER_NO_1).text
+            if  questionAnswer1 == False:
+                writeToLog("INFO","FAILED to extract the Question's answer no1")
+                return False
+            questionDetails.append(questionAnswer1)  
+
+            questionAnswer2= self.wait_element(self.clsCommon.player.PLAYER_QUIZ_ANSWER_NO_2).text
+            if  questionAnswer2 == False:
+                writeToLog("INFO","FAILED to extract the Question's answer no2")
+                return False
+            questionDetails.append(questionAnswer2)
+                      
+            questionAnswer3= self.wait_element(self.clsCommon.player.PLAYER_QUIZ_ANSWER_NO_3).text
+            if  questionAnswer3 == False:
+                writeToLog("INFO","extract was not performed to Question's answer no3")
+                return questionDetails
+            questionDetails.append(questionAnswer3)
+                       
+            questionAnswer4= self.wait_element(self.clsCommon.player.PLAYER_QUIZ_ANSWER_NO_4).text
+            if  questionAnswer4 == False:
+                writeToLog("INFO","extract was not performed to Question's answer no3")
+                return questionDetails
+            questionDetails.append(questionAnswer4)
+            
+            return questionDetails
+        
+        except Exception:
+            return False        
+    
     # @ Author: Tzachi Guetta    
     def removeDuplicate(self, duplicateList): 
         try:
@@ -221,6 +336,42 @@ class Player(Base):
       
         return True
     
+    # @ Author: Tzachi Guetta    
+    # the following method will perform the following action:
+    # for isExistDict:  
+        #     the method will verify first that the length of isExistDict is equal the length of questionDict,
+        #     than the method will compared the content of questionDict to isExistDict
+    # for isExistDict:
+        # the function will verify that isAbsentDict's KEYS are not found inside questionDict
+    def  compareQuizQuestionDict(self, questionDict, isExistDict='', isAbsentDict=''):
+        try:     
+            if isExistDict != '':
+                if len(questionDict) == len(isExistDict):
+                    for key in isExistDict:
+                        if key in questionDict:
+                            i=0
+                            writeToLog("INFO","Verifying Question number " + str(key))
+                            
+                            for questionItem in isExistDict[key]:
+                                if questionItem == questionDict[key][i]:
+                                    i += 1
+                                else:
+                                    writeToLog("INFO","NOT Expected: the following question item wasn't found: " + str(questionItem))
+                                    return False
+                else:
+                    writeToLog("INFO","NOT Expected: the length of the question list and the isExist dictionary is not equal")
+                    return False
+                
+            if isAbsentDict != '':
+                for key in isAbsentDict:
+                    if key in questionDict:
+                        writeToLog("INFO","NOT Expected: the following question number was found: " + key)
+                        return False            
+                
+        except Exception as exp:
+            return False
+      
+        return True
     
     # Author: Inbar Willman
     # This method will wait for delay and click pause, without clicking play
