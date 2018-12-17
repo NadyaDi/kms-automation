@@ -740,7 +740,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to show all entries") 
                 return False 
               
-        writeToLog("INFO","Success, sort/filter by " + dropDownListName.value + " - " + dropDownListItem.value + " was set successfully")
+        writeToLog("INFO","Success, sort/filter by '" + dropDownListName.value + " - " + dropDownListItem.value + "' was set successfully")
         return True
     
     
@@ -1509,6 +1509,8 @@ class MyMedia(Base):
     
     #@Author: Michal Zomper 
     # The function check that only the entries type with that match the 'iconType' parameter display in the list in my media
+    # the function verify that their entries with diffrent iconType find in the filter 
+    # for exm: if i filter by Image i will check that only image entry display (checking by icon type)
     def verifyFilterUniqueIconType(self, iconType):
         if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")

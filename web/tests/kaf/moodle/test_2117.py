@@ -15,7 +15,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard: My Media - Filter Media View Different Statuses
+    # Test Name : Moodle: My Media - Filter Media View Different Statuses
     # Test description:
     # upload 4 entries
     # some of the entries live as private /publish  /Pending / Rejected
@@ -27,8 +27,8 @@ class Test:
     #    5. Filter by 'All Media' - All the user's entries should be displayed - in any status..
     # *A compatible label should be displayed on top of the entry's thumbnail.
     #================================================================================================================================
-    testNum     = "610"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2117"
+    application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -45,7 +45,7 @@ class Test:
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
     galleryName = "New1"
-    userName1 = "apps.qa.automation@mailinator.com"
+    userName1 = "automoodle"
     userPass1 = "Kaltura1!"
     filterByPrivate = None
     filterByPublished = None
@@ -89,7 +89,6 @@ class Test:
             uploadEntrieList = [self.rejectedEntrey, self.PendingEntry] 
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                   
             writeToLog("INFO","Step 1: Going to upload 2 entries")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -110,13 +109,13 @@ class Test:
                 
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 4: Going to logout from main user")
-            if self.common.blackBoard.logOutOfBlackBoard() == False:
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to logout from user: " + self.userName1)
                 return  
                                    
             writeToLog("INFO","Step 5:Going to login with : " + self.userName1)
-            if  self.common.blackBoard.loginToBlackBoard(self.userName1, self.userPass1)  == False:
+            if  self.common.moodle.loginToMoodle(self.userName1, self.userPass1)  == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to login with " + self.userName1)
                 return
@@ -129,13 +128,13 @@ class Test:
              
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 7: Going to logout from user: " + self.userName1)
-            if self.common.blackBoard.logOutOfBlackBoard() == False:
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to logout from main user")
                 return  
                                     
             writeToLog("INFO","Step 8: Going to login with main user")
-            if self.common.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+            if self.common.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to login with main user")
                 return
@@ -329,7 +328,7 @@ class Test:
                 return
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard: My Media - Filter Media View Different Statuses' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle: My Media - Filter Media View Different Statuses' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -341,8 +340,8 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             if self.common.login.getLoginUserName() != localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN :
                 self.common.base.switch_to_default_content()
-                self.common.blackBoard.logOutOfBlackBoard()
-                self.common.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+                self.common.moodle.logOutOfMoodle()()
+                self.common.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:

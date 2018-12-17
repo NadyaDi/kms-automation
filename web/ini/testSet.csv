@@ -132,9 +132,13 @@ test_2106,1,0,0,0,Moodle - Publish after upload
 test_2107,1,0,0,0,Moodle - Publish from my media (single and multiple)
 test_2108,1,0,0,0,Moodle - Publish From Entry Page
 test_2109,1,0,0,0,Moodle - Preview all kinds of media from My Media and Gallery
+test_2110,1,0,0,0,Moodle - View Collapsed Expanded Modes
 test_2111,1,0,0,0,Moodle - Upload media from desktop
-test_2114,1,0,0,0,Moodle - Search Media (by entry name)
-test_2115,1,0,0,0,Moodle - Search Media (by entry tag)
+test_2114,1,0,0,0,Moodle - My Media - Search by Name / Description / Tags
+test_2116,1,0,0,0,Moodle - My Media - Sort Media
+test_2117,1,0,0,0,Moodle - My Media - Filter Media View Different Statuses
+test_2118,1,0,0,0,Moodle - My Media - Filter by media Type
+test_2119,1,0,0,0,Moodle - Edit Entry Metadata
 test_2127,1,0,0,0,Moodle - Embed media in site blogs from my media
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
@@ -216,7 +220,7 @@ test_4329,1,0,0,0,eSearch - Sort by media type - my media
 test_4330,1,0,0,0,eSearch - Sort by media type - channel page
 test_4331,1,0,0,0,eSearch - Sort by media type - my media with search
 test_4332,1,0,0,0,eSearch - Sort by media type - channel page with search
-test_4333,1,0,0,0,eSearch - Sort by media type - category page 
+test_4333,1,0,0,0,eSearch - Sort by media type - category page
 test_4334,1,0,0,0,eSearch - Sort by media type - category page with search
 test_4335,1,0,0,0,eSearch - Sort by media type - add to channel
 test_4336,1,0,0,0,eSearch - Sort by media type - add to category
