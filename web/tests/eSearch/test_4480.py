@@ -57,12 +57,14 @@ class Test:
             self.sixtyDuration = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryName4: False, self.entryName5: False}
             self.customDuration = {self.entryName1: True, self.entryName2: True, self.entryName3: True, self.entryName4: True, self.entryName5: False}
             self.specialDuration = {self.entryName1: False, self.entryName2: False, self.entryName3: False, self.entryName4: True, self.entryName5: False}
+            self.betweenDuration = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryName4: True, self.entryName5: False}
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to navigate to Add To Gallery My Media Tab")
             if self.common.category.navigateToAddToCategory(self.gallery) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to navigate to Add To Gallery My Media Tab")
                 return
+            
             writeToLog("INFO","Step 2: Going to make a search in Add To Gallery My Media Tab")
             if self.common.channel.searchInAddToChannel(self.entryName) == False:
                 self.status = "Fail"
@@ -174,6 +176,36 @@ class Test:
             if self.common.channel.verifyFiltersInAddToChannel(self.specialDuration, enums.Location.ADD_TO_CHANNEL_MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 20: FAILED to verify filter Add to Gallery - My media tab entries  by '" + enums.Duration.CUSTOM.value + "'")
+
+            writeToLog("INFO", "STEP 21: Going to modify the custom duration limit to default")
+            if self.common.myMedia.filterCustomDuration(-70, value="3600")== False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 21: FAILED to modify the custom duration limit to default")
+                 
+            writeToLog("INFO", "STEP 22: Going to clear the filter search menu")
+            if self.common.myMedia.filterClearAllWhenOpened() == False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 22: Failed to clear the search menu")
+
+            writeToLog("INFO", "STEP 23: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + "'")
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.CUSTOM) == False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 23: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + "'")
+
+            writeToLog("INFO", "STEP 24: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
+            if self.common.myMedia.filterCustomDuration(35, value='0')== False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 24: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+
+            writeToLog("INFO", "STEP 25: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
+            if self.common.myMedia.filterCustomDuration(-45, value='10800')== False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 25: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+                
+            writeToLog("INFO", "STEP 26: Going to verify filter Global page entries by: " + enums.Duration.CUSTOM.value + "'")
+            if self.common.channel.verifyFiltersInAddToChannel(self.betweenDuration, enums.Location.ADD_TO_CHANNEL_MY_MEDIA) == False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 26: FAILED to verify filter Global page entries  by '" + enums.Duration.CUSTOM.value + "'")
             ##################################################################
             writeToLog("INFO","TEST PASSED: All the entries are properly displayed in Add to Gallery My Media Tab while using filter by duration with a search term")
         # if an exception happened we need to handle it and fail the test

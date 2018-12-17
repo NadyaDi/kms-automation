@@ -57,6 +57,7 @@ class Test:
             self.sixtyDuration = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryName4: False, self.entryName5: False}
             self.customDuration = {self.entryName1: True, self.entryName2: True, self.entryName3: True, self.entryName4: True, self.entryName5: False}
             self.specialDuration = {self.entryName1: False, self.entryName2: False, self.entryName3: False, self.entryName4: True, self.entryName5: False}
+            self.betweenDuration = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryName4: True, self.entryName5: False}
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going navigate to Add new quiz")
             if self.common.kea.navigateToEditorMediaSelection(forceNavigate=True) == False:
@@ -167,6 +168,36 @@ class Test:
             if self.common.kea.verifyFiltersInEditor(self.specialDuration) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 19: FAILED to verify filter Add new quiz entries  by '" + enums.Duration.CUSTOM.value + "'")
+                
+            writeToLog("INFO", "STEP 20: Going to modify the custom duration limit to default")
+            if self.common.myMedia.filterCustomDuration(-999, value="3600")== False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 20: FAILED to modify the custom duration limit to default")
+                 
+            writeToLog("INFO", "STEP 21: Going to clear the filter search menu")
+            if self.common.myMedia.filterClearAllWhenOpened() == False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 21: Failed to clear the search menu")
+
+            writeToLog("INFO", "STEP 22: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + "'")
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.CUSTOM) == False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 22: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + "'")
+
+            writeToLog("INFO", "STEP 23: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
+            if self.common.myMedia.filterCustomDuration(35, value='0')== False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 23: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+
+            writeToLog("INFO", "STEP 24: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
+            if self.common.myMedia.filterCustomDuration(-45, value='10800')== False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 24: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+                
+            writeToLog("INFO", "STEP 25: Going to verify filter Global page entries by: " + enums.Duration.CUSTOM.value + "'")
+            if self.common.kea.verifyFiltersInEditor(self.betweenDuration) == False:
+                self.status = "Fail"
+                writeToLog("INFO", "STEP 25: FAILED to verify filter Global page entries  by '" + enums.Duration.CUSTOM.value + "'")
             ##################################################################
             writeToLog("INFO","TEST PASSED: All the entries are properly displayed in Add new quiz  while using filter by duration with no search term")
         # if an exception happened we need to handle it and fail the test

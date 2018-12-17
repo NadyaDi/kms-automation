@@ -2063,8 +2063,8 @@ class MyMedia(Base):
     
     # @Author: Horia Cus
     # Verify that the specific filter option is available on the first or second screen, only when the right media type is selected
-    # If status=True, the checkbox is enabled
-    # If status=False, the checkbox is disabled
+    # If status=True, the checkbox should be enabled
+    # If status=False, the checkbox should be disabled
     def verifyFilterCheckBox(self, mediaType, checkBoxLabelValue, status=True):
         if self.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, mediaType) == False:
                 writeToLog("INFO","FAILED to filter my media entries")
@@ -2098,7 +2098,7 @@ class MyMedia(Base):
                 writeToLog("INFO", "Failed to enter on the second page ")
                 return False
     
-            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to close the filters drop down menu")
                 return False
         else:
@@ -2120,7 +2120,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to clear all the search filters")
                 return False
 
-            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to close the filters drop down menu")
                 return False  
                     
@@ -2147,6 +2147,8 @@ class MyMedia(Base):
     
     # @Author: Horia Cus
     # The function selects a specific element and moves it by width
+    # Use value 0 in order to select the start pointer
+    # Use value 10800 in order to select the end pointer
     def filterCustomDuration(self, size, value='0'):
         tmpLocator = (self.FILTER_CUSTOM_DURATION[0], self.FILTER_CUSTOM_DURATION[1].replace('VALUE_TO_REPLACE', value))
         
@@ -2156,15 +2158,14 @@ class MyMedia(Base):
             return False
         
         action = ActionChains(self.driver)
-        
         try:
-            action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(1*size, 0).release().perform()
+            action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
         except Exception:
             writeToLog("INFO", "FAILED to move the specific element")
             return False   
         
         if self.clsCommon.general.waitForLoaderToDisappear() == False:
             writeToLog("INFO", "FAILED to save the filter changes")
-            return False
-                 
+            return False 
+        
         return True
