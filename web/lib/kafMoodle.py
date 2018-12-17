@@ -127,11 +127,14 @@ class Moodle(Base):
             if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
                 writeToLog("INFO","FAILED navigate to courses 'New1'")
                 return False
-        self.wait_element(self.clsCommon.channel.CHANNEL_ACTION_BUTTON, timeout=20)
-        
+            
+        self.clsCommon.moodle.switchToMoodleIframe()
+        self.wait_element(self.clsCommon.kafGeneric.KAF_GRID_VIEW, timeout=20)
+        self.clsCommon.base.switch_to_default_content()
         if self.wait_element(self.MOODLE__MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False
+        
         self.clsCommon.moodle.switchToMoodleIframe()
         return True
     

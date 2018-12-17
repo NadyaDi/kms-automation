@@ -10,6 +10,11 @@ test_2107,Moodle - Publish from my media (single and multiple),,,pythonautomatio
 test_2108,Moodle - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2111,Moodle - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2127,Moodle - Embed media in site blogs from my media,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2110,Moodle - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2116,Moodle - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2118,Moodle - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2117,Moodle - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
+test_2119,Moodle - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_113,KAF BB - Embed Media From SR - Add New Announcements,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!

@@ -45,7 +45,6 @@ class Upload(Base):
     DROP_DOWN_MEDIA_UPLOAD_BUTTON               = ('xpath', ".//span[text()='Media Upload']")
     CHOOSE_A_FILE_TO_UPLOAD_BUTTON              = ('xpath', "//label[contains(.,'Choose a file to upload')]")
     UPLOAD_COMPLETED_LABEL                      = ('xpath', "//strong[contains(.,'Upload Completed!')]")
-    UPLOAD_MENU_DROP_DOWN_ELEMENT               = ('id', "uploadMenuDropDown")
     UPLOAD_ENTRY_DETAILS_ENTRY_NAME             = ('id', "Entry-name")
     UPLOAD_ENTRY_DESCRIPTION_IFRAME             = ('class_name', "wysihtml5-sandbox")
     UPLOAD_ENTRY_DESCRIPTION_TEXT_BOX           = ('xpath', "//div[@class='content']")

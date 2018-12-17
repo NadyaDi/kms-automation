@@ -14,7 +14,7 @@ import collections
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard: My Media - Sort Media
+    # Test Name : Moodle: My Media - Sort Media
     # Test description:
     # upload sevaral entries and add them comments.
     # Sort My Media by:
@@ -22,8 +22,8 @@ class Test:
     #    2. Alphabetical - The entries' order should be alphabetical
     #    4. Comments - The entries' order should be descending by comments' number
     #================================================================================================================================
-    testNum     = "609"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2116"
+    application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -121,8 +121,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED navigate to my media")
                 return 
-            sleep(3)
             
+            sleep(3)
             writeToLog("INFO","Step 12: Going to sort my media by: Alphabetical")  
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.ALPHABETICAL, (self.entryName1, self.entryName2, self.entryName3, self.entryName4)) == False:
                 self.status = "Fail"
@@ -151,7 +151,7 @@ class Test:
                 return
 
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard: My Media - Sort Media' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle: My Media - Sort Media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
