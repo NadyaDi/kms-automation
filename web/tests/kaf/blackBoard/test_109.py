@@ -27,13 +27,11 @@ class Test:
     status = "Pass"
     timeout_accured = "False"
     # Test variables
-    entryName = None
     description = "Description"
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     galleryName = "New1"
     module = "embed media from wysiwyg"
-    itemNameEmbedMediaGallery = None
     delay = "0:08"
     
     
@@ -57,47 +55,46 @@ class Test:
             self.uploadEntrieList = [self.entryToUpload] 
             self.itemNameEmbedMediaGallery = clsTestService.addGuidToString("Embed from media gallery page", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
- 
             writeToLog("INFO","Step 1: Going to upload entry")    
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-             
+              
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-             
+              
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-             
-            writeToLog("INFO","Step 4: Going to publish entry to gallery")    
+              
+            writeToLog("INFO","Step 4: Going to PUBLISH entry to gallery")    
             if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish entry to gallery")
+                writeToLog("INFO","Step 4: FAILED to PUBLISH entry to gallery")
                 return
-
-            writeToLog("INFO","Step 5: Going to create embed kaltura media from media gallery")  
+ 
+            writeToLog("INFO","Step 5: Going to CREATE embed kaltura media from media gallery")  
             if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, self.entryName, self.itemNameEmbedMediaGallery, '', '0:08')== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create embed kaltura media from media gallery")
+                writeToLog("INFO","Step 5: FAILED to CREATE embed kaltura media from media gallery")
                 return   
             
-            writeToLog("INFO","Step 6: Going to create embed kaltura media from media gallery")  
+            writeToLog("INFO","Step 6: Going to VERIFY embed kaltura media from media gallery")  
             if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedMediaGallery,'', '0:08')== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to create embed kaltura media from media gallery")
+                writeToLog("INFO","Step 6: FAILED to VERIFY embed kaltura media from media gallery")
                 return              
             
-            writeToLog("INFO","Step 7: Going to delete embed content from media gallery")  
+            writeToLog("INFO","Step 7: Going to DELETE embed content from media gallery")  
             if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 7: FAILED to DELETE embed content from my media")
                 return                      
             
             #########################################################################
@@ -111,6 +108,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
+            self.common.kafGeneric.switchToKAFIframeGeneric()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
