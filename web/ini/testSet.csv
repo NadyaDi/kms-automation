@@ -173,6 +173,7 @@ test_4455,1,0,0,0,KEA clip
 test_4458,1,0,0,0,KEA trim entry with slides
 test_4465,1,0,0,0,KEA clip entry with slides
 test_4482,1,0,0,0,KEA trim Quiz entry
+test_4513,1,0,0,0,KEA clip Quiz entry
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
@@ -204,6 +205,12 @@ test_9,1,0,0,0,Setup test for eSearch
 test_11,1,0,0,0,Setup test for eSearch
 test_12,1,0,0,0,Setup test for eSearch
 test_13,1,0,0,0,Setup test for eSearch
+test_14,1,0,0,0,eSearch - Filter by Duration
+test_15,1,0,0,0,eSearch - Filter by Scheduling
+test_17,1,0,0,0,eSearch - Filter by Scheduling
+test_18,1,0,0,0,eSearch - Filter by Scheduling
+test_19,1,0,0,0,eSearch - Filter by Scheduling
+test_20,1,0,0,0,eSearch - Filter by Scheduling
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media - when search is made
 test_4314,1,0,0,0,eSearch - Sort by - Global search - when search is made
@@ -291,6 +298,10 @@ test_4453,1,0,0,0,eSearch - Filter by Captions
 test_4454,1,0,0,0,eSearch - Filter by Captions
 test_4456,1,0,0,0,eSearch - Filter by Captions
 test_4457,1,0,0,0,eSearch - Filter by Captions
+test_4459,1,0,0,0,eSearch - Filter by Captons
+test_4460,1,0,0,0,eSearch - Filter by Captons
+test_4461,1,0,0,0,eSearch - Filter by Captons
+test_4462,1,0,0,0,eSearch - Filter by Captons
 test_4463,1,0,0,0,eSearch - Filter by Duration
 test_4464,1,0,0,0,eSearch - Filter by Duration
 test_4465,1,0,0,0,eSearch - Filter by Duration
@@ -310,3 +321,21 @@ test_4478,1,0,0,0,eSearch - Filter by Duration
 test_4479,1,0,0,0,eSearch - Filter by Duration
 test_4480,1,0,0,0,eSearch - Filter by Duration
 test_4481,1,0,0,0,eSearch - Filter by Duration
+test_4484,1,0,0,0,eSearch - Filter by Scheduling
+test_4485,1,0,0,0,eSearch - Filter by Scheduling
+test_4486,1,0,0,0,eSearch - Filter by Scheduling
+test_4487,1,0,0,0,eSearch - Filter by Scheduling
+test_4488,1,0,0,0,eSearch - Filter by Scheduling
+test_4489,1,0,0,0,eSearch - Filter by Scheduling
+test_4490,1,0,0,0,eSearch - Filter by Scheduling
+test_4491,1,0,0,0,eSearch - Filter by Scheduling
+test_4492,1,0,0,0,eSearch - Filter by Scheduling
+test_4493,1,0,0,0,eSearch - Filter by Scheduling
+test_4494,1,0,0,0,eSearch - Filter by Scheduling
+test_4495,1,0,0,0,eSearch - Filter by Scheduling
+test_4496,1,0,0,0,eSearch - Filter by Scheduling
+test_4497,1,0,0,0,eSearch - Filter by Scheduling
+test_4498,1,0,0,0,eSearch - Filter by Scheduling
+test_4499,1,0,0,0,eSearch - Filter by Scheduling
+test_4500,1,0,0,0,eSearch - Filter by Scheduling
+test_4501,1,0,0,0,eSearch - Filter by Scheduling
