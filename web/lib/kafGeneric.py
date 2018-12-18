@@ -13,7 +13,9 @@ class KafGeneric(Base):
     def __init__(self, clsCommon, driver):
         self.driver = driver
         self.clsCommon = clsCommon    
-    #====================================================================================================================================
+    #
+    
+    =================================================================================================================================
     #Login locators:
     #====================================================================================================================================
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
@@ -309,7 +311,11 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='' ):
+    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', application=enums.Application.BLACK_BOARD):
+        if application == enums.Application.MOODLE:
+            self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
+      
+            
         if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
@@ -366,6 +372,13 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to click on 'select' media button")
             return False
         
+        if application == enums.Application.MOODLE:
+            sleep(4)
+            self.switch_to_default_content()
+            if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'embed' button")
+                return False                
+        
         return True   
     
     
@@ -402,14 +415,16 @@ class KafGeneric(Base):
     def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD):
         if application == enums.Application.BLACK_BOARD:
             return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
-#         elif application == enums.Application.MOODLE:
-#             return self.clsCommon.blackBoard.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay)
-#         elif application == enums.Application.CANVAS:
-#             return self.clsCommon.blackBoard.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
-#         elif application == enums.Application.D2L:
-#             return self.clsCommon.blackBoard.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
-#         elif application == enums.Application.JIVE:
-#             return self.clsCommon.blackBoard.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay)                        
+        elif application == enums.Application.MOODLE:
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay)
+#       elif application == enums.Application.CANVAS:
+#            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
+#       elif application == enums.Application.D2L:
+#            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
+#       elif application == enums.Application.JIVE:
+#            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay)                       
         else:
-            writeToLog("INFO","FAILED unknown application: " + application.value)    
-            return False   
+            writeToLog("INFO","FAILED unknown application: " + application.value)   
+            return False
+        
+        return True                     

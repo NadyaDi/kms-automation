@@ -35,6 +35,13 @@ class Moodle(Base):
     MOODLE_SITE_BLOG_ENTRY_TITLE                        = ('xpath', '//input[@id="id_subject"]')
     MOODLE_SITE_BLOG_WYSIWYG                            = ('xpath', '//button[@class="atto_kalturamedia_button"]')
     MOODLE_SITE_BLOG_SUBMIT_BTN                         = ('xpath', '//input[@id="id_submitbutton"]')
+    MOODLE_EMBED_IFRAME                                 = ('xpath', '//iframe[@id="kafIframe"]')
+    MOODLE_EMBED_BTN                                    = ('xpath', '//button[@id="KalturaMediaSubmit"]')
+    MOODLE_EMBED_SITE_BLOG_TITLE                        = ('xpath', '//a[contains(@href,"/moodle/blog/") and text()="SITE_BLOG_TITLE"]')
+    MOODLE_EMBED_ENTRY_IFRAME                           = ('xpath', '//iframe[@class="kaltura-player-iframe"]')
+    MOODLE_DELETE_EMBED_SITE_BLOG                       = ('xpath', '//a[contains(@href, "/moodle/blog") and text()="Delete"]')
+    MOODLE_CONFIRM_DELETE_BUTTON                        = ('xpath', '//input[@type="submit" and @value="Continue"]')
+    MOODLE_EMBED_SITE_BLOG_SECTION                      = ('xpath', '//div[@class="forumpost blog_entry blog clearfix site"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -187,7 +194,7 @@ class Moodle(Base):
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
         
-        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, application=enums.Application.MOODLE) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
                 
@@ -197,4 +204,68 @@ class Moodle(Base):
             writeToLog("INFO","FAILED to click on submit button")
             return False  
                     
-        return True                                  
+        return True       
+    
+    
+    # @Author: Inbar Willman
+    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay=''): 
+        # Navigate to site blog      
+        if self.navigateToSiteBlog() == False:
+            writeToLog("INFO","FAILED to navigate to site blog")
+            return False  
+        
+        # Click on embed site blog
+        embedSiteBlogTitle = (self.MOODLE_EMBED_SITE_BLOG_TITLE[0], self.MOODLE_EMBED_SITE_BLOG_TITLE[1].replace('SITE_BLOG_TITLE', embedTitle))
+        if self.click(embedSiteBlogTitle) == False:
+            writeToLog("INFO","FAILED to click on site blog title")
+            return False   
+         
+        # If entry type is video
+        if delay != '':  
+            self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
+#            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                writeToLog("INFO","FAILED to play and verify video")
+                False                
+        
+        # If entry type is image     
+        else:
+            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                writeToLog("INFO","FAILED to display correct image thumbnail")
+                
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    # Delete embed item
+    def deleteEmbedSiteBlog(self, embedName, forceNavigate=False):
+        if forceNavigate == True:
+            # Navigate to site blog      
+            if self.navigateToSiteBlog() == False:
+                writeToLog("INFO","FAILED to navigate to site blog")
+                return False  
+        
+            # Click on embed site blog
+            embedSiteBlogTitle = (self.MOODLE_EMBED_SITE_BLOG_TITLE[0], self.MOODLE_EMBED_SITE_BLOG_TITLE[1].replace('SITE_BLOG_TITLE', embedName))
+            if self.click(embedSiteBlogTitle) == False:
+                writeToLog("INFO","FAILED to click on site blog title")
+                return False 
+        
+        # Click on delete button    
+        if self.click(self.MOODLE_DELETE_EMBED_SITE_BLOG) == False:
+            writeToLog("INFO","FAILED click on 'delete' button")
+            return False 
+        
+        # Confirm delete
+        if self.click(self.MOODLE_CONFIRM_DELETE_BUTTON) == False:
+            writeToLog("INFO","FAILED click on 'conform' button")
+            return False                       
+    
+        #Verify that site blog section isn't display anymore 
+        if self.wait_element(self.MOODLE_EMBED_SITE_BLOG_SECTION) != False:
+            writeToLog("INFO","FAILED, embed site blog section is still displayed")
+            return False             
+        
+        return True   
+    
+                 
