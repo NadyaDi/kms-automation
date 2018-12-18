@@ -42,6 +42,13 @@ class Moodle(Base):
     MOODLE_DELETE_EMBED_SITE_BLOG                       = ('xpath', '//a[contains(@href, "/moodle/blog") and text()="Delete"]')
     MOODLE_CONFIRM_DELETE_BUTTON                        = ('xpath', '//input[@type="submit" and @value="Continue"]')
     MOODLE_EMBED_SITE_BLOG_SECTION                      = ('xpath', '//div[@class="forumpost blog_entry blog clearfix site"]')
+    MOODLE_TURN_EDITING_ON_BTN                          = ('xoath', '//input[@type="submit" and @value="Turn editing on"]')
+    MOODLE_ADD_ACTIVITY_BUTTON                          = ('xpath', '//span[@class="section-modchooser-text" and text()="Add an activity or resource"]')
+    MOODLE_KALTURA_VIDEO_RESOURCE_OPTION                = ('xpath', '//input[@id="item_kalvidres"]')
+    MOODLE_ADD_CHOSEN_ACTIVITY_BTN                      = ('xpath', '//input[@class="submitbutton" and @value="Add"]')
+    MOODLE_KALTURA_VIDEO_SOURCE_PAGE                    = ('xpath', '//img[@class="icon iconlarge" and text()="Adding a new Kaltura Video Resource"]')
+    MOODLE_FILL_ACTIVITY_NAME                           = ('xpath', '//input[@id="id_name"]')
+    MOODLE_KALTURA_VIDEO_SOURCE_ADD_MEDIA_BTN           = ('xpath', 'input[@id="id_add_video"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -208,17 +215,18 @@ class Moodle(Base):
     
     
     # @Author: Inbar Willman
-    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay=''): 
-        # Navigate to site blog      
-        if self.navigateToSiteBlog() == False:
-            writeToLog("INFO","FAILED to navigate to site blog")
-            return False  
+    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', forceNavigate=False): 
+        # Navigate to site blog   
+        if forceNavigate == True:   
+            if self.navigateToSiteBlog() == False:
+                writeToLog("INFO","FAILED to navigate to site blog")
+                return False  
         
-        # Click on embed site blog
-        embedSiteBlogTitle = (self.MOODLE_EMBED_SITE_BLOG_TITLE[0], self.MOODLE_EMBED_SITE_BLOG_TITLE[1].replace('SITE_BLOG_TITLE', embedTitle))
-        if self.click(embedSiteBlogTitle) == False:
-            writeToLog("INFO","FAILED to click on site blog title")
-            return False   
+            # Click on embed site blog
+            embedSiteBlogTitle = (self.MOODLE_EMBED_SITE_BLOG_TITLE[0], self.MOODLE_EMBED_SITE_BLOG_TITLE[1].replace('SITE_BLOG_TITLE', embedTitle))
+            if self.click(embedSiteBlogTitle) == False:
+                writeToLog("INFO","FAILED to click on site blog title")
+                return False   
          
         # If entry type is video
         if delay != '':  
@@ -239,6 +247,8 @@ class Moodle(Base):
     # @Author: Inbar Willman
     # Delete embed item
     def deleteEmbedSiteBlog(self, embedName, forceNavigate=False):
+        self.switch_to_default_content()
+        
         if forceNavigate == True:
             # Navigate to site blog      
             if self.navigateToSiteBlog() == False:
@@ -268,4 +278,78 @@ class Moodle(Base):
         
         return True   
     
-                 
+    
+    # @Author: Inbar Willman
+    def chooseMoodleActivity(self, galleryName='New1', activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE):
+        if self.navigateToGalleryMoodle(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to to course page")
+            return False
+        
+        # Check if turn editing on id enabled
+        if self.wait_element(self.MOODLE_TURN_EDITING_ON_BTN) == False:
+            # Enable turn editing on
+            if self.click(self.MOODLE_TURN_EDITING_ON_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'turn editing on' button")
+                return False  
+            
+        if self.click(self.MOODLE_ADD_ACTIVITY_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on 'add an activity or resource' button")
+                return False 
+            
+        if activity == enums.MoodleActivities.KALTURA_VIDEO_RESOURCE:
+            if self.click(self.MOODLE_KALTURA_VIDEO_RESOURCE_OPTION) == False:
+                writeToLog("INFO","FAILED to click on 'kaltura video resource' option")
+                return False  
+            
+        if self.click(self.MOODLE_ADD_CHOSEN_ACTIVITY_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Add' button")
+                return False
+            
+        if activity == enums.MoodleActivities.KALTURA_VIDEO_RESOURCE:
+            if self.wait_element(self.MOODLE_KALTURA_VIDEO_SOURCE_PAGE) == False:
+                writeToLog("INFO","FAILED to display kaltura video spurce page")
+                return False 
+            
+        return True
+            
+    
+    # @Author: Inbar Willman        
+    def createEmbedActivity(self, entryName, activityName, galleryName='New1', activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
+        if self.chooseMoodleActivity(galleryName, activity) == False:
+                writeToLog("INFO","FAILED to choose moodle activity")
+                return False  
+            
+        if self.send_keys(self.MOODLE_FILL_ACTIVITY_NAME, activityName) == False:
+            writeToLog("INFO","FAILED to insert site blog entry title")
+            return False   
+        
+        # Get window before opening embed window
+        window_before = self.clsCommon.base.driver.window_handles[0]  
+        
+        if activity == enums.MoodleActivities.KALTURA_VIDEO_RESOURCE:
+            if self.click(self.MOODLE_KALTURA_VIDEO_SOURCE_ADD_MEDIA_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Add medoa' button")
+                return False                
+             
+        else:
+            if self.click(self.MOODLE_SITE_BLOG_WYSIWYG) == False:
+                writeToLog("INFO","FAILED to click on wysiwyg")
+                return False  
+        
+        sleep(2)
+        
+        # Get window after opening embed window and switch to this window
+        window_after = self.clsCommon.base.driver.window_handles[1]
+        self.clsCommon.base.driver.switch_to_window(window_after)
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, application=enums.Application.MOODLE) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False  
+                
+        self.clsCommon.base.driver.switch_to_window(window_before) 
+        
+        if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
+            writeToLog("INFO","FAILED to click on submit button")
+            return False  
+                    
+        return True         

@@ -14,12 +14,12 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Moodle - Embed media in site blogs from my media
+    # Test Name : Moodle - Embed video resource from SR
     # Test description:
-    # Upload entry -> Go to site page -> Go to site blog -> Click on kaltura media -> Click on 'My media' tab
-    # Select video -> Embed -> Verify that entry was embedded and played
+    # Upload entry -> Go to course -> Turn editing on -> Add an activity or resource -> Choose kalture video resource -< Fill name
+    # Select video from SR -> Embed -> Verify that entry was embedded and played
     #================================================================================================================================
-    testNum     = "2127"
+    testNum     = "2128"
     application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -50,32 +50,32 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Embed media in site blog from my media - video", self.testNum)
-            self.siteBlogTitle = clsTestService.addGuidToString("site blog from my media - video", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Embed kaltura video resource from SR - video", self.testNum)
+            self.activityTitle = clsTestService.addGuidToString("Embed kaltura video resource", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to upload entry")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
+#             writeToLog("INFO","Step 1: Going to upload entry")    
+#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 1: FAILED to upload entry")
+#                 return
+#              
+#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
+#                 return
+#              
+#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+#                 return
              
-            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+            writeToLog("INFO","Step 4: Going to create embed video resource from 'SR'")    
+            if self.common.moodle.createEmbedActivity('023ADE3C-2128-Embed kaltura video resource from SR - video', self.activityTitle, embedFrom=enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate entry page")
-                return
-             
-            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-                return
-             
-            writeToLog("INFO","Step 4: Going to create embed site blog from 'My Media'")    
-            if self.common.moodle.createEmbedSiteBlog(self.entryName, self.siteBlogTitle)== False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to create embed site blog from 'My Media'")
+                writeToLog("INFO","Step 4: FAILED to create embed video resource from 'SR'")
                 return 
             
             writeToLog("INFO","Step 5: Going to verify embed site blog")    
@@ -90,7 +90,7 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to delete embed site blog")
                 return                                         
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Moodle - Embed media in site blogs from my media' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle - Embed video resource from SR' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -101,7 +101,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.moodle.deleteEmbedSiteBlog(self.siteBlogTitle, True)
+
             writeToLog("INFO","**************** Ended: teardown_method *******************")                       
         except:
             pass            

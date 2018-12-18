@@ -451,3 +451,10 @@ class BBContentPageMenusOptions(Enum):
     KALTURA_MEDIA             = 'Kaltura Media' 
     MORE_TOOLS                = 'More Tools'
     ANNOUNCEMENTS             = 'Announcements' 
+    
+
+class MoodleActivities(Enum):
+    def __str__(self):
+        return str(self.value)   
+    
+    KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
