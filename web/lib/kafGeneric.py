@@ -13,7 +13,9 @@ class KafGeneric(Base):
     def __init__(self, clsCommon, driver):
         self.driver = driver
         self.clsCommon = clsCommon    
-    #====================================================================================================================================
+    #
+    
+    =================================================================================================================================
     #Login locators:
     #====================================================================================================================================
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
@@ -29,6 +31,7 @@ class KafGeneric(Base):
     KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE    = ('xpath', "//a[@data-original-title='Media Gallery']")
     KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
     KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
+    KAF_GRID_VIEW                               = ('xpath', "//button[@id='MyMediaGrid']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -44,14 +47,14 @@ class KafGeneric(Base):
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
             writeToLog("INFO","FAILED navigate to My Media")
             return False
-         
-        self.wait_element(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON, timeout=15)
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-         
+        
         if self.switchToKAFIframeGeneric()== False:
             writeToLog("INFO","FAILED switch to iframe")
+            return False
+        
+        self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
+        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
+            writeToLog("INFO","FAILED navigate to My Media")
             return False
          
         return True
@@ -267,6 +270,7 @@ class KafGeneric(Base):
         sleep(5)
         return True
     
+    
     def handlePendingEntriesIngallery(self, galleryName, toRejectEntriesNames, toApproveEntriesNames , navigate=True):
         if navigate == True:
             if self.navigateToGallery(galleryName) == False:
@@ -404,8 +408,8 @@ class KafGeneric(Base):
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
         return True      
-    
 
+    
     # @Author: Oleg Sigalov
     # Verify embed entry generic
     def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD):
