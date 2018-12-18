@@ -495,7 +495,7 @@ class EntryPage(Base):
                     return False           
             
         # Check that there is no option to add comments - relevant for both close discussion and disabled comments
-        if self.is_visible(self.ENTRY_PAGE_COMMENT_TEXT_AREA) == True:
+        if self.wait_element(self.ENTRY_PAGE_COMMENT_TEXT_AREA, timeout=10) == True:
             writeToLog("INFO","FAILED - add new comment box is still displayed")
             return False                  
         
@@ -766,8 +766,6 @@ class EntryPage(Base):
         if playerTime != captionTime[1:]:
             writeToLog("INFO","FAILED, caption time in the player isn't correct")
             return False
-            
-        self.clsCommon.blackBoard.switchToBlackboardIframe()
         
         writeToLog("INFO","Success, caption was found and verified in the player")
         return True

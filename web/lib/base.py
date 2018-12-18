@@ -293,25 +293,50 @@ class Base:
             
 
     # waits for the element to appear
+#     def wait_element1(self, locator, timeout=10, multipleElements=False):
+#         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+#         self.setImplicitlyWait(0)
+#         while True:
+#             try:
+#                 self.setImplicitlyWaitToDefault()
+#                 if multipleElements == True:
+#                     elements = self.get_elements(locator)
+#                     for el in elements:
+#                         if el.size['width']!=0 and el.size['height']!=0:
+#                             return el
+#                     return False
+#                 else:
+#                     return self.get_element(locator)
+#             except:
+#                 if wait_until < datetime.datetime.now():
+#                     self.setImplicitlyWaitToDefault()
+#                     return False                 
+#                 pass      
+            
+            
+    # waits for the element to appear
     def wait_element(self, locator, timeout=10, multipleElements=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         self.setImplicitlyWait(0)
         while True:
             try:
-                self.setImplicitlyWaitToDefault()
                 if multipleElements == True:
                     elements = self.get_elements(locator)
                     for el in elements:
                         if el.size['width']!=0 and el.size['height']!=0:
+                            self.setImplicitlyWaitToDefault()
                             return el
+                    self.setImplicitlyWaitToDefault()
                     return False
                 else:
-                    return self.get_element(locator)
+                    el = self.get_element(locator)
+                    self.setImplicitlyWaitToDefault()
+                    return el
             except:
                 if wait_until < datetime.datetime.now():
                     self.setImplicitlyWaitToDefault()
                     return False                 
-                pass      
+                pass   
             
 
     # waits for the elements to appear (self.is_visible)
