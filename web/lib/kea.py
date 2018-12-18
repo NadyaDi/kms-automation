@@ -230,10 +230,13 @@ class Kea(Base):
             writeToLog("INFO","FAILED to click Done button")
             return False 
         
-        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
-            writeToLog("INFO","FAILED to wait until spinner isn't visible")
-            return False  
-        
+#         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+#             writeToLog("INFO","FAILED to wait until spinner isn't visible")
+#             return False  
+# Until we catch the locator of the overlay we are going to use sleep
+
+        sleep(5)
+
         if doneOption == enums.KeaQuizButtons.GO_TO_MEDIA_PAGE:
             if self.keaQuizClickButton(enums.KeaQuizButtons.GO_TO_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to click go to media page button")

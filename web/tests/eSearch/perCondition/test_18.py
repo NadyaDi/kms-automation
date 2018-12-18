@@ -113,8 +113,8 @@ class Test:
             if self.common.kea.addQuizQuestion(self.QuizQuestion1, self.QuizQuestion1Answer1, self.QuizQuestion1AdditionalAnswers) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to start quiz and add questions")
-                return   
-                  
+                return  
+                              
             writeToLog("INFO","Step 6: Going to save quiz and navigate to media page")
             if self.common.kea.clickDone() == False:
                 self.status = "Fail"
@@ -154,8 +154,8 @@ class Test:
             if self.common.kea.addQuizQuestion(self.QuizQuestion1, self.QuizQuestion1Answer1, self.QuizQuestion1AdditionalAnswers) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to start quiz and add questions")
-                return   
-                  
+                return 
+                              
             writeToLog("INFO","Step 13: Going to save quiz and navigate to media page")
             if self.common.kea.clickDone() == False:
                 self.status = "Fail"
@@ -196,7 +196,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to start quiz and add questions")
                 return   
-                  
+                              
             writeToLog("INFO","Step 20: Going to save quiz and navigate to media page")
             if self.common.kea.clickDone() == False:
                 self.status = "Fail"
