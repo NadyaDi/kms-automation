@@ -54,29 +54,41 @@ class Test:
             self.siteBlogTitle = clsTestService.addGuidToString("site blog from my media - video", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-#             writeToLog("INFO","Step 1: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return
-#             
-#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
-#                 return
-#             
-#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-#                 return
-            
+            writeToLog("INFO","Step 1: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return
+             
+            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                return
+             
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                return
+             
             writeToLog("INFO","Step 4: Going to create embed site blog from 'My Media'")    
-            if self.common.moodle.createEmbedSiteBlog('70FC0894-2127-Embed media in site blog from my media - video', self.siteBlogTitle)== False:
+            if self.common.moodle.createEmbedSiteBlog(self.entryName, self.siteBlogTitle)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create embed site blog from 'My Media'")
-                return            
+                return 
+            
+            writeToLog("INFO","Step 5: Going to verify embed site blog")    
+            if self.common.kafGeneric.verifyEmbedEntry(self.siteBlogTitle, '', self.vidoeTimeToStop, application=enums.Application.MOODLE)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to verify embed site blog")
+                return  
+            
+            writeToLog("INFO","Step 6: Going to delete embed site blog")    
+            if self.common.moodle.deleteEmbedSiteBlog(self.siteBlogTitle)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to delete embed site blog")
+                return                                         
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Upload media from desktop and verify player' was done successfully")
         # if an exception happened we need to handle it and fail the test       
@@ -88,7 +100,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName, self.audioEntryName, self.imageEntryName])
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.moodle.deleteEmbedSiteBlog(self.siteBlogTitle, True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")                       
         except:
             pass            

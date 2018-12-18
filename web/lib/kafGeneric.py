@@ -307,7 +307,11 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='' ):
+    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', application=enums.Application.BLACK_BOARD):
+        if application == enums.Application.MOODLE:
+            self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
+      
+            
         if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
@@ -364,6 +368,13 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to click on 'select' media button")
             return False
         
+        if application == enums.Application.MOODLE:
+            sleep(4)
+            self.switch_to_default_content()
+            if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'embed' button")
+                return False                
+        
         return True   
     
     
@@ -394,62 +405,22 @@ class KafGeneric(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         return True      
     
-    
-    # @Author: Inbar Willman
-    # Verify embed entry (video/image) in page
-    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', mediaType=enums.MediaType.VIDEO, application=enums.Application.BLACK_BOARD): 
+
+    # @Author: Oleg Sigalov
+    # Verify embed entry generic
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD):
         if application == enums.Application.BLACK_BOARD:
-            self.refresh()
-            self.clsCommon.base.switch_to_default_content()
-            
-            tmpEmbedTitle= (self.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[0], self.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[1].replace('EMBED_TITLE', embedTitle))
-            try:
-                embedNameElment = self.get_element(tmpEmbedTitle) 
-                embedContainer = embedNameElment.find_element_by_xpath("../../..")
-                
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to find embed container")
-                return False
-            
-            parentId = embedContainer.get_attribute("id")
-            if parentId == "":
-                writeToLog("INFO","FAILED to get id attribute from embed container")
-                return False 
-                
-            parentId = parentId.split(":")
-            iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + parentId[1] + "')]"))
-            
-            if iframeElment == False:
-                writeToLog("INFO","FAILED to get player iframe")
-                return False 
-             
-            try:    
-                self.driver.switch_to.frame(iframeElment)
-            except Exception:
-                writeToLog("INFO","FAILED to switch to player iframe")
-                return False
-            
-            # If we are in blackboard need to click on play icon in order to get the player
-            if self.click(self.clsCommon.blackBoard.EMBED_ENTRY_PLAY_ICON) == False:
-                writeToLog("INFO","FAILED to click on play icon")
-                return False 
-             
-            sleep(10)
-            if delay != '':
-                self.switch_to_default_content()
-                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/content/') and contains(@src, 'content_id=" + parentId[1] + "')]"))
-                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + parentId[1] + "')]"))
-                self.driver.switch_to.frame(self.wait_element(self.clsCommon.player.PLAYER_IFRAME, 60))
-                localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
-                
-                if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
-                    writeToLog("INFO","FAILED to play and verify video")
-                    False                
-            
-            else:
-                if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
-                    writeToLog("INFO","FAILED to display correct image thumbnail")
-                    return False   
+            return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
+        elif application == enums.Application.MOODLE:
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay)
+#       elif application == enums.Application.CANVAS:
+#            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
+#       elif application == enums.Application.D2L:
+#            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
+#       elif application == enums.Application.JIVE:
+#            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay)                       
+        else:
+            writeToLog("INFO","FAILED unknown application: " + application.value)   
+            return False
         
-        writeToLog("INFO","Embed media was successfully verified")    
-        return True   
+        return True                     

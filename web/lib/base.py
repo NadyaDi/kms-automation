@@ -776,7 +776,7 @@ class Base:
 
             
     def swith_to_iframe(self, locator, timeout=30):
-        elementIframe = self.wait_visible(locator, timeout)
+        elementIframe = self.wait_element(locator, timeout)
         if elementIframe == False:
             writeToLog("INFO","FAILED to get IFRAME element")
             return False      
