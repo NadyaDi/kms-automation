@@ -260,7 +260,7 @@ class KafGeneric(Base):
         if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None, verifyModerationWarning=isGalleryModerate) == None:
             writeToLog("INFO","FAILED to upload media from gallery page: " + uploadEntry.name)
             return False
-        sleep(5)
+        sleep(10)
         
         # Click 'Go To media gallery'
         if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
