@@ -721,7 +721,7 @@ class Player(Base):
                 
                 QRcodeList.append(qrResolve)
                 QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
-                sleep(0.3)
+                sleep(0.1)
             
             return self.removeDuplicate(QRcodeList)
             
