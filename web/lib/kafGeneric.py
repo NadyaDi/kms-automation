@@ -13,9 +13,8 @@ class KafGeneric(Base):
     def __init__(self, clsCommon, driver):
         self.driver = driver
         self.clsCommon = clsCommon    
-    #
     
-    =================================================================================================================================
+    #=================================================================================================================================
     #Login locators:
     #====================================================================================================================================
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
@@ -32,6 +31,7 @@ class KafGeneric(Base):
     KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
     KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
     KAF_GRID_VIEW                               = ('xpath', "//button[@id='MyMediaGrid']")
+    KAF_SR_ENTRY_CHECKBOX                       = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -373,7 +373,7 @@ class KafGeneric(Base):
             return False
         
         if application == enums.Application.MOODLE:
-            sleep(4)
+            sleep(5)
             self.switch_to_default_content()
             if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'embed' button")
@@ -412,6 +412,8 @@ class KafGeneric(Base):
     
     # @Author: Oleg Sigalov
     # Verify embed entry generic
+    # imageThumbnail is the expecterQrCode of embed image - when the value different then '', means that the type is image
+    # imageThumbnail is the expecterQrCode of embed video - when the value different then '', means that the type is video
     def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD):
         if application == enums.Application.BLACK_BOARD:
             return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
@@ -427,4 +429,77 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED unknown application: " + application.value)   
             return False
         
-        return True                     
+        return True     
+    
+    
+    # @Author: Inbar Willman
+    # Add media to media gallery from SR
+    def addSharedRepositoryMedieToMediaGallery(self, galleryName, entriesNames):
+        if self.navigateToGallery(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to  gallery: " +  galleryName)
+            return False
+        
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click add to gallery button")
+            return False           
+        
+        sleep(1)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)   
+        
+        # open shared repository list
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY) == False:
+            writeToLog("INFO","FAILED to click on Shared repository tab")
+            return False
+        
+        #chose shared repository channel 
+        tmpSharedRepositoryChannel = (self.clsCommon.channel.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[0], self.clsCommon.channel.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[1].replace('CHANNEL_NAME', "Shared Repository"))
+        if self.click(tmpSharedRepositoryChannel) == False:
+            writeToLog("INFO","FAILED to select Shared repository option in dropdown")
+            return False
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+            
+        if self.addContentFromSR(entriesNames) == False:
+            writeToLog("INFO","FAILED to publish entries to media gallery: " + galleryName)
+            return False    
+        
+        ("INFO","Success to publish entry from SR tab to: " + galleryName)
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def addContentFromSR(self, entriesNames):   
+        # Checking if entriesNames list type
+        if type(entriesNames) is list: 
+            for entryName in entriesNames: 
+                if self.checkSingleEntryInSharedRepository(entryName) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
+                    return False
+                
+                writeToLog("INFO","Going to publish Entry: " + entryName)
+        else:
+            if self.checkSingleEntryInSharedRepository(entriesNames) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                    return False
+                
+            writeToLog("INFO","Going to publish Entry: " + entriesNames)
+            
+        if self.click(self.clsCommon.channel.CHANNEL_PUBLISH_BUTTON) == False:
+            writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+            return False             
+        
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def checkSingleEntryInSharedRepository(self, entryName):
+        # Click on the Entry's check-box in MyMedia page
+        tmp_entry_name = (self.KAF_SR_ENTRY_CHECKBOX[0], self.KAF_SR_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
+        if self.click(tmp_entry_name, multipleElements=True) == False:
+            # If entry not found, search for 'No Entries Found' alert
+            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        return True            
