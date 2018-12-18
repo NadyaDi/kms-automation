@@ -143,6 +143,7 @@ test_2120,0,1,0,0,Moodle - Edit Entry page - Disable comments
 test_2121,0,1,0,0,Moodle - Edit Entry page - Close discussion
 test_2123,1,0,0,0,Moodle - Entry page - Add captions And Search - remove caption
 test_2127,1,0,0,0,Moodle - Embed media in site blogs from my media
+test_2128,1,0,0,0,Moodle - Embed video resource from SR
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
