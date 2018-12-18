@@ -215,6 +215,7 @@ class SortAndFilter(Enum):
     CAPTIONS                  = 'Captions'
     DURATION                  = 'Duration'
     CREATION_DATE             = 'Creation Date'
+    PUBLISH_STATUS            = 'Publish Status'  
     
 
 class KeaQuizButtons(Enum):

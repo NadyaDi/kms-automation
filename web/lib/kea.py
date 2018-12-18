@@ -231,10 +231,13 @@ class Kea(Base):
             writeToLog("INFO","FAILED to click Done button")
             return False 
         
-        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
-            writeToLog("INFO","FAILED to wait until spinner isn't visible")
-            return False  
-        
+#         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+#             writeToLog("INFO","FAILED to wait until spinner isn't visible")
+#             return False  
+# Until we catch the locator of the overlay we are going to use sleep
+
+        sleep(5)
+
         if doneOption == enums.KeaQuizButtons.GO_TO_MEDIA_PAGE:
             if self.keaQuizClickButton(enums.KeaQuizButtons.GO_TO_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to click go to media page button")
@@ -496,8 +499,8 @@ class Kea(Base):
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
-    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom):
-        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom)
+    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
         
         sleep(1)
         if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
@@ -524,6 +527,11 @@ class Kea(Base):
             writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
             return False
         
+        if openEditorTab == True:
+            sleep(10)
+            self.refresh()
+            sleep(5)
+            
         self.clsCommon.player.switchToPlayerIframe()
         entryDuration = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
         self.switch_to_default_content()
@@ -540,9 +548,9 @@ class Kea(Base):
     # the following function will create a Quiz (within the given dictQuestions)
     # Currently support question type=Multiple ONLY     
     def quizCreation(self, entryName, dictQuestions): #TBD: dictDetails, dictScores, dictExperience
-        sleep(15)
+        sleep(25)
         self.searchAndSelectEntryInMediaSelection(entryName)
-        sleep(10) 
+        sleep(5) 
                    
         for questionNumber in dictQuestions:
             questionDetails = dictQuestions[questionNumber]
