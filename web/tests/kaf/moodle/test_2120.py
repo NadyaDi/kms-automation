@@ -95,7 +95,7 @@ class Test:
                 return   
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BB :Edit Entry Metadata ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

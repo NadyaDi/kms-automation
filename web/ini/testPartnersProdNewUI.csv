@@ -15,6 +15,7 @@ test_2116,Moodle - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kalt
 test_2118,Moodle - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2117,Moodle - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2119,Moodle - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2120,Moodle - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_113,KAF BB - Embed Media From SR - Add New Announcements,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
@@ -267,14 +268,14 @@ test_4490,Filter by Scheduling - with search - Category page - pending tab,24438
 test_4491,Filter by Scheduling - no search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4492,Filter by Scheduling - with search - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4493,Filter by Scheduling - no search - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4494,Filter by Scheduling - with search - Add to channel - My Media tab	,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4495,Filter by Scheduling - no search - Add to channel - My Media tab	,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4494,Filter by Scheduling - with search - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4495,Filter by Scheduling - no search - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4496,Filter by Scheduling - with search - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4497,Filter by Scheduling - no search - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4498,Filter by Scheduling - with search - Add to channel - SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4499,Filter by Scheduling - no search - Add to channel - SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4500,Filter by Scheduling - with search - Add to Gallery - SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4501,Filter by Scheduling - no search - Add to Gallery - SR tab	,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4501,Filter by Scheduling - no search - Add to Gallery - SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_1,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

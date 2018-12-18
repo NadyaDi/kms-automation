@@ -139,6 +139,7 @@ test_2116,1,0,0,0,Moodle - My Media - Sort Media
 test_2117,1,0,0,0,Moodle - My Media - Filter Media View Different Statuses
 test_2118,1,0,0,0,Moodle - My Media - Filter by media Type
 test_2119,1,0,0,0,Moodle - Edit Entry Metadata
+test_2119,1,0,0,0,Moodle - Edit Entry page - Disable comments
 test_2127,1,0,0,0,Moodle - Embed media in site blogs from my media
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history

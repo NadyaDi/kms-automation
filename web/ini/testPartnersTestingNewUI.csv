@@ -14,6 +14,7 @@ test_2116,Moodle - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kalt
 test_2118,Moodle - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2117,Moodle - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2119,Moodle - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2120,Moodle - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
