@@ -55,10 +55,12 @@ class QrCodeReader(Base):
     
 
     # Take screenshot the bottom (slide on bottom right of the player) half of the player, return the full file path of the screenshot 
-    def takeQrCodeSlideScreenshot(self):
+    def takeQrCodeSlideScreenshot(self, showLog=True):
         filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        
         if self.takeScreeshot(filePath) == True:
-            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+            if showLog == True:
+                writeToLog("INFO","Screenshot of the page save to: " + filePath)
         else:
             writeToLog("INFO","FAILED to take screenshot of the page")
             return False       

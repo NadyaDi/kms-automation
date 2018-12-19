@@ -142,6 +142,7 @@ test_2119,1,0,0,0,Moodle - Edit Entry Metadata
 test_2120,0,1,0,0,Moodle - Edit Entry page - Disable comments
 test_2121,0,1,0,0,Moodle - Edit Entry page - Close discussion
 test_2123,1,0,0,0,Moodle - Entry page - Add captions And Search - remove caption
+test_2124,1,0,0,0,Moodle - Edit entry page - thumbnail tab
 test_2127,1,0,0,0,Moodle - Embed media in site blogs from my media
 test_2128,1,0,0,0,Moodle - Embed video resource from SR
 test_2510,1,0,0,0,Global Search for Category
@@ -172,6 +173,7 @@ test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recent
 test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page
 test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
+test_2284,1,0,0,0,Canvas - Preview all kinds of media from My Media and Gallery
 test_2869,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
 test_4458,1,0,0,0,KEA trim entry with slides

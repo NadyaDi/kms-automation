@@ -29,6 +29,7 @@ from globalSearch import GlobalSearch
 import filecmp
 from kafGeneric import KafGeneric
 from kafMoodle import Moodle
+from kafCanvas import Canvas
 
 
     #============================================================================================================
@@ -65,6 +66,7 @@ class Common():
         self.blackBoard         = BlackBoard(self, driver)
         self.sharePoint         = SharePoint(self, driver)
         self.moodle             = Moodle(self, driver)
+        self.canvas             = Canvas(self, driver)
         
     #=============================================================================================================
     # Locators:
@@ -117,6 +119,8 @@ class Common():
             return self.sharePoint.loginToSharepoint(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)      
         elif self.base.getAppUnderTest() == enums.Application.MOODLE:
             return self.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)   
+        elif self.base.getAppUnderTest() == enums.Application.CANVAS:
+            return self.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
     
     
     # Author: Tzachi Guetta     
@@ -245,6 +249,8 @@ class Common():
             return self.blackBoard.switchToBlackboardIframe()
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             return self.moodle.switchToMoodleIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            return self.canvas.switchToCanvasIframe()()
         else:
             self.base.switch_to_default_content()
             

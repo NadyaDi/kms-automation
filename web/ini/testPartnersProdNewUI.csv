@@ -18,6 +18,7 @@ test_2119,Moodle - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltur
 test_2120,Moodle - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2121,Moodle - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2123,Moodle - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2124,Moodle - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2128,Moodle - Embed video resource from SR,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
@@ -46,6 +47,7 @@ test_114,KAF BB - Add Remove Featured Media Module,,,pythonautomation1@mailinato
 test_4424,KAF BB -upload media from media gallery page,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_2088,KAF BB - Upload From Embed As Standalone,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
