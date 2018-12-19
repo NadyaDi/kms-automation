@@ -840,8 +840,14 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to get id attribute from embed container")
             return False 
             
-        parentId = parentId.split(":")
-        iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + parentId[0] + "')]"))
+        m = re.search('(_\d\d\d_)', parentId)
+        if m:
+            foundId = m.group(1)
+        else:
+            writeToLog("INFO","FAILED to get id from string: '" + str(parentId) + "'")
+            return False             
+                
+        iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + foundId + "')]"))
         if iframeElment == False:
             writeToLog("INFO","FAILED to get player iframe")
             return False 
