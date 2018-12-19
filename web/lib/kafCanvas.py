@@ -2,7 +2,6 @@ from base import *
 from general import General
 import localSettings
 from logger import *
-from _ast import Is
 from selenium.webdriver.common.keys import Keys
 import enums
 
