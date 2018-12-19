@@ -709,23 +709,27 @@ class Player(Base):
             if self.clickPlay(False, True) == False:
                 return False       
             
-            QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
-            QRcodeList = [];
+            qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            QRPathList = []
             
-            while QRcode != False:       
-                
-                qrResolve = self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
+            while qrPath != False:
+                qrPath = self.clsCommon.qrcode.takeQrCodeSlideScreenshot()
+                if qrPath == False:
+                    break
+                    
+                QRPathList.append(qrPath)
+                qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+            
+            QRcodeList = []
+            for qrPath in QRPathList:
+                qrResolve = self.clsCommon.qrcode.resolveQrCode(qrPath)
                 if qrResolve == False:
                     writeToLog("INFO","FAILED to resolve QR code")
-                    return self.removeDuplicate(QRcodeList)  
-                
                 QRcodeList.append(qrResolve)
-                QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
-#                 sleep(0.1)
-            
+                
             return self.removeDuplicate(QRcodeList)
             
-        except Exception:
+        except Exception as inst:
             return False
         
         
