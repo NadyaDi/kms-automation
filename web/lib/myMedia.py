@@ -116,6 +116,8 @@ class MyMedia(Base):
     FILTER_NEXT_ARROW                                           = ('xpath', "//button[@class='search-filters__arrow search-filters__arrow--next']")
     FILTER_PREVIOUS_ARROW                                       = ('xpath', "//button[contains(@class,'search-filters__arrow search-filters__arrow--previous')]")
     FILTER_CUSTOM_DURATION                                      = ('xpath', "//div[@class='input-range__slider' and @aria-valuenow='VALUE_TO_REPLACE']")
+    CHANNEL_PENDING_TAB_ICON                                    = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']")
+    CHANNEL_PENDING_ENTRY_DATA                                  = ('xpath', "//tr[@id='ENTRY_ID_tr']")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1413,16 +1415,29 @@ class MyMedia(Base):
         return True
     
     
-    #@Author: Michal Zomper 
-    # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter
-    def verifyEntryTypeIcon(self, entriesList, entryType):
+    #@Author: Michal Zomper
+    # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter    
+    def verifyEntryTypeIcon(self, entriesList, entryType, location=enums.Location.CHANNEL_PAGE):
         for entry in entriesList:
-            tmpEntry = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entry))
-            try:
-                entryThumbnail = self.get_element(tmpEntry)
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to find entry '" + entry + "' element")
-                return False
+            
+            if location == enums.Location.PENDING_TAB:
+                tmpEntry = (self.CHANNEL_PENDING_TAB_ICON[0], self.CHANNEL_PENDING_TAB_ICON[1].replace('ENTRY_NAME', entry)) 
+                element = self.wait_element(tmpEntry)
+                      
+                entryId = element.get_attribute("id")
+                tmpEntryID = (self.CHANNEL_PENDING_ENTRY_DATA[0], self.CHANNEL_PENDING_ENTRY_DATA[1].replace('ENTRY_ID', entryId))           
+                try:
+                    entryThumbnail = self.get_element(tmpEntryID)
+                except Exception:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' element")
+                    return False
+            else:
+                tmpEntry = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entry))
+                try:
+                    entryThumbnail = self.get_element(tmpEntry)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' element")
+                    return False        
 
             if entryType == enums.MediaType.IMAGE:
                 try: 
@@ -1458,9 +1473,9 @@ class MyMedia(Base):
             return False
                 
         writeToLog("INFO","Success, All entry '" + entry + "' " + entryType.value + "  icon was verify")
-        return True 
-    
-    
+        return True
+
+
     #@Author: Oded berihon 
     # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter
     def verifyEntryTypeIconAferSearch(self, entriesList, entryType):
