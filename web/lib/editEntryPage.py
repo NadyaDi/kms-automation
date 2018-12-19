@@ -1463,6 +1463,7 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_DELETE_ENTRY_BUTTON, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on delete button")
             return False
+        sleep(2)
         
         # Click on confirm delete
         if self.click(self.clsCommon.myMedia.MY_MEDIA_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
