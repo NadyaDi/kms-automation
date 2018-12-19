@@ -112,3 +112,4 @@ TEST_CURRENT_IFRAME_ENUM                    = enums.IframeName.DEFAULT
 LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL      = 'https://il-qa-blackboard-q2-2018.dev.kaltura.com:8443'
 LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL      = 'https://kalturasp2013.sharepoint.com/sites/QA/QAtesting/automation/SitePages'
 LOCAL_SETTINGS_KAF_MOODLE_BASE_URL          = 'https://extqa4.dev.kaltura.com/moodle3.2vs4.0.10new/moodle'
+LOCAL_SETTINGS_KAF_CANVAS_BASE_URL          = 'https://kaltura.instructure.com'

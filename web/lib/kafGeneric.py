@@ -43,19 +43,24 @@ class KafGeneric(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     
-    def navigateToMyMediaKAF(self):         
-        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-        
-        if self.switchToKAFIframeGeneric()== False:
-            writeToLog("INFO","FAILED switch to iframe")
-            return False
-        
-        self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
+    def navigateToMyMediaKAF(self):   
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.clsCommon.canvas.navigateToMyMediaCanvas() == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False   
+        else: 
+            if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False
+            
+            if self.switchToKAFIframeGeneric()== False:
+                writeToLog("INFO","FAILED switch to iframe")
+                return False
+            
+            self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False
          
         return True
 
@@ -74,6 +79,11 @@ class KafGeneric(Base):
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
             if self.clsCommon.sharePoint.switchToSharepointIframe() == False:
                 writeToLog("INFO","FAILED to switch to sharepoint iframe")
+                return False
+            
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.clsCommon.canvas.switchToCanvasIframe()() == False:
+                writeToLog("INFO","FAILED to switch to canvas iframe")
                 return False
         
         return True
@@ -100,6 +110,11 @@ class KafGeneric(Base):
             
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             if self.clsCommon.moodle.navigateToGalleryMoodle(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
+                return False 
+            
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.clsCommon.canvas.navigateToGalleryCanvas(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
         return True
