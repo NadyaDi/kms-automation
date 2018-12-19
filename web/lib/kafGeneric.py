@@ -326,11 +326,11 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', application=enums.Application.BLACK_BOARD):
+    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG):
         if application == enums.Application.MOODLE:
-            self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
-      
-            
+            if activity == enums.MoodleActivities.SITE_BLOG:
+                self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
+          
         if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
@@ -376,7 +376,9 @@ class KafGeneric(Base):
                 return False    
             
             self.clsCommon.general.waitForLoaderToDisappear()  
-            return True                                
+            return True   
+        
+        self.clsCommon.general.waitForLoaderToDisappear()                              
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
@@ -388,11 +390,12 @@ class KafGeneric(Base):
             return False
         
         if application == enums.Application.MOODLE:
-            sleep(5)
-            self.switch_to_default_content()
-            if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
-                writeToLog("INFO","FAILED to click on 'embed' button")
-                return False                
+            if activity == enums.MoodleActivities.SITE_BLOG:
+                sleep(5)
+                self.switch_to_default_content()
+                if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
+                    writeToLog("INFO","FAILED to click on 'embed' button")
+                    return False                
         
         return True   
     
@@ -427,13 +430,14 @@ class KafGeneric(Base):
     
     # @Author: Oleg Sigalov
     # Verify embed entry generic
-    # imageThumbnail is the expecterQrCode of embed image - when the value different then '', means that the type is image
-    # imageThumbnail is the expecterQrCode of embed video - when the value different then '', means that the type is video
-    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD):
+    # 'imageThumbnail'' is the expecterQrCode of embed image - when the value different then '', means that the type is image
+    # 'imageThumbnail' is the expecterQrCode of embed video - when the value different then '', means that the type is video
+    # 'activity' is relevant just for moodle KAF
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG):
         if application == enums.Application.BLACK_BOARD:
             return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
         elif application == enums.Application.MOODLE:
-            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay)
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity)
 #       elif application == enums.Application.CANVAS:
 #            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
 #       elif application == enums.Application.D2L:
