@@ -18,6 +18,7 @@ test_2119,Moodle - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltur
 test_2120,Moodle - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2121,Moodle - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2123,Moodle - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2124,Moodle - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2128,Moodle - Embed video resource from SR,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
