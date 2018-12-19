@@ -841,7 +841,7 @@ class BlackBoard(Base):
             return False 
             
         parentId = parentId.split(":")
-        iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + parentId[1] + "')]"))
+        iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + parentId[0] + "')]"))
         if iframeElment == False:
             writeToLog("INFO","FAILED to get player iframe")
             return False 
