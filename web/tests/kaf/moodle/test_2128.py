@@ -30,10 +30,7 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
-    videoQrCodeResult = "7"
-    vidoeLength = "0:10"
-    vidoeTimeToStop = "0:07"
-    categoryName = None
+    vidoeTimeToStop = "0:08"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -52,43 +49,57 @@ class Test:
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Embed kaltura video resource from SR - video", self.testNum)
             self.activityTitle = clsTestService.addGuidToString("Embed kaltura video resource", self.testNum)
-            
+            self.fieldText = "metadata"
+            self.galleryName = "Shared Repository"
             ##################### TEST STEPS - MAIN FLOW ##################### 
-#             writeToLog("INFO","Step 1: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return
-#              
-#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
-#                 return
-#              
-#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-#                 return
-             
-            writeToLog("INFO","Step 4: Going to create embed video resource from 'SR'")    
-            if self.common.moodle.createEmbedActivity('023ADE3C-2128-Embed kaltura video resource from SR - video', self.activityTitle, embedFrom=enums.Location.SHARED_REPOSITORY) == False:
+            writeToLog("INFO","Step 1: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to create embed video resource from 'SR'")
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return            
+               
+            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                return            
+               
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                return
+            
+            writeToLog("INFO","Step 4: Going to to add required metadata fields for SR")    
+            if self.common.moodle.addSharedRepositoryMetadataMoodle(self.entryName, self.fieldText) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to add required metadata fields for SR")
                 return 
             
-            writeToLog("INFO","Step 5: Going to verify embed site blog")    
-            if self.common.kafGeneric.verifyEmbedEntry(self.siteBlogTitle, '', self.vidoeTimeToStop, application=enums.Application.MOODLE)== False:
+            writeToLog("INFO","Step 5: Going to publish entry to SR")    
+            if self.common.myMedia.publishSingleEntry(self.entryName, '', '', [self.galleryName]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to verify embed site blog")
+                writeToLog("INFO","Step 5: FAILED to publish entry to SR")
+                return                                     
+              
+            writeToLog("INFO","Step 6: Going to create embed video resource from 'SR'")    
+            if self.common.moodle.createEmbedActivity(self.entryName, self.activityTitle, embedFrom=enums.Location.SHARED_REPOSITORY) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to create embed video resource from 'SR'")
+                return 
+             
+            writeToLog("INFO","Step 7: Going to verify embed kaltura video resource")    
+            if self.common.kafGeneric.verifyEmbedEntry(self.activityTitle, '', self.vidoeTimeToStop, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to verify embed kaltura video resource")
                 return  
             
-            writeToLog("INFO","Step 6: Going to delete embed site blog")    
-            if self.common.moodle.deleteEmbedSiteBlog(self.siteBlogTitle)== False:
+            writeToLog("INFO","Step 8: Going to delete embed kaltura video resource")    
+            if self.common.moodle.deleteEmbedActivity(self.activityTitle)== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to delete embed site blog")
-                return                                         
+                writeToLog("INFO","Step 8: FAILED to delete embed kaltura video resource")
+                return 
+                                                                 
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Moodle - Embed video resource from SR' was done successfully")
         # if an exception happened we need to handle it and fail the test       
@@ -101,7 +112,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-
+            self.common.moodle.deleteEmbedActivity(self.activityTitle)
             writeToLog("INFO","**************** Ended: teardown_method *******************")                       
         except:
             pass            

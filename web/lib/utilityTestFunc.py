@@ -79,6 +79,7 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/local/mymedia/mymedia.php'
         localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/local/kalturamediagallery/index.php?courseid=10'
         localSettings.LOCAL_SETTINGS_SITE_BLOG_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/blog/index.php'
+        localSettings.LOCAL_SETTINGS_COURSE_URL                 = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/course/view.php?id=10'
     return
 
 

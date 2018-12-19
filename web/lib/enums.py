@@ -458,3 +458,4 @@ class MoodleActivities(Enum):
         return str(self.value)   
     
     KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
+    SITE_BLOG                 = 'Site blog'
