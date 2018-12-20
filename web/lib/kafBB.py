@@ -607,7 +607,7 @@ class BlackBoard(Base):
     # Create embed item
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags=''):
+    def createEmbedItem(self, galleryName, entryName, itemName, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags=''):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
             return False 
@@ -687,7 +687,7 @@ class BlackBoard(Base):
     # Create embed kaltura media
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags=''):
+    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags=''):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.KALTURA_MEDIA) == False:
             writeToLog("INFO","FAILED to navigate to content kaltura media page")
             return False 
@@ -885,6 +885,7 @@ class BlackBoard(Base):
                 return False                
         
         else:
+            sleep(5)
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
                 return False   

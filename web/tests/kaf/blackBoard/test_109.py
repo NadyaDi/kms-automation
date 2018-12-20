@@ -80,7 +80,7 @@ class Test:
                 return
  
             writeToLog("INFO","Step 5: Going to CREATE embed kaltura media from media gallery")  
-            if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, self.entryName, self.itemNameEmbedMediaGallery, '', '0:08')== False:
+            if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, self.entryName, self.itemNameEmbedMediaGallery)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to CREATE embed kaltura media from media gallery")
                 return   

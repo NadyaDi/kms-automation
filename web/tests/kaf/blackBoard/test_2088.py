@@ -57,7 +57,7 @@ class Test:
             ######################### TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to create embed item media from upload entry")  
-            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedUpload, self.uploadThumbnailExpectedResult, '', embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=self.tags)== False:
+            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedUpload, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=self.tags)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create embed item media from upload entry")
                 return
