@@ -72,9 +72,6 @@ class Test:
             self.imageEntryName: self.filePathImage }
 
             ##################### TEST STEPS - MAIN FLOW ##################### 
-#             self.common.canvas.navigateToMyMediaCanvas()
-            self.common.canvas.navigateToGalleryCanvas()
-            
             writeToLog("INFO","Step 1: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -83,73 +80,75 @@ class Test:
              
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 2: Going navigate to My Media not using a url navigation")  
-            if self.common.base.wait_visible(self.common.moodle.MOODLE_MY_MEDIA_BUTTON_IN_NAVIGATION_MENU, timeout=10) == False:
-                writeToLog("INFO", "Site home isn't open and need to open it")
-                if self.common.base.click(self.common.moodle.MOODLE_SITE_HOME_BUTTON) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 2: FAILED to click on site home button in the navigation menu")
-                    return
- 
-            #click on My Media button        
-            if self.common.base.click(self.common.moodle.MOODLE_MY_MEDIA_BUTTON_IN_NAVIGATION_MENU, multipleElements=False) == False:
+            if self.common.base.click(self.common.canvas.CANVAS_DASHBOARD_BUTTON_IN_NAV_BAR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to click on site home button in the navigation menu")
+                writeToLog("INFO","Step 2: FAILED to click on 'Dashboard' button in the navigation menu")
                 return
-            sleep(5)  
-                    
-            if self.common.base.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
+  
+            #click on gallery new1  button        
+            if self.common.base.click(self.common.canvas.CANVAS_GALLERY_NEW1_IN_DASHBOARD_MENU) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED verify My Media page URL")
-                return 
-              
-            self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_ACTIONS_BUTTON)
+                writeToLog("INFO","Step 2: FAILED to click on gallery 'New1' button in dashboard menu")
+                return
+             
+            #click on My Media button        
+            if self.common.base.click(self.common.canvas.CANVAS_MY_MEDIA_BUTTON_IN_NAV_BAR) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to click on my media button")
+                return
+                     
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED switch to moodle iframe")
+                writeToLog("INFO","Step 2: FAILED switch to canvas iframe")
                 return  
-              
+             
+            if self.common.base.wait_element(self.common.myMedia.MY_MEDIA_TITLE, timeout=15) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED navigate to My Media")
+                return 
+               
             writeToLog("INFO","Step 3: Going navigate to image entry: "+ self.imageEntryName)    
             if self.common.entryPage.navigateToEntry(self.imageEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to entry: " + self.imageEntryName)
                 return
-                     
+                      
             writeToLog("INFO","Step 4: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the entry '" + self.imageEntryName + "' in player")
                 return   
-                 
+                  
             writeToLog("INFO","Step 5: Going navigate to audio entry: "+ self.audioEntryName)    
             if self.common.entryPage.navigateToEntry(self.audioEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to entry: " + self.audioEntryName)
                 return 
-                             
+                              
             writeToLog("INFO","Step 6: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED - New entry is still processing")
                 return 
-                 
+                  
             writeToLog("INFO","Step 7: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, self.audioLength, "", "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify the entry '" + self.audioEntryName + "' in player")
                 return   
-        
+         
             writeToLog("INFO","Step 8: Going navigate to video entry: "+ self.videoEntryName1)    
             if self.common.entryPage.navigateToEntry(self.videoEntryName1, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to entry: " + self.videoEntryName1)
                 return 
-                       
+                        
             writeToLog("INFO","Step 9: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED - New entry is still processing")
                 return 
-                 
+                  
             writeToLog("INFO","Step 10: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
                 self.status = "Fail"
@@ -164,32 +163,33 @@ class Test:
             
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 12: Going navigate to Media Gallery not using a url navigation")  
-            if self.common.base.wait_visible(self.common.moodle.MOODLE_MEDIA_GALLERY_BUTTON_IN_NAVIGATION_MENU, timeout=10) == False:
-                writeToLog("INFO", "My Courses isn't open and need to open it")
-             
-                #click on course button        
-                if self.common.base.click(self.common.moodle.MOODLE_COURSE_BUTTON_IN_MENU_BAR) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 12: FAILED to click on course 'New1' button in the navigation menu")
-                    return
-                
-            #click on Media gallery button        
-            if self.common.base.click(self.common.moodle.MOODLE_MEDIA_GALLERY_BUTTON_IN_NAVIGATION_MENU) == False:
+
+            if self.common.base.click(self.common.canvas.CANVAS_DASHBOARD_BUTTON_IN_NAV_BAR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to click on media gallery button in the navigation menu")
+                writeToLog("INFO","Step 12: FAILED to click on 'Dashboard' button in the navigation menu")
                 return
-            sleep(5)
-            
-            if self.common.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+ 
+            #click on gallery new1  button        
+            if self.common.base.click(self.common.canvas.CANVAS_GALLERY_NEW1_IN_DASHBOARD_MENU) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED verify Media Gallery page URL")
-                return 
+                writeToLog("INFO","Step 2: FAILED to click on gallery 'New1' button in dashboard menu")
+                return
             
-            self.common.base.wait_visible(self.common.channel.CHANNEL_ACTION_BUTTON)
+            #click on Media Gallery button        
+            if self.common.base.click(self.common.canvas.CANVAS_MEDIA_GALLERY_BUTTON_IN_NAV_BAR) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to click on media gallery button")
+                return
+                    
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED switch to moodle iframe")
+                writeToLog("INFO","Step 12: FAILED switch to canvas iframe")
                 return  
+            
+            if self.common.base.wait_element(self.common.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED navigate to Media Gallery")
+                return 
              
             writeToLog("INFO","Step 13: Going navigate to image entry: '" + self.imageEntryName + "' from gallery page")    
             if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.imageEntryName, self.galleryName) == False:

@@ -250,7 +250,7 @@ class Common():
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             return self.moodle.switchToMoodleIframe()
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-            return self.canvas.switchToCanvasIframe()()
+            return self.canvas.switchToCanvasIframe()
         else:
             self.base.switch_to_default_content()
             

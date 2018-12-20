@@ -25,6 +25,8 @@ class Canvas(Base):
     CANVAS_MEDIA_SPACE_IFRAME                           = ('xpath', "//iframe[@id='tool_content']")
     CANVAS_MY_MEDIA_BUTTON_IN_NAV_BAR                   = ('xpath', "//a[contains(@class, 'ontext_external_tool') and @title='My Media']")
     CANVAS_MEDIA_GALLERY_BUTTON_IN_NAV_BAR              = ('xpath', "//a[contains(@class, 'ontext_external_tool') and @title='Media Gallery']")
+    CANVAS_DASHBOARD_BUTTON_IN_NAV_BAR                  = ('xpath', "//a[@id='global_nav_dashboard_link']")
+    CANVAS_GALLERY_NEW1_IN_DASHBOARD_MENU               = ('xpath', "//div[@class='ic-DashboardCard' and @aria-label='New1']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -41,18 +43,18 @@ class Canvas(Base):
             if self.swith_to_iframe(self.CANVAS_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
                 return False
-            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_MOODLE
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_CANVAS
             return True
                      
         if self.wait_visible(self.CANVAS_MEDIA_SPACE_IFRAME, 3) == False:
-            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_MOODLE
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_CANVAS
             return True
         else:
             if self.swith_to_iframe(self.CANVAS_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
                 return False
              
-        localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_MOODLE
+        localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_CANVAS
         return True
             
                 
@@ -103,15 +105,16 @@ class Canvas(Base):
      
      
     # Author: Michal Zomper
-    def navigateToMyMediaCanvas(self):
-        self.switchToCanvasIframe()
-        if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_TITLE, 5) != False:
-            writeToLog("INFO","Success Already in my Gallery page")
-            return True
+    def navigateToMyMediaCanvas(self, forceNavigate=False):
+        if forceNavigate==False:
+            self.switchToCanvasIframe()
+            if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_TITLE, 5) != False:
+                writeToLog("INFO","Success Already in my Media page")
+                return True
         
         self.clsCommon.base.switch_to_default_content()
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-            writeToLog("INFO","FAILED navigate to course page")
+            writeToLog("INFO","FAILED navigate to my media page")
             return False
         
         if self.click(self.CANVAS_MY_MEDIA_BUTTON_IN_NAV_BAR) == False:
@@ -126,13 +129,12 @@ class Canvas(Base):
         return True   
          
      
-     
     # Author: Michal Zomper
     def navigateToGalleryCanvas(self, forceNavigate=False):
         if forceNavigate == False:
             self.switchToCanvasIframe()
             if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
-                writeToLog("INFO","Success Already in my Gallery page")
+                writeToLog("INFO","Success Already in gallery page")
                 return True
         
         self.clsCommon.base.switch_to_default_content()

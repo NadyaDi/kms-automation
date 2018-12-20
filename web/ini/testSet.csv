@@ -115,6 +115,7 @@ test_869,1,0,0,0,add Publishing - playlist flow
 test_876,1,0,0,0,add Publishing Schedule during upload
 test_883,1,0,0,0,add Publishing Schedule via edit entry page
 test_894,1,0,0,0,sort in my media
+test_954,1,0,0,0,Moodle - Publish from my media to shared repository
 test_1025,0,1,0,0,Categories - Sort media on category page
 test_1026,1,0,0,0,Publish from upload page
 test_1027,1,0,0,0,Edir entry - thumbnail tab
@@ -145,6 +146,11 @@ test_2123,1,0,0,0,Moodle - Entry page - Add captions And Search - remove caption
 test_2124,1,0,0,0,Moodle - Edit entry page - thumbnail tab
 test_2127,1,0,0,0,Moodle - Embed media in site blogs from my media
 test_2128,1,0,0,0,Moodle - Embed video resource from SR
+test_2276,1,0,0,0,Canvas - Edit entry page - thumbnail tab
+test_2279,1,0,0,0,Canvas - My Media -Delete through my media
+test_2280,1,0,0,0,Canvas - Delete through edit entry page
+test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
+test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history

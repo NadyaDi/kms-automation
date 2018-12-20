@@ -99,6 +99,7 @@ class IframeName(Enum):
     KAF_BLACKBOARD_EMBED_KALTURA_MEDIA      = 'KAF_BLACKBOARD_EMBED_KALTURA_MEDIA'
     KAF_SHAREPOINT                          = 'KAF_SHAREPOINT'
     KAF_MOODLE                              = 'KAF_MOODLE'
+    KAF_CANVAS                              = 'KAF_CANVAS'
 
     
     

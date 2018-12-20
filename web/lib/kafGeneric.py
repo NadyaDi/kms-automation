@@ -43,12 +43,16 @@ class KafGeneric(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     
-    def navigateToMyMediaKAF(self):   
+    def navigateToMyMediaKAF(self, forceNavigate=False): 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-            if self.clsCommon.canvas.navigateToMyMediaCanvas() == False:
+            if self.clsCommon.canvas.navigateToMyMediaCanvas(forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False   
         else: 
+            if forceNavigate == False:
+                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 5) == True:
+                    return True 
+            
             if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False
@@ -82,7 +86,7 @@ class KafGeneric(Base):
                 return False
             
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-            if self.clsCommon.canvas.switchToCanvasIframe()() == False:
+            if self.clsCommon.canvas.switchToCanvasIframe() == False:
                 writeToLog("INFO","FAILED to switch to canvas iframe")
                 return False
         
@@ -114,14 +118,15 @@ class KafGeneric(Base):
                 return False 
             
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-            if self.clsCommon.canvas.navigateToGalleryCanvas(galleryName, forceNavigate) == False:
-                writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
+            if self.clsCommon.canvas.navigateToGalleryCanvas(forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
                 return False 
         return True
         
     
     # Author: Michal Zomper    
     def navigateToEntryPageFromGalleryPage(self, entryName, galleryName, forceNavigate=False):
+        self.switchToKAFIframeGeneric() 
         tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         if self.wait_element(tmpEntryName, 5) != False:
             writeToLog("INFO","Already in entry page: '" + entryName + "'")
