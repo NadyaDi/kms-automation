@@ -56,7 +56,9 @@ class Moodle(Base):
     MOODLE_CONFIRM_DELETE_EMBED                            = ('xpath', '//input[@value="Yes" and @type="button"]')
     MOODLE_SITE_BLOG_TITLE_IN_SITE_BLOGS_PAGE              = ('xpath', '//a[contains(@href, "/moodle/blog/") and text()="SITE_BLOG_TITLE")]')  
     MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')  
-    MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')                                   
+    MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')    
+    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
+    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')                               
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -183,7 +185,7 @@ class Moodle(Base):
     
     
     # @Author: Inbar Willman
-    def createEmbedSiteBlog(self, entryName, siteBlogTitle, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
+    def createEmbedSiteBlog(self, entryName, siteBlogTitle, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, mediaGalleryName=None):
         if self.navigateToSiteBlog() == False:
             writeToLog("INFO","FAILED navigate to to site blog page")
             return False
@@ -209,7 +211,7 @@ class Moodle(Base):
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
         
-        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, application=enums.Application.MOODLE, activity=enums.MoodleActivities.SITE_BLOG) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, application=enums.Application.MOODLE, activity=enums.MoodleActivities.SITE_BLOG) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
                 
@@ -246,10 +248,11 @@ class Moodle(Base):
                 if self.click(embed_activity) == False:
                     writeToLog("INFO","FAILED to click on embed activity title")
                     return False                                        
-         
+        
+        self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
+        sleep(5)
         # If entry type is video
-        if delay != '':  
-            self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
+        if delay != '':   
 #            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
             if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
                 writeToLog("INFO","FAILED to play and verify video")
@@ -259,6 +262,7 @@ class Moodle(Base):
         else:
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
+                return False
                 
         return True 
     
@@ -325,7 +329,7 @@ class Moodle(Base):
             
     
     # @Author: Inbar Willman        
-    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False):
+    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False , filePath=None, description=None, tags=None):
         self.clsCommon.base.switch_to_default_content()
         # Navigate to course page
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_URL) == False:
@@ -373,7 +377,7 @@ class Moodle(Base):
         self.clsCommon.base.driver.switch_to_window(window_after)
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
                 
@@ -487,3 +491,17 @@ class Moodle(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
 
         return True
+    
+    
+    # @Author: Inbar Willman
+    def submitMediaAsAssignment(self, isAssignmgnet):
+        if isAssignmgnet == True:
+            if self.click(self.MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Yes' button")
+                return False     
+        else:
+            if self.click(self.MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'No' button")
+                return False  
+            
+        return True                          

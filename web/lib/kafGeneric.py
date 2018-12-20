@@ -326,7 +326,7 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG):
+    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False):
         if application == enums.Application.MOODLE:
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
@@ -375,6 +375,7 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on save and embed button")
                 return False    
             
+            sleep(2)
             self.clsCommon.general.waitForLoaderToDisappear()  
             return True   
         

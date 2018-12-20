@@ -52,6 +52,7 @@ class Admin(Base):
     ADMIN_CUSTOM_DATA_PROFILE_ID_DROPDOWN           = ('xpath', '//dd[@id="profileId-element"]')
     ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION             = ('xpath', '//option[@value="PROFILE_ID"]')
     ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
+    ADMIN_ASSIGNMENT_SUBMISSION                     = ('xpath', '//select[@id="enableAssignmentSubmission"]')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -945,4 +946,31 @@ class Admin(Base):
             return False
             
         writeToLog("INFO","Success, secureEmbed was set to: " + str(selection) + "'")
-        return True          
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def enableDisabledAssignmentSubmission(self, isEnabled):     
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to CustometadatabrowseAndEmbed module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/browseandembed') == False:
+            writeToLog("INFO","FAILED to load 'browse and embed' page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable assignment submission
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ASSIGNMENT_SUBMISSION, selection) == False:
+            writeToLog("INFO","FAILED to set assignment submission as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+            
+        writeToLog("INFO","Success, assignment submission was set to: " + str(selection) + "'")
+        return True            
