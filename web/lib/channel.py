@@ -2041,8 +2041,11 @@ class Channel(Base):
                 searchLine = searchText
         else: 
             searchLine = searchText
-                   
-        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
+        else:
+            self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
         

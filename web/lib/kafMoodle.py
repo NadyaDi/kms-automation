@@ -141,7 +141,7 @@ class Moodle(Base):
         self.clsCommon.base.switch_to_default_content()
         if forceNavigate == False:
             if self.wait_element(self.MOODLE__MEDIA_GALLERY_TITLE, 5) != False:
-                writeToLog("INFO","Success Already in my Gallery page")
+                writeToLog("INFO","Success Already in gallery page")
                 self.clsCommon.moodle.switchToMoodleIframe()
                 return True
         

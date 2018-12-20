@@ -135,10 +135,10 @@ class MyMedia(Base):
 
     
     # This method, clicks on the menu and My Media
-    def navigateToMyMedia(self, forceNavigate = False):
+    def navigateToMyMedia(self, forceNavigate=False):
         # KAF
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
-            if self.clsCommon.kafGeneric.navigateToMyMediaKAF() == False:
+            if self.clsCommon.kafGeneric.navigateToMyMediaKAF(forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to my media in " + localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST.value)
                 return False
 
@@ -194,7 +194,7 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     # Known limitation: entries MUST be presented on the first page of my media
     def deleteEntriesFromMyMedia(self, entriesNames, showAllEntries=False):
-        if self.navigateToMyMedia(forceNavigate = True) == False:
+        if self.navigateToMyMedia(forceNavigate=True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
         
@@ -1371,7 +1371,7 @@ class MyMedia(Base):
                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
             
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS):
                 self.click(self.MY_MEDIA_TITLE)
             
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
