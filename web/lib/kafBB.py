@@ -868,7 +868,7 @@ class BlackBoard(Base):
         sleep(10)
         if delay != '':
             try:   
-                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + parentId[1] + "')]"))
+                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + foundId + "')]"))
             except Exception:
                 writeToLog("INFO","FAILED to switch to '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay' iframe")
                 return False                      
