@@ -255,8 +255,9 @@ class Common():
             self.base.switch_to_default_content()
             
             
-    def sendKeysToBodyElement(self, keys):
-        self.base.send_keys_to_element(self.base.get_body_element(), keys)
+    def sendKeysToBodyElement(self, keys, multipleAction=1):
+        for i in range(multipleAction):
+            self.base.send_keys_to_element(self.base.get_body_element(), keys)
         return True
     
     
