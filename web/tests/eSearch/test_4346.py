@@ -51,7 +51,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver) 
             
-            self.searchInAddToChannel = "searchIn"
+            self.searchInAddToChannelSearchIn = "searchIn"
             self.channel = "Channel for eSearch"
             
             self.entryForSearchIn1 = "Search in - Captions"
@@ -91,7 +91,7 @@ class Test:
                 return  
               
             writeToLog("INFO","Step 3: Going to make a search in 'Add to channel' - 'My Media' tab")
-            if self.common.channel.searchInAddToChannel(self.searchInAddToChannel) == False:
+            if self.common.channel.searchInAddToChannel(self.searchInAddToChannelSearchIn) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to make a search in 'Add to channel' - 'My Media' tab")
                 return          

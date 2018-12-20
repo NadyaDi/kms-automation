@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from base import *
 import clsTestService
 import enums
-
+from PIL import Image
 
 class Player(Base):
     driver = None
@@ -713,12 +713,19 @@ class Player(Base):
             QRPathList = []
             
             while qrPath != False:
-                qrPath = self.clsCommon.qrcode.takeQrCodeSlideScreenshot()
+                qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot()
                 if qrPath == False:
                     break
                     
                 QRPathList.append(qrPath)
                 qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+            
+            bodyElement = self.get_body_element()
+            for qrPath in QRPathList:
+                # Crop the image
+                img = Image.open(qrPath)
+                img2 = img.crop((bodyElement['right'] / 1.37, bodyElement['top'], bodyElement['right'], bodyElement['bottom'] / 1.63))
+                img2.save(qrPath)            
             
             QRcodeList = []
             for qrPath in QRPathList:

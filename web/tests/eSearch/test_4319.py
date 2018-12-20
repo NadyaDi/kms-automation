@@ -52,7 +52,7 @@ class Test:
             self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver) 
             
-            self.searchInAddToChannel = "Sort by"
+            self.searchInAddToChannelSortBy = "Sort by"
             self.sRChannel = "SR-Channel for eSearch"
             self.gallery = "eSearch category"
             self.sortEntriesByCreationDateDescending = ("Sort by - Sort H", "Sort by - Sort G", "Sort by - Sort F", "Sort by - Sort E", "Sort by - Sort D", 
@@ -105,7 +105,7 @@ class Test:
                 return   
               
             writeToLog("INFO","Step 6: Going to make a search in 'Add to gallery' - 'SR' tab")
-            if self.common.channel.searchInAddToChannel(self.searchInAddToChannel, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY) == False:
+            if self.common.channel.searchInAddToChannel(self.searchInAddToChannelSortBy, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to make a search in 'Add to gallery' - 'SR' tab")
                 return 

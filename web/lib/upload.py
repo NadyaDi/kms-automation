@@ -129,12 +129,14 @@ class Upload(Base):
             entryID = href.split("/")[len(href.split("/"))-1]
             
         except NoSuchElementException:
+            writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator + "'")
             return False
         
         return entryID
     
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
+    # IMPORTENT!! This method return None (not False) if failed and an entry ID if passed
     def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False):
         for i in range(retries):
             try:
@@ -229,6 +231,9 @@ class Upload(Base):
             except Exception:
                 writeToLog("INFO","FAILED to upload entry, retry number " + str(i))
                 pass
+            
+        if i >= retries - 1:
+            return None
     
     
     def uploadMulitple(self, uploadEntrieList, disclaimer=False, uploadFrom=enums.Location.UPLOAD_PAGE):

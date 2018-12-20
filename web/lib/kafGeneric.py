@@ -458,7 +458,57 @@ class KafGeneric(Base):
         if self.navigateToGallery(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to  gallery: " +  galleryName)
             return False
+            
+        if self.addContentFromSR(entriesNames) == False:
+            writeToLog("INFO","FAILED to publish entries to media gallery: " + galleryName)
+            return False    
         
+        ("INFO","Success to publish entry from SR tab to: " + galleryName)
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def addContentFromSR(self, entriesNames):   
+        # Checking if entriesNames list type
+        if type(entriesNames) is list: 
+            for entryName in entriesNames:
+                if self.clickAddMediaAndSharedRepository() == False:
+                    writeToLog("INFO","FAILED to open shared repository section")
+                    return False
+                
+                if self.checkSingleEntryInSharedRepository(entryName, withSearch=True) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
+                    return False
+                
+                writeToLog("INFO","Going to publish Entry: " + entryName)
+                if self.clickPublishAndWaitForLoaderToDisappear() == False:
+                    return False   
+                writeToLog("INFO","Entry: '" + entryName + "' was published successfully")
+            return True
+
+        # Single entry
+        else:
+            if self.clickAddMediaAndSharedRepository() == False:
+                writeToLog("INFO","FAILED to open shared repository section")
+                return False  
+                          
+            if self.checkSingleEntryInSharedRepository(entriesNames) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                    return False
+                
+            writeToLog("INFO","Going to publish Entry: " + entriesNames)
+            
+        if self.clickPublishAndWaitForLoaderToDisappear() == False:
+            return False             
+        
+        # Single entry log
+        writeToLog("INFO","Entry: '" + entriesNames + "' was published successfully")
+        return True    
+    
+    
+    # @Author: Oleg Sigalov
+    # Method flow: Click Add Media, Click on shared repository menu, Click shared repository dropdown
+    def clickAddMediaAndSharedRepository(self):
         if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to gallery button")
             return False           
@@ -476,47 +526,29 @@ class KafGeneric(Base):
         if self.click(tmpSharedRepositoryChannel) == False:
             writeToLog("INFO","FAILED to select Shared repository option in dropdown")
             return False
-        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
-            
-        if self.addContentFromSR(entriesNames) == False:
-            writeToLog("INFO","FAILED to publish entries to media gallery: " + galleryName)
-            return False    
         
-        ("INFO","Success to publish entry from SR tab to: " + galleryName)
-        return True    
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+        return True
     
-    
-    # @Author: Inbar Willman
-    def addContentFromSR(self, entriesNames):   
-        # Checking if entriesNames list type
-        if type(entriesNames) is list: 
-            for entryName in entriesNames: 
-                if self.checkSingleEntryInSharedRepository(entryName) == False:
-                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
-                    return False
-                
-                writeToLog("INFO","Going to publish Entry: " + entryName)
-        else:
-            if self.checkSingleEntryInSharedRepository(entriesNames) == False:
-                    writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
-                    return False
-                
-            writeToLog("INFO","Going to publish Entry: " + entriesNames)
-            
+        
+    # @Author: Oleg Sigalov
+    def clickPublishAndWaitForLoaderToDisappear(self):
         if self.click(self.clsCommon.channel.CHANNEL_PUBLISH_BUTTON) == False:
-            writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+            writeToLog("INFO","FAILED to CHECK the entry, At add content -> my media flow")
             return False             
         
         sleep(1)
         self.clsCommon.general.waitForLoaderToDisappear()
-        
-        return True    
+        return True        
     
     
     # @Author: Inbar Willman
-    def checkSingleEntryInSharedRepository(self, entryName):
+    def checkSingleEntryInSharedRepository(self, entryName, withSearch=False):
+        if withSearch == True:
+            self.clsCommon.channel.searchInAddToChannel(entryName, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY)
         # Click on the Entry's check-box in MyMedia page
         tmp_entry_name = (self.KAF_SR_ENTRY_CHECKBOX[0], self.KAF_SR_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
+                
         if self.click(tmp_entry_name, multipleElements=True) == False:
             # If entry not found, search for 'No Entries Found' alert
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
