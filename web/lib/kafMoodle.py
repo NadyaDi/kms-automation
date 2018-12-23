@@ -58,7 +58,8 @@ class Moodle(Base):
     MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')  
     MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')    
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
-    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')                               
+    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')
+    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")                               
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -504,4 +505,13 @@ class Moodle(Base):
                 writeToLog("INFO","FAILED to click on 'No' button")
                 return False  
             
-        return True                          
+        return True       
+    
+    
+    def getMoodleLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.MOODLE_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName                      

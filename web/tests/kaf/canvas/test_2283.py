@@ -14,15 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard - Publish after upload
+    # Test Name : Canvas - Publish From Entry Page
     # Test description:
-    # 1. Enter my media and click on "add new"
-    # 2. Choose a file to upload and click save
-    # 3. After entry was finished upload - Click publish and choose a course to publish the media (from upload page)
-    # 4. Go the course and verify that the entry was published
+    # Upload entry
+    # Go to the entry page that was uploaded and publish it to course
+    # Go to the course that the entry was published to and verify that the entry display their
     #================================================================================================================================
-    testNum     = "599"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2283"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -52,36 +51,47 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Publish from upload page", self.testNum)
-            
+            self.entryName = clsTestService.addGuidToString("Publish From Entry Page", self.testNum)
+        
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            writeToLog("INFO","Step 1: Going to upload entry")  
+            writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName1)
-                return 
-                                 
-            writeToLog("INFO","Step 2: Going to publish entry from upload page")  
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return      
+              
+            writeToLog("INFO","Step 2: Going navigate to entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to publish entry' " + self.entryName + " to gallery upload page")
-                return 
-            sleep(3)
-            writeToLog("INFO","Step 3: Going navigate to gallery page")
+                writeToLog("INFO","Step 2: FAILED  navigate to entry page: " + self.entryName)
+                return           
+              
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+                  
+            writeToLog("INFO","Step 5: Going to publish entry to gallery from entry page")
+            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.ENTRY_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "' to gallery '" + self.galleryName + "' from entry page")
+                return                 
+            
+            writeToLog("INFO","Step 6: Going navigate to gallery page")
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to gallery: " + self.galleryName)
-                return
-                
-            writeToLog("INFO","Step 4: Going to verify entry published to category ")
+                writeToLog("INFO","Step 6: FAILED navigate to gallery: " + self.galleryName)
+                return             
+                          
+            writeToLog("INFO","Step 7: Going to search entry in gallery")
             if self.common.channel.searchEntryInChannel(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to find entry ' " + self.entryName + "' in gallery: " + self.galleryName)
-                return 
-           
+                writeToLog("INFO","Step 7: FAILED to find entry entry '" + self.entryName + "' in gallery '" + self.galleryName)
+                return               
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard - Publish after upload' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Publish From Entry Page' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

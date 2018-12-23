@@ -14,15 +14,15 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard - Publish after upload
+    # Test Name : Canvas - Publish after upload
     # Test description:
     # 1. Enter my media and click on "add new"
     # 2. Choose a file to upload and click save
     # 3. After entry was finished upload - Click publish and choose a course to publish the media (from upload page)
     # 4. Go the course and verify that the entry was published
     #================================================================================================================================
-    testNum     = "599"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2281"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -81,7 +81,7 @@ class Test:
                 return 
            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard - Publish after upload' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Publish after upload' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
