@@ -138,7 +138,7 @@ class MyMedia(Base):
     def navigateToMyMedia(self, forceNavigate=False):
         # KAF
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
-            if self.clsCommon.kafGeneric.navigateToMyMediaKAF(forceNavigate) == False:
+            if self.clsCommon.kafGeneric.navigateToMyMediaKAF() == False:
                 writeToLog("INFO","FAILED navigate to my media in " + localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST.value)
                 return False
 
