@@ -43,16 +43,12 @@ class KafGeneric(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     
-    def navigateToMyMediaKAF(self, forceNavigate=False): 
+    def navigateToMyMediaKAF(self): 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-            if self.clsCommon.canvas.navigateToMyMediaCanvas(forceNavigate) == False:
+            if self.clsCommon.canvas.navigateToMyMediaCanvas() == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False   
         else: 
-            if forceNavigate == False:
-                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 5) == True:
-                    return True 
-            
             if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False

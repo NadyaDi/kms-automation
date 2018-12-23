@@ -105,13 +105,7 @@ class Canvas(Base):
      
      
     # Author: Michal Zomper
-    def navigateToMyMediaCanvas(self, forceNavigate=False):
-        if forceNavigate==False:
-            self.switchToCanvasIframe()
-            if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_TITLE, 5) != False:
-                writeToLog("INFO","Success Already in my Media page")
-                return True
-        
+    def navigateToMyMediaCanvas(self):
         self.clsCommon.base.switch_to_default_content()
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
             writeToLog("INFO","FAILED navigate to my media page")
