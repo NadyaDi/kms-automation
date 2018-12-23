@@ -43,16 +43,12 @@ class KafGeneric(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     
-    def navigateToMyMediaKAF(self, forceNavigate=False): 
+    def navigateToMyMediaKAF(self): 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-            if self.clsCommon.canvas.navigateToMyMediaCanvas(forceNavigate) == False:
+            if self.clsCommon.canvas.navigateToMyMediaCanvas() == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False   
         else: 
-            if forceNavigate == False:
-                if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 5) == True:
-                    return True 
-            
             if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False
@@ -301,18 +297,21 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on gallery moderation tab")
                 return False        
         
-        sleep(2)
+        sleep(4)
         self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30) 
-        
+        self.clsCommon.channel.showAllEntriesPendingTab()
         if self.clsCommon.channel.approveEntriesInPandingTab(toApproveEntriesNames) == False:
             writeToLog("INFO","FAILED to approve entries")
             return False  
         
-        self.click(self.KAF_REFRSH_BUTTON)
-        sleep(6)
+        self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
+        sleep(4)
+        self.click(self.KAF_GRID_VIEW)
+        self.get_body_element().send_keys(Keys.PAGE_UP)
+        sleep(2)
         self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
         sleep(2)
-        
+        self.clsCommon.channel.showAllEntriesPendingTab()
         if self.clsCommon.channel.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
             writeToLog("INFO","FAILED to reject entries")
             return False

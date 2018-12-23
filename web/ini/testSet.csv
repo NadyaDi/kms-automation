@@ -59,7 +59,9 @@ test_676,1,0,0,0,Playlists - Add to playlist Entry already existing inside
 test_677,1,0,0,0,Playlists - Add Entry from My Media to Several Playlists
 test_678,1,0,0,0,Playlists - Add entry from Entry Page to several playlists together
 test_679,1,0,0,0,Playlists - Remove Entry from one of playlist during to add same Entry to new
-test_683,1,0,0,0,Create Empty Playlist
+test_681,1,0,0,0,Playlists - Add several entries to new and existing playlists
+test_683,1,0,0,0,Playlists - Create Empty Playlist
+test_4542,1,0,0,0,Playlists - Delete entries from Playlist
 test_684,1,0,0,0,Entry page - Navigate to Edit Entry Page from Entry Page
 test_685,1,0,0,0,Entry page - Edit Metadata
 test_686,1,0,0,0,Entry page - Like Unlike
@@ -149,6 +151,13 @@ test_2128,1,0,0,0,Moodle - Embed video resource from SR
 test_2276,1,0,0,0,Canvas - Edit entry page - thumbnail tab
 test_2279,1,0,0,0,Canvas - My Media -Delete through my media
 test_2280,1,0,0,0,Canvas - Delete through edit entry page
+test_2281,1,0,0,0,Canvas - Publish after upload
+test_2282,1,0,0,0,Canvas - Publish from my media (single and multiple)
+test_2283,1,0,0,0,Canvas - Publish From Entry Page
+test_2284,1,0,0,0,Canvas - Preview all kinds of media from My Media and Gallery
+test_2285,1,0,0,0,Canvas - View Collapsed Expanded Modes
+test_2286,1,0,0,0,Canvas - Upload media from desktop
+test_2290,1,0,0,0,Canvas - My Media - Search by Name / Description / Tags
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
@@ -179,13 +188,13 @@ test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recent
 test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page
 test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
-test_2284,1,0,0,0,Canvas - Preview all kinds of media from My Media and Gallery
-test_2869,1,0,0,0,KEA trim
+test_4543,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
 test_4458,1,0,0,0,KEA trim entry with slides
 test_4465,1,0,0,0,KEA clip entry with slides
 test_4482,1,0,0,0,KEA trim Quiz entry
 test_4513,1,0,0,0,KEA clip Quiz entry
+test_4535,1,0,0,0,KEA trim Audio entry
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,1,0,0,0,Slide Deck Upload
 test_3274,1,0,0,0,Slide Deck Upload-delete slides
@@ -245,6 +254,14 @@ test_4335,1,0,0,0,eSearch - Sort by media type - add to channel
 test_4336,1,0,0,0,eSearch - Sort by media type - add to category
 test_4337,1,0,0,0,eSearch - Sort by media type - add to channel with search
 test_4338,1,0,0,0,eSearch - Sort by media type - add to category page with search
+test_4339,1,0,0,0,eSearch - Sort by media type - pending tab channel page no search
+test_4340,1,0,0,0,eSearch - Sort by media type - pending tab category page no search
+test_4341,1,0,0,0,eSearch - Sort by media type - pending tab channel page with search
+test_4342,1,0,0,0,eSearch - Sort by media type - pending tab category page with search
+test_4354,1,0,0,0,eSearch - Filter by media type - add to channel SR tab no search
+test_4355,1,0,0,0,eSearch - Filter by media type - add to channel SR tab with search
+test_4356,1,0,0,0,eSearch - Filter by media type - add to category SR tab no search
+test_4343,1,0,0,0,eSearch - Filter by media type - add to channel SR tab with search
 test_4343,1,0,0,0,eSearch - Search In - My media
 test_4345,1,0,0,0,eSearch - Search In - Global page
 test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
@@ -316,7 +333,6 @@ test_4461,1,0,0,0,eSearch - Filter by Captons
 test_4462,1,0,0,0,eSearch - Filter by Captons
 test_4463,1,0,0,0,eSearch - Filter by Duration
 test_4464,1,0,0,0,eSearch - Filter by Duration
-test_4465,1,0,0,0,eSearch - Filter by Duration
 test_4466,1,0,0,0,eSearch - Filter by Duration
 test_4467,1,0,0,0,eSearch - Filter by Duration
 test_4468,1,0,0,0,eSearch - Filter by Duration

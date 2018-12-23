@@ -14,15 +14,16 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard - Publish after upload
+    # Test Name : Canvas - View Collapsed Expanded Modes
     # Test description:
-    # 1. Enter my media and click on "add new"
-    # 2. Choose a file to upload and click save
-    # 3. After entry was finished upload - Click publish and choose a course to publish the media (from upload page)
-    # 4. Go the course and verify that the entry was published
+    # upload several entries
+    # in my media -  In the page's top right side - Change between the view options : 
+    #    Collapsed view 
+    #    Expanded view
+    # All the entries / buttons / menus should be displayed in both view options and the page should look properly 
     #================================================================================================================================
-    testNum     = "599"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2285"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -31,11 +32,11 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName = None
+    entryName1 = None
+    entryName2 = None
     description = "Description" 
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
-    galleryName = "New1"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -52,36 +53,53 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Publish from upload page", self.testNum)
+            self.entryName1 = clsTestService.addGuidToString("My Media - View: Collapsed Expanded 1", self.testNum)
+            self.entryName2 = clsTestService.addGuidToString("My Media - View: Collapsed Expanded 2", self.testNum)
+            
+            self.entriesToUpload = {
+            self.entryName1: self.filePath,
+            self.entryName2: self.filePath}
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            writeToLog("INFO","Step 1: Going to upload entry")  
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
+            writeToLog("INFO","Step 1: Going to upload 2 entries")   
+            if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName1)
+                writeToLog("INFO","Step 1: FAILED to upload 2 entries")
+                return          
+
+            writeToLog("INFO","Step 2: Going navigate to my media")  
+            if self.common.myMedia.navigateToMyMedia() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED navigate to my media")
+                return  
+ 
+            writeToLog("INFO","Step 3: Going to change my media view to 'collapsed'")  
+            if self.common.base.click(self.common.myMedia.MY_MEDIA_COLLAPSED_VIEW_BUTTON, timeout=15) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to change my media view to 'collapsed view'")
                 return 
-                                 
-            writeToLog("INFO","Step 2: Going to publish entry from upload page")  
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
+               
+            writeToLog("INFO","Step 4: Going to verify my media view")
+            if self.common.myMedia.verifyMyMediaViewForEntris([self.entryName1, self.entryName2], viewType=enums.MyMediaView.COLLAPSED) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to publish entry' " + self.entryName + " to gallery upload page")
-                return 
-            sleep(3)
-            writeToLog("INFO","Step 3: Going navigate to gallery page")
-            if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to gallery: " + self.galleryName)
+                writeToLog("INFO","Step 4: FAILED to verify my media view")
                 return
-                
-            writeToLog("INFO","Step 4: Going to verify entry published to category ")
-            if self.common.channel.searchEntryInChannel(self.entryName) == False:
+            
+            writeToLog("INFO","Step 5: Going to change my media view to 'detailed'")  
+            if self.common.base.click(self.common.myMedia.MY_MEDIA_DETAILED_VIEW_BUTTON, timeout=15) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to find entry ' " + self.entryName + "' in gallery: " + self.galleryName)
+                writeToLog("INFO","Step 5: FAILED to change my media view to 'detailed view'")
                 return 
+               
+            writeToLog("INFO","Step 6: Going to verify my media view")
+            if self.common.myMedia.verifyMyMediaViewForEntris([self.entryName1, self.entryName2], viewType=enums.MyMediaView.DETAILED) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify my media view")
+                return
            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard - Publish after upload' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - View Collapsed Expanded Modes' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -91,7 +109,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

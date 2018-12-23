@@ -69,6 +69,7 @@ class BlackBoard(Base):
     BB_COURSE_NEW1_BUTTON_IN_COURSES_PAGE               = ('xpath', "//a[contains(text(), 'New1: New1')]")
     BB_TOOLS_OPTION_UNDER_TOOLS_MENU_IN_COURSE_PAGE     = ('xpath', "//span[@title= 'Tools' and contains(text(), 'Tools')]")
     BB_MEDIA_GALLEY_OPTION_IN_TOOLS_PAGE                = ('xpath', "//a[contains(text(), 'Media Gallery')]")
+    BB_USER_NAME                                        = ('xpath', "//a[@id ='global-nav-link']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -891,4 +892,12 @@ class BlackBoard(Base):
                 return False   
     
         writeToLog("INFO","Embed media was successfully verified")    
-        return True                                
+        return True 
+    
+    def getBlackboardLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.BB_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName                             

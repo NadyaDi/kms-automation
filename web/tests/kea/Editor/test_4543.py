@@ -13,11 +13,11 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Tzachi Guetta
-    # Test Name : Trimming a  Quiz entry
+    # Test Name : Trimming a video entry
     # Test description:
     # 
     #================================================================================================================================
-    testNum = "2869"
+    testNum = "4543"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

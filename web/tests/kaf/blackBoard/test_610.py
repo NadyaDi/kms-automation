@@ -339,10 +339,11 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            if self.common.login.getLoginUserName() != localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN :
-                self.common.base.switch_to_default_content()
+            self.common.base.switch_to_default_content()
+            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME in self.common.blackBoard.getBlackboardLoginUserName()) == False:
                 self.common.blackBoard.logOutOfBlackBoard()
                 self.common.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+            self.common.blackBoard.switchToBlackboardIframe()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
