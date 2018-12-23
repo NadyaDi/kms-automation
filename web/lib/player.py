@@ -713,14 +713,13 @@ class Player(Base):
             QRPathList = []
             
             while qrPath != False:
-                qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot()
+                qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(False)
                 if qrPath == False:
                     break
                     
                 QRPathList.append(qrPath)
                 qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
             
-            QRPathList = self.removeDuplicate(QRPathList)
             
             for qrPath in QRPathList:
                 # Crop the image
