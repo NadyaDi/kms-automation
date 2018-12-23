@@ -14,14 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : Blackboard- Upload media from desktop
+    # Test Name : Canvas - Upload media from desktop
     # Test description:
     # Test description:
     # upload 3 entries : video / Audio / Image
     # Navigate to each entry page and verify player is working 
     #================================================================================================================================
-    testNum     = "604"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2286"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -125,7 +125,7 @@ class Test:
                 return   
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Blackboard - Upload media from desktop and verify player' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Upload media from desktop and verify player' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

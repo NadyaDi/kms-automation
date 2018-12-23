@@ -1067,7 +1067,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to find clear search icon")
                 return False
             
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
                 if self.clickElement(clear_button[0]) == False:
                     writeToLog("INFO","FAILED click on the remove search icon")
                     return False
