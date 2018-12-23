@@ -74,8 +74,10 @@ class Home(Base):
             writeToLog("INFO","FAILED to find entry '" + entryName + "' in playlist")
             return False
         
-        sleep(3)
-        qrResult = self.clsCommon.qrcode.getScreenshotAndResolveCustomImageQrCode(cropLeft, croTop, cropRight, cropBottom, tmp_entry)
+        sleep(1)
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        sleep(1)
+        qrResult = self.clsCommon.qrcode.takeScreenshotAndCropAndResolveQrCode(cropLeft, croTop, cropRight, cropBottom)
         
         if qrResult != str(expectedQrResult):
             writeToLog("INFO","FAILED entry thumbnail is '" + str(qrResult) + "' but need to be '" + str(expectedQrResult) + "'")
