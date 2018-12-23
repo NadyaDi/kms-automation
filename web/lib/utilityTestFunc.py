@@ -125,7 +125,7 @@ def getTimerInSeconds(driver, player):
 #===============================================================================        
 def generateTimeStamp():
     ts = time.time()
-    return datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y%H%M%S')
+    return datetime.datetime.fromtimestamp(ts).strftime('%d%m%Y%H%M%S%f')
 
 #===============================================================================
 # Run any shell command

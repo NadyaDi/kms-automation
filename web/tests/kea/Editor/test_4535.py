@@ -45,8 +45,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.audioEntryName = clsTestService.addGuidToString("Upload media - Video", self.testNum)
-            expectedEntryDuration = "0:20"
+            self.audioEntryName = clsTestService.addGuidToString("Upload media - Audio", self.testNum)
+            expectedEntryDuration = "0:21"
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry - to be trimmed")  
             if self.common.upload.uploadEntry(self.filePathVideo, self.audioEntryName, self.description, self.tags) == False:
@@ -60,11 +60,18 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to trim the entry from 30sec to 20sec")
                 return
 
-            writeToLog("INFO","Step 3: Going to verify the Audio's duration after trim")  
-            self.QRlist = self.common.entryPage.verifyEntryViaType(self.audioEntryName, expectedEntryDuration)
+            writeToLog("INFO","Step 3: Going to Navigate to entry page")  
+            self.QRlist = self.common.entryPage.navigateToEntryPageFromMyMedia(self.audioEntryName)
             if  self.QRlist == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to verify the Audio's duration after trim")
+                writeToLog("INFO","Step 3: FAILED to Navigate to entry pagem")
+                return
+
+            writeToLog("INFO","Step 4: Going to verify the Audio's duration after trim")  
+            self.QRlist = self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, expectedEntryDuration)
+            if  self.QRlist == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to verify the Audio's duration after trim")
                 return
                 
             writeToLog("INFO","TEST PASSED")
