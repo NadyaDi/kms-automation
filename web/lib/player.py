@@ -720,12 +720,13 @@ class Player(Base):
                 QRPathList.append(qrPath)
                 qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
             
-            bodyElement = self.get_body_element()
+            QRPathList = self.removeDuplicate(QRPathList)
+            
             for qrPath in QRPathList:
                 # Crop the image
                 img = Image.open(qrPath)
-                img2 = img.crop((bodyElement['right'] / 1.37, bodyElement['top'], bodyElement['right'], bodyElement['bottom'] / 1.63))
-                img2.save(qrPath)            
+                img2 = img.crop((img.width / 1.38, img.height / 1.56, img.width / 1.02, img.height / 1.08))
+                img2.save(qrPath)           
             
             QRcodeList = []
             for qrPath in QRPathList:
