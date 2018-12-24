@@ -115,7 +115,7 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
                     if i > 0:
                         writeToLog("INFO","WARNING: Webdriver issue, can't start Firefox after " + str(i) + " retries of " + str(retries) + ". Going to try again...")
                     # Convert path for Windows
-                    return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL})
+                    return webdriver.Remote(browser_profile=fp,command_executor=localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL, desired_capabilities={'browserName': hostBrowser.split("_")[1], 'requireWindowFocus':True, 'applicationName': localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL, 'acceptInsecureCerts': True})
                 except Exception:
                     writeToLog("INFO","FAILED to start Firefox, retry number " + str(i))
                     writeToLog("INFO","Going to wait 5 seconds and try again")
