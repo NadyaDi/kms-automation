@@ -233,6 +233,14 @@ test_17,1,0,0,0,eSearch - Filter by Scheduling
 test_18,1,0,0,0,eSearch - Filter by Scheduling
 test_19,1,0,0,0,eSearch - Filter by Scheduling
 test_20,1,0,0,0,eSearch - Filter by Scheduling
+test_21,1,0,0,0,Setup test for eSearch
+test_22,1,0,0,0,Setup test for eSearch
+test_23,1,0,0,0,Setup test for eSearch
+test_24,1,0,0,0,Setup test for eSearch
+test_25,1,0,0,0,eSearch - Filter by custom-data
+test_26,1,0,0,0,eSearch - Filter by custom-data
+test_27,1,0,0,0,eSearch - Filter by custom-data
+test_28,1,0,0,0,eSearch - Filter by custom-data
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media - when search is made
 test_4314,1,0,0,0,eSearch - Sort by - Global search - when search is made
@@ -368,3 +376,31 @@ test_4498,1,0,0,0,eSearch - Filter by Scheduling
 test_4499,1,0,0,0,eSearch - Filter by Scheduling
 test_4500,1,0,0,0,eSearch - Filter by Scheduling
 test_4501,1,0,0,0,eSearch - Filter by Scheduling
+test_4503,1,0,0,0,Filter by Publish Statuses - Dependency with other filters - My Media
+test_4504,1,0,0,0,Filter by Publish Statuses - with search - My Media
+test_4505,1,0,0,0,Filter by Publish Statuses - no search - My Media
+test_4506,1,0,0,0,Filter by Scheduling - with search - My Media
+test_4507,1,0,0,0,Filter by Scheduling - no search - My Media
+test_4508,1,0,0,0,Filter by Duration - with search - My Media
+test_4509,1,0,0,0,Filter by Duration - no search - My Media
+test_4510,1,0,0,0,Filter by Captions - with search - My Media
+test_4511,1,0,0,0,Filter by Captions - no search - My Media
+test_4514,1,0,0,0,Filter by custom-data - with search - My Media - negative and positive
+test_4515,1,0,0,0,Filter by custom-data - no search - My Media - negative and positive
+test_4516,1,0,0,0,Filter by custom-data - with search - Global Page - negative and positive
+test_4517,1,0,0,0,Filter by custom-data - with search - Channel page - media tab - negative and positive
+test_4518,1,0,0,0,Filter by custom-data - no search - Channel page - media tab - negative and positive
+test_4519,1,0,0,0,Filter by custom-data - with search - Category page - media tab - negative and positive
+test_4520,1,0,0,0,Filter by custom-data - no search - Category page - media tab - negative and positive
+test_4521,1,0,0,0,Filter by custom-data - with search - Category page - pending tab - negative and positive
+test_4522,1,0,0,0,Filter by custom-data - no search - Category page - pending tab - negative and positive
+test_4523,1,0,0,0,Filter by custom-data - with search - Add new quiz - negative and positive
+test_4524,1,0,0,0,Filter by custom-data - no search - Add new quiz - negative and positive
+test_4525,1,0,0,0,Filter by custom-data - with search - Add to channel - My Media tab - negative and positive
+test_4526,1,0,0,0,Filter by custom-data - no search - Add to channel - My Media tab - negative and positive
+test_4527,1,0,0,0,Filter by custom-data - with search - Add to Gallery - My media tab - negative and positive
+test_4528,1,0,0,0,Filter by custom-data - no search - Add to Gallery - My media tab - negative and positive
+test_4529,1,0,0,0,Filter by custom-data - with search - Add to channel - SR tab - negative and positive
+test_4530,1,0,0,0,Filter by custom-data - no search - Add to channel - SR tab - negative and positive
+test_4531,1,0,0,0,Filter by custom-data - with search - Add to Gallery - SR tab - negative and positive
+test_4532,1,0,0,0,Filter by custom-data - no search - Add to Gallery - SR tab - negative and positive
