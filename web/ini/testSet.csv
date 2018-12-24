@@ -158,6 +158,7 @@ test_2284,1,0,0,0,Canvas - Preview all kinds of media from My Media and Gallery
 test_2285,1,0,0,0,Canvas - View Collapsed Expanded Modes
 test_2286,1,0,0,0,Canvas - Upload media from desktop
 test_2290,1,0,0,0,Canvas - My Media - Search by Name / Description / Tags
+test_2292,1,0,0,0,Canvas - My Media - filter media view different statuses
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category

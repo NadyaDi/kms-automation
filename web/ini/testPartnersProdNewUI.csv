@@ -60,6 +60,7 @@ test_2283,Canvas - Publish From Entry Page,,,pythonautomation1@mailinator.com,Ka
 test_2285,Canvas - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2286,Canvas - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2292,My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -158,7 +159,7 @@ test_678,Playlists - Add entry from Entry Page to several playlists together,236
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
 test_683,Playlists - Create Empty Playlist,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_4542,Playlists - Create Empty Playlist,,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
+test_4542,Playlists - Delete Entries From Playlist,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!,Kaltura1!
 test_695,Entry page - Add caption,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_739,Channel - Members tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_699,Entry page - Disable comments,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
