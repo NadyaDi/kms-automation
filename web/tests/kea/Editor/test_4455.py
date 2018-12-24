@@ -86,7 +86,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia(self.videoEntryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName, "Clip of " + self.videoEntryName])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

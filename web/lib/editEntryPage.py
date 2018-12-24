@@ -835,12 +835,12 @@ class EditEntryPage(Base):
     def navigateToEditEntry(self, entryName="", navigateFrom = enums.Location.MY_MEDIA):
             if navigateFrom == enums.Location.MY_MEDIA:
                 if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
-                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.MY_MEDIA)
+                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.MY_MEDIA.value)
                     return False  
                 
             elif navigateFrom == enums.Location.ENTRY_PAGE:
                 if self.navigateToEditEntryPageFromMyMedia(entryName) == False:
-                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.ENTRY_PAGE)
+                    writeToLog("INFO","FAILED navigate to edit entry '" + entryName + "' from " + enums.Location.ENTRY_PAGE.value)
                     return False            
             sleep(2)
             return True    
@@ -1467,6 +1467,7 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_DELETE_ENTRY_BUTTON, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on delete button")
             return False
+        sleep(2)
         
         # Click on confirm delete
         if self.click(self.clsCommon.myMedia.MY_MEDIA_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:

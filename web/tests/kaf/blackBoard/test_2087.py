@@ -75,7 +75,7 @@ class Test:
                 return
  
             writeToLog("INFO","Step 4: Going to create embed entry from my media")  
-            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedMyMedia, '', self.delay) == False:
+            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedMyMedia) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create embed entry from my media")
                 return

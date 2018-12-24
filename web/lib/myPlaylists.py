@@ -586,21 +586,23 @@ class MyPlaylists(Base):
     
     # @Author: Ori Flchtman
     # Add Entry from My Media or Entry Page to Several Playlists
-    # ! TODO: toCreateNewPlaylist - need to implement create new playlist if needed.
-    def addSingleEntryToMultiplePlaylists(self, entryName, playlistsName='', toCreateNewPlaylist = False, currentLocation = enums.Location.MY_MEDIA):
+    # if newPlaylistsName is empty ('') will not create new playlists
+    # playlistsName - will try to check all playlists from this list (also playlist which are already checked - will UNCHECK them)
+    def addEntriesToMultiplePlaylists(self, entries, playlistsName='', newPlaylistsName='', currentLocation=enums.Location.MY_MEDIA):
         try:
             if currentLocation == enums.Location.MY_MEDIA: 
-                if self.clsCommon.myMedia.navigateToMyMedia() == False:
+                if self.clsCommon.myMedia.navigateToMyMedia(forceNavigate=True) == False:
                     writeToLog("INFO","FAILED to navigate to my media")
                     return False
+                    sleep(10)
                 
-                if type(entryName) is list: 
-                    if self.clsCommon.myMedia.checkEntriesInMyMedia(entryName) == False:
+                if type(entries) is list: 
+                    if self.clsCommon.myMedia.checkEntriesInMyMedia(entries) == False:
                         writeToLog("INFO","FAILED to check entries in My-Media")
                         return False
                 else: 
-                    if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entryName) == False:
-                        writeToLog("INFO","FAILED to check entry '" + entryName + "' check box")
+                    if self.clsCommon.myMedia.serachAndCheckSingleEntryInMyMedia(entries) == False:
+                        writeToLog("INFO","FAILED to check entry '" + entries + "' check box")
                         return False
              
                 if self.clsCommon.myMedia.clickActionsAndAddToPlaylistFromMyMedia() == False:
@@ -610,30 +612,48 @@ class MyPlaylists(Base):
                       
                       
             elif currentLocation == enums.Location.ENTRY_PAGE:
-                if self.clsCommon.entryPage.navigateToEntry(entryName) == False:
-                    writeToLog("INFO","FAILED to navigate to Entry Page '" + entryName)
+                if self.clsCommon.entryPage.navigateToEntry(entries) == False:
+                    writeToLog("INFO","FAILED to navigate to Entry Page '" + entries)
                     return False
                 sleep(3)
                 # Click on action tab
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
-                    writeToLog("INFO","FAILED to click on action button in entry page '" + entryName + "'")
+                    writeToLog("INFO","FAILED to click on action button in entry page '" + entries + "'")
                     return False  
                 
                 sleep(1)
                 # Click on publish button
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ADDTOPLAYLIST_BUTTON, 30) == False:
-                    writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
+                    writeToLog("INFO","FAILED to click on publish button in entry page '" + entries + "'")
                     return False
             
             else:
                 writeToLog("INFO","FAILED, Add entry to playlist: the provided ""currentLocation"" Value is not accepted ")
                 return False
             
-            for playlist in playlistsName:
-                tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlist))   
-                if self.click(tmp_playlist_name) == False:
-                    writeToLog("INFO","FAILED to Check for playlists, something went wrong")
-                    return False
+            if newPlaylistsName != '':
+                if type(newPlaylistsName) is list:
+                    for newPlaylist in newPlaylistsName:
+                        if self.typeNewPalylistNameAndClickCreate(newPlaylist, saveAfterCreation=False) == False:
+                            writeToLog("INFO","FAILED to create new playlist ")
+                            return False
+                else:
+                    if self.typeNewPalylistNameAndClickCreate(newPlaylistsName, saveAfterCreation=False) == False:
+                        writeToLog("INFO","FAILED to create new playlist ")
+                        return False                
+            
+            if playlistsName != '':
+                if type(playlistsName) is list:
+                    for playlist in playlistsName:
+                        tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlist))   
+                        if self.click(tmp_playlist_name) == False:
+                            writeToLog("INFO","FAILED to Check for playlists, something went wrong")
+                            return False
+                else:
+                    tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlistsName))   
+                    if self.click(tmp_playlist_name) == False:
+                        writeToLog("INFO","FAILED to Check for playlists, something went wrong")
+                        return False
             
             if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on create playlist Button")
@@ -644,15 +664,15 @@ class MyPlaylists(Base):
 
             if currentLocation == enums.Location.MY_MEDIA: 
                 if self.wait_visible(self.ADD_TO_PLAYLIST_CONFIRM_MSG_PLAYLIST_PG, 10) == False:
-                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                    writeToLog("INFO","FAILED to add entry: " + entries + " to Playlists")
                     return False
 
             elif currentLocation == enums.Location.ENTRY_PAGE:
                 if self.wait_visible(self.ADD_TO_PLAYLIST_CONFIRM_MSG_ENTRY_PG, 10) == False:
-                    writeToLog("INFO","FAILED to add entry: " + entryName + " to Playlists")
+                    writeToLog("INFO","FAILED to add entry: " + entries + " to Playlists")
                     return False
             
-            writeToLog("INFO","Entry: '" + entryName + "' added to Playlists")
+            writeToLog("INFO","Entries added to Playlists")
                                        
         except NoSuchElementException:
             return False
@@ -837,36 +857,37 @@ class MyPlaylists(Base):
 
     # @Author:Ori Flchtman
     # Create new Playlist from Add To Playlist screen
-    def typeNewPalylistNameAndClickCreate(self, playlistsName, currentLocation=enums.Location.MY_MEDIA):
-        for playlistName in playlistsName:
-            if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName) == False:
-                writeToLog("INFO","FAILED to enter playlist name")
-                return False
-                sleep(1)     
-         
-            if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on create playlist Button")
-                return False
-            
-            self.clsCommon.general.waitForLoaderToDisappear()
-            sleep(1)
-            
-        if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
+    def typeNewPalylistNameAndClickCreate(self, newPlaylistsName, saveAfterCreation=True, currentLocation=enums.Location.MY_MEDIA):
+        #for playlistName in newPlaylistsName:
+        if self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, newPlaylistsName) == False:
+            writeToLog("INFO","FAILED to enter playlist name")
+            return False
+            sleep(1)     
+     
+        if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on create playlist Button")
             return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(1)
             
-        if currentLocation == enums.Location.MY_MEDIA:     
-            if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+        if saveAfterCreation == True: 
+            if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on create playlist Button")
                 return False
+                
+            if currentLocation == enums.Location.MY_MEDIA:     
+                if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
+                    writeToLog("INFO","FAILED to to create playlist: " + newPlaylistsName)
+                    return False
+            
+            else:
+                tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', newPlaylistsName))
+                if self.wait_visible(tmp_success_msg, 10) == False:
+                    writeToLog("INFO","FAILED to to create playlist: " + newPlaylistsName)
+                    return False
         
-        else:
-            tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', playlistName))
-            if self.wait_visible(tmp_success_msg, 10) == False:
-                writeToLog("INFO","FAILED to to create playlist: " + playlistName)
-                return False
-        
-        writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
+        writeToLog("INFO","Playlist: '" + newPlaylistsName + "' successfully created")
         return True
 
 

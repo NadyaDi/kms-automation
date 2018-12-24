@@ -69,6 +69,7 @@ class BlackBoard(Base):
     BB_COURSE_NEW1_BUTTON_IN_COURSES_PAGE               = ('xpath', "//a[contains(text(), 'New1: New1')]")
     BB_TOOLS_OPTION_UNDER_TOOLS_MENU_IN_COURSE_PAGE     = ('xpath', "//span[@title= 'Tools' and contains(text(), 'Tools')]")
     BB_MEDIA_GALLEY_OPTION_IN_TOOLS_PAGE                = ('xpath', "//a[contains(text(), 'Media Gallery')]")
+    BB_USER_NAME                                        = ('xpath', "//a[@id ='global-nav-link']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -607,7 +608,7 @@ class BlackBoard(Base):
     # Create embed item
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedItem(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags=''):
+    def createEmbedItem(self, galleryName, entryName, itemName, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags=''):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
             return False 
@@ -687,7 +688,7 @@ class BlackBoard(Base):
     # Create embed kaltura media
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags=''):
+    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags=''):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.KALTURA_MEDIA) == False:
             writeToLog("INFO","FAILED to navigate to content kaltura media page")
             return False 
@@ -840,8 +841,14 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to get id attribute from embed container")
             return False 
             
-        parentId = parentId.split(":")
-        iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + parentId[1] + "')]"))
+        m = re.search('(_\d\d\d_)', parentId)
+        if m:
+            foundId = m.group(1)
+        else:
+            writeToLog("INFO","FAILED to get id from string: '" + str(parentId) + "'")
+            return False             
+                
+        iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + foundId + "')]"))
         if iframeElment == False:
             writeToLog("INFO","FAILED to get player iframe")
             return False 
@@ -862,7 +869,7 @@ class BlackBoard(Base):
         sleep(10)
         if delay != '':
             try:   
-                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + parentId[1] + "')]"))
+                self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + foundId + "')]"))
             except Exception:
                 writeToLog("INFO","FAILED to switch to '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay' iframe")
                 return False                      
@@ -879,9 +886,18 @@ class BlackBoard(Base):
                 return False                
         
         else:
+            sleep(5)
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
                 return False   
     
         writeToLog("INFO","Embed media was successfully verified")    
-        return True                                
+        return True 
+    
+    def getBlackboardLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.BB_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName                             

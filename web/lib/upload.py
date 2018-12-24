@@ -70,6 +70,7 @@ class Upload(Base):
     UPLOAD_MODERATION_UPLOAD_MESSAGE            = ('xpath', "//div[contains(text(), 'Some media may not be published until approved by the media moderator.')]")
     UPLOAD_PAGE_TITLE                           = ('xpath', "//h1[text()='Upload Media']")
     DROP_DOWN_WEBCAST_BUTTON                    = ('xpath', ".//span[text()='Webcast Event']")
+    UPLOAD_DESCRIPTION_FIELD_TITLE              = ('xpath', '//label[@id="description-label"]')   
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -129,12 +130,14 @@ class Upload(Base):
             entryID = href.split("/")[len(href.split("/"))-1]
             
         except NoSuchElementException:
+            writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator + "'")
             return False
         
         return entryID
     
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
+    # IMPORTENT!! This method return None (not False) if failed and an entry ID if passed
     def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False):
         for i in range(retries):
             try:
@@ -196,9 +199,9 @@ class Upload(Base):
                     if self.wait_visible(self.UPLOAD_MODERATION_UPLOAD_MESSAGE) == False:
                         writeToLog("INFO","FAILED to find moderation upload message")
                         return False
-                     
+                    
                 # Click Save
-                if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or uploadFrom == enums.Location.UPLOAD_PAGE_EMBED:
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                     sleep(3)
@@ -213,11 +216,15 @@ class Upload(Base):
                 sleep(3)
                  
                 # Wait for 'Your changes have been saved.' message
-                if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False:                
-                    entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
-                    if entryID != None:
-                        writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
-                        return entryID
+                if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) != False: 
+                    if uploadFrom != enums.Location.UPLOAD_PAGE_EMBED:              
+                        entryID = self.extractEntryID(self.UPLOAD_GO_TO_MEDIA_BUTTON)
+                        if entryID != None:
+                            writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
+                            return entryID
+                    else:
+                        writeToLog("INFO","Successfully uploaded entry: '" + name)
+                        continue
                 else:
                     writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
                     continue
@@ -225,6 +232,9 @@ class Upload(Base):
             except Exception:
                 writeToLog("INFO","FAILED to upload entry, retry number " + str(i))
                 pass
+            
+        if i >= retries - 1:
+            return None
     
     
     def uploadMulitple(self, uploadEntrieList, disclaimer=False, uploadFrom=enums.Location.UPLOAD_PAGE):
@@ -436,6 +446,8 @@ class Upload(Base):
                 sleep(1)
             elif self.getAppUnderTest() == enums.Application.MOODLE:
                 self.clsCommon.moodle.switchToMoodleIframe()
+            elif self.getAppUnderTest() == enums.Application.CANVAS:
+                self.clsCommon.canvas.switchToCanvasIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)

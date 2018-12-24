@@ -13,7 +13,7 @@ class KafGeneric(Base):
     def __init__(self, clsCommon, driver):
         self.driver = driver
         self.clsCommon = clsCommon    
-
+        
     #=================================================================================================================================
     #Login locators:
     #====================================================================================================================================
@@ -31,6 +31,7 @@ class KafGeneric(Base):
     KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
     KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
     KAF_GRID_VIEW                               = ('xpath', "//button[@id='MyMediaGrid']")
+    KAF_SR_ENTRY_CHECKBOX                       = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -42,19 +43,24 @@ class KafGeneric(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     
-    def navigateToMyMediaKAF(self):         
-        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
-        
-        if self.switchToKAFIframeGeneric()== False:
-            writeToLog("INFO","FAILED switch to iframe")
-            return False
-        
-        self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
-        if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-            writeToLog("INFO","FAILED navigate to My Media")
-            return False
+    def navigateToMyMediaKAF(self): 
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.clsCommon.canvas.navigateToMyMediaCanvas() == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False   
+        else: 
+            if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False
+            
+            if self.switchToKAFIframeGeneric()== False:
+                writeToLog("INFO","FAILED switch to iframe")
+                return False
+            
+            self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
+            if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False
          
         return True
 
@@ -73,6 +79,11 @@ class KafGeneric(Base):
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
             if self.clsCommon.sharePoint.switchToSharepointIframe() == False:
                 writeToLog("INFO","FAILED to switch to sharepoint iframe")
+                return False
+            
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.clsCommon.canvas.switchToCanvasIframe() == False:
+                writeToLog("INFO","FAILED to switch to canvas iframe")
                 return False
         
         return True
@@ -101,11 +112,17 @@ class KafGeneric(Base):
             if self.clsCommon.moodle.navigateToGalleryMoodle(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to gallery:" + galleryName)
                 return False 
+            
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.clsCommon.canvas.navigateToGalleryCanvas(forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
         return True
         
     
     # Author: Michal Zomper    
     def navigateToEntryPageFromGalleryPage(self, entryName, galleryName, forceNavigate=False):
+        self.switchToKAFIframeGeneric() 
         tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
         if self.wait_element(tmpEntryName, 5) != False:
             writeToLog("INFO","Already in entry page: '" + entryName + "'")
@@ -260,7 +277,7 @@ class KafGeneric(Base):
         if self.clsCommon.upload.uploadEntry(uploadEntry.filePath, uploadEntry.name, uploadEntry.description, uploadEntry.tags, uploadEntry.timeout,retries=1,  uploadFrom=None, verifyModerationWarning=isGalleryModerate) == None:
             writeToLog("INFO","FAILED to upload media from gallery page: " + uploadEntry.name)
             return False
-        sleep(5)
+        sleep(10)
         
         # Click 'Go To media gallery'
         if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
@@ -280,18 +297,21 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on gallery moderation tab")
                 return False        
         
-        sleep(2)
+        sleep(4)
         self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30) 
-        
+        self.clsCommon.channel.showAllEntriesPendingTab()
         if self.clsCommon.channel.approveEntriesInPandingTab(toApproveEntriesNames) == False:
             writeToLog("INFO","FAILED to approve entries")
             return False  
         
-        self.click(self.KAF_REFRSH_BUTTON)
-        sleep(6)
+        self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
+        sleep(4)
+        self.click(self.KAF_GRID_VIEW)
+        self.get_body_element().send_keys(Keys.PAGE_UP)
+        sleep(2)
         self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
         sleep(2)
-        
+        self.clsCommon.channel.showAllEntriesPendingTab()
         if self.clsCommon.channel.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
             writeToLog("INFO","FAILED to reject entries")
             return False
@@ -310,11 +330,11 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName='', embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', application=enums.Application.BLACK_BOARD):
+    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False):
         if application == enums.Application.MOODLE:
-            self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
-      
-            
+            if activity == enums.MoodleActivities.SITE_BLOG:
+                self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
+          
         if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
@@ -359,8 +379,11 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to click on save and embed button")
                 return False    
             
+            sleep(2)
             self.clsCommon.general.waitForLoaderToDisappear()  
-            return True                                
+            return True   
+        
+        self.clsCommon.general.waitForLoaderToDisappear()                              
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
@@ -372,11 +395,12 @@ class KafGeneric(Base):
             return False
         
         if application == enums.Application.MOODLE:
-            sleep(4)
-            self.switch_to_default_content()
-            if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
-                writeToLog("INFO","FAILED to click on 'embed' button")
-                return False                
+            if activity == enums.MoodleActivities.SITE_BLOG:
+                sleep(5)
+                self.switch_to_default_content()
+                if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
+                    writeToLog("INFO","FAILED to click on 'embed' button")
+                    return False                
         
         return True   
     
@@ -411,11 +435,14 @@ class KafGeneric(Base):
     
     # @Author: Oleg Sigalov
     # Verify embed entry generic
-    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD):
+    # 'imageThumbnail'' is the expecterQrCode of embed image - when the value different then '', means that the type is image
+    # 'imageThumbnail' is the expecterQrCode of embed video - when the value different then '', means that the type is video
+    # 'activity' is relevant just for moodle KAF
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG):
         if application == enums.Application.BLACK_BOARD:
             return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
         elif application == enums.Application.MOODLE:
-            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay)
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity)
 #       elif application == enums.Application.CANVAS:
 #            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
 #       elif application == enums.Application.D2L:
@@ -426,4 +453,109 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED unknown application: " + application.value)   
             return False
         
-        return True                     
+        return True     
+    
+    
+    # @Author: Inbar Willman
+    # Add media to media gallery from SR
+    def addSharedRepositoryMedieToMediaGallery(self, galleryName, entriesNames):
+        if self.navigateToGallery(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to  gallery: " +  galleryName)
+            return False
+            
+        if self.addContentFromSR(entriesNames) == False:
+            writeToLog("INFO","FAILED to publish entries to media gallery: " + galleryName)
+            return False    
+        
+        ("INFO","Success to publish entry from SR tab to: " + galleryName)
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def addContentFromSR(self, entriesNames):   
+        # Checking if entriesNames list type
+        if type(entriesNames) is list: 
+            for entryName in entriesNames:
+                if self.clickAddMediaAndSharedRepository() == False:
+                    writeToLog("INFO","FAILED to open shared repository section")
+                    return False
+                
+                if self.checkSingleEntryInSharedRepository(entryName, withSearch=True) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entryName + ", At add content -> my media flow")
+                    return False
+                
+                writeToLog("INFO","Going to publish Entry: " + entryName)
+                if self.clickPublishAndWaitForLoaderToDisappear() == False:
+                    return False   
+                writeToLog("INFO","Entry: '" + entryName + "' was published successfully")
+            return True
+
+        # Single entry
+        else:
+            if self.clickAddMediaAndSharedRepository() == False:
+                writeToLog("INFO","FAILED to open shared repository section")
+                return False  
+                          
+            if self.checkSingleEntryInSharedRepository(entriesNames) == False:
+                    writeToLog("INFO","FAILED to CHECK the entry: " + entriesNames + ", At add content -> my media flow")
+                    return False
+                
+            writeToLog("INFO","Going to publish Entry: " + entriesNames)
+            
+        if self.clickPublishAndWaitForLoaderToDisappear() == False:
+            return False             
+        
+        # Single entry log
+        writeToLog("INFO","Entry: '" + entriesNames + "' was published successfully")
+        return True    
+    
+    
+    # @Author: Oleg Sigalov
+    # Method flow: Click Add Media, Click on shared repository menu, Click shared repository dropdown
+    def clickAddMediaAndSharedRepository(self):
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
+            writeToLog("INFO","FAILED to click add to gallery button")
+            return False           
+        
+        sleep(1)
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)   
+        
+        # open shared repository list
+        if self.click(self.clsCommon.channel.CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY) == False:
+            writeToLog("INFO","FAILED to click on Shared repository tab")
+            return False
+        
+        #chose shared repository channel 
+        tmpSharedRepositoryChannel = (self.clsCommon.channel.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[0], self.clsCommon.channel.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[1].replace('CHANNEL_NAME', "Shared Repository"))
+        if self.click(tmpSharedRepositoryChannel) == False:
+            writeToLog("INFO","FAILED to select Shared repository option in dropdown")
+            return False
+        
+        self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+        return True
+    
+        
+    # @Author: Oleg Sigalov
+    def clickPublishAndWaitForLoaderToDisappear(self):
+        if self.click(self.clsCommon.channel.CHANNEL_PUBLISH_BUTTON) == False:
+            writeToLog("INFO","FAILED to CHECK the entry, At add content -> my media flow")
+            return False             
+        
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True        
+    
+    
+    # @Author: Inbar Willman
+    def checkSingleEntryInSharedRepository(self, entryName, withSearch=False):
+        if withSearch == True:
+            self.clsCommon.channel.searchInAddToChannel(entryName, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY)
+        # Click on the Entry's check-box in MyMedia page
+        tmp_entry_name = (self.KAF_SR_ENTRY_CHECKBOX[0], self.KAF_SR_ENTRY_CHECKBOX[1].replace('ENTRY_NAME', entryName))
+                
+        if self.click(tmp_entry_name, multipleElements=True) == False:
+            # If entry not found, search for 'No Entries Found' alert
+            writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
+            return False
+        
+        return True            

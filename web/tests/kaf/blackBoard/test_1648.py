@@ -72,109 +72,112 @@ class Test:
             if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to add shared repository module")
-
+ 
             writeToLog("INFO","Step 2: Going to navigate to upload media page in SR")
             if self.common.blackBoard.navigateToUploadMediaInSR() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to upload media page in SR")
                 return               
-
+ 
             writeToLog("INFO","Step 3: Going to upload image media")
             if self.common.upload.uploadEntry(self.filePathImage, self.imageEntryName, self.description, self.tags, uploadFrom=enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to upload image media")
                 return  
-    
+     
             writeToLog("INFO","Step 4: Going to completed the required fields in entry '" + self.imageEntryName + "' order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.imageEntryName, self.SR_RequiredField, enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add required fields to entry '" + self.imageEntryName)
                 return
-            
+             
             writeToLog("INFO","Step 5: Going to navigate to upload media page in SR")
             if self.common.blackBoard.navigateToUploadMediaInSR() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to upload media page in SR")
                 return 
-            
+             
             writeToLog("INFO","Step 6: Going to upload video media")
             if self.common.upload.uploadEntry(self.filePathVideo, self.videoEntryName, self.description, self.tags, uploadFrom=enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload video media")
                 return  
-    
+     
             writeToLog("INFO","Step 7: Going to completed the required fields in entry '" + self.videoEntryName + "' order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.videoEntryName, self.SR_RequiredField, enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to add required fields to entry '" + self.videoEntryName)
                 return   
-            
+             
             writeToLog("INFO","Step 8: Going to navigate to upload media page in SR")
             if self.common.blackBoard.navigateToUploadMediaInSR() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate to upload media page in SR")
                 return 
-            
+             
             writeToLog("INFO","Step 9: Going to upload audio media")
             if self.common.upload.uploadEntry(self.filePathAudio, self.audioEntryName, self.description, self.tags, uploadFrom=enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to upload audio media")
                 return  
-    
+     
             writeToLog("INFO","Step 10: Going to completed the required fields in entry '" + self.audioEntryName + "' order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.audioEntryName, self.SR_RequiredField, enums.Location.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to add required fields to entry '" + self.audioEntryName)
                 return                       
-            
+             
             writeToLog("INFO","Step 11: Going navigate to shared repository gallery")
             if self.common.blackBoard.navigateToSharedRepositoryInBB() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED navigate to shared repository gallery")
                 return
-             
+              
             self.common.blackBoard.switchToBlackboardIframe()
             writeToLog("INFO","Step 12: Going to verify entry '" + self.imageEntryName + "' display in shared repository gallery")
             if self.common.channel.searchEntryInChannel(self.imageEntryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to find entry '" + self.imageEntryName + "' shared repository gallery")
                 return
-             
+              
             writeToLog("INFO","Step 13: Going to clear search textbox")
             if self.common.myMedia.clearSearch() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to clear search textbox")
                 return
-         
+          
             writeToLog("INFO","Step 14: Going to verify entry '" + self.audioEntryName + "' display in shared repository gallery")
             if self.common.channel.searchEntryInChannel(self.audioEntryName) == False:    
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to find entry '" + self.audioEntryName + "' shared repository gallery")
                 return
-             
+              
             writeToLog("INFO","Step 15: Going to clear search textbox")
             if self.common.myMedia.clearSearch() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to clear search textbox")
                 return
-             
+              
             writeToLog("INFO","Step 16: Going to verify entry '" + self.videoEntryName + "' display in shared repository gallery")
             if self.common.channel.searchEntryInChannel(self.videoEntryName) == False:    
                 self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to find entry '" + self.videoEntryName + "' shared repository gallery")
                 return
             
-            writeToLog("INFO","Step 17: Going to publish multiple entries to " + self.galleryName)
-            if self.common.myMedia.publishEntriesFromMyMedia([self.videoEntryName, self.audioEntryName, self.imageEntryName], '', '', [self.galleryName], showAllEntries=True) == False:
+            writeToLog("INFO","Step 17: Going to publish entries from SR to media gallery")
+            if self.common.kafGeneric.addSharedRepositoryMedieToMediaGallery(self.galleryName, [self.videoEntryName, self.audioEntryName, self.imageEntryName]) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to publish entries to " + self.galleryName)
-                return
+                writeToLog("INFO","Step 17: FAILED to publish entries from SR to media gallery")
+                return     
             
             writeToLog("INFO","Step 18: Going to navigate to " + self.galleryName)
             if self.common.blackBoard.navigateToGalleryBB(self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to navigate to to " + self.galleryName)
                 return
+            
+            self.common.base.click(self.common.kafGeneric.KAF_REFRSH_BUTTON)
+            sleep(5)
             
             self.common.blackBoard.switchToBlackboardIframe()
             writeToLog("INFO","Step 19: Going to verify entry '" + self.imageEntryName + "' display in shared repository gallery")

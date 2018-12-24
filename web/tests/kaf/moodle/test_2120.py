@@ -14,14 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name: BB: Edit Entry page - Disable comments
+    # Test Name: Moodle: Edit Entry page - Disable comments
     # Test description:
     # Upload entry -> Go to entry page > Add comments
     # Go to edit entry page -> option tab and  disabled comments option
     # Go to entry page -> Check that comment isn't displayed and there is no option to add new comments 
     #================================================================================================================================
-    testNum     = "590"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2120"
+    application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
@@ -95,7 +95,7 @@ class Test:
                 return   
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Edit Entry Metadata ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle: Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

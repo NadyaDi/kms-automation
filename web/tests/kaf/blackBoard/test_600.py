@@ -79,7 +79,7 @@ class Test:
                 return   
                 
             writeToLog("INFO","Step 3: Going navigate to gallery page")         
-            if self.common.blackBoard.navigateToGalleryBB(self.galleryName) == False:
+            if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to gallery page")
                 return  
@@ -97,7 +97,7 @@ class Test:
                 return  
              
             writeToLog("INFO","Step 6: Going navigate to gallery page")         
-            if self.common.blackBoard.navigateToGalleryBB(self.galleryName) == False:
+            if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED navigate to gallery page")
                 return  

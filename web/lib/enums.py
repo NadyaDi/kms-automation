@@ -99,6 +99,7 @@ class IframeName(Enum):
     KAF_BLACKBOARD_EMBED_KALTURA_MEDIA      = 'KAF_BLACKBOARD_EMBED_KALTURA_MEDIA'
     KAF_SHAREPOINT                          = 'KAF_SHAREPOINT'
     KAF_MOODLE                              = 'KAF_MOODLE'
+    KAF_CANVAS                              = 'KAF_CANVAS'
 
     
     
@@ -483,3 +484,9 @@ class FreeText(Enum):
     UNLIMITED_TEXT        = "Unlimited Text" 
 
     
+class MoodleActivities(Enum):
+    def __str__(self):
+        return str(self.value)   
+    
+    KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
+    SITE_BLOG                 = 'Site blog'

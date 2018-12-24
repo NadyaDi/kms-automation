@@ -1421,6 +1421,8 @@ class Channel(Base):
     def method_helper_approveEntry(self, approveEntry):
         tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
         entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+        if entryId == False:
+            return False 
         tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
         
         if self.click(tmpApproveBtn) == False:
@@ -2041,8 +2043,11 @@ class Channel(Base):
                 searchLine = searchText
         else: 
             searchLine = searchText
-                   
-        self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
+        else:
+            self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
         sleep(2)
         self.clsCommon.general.waitForLoaderToDisappear()
         

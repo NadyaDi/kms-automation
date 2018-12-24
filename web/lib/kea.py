@@ -499,8 +499,8 @@ class Kea(Base):
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
-    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom):
-        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom)
+    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
         
         sleep(1)
         if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
@@ -527,6 +527,12 @@ class Kea(Base):
             writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
             return False
         
+        #If the entry is Quiz, So openEditorTab = True, Then - wait 10sec refresh and wait again
+        if openEditorTab == True:
+            sleep(10)
+            self.refresh()
+            sleep(5)
+            
         self.clsCommon.player.switchToPlayerIframe()
         entryDuration = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
         self.switch_to_default_content()
@@ -543,9 +549,9 @@ class Kea(Base):
     # the following function will create a Quiz (within the given dictQuestions)
     # Currently support question type=Multiple ONLY     
     def quizCreation(self, entryName, dictQuestions): #TBD: dictDetails, dictScores, dictExperience
-        sleep(15)
+        sleep(25)
         self.searchAndSelectEntryInMediaSelection(entryName)
-        sleep(10) 
+        sleep(5) 
                    
         for questionNumber in dictQuestions:
             questionDetails = dictQuestions[questionNumber]

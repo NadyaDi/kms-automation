@@ -108,7 +108,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to edit entry page")
                 return   
-                
+            
+            self.common.blackBoard.switchToBlackboardIframe()   
             writeToLog("INFO","Step 9: Going navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"

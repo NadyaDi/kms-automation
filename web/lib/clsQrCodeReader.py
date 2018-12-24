@@ -55,10 +55,12 @@ class QrCodeReader(Base):
     
 
     # Take screenshot the bottom (slide on bottom right of the player) half of the player, return the full file path of the screenshot 
-    def takeQrCodeSlideScreenshot(self):
+    def takeQrCodeSlideScreenshot(self, showLog=True):
         filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        
         if self.takeScreeshot(filePath) == True:
-            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+            if showLog == True:
+                writeToLog("INFO","Screenshot of the page save to: " + filePath)
         else:
             writeToLog("INFO","FAILED to take screenshot of the page")
             return False       
@@ -116,6 +118,23 @@ class QrCodeReader(Base):
         img2.save(filePath)
         
         return filePath
+    
+    
+    # Take screenshot, crop original image and write over the original. Return the file path.
+    def takeScreenshotAndCrop(self, left, top, right, bottom):
+        filePath = os.path.abspath(os.path.join(LOCAL_QRCODE_TEMP_DIR, generateTimeStamp() + ".png"))
+        if self.takeScreeshot(filePath) == True:
+            writeToLog("INFO","Screenshot of the page save to: " + filePath)
+        else:
+            writeToLog("INFO","FAILED to take screenshot of the page")
+            return False       
+        
+        # Crop the image
+        img = Image.open(filePath)
+        img2 = img.crop((img.width / left , img.height / top, img.width / right , img.height / bottom))
+        img2.save(filePath)
+        
+        return filePath    
     
     
     # @Author: Oleg Sigalov
@@ -301,6 +320,21 @@ class QrCodeReader(Base):
             writeToLog("DEBUG","QR code result is: " + result)
             return result 
         
+    
+    # Take full screen screen shot and crop relative to image size(screen shot size), and return the resolved value from image (QR)    
+    def takeScreenshotAndCropAndResolveQrCode(self, cropLeft, croTop, cropRight, cropBottom):
+        sc = self.takeScreenshotAndCrop(cropLeft, croTop, cropRight, cropBottom)
+        if sc == None:
+            writeToLog("DEBUG","FAILED to get screenshot for QR code")
+            return None
+        result = self.resolveQrCode(sc)
+        if result == None:
+            writeToLog("DEBUG","FAILED to resolve QR code")
+            return False
+        else:
+            writeToLog("DEBUG","QR code result is: " + result)
+            return result 
+                
         
     #Return live timer in seconds, if function failed, return -1    
     def getTimerFromQrCodeInSeconds(self, player, driver, fullScreen=False, live=True):

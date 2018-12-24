@@ -52,7 +52,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver) 
             
-            self.searchInAddToChannel = "Sort by"
+            self.searchInAddToChannelSortBy = "Sort by"
             self.channel = "Channel for eSearch"
             self.sortEntriesByCreationDateDescending = ("Sort by - Sort H", "Sort by - Sort G", "Sort by - Sort F", "Sort by - Sort E", "Sort by - Sort D", 
                                                         "Sort by - Sort C", "Sort by - Sort B", "Sort by - Sort A")
@@ -86,7 +86,7 @@ class Test:
                 return   
                
             writeToLog("INFO","Step 3: Going to make a search in 'Add to channel' - 'My Media' tab")
-            if self.common.channel.searchInAddToChannel(self.searchInAddToChannel) == False:
+            if self.common.channel.searchInAddToChannel(self.searchInAddToChannelSortBy) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to make a search in 'Add to channel' - 'My Media' tab")
                 return 

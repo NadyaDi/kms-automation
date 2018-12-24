@@ -80,7 +80,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to add Entry to Multiple Playlists") 
-            if self.common.myPlaylists.addSingleEntryToMultiplePlaylists(self.entryName1, self.listOfPlaylists) == False:
+            if self.common.myPlaylists.addEntriesToMultiplePlaylists(self.entryName1, self.listOfPlaylists) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add Entry to Multiple Playlists")
                 return

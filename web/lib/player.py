@@ -5,7 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from base import *
 import clsTestService
 import enums
-
+from PIL import Image
 
 class Player(Base):
     driver = None
@@ -178,7 +178,7 @@ class Player(Base):
                 
                 QRcodeList.append(qrResolve)
                 QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
-                sleep(0.5)
+                sleep(0.3)
             
             return self.removeDuplicate(QRcodeList)
             
@@ -709,23 +709,34 @@ class Player(Base):
             if self.clickPlay(False, True) == False:
                 return False       
             
-            QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
-            QRcodeList = [];
+            qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            QRPathList = []
             
-            while QRcode != False:       
-                
-                qrResolve = self.clsCommon.qrcode.getScreenshotAndResolvePlayerQrCode(enums.PlayerPart.BOTTOM)
+            while qrPath != False:
+                qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(False)
+                if qrPath == False:
+                    break
+                    
+                QRPathList.append(qrPath)
+                qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+            
+            
+            for qrPath in QRPathList:
+                # Crop the image
+                img = Image.open(qrPath)
+                img2 = img.crop((img.width / 1.38, img.height / 1.56, img.width / 1.02, img.height / 1.08))
+                img2.save(qrPath)           
+            
+            QRcodeList = []
+            for qrPath in QRPathList:
+                qrResolve = self.clsCommon.qrcode.resolveQrCode(qrPath)
                 if qrResolve == False:
                     writeToLog("INFO","FAILED to resolve QR code")
-                    return self.removeDuplicate(QRcodeList)  
-                
                 QRcodeList.append(qrResolve)
-                QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
-                sleep(0.3)
-            
+                
             return self.removeDuplicate(QRcodeList)
             
-        except Exception:
+        except Exception as inst:
             return False
         
         

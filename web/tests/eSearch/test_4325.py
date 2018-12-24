@@ -52,7 +52,7 @@ class Test:
             self,self.driver = clsTestService.initialize(self, driverFix)
             self.common = Common(self.driver) 
             
-            self.searchInAddToChannel = "Sort by"
+            self.searchInAddToChannelSortBy = "Sort by"
             self.gallery = "eSearch category"
             self.sortEntriesByCreationDateDescending = ("Sort by - Sort H", "Sort by - Sort G", "Sort by - Sort F", "Sort by - Sort E", "Sort by - Sort D", 
                                                         "Sort by - Sort C", "Sort by - Sort B", "Sort by - Sort A")
@@ -98,7 +98,7 @@ class Test:
                 return   
               
             writeToLog("INFO","Step 5: Going to make a search in gallery - media tab")
-            if self.common.channel.searchInChannelWithoutVerifyResults(self.searchInAddToChannel) == False:
+            if self.common.channel.searchInChannelWithoutVerifyResults(self.searchInAddToChannelSortBy) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to make a search in in gallery - media tab")
                 return 

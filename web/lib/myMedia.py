@@ -126,6 +126,8 @@ class MyMedia(Base):
     FILTER_SELECT_FIELD_TEXT                                    = ('xpath', "//div[contains(text(),'DROPDOWNLIST_ITEM')]")
     FILTER_SELECT_FIELD_CATEGORY                                = ('xpath', "//span[@class='search-filters-group__title--desktop'][contains(text(),'DROPDOWNLIST_NAME')]")
     ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found']")
+    CHANNEL_PENDING_TAB_ICON                                    = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']")
+    CHANNEL_PENDING_ENTRY_DATA                                  = ('xpath', "//tr[@id='ENTRY_ID_tr']")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -143,7 +145,7 @@ class MyMedia(Base):
 
 
     # This method, clicks on the menu and My Media
-    def navigateToMyMedia(self, forceNavigate = False):
+    def navigateToMyMedia(self, forceNavigate=False):
         # KAF
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
             if self.clsCommon.kafGeneric.navigateToMyMediaKAF() == False:
@@ -202,7 +204,7 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     # Known limitation: entries MUST be presented on the first page of my media
     def deleteEntriesFromMyMedia(self, entriesNames, showAllEntries=False):
-        if self.navigateToMyMedia(forceNavigate = True) == False:
+        if self.navigateToMyMedia(forceNavigate=True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False
 
@@ -1120,8 +1122,8 @@ class MyMedia(Base):
             except NoSuchElementException:
                 writeToLog("INFO","FAILED to find clear search icon")
                 return False
-
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
                 if self.clickElement(clear_button[0]) == False:
                     writeToLog("INFO","FAILED click on the remove search icon")
                     return False
@@ -1423,9 +1425,9 @@ class MyMedia(Base):
                 sleep(1)
                 # go back to the top of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
-                return True
-
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+                return True 
+            
+            if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS):
                 self.click(self.MY_MEDIA_TITLE)
 
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
@@ -1467,18 +1469,31 @@ class MyMedia(Base):
 
         writeToLog("INFO","Success, Only the correct media display in my media")
         return True
-
-
+   
+    
     #@Author: Michal Zomper
-    # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter
-    def verifyEntryTypeIcon(self, entriesList, entryType):
+    # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter    
+    def verifyEntryTypeIcon(self, entriesList, entryType, location=enums.Location.CHANNEL_PAGE):
         for entry in entriesList:
-            tmpEntry = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entry))
-            try:
-                entryThumbnail = self.get_element(tmpEntry)
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to find entry '" + entry + "' element")
-                return False
+            
+            if location == enums.Location.PENDING_TAB:
+                tmpEntry = (self.CHANNEL_PENDING_TAB_ICON[0], self.CHANNEL_PENDING_TAB_ICON[1].replace('ENTRY_NAME', entry)) 
+                element = self.wait_element(tmpEntry)
+                      
+                entryId = element.get_attribute("id")
+                tmpEntryID = (self.CHANNEL_PENDING_ENTRY_DATA[0], self.CHANNEL_PENDING_ENTRY_DATA[1].replace('ENTRY_ID', entryId))           
+                try:
+                    entryThumbnail = self.get_element(tmpEntryID)
+                except Exception:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' element")
+                    return False
+            else:
+                tmpEntry = (self.MY_MEDIA_ENTRY_THUMBNAIL[0], self.MY_MEDIA_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entry))
+                try:
+                    entryThumbnail = self.get_element(tmpEntry)
+                except NoSuchElementException:
+                    writeToLog("INFO","FAILED to find entry '" + entry + "' element")
+                    return False        
 
             if entryType == enums.MediaType.IMAGE:
                 try:
@@ -1516,8 +1531,8 @@ class MyMedia(Base):
         writeToLog("INFO","Success, All entry '" + entry + "' " + entryType.value + "  icon was verify")
         return True
 
-
-    #@Author: Oded berihon
+      
+    #@Author: Oded berihon 
     # The function going over the entries list and check that the entries icon that display on the thumbnail are  match the 'entryType' parameter
     def verifyEntryTypeIconAferSearch(self, entriesList, entryType):
         for entry in entriesList:
