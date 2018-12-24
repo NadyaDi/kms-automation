@@ -295,6 +295,8 @@ class Admin(Base):
             writeToLog("INFO","FAILED to load home module page in admin")
             return False
         
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
         if self.click(self.ADMIN_ADD_PLAYLIST_BUTTON) == False:
             writeToLog("INFO","FAILED to click on add list button")
             return False
