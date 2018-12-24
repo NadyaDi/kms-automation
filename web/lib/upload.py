@@ -69,6 +69,7 @@ class Upload(Base):
     WEBCAST_PAGE_TITLE                          = ('xpath', "//h1[text()='Schedule a Webcast Event']")
     UPLOAD_MODERATION_UPLOAD_MESSAGE            = ('xpath', "//div[contains(text(), 'Some media may not be published until approved by the media moderator.')]")
     UPLOAD_PAGE_TITLE                           = ('xpath', "//h1[text()='Upload Media']")
+    DROP_DOWN_WEBCAST_BUTTON                    = ('xpath', ".//span[text()='Webcast Event']")
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -644,37 +645,40 @@ class Upload(Base):
         return True
     
     
-    # @Auther: Ori Flchtman TODO: UNDER CONSTRUCTION, DON'T USE IT
-    # Click on Add New Webcast Event for Filter tests
-    def clickAddNewWebcast(self, name, description, tags, disclaimer=False):
-    # Click Add New
-        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
-            writeToLog("DEBUG","FAILED to click on 'Add New' button")
+    # @Auther: Ori Flchtman
+    # Upload a new webcast entry
+    def addWebcastEntry(self, entryName, description, tags, disclaimer=False):
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'Add New' button")
             return False
 
-        if self.clickWebcastEvent() == False:
-            writeToLog("DEBUG","FAILED to click on 'Webcast Event' button")
+        if self.click(self.DROP_DOWN_WEBCAST_BUTTON, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to select the Webcast option from the drop down menu")
             return False
       
         if self.wait_visible(self.WEBCAST_PAGE_TITLE, 30) == False:
-            writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
+            writeToLog("INFO","FAILED to navigate to add new Webcast page")
             return False
         
-        if self.fillFileUploadEntryDetails(name, description, tags) == False:
-            writeToLog("DEBUG","FAILED to navigate to add new Webcast page")
+        if self.fillFileUploadEntryDetails(entryName, description, tags) == False:
+            writeToLog("INFO","FAILED to complete the field forms")
             return False
         
-        #checking if disclaimer is turned on for "Before upload"
         if disclaimer == True:
             if self.clsCommon.upload.handleDisclaimerBeforeUplod() == False:
                 writeToLog("INFO","FAILED, Handle disclaimer before upload failed")
                 return False        
         
-        # Click Save
         if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON) == False:
-            writeToLog("DEBUG","FAILED to click on 'Save' button")
+            writeToLog("INFO","FAILED to click on 'Save' button")
             return False
-        sleep(3)        
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "FAILED to save webcast entry changes")
+            return False
 
+        if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) == False:
+            writeToLog("INFO", "FAILED to save webcast entry changes")
+            return False                
+            
         return True
- 

@@ -215,7 +215,10 @@ class SortAndFilter(Enum):
     CAPTIONS                  = 'Captions'
     DURATION                  = 'Duration'
     CREATION_DATE             = 'Creation Date'
-    PUBLISH_STATUS            = 'Publish Status'  
+    PUBLISH_STATUS            = 'Publish Status'
+    SINGLE_LIST               = 'Single Text selected list' 
+    SINGLE_DATE               = 'Single Date'
+    FREE_TEXT                 = 'Free Text'
     
 
 class KeaQuizButtons(Enum):
@@ -451,3 +454,32 @@ class BBContentPageMenusOptions(Enum):
     KALTURA_MEDIA             = 'Kaltura Media' 
     MORE_TOOLS                = 'More Tools'
     ANNOUNCEMENTS             = 'Announcements' 
+    
+
+class SingleList(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    LIST_ONE           = "Search in - One"  
+    LIST_TWO           = "Search in - Two"  
+    LIST_THREE         = "Search in - Three"  
+    LIST_FOUR          = "Search in - Four"  
+    LIST_FIVE          = "Search in - Five"  
+    LIST_SIX           = "Search in - Six"
+    
+    
+class SingleDate(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    DATE           = "Single Date"  
+    
+
+class FreeText(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    SINGLE_TEXT           = "SIngle Text" 
+    UNLIMITED_TEXT        = "Unlimited Text" 
+
+    

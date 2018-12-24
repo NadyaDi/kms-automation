@@ -113,6 +113,10 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD                           = ('xpath', '//input[@id="customdata-FIELD_NAME"]')  
     EDIT_ENTRY_CUSTOM_LIST_FIELD                                = ('xpath', '//select[@id="customdata-FIELD_NAME"]')   
     EDIT_ENTRY_ADD_UNLIMITED_TEXT_CUSTOMDATA_FIELD              = ('xpath', '//button[@id="customdata-FIELD_NAME-addBtn"]')
+    EDIT_ENTRY_CUSTOM_DATE                                      = ('xpath', '//input[@id="customdata-FIELD_NAME"]')
+    EDIT_ENTRY_CUSTOM_DATEPICKER_SWITCH                         = ('xpath', '//th[@class="datepicker-switch"]')
+    EDIT_ENTRY_CUSTOM_DATE_INTERVAL_YEAR_OR_DATE                = ('xpath', '//span[contains(text(),"YEAR_or_DATE")]')    
+    EDIT_ENTRY_CUSTOM_DATE_DAY                                  = ('xpath', "//td[@class='day'][contains(text(),'DAY')]")  
     EDIT_ENTRY_POP_UP_CANCEL_BUTTON                             = ('xpath', "//a[@class='btn null']")                          
     #=============================================================================================================
     
@@ -1477,7 +1481,7 @@ class EditEntryPage(Base):
     # @Author: Inbar Willman
     # Set custom data fields
     # Field input can be single value or list in case filling unlimited text field
-    def setCustomDataField(self, fieldName, fieldInput, fieldBtn ="", fieldType = enums.CustomdataType.TEXT_SINGLE):
+    def setCustomDataField(self, fieldName, fieldInput="", fieldBtn ="", fieldType = enums.CustomdataType.TEXT_SINGLE, year=None, month=None, day=None):
         # Set element
         tmp_field = (self.EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD[0], self.EDIT_ENTRY_CUSTOM_DATA_TEXT_FIELD[1].replace('FIELD_NAME', fieldName))
         
@@ -1506,10 +1510,11 @@ class EditEntryPage(Base):
             tmp_field = (self.EDIT_ENTRY_CUSTOM_LIST_FIELD[0], self.EDIT_ENTRY_CUSTOM_LIST_FIELD[1].replace('FIELD_NAME', fieldName))
             self.select_from_combo_by_value(tmp_field, fieldInput)
         
-        #TO DO    
         elif fieldType == enums.CustomdataType.DATE:
-            return True
-        
+            if self.setCustomDate(fieldName, year, month, day) == False:
+                writeToLog("INFO", "Failed to select a custom date")
+                return False
+
         # Save changes
         if self.click(self.EDIT_ENTRY_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button ")
@@ -1518,7 +1523,44 @@ class EditEntryPage(Base):
         if self.wait_visible(self.EDIT_ENTRY_SAVE_MASSAGE, 30) == False:
             writeToLog("INFO","FAILED to find save massage")
             return False
-        sleep(3)
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "Failed to save the changes")
+            return False
+        sleep(1)
         
         writeToLog("INFO","Success customdata were change successfully")
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function opens the custom date calendar and selects a specific year,month and day
+    def setCustomDate(self, fieldName, year, month, day):
+        tmp_field = (self.EDIT_ENTRY_CUSTOM_DATE[0], self.EDIT_ENTRY_CUSTOM_DATE[1].replace('FIELD_NAME', fieldName))
+        if self.click(tmp_field) == False:
+            writeToLog("INFO", "FAILED to select the custom date field")
+            return False
+        
+        if self.click(self.EDIT_ENTRY_CUSTOM_DATEPICKER_SWITCH, multipleElements=True) == False:
+            writeToLog("INFO", "Failed to enter in the months calendar")
+            return False
+        
+        if self.click(self.EDIT_ENTRY_CUSTOM_DATEPICKER_SWITCH, multipleElements=True) == False:
+            writeToLog("INFO", "Failed to enter in the years calendar")
+            return False
+        
+        tmp_field = (self.EDIT_ENTRY_CUSTOM_DATE_INTERVAL_YEAR_OR_DATE[0], self.EDIT_ENTRY_CUSTOM_DATE_INTERVAL_YEAR_OR_DATE[1].replace('YEAR_or_DATE', year))       
+        if self.click(tmp_field) == False:
+            writeToLog("INFO", "Failed to select a year from the calendar")
+            return False
+        
+        tmp_field = (self.EDIT_ENTRY_CUSTOM_DATE_INTERVAL_YEAR_OR_DATE[0], self.EDIT_ENTRY_CUSTOM_DATE_INTERVAL_YEAR_OR_DATE[1].replace('YEAR_or_DATE', month))      
+        if self.click(tmp_field) == False:
+            writeToLog("INFO", "Failed to select a month from the calendar")
+            return False 
+               
+        if self.clickOnDayFromDatePicker(day) == False:
+            writeToLog("INFO", "Failed to select a day from the calendar")
+            return False      
+        
         return True 
