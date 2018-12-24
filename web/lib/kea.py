@@ -527,6 +527,7 @@ class Kea(Base):
             writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
             return False
         
+        #If the entry is Quiz, So openEditorTab = True, Then - wait 10sec refresh and wait again
         if openEditorTab == True:
             sleep(10)
             self.refresh()
