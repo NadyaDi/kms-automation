@@ -448,6 +448,8 @@ class Upload(Base):
                 self.clsCommon.moodle.switchToMoodleIframe()
             elif self.getAppUnderTest() == enums.Application.CANVAS:
                 self.clsCommon.canvas.switchToCanvasIframe()
+            elif self.getAppUnderTest() == enums.Application.D2L:
+                self.clsCommon.d2l.switchToD2LIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)

@@ -113,3 +113,4 @@ LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL      = 'https://il-qa-blackboard-q2-2018.
 LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL      = 'https://kalturasp2013.sharepoint.com/sites/QA/QAtesting/automation/SitePages'
 LOCAL_SETTINGS_KAF_MOODLE_BASE_URL          = 'https://extqa4.dev.kaltura.com/moodle3.2vs4.0.10new/moodle'
 LOCAL_SETTINGS_KAF_CANVAS_BASE_URL          = 'https://kaltura.instructure.com'
+LOCAL_SETTINGS_KAF_D2L_BASE_URL             = 'https://kalturaqa2.d2l-partners.brightspace.com/d2l/home'

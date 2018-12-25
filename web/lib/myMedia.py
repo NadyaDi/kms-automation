@@ -1427,7 +1427,7 @@ class MyMedia(Base):
                 self.clsCommon.sendKeysToBodyElement(Keys.HOME)
                 return True 
             
-            if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS):
+            if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS) or (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L):
                 self.click(self.MY_MEDIA_TITLE)
 
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
