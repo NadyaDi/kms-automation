@@ -158,11 +158,13 @@ test_2284,1,0,0,0,Canvas - Preview all kinds of media from My Media and Gallery
 test_2285,1,0,0,0,Canvas - View Collapsed Expanded Modes
 test_2286,1,0,0,0,Canvas - Upload media from desktop
 test_2290,1,0,0,0,Canvas - My Media - Search by Name / Description / Tags
+test_2291,0,1,0,0,Canvas - My Media - Sort Media
 test_2292,1,0,0,0,Canvas - My Media - filter media view different statuses
 test_2293,1,0,0,0,Canvas - My Media - filter media view different media types
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
+test_2543,1,0,0,0,D2L - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history

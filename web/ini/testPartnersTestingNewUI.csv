@@ -32,8 +32,10 @@ test_2283,Canvas - Publish From Entry Page,,,pythonautomation1@mailinator.com,Ka
 test_2285,Canvas - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2286,Canvas - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2291,Canvas - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
