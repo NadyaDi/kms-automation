@@ -27,6 +27,7 @@ class Canvas(Base):
     CANVAS_MEDIA_GALLERY_BUTTON_IN_NAV_BAR              = ('xpath', "//a[contains(@class, 'ontext_external_tool') and @title='Media Gallery']")
     CANVAS_DASHBOARD_BUTTON_IN_NAV_BAR                  = ('xpath', "//a[@id='global_nav_dashboard_link']")
     CANVAS_GALLERY_NEW1_IN_DASHBOARD_MENU               = ('xpath', "//div[@class='ic-DashboardCard' and @aria-label='New1']")
+    CANVAS_USER_NAME                                    = ('xpath', "//h2[@class='_16dxlnN _2nPix9- _3ofYXie _1vP3JKU']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -91,7 +92,7 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to click on account button in main nav bar ")
             return False
         
-        if self.click(self.USER_LOGOUT_BTN) == False:
+        if self.click(self.USER_LOGOUT_BTN, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False
          
@@ -147,5 +148,15 @@ class Canvas(Base):
          
         return True
      
-    
+    def getCanvasLoginUserName(self):
+        self.clsCommon.base.switch_to_default_content()
+        if self.click(self.USER_ACCOUNT_BUTTON_IN_NAV_BAR) == False:
+            writeToLog("INFO","FAILED to click on account button")
+            return False 
+        try:
+            userName = self.get_element_text(self.CANVAS_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName.lower()   
     
