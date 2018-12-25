@@ -85,6 +85,11 @@ class KafGeneric(Base):
             if self.clsCommon.canvas.switchToCanvasIframe() == False:
                 writeToLog("INFO","FAILED to switch to canvas iframe")
                 return False
+    
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            if self.clsCommon.d2l.switchToD2LIframe() == False:
+                writeToLog("INFO","FAILED to switch to canvas iframe")
+                return False
         
         return True
     
@@ -117,6 +122,12 @@ class KafGeneric(Base):
             if self.clsCommon.canvas.navigateToGalleryCanvas(forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to media gallery")
                 return False 
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            if self.clsCommon.d2l.navigateToGalleryD2L(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False   
+        
         return True
         
     

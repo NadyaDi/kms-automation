@@ -100,6 +100,7 @@ class IframeName(Enum):
     KAF_SHAREPOINT                          = 'KAF_SHAREPOINT'
     KAF_MOODLE                              = 'KAF_MOODLE'
     KAF_CANVAS                              = 'KAF_CANVAS'
+    KAF_D2L                                 = 'KAF_D2L'
 
     
     

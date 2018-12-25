@@ -634,6 +634,9 @@ class EntryPage(Base):
     def verifyEntryViaType(self, entryType, entryLangth='', timeToStop='', entryQRResult=''):
         self.clsCommon.player.switchToPlayerIframe()
         if entryType == enums.MediaType.VIDEO:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
             try:
                 videoLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
             except NoSuchElementException:
@@ -648,6 +651,10 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
                 return False
             
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                self.get_body_element().send_keys(Keys.PAGE_UP)
+                
             qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
             if qrCodeSc == False:
                 writeToLog("INFO","FAILED to take qr screen shot")
@@ -663,6 +670,9 @@ class EntryPage(Base):
                 return False
         
         if entryType == enums.MediaType.AUDIO:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
             try:
                 audioLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
             except NoSuchElementException:

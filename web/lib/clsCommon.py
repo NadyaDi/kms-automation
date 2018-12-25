@@ -30,6 +30,7 @@ import filecmp
 from kafGeneric import KafGeneric
 from kafMoodle import Moodle
 from kafCanvas import Canvas
+from kafD2L import D2L
 
 
     #============================================================================================================
@@ -67,6 +68,7 @@ class Common():
         self.sharePoint         = SharePoint(self, driver)
         self.moodle             = Moodle(self, driver)
         self.canvas             = Canvas(self, driver)
+        self.d2l                = D2L(self, driver)
         
     #=============================================================================================================
     # Locators:
@@ -121,6 +123,8 @@ class Common():
             return self.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)   
         elif self.base.getAppUnderTest() == enums.Application.CANVAS:
             return self.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
+        elif self.base.getAppUnderTest() == enums.Application.D2L:
+            return self.d2l.loginToD2L(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
     
     
     # Author: Tzachi Guetta     
@@ -251,6 +255,8 @@ class Common():
             return self.moodle.switchToMoodleIframe()
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
             return self.canvas.switchToCanvasIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            return self.d2l.switchToD2LIframe()
         else:
             self.base.switch_to_default_content()
             

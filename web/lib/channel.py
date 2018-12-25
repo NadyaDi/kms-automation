@@ -2500,7 +2500,7 @@ class Channel(Base):
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
         while wait_until > datetime.datetime.now():                       
-            if self.wait_while_not_visible(loading_message, 10) == True:
+            if self.wait_while_not_visible(loading_message, 5) == True:
                     self.clsCommon.sendKeysToBodyElement(Keys.END)
             
         if self.is_present(no_entries_page_msg, 5) == True:
