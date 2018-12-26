@@ -74,7 +74,8 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
             
-            sleep(5)
+            self.refresh()
+            sleep(3)
             
             writeToLog("INFO","Step 4: Going to play and verify entry")
             if self.common.player.clickPlayPauseAndVerify('0:05', clickPlayFromBarline=False) == False:
