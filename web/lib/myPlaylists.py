@@ -37,6 +37,8 @@ class MyPlaylists(Base):
     PLAYLIST_EMBED_PLAYER_SIZES              = ('xpath', '//iframe[@width="WIDTH_SIZE" and @height="HEIGHT_SIZE"]')
     PLAYLIST_TABLE                           = ('xpath', '//table[@id="playlist-table"]')
     CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE   = ('xpath', '//div[contains(@class, "alert alert-success ") and contains(text(),"Media added to selected playlist(s): PLAYLIST_NAME.")]')
+    DELETE_ENTRY_FROM_PLAYLIST_BUTTON        = ('xpath', "//a[@aria-label='Remove media ENTRY_NAME from playlist']")
+    ENTRY_NAME                               = ('xpath', "//a[contains(@herf,'ENTRY_NAME')]")
     #============================================================================================================
 
     #  @Author: Tzachi Guetta      
@@ -728,12 +730,13 @@ class MyPlaylists(Base):
     
     # @Author: Inbar Willman
     # Verify multiple entries in single playlist
-    def verifyMultipleEntriesInPlaylist(self, playlistName, entriesList, isExpected=True):
+    def verifyMultipleEntriesInPlaylist(self, playlistName, entriesList, isExpected=True, forceNavigate=True ):
         try:                
             if playlistName != '':
-                if self.navigateToMyPlaylists() == False:
-                    writeToLog("INFO","FAILED to navigate to my Playlists")
-                    return False
+                if forceNavigate == True:
+                    if self.navigateToMyPlaylists() == False:
+                        writeToLog("INFO","FAILED to navigate to my Playlists")
+                        return False
                  
                 tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
                 if self.click(tmp_playlist_name) == False:
@@ -893,7 +896,7 @@ class MyPlaylists(Base):
 
     # @Author:Ori Flchtman
     # Join above 2 functions- typeNewPalylistNameAndClickCreate with selectEntriesAndClickAddToPlaylist
-    def removeAddEntriesToPlaylistsAtSameTime(self, entriesName, addRemoveExistingPlalists, newPlaylists):
+    def removeAddEntriesToPlaylistsAtSameTime(self, entriesName, newPlaylists):
         if self.selectEntriesAndClickAddToPlaylist(entriesName) == False:
             writeToLog("INFO","FAILED to select entries")
             return False
@@ -903,3 +906,41 @@ class MyPlaylists(Base):
             return False
         
         # To do- Implement method addRemoveExistingPlaylistswhen bus ### and ### are fixed 
+        
+    
+    # @Author:Ori Flchtman
+    # Open my playlists screen, select playlist and delete entries
+    def deleteEntriesFromPlalists(self, entriesList, playlistName):
+        if self.navigateToMyPlaylists() == False:
+            writeToLog("INFO","FAILED to navigate to my Playlists")
+            return False
+        sleep(3)
+        
+        tmp_playlist_name = (self.PLAYLIST_NAME[0], self.PLAYLIST_NAME[1].replace('PLAYLIST_NAME', playlistName))
+        if self.click(tmp_playlist_name) == False:
+            writeToLog("INFO","FAILED to click on playlist name (at my playlist page)")
+            return False
+        sleep(3)
+        
+        for entry in entriesList:
+            tmp_entry_name = (self.DELETE_ENTRY_FROM_PLAYLIST_BUTTON[0], self.DELETE_ENTRY_FROM_PLAYLIST_BUTTON[1].replace('ENTRY_NAME', entry))
+            if self.click(tmp_entry_name) == False:
+                writeToLog("INFO","FAILED to delete" + entry + "from Playlist")
+                return False
+            sleep(5)
+            if self.click(self.PLAYLIST_DELETE_BUTTON_CONFIRM, 30, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on delete button confirmation, entry name: '" + entry + "'")
+                return False
+            sleep(5)
+            
+        if self.click(self.PLAYLIST_SAVE_BUTTON, 30) == False:
+                writeToLog("INFO","FAILED to click on playlist save button")
+                return False
+            
+        if self.wait_visible(self.PLAYLIST_SAVED_ALERT, 10) == False:
+                writeToLog("INFO","FAILED to to save playlist: " + playlistName)
+                return False
+            
+        return True
+                        
+            
