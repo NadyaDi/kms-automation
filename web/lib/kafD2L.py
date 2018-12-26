@@ -116,10 +116,19 @@ class D2L(Base):
                 return False
         sleep(5)
         
+        self.removeD2LPopupIngallery()
         self.switchToD2LIframe()
         if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False
         
         return True
+        
+        
+    # Author: Michal Zomper
+    def removeD2LPopupIngallery(self):
+        self.clsCommon.base.switch_to_default_content()
+        self.driver.execute_script("try{var element = document.querySelectorAll('div[data-id=tourorg-1]')[0];element.parentNode.removeChild(element);}catch (e){}")
+        self.switchToD2LIframe()
+        
         

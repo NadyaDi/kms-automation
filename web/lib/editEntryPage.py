@@ -164,7 +164,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to click on Edit button")
             return False
         
-        #Wait page load - wait for entry title
+        #Wait page load - wait for entry title 
         if self.wait_element(tmp_entry_name, 5) == False:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
@@ -1108,8 +1108,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
-        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
-        if application == enums.Application.BLACK_BOARD:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
             if self.clsCommon.blackBoard.switchToBlackboardIframe() == False:
                 writeToLog("INFO","FAILED to load blackboard iframe")
                 return False

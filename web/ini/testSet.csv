@@ -164,6 +164,11 @@ test_2293,1,0,0,0,Canvas - My Media - filter media view different media types
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
+test_2533,1,0,0,0,D2L - Edit Entry Metadata
+test_2534,0,1,0,0,D2l - Edit Entry page - Disable comments
+test_2535,0,1,0,0,D2L - Edit Entry page - Close discussion
+test_2537,1,0,0,0,D2L - Entry page - Add captions And Search - remove caption
+test_2538,1,0,0,0,D2L - Edit entry page - Thumbnail tab
 test_2543,1,0,0,0,D2L - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
