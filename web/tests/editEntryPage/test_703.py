@@ -74,7 +74,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
             
-            self.refresh()
+            self.common.base.refresh()
             sleep(3)
             
             writeToLog("INFO","Step 4: Going to play and verify entry")
