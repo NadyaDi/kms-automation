@@ -311,21 +311,23 @@ class KafGeneric(Base):
         sleep(4)
         self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30) 
         self.clsCommon.channel.showAllEntriesPendingTab()
-        if self.clsCommon.channel.approveEntriesInPandingTab(toApproveEntriesNames) == False:
-            writeToLog("INFO","FAILED to approve entries")
-            return False  
+        if len(toApproveEntriesNames) != 0:
+            if self.clsCommon.channel.approveEntriesInPandingTab(toApproveEntriesNames) == False:
+                writeToLog("INFO","FAILED to approve entries")
+                return False  
         
-        self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
-        sleep(4)
-        self.click(self.KAF_GRID_VIEW)
-        self.get_body_element().send_keys(Keys.PAGE_UP)
-        sleep(2)
-        self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
-        sleep(2)
-        self.clsCommon.channel.showAllEntriesPendingTab()
-        if self.clsCommon.channel.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
-            writeToLog("INFO","FAILED to reject entries")
-            return False
+        if len(toRejectEntriesNames) != 0:
+            self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
+            sleep(4)
+            self.click(self.KAF_GRID_VIEW)
+            self.get_body_element().send_keys(Keys.PAGE_UP)
+            sleep(2)
+            self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, timeout=60, multipleElements=True)
+            sleep(2)
+            self.clsCommon.channel.showAllEntriesPendingTab()
+            if self.clsCommon.channel.rejectEntriesInPandingTab(toRejectEntriesNames) == False:
+                writeToLog("INFO","FAILED to reject entries")
+                return False
         
         # verify that entry approve/ rejected in gallery 
         if self.navigateToGallery(galleryName, forceNavigate=True) == False:

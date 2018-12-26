@@ -130,10 +130,21 @@ class Player(Base):
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     # additional = additional delay befor pause 
     def clickPlayAndPause(self, delay, timeout=30, embed=False, clickPlayFromBarline=True, additional=0):
+        if clickPlayFromBarline == False:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
+                self.get_body_element().send_keys(Keys.PAGE_UP)
+            
         self.switchToPlayerIframe(embed)
         if self.clickPlay(embed, fromActionBar=clickPlayFromBarline) == False:
             return False
         
+        if clickPlayFromBarline == False:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                self.switchToPlayerIframe(embed)
+            
         # Wait for delay
         if self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout) == False:
             writeToLog("INFO","FAILED to seek timer to: '" + str(delay) + "'")
@@ -509,14 +520,18 @@ class Player(Base):
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
                     writeToLog("INFO","FAILED to navigate to edit entry page")
                     return False 
-                
+                 
                 if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
-                
+                 
                 sleep(3)
                  
                 if toVerify == True:  
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                        self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                        self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                        
                     if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
                         writeToLog("INFO","FAILED to click Play Pause And Verify")
                         return False

@@ -64,6 +64,11 @@ test_2291,Canvas - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kalt
 test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2535,D2L - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2537,D2L - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2538,D2L - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
