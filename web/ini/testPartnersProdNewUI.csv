@@ -70,6 +70,10 @@ test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinato
 test_2535,D2L - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2537,D2L - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2538,D2L - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2541,D2L - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2542,D2L - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2544,D2L - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2545,D2L - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!

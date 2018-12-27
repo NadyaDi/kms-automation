@@ -42,6 +42,10 @@ test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinato
 test_2535,D2L - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2537,D2L - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2538,D2L - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2541,D2L - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2542,D2L - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2544,D2L - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2545,D2L - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
