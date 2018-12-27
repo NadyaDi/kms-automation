@@ -449,24 +449,31 @@ class Base:
             except:
                 self.setImplicitlyWaitToDefault()
                 return False                       
-
-
+    
+    
     # Clicks and taps
     # When you have more then one element found with your locator, use multipleElements = True
-    # It will search for element from the elements list, and find the one with size not 0
-    def click(self, locator, timeout=10, multipleElements=False):
+    # It will search for element from the elements list, and find the one with size not 0  
+    # if passed width and height will use action chain  
+    def click(self, locator, timeout=10, multipleElements=False, width=0, height=0):
         try:
             if multipleElements == True:
-                el = self.wait_element(locator, timeout, multipleElements=True)
-                if el != False:
-                    el.click()
+                element = self.wait_element(locator, timeout, multipleElements=True)
+                if element != False:
+                    if (width!=0 and height!=0):
+                        ActionChains(self.driver).move_to_element_with_offset(element, width, height).click().perform()
+                    else:
+                        element.click()
                     return True
                 return False
             element = self.wait_element(locator, timeout)
             if element == False:
                 return False
             else:
-                element.click()
+                if (width!=0 and height!=0):
+                    ActionChains(self.driver).move_to_element_with_offset(element, width, height).click().perform()
+                else:
+                    element.click()
                 return True
             
         except Exception:

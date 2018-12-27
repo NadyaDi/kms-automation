@@ -37,7 +37,7 @@ class D2L(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     def switchToD2LIframe(self):
-        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER or localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.KAF_BLACKBOARD_EMBED_KALTURA_MEDIA:
+        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
             self.switch_to_default_content()
             if self.swith_to_iframe(self.D2L_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")

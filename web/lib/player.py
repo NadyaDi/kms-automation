@@ -99,14 +99,18 @@ class Player(Base):
     def clickPlay(self,embed=False, fromActionBar=True):
         self.switchToPlayerIframe(embed)
         if fromActionBar == True:
-            if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER) == False:
+            playButtonControlsEl = self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER)
+            playBtnWidth = playButtonControlsEl.size['width'] / 3
+            playBtnHeight = playButtonControlsEl.size['height'] / 1.1
+            
+            if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, width=playBtnWidth, height=playBtnHeight) == False:
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
                 return False
         elif fromActionBar == False:
             if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 20, True) == False:
                 writeToLog("INFO","FAILED to click Play in the middle of the player; fromActionBar = " + str(fromActionBar))
                 return False   
-            
+        
         return True     
             
             
@@ -115,7 +119,10 @@ class Player(Base):
     def clickPause(self,  embed=False, fromActionBar=True):
         self.switchToPlayerIframe(embed)
         if fromActionBar == True:
-            if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER) == False:
+            playButtonControlsEl = self.wait_element(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            playBtnWidth = playButtonControlsEl.size['width'] / 3
+            playBtnHeight = playButtonControlsEl.size['height'] / 1.1
+            if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, width=playBtnWidth, height=playBtnHeight) == False:
                 writeToLog("INFO","FAILED to click Pause; fromActionBar = " + str(fromActionBar))
                 return False
             
@@ -130,21 +137,10 @@ class Player(Base):
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     # additional = additional delay befor pause 
     def clickPlayAndPause(self, delay, timeout=30, embed=False, clickPlayFromBarline=True, additional=0):
-        if clickPlayFromBarline == False:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
-                self.get_body_element().send_keys(Keys.PAGE_UP)
-            
         self.switchToPlayerIframe(embed)
         if self.clickPlay(embed, fromActionBar=clickPlayFromBarline) == False:
             return False
-        
-        if clickPlayFromBarline == False:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
-                self.get_body_element().send_keys(Keys.PAGE_DOWN)
-                self.switchToPlayerIframe(embed)
-            
+ 
         # Wait for delay
         if self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout) == False:
             writeToLog("INFO","FAILED to seek timer to: '" + str(delay) + "'")
@@ -529,7 +525,7 @@ class Player(Base):
                  
                 if toVerify == True:  
                     if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                        self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                        self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                         self.get_body_element().send_keys(Keys.PAGE_DOWN)
                         
                     if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
