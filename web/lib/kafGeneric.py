@@ -405,7 +405,19 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to click on 'select' media button")
             return False
         
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
         if application == enums.Application.MOODLE:
+            if isAssignmentEnable == True:
+                if submitAssignment == True:
+                    if self.clsCommon.moodle.submitMediaAsAssignment(True) == False:
+                        writeToLog("INFO","FAILED to create embed as assignment submission")
+                        return False
+                else:
+                    if self.clsCommon.moodle.submitMediaAsAssignment(False) == False:
+                        writeToLog("INFO","FAILED to create embed not as assignment submission")
+                        return False 
+                                                               
             if activity == enums.MoodleActivities.SITE_BLOG:
                 sleep(5)
                 self.switch_to_default_content()

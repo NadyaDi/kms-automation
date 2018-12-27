@@ -98,7 +98,7 @@ class Test:
                 return  
               
             writeToLog("INFO","Step 4: Going to make a search in 'Add to channel' - 'SR' tab")
-            if self.common.channel.searchInAddToChannel(self.self.searchInAddToChannelSearchIn, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY) == False:
+            if self.common.channel.searchInAddToChannel(self.searchInAddToChannelSearchIn, tabToSearcFrom=enums.AddToChannelTabs.SHARED_REPOSITORY) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to make a search in 'Add to channel' - 'SR' tab")
                 return          

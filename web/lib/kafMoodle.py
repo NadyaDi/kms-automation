@@ -330,7 +330,7 @@ class Moodle(Base):
             
     
     # @Author: Inbar Willman        
-    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False , filePath=None, description=None, tags=None):
+    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False , filePath=None, description=None, tags=None, isAssignmentEnable=False, submitAssignment=False):
         self.clsCommon.base.switch_to_default_content()
         # Navigate to course page
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_URL) == False:
@@ -378,7 +378,7 @@ class Moodle(Base):
         self.clsCommon.base.driver.switch_to_window(window_after)
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, isAssignmentEnable=isAssignmentEnable, submitAssignment=submitAssignment) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
                 
