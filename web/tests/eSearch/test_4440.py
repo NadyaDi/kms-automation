@@ -100,7 +100,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 7: Going to clear all the search filters") 
-            if self.common.base.click(self.common.myMedia.FILTERS_CLEAR_ALL_BUTTON, 20) == False:
+            if self.common.base.click(self.common.myMedia.FILTER_CLEAR_ALL_BUTTON, 20) == False:
                 writeToLog("INFO","Step 7: FAILED to clear all the search filters")
                 self.status = "Fail"
                 return False 
