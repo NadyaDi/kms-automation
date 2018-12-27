@@ -23,6 +23,7 @@ test_2128,Moodle - Embed video resource from SR,,,pythonautomation1@mailinator.c
 test_954,Moodle - Publish from my media to shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2397,Moodle - Embed media in site blogs from media gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2398,Moodle - upload and Embed media in kaltura video resource,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_113,KAF BB - Embed Media From SR - Add New Announcements,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
