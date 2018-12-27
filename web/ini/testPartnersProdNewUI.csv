@@ -319,8 +319,8 @@ test_4486,Filter by Scheduling - with search - Channel page - media tab,2443872,
 test_4487,Filter by Scheduling - no search - Channel page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4488,Filter by Scheduling - with search - Category page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4489,Filter by Scheduling - no search - Category page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4490,Filter by Scheduling - with search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4491,Filter by Scheduling - no search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4490,Filter by Scheduling - with search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4491,Filter by Scheduling - no search - Category page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
 test_4492,Filter by Scheduling - with search - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4493,Filter by Scheduling - no search - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4494,Filter by Scheduling - with search - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -347,8 +347,8 @@ test_4517,Filter by custom-data - with search - Channel page - media tab - negat
 test_4518,Filter by custom-data - no search - Channel page - media tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4519,Filter by custom-data - with search - Category page - media tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4520,Filter by custom-data - no search - Category page - media tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4521,Filter by custom-data - with search - Category page - pending tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4522,Filter by custom-data - no search - Category page - pending tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4521,Filter by custom-data - with search - Category page - pending tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4522,Filter by custom-data - no search - Category page - pending tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
 test_4523,Filter by custom-data - with search - Add new quiz - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4524,Filter by custom-data - no search - Add new quiz - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4525,Filter by custom-data - with search - Add to channel - My Media tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
