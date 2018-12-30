@@ -548,10 +548,10 @@ class Kea(Base):
     # NOT FINISHED:
     # the following function will create a Quiz (within the given dictQuestions)
     # Currently support question type=Multiple ONLY     
-    def quizCreation(self, entryName, dictQuestions): #TBD: dictDetails, dictScores, dictExperience
+    def quizCreation(self, entryName, dictQuestions, timeout=15): #TBD: dictDetails, dictScores, dictExperience
         sleep(25)
         self.searchAndSelectEntryInMediaSelection(entryName)
-        sleep(5) 
+        sleep(timeout) 
                    
         for questionNumber in dictQuestions:
             questionDetails = dictQuestions[questionNumber]

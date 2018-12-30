@@ -100,7 +100,7 @@ class Test:
             self.isExist = ["5", "7", "22", "28"];
             self.isAbsent = ["12", "13", "15", "17"];
             writeToLog("INFO","Step 6: Going to verify the entry duration (using QR codes)")  
-            if self.common.player.compareQRlists(self.QRlist, self.isExist, self.isAbsent) == False:
+            if self.common.player.compareLists(self.QRlist, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify the entry duration (using QR codes)")
                 return    

@@ -61,8 +61,8 @@ class Test:
                 return
 
             writeToLog("INFO","Step 3: Going to collect the new entry's QR codes")  
-            self.QRlist = self.common.player.collectQrTimestampsFromPlayer(self.videoEntryName)
-            if  self.QRlist == False:
+            self.captionList = self.common.player.collectQrTimestampsFromPlayer(self.videoEntryName)
+            if  self.captionList == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to collect the new entry's QR codes")
                 return
@@ -70,7 +70,7 @@ class Test:
             self.isExist = ["5", "7", "22", "28"];
             self.isAbsent = ["12", "13", "15", "17"];
             writeToLog("INFO","Step 4: Going to verify the entry duration (using QR codes)")  
-            if self.common.player.compareQRlists(self.QRlist, self.isExist, self.isAbsent) == False:
+            if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the entry duration (using QR codes)")
                 return        
