@@ -51,6 +51,7 @@ class Player(Base):
     PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON                             = ('xpath', "//div[@class='ftr-right' and text()='SKIP FOR NOW']")
     PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU                    = ('xpath', "//input[@id='searchBox' and @placeholder='Search']")
     PLAYER_CAPTIONS_SECTION                                     = ('xpath', '//span[@style="position: relative;" and contains(text(),"CAPTION_TEXT")]')
+    PLAYER_CAPTIONS_TEXT                                        = ('xpath', "//span[@style='position: relative;']")
     PLAYER_TOTAL_VIDEO_LENGTH                                   = ('xpath', "//div[@class='timers comp durationLabel display-medium']")
     PLAYER_CURRENT_PLAYBACK_TIME                                = ('xpath', "//div[@class='timers comp currentTimeLabel display-high disabled']")
     PLAYER_QUIZ_ALMOST_DONE_SCREEN                              = ('xpath', "//div[@class='title-text padding20']")
@@ -157,6 +158,43 @@ class Player(Base):
     
     
     # @ Author: Tzachi Guetta
+    # This function will play the player from start to end - and collect all the Captions that were presented on the player - and return list of Captions codes (filters the duplicates)     
+    def collectCaptionsFromPlayer(self, entryName, embed=False, fromActionBar=True):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False
+            
+            if self.clickPlay(embed, fromActionBar) == False:
+                return False       
+            
+            caption = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            captionsList = [];
+            
+            while caption != False:
+                
+                caption = self.wait_element(self.PLAYER_CAPTIONS_TEXT)
+                if caption == False:
+                    writeToLog("INFO","FAILED to extract caption from player")
+                    return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
+
+                
+                captionsList.append(caption.text)
+                caption = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                sleep(0.3)
+            
+            self.clsCommon.base.switch_to_default_content()
+            return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
+            
+        except Exception as exp:
+            return False  
+    
+    # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the player - and return list of QR codes (filters the duplicates)     
     def collectQrTimestampsFromPlayer(self, entryName):
         try:
@@ -180,18 +218,18 @@ class Player(Base):
                 qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(showLog=False)
                 if qrPath == False:
                     writeToLog("INFO","FAILED to take QR code screen shot")
-                    return self.removeDuplicate(QRcodeList)              
+                    return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)              
                 
                 qrResolve = self.clsCommon.qrcode.resolveQrCode(qrPath)
                 if qrResolve == False:
                     writeToLog("INFO","FAILED to resolve QR code")
-                    return self.removeDuplicate(QRcodeList)  
+                    return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)  
                 
                 QRcodeList.append(qrResolve)
                 QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
                 sleep(0.3)
             
-            return self.removeDuplicate(QRcodeList)
+            return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
         except Exception:
             return False
@@ -306,14 +344,14 @@ class Player(Base):
             return False        
     
     # @ Author: Tzachi Guetta    
-    def removeDuplicate(self, duplicateList): 
+    def removeDuplicate(self, duplicateList, playerObject): 
         try:
             final_list = [] 
             for num in duplicateList: 
                 if num not in final_list: 
                     final_list.append(num)
                     
-            writeToLog("INFO","The found QR codes on player: " + str(final_list))
+            writeToLog("INFO","The " + str(playerObject) +"'s that were found on player: " + str(final_list))
             return final_list
                 
         except Exception:
@@ -324,22 +362,22 @@ class Player(Base):
     # this method is checking 2 things:
     # checking if "isExistList" is exist on qrList - and return True in case all of the values were found
     # checking if "isAbsentList" is NOT exist on qrList - and return True in case all of the values were NOT found
-    def compareQRlists(self, qrList, isExistList, isAbsentList):
+    def compareLists(self, qrList, isExistList, isAbsentList, playerObject):
         try:     
             for qr1 in isExistList:
                 if qr1 in qrList:
-                    writeToLog("INFO","As Expected: the QR code of second " + qr1 +" found on player")
+                    writeToLog("INFO","As Expected: The " + str(playerObject) + ": '" + qr1 +"' found on player")
                     
                 else:
-                    writeToLog("INFO","NOT Expected: the QR code of second " + qr1 +" Not found on player")
+                    writeToLog("INFO","NOT Expected: The " + str(playerObject) + ": '" + qr1 +"' Not found on player")
                     return False
                 
             for qr2 in isAbsentList:
                 if qr2 not in qrList:
-                    writeToLog("INFO","As Expected: the QR code of second " + qr2 +" not found on player")
+                    writeToLog("INFO","As Expected: The " + str(playerObject) + ": '" + qr2 +"' not found on player")
                     
                 else:
-                    writeToLog("INFO","NOT Expected: the QR code of second " + qr2 +" found on player")
+                    writeToLog("INFO","NOT Expected: The " + str(playerObject) + ": '" + qr2 +"' found on player")
                     return False            
                 
         except Exception:
@@ -707,7 +745,7 @@ class Player(Base):
         
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)     
-    def collectQrOfSlidesFromPlayer(self, entryName):
+    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -721,7 +759,7 @@ class Player(Base):
             # The QR codes of the slides needs to be presented on the bottom right of the player  - in order to capture them. then the following function will switch the player view to that position
             self.changePlayerView(enums.PlayerView.SWITCHVIEW)
             
-            if self.clickPlay(False, True) == False:
+            if self.clickPlay(embed, fromActionBar) == False:
                 return False       
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -749,7 +787,8 @@ class Player(Base):
                     writeToLog("INFO","FAILED to resolve QR code")
                 QRcodeList.append(qrResolve)
                 
-            return self.removeDuplicate(QRcodeList)
+            self.clsCommon.base.switch_to_default_content()    
+            return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
         except Exception as inst:
             return False
