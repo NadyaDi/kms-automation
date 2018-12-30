@@ -583,4 +583,28 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
         
-        return True            
+        return True   
+    
+    
+        # Author: Michal Zomper
+    def editGalleryMatedate(self, newGallerydescription="", newGalleryTags=""):
+        
+        
+        if newGallerydescription != "":
+            if self.clsCommon.category.fillCategoryDescription(newGallerydescription, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace channel description to:'" + newGallerydescription + "'")    
+                return False
+        
+        if newGalleryTags != "":
+            if self.clsCommon.category.fillCategoryTags(newGalleryTags, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace channel tags to:'" + newGalleryTags + "'")    
+                return False   
+            
+        # Click Save
+        if self.click(self.clsCommon.category.EDIT_CATEGORY_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False
+        sleep(3)         
+        
+        
+    return True
