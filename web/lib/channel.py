@@ -2670,3 +2670,35 @@ class Channel(Base):
         
         return True    
     
+    
+    # Author: Michal Zomper   
+    def varifyChannelyMatedate(self, channelName, channelDescription, channelTags, channelType, appearsInCategoryName):
+        tmpChannelName = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+        if self.wait_visible(tmpChannelName, 30) == False:
+            writeToLog("INFO","FAILED to verify channel name")
+            return False
+        
+        tmpChannelDescription = (self.clsCommon.category.CATEGORY_DESCRIPTION[0], self.clsCommon.category.CATEGORY_DESCRIPTION[1].replace('CATEGORY_DESCRIPTION', channelDescription))
+        if self.wait_visible(tmpChannelDescription, 30) == False:
+            writeToLog("INFO","FAILED to verify channel description")
+            return False
+        
+        tmpChannelTags = (self.clsCommon.category.CATEGORY_TAGS[0], self.clsCommon.category.CATEGORY_TAGS[1].replace('CATEGORY_TAGS', channelTags[:-1]))
+        if self.wait_visible(tmpChannelTags, 30) == False:
+            writeToLog("INFO","FAILED to verify channel tags")
+            return False
+        
+        if channelType.value in self.get_element_text(self.CHANNEL_TYPE, 20).lower() == False:
+            writeToLog("INFO","Failed to verify that channel type is : " + channelType)
+            return False 
+        
+        tmp_chnnelAppearIn = (self.CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+        if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
+            writeToLog("INFO","Failed to click on appears in button")
+            return False
+        
+        if self.is_visible(tmp_chnnelAppearIn) == False:
+            writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+            return False
+        
+        return True
