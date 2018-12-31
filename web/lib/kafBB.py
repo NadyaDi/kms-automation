@@ -510,6 +510,10 @@ class BlackBoard(Base):
         if self.navigateToCourseMenuOptionPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to course: " + galleryName + " home page")   
             return False  
+        sleep(7)
+        homePage= (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', "Home Page"))
+        self.click(homePage)
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
         
         # We don't use 'self.clsCommon.player.switchToPlayerIframe(False)' method because it's different player iframe locator.
         # Because we have only one iframe on the page, we can locate the iframe by 'tag_name'
@@ -530,13 +534,9 @@ class BlackBoard(Base):
                     writeToLog("INFO","Success: Entry isn't displayed in featured media")
                     return True 
             else:
-                if not entryName in carouselItemEl.text:
-                    writeToLog("INFO","Success: Entry isn't displayed in featured media")
-                    return True 
-                else:
-                    writeToLog("INFO","FAILED: Entry shouldn't be displayed " + entryName + " in featured media")   
-                    return False                      
-            
+                writeToLog("INFO","Success: Entry isn't displayed in featured media")
+                return True 
+
         # shouldBeDisplayed == True     
         else:        
             carouselItemEl = self.wait_element(self.FEATURED_MEDIA_ENTRY, timeout=3)

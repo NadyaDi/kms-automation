@@ -235,12 +235,12 @@ class KafGeneric(Base):
         
         if type(uploadEntrieList) is list:
             for entry in uploadEntrieList:
-                if self.addNewContentToGalleryWithoutNavigate(entry, isGalleryModerate) == False:
+                if self.addNewContentToGalleryWithoutNavigate(galleryName, entry, isGalleryModerate) == False:
                     writeToLog("INFO","FAILED to upload new media to gallery")
                     return False 
                 sleep(2)
         else:
-            if self.addNewContentToGalleryWithoutNavigate(uploadEntrieList, isGalleryModerate) == False:
+            if self.addNewContentToGalleryWithoutNavigate(galleryName, uploadEntrieList, isGalleryModerate) == False:
                 writeToLog("INFO","FAILED to upload new media to gallery")
                 return False  
         
@@ -270,7 +270,7 @@ class KafGeneric(Base):
     
     # Author: Michal Zomper
     #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
-    def addNewContentToGalleryWithoutNavigate(self, uploadEntry, isGalleryModerate=''):
+    def addNewContentToGalleryWithoutNavigate(self, galleryName, uploadEntry, isGalleryModerate=''):
         if self.click(self.KAF_GALLERY_ADD_MEDIA_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to Gallery button")
             return False     
@@ -294,11 +294,16 @@ class KafGeneric(Base):
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
             self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
             self.get_body_element().send_keys(Keys.PAGE_DOWN) 
-            
-        # Click 'Go To media gallery'
-        if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on 'Go To gallery'")
-            return False
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            if self.navigateToGallery(galleryName) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False
+        else:
+            # Click 'Go To media gallery'
+            if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'Go To gallery'")
+                return False
         sleep(5)
         return True
     
