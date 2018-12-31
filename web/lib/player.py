@@ -169,19 +169,19 @@ class Player(Base):
             if self.clickPlay(embed, fromActionBar) == False:
                 return False       
             
-            caption = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
             captionsList = [];
             
-            while caption != False:
+            while playback != False:
                 
-                caption = self.wait_element(self.PLAYER_CAPTIONS_TEXT)
-                if caption == False:
+                captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT).text
+                if captionText == False:
                     writeToLog("INFO","FAILED to extract caption from player")
                     return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
 
                 
-                captionsList.append(caption.text)
-                caption = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                captionsList.append(captionText)
+                playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
                 sleep(0.3)
             
             self.clsCommon.base.switch_to_default_content()
