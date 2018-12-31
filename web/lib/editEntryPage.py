@@ -153,6 +153,10 @@ class EditEntryPage(Base):
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON, timeout=5 ,multipleElements=True)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        
         sleep(2)
         #Open "Actions" drop-down list 
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, multipleElements=True) == False:
