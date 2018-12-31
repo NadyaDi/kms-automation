@@ -251,7 +251,7 @@ class Moodle(Base):
                     return False                                        
         
         self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
-        sleep(5)
+        sleep(10)
         # If entry type is video
         if delay != '':   
 #            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
