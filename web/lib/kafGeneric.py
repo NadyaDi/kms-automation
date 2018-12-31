@@ -32,6 +32,7 @@ class KafGeneric(Base):
     KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
     KAF_GRID_VIEW                               = ('xpath', "//button[@id='MyMediaGrid']")
     KAF_SR_ENTRY_CHECKBOX                       = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
+    KAF_EMBED_LOADING_MESSAGE                   = ('xpath', '//div[@class="elementLoader"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -396,7 +397,7 @@ class KafGeneric(Base):
             self.clsCommon.general.waitForLoaderToDisappear()  
             return True   
         
-        self.clsCommon.general.waitForLoaderToDisappear()                              
+        self.wait_while_not_visible(self.KAF_EMBED_LOADING_MESSAGE, 60)                             
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
