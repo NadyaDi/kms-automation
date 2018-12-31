@@ -59,7 +59,8 @@ class Moodle(Base):
     MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')    
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')
-    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")                               
+    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")     
+    MOODLE_PLAYER_IN_VIDEO_RESOURCE                        = ('xpath', "//video[@class='persistentNativePlayer nativeEmbedPlayerPid']")  
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -384,7 +385,10 @@ class Moodle(Base):
             return False  
                 
         self.clsCommon.base.driver.switch_to_window(window_before) 
-        sleep(4)
+        sleep(6)
+        
+        
+        
         if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
             writeToLog("INFO","FAILED to click on submit button")
             return False  
