@@ -19,7 +19,7 @@ class KafGeneric(Base):
     #====================================================================================================================================
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
     KAF_GALLERY_ADD_MEDIA_BUTTON                = ('xpath', "//a[@id='tab-addcontent']")
-    KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next']")
+    KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next' and contains(text(), 'Go To Media Gallery')]")
     KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']") 
     KAF_EMBED_FROM_MY_MEDIA_PAGE                = ('xpath', "//a[@id='media-tab']")
     KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_MULTIPLE  = ('xpath', "//a[@id='MediaGalleries-tab']")
@@ -381,7 +381,7 @@ class KafGeneric(Base):
                 
         elif embedFrom == enums.Location.UPLOAD_PAGE_EMBED:
             # Upload entry
-            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED) == False:
+            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED) == None:
                 writeToLog("INFO","FAILED to upload new entry to embed page embed page")
                 return False  
             

@@ -40,7 +40,7 @@ class EntryPage(Base):
     ENTRY_PAGE_COMMENT_TEXT_AREA                           = ('xpath', '//textarea[@id="commentsbox"]')
     ENTRY_PAGE_COMMENT_ADD_BUTTON                          = ('xpath', '//input[@id="add-comment"]')
     ENTRY_PAGE_COMMENTS_PANEL                              = ('xpath', "//div[@id='commentsWrapper']")
-    ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and @class='btn responsiveSizePhone tabs-container__button tab-Details active']")
+    ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and contains(@class, 'btn responsiveSizePhone tabs-container__button tab-Details')]")
     ENTRY_PAGE_LIKE_BUTTON                                 = ('xpath', "//span[@id='likes']")
     ENTRY_PAGE_COMMENT_SECTION                             = ('xpath', '//div[@class="commentText"]/p[text()="COMMENT_TEXT"]')
     ENTRY_PAGE_CLOSE_DISCUSSION_MSG                        = ('xpath', '//h4[@class="muted" and text()="Discussion is closed"]')
