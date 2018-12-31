@@ -74,7 +74,9 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add Quiz")
                 return  
-
+            
+            self.common.base.refresh()
+            
             writeToLog("INFO","Step 3: Going to collect the new Quiz's question information from the player")  
             self.quizQuestionsBeforeTrimming = self.common.player.collectQuizQuestionsFromPlayer(self.videoEntryName + " - Quiz", 5)
             if  self.quizQuestionsBeforeTrimming == False:
