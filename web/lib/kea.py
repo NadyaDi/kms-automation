@@ -594,6 +594,6 @@ class Kea(Base):
                 
         self.switchToKeaIframe() 
         self.clickDone()
-                        
+        return True                
         
         

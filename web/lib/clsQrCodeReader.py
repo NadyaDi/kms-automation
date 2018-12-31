@@ -48,7 +48,7 @@ class QrCodeReader(Base):
 
         # Crop the image
         img = Image.open(filePath)
-        img2 = img.crop((img.width / 2.1, img.height / 2.56, img.width / 1.82, img.height / 1.86))
+        img2 = img.crop((img.width / 2.2, img.height / 2.66, img.width / 1.8, img.height / 1.76))
         img2.save(filePath)
         return filePath
     
