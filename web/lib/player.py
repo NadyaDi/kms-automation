@@ -253,7 +253,7 @@ class Player(Base):
                 return False  
             
             #Click continue button
-            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON) == False:
+            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON, 45) == False:
                 writeToLog("INFO","FAILED to click on Welcome Screen's continue button (Quiz Entry)")
                 return False  
 
