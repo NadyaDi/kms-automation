@@ -165,7 +165,7 @@ class EditEntryPage(Base):
             return False
         
         #Wait page load - wait for entry title 
-        if self.wait_element(tmp_entry_name, 5) == False:
+        if self.wait_element(tmp_entry_name, 20) == False:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
         
