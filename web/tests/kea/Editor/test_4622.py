@@ -56,21 +56,6 @@ class Test:
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2
-#             questionNumber1 = ['00:05', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
-#             questionNumber2 = ['00:10', enums.QuizQuestionType.Multiple, 'question #2 Title', 'question #2 option #1', 'question #2 option #2', 'question #2 option #3', 'question #2 option #4'] 
-#             questionNumber3 = ['00:15', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4'] 
-#             questionNumber4 = ['00:20', enums.QuizQuestionType.Multiple, 'question #4 Title', 'question #4 option #1', 'question #4 option #2', 'question #4 option #3', 'question #4 option #4'] 
-#             questionNumber5 = ['00:25', enums.QuizQuestionType.Multiple, 'question #5 Title', 'question #5 option #1', 'question #5 option #2', 'question #5 option #3', 'question #5 option #4']   
-#             self.dictQuestions = {'1':questionNumber1,'2':questionNumber2,'3':questionNumber3,'4':questionNumber4,'5':questionNumber5} 
-#             
-#             questionTrim1 = ['00:05', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
-#             questionTrim2 = ['00:25', enums.QuizQuestionType.Multiple, 'question #5 Title', 'question #5 option #1', 'question #5 option #2', 'question #5 option #3', 'question #5 option #4'] 
-#             self.dictQuestionsTrimmedExist = {'1':questionTrim1,'2':questionTrim2}
-#             
-#             questionTrim3 = ['00:10', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4'] 
-#             questionTrim4 = ['00:20', enums.QuizQuestionType.Multiple, 'question #4 Title', 'question #4 option #1', 'question #4 option #2', 'question #4 option #3', 'question #4 option #4'] 
-#             self.dictQuestionsTrimmedAbsent = {'4':questionTrim3,'5':questionTrim4}       
-                    
             self.slidesQrCodeAndTimeList = [('0','00:00'), ('1','00:01'),('2','00:02'), ('3','00:03'), ('4','00:04'), ('5','00:05'), ('6','00:06'), ('7','00:07'), ('8','00:08'), ('9','00:09'),
                                             ('10','00:10'), ('11','00:11'), ('12','00:12'), ('13','00:13'), ('14','00:14'), ('15','00:15'), ('16','00:16'), ('17','00:17'), ('18','00:18'), ('19','00:19'),
                                             ('20','00:20'), ('21','00:21'), ('22','00:22'), ('23','00:23'), ('24','00:24'), ('25','00:25'), ('26','00:26'), ('27','00:27'), ('28','00:28'), ('29','00:29')]
@@ -87,7 +72,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-#-------------------------------------------------------------------SLIDES---------------------------------------------------------------------------------------------
             
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
@@ -100,8 +84,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 self.status = "Fail"
                 return
-#-------------------------------------------------------------------SLIDES---------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------CAPTION--------------------------------------------------------------------------------------------
+
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
@@ -119,29 +102,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return
-#-------------------------------------------------------------------CAPTION--------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------QUIZ-----------------------------------------------------------------------------------------------
-#             writeToLog("INFO","Step 2: Going to add Quiz")  
-#             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, 40) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to add Quiz")
-#                 return  
-# 
-#             writeToLog("INFO","Step 3: Going to collect the new Quiz's question information from the player")  
-#             self.quizQuestionsBeforeTrimming = self.common.player.collectQuizQuestionsFromPlayer(self.entryName + " - Quiz", 5)
-#             if  self.quizQuestionsBeforeTrimming == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to collect the new Quiz's question information from the player")
-#                 return
-# 
-#             writeToLog("INFO","Step 4: Going to Compare the quiz questions info - that were presented on player")  
-#             if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeTrimming) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to Compare the quiz questions info - that were presented on player")
-#                 return 
-                     
-#-------------------------------------------------------------------QUIZ-----------------------------------------------------------------------------------------------
-#-------------------------------------------------------------------Trimming and verification--------------------------------------------------------------------------
                         
             writeToLog("INFO","Step 7: Going to trim the entry from 10sec to 20sec")  
             if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, True) == False:
@@ -163,19 +123,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify the entry duration (using QR codes)")
                 return
-#  
-#             writeToLog("INFO","Step 6: Going to collect the new Quiz's question information from the player (after the Quiz was trimmed)")
-#             self.qestionCollectedafterTrim = self.common.player.collectQuizQuestionsFromPlayer(self.entryName + " - Quiz", 3)
-#             if  self.qestionCollectedafterTrim == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 6: FAILED to collect the new Quiz's question information from the player")
-#                 return  
-#             
-#             writeToLog("INFO","Step 7: Going to Compare the quiz questions info - after the quiz was trimmed") 
-#             if self.common.player.compareQuizQuestionDict(self.qestionCollectedafterTrim, self.dictQuestionsTrimmedExist, self.dictQuestionsTrimmedAbsent) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 7: FAILED to Compare the quiz questions info - after the quiz was trimmed") 
-#                 return                                  
             
             writeToLog("INFO","Step 10: Going to collect all the presented captions on the player (after the entry was trimmed)")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName, fromActionBar=False)
@@ -192,7 +139,6 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED to verify the captions that were collected")
                 return
                 
-#-------------------------------------------------------------------Trimming and verification--------------------------------------------------------------------------                                
             #########################################################################
             writeToLog("INFO","TEST PASSED")            
         # if an exception happened we need to handle it and fail the test       
