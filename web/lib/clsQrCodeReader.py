@@ -45,12 +45,11 @@ class QrCodeReader(Base):
         else:
             writeToLog("INFO","FAILED to take screenshot of the page")
             return False       
-        playerElement = self.get_element_attributes(('xpath', '/html/body'))
+
         # Crop the image
         img = Image.open(filePath)
-        img2 = img.crop((playerElement['right'] / 1.37, playerElement['top'], playerElement['right'], playerElement['bottom'] / 1.63))
+        img2 = img.crop((img.width / 2.1, img.height / 2.56, img.width / 1.82, img.height / 1.86))
         img2.save(filePath)
-        
         return filePath
     
 
@@ -63,13 +62,13 @@ class QrCodeReader(Base):
                 writeToLog("INFO","Screenshot of the page save to: " + filePath)
         else:
             writeToLog("INFO","FAILED to take screenshot of the page")
-            return False       
-        playerElement = self.get_element_attributes(('xpath', '/html/body'))
+            return False    
+           
         # Crop the image
         img = Image.open(filePath)
-        img2 = img.crop((playerElement['right'] / 1.37, playerElement['bottom'] / 1.63, playerElement['right'], playerElement['bottom']))
-        img2.save(filePath)
-        
+        img2 = img.crop((img.width / 2.06, img.height / 1.68, img.width / 1.71, img.height / 1.3))
+        img2.save(filePath) 
+               
         return filePath
         
         

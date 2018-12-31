@@ -218,10 +218,10 @@ test_4562,1,0,0,0,KEA Trim video with captions
 test_4621,1,0,0,0,KEA Clip video with captions
 test_4622,1,0,0,0,KEA Trim Quiz with caption and slide
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
-test_3273,1,0,0,0,Slide Deck Upload
-test_3274,1,0,0,0,Slide Deck Upload-delete slides
-test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
-test_3276,1,0,0,0,Slide Deck Upload - change slide location
+test_3273,0,1,0,0,Slide Deck Upload
+test_3274,0,1,0,0,Slide Deck Upload-delete slides
+test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
+test_3276,0,1,0,0,Slide Deck Upload - change slide location
 test_3277,1,0,0,0,Collaboration - edit metadata
 test_3278,1,0,0,0,Collaboration co editor - Options tab
 test_3279,1,0,0,0,Collaboration co editor - Thumbnail tab
