@@ -6,6 +6,7 @@ from base import *
 import clsTestService
 import enums
 from PIL import Image
+from selenium.common.exceptions import StaleElementReferenceException
 
 class Player(Base):
     driver = None
@@ -173,20 +174,22 @@ class Player(Base):
             captionsList = [];
             
             while playback != False:
-                
-                captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT).text
-                if captionText == False:
-                    writeToLog("INFO","FAILED to extract caption from player")
-                    return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
-
-                
-                captionsList.append(captionText)
-                playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
-                sleep(0.3)
-            
+                try:
+                    captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT).text
+                    if captionText == False:
+                        writeToLog("INFO","FAILED to extract caption from player")
+                        return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
+    
+                    
+                    captionsList.append(captionText)
+                    playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                    sleep(0.3)
+                except StaleElementReferenceException:
+                    pass    
+                         
             self.clsCommon.base.switch_to_default_content()
             return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
-            
+   
         except Exception as exp:
             return False  
     
