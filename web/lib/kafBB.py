@@ -633,17 +633,19 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to click on kaltura media option")
             return False 
          
-        sleep(2)
+        sleep(4)
          
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
+        self.clsCommon.base.driver.maximize_window()
         
         # Select media in embed page 
         if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False  
-         
+        
+        sleep(4) 
         self.clsCommon.base.driver.switch_to_window(window_before)           
         
         #Submit item 
@@ -768,6 +770,7 @@ class BlackBoard(Base):
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
+        self.clsCommon.base.driver.maximize_window()
         
         # Select media in embed page 
         if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
@@ -822,6 +825,7 @@ class BlackBoard(Base):
     def verifyBlackboardEmbedEntry(self, embedTitle, imageThumbnail='', delay=''):
         self.refresh()
         self.clsCommon.base.switch_to_default_content()
+        sleep(7)
         
         tmpEmbedTitle= (self.clsCommon.kafGeneric.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[0], self.clsCommon.kafGeneric.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[1].replace('EMBED_TITLE', embedTitle))
         try:
@@ -866,7 +870,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to click on play icon")
             return False 
          
-        sleep(10)
+        sleep(18)
         if delay != '':
             try:   
                 self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + foundId + "')]"))

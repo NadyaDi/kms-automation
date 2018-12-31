@@ -224,7 +224,7 @@ class Upload(Base):
                             return entryID
                     else:
                         writeToLog("INFO","Successfully uploaded entry: '" + name)
-                        continue
+                        return True
                 else:
                     writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
                     continue

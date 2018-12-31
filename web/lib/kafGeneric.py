@@ -290,6 +290,10 @@ class KafGeneric(Base):
             return False
         sleep(10)
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            self.click(self.UPLOAD_PAGE_TITLE)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN) 
+            
         # Click 'Go To media gallery'
         if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on 'Go To gallery'")
