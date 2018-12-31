@@ -1802,6 +1802,7 @@ class MyMedia(Base):
                 return False
 
         self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(5)
         return True
 
 
@@ -1932,7 +1933,7 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on 'Show All' button")
                 return False
 
-            sleep(2)
+            sleep(5)
 
             # Verify that correct icon is displayed after clicking on field with correct number of display - before clicking show all
             if self.verifyFieldIconAndNumberOfDisplayInResults(isSingle, field, numOfDisplay, showAll=True) == False:
