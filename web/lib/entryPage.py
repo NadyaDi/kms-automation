@@ -833,7 +833,7 @@ class EntryPage(Base):
     # The function verifies that the proper elements are displayed while being in show more and show less screen
     def verifyFieldDisplayInEntryPage(self, field, number):
         if self.clsCommon.myMedia.verifyFieldIconAndNumberOfDisplayInResults(False, field, number, True) == False:
-            writeToLog("INFO", "Failed to display the" '"' + field + '"' "values")
+            writeToLog("INFO", "Failed to display the" '"' + field.value + '"' "values")
             return False
          
         if self.is_visible(self.ENTRY_SEARCH_SHOW_LESS) == False:

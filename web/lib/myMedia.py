@@ -99,7 +99,7 @@ class MyMedia(Base):
     SEARCH_IN_DROP_DOWN_OPTION                                  = ('xpath', '//a[@role="menuitem" and text()="FIELD_NAME"]')
     ENTRY_FIELD_IN_RESULTS                                      = ('xpath', '//span[@class="hidden-phone" and contains(text(),"FIELD_NAME")]')
     ENTRY_FIELD_ICON_IN_RESULTS                                 = ('xpath', '//i[contains(@class,"icon icon icon--vertical-align-sub search-results-icon") and @title="FIELD_NAME"]')
-    ENTRY_TAG_VALUES_IN_RESULTS                                 = ('xpath', '//span[@class="search-results__tag"]')
+    ENTRY_TAG_VALUES_IN_RESULTS                                 = ('xpath', '//span[@class="tag search-results__tag"]')
     ENTRY_FIELD_VALUES_IN_RESULTS                               = ('xpath', '//span[@class="results__result-item--text"]')
     ENTRY_FIELD_IN_RESULTS_SHOW_MORE_BTN                        = ('xpath', '//span[@aria-label="Show More"]')
     ENTRY_FIELD_IN_RESULTS_SHOW_LESS_BTN                        = ('xpath', '//a[@aria-label="Show Less"]')
@@ -1767,7 +1767,7 @@ class MyMedia(Base):
             writeToLog("INFO","FAILED to click on 'search in' dropdown")
             return False
 
-        sleep(2)
+        sleep(5)
 
         #Get option locator
         tmp_option = (self.SEARCH_IN_DROP_DOWN_OPTION[0], self.SEARCH_IN_DROP_DOWN_OPTION[1].replace('FIELD_NAME', option.value))
