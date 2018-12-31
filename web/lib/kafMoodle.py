@@ -376,6 +376,7 @@ class Moodle(Base):
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
+        self.clsCommon.base.driver.maximize_window()
         
         # In embed page, choose page to embed from and media
         if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, isAssignmentEnable=isAssignmentEnable, submitAssignment=submitAssignment) == False:    
@@ -383,7 +384,7 @@ class Moodle(Base):
             return False  
                 
         self.clsCommon.base.driver.switch_to_window(window_before) 
-        
+        sleep(4)
         if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
             writeToLog("INFO","FAILED to click on submit button")
             return False  

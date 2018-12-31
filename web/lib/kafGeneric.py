@@ -358,7 +358,7 @@ class KafGeneric(Base):
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
           
-        if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
+        if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE, timeout=60) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
                         
@@ -406,7 +406,7 @@ class KafGeneric(Base):
             self.clsCommon.general.waitForLoaderToDisappear()  
             return True   
         
-        self.wait_while_not_visible(self.KAF_EMBED_LOADING_MESSAGE, 60)                             
+        self.wait_while_not_visible(self.KAF_EMBED_LOADING_MESSAGE, 80)                             
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
@@ -596,7 +596,7 @@ class KafGeneric(Base):
         return True   
     
     
-        # Author: Michal Zomper
+        # Author: Michal Zomper - NOT FINISHED
     def editGalleryMatedate(self, newGallerydescription="", newGalleryTags=""):
         
         
