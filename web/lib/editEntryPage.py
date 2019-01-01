@@ -661,6 +661,7 @@ class EditEntryPage(Base):
     # Author: Michal Zomper
     # NOT finish
     def uploadSlidesDeck(self, filePath, mySlidesList, waitToFinish=True):
+        sleep(2)
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
@@ -674,7 +675,8 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides button")
             return False              
-          
+        
+        sleep(2)  
         if self.click(self.EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE, 20) == False:
             writeToLog("INFO","FAILED to click on choose a file to upload button")
             return False            

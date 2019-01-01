@@ -172,6 +172,7 @@ class Test:
                 self.status = "Fail"
                 return
             
+            sleep(4)
             self.common.player.switchToPlayerIframe() 
             writeToLog("INFO","Step 14: Going to open slide menu bar")
             if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
