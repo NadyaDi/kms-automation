@@ -61,6 +61,7 @@ class Player(Base):
     PLAYER_QUIZ_ANSWER_NO_2                                     = ('xpath', "//p[@id='answer-1-text']")
     PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
     PLAYER_QUIZ_ANSWER_NO_4                                     = ('xpath', "//p[@id='answer-3-text']")
+    PLAYER_CONTROLER_BAR                                        = ('xpath', "//div[@class='controlsContainer']") 
     #=====================================================================================================================
     #                                                           Methods:
     #

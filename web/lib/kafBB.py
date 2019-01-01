@@ -658,7 +658,8 @@ class BlackBoard(Base):
         if self.is_visible(successMsg) == False:
             writeToLog("INFO","FAILED to display correct success message")
             return False             
-                    
+        
+        writeToLog("INFO","Embed was created successfully")           
         return True     
     
     
@@ -714,8 +715,9 @@ class BlackBoard(Base):
          
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
-            return False              
-                    
+            return False     
+                 
+        writeToLog("INFO","Embed item was created successfully")          
         return True      
     
     
@@ -740,7 +742,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED display delete message")
             
             return False                        
-        
+        writeToLog("INFO","Embed item was deleted successfully") 
         return True     
     
     
@@ -791,7 +793,7 @@ class BlackBoard(Base):
 #         if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime, mediaType) == False:
 #             writeToLog("INFO","FAILED to played and verify embedded entry")
 #             return False             
-                    
+        writeToLog("INFO","Embed media was successfully verified")             
         return True  
        
          
@@ -897,6 +899,7 @@ class BlackBoard(Base):
     
         writeToLog("INFO","Embed media was successfully verified")    
         return True 
+    
     
     def getBlackboardLoginUserName(self):
         try:
