@@ -893,6 +893,7 @@ class Player(Base):
             tmpTabindexIdLocator = (self.PLAYER_OPEN_CHAPTER_ICON[0], self.PLAYER_OPEN_CHAPTER_ICON[1].replace('TABINDEXID', tabindexId))
             sleep(2)
             self.scrollInSlidesMenuBar(2)
+            self.scrollInSlidesMenuBar(2)
             
             # open chapter in order to see all the slides
             if self.click(tmpTabindexIdLocator) == False:
