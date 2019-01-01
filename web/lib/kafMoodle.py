@@ -60,7 +60,6 @@ class Moodle(Base):
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')
     MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")     
-    MOODLE_PLAYER_IN_VIDEO_RESOURCE                        = ('xpath', "//video[@class='persistentNativePlayer nativeEmbedPlayerPid']")  
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -251,8 +250,11 @@ class Moodle(Base):
                     writeToLog("INFO","FAILED to click on embed activity title")
                     return False                                        
         
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        self.clsCommon.base.switch_to_default_content()
         self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
-        sleep(10)
+        sleep(5)
         # If entry type is video
         if delay != '':   
 #            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
@@ -265,7 +267,8 @@ class Moodle(Base):
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
                 return False
-                
+        
+        writeToLog("INFO","Success embed was verified")
         return True 
     
     
@@ -385,14 +388,16 @@ class Moodle(Base):
             return False  
                 
         self.clsCommon.base.driver.switch_to_window(window_before) 
-        sleep(6)
+        # wait until the player display in the page
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
-        
-        
+        self.clsCommon.base.switch_to_default_content()
         if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
             writeToLog("INFO","FAILED to click on submit button")
             return False  
-                    
+        
+        writeToLog("INFO","Success embed media was created successfully")           
         return True   
     
     
@@ -416,7 +421,8 @@ class Moodle(Base):
         if self.clickOnEditDropDownAndChooseDeleteOption(embedActivityName) == False:
             writeToLog("INFO","FAILED to click on edit drop down and choose 'delete' option")
             return False 
-  
+        
+        writeToLog("INFO","Success embed was deleted")
         return True    
     
     
