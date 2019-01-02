@@ -2701,4 +2701,5 @@ class Channel(Base):
             writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
             return False
         
+        writeToLog("INFO","Success, channel metadata was verified successfully")
         return True

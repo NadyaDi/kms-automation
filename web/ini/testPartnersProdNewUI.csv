@@ -78,6 +78,8 @@ test_2549,D2L - My Media - Search by Name / Description / Tags,,,pythonautomatio
 test_2550,D2L - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!,
 test_2551,D2L - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!,
 test_2552,D2L - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!,
+test_2556,D2L - Edit Media Gallery Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!,
+test_2557,D2L - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!,
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
