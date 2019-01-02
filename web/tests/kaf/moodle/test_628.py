@@ -54,37 +54,38 @@ class Test:
             self.entryName2 = clsTestService.addGuidToString("Embed - Not assignment submission entry", self.testNum)
             self.galleryName = "New1"
             self.activityName1 = clsTestService.addGuidToString("Embed - Assignment submission", self.testNum)
+            self.activityName2 = clsTestService.addGuidToString("Embed - Not assignment submission", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
             localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
             localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
             
-            writeToLog("INFO","Step 1: Going to enable assignment submission")          
+#             writeToLog("INFO","Step 1: Going to enable assignment submission")          
 #             if self.common.admin.enableDisabledAssignmentSubmission(True) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 1: FAILED to enable assignment submission")
 #                 return              
-#             
-#             writeToLog("INFO","Step 2: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to upload entry")
-#                 return 
-#             
-#             writeToLog("INFO","Step 3: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName1) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to navigate entry page")
-#                 return 
-#             
-#             writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
-#                 return
+#              
+            writeToLog("INFO","Step 2: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to upload entry")
+                return 
+              
+            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to navigate entry page")
+                return 
+              
+            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                return
             
             writeToLog("INFO","Step 5: Going to create assignment submission - from My media")    
-            if self.common.moodle.createEmbedActivity(' 38FC481A-628-Embed - Assignment submission entry', self.activityName1, isAssignmentEnable=True, submitAssignment=True) == False:
+            if self.common.moodle.createEmbedActivity(self.entryName1, self.activityName1, isAssignmentEnable=True, submitAssignment=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create assignment submission - from My media")
                 return     
@@ -96,13 +97,13 @@ class Test:
                 return 
             
             writeToLog("INFO","Step 7: Going to upload entry")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.description, self.tags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName2, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to upload entry")
                 return 
             
             writeToLog("INFO","Step 8: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName2) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate entry page")
                 return 
@@ -114,7 +115,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 10: Going to publish entry to gallery")    
-            if self.common.myMedia.publishSingleEntry(self.entryName, '', '', [self.galleryName]) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryName2, '', '', [self.galleryName]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to publish entry to gallery")
                 return    
@@ -129,7 +130,13 @@ class Test:
             if self.common.kafGeneric.verifyEmbedEntry(self.activityName2, '', self.vidoeTimeToStop, application=enums.Application.MOODLE)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to verify embed assignment submission")
-                return             
+                return  
+            
+            writeToLog("INFO","Step 13: Going to navigate to " + self.entryName1 +" edit entry page")    
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName1)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to navigate to " + self.entryName1 +" edit entry page")
+                return              
                                                                              
          
             ##################################################################
@@ -143,7 +150,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
             self.common.admin.enableDisabledAssignmentSubmission(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")                       
         except:

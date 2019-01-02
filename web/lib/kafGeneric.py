@@ -429,6 +429,8 @@ class KafGeneric(Base):
                     if self.clsCommon.moodle.submitMediaAsAssignment(False) == False:
                         writeToLog("INFO","FAILED to create embed not as assignment submission")
                         return False 
+                    
+                self.clsCommon.general.waitForLoaderToDisappear()
                                                                
             if activity == enums.MoodleActivities.SITE_BLOG:
                 sleep(5)
