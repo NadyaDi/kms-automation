@@ -504,7 +504,7 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to publish entries to media gallery: " + galleryName)
             return False    
         
-        ("INFO","Success to publish entry from SR tab to: " + galleryName)
+        writeToLog("INFO","Success to publish entry from SR tab to: " + galleryName)
         return True    
     
     
@@ -598,9 +598,30 @@ class KafGeneric(Base):
         return True   
     
     
-        # Author: Michal Zomper - NOT FINISHED
-    def editGalleryMatedate(self, newGallerydescription="", newGalleryTags=""):
+    # Author: Michal Zomper
+    def navigateToEditGalleyPage(self, galleryName):
+        if self.navigateToGallery(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to gallery page")
+            return False
         
+        if self.click(self.clsCommon.channel.CHANNEL_EDIT_DROP_DOWN_MENU,timeout=20) == False:
+            writeToLog("INFO","FAILED to Click on action menu button")
+            return False  
+        sleep(2)
+        
+        if self.click(self.clsCommon.channel.CHANNEL_EDIT_BUTTON) == False:
+            writeToLog("INFO","FAILED to Click on edit drop down menu")
+            return False  
+        sleep(2)
+    
+        return True
+    
+    
+    # Author: Michal Zomper
+    def editGalleryMatedate(self, galleryName, newGallerydescription="", newGalleryTags=""):
+        if self.navigateToEditGalleyPage(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to ediat gallery page")    
+            return False
         
         if newGallerydescription != "":
             if self.clsCommon.category.fillCategoryDescription(newGallerydescription, uploadboxId=-1) == False:
@@ -616,7 +637,27 @@ class KafGeneric(Base):
         if self.click(self.clsCommon.category.EDIT_CATEGORY_SAVE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on 'Save' button")
             return False
-        sleep(3)         
+        self.clsCommon.general.waitForLoaderToDisappear()        
         
+        writeToLog("INFO","Success, media gallery metadata was changed successfully")
+        return True
+    
+    
+    # Author: Michal Zomper   
+    def varifyGalleyMatedate(self, galleryName, galleryDescription, galleryTags):
+        if self.navigateToGallery(galleryName, forceNavigate=True) == False:
+            writeToLog("INFO","FAILED navigate to  gallery page")    
+            return False
         
+        tmpGalleryDescription = (self.clsCommon.category.CATEGORY_DESCRIPTION[0], self.clsCommon.category.CATEGORY_DESCRIPTION[1].replace('CATEGORY_DESCRIPTION', galleryDescription))
+        if self.wait_visible(tmpGalleryDescription, 30) == False:
+            writeToLog("INFO","FAILED to verify gallery description")
+            return False
+        
+        tmpGalleryTags = (self.clsCommon.category.CATEGORY_TAGS[0], self.clsCommon.category.CATEGORY_TAGS[1].replace('CATEGORY_TAGS', galleryTags[:-1]))
+        if self.wait_visible(tmpGalleryTags, 30) == False:
+            writeToLog("INFO","FAILED to verify gallery tags")
+            return False
+        
+        writeToLog("INFO","Success, media gallery metadata was verified successfully")
         return True

@@ -179,6 +179,8 @@ test_2549,1,0,0,0,D2L - My Media - Search by Name / Description / Tags
 test_2550,0,1,0,0,D2L - My Media - Sort Media
 test_2551,1,0,0,0,D2L - My Media - Filter Media View Different Statuses
 test_2552,1,0,0,0,D2L - My Media - Filter by media Type
+test_2556,1,0,0,0,D2L - Edit Media Gallery Metadata
+test_2557,1,0,0,0,D2L - Remove Media From Media Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history

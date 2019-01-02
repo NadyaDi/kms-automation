@@ -51,20 +51,17 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Edit Entry page - Close discussion", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
                  
-            writeToLog("INFO","Step 1: Going navigate to gallery page")   
-            if self.common.kafGeneric.navigateToGallery(self.galleryame) == False:
+            writeToLog("INFO","Step 1: Going to edit gallery metadata")   
+            if self.common.kafGeneric.editGalleryMatedate(self.galleryame, self.newDescription, self.newTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED navigate to gallery page")
-                return
-            
-            writeToLog("INFO","Step 2: Going to edit gallery metadata")   
-            if self.common.kafGeneric.editGalleryMatedate(self.newDescription, self.newTags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED edit gallery metadata")
+                writeToLog("INFO","Step 1: FAILED edit gallery metadata")
                 return
                     
-
-            
+            writeToLog("INFO","Step 2: Going to verify gallery edit metadata")   
+            if self.common.kafGeneric.varifyGalleyMatedate(self.galleryame, self.newDescription, self.newTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to verify gallery edit metadata")
+                return
             
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'D2L - Edit Media Gallery Metadata' was done successfully")
@@ -76,8 +73,8 @@ class Test:
     def teardown_method(self,method):
         try:
             self.common.handleTestFail(self.status)
-            writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            writeToLog("INFO","**************** Starting: teardown_method ****************")   
+            self.common.kafGeneric.editGalleryMatedate(self.galleryame, self.description, self.tags)   
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

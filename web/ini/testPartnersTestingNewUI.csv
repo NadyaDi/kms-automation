@@ -50,6 +50,8 @@ test_2549,D2L - My Media - Search by Name / Description / Tags,,,pythonautomatio
 test_2550,D2L - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2551,D2L - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2552,D2L - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2556,D2L - Edit Media Gallery Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2557,D2L - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
