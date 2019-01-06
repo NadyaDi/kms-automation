@@ -88,7 +88,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_REPLACE_VIDEO_TAB                                = ('xpath', '//a[@id="replacemedia-tab"]')
     EDIT_ENTRY_UPLOAD_NEW_FILE                                  = ('xpath', '//label[@for="replace_media_fileinput"]')
     EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
-    EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and text()="Your media was successfully replaced."]') 
+    EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and contains(text(),"Your media was successfully replaced")]') 
     EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
     EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[contains(@id,"attachments-tab")]')# USE multipleElements=True
     EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
@@ -1213,7 +1213,7 @@ class EditEntryPage(Base):
             return False
         
         # wait until 'Your media was successfully replaced.' message is displayed
-        if self.wait_visible(self.EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG, timeout= 100) == False:
+        if self.wait_visible(self.EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG, timeout= 110) == False:
             writeToLog("INFO","FAILED to display 'Your media was successfully replaced.' message")
             return False
         
