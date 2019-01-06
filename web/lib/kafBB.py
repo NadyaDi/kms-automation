@@ -474,7 +474,9 @@ class BlackBoard(Base):
                 return False
             
         elif location == enums.Location.SHARED_REPOSITORY:
-            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM) == False:
+            self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN) 
+            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to find save success message")
                 return False
         
