@@ -58,7 +58,7 @@ class Moodle(Base):
     MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')  
     MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')    
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
-    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')
+    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[@class="btn btn-large btn-primary btn-danger"]')
     MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")     
     #====================================================================================================================================
     #====================================================================================================================================
@@ -226,7 +226,7 @@ class Moodle(Base):
     
     
     # @Author: Inbar Willman
-    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', forceNavigate=False, activity=enums.MoodleActivities.SITE_BLOG): 
+    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False): 
         # Navigate to site blog   
         if forceNavigate == True: 
             if activity == enums.MoodleActivities.SITE_BLOG:  
@@ -244,6 +244,15 @@ class Moodle(Base):
                 if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_URL) == False:
                     writeToLog("INFO","FAILED to navigate to course page")
                     return False  
+                
+                # Check if turn editing on is enabled
+                if self.wait_visible(self.MOODLE_TURN_EDITING_ON_BTN, timeout=3) != False:
+                    # If turn editing is off - Enable turn editing on
+                    if self.click(self.MOODLE_TURN_EDITING_ON_BTN) == False:
+                        writeToLog("INFO","FAILED to click on 'turn editing on' button")
+                        return False 
+            
+                    sleep(2)                
                 
                 embed_activity = (self.MOODLE_EMBED_ACTIVITY[0], self.MOODLE_EMBED_ACTIVITY[1].replace('ACTIVITY_NAME', embedTitle))
                 if self.click(embed_activity) == False:
@@ -334,7 +343,7 @@ class Moodle(Base):
             
     
     # @Author: Inbar Willman        
-    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False , filePath=None, description=None, tags=None, isAssignmentEnable=False, submitAssignment=False):
+    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, mediaGalleryName=None, filePath=None, description=None, tags=None, isAssignmentEnable=False, submitAssignment=False):
         self.clsCommon.base.switch_to_default_content()
         # Navigate to course page
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_URL) == False:
@@ -383,7 +392,7 @@ class Moodle(Base):
         self.clsCommon.base.driver.maximize_window()
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, isAssignmentEnable=isAssignmentEnable, submitAssignment=submitAssignment) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, isAssignmentEnable=isAssignmentEnable, submitAssignment=submitAssignment) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
                 

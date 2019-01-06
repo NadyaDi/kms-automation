@@ -475,13 +475,13 @@ class KafGeneric(Base):
     # 'imageThumbnail'' is the expecterQrCode of embed image - when the value different then '', means that the type is image
     # 'imageThumbnail' is the expecterQrCode of embed video - when the value different then '', means that the type is video
     # 'activity' is relevant just for moodle KAF
-    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG):
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False):
         if application == enums.Application.BLACK_BOARD:
             return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
         elif application == enums.Application.MOODLE:
-            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity)
-#       elif application == enums.Application.CANVAS:
-#            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity, forceNavigate)
+        elif application == enums.Application.CANVAS:
+            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
 #       elif application == enums.Application.D2L:
 #            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
 #       elif application == enums.Application.JIVE:
