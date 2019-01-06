@@ -1880,6 +1880,8 @@ class Channel(Base):
         
         self.clsCommon.general.waitForLoaderToDisappear()
         writeToLog("INFO","Success, sort channels by '" + sortType + "' was set")
+        
+        sleep(2)
         return True    
     
     
