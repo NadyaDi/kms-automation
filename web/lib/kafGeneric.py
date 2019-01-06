@@ -343,7 +343,8 @@ class KafGeneric(Base):
         if self.navigateToGallery(galleryName, forceNavigate=True) == False:
             writeToLog("INFO","FAILED navigate to  gallery: " +  galleryName)
             return False
-
+        
+        self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON)
         if self.clsCommon.channel.verifyEntriesApprovedAndRejectedInChannelOrGallery(toRejectEntriesNames, toApproveEntriesNames) == False:
             writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
             return False 
