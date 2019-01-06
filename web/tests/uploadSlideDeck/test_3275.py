@@ -174,12 +174,14 @@ class Test:
             
             sleep(4)
             self.common.player.switchToPlayerIframe() 
+            sleep(2)
             writeToLog("INFO","Step 14: Going to open slide menu bar")
-            if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
+            if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30, multipleElements=True) == False:
                 writeToLog("INFO","Step 14: FAILED to click and open slides bar menu")
                 self.status = "Fail"
                 return
 
+            sleep(2)
             writeToLog("INFO","Step 15: Going to verify that all chapters were deleted")              
             # click on the EXPAND_COLLAPSE button in the slides menu bar in order to open all the chapters
             self.common.base.click(self.common.player.PLAYER_EXPAND_COLLAPSE_ALL_CHAPTERS)
