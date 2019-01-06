@@ -2044,7 +2044,7 @@ class Channel(Base):
         else: 
             searchLine = searchText
         
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
         else:
             self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
