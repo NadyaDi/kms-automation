@@ -461,7 +461,8 @@ class BlackBoard(Base):
         if isElementFound == False:
             writeToLog("INFO","FAILED to find required metadata field for shared repository")
             return False
-            
+        
+        sleep(4)   
         if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False

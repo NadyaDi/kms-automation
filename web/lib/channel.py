@@ -1328,12 +1328,14 @@ class Channel(Base):
                 if self.method_helper_approveEntry(approveEntry) == False:
                     writeToLog("INFO","FAILED to approve entry: " + approveEntry)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
         else:
             if toApproveEntriesNames != '':
                 if self.method_helper_approveEntry(toApproveEntriesNames) == False:
                     writeToLog("INFO","FAILED to approve entry: " + toApproveEntriesNames)
-                    return False 
+                    return False
+                sleep(3) 
                 self.clsCommon.general.waitForLoaderToDisappear()
         
         return True
@@ -1346,6 +1348,7 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(rejectEntry) == False:
                     writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
             
         else:
@@ -1353,6 +1356,7 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
                     writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()               
         
         return True
