@@ -287,7 +287,14 @@ class Kea(Base):
 
     # @Author: Inbar Willman
     # The function check and verify that the entries sort in my media are in the correct order 
-    def verifyFiltersInEditor(self, entriesDict):    
+    def verifyFiltersInEditor(self, entriesDict, noEntriesExpected=False): 
+        if noEntriesExpected == True:
+            if self.wait_element(self.clsCommon.myMedia.ENTRY_NO_MEDIA_FOUND_MESSAGE, 1, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+                   
         if self.clsCommon.myMedia.showAllEntries(searchIn=enums.Location.EDITOR_PAGE) == False:
             writeToLog("INFO","FAILED to show all entries in editor page")
             return False
@@ -458,7 +465,14 @@ class Kea(Base):
     
     # @Author: Horia Cus
     # The function check the the entries in my media are filter correctly
-    def verifyFiltersInAddQuizPage(self, entriesDict):
+    def verifyFiltersInAddQuizPage(self, entriesDict, noEntriesExpected=False):
+        if noEntriesExpected == True:
+            if self.wait_element(self.clsCommon.myMedia.ENTRY_NO_MEDIA_FOUND_MESSAGE, 1, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+                
         if self.showAllEntriesInAddQuizPage() == False:
             writeToLog("INFO","FAILED to show all entries in global page")
             return False

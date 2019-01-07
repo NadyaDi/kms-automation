@@ -125,9 +125,12 @@ class MyMedia(Base):
     FILTER_SINGLE_DATE_DAY                                      = ('xpath', "//div[contains(@class,'react-datepicker__day') and @aria-label='day-DAY_NUMBER']")
     FILTER_SELECT_FIELD_TEXT                                    = ('xpath', "//div[contains(text(),'DROPDOWNLIST_ITEM')]")
     FILTER_SELECT_FIELD_CATEGORY                                = ('xpath', "//span[@class='search-filters-group__title--desktop'][contains(text(),'DROPDOWNLIST_NAME')]")
-    ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found']")
+    ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found.' or text()='No Entries Found']")
     CHANNEL_PENDING_TAB_ICON                                    = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']")
     CHANNEL_PENDING_ENTRY_DATA                                  = ('xpath', "//tr[@id='ENTRY_ID_tr']")
+    ACTION_TAB_OPTION_DISABLED                                  = ('xpath', "//a[@id='tab-ACTIONID' and contains(@class,'disabled')]")
+    ACTION_TAB_OPTION_NORMAL                                    = ('xpath', "//a[@id='tab-ACTIONID']")
+    EDIT_OPTION_PRESENT_ANY_ENTRY                               = ('xpath', "//a[contains(@title,'Edit')]//i[contains(@class,'icon-pencil')]")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -1441,7 +1444,14 @@ class MyMedia(Base):
 
     #  @Author: Michal Zomper
     # The function check the the entries in my media are filter correctly
-    def verifyFiltersInMyMedia(self, entriesDict):
+    def verifyFiltersInMyMedia(self, entriesDict, noEntriesExpected=False):
+        if noEntriesExpected == True:
+            if self.wait_element(self.ENTRY_NO_MEDIA_FOUND_MESSAGE, 1, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+        
         if self.showAllEntries() == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
@@ -2243,8 +2253,12 @@ class MyMedia(Base):
         try:
             action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
         except Exception:
-            writeToLog("INFO", "FAILED to move the specific element")
-            return False
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN, 5)
+            try:
+                action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to move the specific element")
+                return False
 
         if self.clsCommon.general.waitForLoaderToDisappear() == False:
             writeToLog("INFO", "FAILED to save the filter changes")
@@ -2338,5 +2352,36 @@ class MyMedia(Base):
         else:
             writeToLog("INFO", "FAILED: To select a date, please make sure that you inserted a valid date, using year and month as integer and day as string")
             return False
+
+        return True
+    
+
+    # @Author: Horia Cus
+    # The function verifies if a specific action option is disabled or enabled
+    def verifyActionOptionStatus(self, actionID='', disabled=False):
+        if self.click(self.MY_MEDIA_ACTIONS_BUTTON) == False:
+            writeToLog("INFO", "Failed to open the actions drop down menu")
+            return False
+                
+        if disabled == True:
+            tmp_locator = (self.ACTION_TAB_OPTION_NORMAL[0], self.ACTION_TAB_OPTION_NORMAL[1].replace('ACTIONID', actionID))
+            if self.is_visible(tmp_locator, multipleElements=True) == False:
+                writeToLog("INFO", "The specific action option is not present")
+                return False
+            
+            tmp_locator = (self.ACTION_TAB_OPTION_DISABLED[0], self.ACTION_TAB_OPTION_DISABLED[1].replace('ACTIONID', actionID))
+            if self.is_visible(tmp_locator) != True:
+                writeToLog("INFO", "The specific action option is enabled")
+                return False
+        else:
+            tmp_locator = (self.ACTION_TAB_OPTION_DISABLED[0], self.ACTION_TAB_OPTION_DISABLED[1].replace('ACTIONID', actionID))
+            if self.is_present(tmp_locator, 1) == True:
+                writeToLog("INFO", "The specific action option is disabled")
+                return False
+                
+            tmp_locator = (self.ACTION_TAB_OPTION_NORMAL[0], self.ACTION_TAB_OPTION_NORMAL[1].replace('ACTIONID', actionID))
+            if self.is_visible(tmp_locator, multipleElements=True) == False:
+                writeToLog("INFO", "The specific action option is not present")
+                return False
 
         return True
