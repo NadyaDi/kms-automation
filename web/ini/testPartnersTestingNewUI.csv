@@ -36,7 +36,7 @@ test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautoma
 test_2291,Canvas - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2309,Canvas - Embed on BSE from my media ,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2309,Canvas - Embed on BSE from my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
@@ -53,6 +53,8 @@ test_2551,D2L - My Media - Filter Media View Different Statuses,,,pythonautomati
 test_2552,D2L - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2556,D2L - Edit Media Gallery Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2557,D2L - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2558,D2L - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2559,D2L - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456

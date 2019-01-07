@@ -76,6 +76,7 @@ class Location(Enum):
     MEDIA_GALLARY               = 'channel page'
     SHARED_REPOSITORY           = 'Shared Repository'
     UPLOAD_PAGE_EMBED           = 'Upload page embed'
+    GALLERY_PAGE                = 'Gallery Page'
 
 
 class EditEntryPageTabName(Enum):

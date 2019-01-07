@@ -711,9 +711,14 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to click on search icon")
                 return False
             
-            if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText, multipleElements=False) == False:
-                writeToLog("INFO","FAILED to insert caption search")
-                return False
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+                if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText + Keys.ENTER, multipleElements=False) == False:
+                    writeToLog("INFO","FAILED to insert caption search")
+                    return False
+            else:
+                if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText, multipleElements=False) == False:
+                    writeToLog("INFO","FAILED to insert caption search")
+                    return False
             sleep(4)
          
             try:
