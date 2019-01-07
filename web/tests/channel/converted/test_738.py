@@ -83,45 +83,33 @@ class Test:
                 return
               
             writeToLog("INFO","Step 4: Going to create new channel")            
-            if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
+            if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED create new channel: " + self.channelName)
                 return
-               
-            writeToLog("INFO","Step 5: Going navigate to channel page")
-            if self.common.channel.navigateToChannel(self.channelName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to navigate to channel page: " + self.channelName)
-                return
-              
-            writeToLog("INFO","Step 6: Going to verify channel details")
-            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.OPEN), "0", "1", "0", self.common.login.getLoginUserName()) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify channel details")
-                return
-  
-            writeToLog("INFO","Step 7: Going navigate to edit channel page")
+
+            writeToLog("INFO","Step 5: Going navigate to edit channel page")
             if self.common.channel.navigateToEditChannelPage(self.channelName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED navigate to edit channel page")
+                writeToLog("INFO","Step 5: FAILED navigate to edit channel page")
                 return
               
-            writeToLog("INFO","Step 8: Going to edit channel matedata")
+            writeToLog("INFO","Step 6: Going to edit channel matedata")
             if self.common.channel.editChannelMatedate(self.newChannelName, self.newDescription, self.newTags,  enums.ChannelPrivacyType.PRIVATE, [self.categoryName]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to edit channel matedata")
+                writeToLog("INFO","Step 6: FAILED to edit channel matedata")
                 return
               
-            writeToLog("INFO","Step 9: Going navigate to channel page")
+            writeToLog("INFO","Step 7: Going navigate to channel page")
             if self.common.channel.navigateToChannelPageFromEditChannelPage(self.newChannelName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to navigate to channel page: " + self.channelName)
+                writeToLog("INFO","Step 7: FAILED to navigate to channel page: " + self.channelName)
                 return
               
-            writeToLog("INFO","Step 10: Going to verify channel details")
-            if self.common.channel.verifyChannelInformation(str(enums.ChannelPrivacyType.PRIVATE), "0", "1", "0", self.common.login.getLoginUserName(), self.categoryName) == False:
+            writeToLog("INFO","Step 8: Going to verify channel details")
+            if self.common.channel.varifyChannelyMatedate(self.newChannelName, self.newDescription, self.newTags, enums.ChannelPrivacyType.PRIVATE, appearsInCategoryName=self.categoryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to verify channel details")
+                writeToLog("INFO","Step 8: FAILED to verify channel details")
                 return    
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Channel page - Edit metadata'  was done successfully")

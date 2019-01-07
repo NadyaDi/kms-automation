@@ -16,8 +16,11 @@ class Test:
     # @Author: Inbar Willman
     # Test Name : Moodle - Assignment Submission Functionalities
     # Test description:
-    # Upload entry -> Edit SR required fields -> Publish entry entry from my media to SR
-    # Verify that entry is displayed in SR
+    # Enable assignment submission module -> upload entry -> embed entry and create assignment submission
+    # -> verify that entry is displayed and played -> upload another entry -> embed entry and don't create assignment submission -> 
+    # Verify that entry is displayed and played
+    # Replace video for the uploaded entries -> Verify that the embed entry in assignment submission isn't replaced
+    # Verify that the embed entry (not assignment submission) is replaced
     #================================================================================================================================
     testNum     = "628"
     application = enums.Application.MOODLE
@@ -29,7 +32,10 @@ class Test:
     # Test variables
     description = "Description" 
     tags = "Tags,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_5.png'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+    filePathVideorReplacment = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4'
+    vidoeTimeToStop = "0:07"
+    vidoeTimeToStopReplacedMedia = '0:14'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -46,38 +52,136 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Assignment submission test", self.testNum)
+            self.entryName1 = clsTestService.addGuidToString("Embed - Assignment submission entry", self.testNum)
+            self.entryName2 = clsTestService.addGuidToString("Embed - Not assignment submission entry", self.testNum)
             self.galleryName = "New1"
-            
+            self.activityName1 = clsTestService.addGuidToString("Embed - Assignment submission", self.testNum)
+            self.activityName2 = clsTestService.addGuidToString("Embed - Not assignment submission", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to enable assignment submission")    
+            localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
+            localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
+            localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            
+            writeToLog("INFO","Step 1: Going to enable assignment submission")          
             if self.common.admin.enableDisabledAssignmentSubmission(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to enable assignment submission")
                 return              
-            
+               
             writeToLog("INFO","Step 2: Going to upload entry")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+            if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry")
+                return 
+               
+            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to navigate entry page")
+                return 
+               
+            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                return
+             
+            writeToLog("INFO","Step 5: Going to create assignment submission - from My media")    
+            if self.common.moodle.createEmbedActivity(self.entryName1, self.activityName1, isAssignmentEnable=True, submitAssignment=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to create assignment submission - from My media")
+                return     
+             
+            writeToLog("INFO","Step 6: Going to verify embed assignment submission")    
+            if self.common.kafGeneric.verifyEmbedEntry(self.activityName1, '', self.vidoeTimeToStop, application=enums.Application.MOODLE)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify embed assignment submission")
+                return 
+             
+            writeToLog("INFO","Step 7: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName2, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to upload entry")
+                return 
+             
+            writeToLog("INFO","Step 8: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to navigate entry page")
+                return 
+             
+            writeToLog("INFO","Step 9: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to wait until media end upload process")
+                return
+             
+            writeToLog("INFO","Step 10: Going to publish entry to gallery")    
+            if self.common.myMedia.publishSingleEntry(self.entryName2, '', '', [self.galleryName]) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to publish entry to gallery")
+                return    
+             
+            writeToLog("INFO","Step 11: Going to create embed, not assignment submission - from media gallery")    
+            if self.common.moodle.createEmbedActivity(self.entryName2, self.activityName2, embedFrom=enums.Location.MEDIA_GALLARY,chooseMediaGalleryinEmbed=True, mediaGalleryName=self.galleryName, isAssignmentEnable=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to create embed, not assignment submission - from media gallery")
+                return     
+             
+            writeToLog("INFO","Step 12: Going to verify embed assignment submission")    
+            if self.common.kafGeneric.verifyEmbedEntry(self.activityName2, '', self.vidoeTimeToStop, application=enums.Application.MOODLE)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to verify embed assignment submission")
+                return  
+             
+            writeToLog("INFO","Step 13: Going to navigate to " + self.entryName1 +" edit entry page")    
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to navigate to " + self.entryName1 +" edit entry page")
+                return  
+             
+            writeToLog("INFO","Step 14: Going to replace video for " + self.entryName1)    
+            if self.common.editEntryPage.replaceVideo(self.filePathVideorReplacment) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to navigate to " + self.entryName1 +" edit entry page")
+                return   
+             
+            writeToLog("INFO","Step 15: Going to verify that embedded video " + self.entryName1 + " wasn't replaced")    
+            if self.common.kafGeneric.verifyEmbedEntry(self.activityName1, '', self.vidoeTimeToStopReplacedMedia, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, forceNavigate=True) == True:
+                self.status = "Fail"
+                writeToLog("INFO","Step 15: FAILED to verify that embedded video " + self.entryName1 + " wasn't replaced")
+                return                     
+            writeToLog("INFO","Step 15: FAILED as expected")   
+            
+            writeToLog("INFO","Step 16: Going to navigate to " + self.entryName2 +" edit entry page")    
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 16: FAILED to navigate to " + self.entryName2 +" edit entry page")
                 return  
             
-            writeToLog("INFO","Step 3: Going to create assignment submission")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+            writeToLog("INFO","Step 17: Going to replace video for " + self.entryName2)    
+            if self.common.editEntryPage.replaceVideo(self.filePathVideorReplacment) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to upload entry")
-                return                        
-
+                writeToLog("INFO","Step 17: FAILED to navigate to " + self.entryName2 +" edit entry page")
+                return   
             
-            self.common.base.click(self.common.kafGeneric.KAF_REFRSH_BUTTON)
-            sleep(5)
-            
-            self.common.blackBoard.switchToBlackboardIframe()
-            writeToLog("INFO","Step 8: Going to verify entry '" + self.entryName + " in media gallery")
-            if self.common.channel.searchEntryInChannel(self.entryName) == False:
+            writeToLog("INFO","Step 18: Going to verify embedded video " + self.entryName2 + " was replaced")    
+            if self.common.kafGeneric.verifyEmbedEntry(self.activityName2, '', self.vidoeTimeToStopReplacedMedia, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, forceNavigate=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to find entry '" + self.entryName + " in media gallery")
-                return                                                
+                writeToLog("INFO","Step 18: FAILED to verify embedded video " + self.entryName2 + " was replaced")
+                return 
+            
+            writeToLog("INFO","Step 19: Going to delete embed kaltura video resource " + self.activityName1)    
+            if self.common.moodle.deleteEmbedActivity(self.activityName1)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 19: FAILED to delete embed kaltura video resource" + self.activityName1)
+                return 
+            
+            writeToLog("INFO","Step 20: Going to delete embed kaltura video resource " + self.activityName2)    
+            if self.common.moodle.deleteEmbedActivity(self.activityName2)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 20: FAILED to delete embed kaltura video resource" + self.activityName2)
+                return                                                                                                                 
          
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Moodle - Assignment Submission Functionalities' was done successfully")
@@ -90,7 +194,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2])
+            self.common.moodle.deleteEmbedActivity(self.activityName1)
+            self.common.moodle.deleteEmbedActivity(self.activityName2)
             self.common.admin.enableDisabledAssignmentSubmission(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")                       
         except:

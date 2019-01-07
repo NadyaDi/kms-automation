@@ -21,11 +21,12 @@ class D2L(Base):
     LOGIN_PASSWORD_FIELD                                = ('id', 'password')
     LOGIN_SIGN_IN_BTN                                   = ('xpath', "//button[@class='d2l-button' and contains(text(), 'Log In')]")
     USER_MENU_TOGGLE_BTN                                = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
-    USER_LOGOUT_BTN                                     = ('xpath', "//button[contains(@class,'d2l-link d2l') and contains(text(), 'Log Out')]")
+    USER_LOGOUT_BTN                                     = ('xpath', "//a[contains(@class,'d2l-link d2l') and contains(text(), 'Log Out')]")
     D2L_MEDIA_SPACE_IFRAME                              = ('xpath', "//iframe[contains(@src,'/d2l/lms/remoteplugins/lti/launchLti.d2l')]")
     D2L_SELECT_COURSES_BUTTON                           = ('xpath', "//button[@class='d2l-navigation-s-button-highlight d2l-dropdown-opener']")
     D2L_SELECT_COURSE_NEW1_BUTTON                       = ('xpath', "//a[@class='d2l-link d2l-datalist-item-actioncontrol' and contains(text(), 'New1 - New1')]")
-    D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE               = ('xpath', "//h2[@class='d2l-heading vui-heading-4']") # in entry page if need to do page down/up us this locator to grab the page 
+    D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE               = ('xpath', "//h2[@class='d2l-heading vui-heading-4']") # in entry page if need to do page down/up us this locator to grab the page
+    D2L_USER_NAME                                       = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -37,7 +38,7 @@ class D2L(Base):
     # to return to default iframe in the end of use of blackboard media space methods or elements, meaning in the test or other classes.
     #====================================================================================================================================
     def switchToD2LIframe(self):
-        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER or localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.KAF_BLACKBOARD_EMBED_KALTURA_MEDIA:
+        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
             self.switch_to_default_content()
             if self.swith_to_iframe(self.D2L_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
@@ -94,6 +95,11 @@ class D2L(Base):
             writeToLog("INFO","FAILED to click on user menu button")
             return False
         
+        # Click on logout button
+        if self.click(self.USER_LOGOUT_BTN) == False:
+            writeToLog("INFO","FAILED to click on user menu button")
+            return False
+        
         # Verify login button is visible
         if self.wait_visible(self.LOGIN_SIGN_IN_BTN, 10) == False:
             writeToLog("INFO","FAILED verify user was logout")
@@ -131,4 +137,12 @@ class D2L(Base):
         self.driver.execute_script("try{var element = document.querySelectorAll('div[data-id=tourorg-1]')[0];element.parentNode.removeChild(element);}catch (e){}")
         self.switchToD2LIframe()
         
+    
+    def getD2LLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.D2L_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName.lower() 
         

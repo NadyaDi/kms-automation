@@ -66,24 +66,30 @@ class Test:
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
-                return            
-               
-            writeToLog("INFO","Step 3: Going to play entry")
-            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05', toVerify=False, timeout=50) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate and play entry")
-                return  
-               
-            writeToLog("INFO","Step 4: Going to switch to default content")
-            if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to switch to default content")
                 return  
             
-            writeToLog("INFO","Step 5: Going to navigate to my history and search entry by description")
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return          
+               
+            writeToLog("INFO","Step 4: Going to play entry")
+            if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05', toVerify=False, timeout=50) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to navigate and play entry")
+                return  
+               
+            writeToLog("INFO","Step 5: Going to switch to default content")
+            if self.common.base.switch_to_default_content() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to switch to default content")
+                return  
+            
+            writeToLog("INFO","Step 6: Going to navigate to my history and search entry by description")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName, self.entryDescription) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED find entry in My History page")
+                writeToLog("INFO","Step 6: FAILED find entry in My History page")
                 return        
             #########################################################################
             writeToLog("INFO","TEST PASSED")

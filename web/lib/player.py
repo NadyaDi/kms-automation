@@ -6,6 +6,7 @@ from base import *
 import clsTestService
 import enums
 from PIL import Image
+from selenium.common.exceptions import StaleElementReferenceException
 
 class Player(Base):
     driver = None
@@ -51,6 +52,7 @@ class Player(Base):
     PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON                             = ('xpath', "//div[@class='ftr-right' and text()='SKIP FOR NOW']")
     PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU                    = ('xpath', "//input[@id='searchBox' and @placeholder='Search']")
     PLAYER_CAPTIONS_SECTION                                     = ('xpath', '//span[@style="position: relative;" and contains(text(),"CAPTION_TEXT")]')
+    PLAYER_CAPTIONS_TEXT                                        = ('xpath', "//span[@style='position: relative;']")
     PLAYER_TOTAL_VIDEO_LENGTH                                   = ('xpath', "//div[@class='timers comp durationLabel display-medium']")
     PLAYER_CURRENT_PLAYBACK_TIME                                = ('xpath', "//div[@class='timers comp currentTimeLabel display-high disabled']")
     PLAYER_QUIZ_ALMOST_DONE_SCREEN                              = ('xpath', "//div[@class='title-text padding20']")
@@ -59,6 +61,7 @@ class Player(Base):
     PLAYER_QUIZ_ANSWER_NO_2                                     = ('xpath', "//p[@id='answer-1-text']")
     PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
     PLAYER_QUIZ_ANSWER_NO_4                                     = ('xpath', "//p[@id='answer-3-text']")
+    PLAYER_CONTROLER_BAR                                        = ('xpath', "//div[@class='controlsContainer']") 
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -99,14 +102,18 @@ class Player(Base):
     def clickPlay(self,embed=False, fromActionBar=True):
         self.switchToPlayerIframe(embed)
         if fromActionBar == True:
-            if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER) == False:
+            playButtonControlsEl = self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER)
+            playBtnWidth = playButtonControlsEl.size['width'] / 3
+            playBtnHeight = playButtonControlsEl.size['height'] / 1.1
+            
+            if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, width=playBtnWidth, height=playBtnHeight) == False:
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
                 return False
         elif fromActionBar == False:
             if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 20, True) == False:
                 writeToLog("INFO","FAILED to click Play in the middle of the player; fromActionBar = " + str(fromActionBar))
                 return False   
-            
+        
         return True     
             
             
@@ -115,7 +122,10 @@ class Player(Base):
     def clickPause(self,  embed=False, fromActionBar=True):
         self.switchToPlayerIframe(embed)
         if fromActionBar == True:
-            if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER) == False:
+            playButtonControlsEl = self.wait_element(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            playBtnWidth = playButtonControlsEl.size['width'] / 3
+            playBtnHeight = playButtonControlsEl.size['height'] / 1.1
+            if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, width=playBtnWidth, height=playBtnHeight) == False:
                 writeToLog("INFO","FAILED to click Pause; fromActionBar = " + str(fromActionBar))
                 return False
             
@@ -130,21 +140,10 @@ class Player(Base):
     # delay - (string) time to play in seconds in format: M:SS (for example, 3 seconds = '0:03'
     # additional = additional delay befor pause 
     def clickPlayAndPause(self, delay, timeout=30, embed=False, clickPlayFromBarline=True, additional=0):
-        if clickPlayFromBarline == False:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
-                self.get_body_element().send_keys(Keys.PAGE_UP)
-            
         self.switchToPlayerIframe(embed)
         if self.clickPlay(embed, fromActionBar=clickPlayFromBarline) == False:
             return False
-        
-        if clickPlayFromBarline == False:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
-                self.get_body_element().send_keys(Keys.PAGE_DOWN)
-                self.switchToPlayerIframe(embed)
-            
+ 
         # Wait for delay
         if self.wait_for_text(self.PLAYER_CURRENT_TIME_LABEL, delay, timeout) == False:
             writeToLog("INFO","FAILED to seek timer to: '" + str(delay) + "'")
@@ -155,6 +154,45 @@ class Player(Base):
         
         return True 
     
+    
+    # @ Author: Tzachi Guetta
+    # This function will play the player from start to end - and collect all the Captions that were presented on the player - and return list of Captions codes (filters the duplicates)     
+    def collectCaptionsFromPlayer(self, entryName, embed=False, fromActionBar=True):
+        try:
+            if len(entryName) != 0:
+                if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
+                    writeToLog("INFO","FAILED to navigate to edit entry page")
+                    return False 
+                
+                if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                    writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
+                    return False
+            
+            if self.clickPlay(embed, fromActionBar) == False:
+                return False       
+            
+            playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
+            captionsList = [];
+            
+            while playback != False:
+                try:
+                    captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT).text
+                    if captionText == False:
+                        writeToLog("INFO","FAILED to extract caption from player")
+                        return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
+    
+                    
+                    captionsList.append(captionText)
+                    playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                    sleep(0.3)
+                except StaleElementReferenceException:
+                    pass    
+                         
+            self.clsCommon.base.switch_to_default_content()
+            return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
+   
+        except Exception as exp:
+            return False  
     
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the player - and return list of QR codes (filters the duplicates)     
@@ -180,18 +218,18 @@ class Player(Base):
                 qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(showLog=False)
                 if qrPath == False:
                     writeToLog("INFO","FAILED to take QR code screen shot")
-                    return self.removeDuplicate(QRcodeList)              
+                    return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)              
                 
                 qrResolve = self.clsCommon.qrcode.resolveQrCode(qrPath)
                 if qrResolve == False:
                     writeToLog("INFO","FAILED to resolve QR code")
-                    return self.removeDuplicate(QRcodeList)  
+                    return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)  
                 
                 QRcodeList.append(qrResolve)
                 QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
                 sleep(0.3)
             
-            return self.removeDuplicate(QRcodeList)
+            return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
         except Exception:
             return False
@@ -216,7 +254,7 @@ class Player(Base):
                 return False  
             
             #Click continue button
-            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON) == False:
+            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON, 45) == False:
                 writeToLog("INFO","FAILED to click on Welcome Screen's continue button (Quiz Entry)")
                 return False  
 
@@ -306,14 +344,14 @@ class Player(Base):
             return False        
     
     # @ Author: Tzachi Guetta    
-    def removeDuplicate(self, duplicateList): 
+    def removeDuplicate(self, duplicateList, playerObject): 
         try:
             final_list = [] 
             for num in duplicateList: 
                 if num not in final_list: 
                     final_list.append(num)
                     
-            writeToLog("INFO","The found QR codes on player: " + str(final_list))
+            writeToLog("INFO","The " + str(playerObject) +"'s that were found on player: " + str(final_list))
             return final_list
                 
         except Exception:
@@ -324,22 +362,22 @@ class Player(Base):
     # this method is checking 2 things:
     # checking if "isExistList" is exist on qrList - and return True in case all of the values were found
     # checking if "isAbsentList" is NOT exist on qrList - and return True in case all of the values were NOT found
-    def compareQRlists(self, qrList, isExistList, isAbsentList):
+    def compareLists(self, qrList, isExistList, isAbsentList, playerObject):
         try:     
             for qr1 in isExistList:
                 if qr1 in qrList:
-                    writeToLog("INFO","As Expected: the QR code of second " + qr1 +" found on player")
+                    writeToLog("INFO","As Expected: The " + str(playerObject) + ": '" + qr1 +"' found on player")
                     
                 else:
-                    writeToLog("INFO","NOT Expected: the QR code of second " + qr1 +" Not found on player")
+                    writeToLog("INFO","NOT Expected: The " + str(playerObject) + ": '" + qr1 +"' Not found on player")
                     return False
                 
             for qr2 in isAbsentList:
                 if qr2 not in qrList:
-                    writeToLog("INFO","As Expected: the QR code of second " + qr2 +" not found on player")
+                    writeToLog("INFO","As Expected: The " + str(playerObject) + ": '" + qr2 +"' not found on player")
                     
                 else:
-                    writeToLog("INFO","NOT Expected: the QR code of second " + qr2 +" found on player")
+                    writeToLog("INFO","NOT Expected: The " + str(playerObject) + ": '" + qr2 +"' found on player")
                     return False            
                 
         except Exception:
@@ -529,7 +567,7 @@ class Player(Base):
                  
                 if toVerify == True:  
                     if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                        self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                        self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                         self.get_body_element().send_keys(Keys.PAGE_DOWN)
                         
                     if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
@@ -707,7 +745,7 @@ class Player(Base):
         
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)     
-    def collectQrOfSlidesFromPlayer(self, entryName):
+    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -721,7 +759,7 @@ class Player(Base):
             # The QR codes of the slides needs to be presented on the bottom right of the player  - in order to capture them. then the following function will switch the player view to that position
             self.changePlayerView(enums.PlayerView.SWITCHVIEW)
             
-            if self.clickPlay(False, True) == False:
+            if self.clickPlay(embed, fromActionBar) == False:
                 return False       
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -749,7 +787,8 @@ class Player(Base):
                     writeToLog("INFO","FAILED to resolve QR code")
                 QRcodeList.append(qrResolve)
                 
-            return self.removeDuplicate(QRcodeList)
+            self.clsCommon.base.switch_to_default_content()    
+            return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
         except Exception as inst:
             return False
@@ -853,6 +892,7 @@ class Player(Base):
                 return False                
             tmpTabindexIdLocator = (self.PLAYER_OPEN_CHAPTER_ICON[0], self.PLAYER_OPEN_CHAPTER_ICON[1].replace('TABINDEXID', tabindexId))
             sleep(2)
+            self.scrollInSlidesMenuBar(2)
             self.scrollInSlidesMenuBar(2)
             
             # open chapter in order to see all the slides

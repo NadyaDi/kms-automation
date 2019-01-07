@@ -13,11 +13,9 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Tzachi guetta
-    # Test Name : Clip entry with slides
-    # Test description:
-    # In this test we will upload entry -> add 30 slides -> Clip the entry (by then 10 slides will be removed) -> check that the entry missing the removed slides
+    # Test Name : Trim entry with slides and captions
     #================================================================================================================================
-    testNum     = "4465"
+    testNum     = "4622"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -29,6 +27,10 @@ class Test:
     entryName = None
     entryDescription = "Description"
     entryTags = "Tags,"
+    captionLanguage = 'Afar'
+    captionLabel = 'abc'
+    captionText = '- Caption search 2'    
+    filePathCaption = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\captions\Trim-Caption.srt'        
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4'
     slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
     slidesQrCodeAndTimeList = None
@@ -50,11 +52,10 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("clip entry with slides", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Trim entry with slides and captions", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2
-            
             self.slidesQrCodeAndTimeList = [('0','00:00'), ('1','00:01'),('2','00:02'), ('3','00:03'), ('4','00:04'), ('5','00:05'), ('6','00:06'), ('7','00:07'), ('8','00:08'), ('9','00:09'),
                                             ('10','00:10'), ('11','00:11'), ('12','00:12'), ('13','00:13'), ('14','00:14'), ('15','00:15'), ('16','00:16'), ('17','00:17'), ('18','00:18'), ('19','00:19'),
                                             ('20','00:20'), ('21','00:21'), ('22','00:22'), ('23','00:23'), ('24','00:24'), ('25','00:25'), ('26','00:26'), ('27','00:27'), ('28','00:28'), ('29','00:29')]
@@ -71,7 +72,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                        
+            
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
@@ -83,28 +84,61 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 self.status = "Fail"
                 return
-                        
-            writeToLog("INFO","Step 4: Going to trim the entry from 30sec to 20sec")  
-            if self.common.kea.clipEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
+
+            writeToLog("INFO","Step 4: Going to navigate to edit entry page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to trim the entry from 30sec to 20sec")
+                writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
+                return    
+            
+            writeToLog("INFO","Step 5: Going to click on caption tab")
+            if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to click on caption tab")
+                return            
+            
+            writeToLog("INFO","Step 6: Going to add caption")
+            if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to upload caption")
                 return
-            sleep(30)
-            writeToLog("INFO","Step 5: Going to collect the new entry's QR codes")  
-            self.QRlist = self.common.player.collectQrOfSlidesFromPlayer("Clip of " + self.entryName)
+                        
+            writeToLog("INFO","Step 7: Going to trim the entry from 10sec to 20sec")  
+            if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to trim the entry from 10sec to 20sec")
+                return
+            
+            writeToLog("INFO","Step 8: Going to collect the new entry's QR codes")  
+            self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.entryName)
             if  self.QRlist == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to collect the new entry's QR codes")
+                writeToLog("INFO","Step 8: FAILED to collect the new entry's QR codes")
                 return
                         
-            self.isExist = ["5", "7", "22", "28"];
-            self.isAbsent = ["12", "13", "15", "17"];
-            writeToLog("INFO","Step 6: Going to verify the entry duration (using QR codes)")  
-            if self.common.player.compareLists(self.QRlist, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
+            self.isExistQR = ["5", "7", "22", "28"];
+            self.isAbsentQR = ["12", "13", "15", "17"];
+            writeToLog("INFO","Step 9: Going to verify the entry duration (using QR codes)")  
+            if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify the entry duration (using QR codes)")
-                return    
+                writeToLog("INFO","Step 9: FAILED to verify the entry duration (using QR codes)")
+                return
+            
+            writeToLog("INFO","Step 10: Going to collect all the presented captions on the player (after the entry was trimmed)")  
+            self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName, fromActionBar=False)
+            if  self.captionList == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to collect all the presented captions on the player (after the entry was trimmed)")
+                return
              
+            self.isExist = ["Caption5search", "Caption7search", "Caption22search", "Caption28search"];
+            self.isAbsent = ["Caption12search", "Caption13search", "Caption15search", "Caption17search"];
+            writeToLog("INFO","Step 11: Going to verify the captions that were collected")  
+            if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to verify the captions that were collected")
+                return
+                
             #########################################################################
             writeToLog("INFO","TEST PASSED")            
         # if an exception happened we need to handle it and fail the test       
@@ -117,7 +151,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
             self.common.base.switch_to_default_content()
-            self.common.myMedia.deleteEntriesFromMyMedia(["Clip of " +self.entryName, self.entryName])
+            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")  
         except:
             pass       

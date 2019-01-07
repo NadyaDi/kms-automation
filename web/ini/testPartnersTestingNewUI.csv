@@ -22,6 +22,7 @@ test_2128,Moodle - Embed video resource from SR,,,pythonautomation1@mailinator.c
 test_954,Moodle - Publish from my media to shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2397,Moodle - Embed media in site blogs from media gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2398,Moodle - upload and Embed media in kaltura video resource,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2279,Canvas - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -35,12 +36,23 @@ test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautoma
 test_2291,Canvas - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2309,Canvas - Embed on BSE from my media ,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2535,D2L - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2537,D2L - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2538,D2L - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2541,D2L - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2542,D2L - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2544,D2L - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2545,D2L - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2549,D2L - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2550,D2L - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2551,D2L - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
+test_2552,D2L - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2556,D2L - Edit Media Gallery Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2557,D2L - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
@@ -223,6 +235,9 @@ test_4482,KEA trim Quiz entry,2438361,qakmstest.dev.kaltura.com,kms.performence@
 test_4513,KEA clip Quiz entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4535,KEA trim audio entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4544,KEA clip audio entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4562,KEA trim video with captions,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4621,KEA clip video with captions,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4622,KEA Trim Quiz with caption and slide,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

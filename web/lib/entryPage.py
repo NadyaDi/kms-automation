@@ -16,7 +16,7 @@ class EntryPage(Base):
     #Entry Page locators:
     #=============================================================================================================
     ENTRY_PAGE_ENTRY_TITLE                                 = ('xpath', "//h3[@class='entryTitle' and contains(text(), 'ENTRY_NAME')]") # When using this locator, replace 'ENTRY_NAME' string with your real entry name
-    ENTRY_PAGE_ACTIONS_DROPDOWNLIST                        = ('xpath', "//button[@id='entryActionsMenuBtn']")    
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST                        = ('xpath', "//button[@id='entryActionsMenuBtn']")
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON            = ('xpath', "//span[@id='tabLabel-Edit']")  
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_KEA_BUTTON             = ('xpath', "//span[@id='tabLabel-editor']")    
     ENTRY_PAGE_DESCRIPTION                                 = ('xpath', "//div[@class='row-fluid normalWordBreak']")
@@ -40,7 +40,7 @@ class EntryPage(Base):
     ENTRY_PAGE_COMMENT_TEXT_AREA                           = ('xpath', '//textarea[@id="commentsbox"]')
     ENTRY_PAGE_COMMENT_ADD_BUTTON                          = ('xpath', '//input[@id="add-comment"]')
     ENTRY_PAGE_COMMENTS_PANEL                              = ('xpath', "//div[@id='commentsWrapper']")
-    ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and @class='btn responsiveSizePhone tabs-container__button tab-Details active']")
+    ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and contains(@class, 'btn responsiveSizePhone tabs-container__button tab-Details')]")
     ENTRY_PAGE_LIKE_BUTTON                                 = ('xpath', "//span[@id='likes']")
     ENTRY_PAGE_COMMENT_SECTION                             = ('xpath', '//div[@class="commentText"]/p[text()="COMMENT_TEXT"]')
     ENTRY_PAGE_CLOSE_DISCUSSION_MSG                        = ('xpath', '//h4[@class="muted" and text()="Discussion is closed"]')
@@ -635,7 +635,7 @@ class EntryPage(Base):
         self.clsCommon.player.switchToPlayerIframe()
         if entryType == enums.MediaType.VIDEO:
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
             try:
                 videoLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
@@ -652,7 +652,7 @@ class EntryPage(Base):
                 return False
             
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                 self.get_body_element().send_keys(Keys.PAGE_UP)
                 
             qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
@@ -671,7 +671,7 @@ class EntryPage(Base):
         
         if entryType == enums.MediaType.AUDIO:
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE)
+                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
             try:
                 audioLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
@@ -833,7 +833,7 @@ class EntryPage(Base):
     # The function verifies that the proper elements are displayed while being in show more and show less screen
     def verifyFieldDisplayInEntryPage(self, field, number):
         if self.clsCommon.myMedia.verifyFieldIconAndNumberOfDisplayInResults(False, field, number, True) == False:
-            writeToLog("INFO", "Failed to display the" '"' + field + '"' "values")
+            writeToLog("INFO", "Failed to display the" '"' + field.value + '"' "values")
             return False
          
         if self.is_visible(self.ENTRY_SEARCH_SHOW_LESS) == False:

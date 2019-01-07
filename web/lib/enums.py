@@ -27,6 +27,14 @@ class ChannelPrivacyType(Enum):
     PUBLIC              = "public"
     UNLISTED            = "Unlisted"
     
+class PlayerObjects(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    QR                = 'QR code'
+    CAPTIONS          = 'Caption'            
+  
+    
 class QuizQuestionType(Enum):
     def __str__(self):
         return str(self.value)

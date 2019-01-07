@@ -28,6 +28,13 @@ class Canvas(Base):
     CANVAS_DASHBOARD_BUTTON_IN_NAV_BAR                  = ('xpath', "//a[@id='global_nav_dashboard_link']")
     CANVAS_GALLERY_NEW1_IN_DASHBOARD_MENU               = ('xpath', "//div[@class='ic-DashboardCard' and @aria-label='New1']")
     CANVAS_USER_NAME                                    = ('xpath', "//h2[@class='_16dxlnN _2nPix9- _3ofYXie _1vP3JKU']")
+    CANVAS_ANNOUNCEMENTS_TAB                            = ('xpath', '//a[@title="Announcements"]')
+    CANVAS_CREATE_ANNOUNCEMENT_BTN                      = ('xpath', '//a[@id="add_announcement"]')
+    CANVAS_ANNOUNCEMENTS_TITLE                          = ('xpath', '//input[@id="discussion-title"]')
+    CANVAS_WYSIWYG                                      = ('xpath', '//button[@id="mceu_21-button"]')
+    CANVAS_SAVE_ANNOUNCEMENT_BTN                        = ('xpath', '//button[@type="submit" and text()="Save"]')
+    CANVAS_EMBED_ANNOUNCEMENTS_TITLE                    = ('xpath', '//h3[@data-ui-testable="Heading" and text()="EMBED_ANNOUNCEMENT_NAME"]')
+    CANVAS_EMBED_IFRAME                                 = ('xpath', '//iframe=[@id="external_tool_button_frame"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -160,3 +167,77 @@ class Canvas(Base):
             return False
         return userName.lower()   
     
+
+    # @Author: Inbar Willman
+    def createEmbedAnnouncements(self, announcementTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL) == False:
+            writeToLog("INFO","FAILED navigate to announcements page")
+            return False 
+        
+        if self.click(self.CANVAS_CREATE_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on create announcement button")
+            return False             
+        
+        if self.send_keys(self.CANVAS_ANNOUNCEMENTS_TITLE, announcementTitle)   == False:
+            writeToLog("INFO","FAILED to insert announcement title")
+            return False 
+        
+        if self.click(self.CANVAS_WYSIWYG) == False:
+                writeToLog("INFO","FAILED to click on wysiwyg")
+                return False  
+            
+        self.clsCommon.base.swith_to_iframe(self.CANVAS_EMBED_IFRAME)
+        
+        # In embed page, choose page to embed from and media
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.CANVAS) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False  
+   
+        # wait until the player display in the page
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        
+        self.clsCommon.base.switch_to_default_content()  
+        
+        if self.click(self.CANVAS_SAVE_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False 
+        
+        writeToLog("INFO","Success: Embed announcement was created successfully")
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def verifyCanvasEmbedEntry(self, embedTitle, imageThumbnail, delay, forceNavigate=False):
+        # Navigate to announcements page  
+        if forceNavigate == True: 
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL) == False:
+                writeToLog("INFO","FAILED navigate to announcements page")
+                return False     
+                
+        embed_anouncement = (self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[0], self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[1].replace('EMBED_ANNOUNCEMENT_NAME', embedTitle))
+        if self.click(embed_anouncement) == False:
+            writeToLog("INFO","FAILED to click on embed announcement name")
+            return False                                        
+        
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        self.clsCommon.base.switch_to_default_content()
+        self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
+        sleep(5)
+        
+        # If entry type is video
+        if delay != '':   
+#            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                writeToLog("INFO","FAILED to play and verify video")
+                return False                
+        
+        # If entry type is image     
+        else:
+            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                writeToLog("INFO","FAILED to display correct image thumbnail")
+                return False
+        
+        writeToLog("INFO","Success embed was verified")
+        return True                                  

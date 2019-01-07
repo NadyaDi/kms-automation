@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BB - Edit entry page - thumbnail tab 
+    # Test Name : BB - Edit entry page - Thumbnail tab 
     # Test description:
     # Login to KMS, and upload a media
     # Navigate Edit Entry Page
@@ -140,7 +140,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED failed to logout from main user")
                 return                                         
-                                 
             
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Edit entry - thumbnail tab' was done successfully")

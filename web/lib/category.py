@@ -560,6 +560,8 @@ class Category(Base):
             elif self.getAppUnderTest() == enums.Application.SHARE_POINT:
                 self.clsCommon.sharePoint.switchToSharepointIframe()
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            elif self.getAppUnderTest() == enums.Application.D2L:
+                self.clsCommon.d2l.switchToD2LIframe()
                 sleep(1)
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:

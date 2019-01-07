@@ -19,7 +19,7 @@ class KafGeneric(Base):
     #====================================================================================================================================
     KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
     KAF_GALLERY_ADD_MEDIA_BUTTON                = ('xpath', "//a[@id='tab-addcontent']")
-    KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next']")
+    KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next' and contains(text(), 'Go To Media Gallery')]")
     KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']") 
     KAF_EMBED_FROM_MY_MEDIA_PAGE                = ('xpath', "//a[@id='media-tab']")
     KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_MULTIPLE  = ('xpath', "//a[@id='MediaGalleries-tab']")
@@ -32,6 +32,7 @@ class KafGeneric(Base):
     KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
     KAF_GRID_VIEW                               = ('xpath', "//button[@id='MyMediaGrid']")
     KAF_SR_ENTRY_CHECKBOX                       = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
+    KAF_EMBED_LOADING_MESSAGE                   = ('xpath', '//div[@class="elementLoader"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -234,12 +235,12 @@ class KafGeneric(Base):
         
         if type(uploadEntrieList) is list:
             for entry in uploadEntrieList:
-                if self.addNewContentToGalleryWithoutNavigate(entry, isGalleryModerate) == False:
+                if self.addNewContentToGalleryWithoutNavigate(galleryName, entry, isGalleryModerate) == False:
                     writeToLog("INFO","FAILED to upload new media to gallery")
                     return False 
                 sleep(2)
         else:
-            if self.addNewContentToGalleryWithoutNavigate(uploadEntrieList, isGalleryModerate) == False:
+            if self.addNewContentToGalleryWithoutNavigate(galleryName, uploadEntrieList, isGalleryModerate) == False:
                 writeToLog("INFO","FAILED to upload new media to gallery")
                 return False  
         
@@ -269,7 +270,7 @@ class KafGeneric(Base):
     
     # Author: Michal Zomper
     #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
-    def addNewContentToGalleryWithoutNavigate(self, uploadEntry, isGalleryModerate=''):
+    def addNewContentToGalleryWithoutNavigate(self, galleryName, uploadEntry, isGalleryModerate=''):
         if self.click(self.KAF_GALLERY_ADD_MEDIA_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to Gallery button")
             return False     
@@ -290,10 +291,19 @@ class KafGeneric(Base):
             return False
         sleep(10)
         
-        # Click 'Go To media gallery'
-        if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on 'Go To gallery'")
-            return False
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN) 
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            if self.navigateToGallery(galleryName) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False
+        else:
+            # Click 'Go To media gallery'
+            if self.click(self.KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'Go To gallery'")
+                return False
         sleep(5)
         return True
     
@@ -333,7 +343,8 @@ class KafGeneric(Base):
         if self.navigateToGallery(galleryName, forceNavigate=True) == False:
             writeToLog("INFO","FAILED navigate to  gallery: " +  galleryName)
             return False
-
+        
+        self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON)
         if self.clsCommon.channel.verifyEntriesApprovedAndRejectedInChannelOrGallery(toRejectEntriesNames, toApproveEntriesNames) == False:
             writeToLog("INFO","FAILED, not all entries was approved/ rejected as needed")
             return False 
@@ -348,7 +359,7 @@ class KafGeneric(Base):
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
           
-        if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE) == False:
+        if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE, timeout=60) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
                         
@@ -381,7 +392,7 @@ class KafGeneric(Base):
                 
         elif embedFrom == enums.Location.UPLOAD_PAGE_EMBED:
             # Upload entry
-            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED) == False:
+            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED) == None:
                 writeToLog("INFO","FAILED to upload new entry to embed page embed page")
                 return False  
             
@@ -396,7 +407,7 @@ class KafGeneric(Base):
             self.clsCommon.general.waitForLoaderToDisappear()  
             return True   
         
-        self.clsCommon.general.waitForLoaderToDisappear()                              
+        self.wait_while_not_visible(self.KAF_EMBED_LOADING_MESSAGE, 80)                             
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
@@ -407,7 +418,21 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to click on 'select' media button")
             return False
         
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
         if application == enums.Application.MOODLE:
+            if isAssignmentEnable == True:
+                if submitAssignment == True:
+                    if self.clsCommon.moodle.submitMediaAsAssignment(True) == False:
+                        writeToLog("INFO","FAILED to create embed as assignment submission")
+                        return False
+                else:
+                    if self.clsCommon.moodle.submitMediaAsAssignment(False) == False:
+                        writeToLog("INFO","FAILED to create embed not as assignment submission")
+                        return False 
+                    
+                self.clsCommon.general.waitForLoaderToDisappear()
+                                                               
             if activity == enums.MoodleActivities.SITE_BLOG:
                 sleep(5)
                 self.switch_to_default_content()
@@ -451,13 +476,13 @@ class KafGeneric(Base):
     # 'imageThumbnail'' is the expecterQrCode of embed image - when the value different then '', means that the type is image
     # 'imageThumbnail' is the expecterQrCode of embed video - when the value different then '', means that the type is video
     # 'activity' is relevant just for moodle KAF
-    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG):
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False):
         if application == enums.Application.BLACK_BOARD:
             return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
         elif application == enums.Application.MOODLE:
-            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity)
-#       elif application == enums.Application.CANVAS:
-#            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay)
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity, forceNavigate)
+        elif application == enums.Application.CANVAS:
+            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
 #       elif application == enums.Application.D2L:
 #            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
 #       elif application == enums.Application.JIVE:
@@ -480,7 +505,7 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to publish entries to media gallery: " + galleryName)
             return False    
         
-        ("INFO","Success to publish entry from SR tab to: " + galleryName)
+        writeToLog("INFO","Success to publish entry from SR tab to: " + galleryName)
         return True    
     
     
@@ -571,4 +596,69 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to Check for Entry: '" + entryName + "' something went wrong")
             return False
         
-        return True            
+        return True   
+    
+    
+    # Author: Michal Zomper
+    def navigateToEditGalleyPage(self, galleryName):
+        if self.navigateToGallery(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to gallery page")
+            return False
+        
+        if self.click(self.clsCommon.channel.CHANNEL_EDIT_DROP_DOWN_MENU,timeout=20) == False:
+            writeToLog("INFO","FAILED to Click on action menu button")
+            return False  
+        sleep(2)
+        
+        if self.click(self.clsCommon.channel.CHANNEL_EDIT_BUTTON) == False:
+            writeToLog("INFO","FAILED to Click on edit drop down menu")
+            return False  
+        sleep(2)
+    
+        return True
+    
+    
+    # Author: Michal Zomper
+    def editGalleryMatedate(self, galleryName, newGallerydescription="", newGalleryTags=""):
+        if self.navigateToEditGalleyPage(galleryName) == False:
+            writeToLog("INFO","FAILED navigate to ediat gallery page")    
+            return False
+        
+        if newGallerydescription != "":
+            if self.clsCommon.category.fillCategoryDescription(newGallerydescription, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace channel description to:'" + newGallerydescription + "'")    
+                return False
+        
+        if newGalleryTags != "":
+            if self.clsCommon.category.fillCategoryTags(newGalleryTags, uploadboxId=-1) == False:
+                writeToLog("INFO","FAILED to replace channel tags to:'" + newGalleryTags + "'")    
+                return False   
+            
+        # Click Save
+        if self.click(self.clsCommon.category.EDIT_CATEGORY_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()        
+        
+        writeToLog("INFO","Success, media gallery metadata was changed successfully")
+        return True
+    
+    
+    # Author: Michal Zomper   
+    def varifyGalleyMatedate(self, galleryName, galleryDescription, galleryTags):
+        if self.navigateToGallery(galleryName, forceNavigate=True) == False:
+            writeToLog("INFO","FAILED navigate to  gallery page")    
+            return False
+        
+        tmpGalleryDescription = (self.clsCommon.category.CATEGORY_DESCRIPTION[0], self.clsCommon.category.CATEGORY_DESCRIPTION[1].replace('CATEGORY_DESCRIPTION', galleryDescription))
+        if self.wait_visible(tmpGalleryDescription, 30) == False:
+            writeToLog("INFO","FAILED to verify gallery description")
+            return False
+        
+        tmpGalleryTags = (self.clsCommon.category.CATEGORY_TAGS[0], self.clsCommon.category.CATEGORY_TAGS[1].replace('CATEGORY_TAGS', galleryTags[:-1]))
+        if self.wait_visible(tmpGalleryTags, 30) == False:
+            writeToLog("INFO","FAILED to verify gallery tags")
+            return False
+        
+        writeToLog("INFO","Success, media gallery metadata was verified successfully")
+        return True

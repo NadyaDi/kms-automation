@@ -461,7 +461,8 @@ class BlackBoard(Base):
         if isElementFound == False:
             writeToLog("INFO","FAILED to find required metadata field for shared repository")
             return False
-            
+        
+        sleep(3) 
         if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False
@@ -474,7 +475,9 @@ class BlackBoard(Base):
                 return False
             
         elif location == enums.Location.SHARED_REPOSITORY:
-            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM) == False:
+            self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN) 
+            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to find save success message")
                 return False
         
@@ -510,6 +513,10 @@ class BlackBoard(Base):
         if self.navigateToCourseMenuOptionPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to course: " + galleryName + " home page")   
             return False  
+        sleep(7)
+        homePage= (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', "Home Page"))
+        self.click(homePage)
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
         
         # We don't use 'self.clsCommon.player.switchToPlayerIframe(False)' method because it's different player iframe locator.
         # Because we have only one iframe on the page, we can locate the iframe by 'tag_name'
@@ -530,13 +537,9 @@ class BlackBoard(Base):
                     writeToLog("INFO","Success: Entry isn't displayed in featured media")
                     return True 
             else:
-                if not entryName in carouselItemEl.text:
-                    writeToLog("INFO","Success: Entry isn't displayed in featured media")
-                    return True 
-                else:
-                    writeToLog("INFO","FAILED: Entry shouldn't be displayed " + entryName + " in featured media")   
-                    return False                      
-            
+                writeToLog("INFO","Success: Entry isn't displayed in featured media")
+                return True 
+
         # shouldBeDisplayed == True     
         else:        
             carouselItemEl = self.wait_element(self.FEATURED_MEDIA_ENTRY, timeout=3)
@@ -633,17 +636,19 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to click on kaltura media option")
             return False 
          
-        sleep(2)
+        sleep(4)
          
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
+        self.clsCommon.base.driver.maximize_window()
         
         # Select media in embed page 
         if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False  
-         
+        
+        sleep(4) 
         self.clsCommon.base.driver.switch_to_window(window_before)           
         
         #Submit item 
@@ -656,7 +661,8 @@ class BlackBoard(Base):
         if self.is_visible(successMsg) == False:
             writeToLog("INFO","FAILED to display correct success message")
             return False             
-                    
+        
+        writeToLog("INFO","Embed was created successfully")           
         return True     
     
     
@@ -712,8 +718,9 @@ class BlackBoard(Base):
          
         if self.click(self.KAF_SUBMIT_BUTTON)  == False:
             writeToLog("INFO","FAILED to click on 'submit' button")
-            return False              
-                    
+            return False     
+                 
+        writeToLog("INFO","Embed item was created successfully")          
         return True      
     
     
@@ -738,7 +745,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED display delete message")
             
             return False                        
-        
+        writeToLog("INFO","Embed item was deleted successfully") 
         return True     
     
     
@@ -768,6 +775,7 @@ class BlackBoard(Base):
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
+        self.clsCommon.base.driver.maximize_window()
         
         # Select media in embed page 
         if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
@@ -788,7 +796,7 @@ class BlackBoard(Base):
 #         if self.clsCommon.kafGeneric.verifyEmbedEntry(imageThumbnail, delayTime, mediaType) == False:
 #             writeToLog("INFO","FAILED to played and verify embedded entry")
 #             return False             
-                    
+        writeToLog("INFO","Embed media was successfully verified")             
         return True  
        
          
@@ -822,6 +830,7 @@ class BlackBoard(Base):
     def verifyBlackboardEmbedEntry(self, embedTitle, imageThumbnail='', delay=''):
         self.refresh()
         self.clsCommon.base.switch_to_default_content()
+        sleep(7)
         
         tmpEmbedTitle= (self.clsCommon.kafGeneric.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[0], self.clsCommon.kafGeneric.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[1].replace('EMBED_TITLE', embedTitle))
         try:
@@ -866,7 +875,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to click on play icon")
             return False 
          
-        sleep(10)
+        sleep(18)
         if delay != '':
             try:   
                 self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + foundId + "')]"))
@@ -893,6 +902,7 @@ class BlackBoard(Base):
     
         writeToLog("INFO","Embed media was successfully verified")    
         return True 
+    
     
     def getBlackboardLoginUserName(self):
         try:

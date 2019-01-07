@@ -1330,12 +1330,14 @@ class Channel(Base):
                 if self.method_helper_approveEntry(approveEntry) == False:
                     writeToLog("INFO","FAILED to approve entry: " + approveEntry)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
         else:
             if toApproveEntriesNames != '':
                 if self.method_helper_approveEntry(toApproveEntriesNames) == False:
                     writeToLog("INFO","FAILED to approve entry: " + toApproveEntriesNames)
-                    return False 
+                    return False
+                sleep(3) 
                 self.clsCommon.general.waitForLoaderToDisappear()
         
         return True
@@ -1348,6 +1350,7 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(rejectEntry) == False:
                     writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
             
         else:
@@ -1355,6 +1358,7 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
                     writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()               
         
         return True
@@ -1878,6 +1882,8 @@ class Channel(Base):
         
         self.clsCommon.general.waitForLoaderToDisappear()
         writeToLog("INFO","Success, sort channels by '" + sortType + "' was set")
+        
+        sleep(2)
         return True    
     
     
@@ -2046,7 +2052,7 @@ class Channel(Base):
         else: 
             searchLine = searchText
         
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
         else:
             self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
@@ -2693,3 +2699,36 @@ class Channel(Base):
         
         return True    
     
+    
+    # Author: Michal Zomper   
+    def varifyChannelyMatedate(self, channelName, channelDescription, channelTags, channelType, appearsInCategoryName):
+        tmpChannelName = (self.CHANNEL_PAGE_TITLE[0], self.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', channelName))
+        if self.wait_visible(tmpChannelName, 30) == False:
+            writeToLog("INFO","FAILED to verify channel name")
+            return False
+        
+        tmpChannelDescription = (self.clsCommon.category.CATEGORY_DESCRIPTION[0], self.clsCommon.category.CATEGORY_DESCRIPTION[1].replace('CATEGORY_DESCRIPTION', channelDescription))
+        if self.wait_visible(tmpChannelDescription, 30) == False:
+            writeToLog("INFO","FAILED to verify channel description")
+            return False
+        
+        tmpChannelTags = (self.clsCommon.category.CATEGORY_TAGS[0], self.clsCommon.category.CATEGORY_TAGS[1].replace('CATEGORY_TAGS', channelTags[:-1]))
+        if self.wait_visible(tmpChannelTags, 30) == False:
+            writeToLog("INFO","FAILED to verify channel tags")
+            return False
+        
+        if channelType.value in self.get_element_text(self.CHANNEL_TYPE, 20).lower() == False:
+            writeToLog("INFO","Failed to verify that channel type is : " + channelType)
+            return False 
+        
+        tmp_chnnelAppearIn = (self.CHANNEL_APPEARS_IN_CATEGORY_NAME[0], self.CHANNEL_APPEARS_IN_CATEGORY_NAME[1].replace('CATEGORY_NAME', appearsInCategoryName))
+        if self.click(self.CHANNEL_APPEARS_IN_BUTTON, 20, multipleElements=True) == False:
+            writeToLog("INFO","Failed to click on appears in button")
+            return False
+        
+        if self.is_visible(tmp_chnnelAppearIn) == False:
+            writeToLog("INFO","Failed to verify channel appear in category: " + appearsInCategoryName)
+            return False
+        
+        writeToLog("INFO","Success, channel metadata was verified successfully")
+        return True

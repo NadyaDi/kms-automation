@@ -26,6 +26,7 @@ test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
 test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publish entries to course
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
+test_628,1,0,0,0,Moodle - Assignment Submission Functionalities
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
 test_639,1,0,0,0,Global Search for Captions in Video
@@ -161,6 +162,7 @@ test_2290,1,0,0,0,Canvas - My Media - Search by Name / Description / Tags
 test_2291,0,1,0,0,Canvas - My Media - Sort Media
 test_2292,1,0,0,0,Canvas - My Media - filter media view different statuses
 test_2293,1,0,0,0,Canvas - My Media - filter media view different media types
+test_2309,1,0,0,0,Canvas - Embed on BSE from my media 
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
@@ -169,7 +171,17 @@ test_2534,0,1,0,0,D2l - Edit Entry page - Disable comments
 test_2535,0,1,0,0,D2L - Edit Entry page - Close discussion
 test_2537,1,0,0,0,D2L - Entry page - Add captions And Search - remove caption
 test_2538,1,0,0,0,D2L - Edit entry page - Thumbnail tab
+test_2541,1,0,0,0,D2L - Delete through my media
+test_2542,1,0,0,0,D2L - Delete through edit entry page
 test_2543,1,0,0,0,D2L - Preview all kinds of media from My Media and Gallery
+test_2544,1,0,0,0,D2L - View Collapsed Expanded Modes
+test_2545,1,0,0,0,D2L - Upload media from desktop
+test_2549,1,0,0,0,D2L - My Media - Search by Name / Description / Tags
+test_2550,0,1,0,0,D2L - My Media - Sort Media
+test_2551,1,0,0,0,D2L - My Media - Filter Media View Different Statuses
+test_2552,1,0,0,0,D2L - My Media - Filter by media Type
+test_2556,1,0,0,0,D2L - Edit Media Gallery Metadata
+test_2557,1,0,0,0,D2L - Remove Media From Media Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history
@@ -205,11 +217,14 @@ test_4482,1,0,0,0,KEA trim Quiz entry
 test_4513,1,0,0,0,KEA clip Quiz entry
 test_4535,1,0,0,0,KEA trim Audio entry
 test_4544,1,0,0,0,KEA Clip Audio entry
+test_4562,1,0,0,0,KEA Trim video with captions
+test_4621,1,0,0,0,KEA Clip video with captions
+test_4622,1,0,0,0,KEA Trim Quiz with caption and slide
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
-test_3273,1,0,0,0,Slide Deck Upload
-test_3274,1,0,0,0,Slide Deck Upload-delete slides
-test_3275,1,0,0,0,SlideDeckUpload add-remove chapters
-test_3276,1,0,0,0,Slide Deck Upload - change slide location
+test_3273,0,1,0,0,Slide Deck Upload
+test_3274,0,1,0,0,Slide Deck Upload-delete slides
+test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
+test_3276,0,1,0,0,Slide Deck Upload - change slide location
 test_3277,1,0,0,0,Collaboration - edit metadata
 test_3278,1,0,0,0,Collaboration co editor - Options tab
 test_3279,1,0,0,0,Collaboration co editor - Thumbnail tab

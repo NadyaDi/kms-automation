@@ -55,11 +55,11 @@ class Moodle(Base):
     MOODLE_EMBED_EDIT_DROPDOWN                             = ('xpath', '//a[@id="action-menu-toggle-ID" and @class="toggle-display textmenu"]')  
     MOODLE_CONFIRM_DELETE_EMBED                            = ('xpath', '//input[@value="Yes" and @type="button"]')
     MOODLE_SITE_BLOG_TITLE_IN_SITE_BLOGS_PAGE              = ('xpath', '//a[contains(@href, "/moodle/blog/") and text()="SITE_BLOG_TITLE")]')  
-    MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')  
-    MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')    
+    MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', "//label[contains(@class,'inline sharedRepositoryMetadata')]")  
+    MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', "//input[contains(@id,'sharedRepositories-Text')]")    
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
-    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" No, thanks ")]')
-    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")                               
+    MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[@class="btn btn-large btn-primary btn-danger"]')
+    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")     
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -226,7 +226,7 @@ class Moodle(Base):
     
     
     # @Author: Inbar Willman
-    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', forceNavigate=False, activity=enums.MoodleActivities.SITE_BLOG): 
+    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False): 
         # Navigate to site blog   
         if forceNavigate == True: 
             if activity == enums.MoodleActivities.SITE_BLOG:  
@@ -245,11 +245,23 @@ class Moodle(Base):
                     writeToLog("INFO","FAILED to navigate to course page")
                     return False  
                 
+                # Check if turn editing on is enabled
+                if self.wait_visible(self.MOODLE_TURN_EDITING_ON_BTN, timeout=3) != False:
+                    # If turn editing is off - Enable turn editing on
+                    if self.click(self.MOODLE_TURN_EDITING_ON_BTN) == False:
+                        writeToLog("INFO","FAILED to click on 'turn editing on' button")
+                        return False 
+            
+                    sleep(2)                
+                
                 embed_activity = (self.MOODLE_EMBED_ACTIVITY[0], self.MOODLE_EMBED_ACTIVITY[1].replace('ACTIVITY_NAME', embedTitle))
                 if self.click(embed_activity) == False:
                     writeToLog("INFO","FAILED to click on embed activity title")
                     return False                                        
         
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        self.clsCommon.base.switch_to_default_content()
         self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
         sleep(5)
         # If entry type is video
@@ -264,7 +276,8 @@ class Moodle(Base):
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
                 return False
-                
+        
+        writeToLog("INFO","Success embed was verified")
         return True 
     
     
@@ -330,7 +343,7 @@ class Moodle(Base):
             
     
     # @Author: Inbar Willman        
-    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False , filePath=None, description=None, tags=None):
+    def createEmbedActivity(self, entryName, activityName, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, mediaGalleryName=None, filePath=None, description=None, tags=None, isAssignmentEnable=False, submitAssignment=False):
         self.clsCommon.base.switch_to_default_content()
         # Navigate to course page
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_URL) == False:
@@ -376,18 +389,24 @@ class Moodle(Base):
         # Get window after opening embed window and switch to this window
         window_after = self.clsCommon.base.driver.window_handles[1]
         self.clsCommon.base.driver.switch_to_window(window_after)
+        self.clsCommon.base.driver.maximize_window()
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, '', embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, isAssignmentEnable=isAssignmentEnable, submitAssignment=submitAssignment) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
                 
         self.clsCommon.base.driver.switch_to_window(window_before) 
+        # wait until the player display in the page
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
+        self.clsCommon.base.switch_to_default_content()
         if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
             writeToLog("INFO","FAILED to click on submit button")
             return False  
-                    
+        
+        writeToLog("INFO","Success embed media was created successfully")           
         return True   
     
     
@@ -411,7 +430,8 @@ class Moodle(Base):
         if self.clickOnEditDropDownAndChooseDeleteOption(embedActivityName) == False:
             writeToLog("INFO","FAILED to click on edit drop down and choose 'delete' option")
             return False 
-  
+        
+        writeToLog("INFO","Success embed was deleted")
         return True    
     
     
@@ -477,6 +497,8 @@ class Moodle(Base):
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
                 return False  
          
+        self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_DETAILS_TAB)
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
         if self.click(self.MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON) == False:
             writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
             return False

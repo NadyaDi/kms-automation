@@ -88,7 +88,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_REPLACE_VIDEO_TAB                                = ('xpath', '//a[@id="replacemedia-tab"]')
     EDIT_ENTRY_UPLOAD_NEW_FILE                                  = ('xpath', '//label[@for="replace_media_fileinput"]')
     EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
-    EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and text()="Your media was successfully replaced."]') 
+    EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and contains(text(),"Your media was successfully replaced")]') 
     EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
     EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[contains(@id,"attachments-tab")]')# USE multipleElements=True
     EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
@@ -153,6 +153,10 @@ class EditEntryPage(Base):
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON, timeout=5 ,multipleElements=True)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        
         sleep(2)
         #Open "Actions" drop-down list 
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, multipleElements=True) == False:
@@ -165,7 +169,7 @@ class EditEntryPage(Base):
             return False
         
         #Wait page load - wait for entry title 
-        if self.wait_element(tmp_entry_name, 5) == False:
+        if self.wait_element(tmp_entry_name, 20) == False:
             writeToLog("INFO","FAILED to open edit entry page")
             return False
         
@@ -657,6 +661,7 @@ class EditEntryPage(Base):
     # Author: Michal Zomper
     # NOT finish
     def uploadSlidesDeck(self, filePath, mySlidesList, waitToFinish=True):
+        sleep(2)
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
             return False
@@ -670,7 +675,8 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_UPLOAD_SLIDES_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload slides button")
             return False              
-          
+        
+        sleep(2)  
         if self.click(self.EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE, 20) == False:
             writeToLog("INFO","FAILED to click on choose a file to upload button")
             return False            
@@ -1207,7 +1213,7 @@ class EditEntryPage(Base):
             return False
         
         # wait until 'Your media was successfully replaced.' message is displayed
-        if self.wait_visible(self.EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG, timeout= 100) == False:
+        if self.wait_visible(self.EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG, timeout= 110) == False:
             writeToLog("INFO","FAILED to display 'Your media was successfully replaced.' message")
             return False
         
