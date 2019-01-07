@@ -400,6 +400,11 @@ class Kea(Base):
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
     def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
+        splitStartTimeArr = splitStartTime.split(':')
+        splitStartTime = splitStartTimeArr[1] + ":" + splitStartTimeArr[0] 
+        
+        splitEndTimeArr = splitEndTime.split(':')
+        splitEndTime = splitEndTimeArr[1] + ":" + splitEndTimeArr[0] 
         self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
         
         sleep(1)
