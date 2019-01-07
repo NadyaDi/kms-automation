@@ -16,7 +16,7 @@ class Test:
     # Test Name : Setup test for eSearch
     # Test description:
     # Going to upload six type of entries (video, quiz, audio, image, youtube and webcast)
-    # Going to add co-editor permissions to a user for all of the entries
+    # Going to add co-editor permissions to an user for all of the entries
     #================================================================================================================================
     testNum = "30"
 

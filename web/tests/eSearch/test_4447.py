@@ -14,7 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Filter by Captions - with search - Global page 
+    # Test Name : Filter by Captions - with search - Channel Page - pending tab
     # Test description:
     # Verify that channel pending tab entries are properly displayed while using a search term and filter them by captions
     #================================================================================================================================
