@@ -65,23 +65,29 @@ class Test:
             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 2: FAILED -to publish entry to gallery")
                 return
-
-            writeToLog("INFO","Step 3: Going navigate to gallery page")                                     
-            if self.common.blackBoard.navigateToGalleryBB(self.galleryName) == False:    
+            
+            writeToLog("INFO","Step 3: Going to approve publish entry in gallery")                                     
+            if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName, "", self.entryName, navigate=True) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to gallery page")
+                writeToLog("INFO","Step 3: FAILED to approve publish entry in gallery")
                 return 
             
-            writeToLog("INFO","Step 4: Going to remove entry from gallery")                                     
+            writeToLog("INFO","Step 4: Going navigate to gallery page")                                     
+            if self.common.kafGeneric.navigateToGallery(self.galleryName, forceNavigate=True) == False:    
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED navigate to gallery page")
+                return 
+            
+            writeToLog("INFO","Step 5: Going to remove entry from gallery")                                     
             if self.common.channel.removeEntry(self.entryName) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
+                writeToLog("INFO","Step 5: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
                 return 
             
-            writeToLog("INFO","Step 5: Going to verify that entry doesn't display in gallery any more")                                     
+            writeToLog("INFO","Step 6: Going to verify that entry doesn't display in gallery any more")                                     
             if self.common.channel.searchEntryInChannel(self.entryName) == True:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
+                writeToLog("INFO","Step 6: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
                 return 
             writeToLog("INFO","Step 5: Preview step failed as expected - entry was removed from gallery and should not be found")
             ##################################################################

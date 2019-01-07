@@ -1067,6 +1067,7 @@ class Channel(Base):
         sleep(4)
         
         self.clsCommon.general.waitForLoaderToDisappear()
+        writeToLog("INFO","Success, entry '" + entryName + "' was removed successfully")
         return True
         
         
@@ -2454,13 +2455,22 @@ class Channel(Base):
                 return False
                     
         elif location == enums.Location.CATEGORY_PAGE:
-                if self.clsCommon.category.navigateToCategory(channelName) == False:
-                    writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
-                    return False
-                    
-                if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on category's moderation tab")
-                    return False 
+            if self.clsCommon.category.navigateToCategory(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
+                return False
+                
+            if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on category's moderation tab")
+                return False 
+                
+        elif location == enums.Location.GALLERY_PAGE:
+            if self.clsCommon.kafGeneric.navigateToGallery(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  gallery: " +  channelName)
+                return False
+                
+            if self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on gallery's moderation tab")
+                return False 
                 
         self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
         return True
