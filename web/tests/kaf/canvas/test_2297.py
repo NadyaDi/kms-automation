@@ -14,26 +14,25 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Canvas: Embed on BSE from my media 
+    # Test Name : Canvas Embed on BSE from media gallery
     # Test description:
     # Upload entry
-    # Go course -> Go to 'Announcements' tab -> Add new announcement -> In announcement, click on wysiwyg and choose media to embed from 'My Media'
+    # Go course -> Go to 'Announcements' tab -> Add new announcement -> In announcement, click on wysiwyg and choose media to embed from 'Media Gallery'
     # Verify that the embed was created successfully 
     # Verify that the embed was deleted successfully
     #================================================================================================================================
-    testNum     = "2309"
+    testNum     = "2297"
     application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
     timeout_accured = "False"
     # Test variables
-    entryName1 = None
-    entryName2 = None
     description = "Description"
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
     timeToStop = '0:07'
+    galleryName = "New1"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -50,8 +49,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Embed from my media", self.testNum)
-            self.announcementName = clsTestService.addGuidToString("Embed announcement from my media", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Embed from media gallery", self.testNum)
+            self.announcementName = clsTestService.addGuidToString("Embed announcement from media gallery", self.testNum)
             
             ######################### TEST STEPS - MAIN FLOW #######################
             
@@ -66,33 +65,39 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                
+               
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-                return  
-             
-            writeToLog("INFO","Step 4: Going to to create embed announcement from my media")    
-            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName) == False:
+                return
+               
+            writeToLog("INFO","Step 4: Going to publish entry to gallery")    
+            if self.common.myMedia.publishSingleEntry(self.entryName, '', '', [self.galleryName]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to create embed announcement from my media")
+                writeToLog("INFO","Step 4: FAILED to publish entry to gallery")
+                return         
+             
+            writeToLog("INFO","Step 5: Going to to create embed announcement from media gallery")    
+            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, self.galleryName, enums.Location.MEDIA_GALLARY, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to create embed announcement from media gallery")
                 return  
              
-            writeToLog("INFO","Step 5: Going to to verify embed announcement")    
+            writeToLog("INFO","Step 6: Going to to verify embed announcement")    
             if self.common.kafGeneric.verifyEmbedEntry(self.announcementName, '', self.timeToStop, enums.Application.CANVAS) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to verify embed announcement")
+                writeToLog("INFO","Step 6: FAILED to verify embed announcement")
                 return     
             
-            writeToLog("INFO","Step 6: Going to to delete embed announcement")    
+            writeToLog("INFO","Step 7: Going to to delete embed announcement")    
             if self.common.canvas.deleteAnnouncemnt(self.announcementName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to delete embed announcement")
+                writeToLog("INFO","Step 7: FAILED to delete embed announcement")
                 return                                          
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Embed on BSE from my media ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Embed on BSE from media gallery' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

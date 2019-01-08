@@ -34,7 +34,14 @@ class Canvas(Base):
     CANVAS_WYSIWYG                                      = ('xpath', '//button[@id="mceu_21-button"]')
     CANVAS_SAVE_ANNOUNCEMENT_BTN                        = ('xpath', '//button[@type="submit" and text()="Save"]')
     CANVAS_EMBED_ANNOUNCEMENTS_TITLE                    = ('xpath', '//h3[@data-ui-testable="Heading" and text()="EMBED_ANNOUNCEMENT_NAME"]')
-    CANVAS_EMBED_IFRAME                                 = ('xpath', '//iframe=[@id="external_tool_button_frame"]')
+    CANVAS_EMBED_IFRAME                                 = ('xpath', '//iframe[@id="external_tool_button_frame"]')
+    CANVAS_ANNOUNCEMNET_ACTION_DROPDOWN                 = ('xpath', '//a[@class="al-trigger btn announcement_cog"]')
+    CANVAS_DELETE_ANNOUNCEMENT_BTN                      = ('xpath' , '//a[contains(@class,"delete_discussion ui-corner-all")]')
+    CANVAS_DELETE_ANNOUNCEMENT_SUCCESS_MSG              = ('xpath', '//li[@class="ic-flash-success"]') 
+    CANVAS_EMBED_ENTRY_IFRAME                           = ('xpath', '//iframe[contains(@src, "/courses/471/external_tools")]')
+    CANVAS_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BTN  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')
+    CANVAS_ENTRY_COURSE_FIELD_DROPDOWN                  = ('xpath', '//select[@id="sharedRepositories-Course"]')
+    CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION           = ('xpath', '//option[@value="math"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -194,6 +201,7 @@ class Canvas(Base):
             return False  
    
         # wait until the player display in the page
+        self.swith_to_iframe(self.CANVAS_EMBED_ENTRY_IFRAME) 
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
@@ -215,15 +223,16 @@ class Canvas(Base):
                 writeToLog("INFO","FAILED navigate to announcements page")
                 return False     
                 
-        embed_anouncement = (self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[0], self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[1].replace('EMBED_ANNOUNCEMENT_NAME', embedTitle))
-        if self.click(embed_anouncement) == False:
-            writeToLog("INFO","FAILED to click on embed announcement name")
-            return False                                        
-        
+            embed_anouncement = (self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[0], self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[1].replace('EMBED_ANNOUNCEMENT_NAME', embedTitle))
+            if self.click(embed_anouncement) == False:
+                writeToLog("INFO","FAILED to click on embed announcement name")
+                return False   
+                                                 
+        self.swith_to_iframe(self.CANVAS_EMBED_ENTRY_IFRAME) 
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         self.clsCommon.base.switch_to_default_content()
-        self.swith_to_iframe(self.MOODLE_EMBED_ENTRY_IFRAME) 
+        self.swith_to_iframe(self.CANVAS_EMBED_ENTRY_IFRAME) 
         sleep(5)
         
         # If entry type is video
@@ -239,5 +248,75 @@ class Canvas(Base):
                 writeToLog("INFO","FAILED to display correct image thumbnail")
                 return False
         
+        self.clsCommon.base.switch_to_default_content()
         writeToLog("INFO","Success embed was verified")
-        return True                                  
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def deleteAnnouncemnt(self, announcementName, forceNavigate=False):   
+        if forceNavigate == True:
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL) == False:
+                writeToLog("INFO","FAILED navigate to announcements page")
+                return False     
+                
+            embed_anouncement = (self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[0], self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[1].replace('EMBED_ANNOUNCEMENT_NAME', announcementName))
+            if self.click(embed_anouncement) == False:
+                writeToLog("INFO","FAILED to click on embed announcement name")
+                return False  
+            
+        if self.click(self.CANVAS_ANNOUNCEMNET_ACTION_DROPDOWN) == False:
+            writeToLog("INFO","FAILED to click on announcement action dropdown menu")
+            return False  
+        
+#         if self.hover_on_element(self.CANVAS_DELETE_ANNOUNCEMENT_BTN) == False:
+#             writeToLog("INFO","FAILED to hover over 'delete' option")
+#             return False   
+           
+        if self.click(self.CANVAS_DELETE_ANNOUNCEMENT_BTN, timeout=30) == False:
+            writeToLog("INFO","FAILED to click on delete option")
+            return False 
+        
+        if self.clsCommon.base.click_dialog_accept() == False:
+            writeToLog("INFO","FAILED click accept dialog")
+            return False 
+        
+        if self.wait_visible(self.CANVAS_DELETE_ANNOUNCEMENT_SUCCESS_MSG) == False:
+            writeToLog("INFO","FAILED to displayed delete success message")
+            return False 
+        
+        embed_anouncement = (self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[0], self.CANVAS_EMBED_ANNOUNCEMENTS_TITLE[1].replace('EMBED_ANNOUNCEMENT_NAME', announcementName))
+        if self.click(embed_anouncement) == True:
+            writeToLog("INFO","FAILED: announcement is still display in announcements page")
+            return False 
+        
+        writeToLog("INFO","Success: announcement was deleted")
+        return True             
+    
+    
+    # @Author: Inbar Willman
+    def addSharedRepositoryMetadataCanvas(self, entryName, location=enums.Location.EDIT_ENTRY_PAGE):
+        if location == enums.Location.EDIT_ENTRY_PAGE:
+            if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
+                return False  
+         
+        if self.click(self.CANVAS_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BTN) == False:
+            writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
+            return False
+        
+        if self.click(self.CANVAS_ENTRY_COURSE_FIELD_DROPDOWN) == False:
+            writeToLog("INFO","FAILED to click on course field dropdown")
+            return False  
+        
+        if self.click(self.CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION) == False:
+            writeToLog("INFO","FAILED to choose 'math' option in dropdown")
+            return False                                    
+             
+        if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+         
+        self.clsCommon.general.waitForLoaderToDisappear()
+
+        return True                 
