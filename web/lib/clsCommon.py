@@ -99,7 +99,17 @@ class Common():
             autoitDr = self.autoit.autoitDriver9    
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd10":
             autoitDr = self.autoit.autoitDriver10                                        
-            
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd11":
+            autoitDr = self.autoit.autoitDriver11
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd12":
+            autoitDr = self.autoit.autoitDriver12
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd13":
+            autoitDr = self.autoit.autoitDriver13
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd14":
+            autoitDr = self.autoit.autoitDriver14
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd15":
+            autoitDr = self.autoit.autoitDriver15                                                
+                        
         if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
             # TODO IE not implemented yet
             autoitDr.execute_script(localSettings.LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR + r'autoit\openFile.exe', path)
