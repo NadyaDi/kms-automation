@@ -128,6 +128,7 @@ class MyMedia(Base):
     ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found.' or text()='No Entries Found']")
     CHANNEL_PENDING_TAB_ICON                                    = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']")
     CHANNEL_PENDING_ENTRY_DATA                                  = ('xpath', "//tr[@id='ENTRY_ID_tr']")
+    SEARCH_IN_CHOSEN_OPTION                                     = ('xpath', '//a[@id="fields-menu-toggle"]')
     ACTION_TAB_OPTION_DISABLED                                  = ('xpath', "//a[@id='tab-ACTIONID' and contains(@class,'disabled')]")
     ACTION_TAB_OPTION_NORMAL                                    = ('xpath', "//a[@id='tab-ACTIONID']")
     EDIT_OPTION_PRESENT_ANY_ENTRY                               = ('xpath', "//a[contains(@title,'Edit')]//i[contains(@class,'icon-pencil')]")
@@ -1813,6 +1814,11 @@ class MyMedia(Base):
 
         self.clsCommon.general.waitForLoaderToDisappear()
         sleep(5)
+        
+        if self.verifySearchInSelectedOption(option.value) == False:
+            writeToLog("INFO","FAILED to display " + option.value + " option in 'Search in' ")
+            return False
+            
         return True
 
 
@@ -2355,7 +2361,26 @@ class MyMedia(Base):
             return False
 
         return True
+   
     
+    # @Author: Inbar Willman
+    # Verify chosen field is displayed in 'Search in' after selected in dropdown
+    def verifySearchInSelectedOption(self, chosenOption, timeout=10):
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
+        self.setImplicitlyWait(0)
+        while True:
+            try:
+                el = self.get_element(self.SEARCH_IN_CHOSEN_OPTION)
+                if el.text == "Search In: " + chosenOption:
+                    self.setImplicitlyWaitToDefault()
+                    return True
+                
+            except:
+                if wait_until < datetime.datetime.now():
+                    self.setImplicitlyWaitToDefault()
+                    return False                 
+                pass   
+
 
     # @Author: Horia Cus
     # The function verifies if a specific action option is disabled or enabled
