@@ -159,6 +159,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
+            self.common.base.switch_to_default_content()
             if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME in self.common.d2l.getD2LLoginUserName()) == False:
                 self.common.d2l.logOutOfD2L()
                 self.common.d2l.loginToD2L(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
