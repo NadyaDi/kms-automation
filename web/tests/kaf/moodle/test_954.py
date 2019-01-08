@@ -70,7 +70,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
              
-            writeToLog("INFO","Step 4: Going to to add required metadata fields for SR")    
+            writeToLog("INFO","Step 4: Going to add required metadata fields for SR")    
             if self.common.moodle.addSharedRepositoryMetadataMoodle(self.entryName, self.fieldText) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add required metadata fields for SR")

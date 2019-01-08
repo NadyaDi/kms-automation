@@ -461,7 +461,8 @@ class BlackBoard(Base):
         if isElementFound == False:
             writeToLog("INFO","FAILED to find required metadata field for shared repository")
             return False
-            
+        
+        sleep(3) 
         if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False
@@ -474,7 +475,9 @@ class BlackBoard(Base):
                 return False
             
         elif location == enums.Location.SHARED_REPOSITORY:
-            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM) == False:
+            self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN) 
+            if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_SAVE_MESSAGE_CONFIRM, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to find save success message")
                 return False
         

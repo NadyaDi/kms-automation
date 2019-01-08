@@ -162,6 +162,8 @@ class Channel(Base):
     CHANNEL_PENDING_TAB_SEARCH_BAR                      = ('xpath', '//input[@placeholder="Search in Pending" and @class="searchForm__text"]')
     CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG             = ('xpath', '//div[@class="message" and text()="Loading..."]')
     CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem visible-v2ui hidden-phone")]')
+    CHANNEL_NO_RESULT_FILTER                            = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No Media Found' or text()='No media found']")
+    CHANNEL_NO_RESULT_FILTER_MODERATION                 = ('xpath', "//div[@id='js-categoryModerationTable-container']//div[contains(@class,'alert alert-info')]")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1065,6 +1067,7 @@ class Channel(Base):
         sleep(4)
         
         self.clsCommon.general.waitForLoaderToDisappear()
+        writeToLog("INFO","Success, entry '" + entryName + "' was removed successfully")
         return True
         
         
@@ -1328,12 +1331,14 @@ class Channel(Base):
                 if self.method_helper_approveEntry(approveEntry) == False:
                     writeToLog("INFO","FAILED to approve entry: " + approveEntry)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
         else:
             if toApproveEntriesNames != '':
                 if self.method_helper_approveEntry(toApproveEntriesNames) == False:
                     writeToLog("INFO","FAILED to approve entry: " + toApproveEntriesNames)
-                    return False 
+                    return False
+                sleep(3) 
                 self.clsCommon.general.waitForLoaderToDisappear()
         
         return True
@@ -1346,6 +1351,7 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(rejectEntry) == False:
                     writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
             
         else:
@@ -1353,6 +1359,7 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
                     writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
                     return False 
+                sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()               
         
         return True
@@ -1876,6 +1883,8 @@ class Channel(Base):
         
         self.clsCommon.general.waitForLoaderToDisappear()
         writeToLog("INFO","Success, sort channels by '" + sortType + "' was set")
+        
+        sleep(2)
         return True    
     
     
@@ -2446,13 +2455,22 @@ class Channel(Base):
                 return False
                     
         elif location == enums.Location.CATEGORY_PAGE:
-                if self.clsCommon.category.navigateToCategory(channelName) == False:
-                    writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
-                    return False
-                    
-                if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on category's moderation tab")
-                    return False 
+            if self.clsCommon.category.navigateToCategory(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  category: " +  channelName)
+                return False
+                
+            if self.click(self.clsCommon.category.CATEGORY_PENDING_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on category's moderation tab")
+                return False 
+                
+        elif location == enums.Location.GALLERY_PAGE:
+            if self.clsCommon.kafGeneric.navigateToGallery(channelName) == False:
+                writeToLog("INFO","FAILED to navigate to  gallery: " +  channelName)
+                return False
+                
+            if self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on gallery's moderation tab")
+                return False 
                 
         self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
         return True
@@ -2517,7 +2535,14 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Verify filter in channel - media tab    
-    def verifyFiltersInAddToChannel(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+    def verifyFiltersInAddToChannel(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA, noEntriesExpected=False):
+        if noEntriesExpected == True:
+            if self.wait_element(self.CHANNEL_NO_RESULT_FILTER, 5, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+                
         if self.clsCommon.myMedia.showAllEntries(searchIn) == False:
             writeToLog("INFO","FAILED to show all entries in Add to channel")
             return False
@@ -2555,7 +2580,14 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Verify filter in channel - pending tab    
-    def verifyFiltersInPendingTab(self, entriesDict, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+    def verifyFiltersInPendingTab(self, entriesDict, noEntriesExpected=False, searchIn = enums.Location.ADD_TO_CHANNEL_MY_MEDIA):
+        if noEntriesExpected == True:
+            if self.wait_visible(self.CHANNEL_NO_RESULT_FILTER_MODERATION, 1, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+                
         if self.showAllEntriesPendingTab() == False:
             writeToLog("INFO","FAILED to show all entries in pending tab page")
             return False
@@ -2587,7 +2619,14 @@ class Channel(Base):
     
     # @Author: Oded.berihon
     # Verify filter in channel - channel page   
-    def verifyEntriesDisplay(self, entriesDict, verifyIn=enums.Location.CHANNEL_PAGE):
+    def verifyEntriesDisplay(self, entriesDict, verifyIn=enums.Location.CHANNEL_PAGE, noEntriesExpected=False):
+        if noEntriesExpected == True:
+            if self.wait_visible(self.CHANNEL_NO_RESULT_FILTER, 1, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+                
         if self.showAllEntriesInChannelCategoryPage() == False:
             writeToLog("INFO","FAILED to show all entries in pending tab page")
             return False
@@ -2623,9 +2662,9 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Navigate to add to category page
-    def navigateToAddToChannel(self, channelName):
+    def navigateToAddToChannel(self, channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE, forceNavigate=False):
         # Navigate to category
-        if self.navigateToChannel(channelName) == False:
+        if self.navigateToChannel(channelName, navigateFrom, forceNavigate) == False:
             writeToLog("INFO","FAILED  to navigate to: " + channelName)
             return False   
         

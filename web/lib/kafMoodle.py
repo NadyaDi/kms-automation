@@ -55,8 +55,8 @@ class Moodle(Base):
     MOODLE_EMBED_EDIT_DROPDOWN                             = ('xpath', '//a[@id="action-menu-toggle-ID" and @class="toggle-display textmenu"]')  
     MOODLE_CONFIRM_DELETE_EMBED                            = ('xpath', '//input[@value="Yes" and @type="button"]')
     MOODLE_SITE_BLOG_TITLE_IN_SITE_BLOGS_PAGE              = ('xpath', '//a[contains(@href, "/moodle/blog/") and text()="SITE_BLOG_TITLE")]')  
-    MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')  
-    MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', '//input[@id="sharedRepositories-Text0"]')    
+    MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON  = ('xpath', "//label[contains(@class,'inline sharedRepositoryMetadata')]")  
+    MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', "//input[contains(@id,'sharedRepositories-Text')]")    
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[@class="btn btn-large btn-primary btn-danger"]')
     MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")     
@@ -497,6 +497,8 @@ class Moodle(Base):
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
                 return False  
          
+        self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_DETAILS_TAB)
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
         if self.click(self.MOODLE_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BUTTON) == False:
             writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
             return False

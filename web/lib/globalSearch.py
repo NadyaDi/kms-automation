@@ -47,6 +47,7 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_NO_RESULTS_ALERT                      = ('xpath', '//div[@class="no-results alert alert-info" and text()="No more media found."]')
     GLOBAL_SEARCH_ENTRY_RESUTLT_NAME                    = ('xpath', '//span[@class="results-entry__name"]')
     GLOBAL_SEARCH_NO_RESULTS_ALERT_QUIZ                 = ('xpath', "//div[@id='quizMyMedia_scroller_alert']")
+    GLOBAL_SEARCH_NO_RESULTS_ALERT_FLTER                = ('xpath', "//div[@class='no-results_body']")
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -448,10 +449,17 @@ class  GlobalSearch(Base):
     
     # @Author: Inbar Willman
     # The function check the the entries in my media are filter correctly
-    def verifyFiltersInGlobalPage(self, entriesDict):
+    def verifyFiltersInGlobalPage(self, entriesDict, noEntriesExpected=False):
+        if noEntriesExpected == True:
+            if self.wait_element(self.GLOBAL_SEARCH_NO_RESULTS_ALERT_FLTER, 1, multipleElements=True) != False:
+                writeToLog("INFO", "PASSED, no entries are displayed")
+                return True
+            else:
+                writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
+        
         if self.showAllEntriesInGloablPage() == False:
-            writeToLog("INFO","FAILED to show all entries in global page")
-            return False
+                writeToLog("INFO","FAILED to show all entries in global page")
+                return False
              
         try:
             # Get list of all entries element in results

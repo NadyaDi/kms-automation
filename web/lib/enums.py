@@ -76,6 +76,7 @@ class Location(Enum):
     MEDIA_GALLARY               = 'channel page'
     SHARED_REPOSITORY           = 'Shared Repository'
     UPLOAD_PAGE_EMBED           = 'Upload page embed'
+    GALLERY_PAGE                = 'Gallery Page'
 
 
 class EditEntryPageTabName(Enum):
@@ -229,6 +230,7 @@ class SortAndFilter(Enum):
     SINGLE_LIST               = 'Single Text selected list' 
     SINGLE_DATE               = 'Single Date'
     FREE_TEXT                 = 'Free Text'
+    OWNERSHIP                 = 'Ownership'
     
 
 class KeaQuizButtons(Enum):
@@ -499,3 +501,14 @@ class MoodleActivities(Enum):
     
     KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
     SITE_BLOG                 = 'Site blog'
+    
+    
+class Ownership(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    ANY_OWNER          = "Any Owner"
+    MEDIA_OWN          = "Media I Own" 
+    MEDIA_EDIT         = "Media I Can Edit" 
+    MEDIA_PUBLISH      = "Media I Can Publish"     
+ 

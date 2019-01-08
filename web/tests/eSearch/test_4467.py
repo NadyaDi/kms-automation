@@ -153,21 +153,25 @@ class Test:
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 16: Failed to clear the search menu")
+                return
 
             writeToLog("INFO", "STEP 17: Going to filter Channel page - media tab entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.CUSTOM) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 17: FAILED to filter Channel page - media tab entries  by '" + enums.Duration.CUSTOM.value + "'")
+                return
 
             writeToLog("INFO", "STEP 18: Going to filter Channel page - media tab entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
             if self.common.myMedia.filterCustomDuration(55)== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 18: FAILED to filter Channel page - media tab entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+                return
 
             writeToLog("INFO", "STEP 19: Going to verify filter Channel page - media tab entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.channel.verifyEntriesDisplay(self.specialDuration) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 19: FAILED to verify filter Channel page - media tab entries  by '" + enums.Duration.CUSTOM.value + "'")
+                return
                 
             writeToLog("INFO", "STEP 20: Going to modify the custom duration limit to default")
             if self.common.myMedia.filterCustomDuration(-999, value="3600")== False:
@@ -178,26 +182,31 @@ class Test:
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 21: Failed to clear the search menu")
+                return
 
             writeToLog("INFO", "STEP 22: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.CUSTOM) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 22: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + "'")
+                return
 
             writeToLog("INFO", "STEP 23: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
             if self.common.myMedia.filterCustomDuration(35, value='0')== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 23: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+                return
 
             writeToLog("INFO", "STEP 24: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
             if self.common.myMedia.filterCustomDuration(-45, value='10800')== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 24: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
+                return
                 
             writeToLog("INFO", "STEP 25: Going to verify filter Global page entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.channel.verifyEntriesDisplay(self.betweenDuration) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 25: FAILED to verify filter Global page entries  by '" + enums.Duration.CUSTOM.value + "'")
+                return
             ##################################################################
             writeToLog("INFO","TEST PASSED: All the entries are properly displayed in Channel page - media tab while using filter by duration with no search term")
         # if an exception happened we need to handle it and fail the test

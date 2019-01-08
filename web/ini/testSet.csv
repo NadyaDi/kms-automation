@@ -162,7 +162,7 @@ test_2290,1,0,0,0,Canvas - My Media - Search by Name / Description / Tags
 test_2291,0,1,0,0,Canvas - My Media - Sort Media
 test_2292,1,0,0,0,Canvas - My Media - filter media view different statuses
 test_2293,1,0,0,0,Canvas - My Media - filter media view different media types
-test_2309,1,0,0,0,Canvas - Embed on BSE from my media 
+test_2309,1,0,0,0,Canvas - Embed on BSE from my media
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
@@ -182,6 +182,8 @@ test_2551,1,0,0,0,D2L - My Media - Filter Media View Different Statuses
 test_2552,1,0,0,0,D2L - My Media - Filter by media Type
 test_2556,1,0,0,0,D2L - Edit Media Gallery Metadata
 test_2557,1,0,0,0,D2L - Remove Media From Media Gallery
+test_2558,1,0,0,0,D2L - Upload Media From Media Gallery Page
+test_2559,1,0,0,0,D2L - Gallery Moderation
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history

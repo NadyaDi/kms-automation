@@ -50,7 +50,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("clip entry with slides", self.testNum)
+            self.entryName = clsTestService.addGuidToString("trim entry with slides", self.testNum)
 
             # The key is the qrcode result and the value is the time that the slide need to appear in
             # for example: {'2':'00:01'} - the key is 2 and the value is 00:01 mean that the qrcode of the slide in 00:01 second is 2
@@ -92,7 +92,7 @@ class Test:
             
             writeToLog("INFO","Step 5: Going to collect the new entry's QR codes")  
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.entryName)
-            if  self.QRlist == False:
+            if self.QRlist == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to collect the new entry's QR codes")
                 return
