@@ -31,6 +31,16 @@ class Autoit():
                     self.autoitDriver9 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST9 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'}) 
                 elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd10":
                     self.autoitDriver10 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST10 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})                                                                                                     
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd11":
+                    self.autoitDriver11 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST11 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})                
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd12":
+                    self.autoitDriver12 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST12 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd13":
+                    self.autoitDriver13 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST13 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd14":
+                    self.autoitDriver14 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST14 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd15":
+                    self.autoitDriver15 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST15 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})            
                 else:
                     writeToLog("INFO","FAIELD to connect to Autoit service on remote host: " + localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL)
         except Exception as exp:
