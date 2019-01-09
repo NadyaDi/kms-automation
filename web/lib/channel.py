@@ -2809,7 +2809,7 @@ class Channel(Base):
     # This function selects a specific entry or entryList and then approves or rejects them using bulk option
     def pendingBulkRejectAndApprove(self, entryList, moderateAction=''):
         if moderateAction == enums.PendingModerateAction.APPROVE:
-            tmpLocator = self.CHANNEL_BULK_POP_UP_APPROVE
+            tmpLocator = self.CHANNEL_APPROVE_BUTTON_BULK
         elif moderateAction == enums.PendingModerateAction.REJECT:
             tmpLocator = self.CHANNEL_REJECT_BUTTON_BULK
         
