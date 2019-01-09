@@ -19,11 +19,13 @@ class Jive(Base):
     #====================================================================================================================================
     LOGIN_USERNAME_FIELD                                = ('xpath', "//input[contains(@id,'username')]")
     LOGIN_PASSWORD_FIELD                                = ('xpath', "//input[contains(@id,'password')]")
-    LOGIN_SIGN_IN_BTN                                   = ('xpath', "//input[@id='login-submit')]")
+    LOGIN_SIGN_IN_BTN                                   = ('xpath', "//input[@id='login-submit']")
     USER_MENU_TOGGLE_BTN                                = ('xpath', "//span[@class='j-user-name j-navLabel']")
     USER_LOGOUT_BTN                                     = ('xpath', "//a[@id='jive-nav-link-logout' and contains(text(), 'Log out')]")
     JIVE_MEDIA_SPACE_IFRAME                             = ('xpath', "//iframe[contains(@src,'kaltura.com/hosted/index/')]")
-    
+    JIVE_MY_MEIDA_BUTTON_IN_MENU                        = ('xpath', "//a[@id='kaltura-nav-link-my-media' and contains(text(), 'My Media')]")
+    JIVE_PLACES_BUTTON_IN_NAVIGATION_BAR                = ('xpath', "//a[@href='/places' and contains(@class, 'j-globalNavLink')]")
+    JIVE_MEDIA_GALLEY_NEW1_IN_PLACES                    = ('xpath', "//span[@class='js-header-text' and contains(text(), 'New1')]")
     
     JIVE_USER_NAME                                       = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
     #====================================================================================================================================
@@ -108,7 +110,7 @@ class Jive(Base):
     def navigateToGalleryJive(self, galleryName, forceNavigate=False):
         if forceNavigate == False:
             if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
-                writeToLog("INFO","Success Already in Gallery page")
+                writeToLog("INFO","Success Already in gallery page")
                 return True
         
         if galleryName == "New1":
@@ -116,21 +118,19 @@ class Jive(Base):
                 writeToLog("INFO","FAILED navigate to courses 'New1'")
                 return False
         sleep(5)
-        
-        self.removeD2LPopupIngallery()
-        self.switchToD2LIframe()
+        self.switchToJiveIframe()
         if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False
         
         return True
         
-    
-    def getD2LLoginUserName(self):
-        try:
-            userName = self.get_element_text(self.D2L_USER_NAME)
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to get user name element")
-            return False
-        return userName.lower() 
-        
+           
+#     def getJiveLoginUserName(self):
+#         try:
+#             userName = self.get_element_text(self.D2L_USER_NAME)
+#         except NoSuchElementException:
+#             writeToLog("INFO","FAILED to get user name element")
+#             return False
+#         return userName.lower() 
+#         

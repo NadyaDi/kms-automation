@@ -90,7 +90,6 @@ class Canvas(Base):
             if self.wait_element(self.USER_NAVIGATION_MENU_BAR, timeout=20) == False:
                 writeToLog("INFO","FAILED to login as '" + username + "@" + password + "' after 30 seconds.")
                 return False
-
             else:
                 writeToLog("INFO","Logged in as '" + username + "@" + password + "'")
                 return True

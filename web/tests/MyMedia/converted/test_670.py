@@ -86,7 +86,7 @@ class Test:
                
             sleep(2)       
             writeToLog("INFO","Step 5: Going to publish entry to channel")  
-            if self.common.channel.addContentToChannel(self.channelName, self.entryName, isChannelModerate=False, publishFrom = enums.Location.MY_CHANNELS_PAGE) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName, self.entryName, isChannelModerate=False, publishFrom = enums.Location.MY_CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "' to: " + self.channelName)
                 return 

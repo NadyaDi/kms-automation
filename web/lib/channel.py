@@ -1205,8 +1205,9 @@ class Channel(Base):
         return parent_entry      
     
 
-    # @Author: Tzachi Guetta    
-    def addContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):
+    # @Author: Tzachi Guetta  
+    # Ths function adding an existing content to channel   
+    def addExistingContentToChannel(self, channelName, entriesNames, isChannelModerate, publishFrom=enums.Location.MY_CHANNELS_PAGE, channelType="", sharedReposiytyChannel=""):
         try:                
             if self.navigateToChannel(channelName, publishFrom) == False:
                 writeToLog("INFO","FAILED to navigate to  channel: " +  channelName)

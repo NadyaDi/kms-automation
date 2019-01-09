@@ -187,6 +187,7 @@ test_2559,1,0,0,0,D2L - Gallery Moderation
 test_2903,1,0,0,0,D2L - Publish after upload
 test_2904,1,0,0,0,D2L - Publish from my media (single and multiple)
 test_2905,1,0,0,0,D2L - Publish From Entry Page
+test_2498,1,0,0,0,Jive - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history

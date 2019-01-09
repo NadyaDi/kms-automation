@@ -157,7 +157,7 @@ class Test:
                 return
                
             writeToLog("INFO","Step 15: Going to publish entries to moderated channel")  
-            if self.common.channel.addContentToChannel(self.channelName, [self.entryName4, self.entryName5], isChannelModerate=True, publishFrom = enums.Location.CHANNELS_PAGE) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName, [self.entryName4, self.entryName5], isChannelModerate=True, publishFrom = enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to publish entries to moderated channel")
                 return 

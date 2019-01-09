@@ -17,7 +17,9 @@ class Test:
     # @Author: Tzachi Guetta
     #  Test Name: Categories - Add New Media to category
     # Test description:
-    # 
+    # Create new category
+    # Enter category and click add new -> upload new media entries (image / audio / video)
+    # verify that entries were published to category
     #================================================================================================================================
     testNum     = "706"
     supported_platforms = clsTestService.updatePlatforms(testNum)
