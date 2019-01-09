@@ -164,6 +164,13 @@ class Channel(Base):
     CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem visible-v2ui hidden-phone")]')
     CHANNEL_NO_RESULT_FILTER                            = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No Media Found' or text()='No media found']")
     CHANNEL_NO_RESULT_FILTER_MODERATION                 = ('xpath', "//div[@id='js-categoryModerationTable-container']//div[contains(@class,'alert alert-info')]")
+    CHANNEL_ENTRY_ID_CHECKBOX                           = ('xpath', "//input[@id='ENTRY_ID']")
+    CHANNEL_APPROVE_BUTTON_BULK                         = ('xpath', "//button[@id='bulk_accept']")
+    CHANNEL_REJECT_BUTTON_BULK                          = ('xpath', "//button[@id='bulk_reject']")
+    CHANNEL_BULK_POP_UP                                 = ('xpath', "//div[@class='modal-body']")
+    CHANNEL_BULK_POP_UP_APPROVE                         = ('xpath', "//a[contains(@class,'btn btn-primary')][contains(text(),'Approve')]")
+    CHANNEL_MEDIA_TAB_ACTIVE                            = ('xpath', "//a[@id='media-tab' and @aria-selected='true']")
+    CHANNEL_ENTRY_PARENT_CHECKBOX                       = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']") 
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -1324,17 +1331,17 @@ class Channel(Base):
     
     
     # Author: Tzachi Guetta 
-    def approveEntriesInPandingTab(self, toApproveEntriesNames):
+    def approveEntriesInPandingTab(self, toApproveEntriesNames, location=''):
         if type(toApproveEntriesNames) is list:
             for approveEntry in toApproveEntriesNames:
-                if self.method_helper_approveEntry(approveEntry) == False:
+                if self.method_helper_approveEntry(approveEntry, location) == False:
                     writeToLog("INFO","FAILED to approve entry: " + approveEntry)
                     return False 
                 sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
         else:
             if toApproveEntriesNames != '':
-                if self.method_helper_approveEntry(toApproveEntriesNames) == False:
+                if self.method_helper_approveEntry(toApproveEntriesNames, location) == False:
                     writeToLog("INFO","FAILED to approve entry: " + toApproveEntriesNames)
                     return False
                 sleep(3) 
@@ -1344,10 +1351,10 @@ class Channel(Base):
     
     
         # Author: Tzachi Guetta 
-    def rejectEntriesInPandingTab(self, toRejectEntriesNames):
+    def rejectEntriesInPandingTab(self, toRejectEntriesNames, location=''):
         if type(toRejectEntriesNames) is list:
             for rejectEntry in toRejectEntriesNames:
-                if self.method_helper_rejectEntry(rejectEntry) == False:
+                if self.method_helper_rejectEntry(rejectEntry, location) == False:
                     writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
                     return False 
                 sleep(3)
@@ -1355,7 +1362,7 @@ class Channel(Base):
             
         else:
             if toRejectEntriesNames != '':
-                if self.method_helper_rejectEntry(toRejectEntriesNames) == False:
+                if self.method_helper_rejectEntry(toRejectEntriesNames, location) == False:
                     writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
                     return False 
                 sleep(3)
@@ -1410,10 +1417,18 @@ class Channel(Base):
                 
     
     # Author: Tzachi Guetta     
-    def method_helper_rejectEntry(self, rejectEntry):
-        tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
-        entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
-        tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+    def method_helper_rejectEntry(self, rejectEntry, location=''):
+        if location == enums.Location.PENDING_TAB:
+            tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', rejectEntry))
+            entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
+            if entryId == False:
+                return False 
+            tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+            
+        else:
+            tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
+            entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+            tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
         
         if self.click(tmpRejectBtn) == False:
             writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
@@ -1424,12 +1439,20 @@ class Channel(Base):
         
         
     # Author: Tzachi Guetta     
-    def method_helper_approveEntry(self, approveEntry):
-        tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
-        entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
-        if entryId == False:
-            return False 
-        tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
+    def method_helper_approveEntry(self, approveEntry, location=''):
+        if location == enums.Location.PENDING_TAB:
+            tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', approveEntry))
+            entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
+            if entryId == False:
+                return False 
+            tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId)) 
+                       
+        else:    
+            tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
+            entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+            if entryId == False:
+                return False 
+            tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
         
         if self.click(tmpApproveBtn) == False:
             writeToLog("INFO","FAILED to approve entry: " + approveEntry)
@@ -2496,7 +2519,7 @@ class Channel(Base):
     
     # @Author: Inbar Willman
     # Show all entries in pending tab
-    def showAllEntriesPendingTab(self, timeOut=30):
+    def showAllEntriesPendingTab(self, timeOut=240):
         tmp_table_size = self.CHANNEL_PENDING_TAB_TABLE_SIZE
         loading_message = self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG
         no_entries_page_msg = self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG                       
@@ -2507,7 +2530,7 @@ class Channel(Base):
               
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
-        while wait_until > datetime.datetime.now():                       
+        while wait_until > datetime.datetime.now() and self.wait_while_not_visible(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1) == True:                       
             if self.wait_while_not_visible(loading_message, 7) == True:
                     self.clsCommon.sendKeysToBodyElement(Keys.END)
             
@@ -2731,4 +2754,96 @@ class Channel(Base):
             return False
         
         writeToLog("INFO","Success, channel metadata was verified successfully")
+        return True
+    
+    
+    # Author: Horia Cus
+    # This function switches between the media and pending tab and then refreshes the page
+    def switchBetweenMediaAndPendingWithRefresh(self, switchToPending=False, switchToMedia=False, location=enums.Location.CHANNEL_PAGE):
+        if location == enums.Location.CHANNEL_PAGE:  
+            tmpLocator = self.CHANNEL_MODERATION_TAB
+            
+        elif location == enums.Location.CATEGORY_PAGE:
+            tmpLocator = self.clsCommon.category.CATEGORY_MODERATION_TAB
+            
+        else:
+            writeToLog("INFO", "Please specify a location")
+            return False    
+               
+        if switchToPending == True:
+            self.driver.refresh() 
+            
+            if self.wait_element(tmpLocator, 15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to load the page after refresh")
+                return False     
+                        
+            if self.click(tmpLocator, 3, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to switch from media tab to pending tab")
+                return False
+                
+            if self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30) == False:
+                writeToLog("INFO","FAILED to load the pending tab entries")
+                return False                        
+            
+        elif switchToMedia == True:                     
+            self.driver.refresh() 
+            
+            if self.wait_visible(self.CHANNEL_MEDIA_TAB_ACTIVE, 15, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to load the page after refresh")
+                return False
+            
+        return True
+                    
+    
+    # Author: Horia Cus
+    # This function selects a specific entry or entryList and then approves or rejects them using bulk option
+    def pendingBulkRejectAndApprove(self, entryList, moderateAction=''):
+        if moderateAction == enums.PendingModerateAction.APPROVE:
+            tmpLocator = self.CHANNEL_BULK_POP_UP_APPROVE
+        elif moderateAction == enums.PendingModerateAction.REJECT:
+            tmpLocator = self.CHANNEL_REJECT_BUTTON_BULK
+        
+        else:
+            writeToLog("INFO", "Please specify a moderate action for the pending tab")
+            return False
+            
+        if type(entryList) is list:
+            for entry in entryList:
+                tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', entry))
+                entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
+                if entryId == False:
+                    return False 
+                
+                tmpEntryCheckBox = (self.CHANNEL_ENTRY_ID_CHECKBOX[0], self.CHANNEL_ENTRY_ID_CHECKBOX[1].replace('ENTRY_ID', entryId))
+                if self.click(tmpEntryCheckBox) == False:
+                    writeToLog("INFO","FAILED to select the checkbox entry for: " + entry)
+                    return False
+        else:
+            if entryList != '':
+                tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', entryList))
+                entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
+                if entryId == False:
+                    return False 
+                
+                tmpEntryCheckBox = (self.CHANNEL_ENTRY_ID_CHECKBOX[0], self.CHANNEL_ENTRY_ID_CHECKBOX[1].replace('ENTRY_ID', entryId))
+                if self.click(tmpEntryCheckBox) == False:
+                    writeToLog("INFO","FAILED to select the checkbox entry for: " + entryList)
+                    return False
+        
+        if self.click(tmpLocator, timeout=5, multipleElements=True) == False:
+            writeToLog("INFO", "Failed to click on the approve/reject bulk button")
+            return False
+        
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "Failed to save the changes")
+            return False
+        
+        if self.wait_element(self.CHANNEL_BULK_POP_UP, timeout=4, multipleElements=True) != False:
+            if self.click(self.CHANNEL_BULK_POP_UP_APPROVE, timeout=3, multipleElements=True) == False:
+                writeToLog("INFO", "Failed to moderate the bulk entries")
+            
+            if self.clsCommon.general.waitForLoaderToDisappear() == False:
+                writeToLog("INFO", "Failed to save the changes")
+                return False    
+        
         return True
