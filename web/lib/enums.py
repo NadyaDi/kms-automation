@@ -110,6 +110,7 @@ class IframeName(Enum):
     KAF_MOODLE                              = 'KAF_MOODLE'
     KAF_CANVAS                              = 'KAF_CANVAS'
     KAF_D2L                                 = 'KAF_D2L'
+    KAF_JIVE                                = 'KAF_JIVE'
 
     
     

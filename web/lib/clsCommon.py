@@ -31,6 +31,7 @@ from kafGeneric import KafGeneric
 from kafMoodle import Moodle
 from kafCanvas import Canvas
 from kafD2L import D2L
+from kafJive import Jive
 
 
     #============================================================================================================
@@ -69,6 +70,7 @@ class Common():
         self.moodle             = Moodle(self, driver)
         self.canvas             = Canvas(self, driver)
         self.d2l                = D2L(self, driver)
+        self.jive               = Jive(self, driver)
         
     #=============================================================================================================
     # Locators:
@@ -135,6 +137,8 @@ class Common():
             return self.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
         elif self.base.getAppUnderTest() == enums.Application.D2L:
             return self.d2l.loginToD2L(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
+        elif self.base.getAppUnderTest() == enums.Application.JIVE:
+            return self.jive.loginToJive(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
     
     
     # Author: Tzachi Guetta     
@@ -267,6 +271,8 @@ class Common():
             return self.canvas.switchToCanvasIframe()
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
             return self.d2l.switchToD2LIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+            return self.jive.switchToJiveIframe()
         else:
             self.base.switch_to_default_content()
             
