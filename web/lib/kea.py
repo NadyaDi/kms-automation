@@ -364,13 +364,15 @@ class Kea(Base):
         self.refresh()
         sleep(3)
         self.switchToKeaIframe()
+        sleep(3)
         
         if openEditorTab == True:
             if self.click(self.KEA_EDITOR_TAB) == False:
-                    writeToLog("INFO","FAILED to click on Editor Tab")
-                    return False
-                   
-        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, splitStartTime + Keys.ENTER) == False:
+                writeToLog("INFO","FAILED to click on Editor Tab")
+                return False
+            
+        self.click(self.EDITOR_TIME_PICKER)           
+        if self.send_keys(self.EDITOR_TIME_PICKER, splitStartTime + Keys.ENTER) == False:
             writeToLog("INFO","FAILED to insert start time into editor input field")
             return False
         
@@ -379,7 +381,9 @@ class Kea(Base):
                 writeToLog("INFO","FAILED to click Split icon (time-line)")
                 return False
         sleep(1)
-        if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, splitEndTime + Keys.ENTER) == False:
+        
+        self.click(self.EDITOR_TIME_PICKER) 
+        if self.send_keys(self.EDITOR_TIME_PICKER, splitEndTime + Keys.ENTER) == False:
             writeToLog("INFO","FAILED to insert start time into editor input field")
             return False
         
@@ -400,11 +404,6 @@ class Kea(Base):
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
     def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
-        splitStartTimeArr = splitStartTime.split(':')
-        splitStartTime = splitStartTimeArr[1] + ":" + splitStartTimeArr[0] 
-        
-        splitEndTimeArr = splitEndTime.split(':')
-        splitEndTime = splitEndTimeArr[1] + ":" + splitEndTimeArr[0] 
         self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
         
         sleep(1)

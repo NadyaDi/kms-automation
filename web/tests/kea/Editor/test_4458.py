@@ -71,21 +71,21 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
-                        
+                         
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 self.status = "Fail"
                 return
-               
+                
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 self.status = "Fail"
                 return
-                        
+            
             writeToLog("INFO","Step 4: Going to trim the entry from 30sec to 20sec")  
-            if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
+            if self.common.kea.trimEntry(self.entryName, "0010", "0020", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to trim the entry from 30sec to 20sec")
                 return

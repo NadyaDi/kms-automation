@@ -718,6 +718,7 @@ class Player(Base):
         self.switchToPlayerIframe()
         #self.hover_on_element(self.PLAYER_LAYOUT)
         ActionChains(self.driver).move_to_element(self.get_element(self.PLAYER_LAYOUT)).perform()
+        sleep(0.5)
         if playerView == enums.PlayerView.PIP:
             if self.click(self.PLAYER_VIEW_PIP, 30) == False:
                 writeToLog("INFO","FAILED to click on pip view on the player")
@@ -757,7 +758,8 @@ class Player(Base):
                     return False
                 
             # The QR codes of the slides needs to be presented on the bottom right of the player  - in order to capture them. then the following function will switch the player view to that position
-            self.changePlayerView(enums.PlayerView.SWITCHVIEW)
+            if self.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
+                return False
             
             if self.clickPlay(embed, fromActionBar) == False:
                 return False       
