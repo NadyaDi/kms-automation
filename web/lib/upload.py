@@ -450,6 +450,8 @@ class Upload(Base):
                 self.clsCommon.canvas.switchToCanvasIframe()
             elif self.getAppUnderTest() == enums.Application.D2L:
                 self.clsCommon.d2l.switchToD2LIframe()
+            elif self.getAppUnderTest() == enums.Application.JIVE:
+                self.clsCommon.jive.switchToJiveIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
