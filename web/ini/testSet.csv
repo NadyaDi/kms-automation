@@ -433,3 +433,74 @@ test_4529,1,0,0,0,Filter by custom-data - with search - Add to channel - SR tab 
 test_4530,1,0,0,0,Filter by custom-data - no search - Add to channel - SR tab - negative and positive
 test_4531,1,0,0,0,Filter by custom-data - with search - Add to Gallery - SR tab - negative and positive
 test_4532,1,0,0,0,Filter by custom-data - no search - Add to Gallery - SR tab - negative and positive
+test_4545,1,0,0,0,Filter by Ownership - with search - media owner - Global Page
+test_4553,1,0,0,0,Filter by Ownership - with search - co editor - Global Page
+test_4554,1,0,0,0,Filter by Ownership - with search - co publisher - Global Page
+test_4555,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Global Page
+test_4563,1,0,0,0,Filter by Ownership - Dependency with other filters - My Media
+test_4565,1,0,0,0,Filter by Ownership - with search - media owner - My Media
+test_4566,1,0,0,0,Filter by Ownership - with search - co editor - My Media
+test_4567,1,0,0,0,Filter by Ownership - with search - co publisher - My Media
+test_4568,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - My Media
+test_4569,1,0,0,0,Filter by Ownership - no search - media owner - My Media
+test_4570,1,0,0,0,Filter by Ownership - no search - co editor - My Media
+test_4571,1,0,0,0,Filter by Ownership - no search - co publisher - My Media
+test_4572,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - My Media
+test_4573,1,0,0,0,Filter by Ownership - with search - media owner - Channel Page
+test_4574,1,0,0,0,Filter by Ownership - with search - co editor - Channel Page
+test_4575,1,0,0,0,Filter by Ownership - with search - co publisher - Channel Page
+test_4576,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Channel Page
+test_4577,1,0,0,0,Filter by Ownership - no search - media owner - Channel Page
+test_4578,1,0,0,0,Filter by Ownership - no search - co editor - Channel Page
+test_4579,1,0,0,0,Filter by Ownership - no search - co publisher - Channel Page
+test_4580,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - Channel Page
+test_4581,1,0,0,0,Filter by Ownership - with search - media owner - Category Page - media tab
+test_4582,1,0,0,0,Filter by Ownership - with search - co editor - Category Page - media tab
+test_4583,1,0,0,0,Filter by Ownership - with search - co publisher - Category Page - media tab
+test_4584,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Category Page - media tab
+test_4585,1,0,0,0,Filter by Ownership - no search - media owner - Category Page - media tab
+test_4586,1,0,0,0,Filter by Ownership - no search - co editor - Category Page - media tab
+test_4587,1,0,0,0,Filter by Ownership - no search - co publisher - Category Page - media tab
+test_4588,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - Category Page - media tab
+test_4589,1,0,0,0,Filter by Ownership - with search - media owner - Category Page - pending tab
+test_4590,1,0,0,0,Filter by Ownership - with search - co editor - Category Page - pending tab
+test_4591,1,0,0,0,Filter by Ownership - with search - co publisher - Category Page - pending tab
+test_4592,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Category Page - pending tab
+test_4593,1,0,0,0,Filter by Ownership - no search - media owner - Category Page - pending tab
+test_4594,1,0,0,0,Filter by Ownership - no search - co editor - Category Page - pending tab
+test_4595,1,0,0,0,Filter by Ownership - no search - co publisher - Category Page - pending tab
+test_4596,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - Category Page - pending tab
+test_4597,1,0,0,0,Filter by Ownership - with search - media owner - Add new quiz
+test_4598,1,0,0,0,Filter by Ownership - with search - co editor - Add new quiz page
+test_4599,1,0,0,0,Filter by Ownership - with search - co publisher - Add new quiz
+test_4600,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Add new quiz
+test_4601,1,0,0,0,Filter by Ownership - no search - media owner - Add new quiz
+test_4602,1,0,0,0,Filter by Ownership - no search - co editor - Add new quiz
+test_4603,1,0,0,0,Filter by Ownership - no search - co publisher - Add new quiz
+test_4604,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - Add new quiz
+test_4605,1,0,0,0,Filter by Ownership - with search - media owner - Add to channel - My Media tab
+test_4606,1,0,0,0,Filter by Ownership - with search - co editor - Add to channel - My Media tab
+test_4607,1,0,0,0,Filter by Ownership - with search - co publisher - Add to channel - My Media tab
+test_4608,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Add to channel - My Media tab
+test_4609,1,0,0,0,Filter by Ownership - no search - media owner - Add to channel - My Media tab
+test_4610,1,0,0,0,Filter by Ownership - no search - co editor - Add to channel - My Media tab
+test_4611,1,0,0,0,Filter by Ownership - no search - co publisher - Add to channel - My Media tab
+test_4612,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - Add to channel - My Media tab
+test_4613,1,0,0,0,Filter by Ownership - with search - media owner - Add to Gallery - My media tab
+test_4614,1,0,0,0,Filter by Ownership - with search - co editor - Add to Gallery - My media tab
+test_4615,1,0,0,0,Filter by Ownership - with search - co publisher - Add to Gallery - My media tab
+test_4616,1,0,0,0,Filter by Ownership - with search - co publisher and co editor - Add to Gallery - My media tab
+test_4617,1,0,0,0,Filter by Ownership - no search - media owner - Add to Gallery - My media tab
+test_4618,1,0,0,0,Filter by Ownership - no search - co editor - Add to Gallery - My media tab
+test_4619,1,0,0,0,Filter by Ownership - no search - co publisher - Add to Gallery - My media tab
+test_4620,1,0,0,0,Filter by Ownership - no search - co publisher and co editor - Add to Gallery - My media tab
+test_4682,1,0,0,0,Approve/Reject - with search - Channel Page - Pending tab
+test_4683,1,0,0,0,Filter by Duration - with search - Channel page - pending tab
+test_4684,1,0,0,0,Filter by Duration - no search - Channel page - pending tab
+test_4685,1,0,0,0,Filter by Scheduling - with search - Channel page - pending tab
+test_4686,1,0,0,0,Filter by Scheduling - no search - Channel page - pending tab
+test_4687,1,0,0,0,Filter by custom-data - with search - Channel page - pending tab - negative and positive
+test_4688,1,0,0,0,Filter by custom-data - no search - Channel page - pending tab - negative and positive
+test_4695,1,0,0,0,Approve/Reject - no search - Channel Page - Pending tab
+test_4696,1,0,0,0,Approve/Reject - with search - Category Page - Pending tab
+test_4697,1,0,0,0,Approve/Reject - no search - Category Page - Pending tab
