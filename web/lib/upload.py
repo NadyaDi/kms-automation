@@ -128,11 +128,11 @@ class Upload(Base):
             div = self.get_element(locator)
             href = div.get_attribute('href')
             entryID = href.split("/")[len(href.split("/"))-1]
-            
+             
         except NoSuchElementException:
             writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator + "'")
             return False
-        
+         
         return entryID
     
                 
@@ -696,3 +696,18 @@ class Upload(Base):
             return False                
             
         return True
+    
+
+    #  @Author: Horia Cus
+    # Extracts the entry id from the entry checkbox while being used in Pending tab   
+    def extractEntryIDFromCheckBox (self, locator):
+        try:
+            div = self.get_element(locator)
+            id = div.get_attribute('id')
+            entryID = id.split("/")[len(id.split("/"))-1]
+             
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator + "'")
+            return False
+         
+        return entryID

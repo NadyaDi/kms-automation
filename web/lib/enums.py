@@ -511,4 +511,11 @@ class Ownership(Enum):
     MEDIA_OWN          = "Media I Own" 
     MEDIA_EDIT         = "Media I Can Edit" 
     MEDIA_PUBLISH      = "Media I Can Publish"     
- 
+    
+
+class PendingModerateAction(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    REJECT           = "Reject"
+    APPROVE          = "Approve" 

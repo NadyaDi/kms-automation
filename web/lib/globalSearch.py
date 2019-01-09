@@ -417,7 +417,7 @@ class  GlobalSearch(Base):
         
     # @Author: Inbar Willman
     # Show all entries in global page    
-    def showAllEntriesInGloablPage(self, timeOut=60):
+    def showAllEntriesInGloablPage(self, timeOut=75):
         # Get all entries in results
         try:
             tmpResultsList = self.get_elements(self.GLOBAL_SEARCH_ENTRY_RESUTLT_ROW)
