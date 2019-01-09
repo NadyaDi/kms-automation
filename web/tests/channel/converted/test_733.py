@@ -13,11 +13,12 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded.berihon @Test name : Publish single entry to channel via add to button
-
+    # @Author: Oded.berihon @Test name : Add Existing Media to channel
     # Test description:
-    # Upload entry and create channel enter the channel click on the "add media" button check the entry in the list and click publish 
-    # 
+    # Upload entry and 
+    # create channel 
+    # enter the channel click on the "add media" button > check the entry in the list and click publish 
+    # verify that the entry was publish to the channel
     #================================================================================================================================
     testNum     = "733"
     
@@ -78,6 +79,18 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add content to channel: '" + self.entryName1 + "'")
                 return     
+            
+            writeToLog("INFO","Step 5: Going navigate to channel page")   
+            if self.common.channel.self.navigateToChannel(self.channelName, forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED navigate to channel page")
+                return  
+             
+            writeToLog("INFO","Step 6: Going to verify that entry was publish to channel")            
+            if self.common.channel.searchEntryInChannel(self.entryName1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to verify that entry was publish to channel: '" + self.entryName1 + "'")
+                return  
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

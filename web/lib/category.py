@@ -353,9 +353,9 @@ class Category(Base):
     
     # @Author: Inbar Willman
     # Search entries in category
-    def searchEntriesInCategory(self, entriesList, categoryName):
+    def searchEntriesInCategory(self, entriesList, categoryName, forceNavigate=False):
         # Navigate to category
-        if self.navigateToCategory(categoryName) == False:
+        if self.navigateToCategory(categoryName, forceNavigate) == False:
             writeToLog("INFO","FAILED to navigate to category")
             return False 
         
@@ -1124,5 +1124,53 @@ class Category(Base):
                 if self.clsCommon.myMedia.clearSearch() == False:
                     writeToLog("INFO","FAILED to clear search")
                     return False 
+        
+        return True
+    
+    
+    # @Author: Michal zomper
+    # The function adding an existing content to category   
+    def addExistingContentToCategory(self, categoryName, entriesNames, isCategoryModerate, forceNavigate=False):
+        try:                
+            if self.navigateToCategory(categoryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED to navigate to category: " +  categoryName)
+                return False
+            
+            if self.click(self.CATEGORY_ADD_TO_CATEGORY_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on add to category button")
+                return False           
+            
+            sleep(1)
+            self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
+                
+            if self.clsCommon.channel.addContentFromMyMedia(entriesNames) == False:
+                writeToLog("INFO","FAILED to publish entries to category: " + categoryName)
+                return False
+                
+            published = False
+            
+            if isCategoryModerate == True:
+                if self.wait_visible(self.clsCommon.channel.CHANNEL_MODARATE_PUBLISH_MSG, 30) != False:
+                    published = True
+            else:
+                if self.wait_visible(self.clsCommon.channel.CHANNEL_PUBLISH_MSG, 30) != False:
+                    published = True
+            
+            if published == True:
+                if type(entriesNames) is list: 
+                    entries = ", ".join(entriesNames)
+                    writeToLog("INFO","The following entries were published: " + entries + "")
+                else:
+                    writeToLog("INFO","The following entry was published: " + entriesNames + "")
+            else:
+                if isCategoryModerate == True:
+                    writeToLog("INFO","Publish to channel: confirmation massage was not presented")
+                    return False
+                else:
+                    writeToLog("INFO","Publish to moderate channel: confirmation massage was not presented")
+                    return False
+            
+        except NoSuchElementException:
+            return False
         
         return True

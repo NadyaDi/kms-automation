@@ -91,6 +91,11 @@ class KafGeneric(Base):
             if self.clsCommon.d2l.switchToD2LIframe() == False:
                 writeToLog("INFO","FAILED to switch to canvas iframe")
                 return False
+            
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+            if self.clsCommon.jive.switchToJiveIframe()== False:
+                writeToLog("INFO","FAILED to switch to canvas iframe")
+                return False
         
         return True
     
@@ -128,6 +133,11 @@ class KafGeneric(Base):
             if self.clsCommon.d2l.navigateToGalleryD2L(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to media gallery")
                 return False   
+            
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+            if self.clsCommon.jive.navigateToGalleryJive(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
         
         return True
         
@@ -163,8 +173,9 @@ class KafGeneric(Base):
     
     
     # Author: Michal Zomper  
+    # This function add media to gallery from the gallery page, clicking on add new and them choosing from my media entries
     # isGalleryModerate - if the user is the admin of the gallery this parameter need to be NO, if not admin need to be YES 
-    def addMediaToGallery(self, galleryName, entriesNames, isGalleryModerate,  channelType=""):
+    def addMediaToGallery(self, galleryName, entriesNames, isGalleryModerate):
         if self.navigateToGallery(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to  gallery: " +  galleryName)
             return False
@@ -175,19 +186,6 @@ class KafGeneric(Base):
         
         sleep(1)
         self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_LOADING_MSG, 30)
-        
-#         if channelType == enums.ChannelPrivacyType.SHAREDREPOSITORY:
-#             # open shared repository list
-#             if self.click(self.CHANNEL_ADD_CONTENT_FOR_SHAREDREPOSITORY) == False:
-#                 writeToLog("INFO","FAILED to open shared repository channels list")
-#                 return False
-#             
-#             #chose shared repository channel 
-#             tmpSharedRepositoryChannel = (self.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[0], self.CHANNEL_CHOOSE_SHAREDREPOSITORY_CHANNEL[1].replace('CHANNEL_NAME', sharedReposiytyChannel))
-#             if self.click(tmpSharedRepositoryChannel) == False:
-#                 writeToLog("INFO","FAILED to select channel '" + sharedReposiytyChannel + "' as the shared repository channel to add content from")
-#                 return False
-#             self.wait_while_not_visible(self.CHANNEL_LOADING_MSG, 30)
             
         if self.clsCommon.channel.addContentFromMyMedia(entriesNames) == False:
             writeToLog("INFO","FAILED to publish entries to gallery: " + galleryName)

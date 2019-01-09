@@ -92,7 +92,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 4: Going to publish single entry")
-            if self.common.channel.addContentToChannel(self.channelName1, self.entriesList, False) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName1, self.entriesList, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry to Channel#1")
                 return

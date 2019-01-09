@@ -58,6 +58,7 @@ test_2559,D2L - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,
 test_2903,D2L - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2904,D2L - Publish from my media (single and multiple),,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2905,D2L - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
@@ -504,4 +505,3 @@ test_4688,Filter by custom-data - no search - Channel page - pending tab - negat
 test_4695,Approve/Reject - no search - Channel Page - Pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4696,Approve/Reject - with search - Category Page - Pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4697,Approve/Reject - no search - Category Page - Pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-

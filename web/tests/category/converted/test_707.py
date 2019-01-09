@@ -13,10 +13,12 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Categories - Add new media from my media to category
+    # Test Name : Categories - Add existing media to category
     # Test description:
-    # Create new category -> Upload 3 entries -> publishe entries to category from my media 0-> check that entries are displayed in category
-    # test cleanup: deleting the uploaded files
+    # Create new category 
+    # From my media upload 3 entries -
+    # Enter the category > click on the "add media" button > check the entries in the list and click publish
+    # verify that entries were published to categpry
     #================================================================================================================================
     testNum = "707"
     
@@ -30,7 +32,7 @@ class Test:
     entryName1 =None
     entryName2 =None
     entryName3 = None
-    categoryName = 'Apps Automation Category'
+    categoryName = None
     description = "Description" 
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR30SecMidRight.mp4'
@@ -52,6 +54,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
+            self.categoryName = clsTestService.addGuidToString('Add existing media to category', self.testNum)
             self.entryName1 = clsTestService.addGuidToString('publishVideoToCategory', self.testNum)
             self.entryName2 = clsTestService.addGuidToString('publishImageToCategory', self.testNum)
             self.entryName3 = clsTestService.addGuidToString('publishAUdioToCategory', self.testNum)
@@ -61,22 +64,42 @@ class Test:
                 self.entryName2: self.filePathImage,
                 self.entryName3: self.filePathAudio}
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to upload 3 entries")            
+            writeToLog("INFO","Step 1: Going to create category") 
+            self.common.apiClientSession.startCurrentApiClientSession()
+            parentId = self.common.apiClientSession.getParentId('galleries') 
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.description, None) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to create category")
+                return
+            
+            writeToLog("INFO","Step 2: Going to clear cache")            
+            if self.common.admin.clearCache() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to clear cache")
+                return
+            
+            writeToLog("INFO","Step 3: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED navigate to home page")
+                return  
+            
+            writeToLog("INFO","Step 4: Going to upload 3 entries")            
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
+                writeToLog("INFO","Step 4: FAILED to upload entry")
                 return
 
-            writeToLog("INFO","Step 2: Going to publish entries to category from my media")
-            if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.categoryName], "") == False:
+            writeToLog("INFO","Step 5: Going to add existing media to category from category page")
+            if self.common.category.addExistingContentToCategory(self.categoryName, self.entriesList, isCategoryModerate=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to publish entries to category from my media")
+                writeToLog("INFO","Step 5: FAILED to add existing media to category from category page")
                 return 
             
-            writeToLog("INFO","Step 3: Going to search entries in category")
-            if self.common.category.searchEntriesInCategory(self.entriesList, self.categoryName) == False:
+            writeToLog("INFO","Step 6: Going to search entries in category")
+            if self.common.category.searchEntriesInCategory(self.entriesList, self.categoryName, forceNavigate=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to find entries in category")
+                writeToLog("INFO","Step 6: FAILED to find entries in category")
                 return  
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Add new media from my media to category' was done successfully")
@@ -90,6 +113,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")     
             self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
+            self.common.apiClientSession.deleteCategory(self.categoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
