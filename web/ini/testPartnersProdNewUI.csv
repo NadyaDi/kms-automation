@@ -378,6 +378,77 @@ test_4529,Filter by custom-data - with search - Add to channel - SR tab - negati
 test_4530,Filter by custom-data - no search - Add to channel - SR tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4531,Filter by custom-data - with search - Add to Gallery - SR tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4532,Filter by custom-data - no search - Add to Gallery - SR tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4545,Filter by Ownership - with search - media owner - Global Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4553,Filter by Ownership - with search - co editor - Global Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4554,Filter by Ownership - with search - co publisher - Global Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4555,Filter by Ownership - with search - co publisher and co editor - Global Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4563,Filter by Ownership - Dependency with other filters - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4565,Filter by Ownership - with search - media owner - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4566,Filter by Ownership - with search - co editor - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4567,Filter by Ownership - with search - co publisher - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4568,Filter by Ownership - with search - co publisher and co editor - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4569,Filter by Ownership - no search - media owner - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4570,Filter by Ownership - no search - co editor - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4571,Filter by Ownership - no search - co publisher - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4572,Filter by Ownership - no search - co publisher and co editor - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4573,Filter by Ownership - with search - media owner - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4574,Filter by Ownership - with search - co editor - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4575,Filter by Ownership - with search - co publisher - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4576,Filter by Ownership - with search - co publisher and co editor - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4577,Filter by Ownership - no search - media owner - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4578,Filter by Ownership - no search - co editor - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4579,Filter by Ownership - no search - co publisher - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4580,Filter by Ownership - no search - co publisher and co editor - Channel Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4581,Filter by Ownership - with search - media owner - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4582,Filter by Ownership - with search - co editor - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4583,Filter by Ownership - with search - co publisher - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4584,Filter by Ownership - with search - co publisher and co editor - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4585,Filter by Ownership - no search - media owner - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4586,Filter by Ownership - no search - co editor - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4587,Filter by Ownership - no search - co publisher - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4588,Filter by Ownership - no search - co publisher and co editor - Category Page - media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4589,Filter by Ownership - with search - media owner - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4590,Filter by Ownership - with search - co editor - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4591,Filter by Ownership - with search - co publisher - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4592,Filter by Ownership - with search - co publisher and co editor - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4593,Filter by Ownership - no search - media owner - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4594,Filter by Ownership - no search - co editor - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4595,Filter by Ownership - no search - co publisher - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4596,Filter by Ownership - no search - co publisher and co editor - Category Page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4597,Filter by Ownership - with search - media owner - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4598,Filter by Ownership - with search - co editor - Add new quiz page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4599,Filter by Ownership - with search - co publisher - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4600,Filter by Ownership - with search - co publisher and co editor - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4601,Filter by Ownership - no search - media owner - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4602,Filter by Ownership - no search - co editor - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4603,Filter by Ownership - no search - co publisher - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4604,Filter by Ownership - no search - co publisher and co editor - Add new quiz,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4605,Filter by Ownership - with search - media owner - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4606,Filter by Ownership - with search - co editor - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4607,Filter by Ownership - with search - co publisher - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4608,Filter by Ownership - with search - co publisher and co editor - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4609,Filter by Ownership - no search - media owner - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4610,Filter by Ownership - no search - co editor - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4611,Filter by Ownership - no search - co publisher - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4612,Filter by Ownership - no search - co publisher and co editor - Add to channel - My Media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4613,Filter by Ownership - with search - media owner - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4614,Filter by Ownership - with search - co editor - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4615,Filter by Ownership - with search - co publisher - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4616,Filter by Ownership - with search - co publisher and co editor - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4617,Filter by Ownership - no search - media owner - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4618,Filter by Ownership - no search - co editor - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4619,Filter by Ownership - no search - co publisher - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,privateForEsearch,123456
+test_4620,Filter by Ownership - no search - co publisher and co editor - Add to Gallery - My media tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,unmodForEsearch,123456
+test_4682,Approve/Reject - with search - Channel Page - Pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4683,Filter by Duration - with search - Channel page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4684,Filter by Duration - no search - Channel page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4685,Filter by Scheduling - with search - Channel page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4686,Filter by Scheduling - no search - Channel page - pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4687,Filter by custom-data - with search - Channel page - pending tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4688,Filter by custom-data - no search - Channel page - pending tab - negative and positive,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,admin,123456
+test_4695,Approve/Reject - no search - Channel Page - Pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4696,Approve/Reject - with search - Category Page - Pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4697,Approve/Reject - no search - Category Page - Pending tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_1,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_2,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_3,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
