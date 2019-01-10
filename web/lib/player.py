@@ -99,7 +99,8 @@ class Player(Base):
     
     # fromActionBar = True, to click play on the bar below the player
     # fromActionBar = False, to click play on middle of the screen player
-    def clickPlay(self,embed=False, fromActionBar=True):
+    def clickPlay(self,embed=False, fromActionBar=True, sleepBeforePlay=0):
+        sleep(sleepBeforePlay)
         self.switchToPlayerIframe(embed)
         if fromActionBar == True:
             playButtonControlsEl = self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER)
@@ -168,7 +169,7 @@ class Player(Base):
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
             
-            if self.clickPlay(embed, fromActionBar) == False:
+            if self.clickPlay(embed, fromActionBar, 10) == False:
                 return False       
             
             playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -207,7 +208,7 @@ class Player(Base):
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
             
-            if self.clickPlay(False, True) == False:
+            if self.clickPlay(False, True, 10) == False:
                 return False       
             
             QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -250,7 +251,7 @@ class Player(Base):
                     return False 
             
             self.switchToPlayerIframe()
-            if self.clickPlay() == False:
+            if self.clickPlay(sleepBeforePlay=10) == False:
                 return False  
             
             #Click continue button
@@ -761,7 +762,7 @@ class Player(Base):
             if self.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
                 return False
             
-            if self.clickPlay(embed, fromActionBar) == False:
+            if self.clickPlay(embed, fromActionBar, 10) == False:
                 return False       
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
