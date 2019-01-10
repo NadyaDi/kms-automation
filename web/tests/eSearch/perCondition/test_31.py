@@ -55,8 +55,11 @@ class Test:
     QuizQuestion1AdditionalAnswers = ['Second answer', 'Third question', 'Fourth question']
 
     channelTags = "Tags,"
-    userName1 = "inbar.willman@kaltura.com" # main user
-    userPass1 = "Kaltura1!"
+    userName1 = "adminForEsearch" # main user
+    userPass1 = "123456"
+    
+    userName2 = "inbar.willman@kaltura.com"
+    userPass2 = "Kaltura1!"
 
     publisherUser = "privateForEsearch"
 
@@ -83,14 +86,13 @@ class Test:
             # Channel for tests in channel/ add to channel tabs
             self.channelForEsearch  = "Channel for eSearch"
             self.channelForModerator = 'channel moderator for eSearch'
-            self.SrChannelForEsearch = "SR-Channel for eSearch"
 
             self.channelForEsearchDescription = "channel for eSearch tests"
             self.channelForEsearchTags = 'channel tag,'
             self.channelForEsearchPrivacy = 'open'
 
             self.entryPermissionList = [self.entryNameVideo, self.publishNameQuiz, self.entryNameImage, self.entryNameAudio, self.entryNameYoutube, self.entryNameWebCast]
-
+            self.approveEntriesInChannel = [self.entryNameAudio, self.entryNameImage, self.publishNameQuiz, self.entryNameVideo, self.entryNameWebCast, self.entryNameYoutube]
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
@@ -105,7 +107,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 3: Going to publish the " + self.entryNameVideo +"  entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameVideo, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameVideo, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 3: FAILED to publish the " + self.entryNameVideo +"  entry")
                 return
 
@@ -140,7 +142,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 9: Going to publish the " + self.publishNameQuiz +"  entry")
-            if self.common.myMedia.publishSingleEntry(self.publishNameQuiz, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.publishNameQuiz, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 9: FAILED to publish the " + self.publishNameQuiz +"  entry")
                 return
 
@@ -151,7 +153,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 11: Going to publish " + self.entryNameAudio + " entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameAudio, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameAudio, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 11: FAILED to publish " + self.entryNameAudio + " entry")
                 return
 
@@ -162,7 +164,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 13: Going to publish " + self.entryNameImage + " entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameImage, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameImage, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 13: FAILED to publish " + self.entryNameImage + " entry")
                 return
 
@@ -179,7 +181,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 16: Going to publish the " + self.entryNameYoutube +"  entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameYoutube, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameYoutube, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 16: FAILED to publish the " + self.entryNameYoutube +"  entry")
                 return
 
@@ -195,7 +197,7 @@ class Test:
                 return
 
             writeToLog("INFO","Step 19: Going to publish " + self.entryNameWebCast + " entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameWebCast, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameWebCast, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 19: FAILED to publish " + self.entryNameWebCast + " entry")
                 return
 
@@ -218,6 +220,38 @@ class Test:
                     return
                 else:
                     i = i + 1
+            sleep(10)
+                    
+            writeToLog("INFO","Step " + str(i) + ": Going to logout from the " + self.userName1)
+            if self.common.login.logOutOfKMS() == False:
+                writeToLog("INFO","Step  " + str(i) + ": FAILED to logout from the " + self.userName1)
+                return
+            
+            writeToLog("INFO","Step " + str(i) + ": Going to log in with the " + self.userName2)
+            if self.common.login.loginToKMS(self.userName2, self.userPass2) == False:
+                writeToLog("INFO","Step " + str(i) + ": FAILED to log in with the " + self.userName2)
+                return
+            else:
+                i = i + 1
+            i = i
+            
+            writeToLog("INFO","Step " + str(i) + ": Going to navigate to " + self.channelForEsearch)
+            if self.common.channel.navigateToPendingaTab(self.channelForEsearch, enums.Location.CHANNEL_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to " + self.channelForEsearch)
+                return
+            else:
+                i = i + 1
+            i = i
+            
+            writeToLog("INFO","Step " + str(i) + ": Going to approve the entries in " + self.channelForEsearch)
+            if self.common.channel.pendingBulkRejectAndApprove(self.approveEntriesInChannel, moderateAction=enums.PendingModerateAction.APPROVE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to approve the entries in " + self.channelForEsearch)
+                return
+            else:
+                i = i + 1
+            i = i
             #################################################################################
 
         # if an exception happened we need to handle it and fail the test

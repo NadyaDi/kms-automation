@@ -586,7 +586,7 @@ class Upload(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         
         #Wait until tag element is displayed
-        self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS, timeout=40)    
+        self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS, timeout=60)    
         
         #Insert new name for entry
         self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME).clear()

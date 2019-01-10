@@ -2817,6 +2817,10 @@ class Channel(Base):
         else:
             writeToLog("INFO", "Please specify a moderate action for the pending tab")
             return False
+        
+        if self.showAllEntriesPendingTab(240) == False:
+            writeToLog("INFO", "Failed to displayed the entries")
+            return False
             
         if type(entryList) is list:
             for entry in entryList:
@@ -2858,3 +2862,30 @@ class Channel(Base):
                 return False    
         
         return True
+    
+
+    # Author: Horia Cus
+    # This function verifies that all the specified channels are displayed
+    def verifyChannelIsPresent(self, channelList):
+        if self.showAllChannels(60) == False:
+            writeToLog("INFO", "Failed to display all the entries")
+            return False
+
+        for entry in channelList:           
+            if channelList[entry] == True:
+                tmp_channelName = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', entry))
+                if self.is_visible(tmp_channelName) == False:
+                    writeToLog("INFO","FAILED to find channel '" + entry + "' after search in my channels")
+                    return False
+                 
+            elif channelList[entry] == False:
+                tmp_channelName = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', entry))
+                if self.is_present(tmp_channelName, 1) == True:
+                    writeToLog("INFO","FAILED to find channel '" + entry + "' after search in my channels")
+                    return False
+            
+            else:
+                writeToLog("INFO", "Please specify if the channel should be displayed or not")
+                return False
+            
+        return True    

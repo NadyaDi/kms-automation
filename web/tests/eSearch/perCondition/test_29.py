@@ -42,7 +42,7 @@ class Test:
     filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3'
     filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg'
     youtuebLink = "https://www.youtube.com/watch?v=usNsCeOV4GM"
-    
+
     entryStartDate = (datetime.datetime.now() + timedelta(days=240)).strftime("%d/%m/%Y")
     entryEndDate = (datetime.datetime.now() + timedelta(days=365)).strftime("%d/%m/%Y")
     entryStartTime = time.time() + (60*60)
@@ -55,8 +55,11 @@ class Test:
     QuizQuestion1AdditionalAnswers = ['Second answer', 'Third question', 'Fourth question']
 
     channelTags = "Tags,"
-    userName1 = "inbar.willman@kaltura.com" # main user
-    userPass1 = "Kaltura1!"
+    userName1 = "adminForEsearch" # main user
+    userPass1 = "123456"
+    
+    userName2 = "inbar.willman@kaltura.com"
+    userPass2 = "Kaltura1!"
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
         return request.param
@@ -80,117 +83,140 @@ class Test:
             # Channel for tests in channel/ add to channel tabs
             self.channelForEsearch  = "Channel for eSearch"
             self.channelForModerator = 'channel moderator for eSearch'
-            self.SrChannelForEsearch = "SR-Channel for eSearch"
 
             self.channelForEsearchDescription = "channel for eSearch tests"
             self.channelForEsearchTags = 'channel tag,'
             self.channelForEsearchPrivacy = 'open'
+            
+            self.approveEntriesInChannel = [self.entryNameAudio, self.entryNameImage, self.publishNameQuiz, self.entryNameVideo, self.entryNameWebCast, self.entryNameYoutube]
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
                 return
-
+ 
             writeToLog("INFO","Step 2: Going to upload " + self.entryNameVideo + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryNameVideo, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload " + self.entryNameVideo + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 3: Going to publish the " + self.entryNameVideo +"  entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameVideo, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameVideo, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 3: FAILED to publish the " + self.entryNameVideo +"  entry")
                 return
-  
+ 
             writeToLog("INFO","Step 4: Going to upload " + self.entryNameQuiz + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryNameQuiz, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to upload " + self.entryNameQuiz + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 5: Going to navigate to " + self.entryNameQuiz + " entry")
             if self.common.upload.addNewVideoQuiz() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to " + self.entryNameQuiz + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 6: Going to search  " + self.entryNameQuiz + " entry and open KEA")
             if self.common.kea.searchAndSelectEntryInMediaSelection(self.entryNameQuiz, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to find  " + self.entryNameQuiz + " entry and open KEA")
                 return
-  
+ 
             writeToLog("INFO","Step 7: Going to start quiz and add questions")
             if self.common.kea.addQuizQuestion(self.QuizQuestion1, self.QuizQuestion1Answer1, self.QuizQuestion1AdditionalAnswers) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to start quiz and add questions")
                 return
-  
+ 
             writeToLog("INFO","Step 8: Going to save quiz and navigate to media page")
             if self.common.kea.clickDone() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to save quiz and navigate to media page")
                 return
-  
+ 
             writeToLog("INFO","Step 9: Going to publish the " + self.publishNameQuiz +"  entry")
-            if self.common.myMedia.publishSingleEntry(self.publishNameQuiz, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.publishNameQuiz, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 9: FAILED to publish the " + self.publishNameQuiz +"  entry")
                 return
-  
+ 
             writeToLog("INFO","Step 10: Going to upload " + self.entryNameAudio + " entry")
             if self.common.upload.uploadEntry(self.filePathAudio, self.entryNameAudio, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to upload " + self.entryNameAudio + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 11: Going to publish " + self.entryNameAudio + " entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameAudio, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameAudio, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 11: FAILED to publish " + self.entryNameAudio + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 12: Going to upload " + self.entryNameImage + " entry")
             if self.common.upload.uploadEntry(self.filePathImage, self.entryNameImage, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to upload " + self.entryNameImage + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 13: Going to publish " + self.entryNameImage + " entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameImage, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameImage, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 13: FAILED to publish " + self.entryNameImage + " entry")
                 return
-  
+ 
             writeToLog("INFO","Step 14: Going to navigate to youtube upload page")
             if self.common.upload.clickAddYoutube() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to navigate to youtube upload page")
                 return
-  
+ 
             writeToLog("INFO","Step 15: Going to upload " + self.entryNameYoutube +" entry")
             if self.common.upload.addYoutubeEntry(self.youtuebLink, self.entryNameYoutube) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to upload " + self.entryNameYoutube +"  entry")
                 return
-  
+ 
             writeToLog("INFO","Step 16: Going to publish the " + self.entryNameYoutube +"  entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameYoutube, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameYoutube, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 16: FAILED to publish the " + self.entryNameYoutube +"  entry")
                 return
-
+ 
             writeToLog("INFO","Step 17: Going to upload " + self.entryNameWebCast + " entry")
             if self.common.upload.addWebcastEntry(self.entryNameWebCast, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to upload " + self.entryNameWebCast + " entry")
                 return
-            
+ 
             writeToLog("INFO","Step 18: Going to set a custom time frame for " + self.entryNameWebCast + " entry")
             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryStartDate, startTime=self.entryStartTime, endDate=self.entryEndDate, endTime=self.entryEndTime, entryName=self.entryNameWebCast)== False:
                 writeToLog("INFO","Step 18: FAILED to set a custom time frame for " + self.entryNameWebCast + " entry")
                 return
-
+ 
             writeToLog("INFO","Step 19: Going to publish " + self.entryNameWebCast + " entry")
-            if self.common.myMedia.publishSingleEntry(self.entryNameWebCast, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
+            if self.common.myMedia.publishSingleEntry(self.entryNameWebCast, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 19: FAILED to publish " + self.entryNameWebCast + " entry")
+                return
+             
+            writeToLog("INFO","Step 20: Going to logout from the " + self.userName1)
+            if self.common.login.logOutOfKMS() == False:
+                writeToLog("INFO","Step 20: FAILED to logout from the " + self.userName1)
+                return
+            
+            writeToLog("INFO","Step 21: Going to log in with the " + self.userName2)
+            if self.common.login.loginToKMS(self.userName2, self.userPass2) == False:
+                writeToLog("INFO","Step 21: FAILED to log in with the " + self.userName2)
+                return
+                  
+            writeToLog("INFO","Step 22: Going to navigate to " + self.channelForEsearch)
+            if self.common.channel.navigateToPendingaTab(self.channelForEsearch, enums.Location.CHANNEL_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 22: FAILED to navigate to " + self.channelForEsearch)
+                return
+            
+            writeToLog("INFO","Step 23: Going to approve the entries in " + self.channelForEsearch)
+            if self.common.channel.pendingBulkRejectAndApprove(self.approveEntriesInChannel, moderateAction=enums.PendingModerateAction.APPROVE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 23: FAILED to approve the entries in " + self.channelForEsearch)
                 return
             #################################################################################
 
