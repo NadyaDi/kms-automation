@@ -117,7 +117,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CUSTOM_DATEPICKER_SWITCH                         = ('xpath', '//th[@class="datepicker-switch"]')
     EDIT_ENTRY_CUSTOM_DATE_INTERVAL_YEAR_OR_DATE                = ('xpath', '//span[contains(text(),"YEAR_or_DATE")]')    
     EDIT_ENTRY_CUSTOM_DATE_DAY                                  = ('xpath', "//td[@class='day'][contains(text(),'DAY')]")  
-    EDIT_ENTRY_POP_UP_CANCEL_BUTTON                             = ('xpath', "//a[@class='btn null']")                          
+    EDIT_ENTRY_CHANGE_MEDIA_OWNER                               = ('xpath', "//a[@id='change_owner']")
+    EDIT_ENTRY_CHANGE_MEDIA_OWNER_POP_UP_TITLE                  = ('xpath', "//h3[contains(text(),'Change Media Owner')]") 
+    EDIT_ENTRY_CHANGE_MEDIA_OWNER_SAVE_BUTTON                   = ('xpath', "//a[contains(text(),'Save')]")                                                    
     #=============================================================================================================
     
     
@@ -213,8 +215,9 @@ class EditEntryPage(Base):
             # Click to add co editor
             if self.click(self.EDIT_ENTRY_CO_PUBLISHER_CHECKBOX, 30) == False:
                 writeToLog("INFO","FAILED to click on co publisher checkbox")
-                return False    
+                return False 
                
+        sleep(1)  
         # Click on save              
         if self.click(self.EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON , 30) == False:
             writeToLog("INFO","FAILED to click on save button")
@@ -1570,4 +1573,43 @@ class EditEntryPage(Base):
             writeToLog("INFO", "Failed to select a day from the calendar")
             return False      
         
-        return True 
+        return True
+    
+
+    # Author: Horia Cus
+    # This function enters in collaboration tab and changes the media owner to a new one 
+    def changeMediaOwner(self, newMediaOwner):
+        if self.clickOnEditTab(enums.EditEntryPageTabName.COLLABORATION) == False:
+            writeToLog("INFO","FAILED to click on collaboration tab")
+            return False    
+        
+        sleep(1)
+        if self.click(self.EDIT_ENTRY_CHANGE_MEDIA_OWNER, 30) == False:
+            writeToLog("INFO","FAILED to click on add collaborator button")
+            return False    
+           
+        sleep(2)
+        if self.wait_element(self.EDIT_ENTRY_CHANGE_MEDIA_OWNER_POP_UP_TITLE, 30, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to trigger the change media owner pop up")
+            return False
+        
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, newMediaOwner) == False:
+            writeToLog("INFO","FAILED to insert the " + newMediaOwner + " user within the field box")
+            return False
+        
+        sleep(3)
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, Keys.RETURN) == False:
+            writeToLog("INFO","FAILED to press Enter after " + newMediaOwner + " was typed")
+            return False  
+ 
+        sleep(1)                
+        if self.click(self.EDIT_ENTRY_CHANGE_MEDIA_OWNER_SAVE_BUTTON, 30) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+
+        if self.wait_while_not_visible(self.EDIT_ENTRY_CHANGE_MEDIA_OWNER_POP_UP_TITLE, 30) == False:
+            writeToLog("INFO","FAILED to save the changes")
+            return False 
+        
+        return True
+        

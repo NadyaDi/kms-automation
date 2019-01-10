@@ -231,6 +231,7 @@ class SortAndFilter(Enum):
     SINGLE_DATE               = 'Single Date'
     FREE_TEXT                 = 'Free Text'
     OWNERSHIP                 = 'Ownership'
+    CHANNEL_MEMBERSHIP        = 'Channel Membership'
     
 
 class KeaQuizButtons(Enum):

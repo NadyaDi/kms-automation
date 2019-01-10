@@ -128,10 +128,11 @@ class MyMedia(Base):
     ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found.' or text()='No Entries Found']")
     CHANNEL_PENDING_TAB_ICON                                    = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']")
     CHANNEL_PENDING_ENTRY_DATA                                  = ('xpath', "//tr[@id='ENTRY_ID_tr']")
-    SEARCH_IN_CHOSEN_OPTION                                     = ('xpath', '//a[@id="fields-menu-toggle"]')
+    SEARCH_IN_CHOSEN_OPTION                                     = ('xpath', '//a[@id="fields-menu-toggle" and @data-toggle="dropdown"]')
     ACTION_TAB_OPTION_DISABLED                                  = ('xpath', "//a[@id='tab-ACTIONID' and contains(@class,'disabled')]")
     ACTION_TAB_OPTION_NORMAL                                    = ('xpath', "//a[@id='tab-ACTIONID']")
     EDIT_OPTION_PRESENT_ANY_ENTRY                               = ('xpath', "//a[contains(@title,'Edit')]//i[contains(@class,'icon-pencil')]")
+    EDIT_OPTION_PRESENT_PUBLISH_ENTRY                           = ('xpath', "//i[@class='icon-pencil']")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -563,7 +564,7 @@ class MyMedia(Base):
 
         sleep(2)
         # Click if category list is empty
-        if len(categoryList) != 0:
+        if type(categoryList) is list:
             # Click on Publish in Category
             if self.click(self.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
                 writeToLog("INFO","FAILED to click on Publish in Category")
@@ -571,11 +572,23 @@ class MyMedia(Base):
 
             # choose all the  categories to publish to
             for category in categoryList:
-                tmoCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+                tmpCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
 
-                if self.click(tmoCategoryName, 30) == False:
+                if self.click(tmpCategoryName, 30) == False:
                     writeToLog("INFO","FAILED to select published category '" + category + "'")
                     return False
+                
+        elif categoryList != '':
+            # Click on Publish in Category
+            if self.click(self.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
+                writeToLog("INFO","FAILED to click on Publish in Category")
+                return False
+
+            tmpCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', categoryList))
+
+            if self.click(tmpCategoryName, 30) == False:
+                writeToLog("INFO","FAILED to select published category '" + category + "'")
+                return False
 
         sleep(2)
         # Click if channel list is empty
@@ -587,10 +600,18 @@ class MyMedia(Base):
                 writeToLog("INFO","FAILED to click on Publish in channel")
                 return False
             sleep(2)
-
-            # choose all the  channels to publish to
-            for channel in channelList:
-                tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
+            
+            if type(channelList) is list:
+                # choose all the  channels to publish to
+                for channel in channelList:
+                    tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channel))
+    
+                    if self.click(tmpChannelName, 20, multipleElements=True) == False:
+                        writeToLog("INFO","FAILED to select published channel '" + channel + "'")
+                        return False
+                    
+            elif channelList != '':
+                tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', channelList))
 
                 if self.click(tmpChannelName, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to select published channel '" + channel + "'")
@@ -2370,11 +2391,15 @@ class MyMedia(Base):
         self.setImplicitlyWait(0)
         while True:
             try:
-                el = self.get_element(self.SEARCH_IN_CHOSEN_OPTION)
-                if el.text == "Search In: " + chosenOption:
-                    self.setImplicitlyWaitToDefault()
-                    return True
-                
+                elements = self.get_elements(self.SEARCH_IN_CHOSEN_OPTION)
+                for el in elements:
+                    if el.size['width']!=0 and el.size['height']!=0:
+                        if el.text == "Search In: " + chosenOption:
+                            self.setImplicitlyWaitToDefault()
+                            return True
+                        else:
+                            writeToLog("INFO", "Failed to find the element")
+                            return False
             except:
                 if wait_until < datetime.datetime.now():
                     self.setImplicitlyWaitToDefault()

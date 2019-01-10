@@ -113,7 +113,7 @@ class Test:
                 return
 
             writeToLog("INFO", "Step 10: Going to verify that the Edit option is enabled while using " + enums.Ownership.MEDIA_EDIT.value + " filter")
-            if self.common.base.is_present(self.common.myMedia.EDIT_OPTION_PRESENT_ANY_ENTRY, timeout=3) != False:
+            if self.common.base.is_present(self.common.myMedia.EDIT_OPTION_PRESENT_PUBLISH_ENTRY, timeout=3) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "Step 10: FAILED the Edit option is disabled while using " + enums.Ownership.MEDIA_EDIT.value + " filter")
                 return
