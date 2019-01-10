@@ -169,7 +169,7 @@ class Player(Base):
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
             
-            if self.clickPlay(embed, fromActionBar, 10) == False:
+            if self.clickPlay(embed, fromActionBar, 60) == False:
                 return False       
             
             playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -208,7 +208,7 @@ class Player(Base):
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
             
-            if self.clickPlay(False, True, 10) == False:
+            if self.clickPlay(False, True, 60) == False:
                 return False       
             
             QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -251,7 +251,7 @@ class Player(Base):
                     return False 
             
             self.switchToPlayerIframe()
-            if self.clickPlay(sleepBeforePlay=10) == False:
+            if self.clickPlay(sleepBeforePlay=60) == False:
                 return False  
             
             #Click continue button
@@ -762,7 +762,7 @@ class Player(Base):
             if self.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
                 return False
             
-            if self.clickPlay(embed, fromActionBar, 10) == False:
+            if self.clickPlay(embed, fromActionBar, 60) == False:
                 return False       
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
