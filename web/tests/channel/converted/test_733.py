@@ -75,13 +75,13 @@ class Test:
                 return         
            
             writeToLog("INFO","Step 4: Going to add content to channel")            
-            if self.common.channel.addContentToChannel(self.channelName, self.entryName1, False) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName, self.entryName1, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add content to channel: '" + self.entryName1 + "'")
                 return     
             
             writeToLog("INFO","Step 5: Going navigate to channel page")   
-            if self.common.channel.self.navigateToChannel(self.channelName, forceNavigate=True) == False:
+            if self.common.channel.navigateToChannel(self.channelName, forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to channel page")
                 return  

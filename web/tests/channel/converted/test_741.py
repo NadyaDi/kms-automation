@@ -148,7 +148,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 15: Going to add entry to channel: " + self.channelName)
-            if self.common.channel.addContentToChannel(self.channelName, self.entryName, False, publishFrom=enums.Location.CHANNELS_PAGE) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName, self.entryName, False, publishFrom=enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add entry '" + self.entryName + "' to channel '" + self.channelName + "'")
                 return

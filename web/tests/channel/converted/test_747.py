@@ -77,7 +77,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 3: Going to add entry to channel: " + self.channelName1)
-            if self.common.channel.addContentToChannel(self.channelName1, self.entryName1, False, publishFrom=enums.Location.MY_CHANNELS_PAGE) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName1, self.entryName1, False, publishFrom=enums.Location.MY_CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add entry '" + self.entryName1 + "' to channel '" + self.channelName1 + "'")
                 return
@@ -102,7 +102,7 @@ class Test:
                 return    
                         
             writeToLog("INFO","Step 7: Going to add entry to channel: " + self.channelName1)
-            if self.common.channel.addContentToChannel(self.channelName1, self.entryName2, False, publishFrom=enums.Location.CHANNELS_PAGE) == True:
+            if self.common.channel.addExistingContentToChannel(self.channelName1, self.entryName2, False, publishFrom=enums.Location.CHANNELS_PAGE) == True:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, user can add content to 'shared repository channel' although the user isn't a member in the channel")
                 return              
@@ -147,13 +147,13 @@ class Test:
                 return                  
                    
             writeToLog("INFO","Step 14: Going to add entry to channel: " + self.channelName1)
-            if self.common.channel.addContentToChannel(self.channelName1, self.entryName2, False, publishFrom=enums.Location.CHANNELS_PAGE) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName1, self.entryName2, False, publishFrom=enums.Location.CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to add entry to channel '" + self.channelName1 + "'")
                 return           
             
             writeToLog("INFO","Step 15: Going to add entry to channel: " + self.channelName2 + " from shared repository channel: " + self.channelName1)
-            if self.common.channel.addContentToChannel(self.channelName2, self.entryName1, False, publishFrom=enums.Location.CHANNELS_PAGE, channelType=enums.ChannelPrivacyType.SHAREDREPOSITORY, sharedReposiytyChannel=self.channelName1) == False:
+            if self.common.channel.addExistingContentToChannel(self.channelName2, self.entryName1, False, publishFrom=enums.Location.CHANNELS_PAGE, channelType=enums.ChannelPrivacyType.SHAREDREPOSITORY, sharedReposiytyChannel=self.channelName1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add entry from shared repository channel to channel '" + self.channelName2 + "'")
                 return              
