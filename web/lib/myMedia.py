@@ -86,6 +86,7 @@ class MyMedia(Base):
     MY_MEDIA_DETAILED_VIEW_BUTTON                               = ('xpath', "//button[@id='MyMediaThumbs' and @data-original-title='Detailed view']")
     SEARCH_RESULTS_ENTRY_NAME                                   = ('xpath', "//span[@class='results-entry__name']")
     MY_MEDIA_FILTERS_BUTTON_NEW_UI                              = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone') and text()='Filters']")
+    MY_MEDIA_FILTERS_BUTTON_NEW_UI_ACTIVE                       = ('xpath', "//button[contains(@class,'toggleButton btn shrink-container__button hidden-phone active')]")
     SEARCH_RESULTS_ENTRY_NAME_OLD_UI                            = ('xpath', '//span[@class="searchTerm" and text()="ENTRY_NAME"]/ancestor::span[@class="searchme"]')
     EDIT_BUTTON_REQUIRED_FIELD_MASSAGE                          = ('xpath', '//a[@class="hidden-phone" and text()="Edit"]')
     CUSTOM_FIELD                                                = ('xpath', '//input[@id="customdata-DepartmentName"]')
@@ -133,6 +134,9 @@ class MyMedia(Base):
     ACTION_TAB_OPTION_NORMAL                                    = ('xpath', "//a[@id='tab-ACTIONID']")
     EDIT_OPTION_PRESENT_ANY_ENTRY                               = ('xpath', "//a[contains(@title,'Edit')]//i[contains(@class,'icon-pencil')]")
     EDIT_OPTION_PRESENT_PUBLISH_ENTRY                           = ('xpath', "//i[@class='icon-pencil']")
+    FILTER_SORT_TYPE_ENABLED                                    = ('xpath', '//a[@aria-checked="true" and @aria-label="DROPDOWNLIST_ITEM undefined"]')
+    FILTER_SORT_TYPE_DISABLED                                   = ('xpath', '//a[@aria-checked="false" and @aria-label="DROPDOWNLIST_ITEM undefined"]')
+    FILTER_SORT_TYPE_REMOVE_BUTTON                              = ('xpath', "//a[@class='cursor-pointer bubble__a' and @aria-label='DROPDOWNLIST_ITEM']")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -717,15 +721,19 @@ class MyMedia(Base):
                     writeToLog("INFO","FAILED to click on sort by  :" + dropDownListItem.value + " filter in my media")
                     return False
             else:
-                if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on filters button in my media")
-                    return False
+                if self.wait_element(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI_ACTIVE, timeout=1, multipleElements=True) == False:
+                    if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
+                        writeToLog("INFO","FAILED to click on filters button in my media")
+                        return False
                 sleep(2)
 
                 if dropDownListName == enums.SortAndFilter.DURATION or dropDownListName == enums.SortAndFilter.CAPTIONS or dropDownListName == enums.SortAndFilter.SINGLE_LIST:
                     tmpLocator = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
                     if self.is_visible(tmpLocator, multipleElements=True) != True:
                         if self.click(self.FILTER_NEXT_ARROW, multipleElements=True) != False:
+                            if self.wait_element(self.FILTER_PREVIOUS_ARROW, 2, multipleElements=True) == False:
+                                writeToLog("INFO", "Failed to properly displayed the second filter page")
+                                return False
                             if self.click(tmpLocator, multipleElements=True) == False:
                                 writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
                                 return False
@@ -2185,7 +2193,8 @@ class MyMedia(Base):
     # Verify that the specific filter option is available or disabled on the first or second screen, based on the selected media type
     # If status=True, the checkbox should be enabled
     # If status=False, the checkbox should be disabled
-    def verifyFilterCheckBox(self, mediaType, checkBoxLabelValue, status=True):
+    # checkBoxLabelValue = the filter type that should / shouldn't be displayed while filtering it by a specific media type
+    def verifyFilterCheckBox(self, mediaType, checkBoxLabelValue, status=True, clearFilter=True):
         if self.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, mediaType) == False:
                 writeToLog("INFO","FAILED to filter my media entries")
                 return False
@@ -2209,18 +2218,16 @@ class MyMedia(Base):
                 if self.wait_visible(tmpEntry, timeout=3) == False:
                     writeToLog("INFO","FAILED, the caption filter option is enabled")
                     return False
+                
+            if clearFilter == True:
+                if self.click(self.FILTER_PREVIOUS_ARROW) == False:
+                    writeToLog("INFO", "Failed to enter on the second page ")
+                    return False
+            
+                if self.filterClearAllWhenOpened() == False:
+                    writeToLog("INFO","FAILED to clear all the search filters")
+                    return False
 
-            if self.click(self.FILTER_CLEAR_ALL_BUTTON, 20, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to clear all the search filters")
-                return False
-
-            if self.click(self.FILTER_PREVIOUS_ARROW) == False:
-                writeToLog("INFO", "Failed to enter on the second page ")
-                return False
-
-            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to close the filters drop down menu")
-                return False
         else:
             if self.click(tmpEntry, timeout=3) == False:
                 self.status = "Fail"
@@ -2235,14 +2242,11 @@ class MyMedia(Base):
                 if self.wait_visible(tmpEntry, timeout=3) == False:
                     writeToLog("INFO","FAILED, the caption filter option is enabled")
                     return False
-
-            if self.click(self.FILTER_CLEAR_ALL_BUTTON, 20, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to clear all the search filters")
-                return False
-
-            if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to close the filters drop down menu")
-                return False
+            
+            if clearFilter == True:
+                if self.filterClearAllWhenOpened() == False:
+                    writeToLog("INFO","FAILED to clear all the search filters")
+                    return False
 
         return True
 
@@ -2436,3 +2440,186 @@ class MyMedia(Base):
                 return False
 
         return True
+
+
+    # @Author: Horia Cus
+    # Verify that the user is able to select and un-select any sort filter option and that the checkbox and remove options are properly displayed
+    # enable = True, it will enable each desired sort filter option and verify that the checbkox is checked and the remove option is present
+    # disable = True, it will disable the desired sort filter option and verify that the checkbox is un checked and the remove option is no longer present
+    def verifyFilterSection(self, filterType='', filterOption='', enable=False, disable=False, clearFilterMenu=False):
+        if filterType == enums.SortAndFilter.MEDIA_TYPE:
+            tmpEntryAll = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', enums.MediaType.ALL_MEDIA.value))
+
+        elif filterType == enums.SortAndFilter.SCHEDULING:
+            tmpEntryAll = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', enums.Scheduling.ALL.value))
+
+        elif filterType == enums.SortAndFilter.DURATION:
+            tmpEntryAll = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', enums.Duration.ANY_DURATION.value))
+
+        elif filterType == enums.SortAndFilter.CREATION_DATE:
+            tmpEntryAll = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', enums.Creation.ANY_DATE.value))
+        
+        else:
+            tmpEntryAll = ''
+
+        if enable == True:
+            if type(filterOption) is list:
+                filterList = {filterType:filterOption}
+                i = 0
+                for entry in filterList:
+                    while True:
+                        i = i
+                        try:
+                            tmpEntryRemoveOption = (self.FILTER_SORT_TYPE_REMOVE_BUTTON[0], self.FILTER_SORT_TYPE_REMOVE_BUTTON[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+                        except Exception:
+                            break
+
+                        tmpLocator = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+                        tmpEntryCheckBox = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+                        if self.wait_element(tmpLocator, 1, multipleElements=True) != False and self.wait_element(tmpEntryRemoveOption, 1, multipleElements=True) == False:
+                            if self.SortAndFilter(entry, filterList[entry][i]) == False:
+                                return False
+
+                            try:
+                                if i >= 1 and self.wait_element(tmpEntryAll, 1, multipleElements=True) != False:
+                                    if self.wait_element(tmpEntryRemoveOption, 1, multipleElements=True) != False or self.wait_element(tmpEntryCheckBox, 1, multipleElements=True) != False:
+                                        writeToLog("INFO", "Failed, the remove option or checkbox for " + filterList[entry][i].value + " is still present while ALL the sort type options are selected")
+                                        return False
+                                    else:
+                                        break
+                            except Exception:
+                                break
+
+                            if self.verifyFilterRemoveOptionAndCheckbox(filterList[entry][i], True) == False:
+                                return False
+                            else:
+                                i = i + 1
+                        else:
+                            writeToLog("INFO", "Some elements are not properly displayed while filtering them by " + filterList[entry][i].value )
+                            return False
+
+                    i = i - 1
+                    while True:
+                        i = i
+                        tmpEntryRemoveOption = (self.FILTER_SORT_TYPE_REMOVE_BUTTON[0], self.FILTER_SORT_TYPE_REMOVE_BUTTON[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+                        tmpEntryCheckBox = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+                        try:
+                            if i >= 0 and self.wait_element(tmpEntryAll, 1, multipleElements=True) != False:
+                                if self.wait_element(tmpEntryRemoveOption, 1, multipleElements=True) != False or self.wait_element(tmpEntryCheckBox, 1, multipleElements=True) != False:
+                                    writeToLog("INFO", "Failed, the remove option or checkbox for " + filterList[entry][i].value + " is still present while ALL the sort type options are selected")
+                                    return False
+                                else:
+                                    break
+                        except Exception:
+                            break
+
+                        if i != -1:
+                            if self.verifyFilterRemoveOptionAndCheckbox(filterList[entry][i], True) == False:
+                                return False
+                            else:
+                                i = i - 1
+                        else:
+                            break
+
+            elif filterType != '' and filterOption != '':
+                if self.SortAndFilter(filterType, filterOption) == False:
+                    return False
+
+                if self.verifyFilterRemoveOptionAndCheckbox(filterOption, True) == False:
+                    return False
+
+            else:
+                writeToLog("INFO", "Please make sure that only the sortOption is list")
+                return False
+
+        if disable == True:
+            if type(filterOption) is list:
+                filterList = {filterType:filterOption}
+                i = 0
+                for entry in filterList:
+                    while True:
+                        i = i
+                        try:
+                            tmpEntryRemoveOption = (self.FILTER_SORT_TYPE_REMOVE_BUTTON[0], self.FILTER_SORT_TYPE_REMOVE_BUTTON[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+                        except Exception:
+                            break
+                        tmpEntryCheckBox = (self.FILTER_SORT_TYPE_DISABLED[0], self.FILTER_SORT_TYPE_DISABLED[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
+
+                        if self.SortAndFilter(entry, filterList[entry][i]) == False:
+                            return False
+
+                        try:
+                            if i >= 1 and self.wait_element(tmpEntryAll, 1, multipleElements=True) != False:
+                                if self.wait_element(tmpEntryRemoveOption, 1, multipleElements=True) != False and self.wait_element(tmpEntryCheckBox, 1, multipleElements=True) == False and self.wait_element(tmpEntryAll, 5, multipleElements=True) == False:
+                                    writeToLog("INFO", "Failed, the remove option or checkbox for " + filterList[entry][i].value + " is still present while ALL the sort type options are selected")
+                                    return False
+                                else:
+                                    break
+                        except Exception:
+                            break
+
+                        if self.verifyFilterRemoveOptionAndCheckbox(filterList[entry][i], False) == False:
+                            return False
+                        else:
+                            i = i + 1
+
+            elif filterType != '' and filterOption != '':
+                if self.SortAndFilter(filterType, filterOption) == False:
+                    return False
+
+                if self.verifyFilterRemoveOptionAndCheckbox(filterOption, False) == False:
+                    return False
+
+            else:
+                writeToLog("INFO", "Please make sure that only the sortOption is list")
+                return False
+
+        if enable == True or disable == True:
+            writeToLog("INFO", "All the filter options were properly displayed")
+        else:
+            writeToLog("INFO", "Please specify if the filter option should be enabled or disabled")
+            return False
+
+        if clearFilterMenu == True:
+            if self.wait_element(self.FILTER_NEXT_ARROW, 1, multipleElements=True) == False:
+                if self.click(self.FILTER_PREVIOUS_ARROW, 1, multipleElements=True) == False:
+                    writeToLog("INFO", "Failed to use the previous arrow button")
+                    return False
+
+                if self.filterClearAllWhenOpened() == False:
+                    return False
+            else:
+                if self.filterClearAllWhenOpened() == False:
+                    return False
+
+        return True
+
+    
+    # @Author: Horia Cus
+    # Verify that the checkbox option and remove options are properly displayed
+    # enabled = True, the checkbox should be enabled and the remove option should be present
+    # disabled = True, the checkbox should be disabled and the remove option should not be present
+    def verifyFilterRemoveOptionAndCheckbox(self, filterOption='', stateEnabled=True):
+        if stateEnabled == True:
+            tmpEntryCheckBox = (self.FILTER_SORT_TYPE_ENABLED[0], self.FILTER_SORT_TYPE_ENABLED[1].replace('DROPDOWNLIST_ITEM', filterOption.value))
+            if self.wait_element(tmpEntryCheckBox, timeout=5, multipleElements=True) == False:
+                writeToLog("INFO", "The " + filterOption.value + " checkbox is not checked")
+                return False
+            
+            tmpEntryRemoveOption = (self.FILTER_SORT_TYPE_REMOVE_BUTTON[0], self.FILTER_SORT_TYPE_REMOVE_BUTTON[1].replace('DROPDOWNLIST_ITEM', filterOption.value))
+            if self.wait_element(tmpEntryRemoveOption, timeout=5, multipleElements=True) == False:
+                writeToLog("INFO", "The " + filterOption.value + " remove option is not present")
+                return False
+
+        else:
+            tmpEntryCheckBox = (self.FILTER_SORT_TYPE_DISABLED[0], self.FILTER_SORT_TYPE_DISABLED[1].replace('DROPDOWNLIST_ITEM', filterOption.value))
+            if self.wait_element(tmpEntryCheckBox, timeout=5, multipleElements=True) == False:
+                writeToLog("INFO", "The " + filterOption.value + " checkbox is checked")
+                return False
+            
+            tmpEntryRemoveOption = (self.FILTER_SORT_TYPE_REMOVE_BUTTON[0], self.FILTER_SORT_TYPE_REMOVE_BUTTON[1].replace('DROPDOWNLIST_ITEM', filterOption.value))
+            if self.wait_element(tmpEntryRemoveOption, timeout=5, multipleElements=True) != False:
+                writeToLog("INFO", "The " + filterOption.value + " remove option is still present")
+                return False
+      
+        return True    
