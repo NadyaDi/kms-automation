@@ -110,7 +110,9 @@ class Common():
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd14":
             autoitDr = self.autoit.autoitDriver14
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd15":
-            autoitDr = self.autoit.autoitDriver15                                                
+            autoitDr = self.autoit.autoitDriver15         
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd16":
+            autoitDr = self.autoit.autoitDriver16  
                         
         if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
             # TODO IE not implemented yet
