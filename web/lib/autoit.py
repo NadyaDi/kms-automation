@@ -41,6 +41,8 @@ class Autoit():
                     self.autoitDriver14 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST14 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
                 elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd15":
                     self.autoitDriver15 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST15 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})            
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd16":
+                    self.autoitDriver16 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST15 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
                 else:
                     writeToLog("INFO","FAIELD to connect to Autoit service on remote host: " + localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL)
         except Exception as exp:
