@@ -169,7 +169,7 @@ class Test:
                 return
  
             writeToLog("INFO", "STEP 19 Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
-            if self.common.myMedia.filterCustomDuration(55)== False:
+            if self.common.myMedia.filterCustomDurationUsingSidebar(55, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 19: FAILED to filter 'Add to channel' - 'SR' tab entries by '" + enums.Duration.CUSTOM.value + " using special entry limits")
                 return
@@ -199,13 +199,13 @@ class Test:
                 return
 
             writeToLog("INFO", "STEP 24: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
-            if self.common.myMedia.filterCustomDuration(35, value='0') == False and self.common.myMedia.filterCustomDuration(20, value='900')== False:
+            if self.common.myMedia.filterCustomDurationUsingSidebar(35, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 24: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
                 return
 
             writeToLog("INFO", "STEP 25: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
-            if self.common.myMedia.filterCustomDuration(-45, value='10800')== False:
+            if self.common.myMedia.filterCustomDurationUsingSidebar(-45, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 25: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
                 return
