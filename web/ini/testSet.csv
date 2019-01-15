@@ -271,6 +271,12 @@ test_25,1,0,0,0,eSearch - Filter by custom-data
 test_26,1,0,0,0,eSearch - Filter by custom-data
 test_27,1,0,0,0,eSearch - Filter by custom-data
 test_28,1,0,0,0,eSearch - Filter by custom-data
+test_29,1,0,0,0,Setup test for eSearch
+test_30,1,0,0,0,Setup test for eSearch
+test_31,1,0,0,0,Setup test for eSearch
+test_32,1,0,0,0,Setup test for eSearch
+test_33,1,0,0,0,Setup test for eSearch
+test_34,1,0,0,0,Setup test for eSearch
 test_4310,1,0,0,0,Sort by - Channels - when no search is made
 test_4311,1,0,0,0,eSearch - Sort by - My Media - when search is made
 test_4314,1,0,0,0,eSearch - Sort by - Global search - when search is made
@@ -505,3 +511,10 @@ test_4688,1,0,0,0,Filter by custom-data - no search - Channel page - pending tab
 test_4695,1,0,0,0,Approve/Reject - no search - Channel Page - Pending tab
 test_4696,1,0,0,0,Approve/Reject - with search - Category Page - Pending tab
 test_4697,1,0,0,0,Approve/Reject - no search - Category Page - Pending tab
+test_4705,1,0,0,0,Filter by Channel Membership - with search - My Channels page
+test_4706,1,0,0,0,Filter by Channel Membership - no search - My Channels page
+test_4715,1,0,0,0,Filters Section - with search - Global Page
+test_4723,1,0,0,0,Filters Section - with search - My Media
+test_4724,1,0,0,0,Filters Section - no search - My Media
+test_4725,1,0,0,0,Filters Section - with search - Channel Page - Media Tab
+test_4726,1,0,0,0,Filters Section - no search - Channel Page - Media Tab
