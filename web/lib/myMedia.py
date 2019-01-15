@@ -137,6 +137,7 @@ class MyMedia(Base):
     FILTER_SORT_TYPE_ENABLED                                    = ('xpath', '//a[@aria-checked="true" and @aria-label="DROPDOWNLIST_ITEM undefined"]')
     FILTER_SORT_TYPE_DISABLED                                   = ('xpath', '//a[@aria-checked="false" and @aria-label="DROPDOWNLIST_ITEM undefined"]')
     FILTER_SORT_TYPE_REMOVE_BUTTON                              = ('xpath', "//a[@class='cursor-pointer bubble__a' and @aria-label='DROPDOWNLIST_ITEM']")
+    FILTER_CUSTOM_DURATION_SIDEBAR                              = ('xpath', "//div[@class='input-range__track input-range__track--active' and contains(@style,'left:')]")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -2286,12 +2287,12 @@ class MyMedia(Base):
 
         action = ActionChains(self.driver)
         try:
-            action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
+            action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).pause(1).release().perform()
         except Exception:
-            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN, 5)
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN, 6)
             sleep(1)
             try:
-                action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
+                action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).pause(1).release().perform()
             except Exception:
                 writeToLog("INFO", "FAILED to move the specific element")
                 return False
@@ -2650,4 +2651,45 @@ class MyMedia(Base):
             writeToLog("INFO", "The remove option for the " + filterOption.value + " is still present after being used")
             return False
         
+        return True
+    
+
+    # @Author: Horia Cus
+    # The function filters the custom duration by clicking directing on the sidebbar
+    # size must be integer
+    # size must be positive if you filter from the start
+    # size must be negative if you filter from the end
+    # filterFromStart = True, it will filter the duration from the start point
+    # filterFromStart = False, it will filter the duration from the end point
+    def filterCustomDurationUsingSidebar(self, size, filterFromStart=True):
+        if filterFromStart == True:
+            locatorPointButton = (self.FILTER_CUSTOM_DURATION[0], self.FILTER_CUSTOM_DURATION[1].replace('VALUE_TO_REPLACE', '0'))
+        else:
+            locatorPointButton = (self.FILTER_CUSTOM_DURATION[0], self.FILTER_CUSTOM_DURATION[1].replace('VALUE_TO_REPLACE', '10800'))
+
+        elementToBeMoved = self.wait_element(locatorPointButton, multipleElements=True)
+        if elementToBeMoved == False:
+            writeToLog("INFO", "Failed to get " + locatorPointButton[1] + "'")
+            return False
+        
+        if self.wait_element(self.FILTER_CUSTOM_DURATION_SIDEBAR, 5, True) == False:
+            writeToLog("INFO", "Custom duration sidebar is missing")
+            return False
+
+        action = ActionChains(self.driver)
+        try:
+            action.move_to_element(elementToBeMoved).move_by_offset(size, 0).pause(1).click().perform()
+        except Exception:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN, 6)
+            sleep(1)
+            try:
+                action.move_to_element(elementToBeMoved).move_by_offset(size, 0).pause(1).click().perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to move the specific element")
+                return False
+    
+        if self.clsCommon.general.waitForLoaderToDisappear() == False:
+            writeToLog("INFO", "FAILED to save the filter changes")
+            return False
+
         return True        
