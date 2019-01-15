@@ -91,7 +91,7 @@ class Test:
             self.enumMediaEdit     = enums.Ownership.MEDIA_EDIT
             self.enumMediaPublish  = enums.Ownership.MEDIA_PUBLISH
 
-            self.entriesMap = {self.enumAnyOwner:[self.thirdtype, enums.Ownership.ANY_OWNER.value, enums.Location.ADD_TO_CHANNEL_MY_MEDIA, False], self.enumMediaOwn:[self.listAllInvalid, enums.Ownership.MEDIA_OWN.value, enums.Location.ADD_TO_CHANNEL_MY_MEDIA, True], self.enumMediaPublish:[self.thirdtype, enums.Ownership.MEDIA_PUBLISH.value, enums.Location.ADD_TO_CHANNEL_MY_MEDIA, False]}
+            self.entriesMap = {self.enumMediaOwn:[self.listAllInvalid, enums.Ownership.MEDIA_OWN.value, enums.Location.ADD_TO_CHANNEL_MY_MEDIA, True], self.enumMediaPublish:[self.thirdtype, enums.Ownership.MEDIA_PUBLISH.value, enums.Location.ADD_TO_CHANNEL_MY_MEDIA, False], self.enumAnyOwner:[self.thirdtype, enums.Ownership.ANY_OWNER.value, enums.Location.ADD_TO_CHANNEL_MY_MEDIA, False]}
             ##################### TEST STEPS - MAIN FLOW #####################
             i = 1
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to " + self.searchPage)

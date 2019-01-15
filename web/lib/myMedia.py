@@ -1987,7 +1987,7 @@ class MyMedia(Base):
 
             #Verify that icons of other fields aren't displayed
             if self.verifyIconsDisplay(field) == False:
-                writeToLog("INFO","FAILED to display just " + field + " icon")
+                writeToLog("INFO","FAILED to display just " + field.value + " icon")
                 return False
 
         return True
@@ -2286,6 +2286,7 @@ class MyMedia(Base):
             action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
         except Exception:
             self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN, 5)
+            sleep(1)
             try:
                 action.move_to_element(elementToBeMoved).click_and_hold().move_by_offset(size, 0).release().perform()
             except Exception:
@@ -2545,7 +2546,8 @@ class MyMedia(Base):
                             break
                         tmpEntryCheckBox = (self.FILTER_SORT_TYPE_DISABLED[0], self.FILTER_SORT_TYPE_DISABLED[1].replace('DROPDOWNLIST_ITEM', filterList[entry][i].value))
 
-                        if self.SortAndFilter(entry, filterList[entry][i]) == False:
+
+                        if self.removeFilterOptionWithXButton(filterList[entry][i])== False:
                             return False
 
                         try:
@@ -2564,7 +2566,8 @@ class MyMedia(Base):
                             i = i + 1
 
             elif filterType != '' and filterOption != '':
-                if self.SortAndFilter(filterType, filterOption) == False:
+
+                if self.removeFilterOptionWithXButton(filterOption)== False:
                     return False
 
                 if self.verifyFilterRemoveOptionAndCheckbox(filterOption, False) == False:
@@ -2622,4 +2625,26 @@ class MyMedia(Base):
                 writeToLog("INFO", "The " + filterOption.value + " remove option is still present")
                 return False
       
-        return True    
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function removes an enabled Filter Option by clicking on the "X" button
+    # For filterOption you must use enums
+    def removeFilterOptionWithXButton(self, filterOption=''):
+        tmpEntryRemoveOption = (self.FILTER_SORT_TYPE_REMOVE_BUTTON[0], self.FILTER_SORT_TYPE_REMOVE_BUTTON[1].replace('DROPDOWNLIST_ITEM', filterOption.value))
+        if self.wait_element(tmpEntryRemoveOption, timeout=5, multipleElements=True) == False:
+            writeToLog("INFO", "The remove option for the " + filterOption.value + " is not present")
+            return False 
+        
+        if self.click(tmpEntryRemoveOption, timeout=5, multipleElements=True) == False:
+            writeToLog("INFO", "The remove option for the " + filterOption.value + " could not be used")
+            return False       
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.wait_element(tmpEntryRemoveOption, timeout=1, multipleElements=True) != False:
+            writeToLog("INFO", "The remove option for the " + filterOption.value + " is still present after being used")
+            return False
+        
+        return True        

@@ -187,7 +187,7 @@ class Test:
                 return
                 
             writeToLog("INFO", "STEP 22: Going to modify the custom duration limit to default")
-            if self.common.myMedia.filterCustomDuration(-60, value="3600")== False:
+            if self.common.myMedia.filterCustomDuration(-80, value="3600")== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 22: FAILED to modify the custom duration limit to default")
                 return
@@ -205,7 +205,7 @@ class Test:
                 return
 
             writeToLog("INFO", "STEP 25: Going to filter Global page entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
-            if self.common.myMedia.filterCustomDuration(35, value='0')== False:
+            if self.common.myMedia.filterCustomDuration(35, value='0') == False and self.common.myMedia.filterCustomDuration(20, value='900')== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 25: FAILED to filter Global page entries  by '" + enums.Duration.CUSTOM.value + " using special entry limits")
                 return
