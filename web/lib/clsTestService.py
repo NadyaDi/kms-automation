@@ -84,7 +84,11 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
                  'download.prompt_for_download': False,
                  'download.directory_upgrade': True,
                  'safebrowsing.enabled': False,
-                 'safebrowsing.disable_download_protection': True}    
+                 'safebrowsing.disable_download_protection': True,
+                 "profile.default_content_setting_values.media_stream_mic": 1, 
+                 "profile.default_content_setting_values.media_stream_camera": 1,
+                 "profile.default_content_setting_values.geolocation": 1, 
+                 "profile.default_content_setting_values.notifications": 1}
         chromeOptions.add_experimental_option('prefs', prefs)  
     
     
