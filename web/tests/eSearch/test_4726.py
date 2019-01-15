@@ -91,7 +91,7 @@ class Test:
             else:
                 i = i + 1
             i = i
-
+ 
             writeToLog("INFO","Step: " + str(i + 1) + ": Going to verify that after all the sort options were selected, the filter will change to 'ALL'")
             if self.common.myMedia.verifyFilterSection(self.sortMediaType, self.sortAllMediaOptions, enable=True, disable=False, clearFilterMenu=False) == False:
                 self.status = "Fail"
