@@ -58,6 +58,11 @@ class clsPractiTest:
                         if runOnlyFailed == 'yes':
                             if not testInstance['attributes']['run-status'].lower() == 'failed':
                                 toRun = False
+                        
+                        # Run only 'No Run' test
+                        else:
+                            if not testInstance['attributes']['run-status'].lower() == 'no run':
+                                toRun = False                             
                                  
                         if executeAutomated == 'Yes' and toRun == True:
                             sessionInstancesDct[testInstance["attributes"]["test-display-id"]] = testInstance["id"] + ";" + platform
