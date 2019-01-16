@@ -114,19 +114,19 @@ class Test:
                     return
                    
             writeToLog("INFO","Step 9: Going to publish entry: " + self.entryName1)            
-            if self.common.myMedia.publishSingleEntry(self.entryName1, "", (self.channelName1, self.channelName2, self.channelName4)) == False: 
+            if self.common.myMedia.publishSingleEntry(self.entryName1, "", [self.channelName1, self.channelName2, self.channelName4]) == False: 
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to publish entry: " + self.entryName1)
                 return
                  
             writeToLog("INFO","Step 10: Going to publish entry: " + self.entryName2)            
-            if self.common.myMedia.publishSingleEntry(self.entryName2, "", (self.channelName2, self.channelName4)) == False: 
+            if self.common.myMedia.publishSingleEntry(self.entryName2, "", [self.channelName2, self.channelName4]) == False: 
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to publish entry: " + self.entryName2)
                 return
                  
             writeToLog("INFO","Step 11: Going to publish entry: " + self.entryName3)            
-            if self.common.myMedia.publishSingleEntry(self.entryName3, "", [(self.channelName2)]) == False: 
+            if self.common.myMedia.publishSingleEntry(self.entryName3, "", [self.channelName2]) == False: 
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to publish entry: " + self.entryName2)
                 return
