@@ -449,8 +449,9 @@ class MyMedia(Base):
         if self.clickActionsAndPublishFromMyMedia() == False:
             writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
             return False
-
-        if self.click(self.MY_MEDIA_PUBLISH_UNLISTED, 30) == False:
+        
+        sleep(3)
+        if self.click(self.MY_MEDIA_PUBLISH_UNLISTED, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on Unlisted button")
             return False
 

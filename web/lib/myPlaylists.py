@@ -423,6 +423,7 @@ class MyPlaylists(Base):
                 
                 # Show all entries at the bottom of the page
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
+                sleep(2)
                 entriesTableList = self.get_elements(self.MY_PLAYLIST_TABLE_SIZE)
                 heightOfEntry = entriesTableList[0].size['height'] + 5
                 moveX = 0
