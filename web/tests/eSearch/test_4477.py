@@ -71,103 +71,103 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to to navigate to 'Add to channel' - 'SR' tab")
                 return
-
+ 
             writeToLog("INFO", "STEP 3: Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.ANY_DURATION.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.ANY_DURATION) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 3: FAILED to filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.ANY_DURATION.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 4 Going to verify filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.ANY_DURATION.value + "'")
             if self.common.channel.verifyFiltersInAddToChannel(self.allDuration, enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 4: FAILED to verify filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.ANY_DURATION.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 5: Going to clear the filter search menu")
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 5: Failed to clear the search menu")
                 return
- 
+  
             writeToLog("INFO", "STEP 6 Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.TEN_MINUTES.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.TEN_MINUTES) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 6: FAILED to filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.TEN_MINUTES.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 7: Going to verify filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.TEN_MINUTES.value + "'")
             if self.common.channel.verifyFiltersInAddToChannel(self.tenDuration, enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 7: FAILED to verify filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.TEN_MINUTES.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 8: Going to clear the filter search menu")
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 8: Failed to clear the search menu")
                 return
- 
+  
             writeToLog("INFO", "STEP 9: Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.THIRTY_MINUTES.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.THIRTY_MINUTES) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 9: FAILED to filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.THIRTY_MINUTES.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 10: Going to verify filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.THIRTY_MINUTES.value + "'")
             if self.common.channel.verifyFiltersInAddToChannel(self.thirtyDuration, enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 10: FAILED to verify filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.THIRTY_MINUTES.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 11: Going to clear the filter search menu")
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 11: Failed to clear the search menu")
                 return
- 
+  
             writeToLog("INFO", "STEP 12 Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.SIXTY_MINUTES.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.SIXTY_MINUTES) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 12: FAILED to filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.SIXTY_MINUTES.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 13 Going to verify filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.SIXTY_MINUTES.value + "'")
             if self.common.channel.verifyFiltersInAddToChannel(self.sixtyDuration, enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 13: FAILED to verify filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.SIXTY_MINUTES.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 14: Going to clear the filter search menu")
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 14: Failed to clear the search menu")
                 return
- 
+  
             writeToLog("INFO", "STEP 15: Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.CUSTOM) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 15: FAILED to filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.CUSTOM.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 16: Going to verify filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.channel.verifyFiltersInAddToChannel(self.customDuration, enums.Location.ADD_TO_CHANNEL_SR) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 16: FAILED to verify filter 'Add to channel' - 'SR' tab entries  by '" + enums.Duration.CUSTOM.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 17: Going to clear the filter search menu")
             if self.common.myMedia.filterClearAllWhenOpened() == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 17: Failed to clear the search menu")
                 return
- 
+  
             writeToLog("INFO", "STEP 18 Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.CUSTOM.value + "'")
             if self.common.myMedia.SortAndFilter(enums.SortAndFilter.DURATION, enums.Duration.CUSTOM) == False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 18: FAILED to filter 'Add to channel' - 'SR' tab entries by '" + enums.Duration.CUSTOM.value + "'")
                 return
- 
+  
             writeToLog("INFO", "STEP 19 Going to filter 'Add to channel' - 'SR' tab entries by: " + enums.Duration.CUSTOM.value + " using special entry limits")
             if self.common.myMedia.filterCustomDurationUsingSidebar(55, True) == False:
                 self.status = "Fail"
@@ -181,7 +181,7 @@ class Test:
                 return
                  
             writeToLog("INFO", "STEP 21: Going to modify the custom duration limit to default")
-            if self.common.myMedia.filterCustomDuration(-80, value="3600")== False:
+            if self.common.myMedia.filterCustomDuration(-65, value="3600")== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 21: FAILED to modify the custom duration limit to default")
                 return
