@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: oded berihon
-    # Test Name : eSearch - Sort by media type in channel page  
+    # Test Name : eSearch - Filter by media type in channel page  
     # Test description:
     # Upload all types of entries and sort them by their type
     # Go to my media page and sort the entries (with and without search):
@@ -24,7 +24,7 @@ class Test:
     #    5. Sort by webcast type - only webcast type should be displayed in the results
     #
     #================================================================================================================================
-    testNum = "4330"
+    testNum = "4718"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
