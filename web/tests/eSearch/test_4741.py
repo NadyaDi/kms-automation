@@ -24,7 +24,7 @@ class Test:
     #    5. Sort by webcast type - only webcast type should be displayed in the results
     #
     #================================================================================================================================
-    testNum = "4358"
+    testNum = "4741"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: oded berihon
-    # Test Name : eSearch - Filter by media type in add to channel page SR tab no search 
+    # Test Name : eSearch - Filter by media type in channel pending tab page with search
     # Test description:
     # Upload all types of entries and sort them by their type
     # Go to my media page and sort the entries (with and without search):
@@ -24,7 +24,7 @@ class Test:
     #    5. Sort by webcast type - only webcast type should be displayed in the results
     #
     #================================================================================================================================
-    testNum = "4354"
+    testNum = "4735"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -55,8 +55,7 @@ class Test:
             self.entryName3 = "Sort by media type - video"
             self.entryNameQuiz = "Sort by media type - Quiz"
             
-            self.channelForEsearch  = "Channel for eSearch"
-            self.SRchannelForEsearch = "SR-Channel for eSearch"
+            self.channelForEsearch  = "channel moderator for eSearch"
             
             self.filterByImage = {self.entryName1: True, self.entryName2: False, self.entryName3: False, self.entryNameQuiz: False}
             self.filterByAudio = {self.entryName1: False, self.entryName2: True, self.entryName3: False, self.entryNameQuiz: False}
@@ -70,72 +69,76 @@ class Test:
                 return 
                         
             writeToLog("INFO","Step 2: Going to navigate to add to channel page")
-            if self.common.channel.navigateToAddToChannel(self.channelForEsearch) == False:
+            if self.common.channel.navigateToPendingaTab(self.channelForEsearch, location=enums.Location.CHANNEL_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to go to add to channel page")
-                return     
+                return
             
-            writeToLog("INFO","Step 3: Going to click on SR tab")
-            if self.common.channel.navigateToSrTabInAddToChannel(self.SRchannelForEsearch) == False:
+            writeToLog("INFO","Step 3: Going to search entry in pending tab channel page")
+            if self.common.channel.makeSearchInPending(self.entryName1) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to click on SR tab")
-                return     
-                                    
+                writeToLog("INFO","Step 3: FAILED to earch entry in pending tab channel page")
+                return
+                    
             sleep(1)
 #             New UI only !! this parameter will be clicked after every filter search so each filter will only have only the chosen type 
             tmpType = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.MediaType.ALL_MEDIA.value))
-            writeToLog("INFO","Step 4: Going to filter entries in add to channel SR tab page by: " + enums.MediaType.IMAGE.value) 
+            writeToLog("INFO","Step 4: Going to filter entries in add to channel page by: " + enums.MediaType.IMAGE.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.IMAGE) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 4: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.IMAGE.value + "'")
+                    writeToLog("INFO","Step 4: FAILED to filter entries in add to channel page by '" + enums.MediaType.IMAGE.value + "'")
                     return
-                
-            writeToLog("INFO","Step 5: Going to verify entries in add to channel SR tab page filter by: " + enums.MediaType.IMAGE.value)  
-            if self.common.channel.verifyFiltersInAddToChannel(self.filterByImage, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+                    
+            writeToLog("INFO","Step 5: Going to verify entries in add to channel page filter by: " + enums.MediaType.IMAGE.value)  
+            if self.common.channel.verifyFiltersInPendingTab(self.filterByImage) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to verify entries in add to channel SR tab page filter by '" + enums.MediaType.IMAGE.value + "'")
+                writeToLog("INFO","Step 5: FAILED to verify entries in add to channel page filter by '" + enums.MediaType.IMAGE.value + "'")
                 return
-
-            writeToLog("INFO","Step 6: Going to verify that only entries with " + enums.MediaType.IMAGE.value + " icon display")  
-            if self.common.myMedia.verifyEntryTypeIcon([self.entryName1], enums.MediaType.IMAGE) == False:
+             
+            if self.common.channel.clearSearchInAddToChannel(tab = enums.AddToChannelTabs.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.IMAGE.value + "'")
+                writeToLog("INFO","FAILED to clear search")
                 return  
-            
+                
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on 'All Media Type' button in filters")
                     self.status = "Fail"
                     return False
                 self.common.general.waitForLoaderToDisappear()
-                # close the filters
-#             tmpType = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.MediaType.ALL_MEDIA.value))                
+#                 close the filters
+#              tmpType = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.MediaType.ALL_MEDIA.value))                
                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in add to channel SR tab")
+                    writeToLog("INFO","FAILED to click and close filters button in my media")
                     self.status = "Fail"
                     return False
-             
+                 
+            writeToLog("INFO","Step 6: Going to search entry in pending tab channel page")
+            if self.common.channel.makeSearchInPending(self.entryName2) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to earch entry in pending tab channel page")
+                return
+                
             sleep(1)
-            writeToLog("INFO","Step 7: Going to filter entries in add to channel SR tab page by: " + enums.MediaType.AUDIO.value) 
+            writeToLog("INFO","Step 7: Going to filter entries in add to channel page by: " + enums.MediaType.AUDIO.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.AUDIO) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 7: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.AUDIO.value + "'")
+                    writeToLog("INFO","Step 7: FAILED to filter entries in add to channel page by '" + enums.MediaType.AUDIO.value + "'")
                     return
-                 
-            writeToLog("INFO","Step 8: Going to verify entries in add to channel SR tab page filter by: " + enums.MediaType.AUDIO.value)  
-            if self.common.channel.verifyFiltersInAddToChannel(self.filterByAudio, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+                    
+            writeToLog("INFO","Step 8: Going to verify entries in add to channel page filter by: " + enums.MediaType.AUDIO.value)  
+            if self.common.channel.verifyFiltersInPendingTab(self.filterByAudio) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to verify entries in add to channel SR tab page filter by '" + enums.MediaType.AUDIO.value + "'")
+                writeToLog("INFO","Step 8: FAILED to verify entries in add to channel page filter by '" + enums.MediaType.AUDIO.value + "'")
                 return
-            
-            writeToLog("INFO","Step 9: Going to verify that only entries with " + enums.MediaType.AUDIO.value + " icon display")  
-            if self.common.myMedia.verifyEntryTypeIcon([self.entryName2], enums.MediaType.AUDIO) == False:
+               
+            if self.common.channel.clearSearchInAddToChannel(tab = enums.AddToChannelTabs.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.AUDIO.value + "'")
-                return        
-              
+                writeToLog("INFO","FAILED to clear search")
+                return 
+               
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on 'All Media Type' button in filters")
@@ -144,30 +147,35 @@ class Test:
                 self.common.general.waitForLoaderToDisappear()
                 # close the filters
                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in add to channel SR tab")
+                    writeToLog("INFO","FAILED to click and close filters button in my media")
                     self.status = "Fail"
                     return False
                  
+            writeToLog("INFO","Step 9: Going to search entry in pending tab channel page")
+            if self.common.channel.makeSearchInPending(self.entryName3) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED to earch entry in pending tab channel page")
+                return
+                   
             sleep(1)
-            writeToLog("INFO","Step 10: Going to filter entries in add to channel SR tab page by: " + enums.MediaType.VIDEO.value) 
+            writeToLog("INFO","Step 10: Going to filter entries in add to channel page by: " + enums.MediaType.VIDEO.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.VIDEO) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 10: Going to filter entries in add to channel SR tab page by '" + enums.MediaType.VIDEO.value + "'")
+                    writeToLog("INFO","Step 10: Going to filter entries in add to channel page by '" + enums.MediaType.VIDEO.value + "'")
                     return
-                 
-            writeToLog("INFO","Step 11: Going to verify entries in add to channel SR tab page filter by: " + enums.MediaType.VIDEO.value)  
-            if self.common.channel.verifyFiltersInAddToChannel(self.filterByVideo, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+                    
+            writeToLog("INFO","Step 11: Going to verify entries in add to channel page filter by: " + enums.MediaType.VIDEO.value)  
+            if self.common.channel.verifyFiltersInPendingTab(self.filterByVideo) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to verify entries in add to channel SR tab page filter by '" + enums.MediaType.VIDEO.value + "'")
+                writeToLog("INFO","Step 11: FAILED to verify entries in add to channel page filter by '" + enums.MediaType.VIDEO.value + "'")
                 return 
-            
-            writeToLog("INFO","Step 12: Going to verify that only entries with " + enums.MediaType.VIDEO.value + " icon display")  
-            if self.common.myMedia.verifyEntryTypeIcon([self.entryName3], enums.MediaType.VIDEO) == False:
+               
+            if self.common.channel.clearSearchInAddToChannel(tab = enums.AddToChannelTabs.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.VIDEO.value + "'")
-                return                          
-                  
+                writeToLog("INFO","FAILED to clear search")
+                return 
+               
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on 'All Media Type' button in filters")
@@ -176,30 +184,35 @@ class Test:
                 self.common.general.waitForLoaderToDisappear()
                 # close the filters
                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in add to channel SR tab")
+                    writeToLog("INFO","FAILED to click and close filters button in my media")
                     self.status = "Fail"
-                    return False            
-               
+                    return False
+                
+            writeToLog("INFO","Step 12: Going to search entry in pending tab channel page")
+            if self.common.channel.makeSearchInPending(self.entryNameQuiz) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to earch entry in pending tab channel page")
+                return
+                
             sleep(1)
-            writeToLog("INFO","Step 13: Going to filter entries in add to channel SR tab page by: " + enums.MediaType.QUIZ.value) 
+            writeToLog("INFO","Step 13: Going to filter entries in add to channel page by: " + enums.MediaType.QUIZ.value) 
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, enums.MediaType.QUIZ) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.QUIZ.value + "'")
+                    writeToLog("INFO","Step 13: FAILED to filter entries in add to channel page by '" + enums.MediaType.QUIZ.value + "'")
                     return
                  
-            writeToLog("INFO","Step 14: Going to verify entries in add to channel SR tab page filter by: " + enums.MediaType.QUIZ.value)  
-            if self.common.channel.verifyFiltersInAddToChannel(self.filterByQuiz, searchIn=enums.Location.ADD_TO_CHANNEL_SR) == False:
+            writeToLog("INFO","Step 14: Going to verify entries in add to channel page filter by: " + enums.MediaType.QUIZ.value)  
+            if self.common.channel.verifyFiltersInPendingTab(self.filterByQuiz) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to verify entries in add to channel SR tab page filter by '" + enums.MediaType.QUIZ.value + "'")
+                writeToLog("INFO","Step 14: FAILED to verify entries in add to channel page filter by '" + enums.MediaType.QUIZ.value + "'")
                 return 
             
-            writeToLog("INFO","Step 15: Going to verify that only entries with " + enums.MediaType.QUIZ.value + " icon display")  
-            if self.common.myMedia.verifyEntryTypeIcon([self.entryNameQuiz], enums.MediaType.QUIZ) == False:
+            if self.common.channel.clearSearchInAddToChannel(tab = enums.AddToChannelTabs.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to filter entries in add to channel SR tab page by '" + enums.MediaType.QUIZ.value + "'")
-                return                      
-                
+                writeToLog("INFO","FAILED to clear search")
+                return 
+            
             if self.common.isElasticSearchOnPage() == True:
                 if self.common.base.click(tmpType, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on 'All Media Type' button in filters")
@@ -208,12 +221,12 @@ class Test:
                 self.common.general.waitForLoaderToDisappear()
                 # close the filters
                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in add to channel SR tab")
+                    writeToLog("INFO","FAILED to click and close filters button in my media")
                     self.status = "Fail"
                     return False                         
                                     
             ##################################################################
-            writeToLog("INFO","TEST PASSED: Filter by media type in add to channel page SR tab no search page done successfully")
+            writeToLog("INFO","TEST PASSED: eSearch - Sort by media type in channel pending tab page with search page done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
