@@ -187,7 +187,7 @@ class Test:
                 return
                 
             writeToLog("INFO", "STEP 22: Going to modify the custom duration limit to default")
-            if self.common.myMedia.filterCustomDuration(-80, value="3600")== False:
+            if self.common.myMedia.filterCustomDuration(-65, value="3600")== False:
                 self.status = "Fail"
                 writeToLog("INFO", "STEP 22: FAILED to modify the custom duration limit to default")
                 return

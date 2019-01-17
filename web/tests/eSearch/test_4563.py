@@ -112,10 +112,10 @@ class Test:
                 writeToLog("INFO", "Step 9: FAILED the Publish action option is enabled while using " + enums.Ownership.MEDIA_PUBLISH.value + " filter")
                 return
 
-            writeToLog("INFO", "Step 10: Going to verify that the Edit option is enabled while using " + enums.Ownership.MEDIA_EDIT.value + " filter")
-            if self.common.base.is_present(self.common.myMedia.EDIT_OPTION_PRESENT_PUBLISH_ENTRY, timeout=3) == False:
+            writeToLog("INFO", "Step 10: Going to verify that the Edit option is disabled while using " + enums.Ownership.MEDIA_EDIT.value + " filter with " + self.userPublisher + " user")
+            if self.common.base.wait_element(self.common.myMedia.EDIT_OPTION_PRESENT_PUBLISH_ENTRY, 1, True) != False:
                 self.status = "Fail"
-                writeToLog("INFO", "Step 10: FAILED the Edit option is disabled while using " + enums.Ownership.MEDIA_EDIT.value + " filter")
+                writeToLog("INFO", "Step 10: FAILED the Edit option is enabled while using " + enums.Ownership.MEDIA_EDIT.value + " filter")
                 return
             ##################################################################
             writeToLog("INFO","TEST PASSED: All the options are properly enabled or disabled while using " + self.filterMenuName + " filter")

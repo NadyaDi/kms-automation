@@ -103,6 +103,8 @@ class IframeName(Enum):
     PLAYER                                  = 'PLAYER'
     KEA                                     = 'KEA'
     KEA_QUIZ_PLAYER                         = 'KEA_QUIZ_PLAYER'
+    KEA_QUIZ_BLANK                          = 'KEA_BLANK'
+    KEA_PREVIEW_PLAYER                      = 'KEA_PREVIEW_PLAYER'
     EMBED_PLAYER                            = 'EMBED_PLAYER'
     KAF_BLACKBOARD                          = 'KAF_BLACKBOARD'
     KAF_BLACKBOARD_EMBED_KALTURA_MEDIA      = 'KAF_BLACKBOARD_EMBED_KALTURA_MEDIA'
@@ -521,3 +523,28 @@ class PendingModerateAction(Enum):
 
     REJECT           = "Reject"
     APPROVE          = "Approve" 
+    
+    
+class KEAQuizSection(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    DETAILS           = "Details"
+    SCORES            = "Scores"
+    EXPERIENCE        = "Experience"
+    
+    
+class KEAQuizOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+
+    QUIZ_NAME           = "Quiz Name"
+    SHOW_WELCOME_PAGE   = "Show Welcome Page"
+    ALLOW_DOWNLOAD      = "Allow Download of Questions List"
+    INSTRUCTIONS        = "Instructions" 
+    DO_NOT_SHOW_SCORES  = "Do Not Show Scores"
+    SHOW_SCORES         = "Show Scores"
+    INCLUDE_ANSWERS     = "Include Answers"
+    ALLOW_ANSWER_CHANGE = "Allow Answers Change"
+    ALLOW_SKIP          = "Allow Skip"
+    DO_NOT_ALLOW_SKIP   = "Do not Allow Skip"
