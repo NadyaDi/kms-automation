@@ -53,6 +53,7 @@ class Admin(Base):
     ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION             = ('xpath', '//option[@value="PROFILE_ID"]')
     ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
     ADMIN_ASSIGNMENT_SUBMISSION                     = ('xpath', '//select[@id="enableAssignmentSubmission"]')
+    ADMIN_GALLERY_PAGE_SIZE                         = ('xpath', "//input[@id='pageSize']")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -976,3 +977,29 @@ class Admin(Base):
             
         writeToLog("INFO","Success, assignment submission was set to: " + str(selection) + "'")
         return True            
+    
+    
+    # @Autor: Michal Zomper 
+    def setGallerypageSize(self, galleryPageSize):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/gallery') == False:
+            writeToLog("INFO","FAILED to load gallery module page in admin")
+            return False
+        
+        sleep(1) 
+        if self.clear_and_send_keys(self.ADMIN_GALLERY_PAGE_SIZE, galleryPageSize) == False:
+            writeToLog("INFO","FAILED to insert gallery page size" )
+            return False   
+        
+        #Save changes
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in home page")
+            return False 
+        
+        writeToLog("INFO","Success, Gallery page size was updated")
+        return True  

@@ -65,6 +65,8 @@ test_2291,Canvas - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kalt
 test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2309,Canvas - Embed on BSE from my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2303,Canvas - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
@@ -182,15 +184,15 @@ test_2755,Watch History - Recently Watched playlist in home page - audio,2373952
 test_2757,Watch History - Recently Watched playlist in home page - Quiz,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_687,Entry page - Embed Entry,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_637,Playlists - Embed playlist,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_673,Playlists - Embed playlist,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_674,Playlists - Delete playlist,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_676,Playlists - Add to playlist Entry already existing inside,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_677,Playlists - Add Entry from My Media to Several Playlists,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_681,Playlists - Add several entries to new and existing playlists,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_683,Playlists - Create Empty Playlist,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!
-test_4542,Playlists - Delete Entries From Playlist,2362001-1,mediaspace.kaltura.com,admin,123456,orifl@mailinator.com,Kaltura1!,Kaltura1!
+test_673,Playlists - Embed playlist,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_674,Playlists - Delete playlist,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_676,Playlists - Add to playlist Entry already existing inside,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_677,Playlists - Add Entry from My Media to Several Playlists,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_681,Playlists - Add several entries to new and existing playlists,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_683,Playlists - Create Empty Playlist,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456
+test_4542,Playlists - Delete Entries From Playlist,2362001-1,mediaspace.kaltura.com,orifl@mailinator.com,Kaltura1!,admin,123456,Kaltura1!
 test_695,Entry page - Add caption,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_739,Channel - Members tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_699,Entry page - Disable comments,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!

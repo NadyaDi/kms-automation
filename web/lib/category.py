@@ -21,11 +21,11 @@ class Category(Base):
     CATEGORY_SEARCH_MAGNAFINE_GLASS                             = ('id', 'gallerySearch-tab')
     CATEGORY_SEARCH_RESULT                                      = ('class_name', 'entryTitle')
     CATEGORY_ENTRY_SEARCH_RESULT                                = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")# When using this locator, replace 'ENTRY_NAME' string with your real entry name
-    CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL                          = ("//a[@href='javascript:;' and contains(text(),'...')]")
+    CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL                          = ('xpath', "//a[@href='javascript:;' and contains(text(),'...')]")
     CATEGORY_ADD_NEW_BUTTON                                     = ('xpath', "//a[@id='add-new-tab']")
     CATEGORY_ADD_NEW_MEDIA_UPLOAD_BUTTON                        = ('xpath', "//a[@class='MediaUpload-tab']")
     CATEGORY_PENDING_TAB                                        = ('xpath', "//a[@id='categorymoderation-tab']")
-    CATEGORY_ENTRY_THUMBNAIL                                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY NAME']")
+    CATEGORY_ENTRY_THUMBNAIL                                    = ('xpath', "//div[@class='photo-group thumb_wrapper' and @title='ENTRY_NAME']")
     CATEGORY_NUMBER_OF_VIEWS_FOR_ENTRY                          = ('xpath', "//span[@class='screenreader-only' and contains(text(), 'NUMBER likes')]")
     CATEGORY_NUMBER_OF_LIKES_FOR_ENTRY                          = ('xpath', "//span[@class='screenreader-only' and contains(text(), 'NUMBER views')]")
     CATEGORY_NUMBER_OF_COMMENTS_FOR_ENTRY                       = ('xpath', "//a[contains(@aria-label, 'NUMBER comment(s)')]")
@@ -448,10 +448,21 @@ class Category(Base):
         # If we are in new UI - hover over edit button before clicking
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             #Set edit button
-            tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[0], self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[1].replace('ENTRY_NAME', entryName))
-            if self.hover_on_element(tmp_entry_edit_btn) == False:
+            #tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[0], self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[1].replace('ENTRY_NAME', entryName))
+            if self.hover_on_element(tmp_entry_thumbnail) == False:
                 writeToLog("INFO","FAILED to hover edit entry button")
                 return False
+            try:
+                entryThumbnail = self.get_element(tmp_entry_thumbnail)
+                elParent = entryThumbnail.find_element_by_xpath("..")
+            except:
+                writeToLog("INFO","FAILED find element parent")
+                return False
+            
+            if self.click_child(elParent, self.CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL,multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on the '...' button")
+                return False
+                
     
         # If we are in old UI we need to click first on "+" icon on entry's thumbnail
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
