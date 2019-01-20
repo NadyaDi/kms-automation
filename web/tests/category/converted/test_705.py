@@ -93,7 +93,14 @@ class Test:
             if self.common.admin.clearCache() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Setup 2: FAILED to clear cache")
-                return            
+                return      
+            
+            writeToLog("INFO","Setup 2: Going to update gallery page size")            
+            if self.common.admin.setGallerypageSize(10) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Setup 2: FAILED to update gallery page size")
+                return   
+                  
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:

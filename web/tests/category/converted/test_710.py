@@ -51,7 +51,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("ClickOnEditFromCategory", self.testNum)
+            self.entryName = clsTestService.addGuidToString("ClickEditFromCategory", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry")
