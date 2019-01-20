@@ -111,6 +111,7 @@ test_4544,KEA Clip audio entry,2438361-1,mediaspace.kaltura.com,pythonautomation
 test_4562,KEA trim video with captions,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_4621,KEA clip video with captions,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_4622,KEA Trim Quiz with caption and slide,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_4742,KEA - Quiz Details section in KEA Editor,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!

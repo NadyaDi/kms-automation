@@ -217,15 +217,16 @@ test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
 test_4543,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
-test_4458,1,0,0,0,KEA trim entry with slides
-test_4465,1,0,0,0,KEA clip entry with slides
+test_4458,0,1,0,0,KEA trim entry with slides
+test_4465,0,1,0,0,KEA clip entry with slides
 test_4482,1,0,0,0,KEA trim Quiz entry
 test_4513,1,0,0,0,KEA clip Quiz entry
 test_4535,1,0,0,0,KEA trim Audio entry
 test_4544,1,0,0,0,KEA Clip Audio entry
 test_4562,1,0,0,0,KEA Trim video with captions
 test_4621,1,0,0,0,KEA Clip video with captions
-test_4622,1,0,0,0,KEA Trim Quiz with caption and slide
+test_4622,0,1,0,0,KEA Trim Quiz with caption and slide
+test_4742,1,0,0,0,KEA - Quiz Details section in KEA Editor
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
