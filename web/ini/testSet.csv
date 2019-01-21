@@ -229,6 +229,7 @@ test_4562,1,0,0,0,KEA Trim video with captions
 test_4621,1,0,0,0,KEA Clip video with captions
 test_4622,0,1,0,0,KEA Trim Quiz with caption and slide
 test_4742,1,0,0,0,KEA - Quiz Details section in KEA Editor
+test_4746,1,0,0,0,KEA - Quiz Details section in Entry Page
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
