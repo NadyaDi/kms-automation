@@ -61,7 +61,10 @@ class Player(Base):
     PLAYER_QUIZ_ANSWER_NO_2                                     = ('xpath', "//p[@id='answer-1-text']")
     PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
     PLAYER_QUIZ_ANSWER_NO_4                                     = ('xpath', "//p[@id='answer-3-text']")
-    PLAYER_CONTROLER_BAR                                        = ('xpath', "//div[@class='controlsContainer']") 
+    PLAYER_CONTROLER_BAR                                        = ('xpath', "//div[@class='controlsContainer']")
+    PLAYER_PREVIEW_WELCOME_MESSAGE                              = ('xpath', "//div[@class='welcomeMessage']")
+    PLAYER_PREVIEW_INSTRUCTIONS                                 = ('xpath', "//div[@class='InvideoTipMessage']")
+    PLAYER_PREVIEW_DOWNLOAD                                     = ('xpath', "//div[@class='pdf-download-txt']") 
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -1001,3 +1004,79 @@ class Player(Base):
             writeToLog("INFO","FAILED to display correct text")
             return False  
         return True
+    
+    
+    # @Author: Horia Cus
+    # This function verifies if a specific KEA element from any KEA option is present or not in the player screen
+    # Supports only KEA Details section for now
+    # location must be enum  (e.g enums.Location.ENTRY_PAGE)
+    # if isPresent = True, the kea element must contain the text for the specific option
+    # if isPresent = true, the keaElement must be empty = ''
+    def verifyQuizElementsInPlayer(self, keaSection, keaOption, keaElement, location, timeOut=45, isPresent=True):
+        if keaSection == enums.KEAQuizSection.DETAILS:
+            if keaOption == enums.KEAQuizOptions.SHOW_WELCOME_PAGE:
+                tmpLocator = self.PLAYER_PREVIEW_WELCOME_MESSAGE
+                
+            elif keaOption == enums.KEAQuizOptions.INSTRUCTIONS:
+                tmpLocator = self.PLAYER_PREVIEW_INSTRUCTIONS
+    
+            elif keaOption == enums.KEAQuizOptions.ALLOW_DOWNLOAD:
+                tmpLocator = self.PLAYER_PREVIEW_DOWNLOAD
+            else:
+                writeToLog("INFO", "Make sure that you have used a supported KEA Option")
+                return False
+            
+        else:
+            writeToLog("INFO", "Make sure that you have used a supported KEA Section")
+            return False
+        
+        if location == enums.Location.ENTRY_PAGE:
+            self.switchToPlayerIframe()
+        
+        elif location == enums.Location.KEA_PAGE:
+            self.clsCommon.kea.switchToKEAPreviewPlayer()
+
+        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, timeOut, True) != False:
+            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 2, True) == False:
+                writeToLog("INFO", "FAILED to activate the preview screen")
+                return False
+        
+        if isPresent == True:
+            wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
+            self.setImplicitlyWait(0)
+            while True:
+                try:
+                    el = self.get_element(tmpLocator)
+                    if el.text == keaElement:
+                        self.setImplicitlyWaitToDefault()
+                        writeToLog("INFO", "The " + keaElement + " has been found in KEA page")
+                        self.switch_to_default_content()
+                        return True
+                    else:
+                        writeToLog("INFO", "The KEA element doesn't match with " + keaElement + " entry")
+                        return False
+                except:
+                    if wait_until < datetime.datetime.now():
+                        self.setImplicitlyWaitToDefault()
+                        writeToLog("INFO", "FAILED to find the " + keaElement + " within the " + str(timeOut) + " seconds")
+                        return False
+                    pass  
+                
+        elif isPresent == False:
+            if self.wait_element(tmpLocator, 30, True) == False:
+                self.switch_to_default_content()
+                writeToLog("INFO", "The " + keaOption.value + " has not been found")
+                return True
+            
+            else:    
+                el = self.wait_element(tmpLocator, 10, True)  
+                if el.text == '':
+                    writeToLog("INFO", "The " + keaOption.value + " is disabled")
+                    self.switch_to_default_content()
+                    return True
+                else:
+                    writeToLog("INFO", "The " + keaOption.value + " is present")
+                    return False
+                
+        self.switch_to_default_content()       
+        return True 

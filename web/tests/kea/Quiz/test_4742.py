@@ -18,7 +18,7 @@ class Test:
     # Verify that all the KEA Quiz Details options have proper functionality by:
     # Verifying that the quiz name can be changed
     # Verifying that the welcome message, allow download and instructions can be enabled and disabled
-    # Verify that the "Revert to default" option as functionality
+    # Verify that the "Revert to default" option has functionality
     #================================================================================================================================
     testNum = "4742"
     
@@ -33,10 +33,7 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    
-    entryName = "KEA Quiz - Details Options"
-    newEntryName       = "KEA Modified - Details Options"
-    
+        
     newWelcomeMessage  = "This is a complete new Welcome Message, enjoy!"
     welcomeMessageText = "In this video, you will be given a Quiz. Good Luck!"
     allowMessageText   = "Pre-test Available"
@@ -58,6 +55,9 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
+            self.entryName          = clsTestService.addGuidToString("KEA Quiz - Details Options Quiz", self.testNum)
+            self.newEntryName       = clsTestService.addGuidToString("KEA Quiz - Modified Options Quiz", self.testNum)
+            
             self.changeEntryName                 = {enums.KEAQuizOptions.QUIZ_NAME:self.newEntryName}
             self.changeWelcomeMessage            = {enums.KEAQuizOptions.SHOW_WELCOME_PAGE:self.newWelcomeMessage}
             
@@ -80,7 +80,6 @@ class Test:
             
             self.keaAllDetailsOptionsList        = [self.keaDetailsInputList, self.keaDetailsBooleanTrue, self.keaDetailsBooleanFalse]
             self.keaPreviewElementsList          = [self.welcomeMessagePreview, self.allowDownloadPreview, self.instructionsPreview]
-            
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
@@ -90,9 +89,9 @@ class Test:
                 return
             else:
                 i = i + 1
-             
+                             
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to KEA Quiz tab for " + self.entryName)  
-            if self.common.kea.initiateQuizTab(self.entryName, navigateToEntry=True) == False:
+            if self.common.kea.initiateQuizFlow(self.entryName, navigateToEntry=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KEA Quiz tab for " + self.entryName)  
                 return 
@@ -102,18 +101,18 @@ class Test:
             for option in self.keaAllDetailsOptionsList:
                 optionNumber = 0
                 while len(option) != optionNumber:
-                    writeToLog("INFO","Step " + str(i) + ": Going to edit the " + enums.KEAQuizSection.DETAILS.value + " by " + next(iter(option[optionNumber])).value)  
+                    writeToLog("INFO","Step " + str(i) + ": Going to edit the " + enums.KEAQuizSection.DETAILS.value + " section by modifying the " + next(iter(option[optionNumber])).value)  
                     if self.common.kea.editQuizOptions(enums.KEAQuizSection.DETAILS, option[optionNumber]) == False:
                         self.status = "Fail"
-                        writeToLog("INFO","Step " + str(i) + ": FAILED to edit the " + enums.KEAQuizSection.DETAILS.value + " by " + next(iter(option[optionNumber])).value)
+                        writeToLog("INFO","Step " + str(i) + ": FAILED to edit the " + enums.KEAQuizSection.DETAILS.value + " section by modifying the " + next(iter(option[optionNumber])).value)
                         return
                     else:
                         i = i + 1
                      
-                    writeToLog("INFO","Step " + str(i) + ": Going to verify the " + enums.KEAQuizSection.DETAILS.value + " by " + next(iter(option[optionNumber])).value)  
+                    writeToLog("INFO","Step " + str(i) + ": Going to verify the " + enums.KEAQuizSection.DETAILS.value + " section by " + next(iter(option[optionNumber])).value)  
                     if self.common.kea.verifyQuizOptionsInKEA(enums.KEAQuizSection.DETAILS, option[optionNumber]) == False:
                         self.status = "Fail"
-                        writeToLog("INFO","Step " + str(i) + ": FAILED to verify the " + enums.KEAQuizSection.DETAILS.value + " by " + next(iter(option[optionNumber])).value)
+                        writeToLog("INFO","Step " + str(i) + ": FAILED to verify the " + enums.KEAQuizSection.DETAILS.value + " section by " + next(iter(option[optionNumber])).value)
                         return 
                     else:
                         i = i + 1
@@ -127,7 +126,7 @@ class Test:
                         i = i + 1
                         optionNumber = optionNumber + 1
             ##################################################################
-            writeToLog("INFO","TEST PASSED: All the KEA Details options were properly edited and verified in KEA Preview screen")
+            writeToLog("INFO","TEST PASSED: All the KEA Details options were properly edited and verified in KEA PAGE")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -137,7 +136,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName, self.newEntryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

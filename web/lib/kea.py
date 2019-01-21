@@ -62,9 +62,6 @@ class Kea(Base):
     KEA_PREVIEW_PLAY_BUTTON                       = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder']")
     KEA_PREVIEW_CLOSE_BUTTON                      = ('xpath', '//i[contains(@class,"kCloseBtn")]')   
     KEA_IFRAME_PREVIEW_PLAYER                     = ('xpath', "//iframe[@class='ng-star-inserted' and contains(@src,'iframeembed=true&playerId=kaltura_player')]")
-    KEA_PREVIEW_WELCOME_MESSAGE                   = ('xpath', "//div[@class='welcomeMessage']")
-    KEA_PREVIEW_INSTRUCTIONS                      = ('xpath', "//div[@class='InvideoTipMessage']")
-    KEA_PREVIEW_DOWNLOAD                          = ('xpath', "//div[@class='pdf-download-txt']")
     KEA_IFRAME_BLANK                              = ('xpath', "//iframe[@title='Kaltura Editor Application']")  
     KEA_QUIZ_OPTIONS_REVERT_TO_DEFAULT_BUTTON     = ('xpath', "//button[@class='link-button pull-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")    
     #============================================================================================================
@@ -634,33 +631,38 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # This function can navigate to a specific entry and open the KEA - Quiz Tab
+    # This function can navigate to a specific entry and initiate the KEA Quiz option
     # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
-    def initiateQuizTab(self, entryName, navigateToEntry=False, timeout=90):
+    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=20):
         if navigateToEntry == True:
+            sleep(timeOut)
             if self.launchKEA(entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Failed to launch KEA for: " + entryName)
                 return False
-        
+
         self.switchToKeaIframe()
         
-        if self.verifyKeaEntryName(entryName, timeout) == False:
+        if self.verifyKeaEntryName(entryName, 60) == False:
             writeToLog("INFO", "FAILED to load the page until the " + entryName + " was present")
             return False
         
-        if self.click(self.KEA_QUIZ_TAB, 5, True) == False:
-            writeToLog("INFO","FAILED to click on the KEA Quiz tab menu")
-            return False  
-    
-        if self.keaQuizClickButton(enums.KeaQuizButtons.START) == False:
-            writeToLog("INFO","FAILED to click on the start button")
-            return False
-                
+        if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 5, True) == False:
+            if self.click(self.KEA_QUIZ_TAB, 5, True) == False:
+                writeToLog("INFO","FAILED to click on the KEA Quiz tab menu")
+                return False  
+            
+        start_button = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.START.value))
+        
+        if self.wait_element(start_button, 5, True) != False:
+            if self.click(start_button, 5, True) == False:
+                writeToLog("INFO","FAILED to click on the Quiz Start button")
+                return False  
+                            
         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
             writeToLog("INFO","FAILED, the loading spinner remained in infinite loading")
             return False
         
-        sleep(3)
+        sleep(1)
                 
         if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 5, True) == False:
             writeToLog("INFO", "FAILED, KEA Quiz tab is not active")
@@ -692,51 +694,7 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to find the " + entryName + " within the " + str(timeout) + " seconds")
                     return False
                 pass
-
-
-    # @Author: Horia Cus
-    # This function verifies if a specific KEA element from any KEA option is present or not in the preview screen
-    # Supports only KEA Details section now
-    def verifyQuizWelcomeScreenElements(self, keaOption, keaElement, timeout=60):
-        if keaOption == enums.KEAQuizOptions.SHOW_WELCOME_PAGE:
-            tmpLocator = self.KEA_PREVIEW_WELCOME_MESSAGE
-            
-        elif keaOption == enums.KEAQuizOptions.INSTRUCTIONS:
-            tmpLocator = self.KEA_PREVIEW_INSTRUCTIONS
-
-        elif keaOption == enums.KEAQuizOptions.ALLOW_DOWNLOAD:
-            tmpLocator = self.KEA_PREVIEW_DOWNLOAD
-            
-        else:
-            writeToLog("INFO", "Make sure that you have used a supported KEA Option")
-            return False
-        
-        self.switchToKEAPreviewPlayer()
-
-        if self.wait_element(self.KEA_PREVIEW_PLAY_BUTTON, 5, True) != False:
-            if self.click(self.KEA_PREVIEW_PLAY_BUTTON, 5, True) == False:
-                writeToLog("INFO", "FAILED to activate the preview screen")
-                return False
-        
-        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
-        self.setImplicitlyWait(0)
-        while True:
-            try:
-                el = self.wait_element(tmpLocator, 60, multipleElements=True)
-                if el.text == keaElement:
-                    self.setImplicitlyWaitToDefault()
-                    writeToLog("INFO", "The " + keaElement + " has been found in KEA page")
-                    return True
-                else:
-                    writeToLog("INFO", "The KEA element doesn't match with " + keaElement + " entry")
-                    return False
-            except:
-                if wait_until < datetime.datetime.now():
-                    self.setImplicitlyWaitToDefault()
-                    writeToLog("INFO", "FAILED to find the " + keaElement + " within the " + str(timeout) + " seconds")
-                    return False
-                pass
-            
+                        
 
     # @Author: Horia Cus
     # This function triggers a specific KEA Section and it can enable / disable or add an input for any available KEA option
@@ -754,7 +712,6 @@ class Kea(Base):
         if self.click(tmpKEASection, 5, True) == False:
             writeToLog("INFO", "Failed to click on the " + keaSection.value)
             return False
-        sleep(3)
                 
         for options in keaOptionDict:
             if keaOptionDict[options] == True:
@@ -781,8 +738,8 @@ class Kea(Base):
                     return False
                 
                 sleep(3)
+                
         sleep(1)  
-           
         if self.click(tmpKEASection, 5, True) == False:
             writeToLog("INFO", "Failed to collapse the " + keaSection.value)
             return False
@@ -874,7 +831,6 @@ class Kea(Base):
         if self.click(tmpKEASection, 5, True) == False:
             writeToLog("INFO", "Failed to click on the " + keaSection.value)
             return False
-        sleep(2)
         
         for options in keaOption:
             if options == enums.KEAQuizOptions.QUIZ_NAME:
@@ -892,14 +848,8 @@ class Kea(Base):
                         return False
 
                 elif keaOption[options] != '':
-                    if self.openKEAPreviewScreen() == False:
-                        return False
-                    
-                    if self.verifyQuizWelcomeScreenElements(options, keaOption[options], timeout=90) == False:
-                        return False
-                    
-                    if self.closeKEAPreviewScreen() == False:
-                        return False
+                    writeToLog("INFO", "Work in progress")
+#                     if self.clsCommon.player.verifyQuizElementsInPlayer() == False: WIP
             
         sleep(1)         
         if self.click(tmpKEASection, 5, True) == False:
@@ -1023,4 +973,51 @@ class Kea(Base):
             writeToLog("INFO", "Failed to collapse the " + keaSection.value)
             return False
             
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function verifies that the default options are displayed after using the revert option
+    # keaSection = must use enums.KEAQuizSection
+    def navigateToEntryPageFromKEA(self, entryName):
+        self.switch_to_default_content()
+        
+        if self.clsCommon.entryPage.verifyEntryNamePresent(entryName, 3) == True:
+            writeToLog("INFO","You are already in the " + entryName + " entry page")
+            return True 
+        
+        self.switchToKeaIframe()
+        tmp_button = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.DONE.value))
+
+        if self.wait_element(tmp_button, 3, True) != False:
+            if self.click(tmp_button, 5, True) == False:
+                writeToLog("INFO", "FAILED to click on the done button")
+                return False
+            else:
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 50) == False:
+                    writeToLog("INFO","FAILED to save the changes")
+                    return False  
+                
+                sleep(1)
+                
+        tmp_button = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.GO_TO_MEDIA_PAGE.value))
+        sleep(1)
+        if self.wait_element(tmp_button, 60, True) == False:
+            writeToLog("INFO", "FAILED to find the go to media button")
+            return False
+        
+        sleep(1)
+        if self.click(tmp_button, 5, True) == False:
+            writeToLog("INFO", "FAILED to click on the Go To Media button")
+            return False
+        
+        self.switch_to_default_content()
+        
+        sleep(3)
+        
+        if self.clsCommon.entryPage.verifyEntryNamePresent(entryName, 60)== False:
+            writeToLog("INFO","FAILED to load the entry page for " + entryName + " entry")
+            return False
+        
+        sleep(2)    
         return True
