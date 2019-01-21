@@ -71,6 +71,15 @@ class Upload(Base):
     UPLOAD_PAGE_TITLE                           = ('xpath', "//h1[text()='Upload Media']")
     DROP_DOWN_WEBCAST_BUTTON                    = ('xpath', ".//span[text()='Webcast Event']")
     UPLOAD_DESCRIPTION_FIELD_TITLE              = ('xpath', '//label[@id="description-label"]')   
+    DROP_DOWN_WEBCAM_RECORDING_BUTTON           = ('xpath', ".//span[text()='Webcam Recording']")
+    RECORDER_PAGE_TITLE                         = ('xpath', "//h1[text()='Record Media']")
+    RECORDER_START_BTN                          = ('xpath', '//button[@id="startRecord"]')
+    RECORDER_STOP_BTN                           = ('xpath', '//button[contains(@class,"timer-button timer-button")]')
+    RECORDER_USE_THIS_BTN                       = ('xpath', '//button[contains(@class,"btn btn-primary btn__save bottom__btn__") and text()="Use This"]')
+    RECORDER_RECORD_AGAIN_BTN                   = ('xpath', '//button[contains(@class,"btn btn__reset bottom__btn__") and text()="Record Again"]')
+    RECORDER_SCREEN                             = ('xpath', '//video[@id="recorder"]')
+    RECORDER_PLAY_BTN                           = ('xpath', '//a[@class="playkit-pre-playback-play-button"]')
+    RECORDER_COUNTDOWN                          = ('xpath', '//div[contains(@class, "countdown countdown")]')
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -713,3 +722,114 @@ class Upload(Base):
             return False
          
         return entryID
+    
+    
+    # @Author: Inbar Willman
+    def clickAddWebcamRecording(self):
+        # Click Add New
+        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
+            writeToLog("DEBUG","FAILED to click on 'Add New' button")
+            return False
+            
+        # Click webcam recording option
+        try:
+            parentElement = self.get_element(self.UPLOAD_MENU_DROP_DOWN_ELEMENT)
+            self.get_child_element(parentElement, self.DROP_DOWN_WEBCAM_RECORDING_BUTTON).click()
+            
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to click webcam recording option from drop down menu")
+            return False 
+
+        if self.wait_visible(self.RECORDER_PAGE_TITLE, 30) == False:
+            writeToLog("DEBUG","FAILED to navigate to recorder page")
+            return False
+        
+        writeToLog("INFO","Success: webcam recording option was chosen")
+        return True
+
+    # NOT FINISHED
+    # @Author: Inbar Willman
+    # timeToStopRecording - When to stop recording (int)
+    # recordAgain - If to record again (delete the current recording) 
+    # numOfRecordinAgain - How many times to click record again before saving the recording
+    def addNewWebcamRecording(self, entryName=None, description=None, tags=None, timeToStopRecording=None, recordAgain=False, numOfRecordinAgain=None, publishStatus=enums.EntryPrivacyType.PRIVATE, channelsList=[], categoriesList=[]):
+        if self.clickAddWebcamRecording() == False:
+            writeToLog("INFO","FAILED to click on webcam recording option in 'Add new'")
+            return False  
+        
+        if self.wait_element(self.RECORDER_START_BTN) == False:
+            writeToLog("INFO","FAILED to display recorder start button")
+            return False 
+        
+        sleep(5)   
+                          
+        if self.clickPlayAndPauseInRecorder(timeToStopRecording) == False:
+            writeToLog("INFO","FAILED to play and stop recording")
+            return False 
+        
+        if recordAgain == True:
+            for i in range(numOfRecordinAgain):
+                if self.clickPlayAndPauseInRecorder(timeToStopRecording, True) == False:
+                    writeToLog("INFO","FAILED to play and stop recording after clicking 'record again'")
+                    return False 
+                
+                i=i+1
+        
+        if self.click(self.RECORDER_USE_THIS_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Use This' button")
+            return False             
+        
+        if self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME) == False:
+            writeToLog("INFO","FAILED to displayed entry details section")
+            return False                         
+        
+        if self.fillFileUploadEntryDetails(entryName, description, tags) == False:
+            writeToLog("INFO","FAILED to fill entry details")
+            return False               
+         
+        # Click Save           
+        if self.click(self.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
+            writeToLog("DEBUG","FAILED to click on 'Save' button")
+            return False 
+                 
+        # Wait for loader to disappear
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(3)
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+                 
+        # Wait for 'Your changes have been saved.' message
+        if self.wait_visible(self.UPLOAD_ENTRY_SUCCESS_MESSAGE, 45) == False: 
+            writeToLog("INFO","FAILED to upload entry, no success message was appeared'")
+            return False
+        
+        if publishStatus == enums.EntryPrivacyType.UNLISTED:
+            return True
+        
+        return True      
+    
+    
+    # @Author: Inbar Willman
+    def clickPlayAndPauseInRecorder(self, timeToStopRecording, isRecordAgain=False):  
+        if isRecordAgain == False:  
+            if self.click(self.RECORDER_START_BTN) == False:
+                writeToLog("INFO","FAILED to click on start button")
+                return False 
+        else:
+            if self.click(self.RECORDER_RECORD_AGAIN_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Record Again' button")
+                return False 
+        
+        if self.wait_while_not_visible(self.RECORDER_COUNTDOWN) == False:
+            writeToLog("INFO","FAILED: countdown is still displayed")
+            return False             
+        
+        if self.wait_for_text(self.RECORDER_STOP_BTN, timeToStopRecording, 100) == False:
+            writeToLog("INFO","FAILED to display correct time")
+            return False   
+        
+        if self.click(self.RECORDER_STOP_BTN) == False:
+            writeToLog("INFO","FAILED to click on stop button")
+            return False                       
+        
+        return True
