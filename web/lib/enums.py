@@ -77,6 +77,7 @@ class Location(Enum):
     SHARED_REPOSITORY           = 'Shared Repository'
     UPLOAD_PAGE_EMBED           = 'Upload page embed'
     GALLERY_PAGE                = 'Gallery Page'
+    KEA_PAGE                    = "KEA PAGE"
 
 
 class EditEntryPageTabName(Enum):

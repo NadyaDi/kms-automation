@@ -225,13 +225,18 @@ class EntryPage(Base):
             
         elif navigateFrom == enums.Location.MY_HISTORY:
             if self.navigateToEntryPageFromMyHistory(entryName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.MY_HISTORY))
+                writeToLog("INFO","FAILED to navigate to entry '" + entryName + "' from " + str(enums.Location.MY_HISTORY))
                 return False   
                 
         elif navigateFrom == enums.Location.HOME:
             if self.navigateToEntryPageFromHomePage(entryName) == False:
-                writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.MY_HISTORY))
-                return False               
+                writeToLog("INFO","FAILED to navigate to entry '" + entryName + "' from " + str(enums.Location.HOME))
+                return False 
+            
+        elif navigateFrom == enums.Location.KEA_PAGE:
+            if self.clsCommon.kea.navigateToEntryPageFromKEA(entryName) == False:
+                writeToLog("INFO","FAILED to navigate to entry '" + entryName + "' from " + str(enums.Location.KEA_PAGE))
+                return False                
         sleep(2)
         return True
         
@@ -809,32 +814,29 @@ class EntryPage(Base):
     
     # Author: Cus Horia
     # The function verifies that the entryName and description are not displayed in the search results
-    def verifyEntryNameAndDescriptionInSearch(self, searchElement):          
+    def verifyEntryNameAndDescriptionInSearch(self, entryName):          
         if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
             writeToLog("INFO","FAILED to click on search icon")
             return False
         
-        if self.click_and_send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, '"' + searchElement + '"') == False:
-            writeToLog("INFO", "Failed to search for the " + searchElement + "element")
+        if self.click_and_send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, '"' + entryName + '"') == False:
+            writeToLog("INFO", "Failed to search for the " + entryName + " entry")
             return False
         
         if self.click(self.ENTRY_SEARCH_TRIGGER) == False:
-            writeToLog("INFO", "Failed to perform a search within the entry")
+            writeToLog("INFO", "Failed to trigger the search process")
             return False
         
-        if self.clsCommon.general.waitForLoaderToDisappear() == False:
-            writeToLog("INFO", "Failed to upload the search results screen")
-            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
 
         if self.is_visible(self.ENTRY_SEARCH_NO_RESULTS_TEXT) == False:
-            writeToLog("INFO", "Description is displayed in the search results")
+            writeToLog("INFO", "Entry name has been found in the search results")
             return False
         
         if self.click(self.ENTRY_SEARCH_CLOSE_ICON) == False:
             writeToLog("INFO", "Failed to close the search bar")
             return False
                     
-        writeToLog("INFO","Success, caption was found and verified")
         return True
     
     
@@ -989,4 +991,43 @@ class EntryPage(Base):
             return False
         
         writeToLog("INFO","Success, only the specific elements for the selected label are displayed")                                
-        return True             
+        return True     
+    
+    
+    # @Author: Horia Cus
+    # This function verifies if the status of any KEA Option is enabled or disabled or that a specific element is present or not
+    # keaSection must be enum
+    # keaOption must be enum and have a map
+    # keaElement must contain the text specific for the selected kea option
+    # entryName must be specified if you want to navigate to entry page from kea
+    def verifyQuizOptionsInEntryPage(self, keaSection, keaOption, keaElement, keaOptionEnabled=True, navigateToEntryPageFromKEA=False, entryName=''):
+        if navigateToEntryPageFromKEA == True:
+            if self.navigateToEntry(entryName, enums.Location.KEA_PAGE) == False:
+                return False
+        
+        if keaSection == enums.KEAQuizSection.DETAILS:
+            if keaOption == enums.KEAQuizOptions.QUIZ_NAME:
+                if self.verifyEntryNamePresent(keaElement) == False:
+                    return False
+            
+            elif keaOptionEnabled == True:
+                if self.clsCommon.player.verifyQuizElementsInPlayer(keaSection, keaOption, keaElement, location=enums.Location.ENTRY_PAGE, timeOut=45, isPresent=True) == False:
+                    return False
+                
+            elif keaOptionEnabled == False:
+                if self.clsCommon.player.verifyQuizElementsInPlayer(keaSection, keaOption, keaElement, location=enums.Location.ENTRY_PAGE, timeOut=30, isPresent=False) == False:
+                    return False   
+        
+        return True  
+    
+    
+    # @Author: Horia Cus
+    # This function verifies if the desired entry name is present in the entry page    
+    def verifyEntryNamePresent(self, entryName, timeOut=30):
+        tmp_entry_name = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+        
+        if self.wait_element(tmp_entry_name, timeOut, True) == False:
+            writeToLog("INFO","The " + entryName + " is not present")
+            return False
+        
+        return True
