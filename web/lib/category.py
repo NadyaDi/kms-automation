@@ -74,6 +74,9 @@ class Category(Base):
     CATEGORY_GALLEY_ALL_MEDIA_TABLE                             = ('xpath', "//div[@id='galleryGrid']")
     CATEGORY_ADD_TO_CATEGORY_BUTTON                             = ('xpath', "//a[@id='tab-addcontent']")
     CATEGORY_MODERATION_TAB                                     = ('xpath', "//a[@id='categorymoderation-tab']")
+    CATEGORY_ENTRY_DETAILS_PART_ON_THUMBNAIL                    = ('xpath', "//div[contains(@id,'collapse') and @class='accordion-body collapse']")
+    CATEGORY_GRID_VIEW                                          = ('xpath', "//button[contains(@class,'btn gridView') and @id='MyMediaGrid']")
+    CATEGORY_DETAILS_VIEW                                       = ('xpath', "//button[contains(@class,'btn longView ') and @id='MyMediaThumbs']")
     #=============================================================================================================
     def clickOnEntryAfterSearchInCategory(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
@@ -440,30 +443,38 @@ class Category(Base):
     # Navigate to edit entry page from category page without making a search in category page
     def navigateToEditEntryPageFromCategoryWhenNoSearchIsMade(self, entryName):
         # "+" icon on thunail
-        tmp_entry_thumbnail = (self.CATEGORY_ENTRY_THUMBNAIL[0], self.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY NAME', entryName))
+        tmp_entry_thumbnail = (self.CATEGORY_ENTRY_THUMBNAIL[0], self.CATEGORY_ENTRY_THUMBNAIL[1].replace('ENTRY_NAME', entryName))
         
         # Edit entry icon
         tmp_entry_edit_btn = None
         
         # If we are in new UI - hover over edit button before clicking
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            #Set edit button
-            #tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[0], self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[1].replace('ENTRY_NAME', entryName))
-            if self.hover_on_element(tmp_entry_thumbnail) == False:
-                writeToLog("INFO","FAILED to hover edit entry button")
-                return False
-            try:
-                entryThumbnail = self.get_element(tmp_entry_thumbnail)
-                elParent = entryThumbnail.find_element_by_xpath("..")
-            except:
-                writeToLog("INFO","FAILED find element parent")
-                return False
-            
-            if self.click_child(elParent, self.CATEGORY_3_DOTS_ON_ENTRY_THUMBNAIL,multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on the '...' button")
-                return False
+            tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[0],self.CATEGORY_EDIT_ENTRY_BTN_NEW_UI[1].replace('ENTRY_NAME', entryName)) 
+            if self.get_element(self.CATEGORY_DETAILS_VIEW).get_attribute("aria-checked") == "true":     
+                if self.hover_on_element(tmp_entry_edit_btn) == False:
+                    writeToLog("INFO","FAILED to hover edit entry button")
+                    return False
                 
-    
+            elif self.get_element(self.CATEGORY_GRID_VIEW).get_attribute("aria-checked") == "true":     
+                if self.hover_on_element(tmp_entry_thumbnail) == False:
+                    writeToLog("INFO","FAILED to hover edit entry button")
+                    return False
+                    
+                try:
+                    entryDetails = self.get_element(self.CATEGORY_ENTRY_DETAILS_PART_ON_THUMBNAIL)
+                except:
+                    writeToLog("INFO","FAILED find entry details element")
+                    return False
+                
+                btnWidth = entryDetails.size['width'] / 1.05
+                btnHeight = entryDetails.size['height'] / 2
+                
+                sleep(3)
+                if self.click(self.CATEGORY_ENTRY_DETAILS_PART_ON_THUMBNAIL, width=btnWidth, height=btnHeight) == False:
+                    writeToLog("INFO","FAILED to click on ... button")
+                    return False
+                
         # If we are in old UI we need to click first on "+" icon on entry's thumbnail
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             try:
@@ -480,14 +491,15 @@ class Category(Base):
             #set edit button for old UI
             tmp_entry_edit_btn = (self.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[0], self.CATEGORY_EDIT_ENTRY_BTN_OLD_UI[1].replace('ENTRY_NAME', entryName))   
         
+        sleep(2)
         # Click on edit button
-        if self.click(tmp_entry_edit_btn) == False:
+        if self.click(tmp_entry_edit_btn, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on edit button")
             return False   
         
         # Verify that we are in edit entry page - wait until you see edit entry page title
         tmp_entry_title = (self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[0], self.clsCommon.editEntryPage.EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE[1].replace('ENTRY_NAME', entryName))
-        if self.wait_visible(tmp_entry_title) == False:
+        if self.wait_visible(tmp_entry_title, timeout=15) == False:
             writeToLog("INFO","FAILED to displayed edit entry page title")
             return False   
         
