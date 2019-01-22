@@ -586,7 +586,7 @@ class EditEntryPage(Base):
         self.clsCommon.upload.typeIntoFileUploadDialog(captionFilePath)
         
         # Verify caption file was uploaded
-        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_CAPTION_SUCCESS_MESSAGE, 20) == False:
+        if self.wait_visible(self.EDIT_ENTRY_UPLOAD_CAPTION_SUCCESS_MESSAGE, 30) == False:
             writeToLog("INFO","FAILED to find caption uploaded success message")
             return False
         sleep(1)            

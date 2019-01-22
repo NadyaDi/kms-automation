@@ -14,14 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard: Remove Media From Media Gallery
+    # Test Name : Canvas - Remove Media From Media Gallery
     # Test description:
     # Upload an entry and publish it to media gallery
     # Go to Media gallery -> find the entry and click on the '+' button -> click on remove button 
     # verify that entry was removed from media gallery
     #================================================================================================================================
-    testNum     = "4425"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2308"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -85,7 +85,7 @@ class Test:
                 return 
             writeToLog("INFO","Step 5: Preview step failed as expected - entry was removed from gallery and should not be found")
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard: Remove Media From Media Gallery' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Remove Media From Media Gallery' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

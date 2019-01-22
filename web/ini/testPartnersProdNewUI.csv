@@ -67,6 +67,10 @@ test_2293,Canvas - My Media - filter media view different media types,,,pythonau
 test_2309,Canvas - Embed on BSE from my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2303,Canvas - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2298,Canvas - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2305,Canvas - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2308,Canvas - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
@@ -114,7 +118,6 @@ test_4562,KEA trim video with captions,2438361-1,mediaspace.kaltura.com,pythonau
 test_4621,KEA clip video with captions,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_4622,KEA Trim Quiz with caption and slide,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_4742,KEA - Quiz Details section in KEA Editor,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_4746,KEA - Quiz Details section in Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
