@@ -14,27 +14,26 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : BlackBoard: Remove Media From Media Gallery
+    # Test Name : Canvas - Edit Entry Metadata 
     # Test description:
-    # Upload an entry and publish it to media gallery
-    # Go to Media gallery -> find the entry and click on the '+' button -> click on remove button 
-    # verify that entry was removed from media gallery
+    # upload media
+    # go to media edit page and change media: name / description / tags 
     #================================================================================================================================
-    testNum     = "4425"
-    application = enums.Application.BLACK_BOARD
+    testNum     = "2298"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
-    
     
     status = "Pass"
     timeout_accured = "False"
-    driver = None
-    common = None
     # Test variables
     entryName = None
+    newEntryName = None
     description = "Description" 
+    newDescription = "Edit description"
     tags = "Tags,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3'
-    galleryName = "New1"
+    newTags = "Edit Tags,"
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,41 +50,43 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Remove Media From Media Gallery", self.testNum)
-
+            self.entryName = clsTestService.addGuidToString("Entry Metadata", self.testNum)
+            self.newEntryName = clsTestService.addGuidToString("Edit Entry Metadata", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                        
-            writeToLog("INFO","Step 1: Going to upload entry")            
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
+                 
+            writeToLog("INFO","Step 1: Going to upload entry")   
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-
-            writeToLog("INFO","Step 2: Going to publish entry to gallery")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 2: FAILED -to publish entry to gallery")
+                    
+            writeToLog("INFO","Step 2: Going navigate to edit entry page")    
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
+                return 
+                
+            writeToLog("INFO","Step 3: Going to change entry metadata  (entry name, description, tags)")
+            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to edit entry metadata")
+                return  
+            
+            writeToLog("INFO","Step 4: Going navigate entry page")    
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.newEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED navigate to entry: " + self.newEntryName)
                 return
-
-            writeToLog("INFO","Step 3: Going navigate to gallery page")                                     
-            if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to gallery page")
-                return 
             
-            writeToLog("INFO","Step 4: Going to remove entry from gallery")                                     
-            if self.common.channel.removeEntry(self.entryName) == False:    
+            writeToLog("INFO","Step 5: Going to verify entry new  metadata  (entry name, description, tags)")
+            # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
+            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.tags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
-                return 
+                writeToLog("INFO","Step 5: FAILED to verify entry new  metadata")
+                return  
             
-            writeToLog("INFO","Step 5: Going to verify that entry doesn't display in gallery any more")                                     
-            if self.common.channel.searchEntryInChannel(self.entryName) == True:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
-                return 
-            writeToLog("INFO","Step 5: Preview step failed as expected - entry was removed from gallery and should not be found")
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BlackBoard: Remove Media From Media Gallery' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -95,7 +96,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            if self.common.myMedia.deleteSingleEntryFromMyMedia(self.newEntryName) == False:
+                self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

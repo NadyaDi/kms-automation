@@ -76,112 +76,112 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
-                       
+                        
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 2: Going navigate to My Media NOT using a url navigation")   
             if self.common.base.click(self.common.jive.USER_MENU_TOGGLE_BTN, timeout=20) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to click on menu button")
                 return   
-              
+               
             if self.common.base.click(self.common.jive.JIVE_MY_MEIDA_BUTTON_IN_MENU, timeout=20) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to click on 'My Media' button in menu")
                 return   
-              
+               
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED switch to jive iframe")
                 return 
-              
+               
             self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_ACTIONS_BUTTON, timeout=20)
             if self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_TITLE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to verify My Media page display")
                 return 
-                        
+                         
             writeToLog("INFO","Step 3: Going navigate to image entry: "+ self.imageEntryName)    
             if self.common.entryPage.navigateToEntry(self.imageEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to entry: " + self.imageEntryName)
-                    
                      
+                      
             writeToLog("INFO","Step 4: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the entry '" + self.imageEntryName + "' in player")
                 return   
-                 
+                  
             writeToLog("INFO","Step 5: Going navigate to audio entry: "+ self.audioEntryName)    
             if self.common.entryPage.navigateToEntry(self.audioEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to entry: " + self.audioEntryName)
                 return 
-                             
+                              
             writeToLog("INFO","Step 6: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED - New entry is still processing")
                 return 
-                 
+                  
             writeToLog("INFO","Step 7: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, self.audioLength, "", "") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify the entry '" + self.audioEntryName + "' in player")
                 return   
-        
+         
             writeToLog("INFO","Step 8: Going navigate to video entry: "+ self.videoEntryName1)    
             if self.common.entryPage.navigateToEntry(self.videoEntryName1, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to entry: " + self.videoEntryName1)
                 return 
-                       
+                        
             writeToLog("INFO","Step 9: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED - New entry is still processing")
                 return 
-                 
+                  
             writeToLog("INFO","Step 10: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to verify the entry '" + self.videoEntryName1 + "' in player")
                 return   
-               
-            writeToLog("INFO","Step 11: Going to add media to galllery form gallery page")
+                
+            writeToLog("INFO","Step 11: Going to add media to gallery form gallery page")
             if self.common.kafGeneric.addMediaToGallery(self.galleryName, [self.videoEntryName2,self.audioEntryName,self.imageEntryName], isGalleryModerate=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to add media to galllery form gallery page")
+                writeToLog("INFO","Step 11: FAILED to add media to gallery form gallery page")
                 return  
-            
+             
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 12: Going navigate to Media Gallery NOT using a url navigation")  
             if self.common.base.click(self.common.jive.JIVE_PLACES_BUTTON_IN_NAVIGATION_BAR, timeout=20) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to click on 'places' button in the navigation bar")
                 return   
-            
+             
             if self.common.base.click(self.common.jive.JIVE_MEDIA_GALLEY_NEW1_IN_PLACES, timeout=20) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to click on media galley 'New1' button in 'places' page")
                 return  
-            
+             
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED switch to jive iframe")
                 return 
-            
+             
             if self.common.base.wait_visible(self.common.kafGeneric.KAF_MEDIA_GALLERY_TITLE, timeout=30) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to verify Media Galley page display")
                 return 
-            
+             
             writeToLog("INFO","Step 13: Going navigate to image entry: '" + self.imageEntryName + "' from gallery page")    
             if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.imageEntryName, self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED navigate to entry: " + self.imageEntryName + " from gallery page")
                 return 
-                 
+                  
             writeToLog("INFO","Step 14: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
                 self.status = "Fail"

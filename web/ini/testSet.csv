@@ -162,9 +162,13 @@ test_2290,1,0,0,0,Canvas - My Media - Search by Name / Description / Tags
 test_2291,0,1,0,0,Canvas - My Media - Sort Media
 test_2292,1,0,0,0,Canvas - My Media - filter media view different statuses
 test_2293,1,0,0,0,Canvas - My Media - filter media view different media types
-test_2302,1,0,0,0,Canvas - Edit Entry page - Disable comments
-test_2303,1,0,0,0,Canvas - Edit Entry page - Close discussion
+test_2298,1,0,0,0,Canvas - Edit Entry Metadata
+test_2302,0,1,0,0,Canvas - Edit Entry page - Disable comments
+test_2303,0,1,0,0,Canvas - Edit Entry page - Close discussion
+test_2305,1,0,0,0,Canvas - Entry page - Add captions And Search - remove caption
+test_2308,1,0,0,0,Canvas - Remove Media From Media Gallery
 test_2309,1,0,0,0,Canvas - Embed on BSE from my media
+test_2335,1,0,0,0,Canvas - Upload Media From Media Gallery Page
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category

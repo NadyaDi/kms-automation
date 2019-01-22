@@ -637,15 +637,18 @@ class EntryPage(Base):
     # @Author: Michal Zomper
     # The function check that the correct media display in the player via type
     def verifyEntryViaType(self, entryType, entryLangth='', timeToStop='', entryQRResult=''):
-        self.clsCommon.player.switchToPlayerIframe()
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+            self.clsCommon.jive.switchToJiveIframe()
+            self.driver.execute_script("window.scrollTo(0, 180)") 
+            self.clsCommon.player.switchToPlayerIframe()
+        else:
+            self.clsCommon.player.switchToPlayerIframe()
+        
         if entryType == enums.MediaType.VIDEO:
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
                 self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
             
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
-                self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
-                self.get_body_element().send_keys(Keys.PAGE_DOWN)
             try:
                 videoLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
             except NoSuchElementException:
@@ -682,6 +685,7 @@ class EntryPage(Base):
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
                 self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
+
             try:
                 audioLangth = self.get_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH).text
             except NoSuchElementException:
@@ -692,7 +696,7 @@ class EntryPage(Base):
                 writeToLog("INFO","Failed, audio length is NOT correct")
                 return False
             
-        if entryType == enums.MediaType.IMAGE:
+        if entryType == enums.MediaType.IMAGE: 
             qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
             if qrCodeSc == False:
                 writeToLog("INFO","FAILED to take qr screen shot")
@@ -720,7 +724,8 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to click on search icon")
                 return False
             
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE \
+                or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
                 if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText + Keys.ENTER, multipleElements=False) == False:
                     writeToLog("INFO","FAILED to insert caption search")
                     return False
