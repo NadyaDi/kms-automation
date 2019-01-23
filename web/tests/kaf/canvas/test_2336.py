@@ -14,14 +14,14 @@ class Test:
     #==============================================================================================================
     # Test Description 
     # author: Michal Zomper
-    # Test Name:  D2L - Gallery Moderation
+    # Test Name:  Canvas - Gallery Moderation
     # Test description::
     # Login with non owner user of the gallery and upload entries > entries with added to pending tab
     # Login with owner user of the gallery and approve / reject the entries
     # Verify the the approve entry display in the gallery and that the reject entry don't dispaly in the gallery
     #==============================================================================================================
-    testNum     = "2559"
-    application = enums.Application.D2L
+    testNum     = "2336"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
@@ -35,7 +35,7 @@ class Test:
     filePathImage = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\AutomatedBenefits.jpg' 
     filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3' 
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4' 
-    newUserId = "autod2l"
+    newUserId = "autocanvas@mailinator.com"
     newUserPass = "Kaltura1!"
     galleryName = "New1"
     
@@ -68,6 +68,7 @@ class Test:
                 self.entryName4: self.filePath } 
 
             ##################### TEST STEPS - MAIN FLOW #####################
+            
             writeToLog("INFO","Step 1: Going to upload 4 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
@@ -82,13 +83,13 @@ class Test:
             
             self.common.base.switch_to_default_content()     
             writeToLog("INFO","Step 3: Going to logout from main user")
-            if self.common.d2l.logOutOfD2L() == False:
+            if self.common.canvas.logOutOfCanvas() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to logout from main user")
                 return  
                                       
             writeToLog("INFO","Step 4: Going to login with gallery's owner")
-            if self.common.d2l.loginToD2L(self.newUserId, self.newUserPass) == False:
+            if self.common.canvas.loginToCanvas(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to login with gallery's owner")
                 return
@@ -115,13 +116,13 @@ class Test:
             
             self.common.base.switch_to_default_content() 
             writeToLog("INFO","Step 8: Going to logout from gallery owner user")
-            if self.common.d2l.logOutOfD2L() == False:
+            if self.common.canvas.logOutOfCanvas() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to logout from gallery owner user")
                 return  
              
             writeToLog("INFO","Step 9: Going to login with main user")
-            if self.common.d2l.loginToD2L(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+            if self.common.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to login with main user")
                 return
@@ -149,7 +150,7 @@ class Test:
                 self.status = "Fail"
                 return
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'D2L - Gallery Moderated' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Gallery Moderated' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -160,10 +161,10 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
             self.common.base.switch_to_default_content()
-            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME in self.common.d2l.getD2LLoginUserName()) == False:
-                self.common.d2l.logOutOfD2L()
-                self.common.d2l.loginToD2L(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
-            self.common.d2l.switchToD2LIframe()
+            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.split('@')[0] in self.common.canvas.getCanvasLoginUserName().split(' ')[0]) == False:
+                self.common.canvas.logOutOfCanvas()
+                self.common.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+            self.common.canvas.switchToCanvasIframe()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:

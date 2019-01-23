@@ -62,7 +62,7 @@ test_2285,Canvas - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.
 test_2286,Canvas - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2291,Canvas - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,student,Kaltura1!
+test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation1@mailinator.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2309,Canvas - Embed on BSE from my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -71,6 +71,7 @@ test_2298,Canvas - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltur
 test_2305,Canvas - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2308,Canvas - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2336,Canvas - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!

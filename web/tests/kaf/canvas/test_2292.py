@@ -126,14 +126,16 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to handle entries in gallery pending tab")
                 return 
-             
+            
+            sleep(2)
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 7: Going to logout from user: " + self.userName1)
             if self.common.canvas.logOutOfCanvas() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to logout from main user")
                 return  
-                                    
+            
+            sleep(2)                       
             writeToLog("INFO","Step 8: Going to login with main user")
             if self.common.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
                 self.status = "Fail"
