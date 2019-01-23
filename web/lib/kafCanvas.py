@@ -41,7 +41,7 @@ class Canvas(Base):
     CANVAS_EMBED_ENTRY_IFRAME                           = ('xpath', '//iframe[contains(@src, "/courses/471/external_tools")]')
     CANVAS_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BTN  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')
     CANVAS_ENTRY_COURSE_FIELD_DROPDOWN                  = ('xpath', '//select[@id="sharedRepositories-Course"]')
-    CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION           = ('xpath', '//option[@value="math"]')
+    CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION           = ('xpath', '//option[@value="VALUE"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -294,7 +294,7 @@ class Canvas(Base):
     
     
     # @Author: Inbar Willman
-    def addSharedRepositoryMetadataCanvas(self, entryName, location=enums.Location.EDIT_ENTRY_PAGE):
+    def addSharedRepositoryMetadataCanvas(self, entryName, sharedRepositoryMetadataValue, location=enums.Location.EDIT_ENTRY_PAGE):
         if location == enums.Location.EDIT_ENTRY_PAGE:
             if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
@@ -308,8 +308,9 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to click on course field dropdown")
             return False  
         
-        if self.click(self.CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION) == False:
-            writeToLog("INFO","FAILED to choose 'math' option in dropdown")
+        metadataOption = (self.CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION[0], self.CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION[1].replace('VALUE', sharedRepositoryMetadataValue))
+        if self.click(metadataOption) == False:
+            writeToLog("INFO","FAILED to choose '" + sharedRepositoryMetadataValue + "' option in dropdown")
             return False                                    
              
         if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SAVE_BUTTON, 15) == False:

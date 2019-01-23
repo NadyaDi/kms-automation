@@ -14,13 +14,13 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Moodle - Publish from my media to shared repository
+    # Test Name : Canvas - Publish from my media to shared repository
     # Test description:
-    # Upload entry -> Edit SR required fields -> Publish entry entry from my media to SR
+    # Upload entry -> Edit SR required fields -> Publish entry  from my media to SR
     # Verify that entry is displayed in SR
     #================================================================================================================================
-    testNum     = "954"
-    application = enums.Application.MOODLE
+    testNum     = "2294"
+    application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -30,6 +30,7 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+    sharedRepositoryMetadataValue = "math"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -71,7 +72,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 4: Going to add required metadata fields for SR")    
-            if self.common.moodle.addSharedRepositoryMetadataMoodle(self.entryName, self.fieldText) == False:
+            if self.common.canvas.addSharedRepositoryMetadataCanvas(self.entryName, self.sharedRepositoryMetadataValue) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add required metadata fields for SR")
                 return 
@@ -80,32 +81,10 @@ class Test:
             if self.common.myMedia.publishSingleEntry(self.entryName, '', '', [self.gallerySRName]) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish entry to SR")
-                return  
-             
-            writeToLog("INFO","Step 6: Going to publish entry :" + self.entryName + " from SR to media gallery")
-            if self.common.kafGeneric.addSharedRepositoryMedieToMediaGallery(self.galleryName, [self.entryName]) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to publish entry :" + self.entryName + " from SR to media gallery")
-                return     
-            
-            writeToLog("INFO","Step 7: Going to navigate to " + self.galleryName)
-            if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to navigate to to " + self.galleryName)
-                return
-            
-            self.common.base.click(self.common.kafGeneric.KAF_REFRSH_BUTTON)
-            sleep(5)
-            
-            self.common.moodle.switchToMoodleIframe()
-            writeToLog("INFO","Step 8: Going to verify entry '" + self.entryName + " in media gallery")
-            if self.common.channel.searchEntryInChannel(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to find entry '" + self.entryName + " in media gallery")
-                return                                                
+                return                                               
          
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Moodle - Publish from my media to shared repository' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Canvas - Publish from my media to shared repository' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
