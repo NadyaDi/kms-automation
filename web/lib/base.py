@@ -744,30 +744,6 @@ class Base:
                     if wait_until < datetime.datetime.now():
                         return False
             
-    # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
-    def verifyUrl_old(self, expectedUrl, isRegex, timeout=30):
-        currentUrl = self.driver.current_url
-        if isRegex == True:
-            m = re.search(expectedUrl, currentUrl)
-            if m:
-                return True
-            else:
-                writeToLog("INFO","FAILED, Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = True")
-                return False
-        # Compare URL with contains method ('in')
-        else:
-            # remove the http/https from the current and expected URL and compare
-            newCurrentUrl = currentUrl.replace('https://', '')
-            newCurrentUrl = newCurrentUrl.replace('http://', '')
-            newExpectedUrl = expectedUrl.replace('https://', '')
-            newExpectedUrl = newExpectedUrl.replace('http://', '')
-            # Compare the URLs
-            if newExpectedUrl in newCurrentUrl:
-                return True
-            else:
-                writeToLog("INFO","FAILED, Page loaded with not expected URL, expected: '" + expectedUrl + "'\nbut actual is: '" + currentUrl + "'; isRegex = False")
-                return False            
-            
             
     def wait_for_page_readyState(self, timeout=30):
         i = 0

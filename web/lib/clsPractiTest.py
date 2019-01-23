@@ -4,17 +4,27 @@ from collections import OrderedDict
 import json, csv, sys, os
 from re import split
 import re, requests
-
+from enum import Enum
 from localSettings import *
 from logger import *
 from utilityTestFunc import *
+import itertools
 
 
 #=============================================================================================================
 # The class contains functions that manage PraciTest integration with automation framework 
 #=============================================================================================================
 class clsPractiTest:
-
+    class TEST_STATUS(Enum):
+        def __str__(self):
+            return str(self.value)
+    
+        PASSED         = 'PASSED'
+        FAILED         = 'FAILED'       
+        BLOCKED              = 'BLOCKED'
+        NO_RUN              = 'NO RUN'
+        N_A                 = 'N/A'
+        
     #=============================================================================================================
     # Function that returns all instances of a specific session 
     #=============================================================================================================    
@@ -240,7 +250,93 @@ class clsPractiTest:
             writeToLog("INFO","Bad response for update instances. " + r.text)
             return False 
         
+        
+    #=============================================================================================================
+    # Function that update the tests status of entire Testset in practitest
+    # testStatus = self.practiTest.TEST_STATUS
+    #============================================================================================================= 
+    def setStatusToEntireTestset(self, testStatus, filterId):
+        # Get all Testset under specified Filter ID
+        testSetList = self.getPractiTestTestSetByFilterId(filterId)
+        
+        practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
+
+        for testSet in testSetList:
+            # Get Testset Instance ID
+            testSetInstanceId = testSet["id"]
+            
+            page = 1
+            while True:
+                headers = { 
+                    'Content-Type': 'application/json',
+                    'Connection':'close'
+                }
+                             
+                practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(testSetInstanceId) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&page[number]=" + str(page) + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
+                # For next iteration
+                page = page + 1
+                 
+                r = requests.get(practiTestGetSessionsURL,headers = headers)
+                if (r.status_code == 200):
+                    dctSets = json.loads(r.text)
+                    if (len(dctSets["data"]) > 0):
+                        testInstancesList = []
+                        for testInstance in dctSets["data"]:
+                            testInstancesList.append(testInstance["id"])
+                        dataChunks = self.createDataChank(testInstancesList, testStatus , 20)
+                        for dataChunk in dataChunks:
+                            # Set status to test instance
+                            data = eval(dataChunk)
+
+                            r = requests.post(practiTestUpdateTestInstanceResultsURL,
+                                data=json.dumps(data),
+                                auth=(LOCAL_SETTINGS_DEVELOPER_EMAIL, str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
+                                headers={'Content-type': 'application/json', 'Connection':'close'})    
+                      
+                            if (r.status_code == 200):
+                                writeToLog("INFO","Updated test instance: " + str(testInstance["id"]) + " as: " + str(testStatus)) 
+                            else:
+                                writeToLog("INFO","Bad response for update instances. " + r.text)
+                                break                            
+                            
+                    else:
+                        writeToLog("INFO","No instances in set. " + r.text)
+                        break    
+                else:
+                    writeToLog("INFO","Bad response for get sessions. " + r.text) 
+                    break
     
+    
+    #=============================================================================================================                
+    # Return yield successive n-sized chunks from l. (return iterable of chunks lists) 
+    #=============================================================================================================
+    def chunks(self, l, n):
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
+        
+        
+    #=============================================================================================================                
+    # Creates generic data for updating multiple test by sending one request
+    #=============================================================================================================
+    def createDataChank(self, instanceIdList, testStatus, maxCount):
+        tampleteSuffix = ']}'
+        listOfDataChunks = []
+        # Divide the list to chunks (PractiTest API can manage maximum of 20 test in one request)
+        iterableList = self.chunks(instanceIdList, maxCount)
+        
+        for maxInstanceList in iterableList:
+            data = '{"data": ['
+            for instanceId in maxInstanceList:
+                data = data + '{ "type": "instances", "attributes":{"instance-id": ' + instanceId + '}, "steps": {"data": [{"name": "Set Test Status As: " + "' + str(testStatus) + '", "expected-results": "This step created automated", "status": "' + str(testStatus) + '"}]}}'
+                # if not last, add ',' at the end
+                if instanceId != maxInstanceList[-1]:
+                    data = data + ','
+            data = data + tampleteSuffix 
+            listOfDataChunks.append(data)
+            
+        return listOfDataChunks
+        
+        
     #=============================================================================================================
     # Function that that creates the csv that contains the automation tests to be run
     #=============================================================================================================
