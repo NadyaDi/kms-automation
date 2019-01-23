@@ -33,6 +33,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_5.png'
     uploadThumbnailExpectedResult = 5
     galleryName = "Shared Repository"
+    sharedRepositoryMetadataValue = "math"
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -73,7 +74,7 @@ class Test:
                 return
              
             writeToLog("INFO","Step 4: Going to to add required metadata fields for SR")    
-            if self.common.canvas.addSharedRepositoryMetadataCanvas(self.entryName) == False:
+            if self.common.canvas.addSharedRepositoryMetadataCanvas(self.entryName, self.sharedRepositoryMetadataValue) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add required metadata fields for SR")
                 return 
