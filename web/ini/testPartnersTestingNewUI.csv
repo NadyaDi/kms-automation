@@ -46,6 +46,8 @@ test_2305,Canvas - Entry page - Add captions And Search - remove caption,,,pytho
 test_2308,Canvas - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2336,Canvas - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
+test_2994,Canvas - Publish from my media to shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
+test_2996,Canvas - Publish to course galleries from  shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
@@ -68,6 +70,11 @@ test_2903,D2L - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1
 test_2904,D2L - Publish from my media (single and multiple),,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2905,D2L - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2485,Jive - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2487,Jive - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2489,Jive - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2490,Jive - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
