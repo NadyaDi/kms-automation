@@ -15,16 +15,27 @@ import itertools
 # The class contains functions that manage PraciTest integration with automation framework 
 #=============================================================================================================
 class clsPractiTest:
+    
+    # ENUMS
     class TEST_STATUS(Enum):
         def __str__(self):
             return str(self.value)
     
-        PASSED         = 'PASSED'
-        FAILED         = 'FAILED'       
-        BLOCKED              = 'BLOCKED'
-        NO_RUN              = 'NO RUN'
-        N_A                 = 'N/A'
-        
+        PASSED          = 'PASSED'
+        FAILED          = 'FAILED'       
+        BLOCKED         = 'BLOCKED'
+        NO_RUN          = 'NO RUN'
+        N_A             = 'N/A'
+    
+    
+    class AUTOMATION_STATUS(Enum):
+        def __str__(self):
+            return str(self.value)
+    
+        PROCESSED       = 'PROCESSED'
+        PENDING         = 'PENDING'       
+
+    
     #=============================================================================================================
     # Function that returns all instances of a specific session 
     #=============================================================================================================    
@@ -196,8 +207,10 @@ class clsPractiTest:
                     listTestSet.append(testSet)
             else:
                 writeToLog("INFO","No Test Sets found under filter id: '" + filterId + "'")
+                return False
         else:
             writeToLog("INFO","Bad response for get Test Set: " + r.text)
+            return False
         
         return listTestSet
     
@@ -253,14 +266,13 @@ class clsPractiTest:
         
     #=============================================================================================================
     # Function that update the tests status of entire Testset in practitest
-    # testStatus = self.practiTest.TEST_STATUS
+    # testSetList = list of testset instance id
+    # testStatus  = self.practiTest.TEST_STATUS
     #============================================================================================================= 
-    def setStatusToEntireTestset(self, testStatus, filterId):
-        # Get all Testset under specified Filter ID
-        testSetList = self.getPractiTestTestSetByFilterId(filterId)
-        
+    def setStatusToEntireTestset(self, testSetList, testStatus):
         practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
 
+        # For each Testset under cpecified filter
         for testSet in testSetList:
             # Get Testset Instance ID
             testSetInstanceId = testSet["id"]
@@ -281,13 +293,18 @@ class clsPractiTest:
                     dctSets = json.loads(r.text)
                     if (len(dctSets["data"]) > 0):
                         testInstancesList = []
+                        
+                        # Split tests to 20 items per list
                         for testInstance in dctSets["data"]:
                             testInstancesList.append(testInstance["id"])
                         dataChunks = self.createDataChank(testInstancesList, testStatus , 20)
+                        
+                        # Set status to each test in each chunk
                         for dataChunk in dataChunks:
-                            # Set status to test instance
+                            # Convert data string to variable
                             data = eval(dataChunk)
 
+                            # Send the post to PractiTest API
                             r = requests.post(practiTestUpdateTestInstanceResultsURL,
                                 data=json.dumps(data),
                                 auth=(LOCAL_SETTINGS_DEVELOPER_EMAIL, str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
@@ -297,14 +314,33 @@ class clsPractiTest:
                                 writeToLog("INFO","Updated test instance: " + str(testInstance["id"]) + " as: " + str(testStatus)) 
                             else:
                                 writeToLog("INFO","Bad response for update instances. " + r.text)
-                                break                            
-                            
+                                return False                            
                     else:
                         writeToLog("INFO","No instances in set. " + r.text)
                         break    
                 else:
                     writeToLog("INFO","Bad response for get sessions. " + r.text) 
-                    break
+                    return False
+        return True
+    
+
+    #=============================================================================================================
+    # Function that update the testsets custom fields
+    # testSetList = list of testset instance id
+    # EXAMPLE: customFiledsDict =  OrderedDict({'---f-30327':'Processed', '---f-38033':'yes'})
+    # (Automation Status = ---f-30327
+    # Automation Run Only FAILED = ---f-30327)
+    #============================================================================================================= 
+    def updateTestsetsCustomFields(self, testSetList, customFiledsDict):
+        # For each Testset under cpecified filter
+        for testSet in testSetList:
+            # Get Testset Instance ID
+            instanceId = testSet["id"]
+            
+            if self.updateInstanceCustomFields(instanceId, customFiledsDict) == False:
+                writeToLog("INFO","FAILED to update Testet custom filed") 
+                return False            
+        return True    
     
     
     #=============================================================================================================                
@@ -316,7 +352,7 @@ class clsPractiTest:
         
         
     #=============================================================================================================                
-    # Creates generic data for updating multiple test by sending one request
+    # Creates generic data for updating multiple tests by sending one request
     #=============================================================================================================
     def createDataChank(self, instanceIdList, testStatus, maxCount):
         tampleteSuffix = ']}'
@@ -337,6 +373,23 @@ class clsPractiTest:
         return listOfDataChunks
         
         
+    #=============================================================================================================                
+    # Creates generic data for updating multiple custom fileds in testset by sending one request
+    #=============================================================================================================
+    def createDataForTestsetMultipleCustomFileds(self, customFiledsDict):
+        tampleteSuffix = '}}}}'
+        data = '{"data": { "type": "sets", "attributes": {"custom-fields": {'
+        
+        for customField in customFiledsDict:
+            data = data + '"' + str(customField) + '": "' + str(customFiledsDict[customField]) + '"'
+            # if not last, add ',' at the end
+            if customField != list(customFiledsDict.keys())[-1]:
+                data = data + ','
+
+        data = data + tampleteSuffix 
+        return data       
+    
+     
     #=============================================================================================================
     # Function that that creates the csv that contains the automation tests to be run
     #=============================================================================================================
@@ -392,7 +445,7 @@ class clsPractiTest:
     # customFiledId example: "---f-38302"
     #=============================================================================================================
     def updateInstanceCustomField(self, instanceId, customFieldId, customFieldValue):
-        practiTestSetAutomationStatusAsProcessedUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances/" + str(instanceId) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL)
+        practiTestUpdateASpecificInstanceUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances/" + str(instanceId) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL)
         
         headers = { 
             'Content-Type': 'application/json',
@@ -400,7 +453,28 @@ class clsPractiTest:
         }
         data = {"data": { "type": "instances", "attributes": {"custom-fields": { customFieldId: str(customFieldValue)}}}}
         
-        r = requests.put(practiTestSetAutomationStatusAsProcessedUrl,headers = headers, data = json.dumps(data))
+        r = requests.put(practiTestUpdateASpecificInstanceUrl,headers = headers, data = json.dumps(data))
+        if (r.status_code == 200):
+                return True
+        else:
+            writeToLog("INFO","Bad response for get sessions. " + r.text)
+            return False
+        
+
+    #=============================================================================================================
+    # Function that sets the test custom field
+    # customFiledId example: "---f-38302"
+    #=============================================================================================================
+    def updateInstanceCustomFields(self, instanceId, customFiledsDict):
+        practiTestUpdateASpecificTestsetInstanceUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets/" + str(instanceId) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) 
+        headers = { 
+            'Content-Type': 'application/json',
+            'Connection':'close'
+        }
+        data = self.createDataForTestsetMultipleCustomFileds(customFiledsDict)
+        # Convert data string to variable
+        data = eval(data) 
+        r = requests.put(practiTestUpdateASpecificTestsetInstanceUrl,headers = headers, data = json.dumps(data))
         if (r.status_code == 200):
                 return True
         else:
