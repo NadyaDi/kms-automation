@@ -1005,18 +1005,33 @@ class EntryPage(Base):
             if self.navigateToEntry(entryName, enums.Location.KEA_PAGE) == False:
                 return False
         
-        if keaSection == enums.KEAQuizSection.DETAILS:
-            if keaOption == enums.KEAQuizOptions.QUIZ_NAME:
-                if self.verifyEntryNamePresent(keaElement) == False:
-                    return False
-            
-            elif keaOptionEnabled == True:
-                if self.clsCommon.player.verifyQuizElementsInPlayer(keaSection, keaOption, keaElement, location=enums.Location.ENTRY_PAGE, timeOut=45, isPresent=True) == False:
+        if keaSection == enums.KEAQuizSection.DETAILS or keaSection == enums.KEAQuizSection.SCORES:            
+            if keaOptionEnabled == True:
+                if keaOption == enums.KEAQuizOptions.QUIZ_NAME:
+                    if self.verifyEntryNamePresent(keaElement) == False:
+                        return False
+    
+                if keaOption == enums.KEAQuizOptions.INCLUDE_ANSWERS:
+                    if self.clsCommon.player.verifyIncludedAnswers(keaElement) == False:
+                        return False
+                    
+                elif self.clsCommon.player.verifyQuizElementsInPlayer(keaSection, keaOption, keaElement, location=enums.Location.ENTRY_PAGE, timeOut=45, isPresent=True) == False:
                     return False
                 
             elif keaOptionEnabled == False:
-                if self.clsCommon.player.verifyQuizElementsInPlayer(keaSection, keaOption, keaElement, location=enums.Location.ENTRY_PAGE, timeOut=30, isPresent=False) == False:
-                    return False   
+                if keaOption == enums.KEAQuizOptions.QUIZ_NAME:
+                    if self.verifyEntryNamePresent(keaElement) != False:
+                        return False
+    
+                if keaOption == enums.KEAQuizOptions.INCLUDE_ANSWERS:
+                    if self.clsCommon.player.verifyIncludedAnswers(keaElement) != False:
+                        return False
+                    
+                elif self.clsCommon.player.verifyQuizElementsInPlayer(keaSection, keaOption, keaElement, location=enums.Location.ENTRY_PAGE, timeOut=30, isPresent=False) == False:
+                    return False
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you're using a supported KEA section")
+            return False  
         
         return True  
     

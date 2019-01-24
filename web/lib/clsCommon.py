@@ -307,4 +307,29 @@ class Common():
             return False      
         else:
             writeToLog("INFO","Two files are identical (binary)")
-        return True      
+        return True    
+    
+    
+    # @Author: Horia Cus
+    # This functions verifies if a file is present in the specific filePath location
+    # filePath must contain the following format: os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, name + ".extension")
+    def verifyFilePathLocationIsValid(self, filePath):
+        if os.path.isfile(filePath) == True:
+            writeToLog("INFO", "The following path location is present: " + filePath )
+            return True
+        else:
+            writeToLog("INFO", "The following path location is not present: " + filePath )
+            return False       
+        
+        
+    # @Author: Horia Cus
+    # This functions verifies if a file has a minimum size
+    # filePath must contain the following format: os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, name + ".extension")
+    def verifyMinimumSizeOfAFile(self, filePath, fileSize=1024):
+        if os.path.getsize(filePath) >= fileSize:
+            writeToLog("INFO", "The downloaded file has content in it")
+            return True
+        
+        elif os.path.getsize(filePath) <= 1:
+            writeToLog("INFO", "The " + filePath + " file location is empty")
+            return False

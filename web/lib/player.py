@@ -62,9 +62,32 @@ class Player(Base):
     PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
     PLAYER_QUIZ_ANSWER_NO_4                                     = ('xpath', "//p[@id='answer-3-text']")
     PLAYER_CONTROLER_BAR                                        = ('xpath', "//div[@class='controlsContainer']")
-    PLAYER_PREVIEW_WELCOME_MESSAGE                              = ('xpath', "//div[@class='welcomeMessage']")
-    PLAYER_PREVIEW_INSTRUCTIONS                                 = ('xpath', "//div[@class='InvideoTipMessage']")
-    PLAYER_PREVIEW_DOWNLOAD                                     = ('xpath', "//div[@class='pdf-download-txt']") 
+    PLAYER_QUIZ_WELCOME_SCREEN_WELCOME_MESSAGE                  = ('xpath', "//div[@class='welcomeMessage']")
+    PLAYER_QUIZ_WELCOME_SCREEN_INSTRUCTIONS                     = ('xpath', "//div[@class='InvideoTipMessage']")
+    PLAYER_QUIZ_WELCOME_SCREEN_DOWNLOAD_TEXT                    = ('xpath', "//div[@class='pdf-download-txt']")
+    PLAYER_QUIZ_WELCOME_SCREEN_PDF_DOWNLOAD_BUTTON              = ('xpath', "//div[@class='pdf-download-img' and @role='button' and @aria-label='Pre-Test - Download PDF']")
+    PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT                     = ('xpath', "//p[contains(@id,'answer') and text()='ANSWER_TEXT']")
+    PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_TEXT                   = ('xpath', "//div[contains(@class,'display-question') and text()='QUESTION_NAME']")
+    PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT                = ('xpath', "//div[contains(@class,'display-question')]")
+    PLAYER_QUIZ_QUESTION_SCREEN_NEXT_ARROW                      = ('xpath', "//a[contains(@class,'cp-navigation-btn next-cp')]") 
+    PLAYER_QUIZ_QUESTION_SCREEN_PREVIOUS_ARROW                  = ('xpath', "//a[contains(@class,'cp-navigation-btn prev')]")   
+    PLAYER_QUIZ_QUESTION_SCREEN_SELECT_BUTTON                   = ('xpath', "//div[@class='single-answer-box-apply qContinue' and @role='button' and text()='Select']")
+    PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON                 = ('xpath', "//div[@aria-disabled='true' and @role='button' and text()='Selected']")
+    PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE                        = ('xpath', "//div[contains(@class,'bubble-window')]")
+    PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER                 = ('xpath', "//div[@id='NUMBER' and contains(@class,'bubble-window')]")
+    PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE                            = ('xpath', "//div[@id='quiz-done-continue-button']")
+    PLAYER_QUIZ_SUBMITTED_SCREEN_SUB_TEXT                       = ('xpath', "//div[@class='sub-text']")
+    PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT                     = ('xpath', "//div[contains(@class,'title-text') and text()='TITLE_NAME']") 
+    PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE       = ('xpath', "//li[@class='q-box' and @title='click to view the question and your answer']")     
+    PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID    = ('xpath', "//li[@class='q-box' and @id='NUMBER']")
+    PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON                  = ('xpath', "//div[@title='Submit your answers']")
+    PLAYER_QUIZ_COMPLETED_SCREEN_REVIEW_BUTTON                  = ('xpath', "//div[@title='review your answers']")
+    PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_TITLE_DEFAULT             = ('xpath', "//div[@class='theQuestion']")
+    PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_TITLE_NAME                = ('xpath', "//div[@class='theQuestion' and text()='ANSWER_TITLE']")
+    PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_CORRECT_ANSWER            = ('xpath', "//div[@class='correctAnswer' and text()='ANSWER_NAME']")
+    PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_USER_ANSWER               = ('xpath', "//div[@class='yourAnswer' and text()='ANSWER_NAME']")  
+    PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_QUESTION_NUMBER           = ('xpath', "//div[@class='reviewAnswerNr' and text()='NUMBER']")
+    PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_GO_BACK_BUTTON            = ('xpath', "//div[@class='gotItBox' and text()='Got It !']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -1013,34 +1036,34 @@ class Player(Base):
     # if isPresent = True, the kea element must contain the text for the specific option
     # if isPresent = true, the keaElement must be empty = ''
     def verifyQuizElementsInPlayer(self, keaSection, keaOption, keaElement, location, timeOut=45, isPresent=True):
+        if self.selectPlayerIframe(location) != True:
+            writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
+            return False
+        
+        if self.verifyAndClickOnPlay(location, timeOut) != True:
+            return False
+                
         if keaSection == enums.KEAQuizSection.DETAILS:
             if keaOption == enums.KEAQuizOptions.SHOW_WELCOME_PAGE:
-                tmpLocator = self.PLAYER_PREVIEW_WELCOME_MESSAGE
+                tmpLocator = self.PLAYER_QUIZ_WELCOME_SCREEN_WELCOME_MESSAGE
                 
             elif keaOption == enums.KEAQuizOptions.INSTRUCTIONS:
-                tmpLocator = self.PLAYER_PREVIEW_INSTRUCTIONS
+                tmpLocator = self.PLAYER_QUIZ_WELCOME_SCREEN_INSTRUCTIONS
     
             elif keaOption == enums.KEAQuizOptions.ALLOW_DOWNLOAD:
-                tmpLocator = self.PLAYER_PREVIEW_DOWNLOAD
+                tmpLocator = self.PLAYER_QUIZ_WELCOME_SCREEN_DOWNLOAD_TEXT
             else:
                 writeToLog("INFO", "Make sure that you have used a supported KEA Option")
                 return False
             
+        elif keaSection == enums.KEAQuizSection.SCORES:            
+            if keaOption == enums.KEAQuizOptions.DO_NOT_SHOW_SCORES or enums.KEAQuizOptions.SHOW_SCORES:
+                tmpLocator = self.PLAYER_QUIZ_SUBMITTED_SCREEN_SUB_TEXT
+            
         else:
             writeToLog("INFO", "Make sure that you have used a supported KEA Section")
             return False
-        
-        if location == enums.Location.ENTRY_PAGE:
-            self.switchToPlayerIframe()
-        
-        elif location == enums.Location.KEA_PAGE:
-            self.clsCommon.kea.switchToKEAPreviewPlayer()
-
-        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, timeOut, True) != False:
-            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 2, True) == False:
-                writeToLog("INFO", "FAILED to activate the preview screen")
-                return False
-        
+                
         if isPresent == True:
             wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)
             self.setImplicitlyWait(0)
@@ -1080,3 +1103,281 @@ class Player(Base):
                 
         self.switch_to_default_content()       
         return True 
+
+    
+    # @Author: Horia Cus
+    # This function selects a specific KEA Iframe, triggers the playing process and selects an answer for each desired Quiz
+    # if submitQuiz=True, all the Quiz questions must be answered, otherwise it will return False
+    # questionDict must contain the following format: {questionName1:answerText1}
+    # questionDict must have questionName:answerText
+    # welcomeScreenEnabled = True it will wait and click on the continue button
+    # This function works only when the "ALLOW SKIP" option is enabled
+    def selectQuizAnswer(self, questionDict, location=enums.Location.ENTRY_PAGE, timeOut=5, submitQuiz=True, welcomeScreenEnabled=True):     
+        if self.selectPlayerIframe(location) != True:
+            writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
+            return False
+        
+        sleep(4)
+        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 7, True) == False and self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 7, True) == False:  
+            self.driver.refresh()
+            
+            if self.selectPlayerIframe(location) != True:
+                writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
+                return False
+                
+            sleep(2)
+            if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 240, True) == False:
+                writeToLog("INFO", "FAILED to load the page after refreshing it")
+                return False      
+                  
+              
+        if self.verifyAndClickOnPlay(location, timeOut) != True:
+            return False
+            
+        sleep(1)
+        if welcomeScreenEnabled == True:            
+            if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 10, True) != False:
+                writeToLog("INFO", "Continue button has been found in welcome screen")
+            else:
+                writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
+                return False
+            
+            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON, 10, True) == False:
+                writeToLog("INFO", "FAILED to continue further from the welcome screen")
+                return False
+            sleep(1)
+        
+        # taking the available questions number                
+        questionNumber     = self.get_elements(self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE)
+        availableQuestions = len(questionNumber)
+        givenQuestions     = len(questionDict)
+        questionsFound     = 0
+        
+        if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
+            writeToLog("INFO", "FAILED to pause the video")
+            return False
+        sleep(1)
+                        
+        for x in range(0,availableQuestions):
+            tmpQuizPage = (self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[0], self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[1].replace('NUMBER', str(x))) 
+            
+            if self.click(tmpQuizPage, 30, True) == False:
+                writeToLog("INFO", "FAILED to move to the " + str(x+1) + " quiz page")
+                return False        
+            
+            sleep(1)  
+            activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 60, True).text
+                        
+            if activeQuestion in questionDict:
+                activeAnswer = questionDict[activeQuestion]
+                tmpAnswerName = (self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[0], self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[1].replace('ANSWER_TEXT', activeAnswer))
+                
+                if self.wait_element(tmpAnswerName, 5, True) == False:
+                    writeToLog("INFO", "The " + activeAnswer + " has not been found in the " + activeQuestion + " question page")
+                    return False
+                     
+                if self.click(tmpAnswerName, 10, True) == False:
+                    writeToLog("INFO", "FAILED to select the " + activeAnswer + " answer")
+                    return False
+                 
+                if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECT_BUTTON, 5, True) == False and self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to confirm the " + activeAnswer + " answer" )
+                    return False
+                 
+                if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "The " + activeAnswer + " is not displayed as being selected")
+                    return  False   
+                                    
+                questionsFound += 1
+                self.wait_while_not_visible(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 10)
+                
+            else:
+                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
+                    writeToLog("INFO", "FAILED to skip the " + activeQuestion + " which was not found in the dictionary")
+                    return False
+
+                self.wait_while_not_visible(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10)
+                        
+        if questionsFound != givenQuestions:
+            writeToLog("INFO", "FAILED to find all the questions from the dictionary")
+            return False
+        
+        sleep(1)
+        if submitQuiz == True:
+            if availableQuestions != questionsFound:
+                writeToLog("INFO", "Some answers were not selected " + str(questionsFound) + " out of " + str(availableQuestions) + " questions")
+                return False
+            
+            if self.submitTheAnswers(location) != True:
+                return False
+             
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function switches the KEA Player iframe based on the location
+    # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
+    def selectPlayerIframe(self, location):     
+        if location == enums.Location.ENTRY_PAGE:
+            self.switchToPlayerIframe()
+         
+        elif location == enums.Location.KEA_PAGE:
+            self.clsCommon.kea.switchToKEAPreviewPlayer()
+            
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function navigates to the end screen and then submits the answers
+    # In order to submit the answers, all the Quiz questions must be answered, use selectQuizAnswer function
+    # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
+    def submitTheAnswers(self, location):
+        if self.selectPlayerIframe(location) != True:
+            writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
+            return False
+        
+        completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
+        
+        if self.wait_element(completedTitle, 2, True) == False:
+            if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 5, True) == False:
+                writeToLog("INFO", "FAILED to find the scrubber end screen button")
+                return False
+
+            if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 5, True) == False:
+                writeToLog("INFO", "FAILED to click on the scrubber end screen button")
+                return False
+            
+        if self.wait_element(completedTitle, 10, True) == True:
+            writeToLog("INFO", "FAILED to load the completed screen")
+            return False
+            
+        if self.click(self.PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON, 30, True) == False:
+            writeToLog("INFO", "FAILED to submit the answers")
+            return False
+        
+        if self.wait_while_not_visible(self.PLAYER_QUIZ_COMPLETED_SCREEN_REVIEW_BUTTON, 30) == False:
+            writeToLog("INFO", "FAILED to progress to the next screen")
+            
+        submittedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Submitted'))
+        if self.wait_element(submittedTitle, 10, True) == False:
+            writeToLog("INFO", "FAILED to find the submitted screen")
+            return False
+        sleep(1)
+            
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function verifies if the play button is present and if not it will trigger the play process
+    # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
+    def verifyAndClickOnPlay(self, location, timeOut=3):
+        if self.selectPlayerIframe(location) != True:
+            writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
+            return False
+        
+        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, timeOut, True) != False:
+            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 2, True) == False:
+                writeToLog("INFO", "FAILED to activate the preview screen")
+                return False
+            
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function verifies that the included answers matches with the ones from the answersDict
+    # answerDict must use the following format: questionName1:{'correct':answerText1, 'given':userAnswer1}
+    # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
+    def verifyIncludedAnswers(self, answersDict, location=enums.Location.ENTRY_PAGE):
+        if self.selectPlayerIframe(location) != True:
+            writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
+            return False
+        
+        submittedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Submitted'))
+        if self.wait_element(submittedTitle, 10, True) == False:
+            writeToLog("INFO", "FAILED, you're not in the Submitted page")
+            return False
+        
+        # taking the numbers of included answers
+        includedAnswers    = self.get_elements(self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE)
+        availableAnswers   = len(includedAnswers)
+        givenAnswers       = len(answersDict)
+        answersFound       = 0
+        reviewAnswerNumber = 1
+                                
+        for x in range(0,availableAnswers):
+            tmpAnswerPage = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[1].replace('NUMBER', str(x)))
+            
+            if self.click(tmpAnswerPage, 10, True) == False:
+                writeToLog("INFO", "FAILED to click on the answer page number " + str(x+1))
+                return False  
+            
+            sleep(1)  
+            
+            tmpActiveAnswer = (self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_QUESTION_NUMBER[0], self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_QUESTION_NUMBER[1].replace('NUMBER', str(reviewAnswerNumber)))
+                        
+            if self.wait_element(tmpActiveAnswer, 10, True) == False:
+                writeToLog("INFO", "The answer page number " + str(reviewAnswerNumber) + " has an invalid number")
+                return False
+            
+            activeQuestion = self.wait_element(self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_TITLE_DEFAULT, 60, True).text
+                        
+            if activeQuestion in answersDict:
+                correctAnswer = answersDict[activeQuestion]['correct']
+                userAnswer    = answersDict[activeQuestion]['given']
+                tmpCorrectAnswerName = (self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_CORRECT_ANSWER[0], self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_CORRECT_ANSWER[1].replace('ANSWER_NAME', correctAnswer))
+                tmpUserAnswerName    = (self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_USER_ANSWER[0], self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_USER_ANSWER[1].replace('ANSWER_NAME', userAnswer))
+                
+                if self.wait_element(tmpCorrectAnswerName, 10, True) == False:
+                    writeToLog("INFO", "FAILED to find the Valid " + correctAnswer + " answer in " + activeQuestion + " question")
+                    return False
+                
+                if self.wait_element(tmpUserAnswerName, 10, True) == False:
+                    writeToLog("INFO", "FAILED to find the User " + userAnswer + " answer in " + activeQuestion + " question")
+                    return False
+                
+                if self.click(self.PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_GO_BACK_BUTTON, 5, True) == False:
+                    writeToLog("INFO", "FAILED to click on the go back button")
+                    return False
+                
+                if self.wait_element(submittedTitle, 30, True) == False:
+                    writeToLog("INFO", "FAILED to properly return to the submitted page")
+                    return False
+                
+                answersFound += 1
+            
+            reviewAnswerNumber += 1
+            
+        if answersFound != givenAnswers:
+            writeToLog("INFO", "Some questions were not found: " + str(answersFound) + " out of " + str(givenAnswers) + " questions")
+            return False                        
+
+        return True  
+    
+    
+    # @Author: Horia Cus
+    # This function downloads the PDF file from  Allow Download of Questions List option
+    # filePath must contain the following format: os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, name + ".extension")
+    def downloadQuizPDF(self, filePath):        
+        self.switchToPlayerIframe()
+        
+        sleep(3)
+        
+        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 30, True) != False:
+            if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 2, True) == False:
+                writeToLog("INFO", "FAILED to activate the welcome screen")
+                return False
+            
+        if self.click(self.clsCommon.player.PLAYER_QUIZ_WELCOME_SCREEN_PDF_DOWNLOAD_BUTTON, 10, True) == False:
+            writeToLog("INFO", "Failed to click on the download button")
+            return False
+        
+        sleep(1)
+        self.switch_to_default_content()
+        
+        if self.clsCommon.verifyFilePathLocationIsValid(filePath) == False:
+            return False
+        
+        if self.clsCommon.verifyMinimumSizeOfAFile(filePath) == False:
+            return False
+        
+        return True   
