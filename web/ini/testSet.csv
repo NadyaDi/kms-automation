@@ -170,6 +170,7 @@ test_2303,0,1,0,0,Canvas - Edit Entry page - Close discussion
 test_2305,1,0,0,0,Canvas - Entry page - Add captions And Search - remove caption
 test_2308,1,0,0,0,Canvas - Remove Media From Media Gallery
 test_2309,1,0,0,0,Canvas - Embed on BSE from my media
+test_2310,1,0,0,0,Canvas - Embed on BSE from upload
 test_2335,1,0,0,0,Canvas - Upload Media From Media Gallery Page
 test_2336,1,0,0,0,Canvas - Gallery Moderation
 test_2994,1,0,0,0,Canvas - Publish from my media to shared repository
@@ -203,7 +204,13 @@ test_2486,0,1,0,0,Jive - Edit Entry page - Disable comments
 test_2487,0,1,0,0,Jive - Edit Entry page - Close discussion
 test_2489,1,0,0,0,Jive - Entry page - Add captions And Search - remove caption
 test_2490,1,0,0,0,Jive - Edit entry page - Thumbnail tab
+test_2493,1,0,0,0,Jive - My Media -Delete through my media
+test_2494,1,0,0,0,Jive - Delete through edit entry page
 test_2498,1,0,0,0,Jive - Preview all kinds of media from My Media and Gallery
+test_2499,1,0,0,0,Jive - View Collapsed Expanded Modes
+test_2500,1,0,0,0,Jive - Upload media from desktop
+test_2503,1,0,0,0,Jive - My Media - Search by Name / Description / Tags
+test_2505,1,0,0,0,Jive - My Media - Sort Media
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history
@@ -529,6 +536,7 @@ test_4688,1,0,0,0,Filter by custom-data - no search - Channel page - pending tab
 test_4695,1,0,0,0,Approve/Reject - no search - Channel Page - Pending tab
 test_4696,1,0,0,0,Approve/Reject - with search - Category Page - Pending tab
 test_4697,1,0,0,0,Approve/Reject - no search - Category Page - Pending tab
+test_4699,1,0,0,0,Krec - upload metadata
 test_4705,1,0,0,0,Filter by Channel Membership - with search - My Channels page
 test_4706,1,0,0,0,Filter by Channel Membership - no search - My Channels page
 test_4715,1,0,0,0,Filters Section - with search - Global Page

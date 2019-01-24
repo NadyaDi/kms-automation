@@ -39,6 +39,7 @@ test_2293,Canvas - My Media - filter media view different media types,,,pythonau
 test_2295,Canvas - Embed on BSE from shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2297,Canvas - Embed on BSE from media gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2309,Canvas - Embed on BSE from my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2310,Canvas - Embed on BSE from upload,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2303,Canvas - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2298,Canvas - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -75,6 +76,12 @@ test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation1@mailinat
 test_2487,Jive - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2489,Jive - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2490,Jive - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2493,Jive - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2494,Jive - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2499,Jive - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2500,Jive - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2503,Jive - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2505,Jive - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
@@ -528,6 +535,7 @@ test_4688,Filter by custom-data - no search - Channel page - pending tab - negat
 test_4695,Approve/Reject - no search - Channel Page - Pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4696,Approve/Reject - with search - Category Page - Pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4697,Approve/Reject - no search - Category Page - Pending tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4699,Krec - upload metadata,1722461-2,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,private,123456
 test_4705,Filter by Channel Membership - with search - My Channels page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4706,Filter by Channel Membership - no search - My Channels page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4715,Filters Section - with search - Global Page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
