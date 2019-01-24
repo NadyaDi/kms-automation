@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : KEA - Quiz Details section in Entry Page
+    # Test Name : Quiz Details section in Entry Page
     # Test description:
     # Verify that all the KEA Quiz Details options have proper functionality by:
     # Verifying that the quiz name can be changed
@@ -56,8 +56,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName          = clsTestService.addGuidToString("KEA Quiz - Details Options Entry", self.testNum)
-            self.newEntryName       = clsTestService.addGuidToString("KEA Quiz - Modified Options Entry", self.testNum)
+            self.entryName          = clsTestService.addGuidToString("Quiz - Details Options Entry", self.testNum)
+            self.newEntryName       = clsTestService.addGuidToString("Quiz - Modified Options Entry", self.testNum)
                         
             self.changeEntryName                 = {enums.KEAQuizOptions.QUIZ_NAME:self.newEntryName}
             self.changeWelcomeMessage            = {enums.KEAQuizOptions.SHOW_WELCOME_PAGE:self.newWelcomeMessage}
@@ -175,7 +175,6 @@ class Test:
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
-            
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:

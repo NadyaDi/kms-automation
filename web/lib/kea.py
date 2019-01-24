@@ -52,8 +52,8 @@ class Kea(Base):
     EDITOR_TOTAL_TIME                             = ('xpath', "//span[@class='total-time']")
     EDITOR_GO_TO_MEDIA_PAGE_BUTTON                = ('xpath', "//a[contains(.,'Media Page')]")
     KEA_ENTRY_NAME                                = ('xpath', "//span[@class='entry-name']")
-    KEA_TOGGLE_MENU_OPTION                        = ('xpath', "//span[text()='OPTION_NAME']")  
-    KEA_OPTION_NORMAL                             = ('xpath', "//label[contains(@class,'ui-chkbox-label') and text()='OPTION_NAME']")  
+    KEA_TOGGLE_MENU_OPTION                        = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
+    KEA_OPTION_NORMAL                             = ('xpath', "//label[contains(@class,'ng-star-inserted') and text()='OPTION_NAME']")  
     KEA_OPTION_ACTIVE                             = ('xpath', "//label[contains(@class,'ui-label-active') and text()='OPTION_NAME']")
     KEA_OPTION_INPUT_FIELD                        = ('xpath', "//input[@id='FIELD_NAME']")
     KEA_OPTION_TEXTAREA_FIELD                     = ('xpath', "//textarea[@id='FIELD_NAME']")  
@@ -590,6 +590,9 @@ class Kea(Base):
             questionDetails = dictQuestions[questionNumber]
             
             self.switchToKeaIframe() 
+            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+                writeToLog("INFO","FAILED to wait until spinner isn't visible")
+                return False 
                     
             timestamp = questionDetails[0]
             if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
@@ -632,8 +635,10 @@ class Kea(Base):
     
     # @Author: Horia Cus
     # This function can navigate to a specific entry and initiate the KEA Quiz option
+    # This function work for both entries that have Quiz created or not
     # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
     def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=20):
+        self.switch_to_default_content()
         if navigateToEntry == True:
             sleep(timeOut)
             if self.launchKEA(entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
@@ -703,6 +708,7 @@ class Kea(Base):
     def editQuizOptions(self, keaSection, keaOptionDict):
         if keaSection != '':
             tmpKEASection = (self.KEA_TOGGLE_MENU_OPTION[0], self.KEA_TOGGLE_MENU_OPTION[1].replace('OPTION_NAME', keaSection.value))
+    
         else:
             writeToLog("INFO", "Please specify in which KEA section we should enable or disable the options")
             return False
@@ -714,13 +720,24 @@ class Kea(Base):
             return False
                 
         for options in keaOptionDict:
-            if keaOptionDict[options] == True:
+            if keaOptionDict[options] == True:                
                 if self.changeKEAOptionState(options, True) == False:
                     return False
                 
             elif keaOptionDict[options] == False:
-                if self.changeKEAOptionState(options, False) == False:
-                    return False
+                if options == enums.KEAQuizOptions.DO_NOT_SHOW_SCORES:
+                    options = enums.KEAQuizOptions.SHOW_SCORES
+                    if self.changeKEAOptionState(options, True) == False:
+                        return False
+                    
+                elif options == enums.KEAQuizOptions.SHOW_SCORES:
+                    options = enums.KEAQuizOptions.DO_NOT_SHOW_SCORES
+                    if self.changeKEAOptionState(options, True) == False:
+                        return False
+                   
+                else:
+                    if self.changeKEAOptionState(options, False) == False:
+                        return False
                 
             elif keaOptionDict[options] != '':
                 if options == enums.KEAQuizOptions.QUIZ_NAME:
@@ -788,8 +805,8 @@ class Kea(Base):
 
     # @Author: Horia Cus
     # This function verifies if the status of any KEA Option is enabled or disabled
-    # If stateEnabled=True, it will verify if the specific KEA Option is enabled
-    # If stateEnabled=False, it will verify if the specific KEA Option is disabled
+    # If expectedState=True, it will verify if the specific KEA Option is enabled
+    # If expectedState=False, it will verify if the specific KEA Option is disabled
     # keaOption must be enum and have a map with boolean
     def verifyKEAOptionState(self, keaOption, expectedState):
         self.switchToKeaIframe()
@@ -803,7 +820,10 @@ class Kea(Base):
         elif expectedState == False:
             tmpKEAOptionActive = (self.KEA_OPTION_ACTIVE[0], self.KEA_OPTION_ACTIVE[1].replace('OPTION_NAME', keaOption.value))
             tmpKEAOptionNormal = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
-            if self.wait_element(tmpKEAOptionActive, 1, True) != False and self.wait_element(tmpKEAOptionNormal, 1, True) == False:
+            if self.wait_element(tmpKEAOptionActive, 1, True) == False and self.wait_element(tmpKEAOptionNormal, 1, True) != False:
+                writeToLog("INFO", "The " + keaOption.value + " is disabled")
+                return True
+            else:
                 writeToLog("INFO", "The " + keaOption.value + " is not disabled")
                 return False
 
