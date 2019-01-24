@@ -140,11 +140,11 @@ test_4562,KEA trim video with captions,2438361-1,mediaspace.kaltura.com,pythonau
 test_4621,KEA clip video with captions,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!,
 test_4622,KEA Trim Quiz with caption and slide,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!,
 test_4742,KEA - Quiz Details section in KEA Editor,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!,
-test_4757,KEA - Quiz Details - Download functionality,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_4758,KEA - Quiz Scores section in KEA Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_4759,KEA - Quiz Scores section in Entry Page - Enabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_4768,KEA - Quiz Scores section in Entry Page - Disabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_4769,KEA - Quiz Scores section in Entry Page - Default,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_4757,Quiz Details section in Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_4758,Quiz Details section in Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_4759,Quiz Scores section in Entry Page - Enabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_4768,Quiz Scores section in Entry Page - Disabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_4769,Quiz Scores section in Entry Page - Default,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
