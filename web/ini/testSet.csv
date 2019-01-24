@@ -211,6 +211,11 @@ test_2499,1,0,0,0,Jive - View Collapsed Expanded Modes
 test_2500,1,0,0,0,Jive - Upload media from desktop
 test_2503,1,0,0,0,Jive - My Media - Search by Name / Description / Tags
 test_2505,1,0,0,0,Jive - My Media - Sort Media
+test_2506,1,0,0,0,Jive - My Media - Filter Media View Different Statuses
+test_2507,1,0,0,0,Jive - My Media - Filter by media Type
+test_2523,1,0,0,0,Jive - Remove Media From Media Gallery
+test_2524,1,0,0,0,Jive - Upload Media From Media Gallery Page
+test_2525,1,0,0,0,Jive - Gallery Moderation
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history

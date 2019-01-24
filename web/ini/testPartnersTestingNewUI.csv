@@ -82,6 +82,11 @@ test_2499,Jive - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.co
 test_2500,Jive - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2503,Jive - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2505,Jive - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2506,Jive - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,hrmanager,hrmanager
+test_2507,Jive - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2525,Jive - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,hrmanager,hrmanager
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
