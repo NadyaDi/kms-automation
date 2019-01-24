@@ -1089,7 +1089,10 @@ class EditEntryPage(Base):
         if self.wait_while_not_visible(self.EDIT_ENTRY_THUMBNAIL_PROGRESS_BAR) == False:
             writeToLog("INFO","FAILED to verify that thumbnail progress bar disappear")
             return False
-
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+            self.click(self.EDIT_ENTRY_THUMBNAIL_TAB)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            
         # verify image was add
         if self.wait_visible(self.EDIT_ENTRY_VERIFY_IMAGE_ADDED_TO_THUMBNAIL_AREA, 20) == False:
             writeToLog("INFO","FAILED to verify capture was added to thumbnail area")
