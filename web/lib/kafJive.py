@@ -26,8 +26,7 @@ class Jive(Base):
     JIVE_MY_MEIDA_BUTTON_IN_MENU                        = ('xpath', "//a[@id='kaltura-nav-link-my-media' and contains(text(), 'My Media')]")
     JIVE_PLACES_BUTTON_IN_NAVIGATION_BAR                = ('xpath', "//a[@href='/places' and contains(@class, 'j-globalNavLink')]")
     JIVE_MEDIA_GALLEY_NEW1_IN_PLACES                    = ('xpath', "//span[@class='js-header-text' and contains(text(), 'New1')]")
-    
-    JIVE_USER_NAME                                       = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
+    JIVE_USER_NAME                                      = ('xpath', "//span[@class='j-user-name j-navLabel']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -126,11 +125,10 @@ class Jive(Base):
         return True
         
            
-#     def getJiveLoginUserName(self):
-#         try:
-#             userName = self.get_element_text(self.D2L_USER_NAME)
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to get user name element")
-#             return False
-#         return userName.lower() 
-#         
+    def getJiveLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.JIVE_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName.lower() 

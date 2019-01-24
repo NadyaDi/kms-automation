@@ -139,7 +139,7 @@ class Upload(Base):
             entryID = href.split("/")[len(href.split("/"))-1]
              
         except NoSuchElementException:
-            writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator + "'")
+            writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator[1] + "'")
             return False
          
         return entryID

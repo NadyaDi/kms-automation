@@ -1420,17 +1420,17 @@ class Channel(Base):
     
     # Author: Tzachi Guetta     
     def method_helper_rejectEntry(self, rejectEntry, location=''):
-        if location == enums.Location.PENDING_TAB:
-            tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', rejectEntry))
-            entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
-            if entryId == False:
-                return False 
-            tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+#         if location == enums.Location.PENDING_TAB:
+        tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', rejectEntry))
+        entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
+        if entryId == False:
+            return False 
+        tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
             
-        else:
-            tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
-            entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
-            tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
+#         else:
+#             tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
+#             entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+#             tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
         
         if self.click(tmpRejectBtn) == False:
             writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
@@ -1442,24 +1442,25 @@ class Channel(Base):
         
     # Author: Tzachi Guetta     
     def method_helper_approveEntry(self, approveEntry, location=''):
-        if location == enums.Location.PENDING_TAB:
-            tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', approveEntry))
-            entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
-            if entryId == False:
-                return False 
-            tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId)) 
+#         if location == enums.Location.PENDING_TAB:
+        tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', approveEntry))
+        entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
+        if entryId == False:
+            return False 
+        tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId)) 
                        
-        else:    
-            tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
-            entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
-            if entryId == False:
-                return False 
-            tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
+#         else:    
+#             tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', approveEntry))
+#             entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
+#             if entryId == False:
+#                 return False 
+#             tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
         
         if self.click(tmpApproveBtn) == False:
             writeToLog("INFO","FAILED to approve entry: " + approveEntry)
             return False   
-                         
+        
+        self.clsCommon.general.waitForLoaderToDisappear()                
         writeToLog("INFO","The following entry was approved : " + approveEntry)
         return True
         
@@ -2077,7 +2078,9 @@ class Channel(Base):
         else: 
             searchLine = searchText
         
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS \
+          or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE \
+          or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
             self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine + Keys.ENTER)
         else:
             self.clsCommon.myMedia.getSearchBarElement().send_keys(searchLine)
