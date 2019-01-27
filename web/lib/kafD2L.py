@@ -63,10 +63,12 @@ class D2L(Base):
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Navigate to login page
 #             self.clsCommon.login.navigateToLoginPage(url)
+            sleep(2)
             # Enter test partner username
             self.send_keys(self.LOGIN_USERNAME_FIELD, username)
             # Enter test partner password
             self.send_keys(self.LOGIN_PASSWORD_FIELD, password)
+            sleep(1)
             # Click Sign In
             self.click(self.LOGIN_SIGN_IN_BTN)
             # Wait page load
