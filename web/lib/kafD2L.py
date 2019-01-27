@@ -74,14 +74,14 @@ class D2L(Base):
             # Wait page load
             self.wait_for_page_readyState()
             # Verify logged in
-            if self.get_element_text(self.USER_MENU_TOGGLE_BTN) == True:
+            if self.wait_visible(self.USER_MENU_TOGGLE_BTN, timeout=20) == False:
+                writeToLog("INFO","FAILED to login as '" + username + "@" + password + "' after 30 seconds.")
+                return False
+            else:
                 writeToLog("INFO","Logged in as '" + username + "@" + password + "'")
                 self.clsCommon.d2l.switchToD2LIframe()
                 self.wait_element(self.clsCommon.myMedia.MY_MEDIA_TITLE, timeout=25)
                 return True
-            else:
-                writeToLog("INFO","FAILED to login as '" + username + "@" + password + "' after 30 seconds.")
-                return False
         except Exception as inst:
             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
