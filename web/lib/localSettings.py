@@ -122,3 +122,4 @@ LOCAL_SETTINGS_KAF_MOODLE_BASE_URL          = 'https://extqa4.dev.kaltura.com/mo
 LOCAL_SETTINGS_KAF_CANVAS_BASE_URL          = 'https://kaltura.instructure.com'
 LOCAL_SETTINGS_KAF_D2L_BASE_URL             = 'https://kalturaqa2.d2l-partners.brightspace.com/d2l/home'
 LOCAL_SETTINGS_KAF_JIVE_BASE_URL            = 'http://il-qa-jive.kaltura.com'
+LOCAL_SETTINGS_KAF_SAKAI_BASE_URL           = 'https://sakai.dev.kaltura.com/portal'

@@ -87,6 +87,7 @@ test_2507,Jive - My Media - Filter by media Type,,,pythonautomation1@mailinator.
 test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2525,Jive - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,hrmanager,hrmanager
+test_2940,Sakai - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456

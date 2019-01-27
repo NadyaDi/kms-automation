@@ -95,6 +95,8 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.D2L
     elif application == enums.Application.JIVE:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.JIVE
+    elif application == enums.Application.SAKAI:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.SAKAI
     else:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
             

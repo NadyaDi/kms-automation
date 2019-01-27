@@ -461,6 +461,8 @@ class Upload(Base):
                 self.clsCommon.d2l.switchToD2LIframe()
             elif self.getAppUnderTest() == enums.Application.JIVE:
                 self.clsCommon.jive.switchToJiveIframe()
+            elif self.getAppUnderTest() == enums.Application.SAKAI:
+                self.clsCommon.sakai.switchToSakaiIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
