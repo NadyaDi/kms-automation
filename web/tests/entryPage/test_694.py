@@ -124,7 +124,7 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.apiClientSession.deleteCategory(self.catagoryName)
+            self.common.apiClientSession.deleteCategory(self.categoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
