@@ -216,6 +216,7 @@ test_2507,1,0,0,0,Jive - My Media - Filter by media Type
 test_2523,1,0,0,0,Jive - Remove Media From Media Gallery
 test_2524,1,0,0,0,Jive - Upload Media From Media Gallery Page
 test_2525,1,0,0,0,Jive - Gallery Moderation
+test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history

@@ -72,11 +72,8 @@ class D2L(Base):
             # Wait page load
             self.wait_for_page_readyState()
             # Verify logged in
-            el = self.get_element_text(self.USER_MENU_TOGGLE_BTN)
-            if username in el.lower():
+            if self.get_element_text(self.USER_MENU_TOGGLE_BTN) == True:
                 writeToLog("INFO","Logged in as '" + username + "@" + password + "'")
-                # Get the username after login and set the variable. Will need this it some tests
-                #localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN = username
                 self.clsCommon.d2l.switchToD2LIframe()
                 self.wait_element(self.clsCommon.myMedia.MY_MEDIA_TITLE, timeout=25)
                 return True

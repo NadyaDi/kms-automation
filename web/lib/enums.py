@@ -114,6 +114,7 @@ class IframeName(Enum):
     KAF_CANVAS                              = 'KAF_CANVAS'
     KAF_D2L                                 = 'KAF_D2L'
     KAF_JIVE                                = 'KAF_JIVE'
+    KAF_SAKAI                               = 'KAF_SAKAI'
 
     
     

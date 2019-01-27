@@ -49,6 +49,12 @@ class KafGeneric(Base):
             if self.clsCommon.canvas.navigateToMyMediaCanvas() == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False   
+            
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            if self.clsCommon.sakai.navigateToMyMediaSakai() == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False 
+            
         else: 
             if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
@@ -95,6 +101,11 @@ class KafGeneric(Base):
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
             if self.clsCommon.jive.switchToJiveIframe()== False:
                 writeToLog("INFO","FAILED to switch to canvas iframe")
+                return False
+
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            if self.clsCommon.sakai.switchToSakaiIframe()== False:
+                writeToLog("INFO","FAILED to switch to sakai iframe")
                 return False
         
         return True
