@@ -363,7 +363,7 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False):
+    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False, isTagsNeeded=True):
         if application == enums.Application.MOODLE:
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
@@ -401,7 +401,7 @@ class KafGeneric(Base):
                 
         elif embedFrom == enums.Location.UPLOAD_PAGE_EMBED:
             # Upload entry
-            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED) == None:
+            if self.clsCommon.upload.uploadEntry(filePath, entryName, description, tags, uploadFrom=enums.Location.UPLOAD_PAGE_EMBED, isTagsNeeded=isTagsNeeded) == None:
                 writeToLog("INFO","FAILED to upload new entry to embed page embed page")
                 return False  
             
@@ -410,7 +410,10 @@ class KafGeneric(Base):
             # Click Save and embed
             if self.click(self.KAF_SAVE_AND_EMBED_UPLOAD_MEDIA) == False:
                 writeToLog("INFO","FAILED to click on save and embed button")
-                return False    
+                return False 
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+                self.switch_to_default_content()   
             
             sleep(2)
             self.clsCommon.general.waitForLoaderToDisappear()  

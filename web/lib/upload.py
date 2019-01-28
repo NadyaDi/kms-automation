@@ -147,7 +147,7 @@ class Upload(Base):
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
     # IMPORTENT!! This method return None (not False) if failed and an entry ID if passed
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False, isTagsNeeded=True):
         for i in range(retries):
             try:
                 if i > 0:
@@ -195,7 +195,7 @@ class Upload(Base):
                     continue
                     
                 # Fill entry details: name, description, tags
-                if self.fillFileUploadEntryDetails(name, description, tags) == False:
+                if self.fillFileUploadEntryDetails(name, description, tags, isTagsNeeded=isTagsNeeded) == False:
                     continue
                  
                 if self.getAppUnderTest() == enums.Application.BLACK_BOARD:
@@ -211,6 +211,12 @@ class Upload(Base):
                     
                 # Click Save
                 if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or uploadFrom == enums.Location.UPLOAD_PAGE_EMBED:
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+                        self.switch_to_default_content()
+                        if self.swith_to_iframe(self.clsCommon.canvas.CANVAS_EMBED_UPLOAD_IFRAME)  == False:
+                            writeToLog("DEBUG","FAILED to switch to canvas upload embed iFrame")
+                            continue
+                                               
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
                     sleep(3)
@@ -231,7 +237,7 @@ class Upload(Base):
                         if entryID != None:
                             writeToLog("INFO","Successfully uploaded entry: '" + name + "'"", entry ID: '" + entryID + "'")
                             return entryID
-                    else:
+                    else:   
                         writeToLog("INFO","Successfully uploaded entry: '" + name)
                         return True
                 else:
@@ -391,7 +397,7 @@ class Upload(Base):
         
         
     # Fill basic entry details after upload is completed, only: name, description, tags     
-    def fillFileUploadEntryDetails(self, name="", description="", tags=""):
+    def fillFileUploadEntryDetails(self, name="", description="", tags="", isTagsNeeded=True):
         if self.wait_visible(self.UPLOAD_ENTRY_DETAILS_ENTRY_NAME) == False:
             return False
         
@@ -405,9 +411,10 @@ class Upload(Base):
             writeToLog("INFO","FAILED to fill a entry Description:'" + description + "'")
             return False
         sleep(2)
-        if self.fillFileUploadEntryTags(tags) == False:
-            writeToLog("INFO","FAILED to fill a entry Tags:'" + tags + "'")
-            return False        
+        if isTagsNeeded == True:
+            if self.fillFileUploadEntryTags(tags) == False:
+                writeToLog("INFO","FAILED to fill a entry Tags:'" + tags + "'")
+                return False        
         
     
     # The method supports BOTH single and multiple upload    
