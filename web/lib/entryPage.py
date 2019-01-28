@@ -764,8 +764,12 @@ class EntryPage(Base):
             
     # Author: Michal Zomper
     # The function click on the caption time in the caption section in entry page and the verify that the caption appear on the player with the correct time              
-    def clickOnCaptionSearchResult(self, captionTime, captionText):
+    def clickOnCaptionSearchResult(self, captionTime, captionText, entryName=''):
         if self.clsCommon.isElasticSearchOnPage() == True:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+                self.click(tmpEntryName)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
             tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
             if self.click(tmpCaptionTime, timeout=15) == False:
                 writeToLog("INFO","FAILED to click on caption time in caption search result")
@@ -804,12 +808,12 @@ class EntryPage(Base):
     # The function search the caption in the caption section in entry page, then clicking on the caption time in the caption section and check the caption in the player 
     # captionText - the search caption
     # expectedCaptionAfterSearch - after clicking on the time in the caption section the player jump to the expected time but move back a few milliseconds so we see the caption befor the one that we are looking for
-    def verifyAndClickCaptionSearchResult(self, captionTime, captionText, expectedCaptionAfterSearch):
+    def verifyAndClickCaptionSearchResult(self, captionTime, captionText, expectedCaptionAfterSearch, entryName=''):
         if self.verifyCaptionsSearchResult(captionTime, captionText) == False:
             writeToLog("INFO","FAILED to verify caption in  entry caption search section")
             return False
         
-        if self.clickOnCaptionSearchResult(captionTime, expectedCaptionAfterSearch) == False:
+        if self.clickOnCaptionSearchResult(captionTime, expectedCaptionAfterSearch, entryName) == False:
             writeToLog("INFO","FAILED to find and verify caption in the player")
             return False
         
