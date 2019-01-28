@@ -48,8 +48,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Embed media in site blog from media gallery - image", self.testNum)
-            self.siteBlogTitle = clsTestService.addGuidToString("site blog from media gallery - image", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedMediaInSiteBlogFromMediaGallery", self.testNum)
+            self.siteBlogTitle = clsTestService.addGuidToString("siteBlogFromMediaGallery-Image", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry")    

@@ -50,10 +50,10 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("embed entry", self.testNum)  
+            self.entryName = clsTestService.addGuidToString("embedEntry", self.testNum)  
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
             self.uploadEntrieList = [self.entryToUpload] 
-            self.itemNameEmbedMediaGallery = clsTestService.addGuidToString("Embed from media gallery page", self.testNum) 
+            self.itemNameEmbedMediaGallery = clsTestService.addGuidToString("EmbedFromMediaGallery", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")    
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
