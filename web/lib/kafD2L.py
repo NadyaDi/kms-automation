@@ -23,7 +23,7 @@ class D2L(Base):
     USER_MENU_TOGGLE_BTN                                = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
     USER_LOGOUT_BTN                                     = ('xpath', "//a[contains(@class,'d2l-link d2l') and contains(text(), 'Log Out')]")
     D2L_MEDIA_SPACE_IFRAME                              = ('xpath', "//iframe[contains(@src,'/d2l/lms/remoteplugins/lti/launchLti.d2l')]")
-    D2L_SELECT_COURSES_BUTTON                           = ('xpath', "//button[@class='d2l-navigation-s-button-highlight d2l-dropdown-opener']")
+    D2L_SELECT_COURSES_BUTTON                           = ('xpath', "//div[@class='d2l-navigation-s-course-menu']")
     D2L_SELECT_COURSE_NEW1_BUTTON                       = ('xpath', "//a[@class='d2l-link d2l-datalist-item-actioncontrol' and contains(text(), 'New1 - New1')]")
     D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE               = ('xpath', "//h2[@class='d2l-heading vui-heading-4']") # in entry page if need to do page down/up us this locator to grab the page
     D2L_USER_NAME                                       = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
