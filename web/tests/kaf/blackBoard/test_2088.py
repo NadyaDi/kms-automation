@@ -52,8 +52,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("embed entry", self.testNum)  
-            self.itemNameEmbedUpload = clsTestService.addGuidToString("Embed from upload page", self.testNum) 
+            self.entryName = clsTestService.addGuidToString("embedEntry", self.testNum)  
+            self.itemNameEmbedUpload = clsTestService.addGuidToString("EmbedFromUploadPage", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
             
             writeToLog("INFO","Step 1: Going to create embed item media from upload entry")  

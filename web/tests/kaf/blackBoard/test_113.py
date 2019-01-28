@@ -53,8 +53,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("embed entry", self.testNum)  
-            self.itemNameEmbedSharedRepository = clsTestService.addGuidToString("Embed from shared repository page", self.testNum) 
+            self.entryName = clsTestService.addGuidToString("embedEntry", self.testNum)  
+            self.itemNameEmbedSharedRepository = clsTestService.addGuidToString("EmbedFromSharedRepositoryPage", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to add shared repository module")     
             if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:

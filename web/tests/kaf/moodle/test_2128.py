@@ -47,8 +47,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Embed kaltura video resource from SR - video", self.testNum)
-            self.activityTitle = clsTestService.addGuidToString("Embed kaltura video resource", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedKalturaVideoResourceFromSR", self.testNum)
+            self.activityTitle = clsTestService.addGuidToString("EmbedKalturaVideoResource", self.testNum)
             self.fieldText = "metadata"
             self.galleryName = "Shared Repository"
             ##################### TEST STEPS - MAIN FLOW ##################### 

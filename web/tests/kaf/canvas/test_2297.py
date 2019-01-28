@@ -49,8 +49,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Embed from media gallery", self.testNum)
-            self.announcementName = clsTestService.addGuidToString("Embed announcement from media gallery", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedFromMediaGallery", self.testNum)
+            self.announcementName = clsTestService.addGuidToString("EmbedAnnouncementFromMediaGallery", self.testNum)
             
             ######################### TEST STEPS - MAIN FLOW #######################
             
