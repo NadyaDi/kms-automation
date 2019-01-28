@@ -42,6 +42,7 @@ class Canvas(Base):
     CANVAS_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BTN  = ('xpath', '//label[@class="collapsed inline sharedRepositoryMetadata"]')
     CANVAS_ENTRY_COURSE_FIELD_DROPDOWN                  = ('xpath', '//select[@id="sharedRepositories-Course"]')
     CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION           = ('xpath', '//option[@value="VALUE"]')
+    CANVAS_EMBED_UPLOAD_IFRAME                          = ('xpath', '//iframe[@id="external_tool_button_frame"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -175,7 +176,7 @@ class Canvas(Base):
     
 
     # @Author: Inbar Willman
-    def createEmbedAnnouncements(self, announcementTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None):
+    def createEmbedAnnouncements(self, announcementTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL) == False:
             writeToLog("INFO","FAILED navigate to announcements page")
             return False 
@@ -195,7 +196,7 @@ class Canvas(Base):
         self.clsCommon.base.swith_to_iframe(self.CANVAS_EMBED_IFRAME)
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.CANVAS) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.CANVAS, isTagsNeeded=isTagsNeeded) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
    

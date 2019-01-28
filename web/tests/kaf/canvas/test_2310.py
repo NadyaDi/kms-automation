@@ -55,7 +55,7 @@ class Test:
             
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to to create embed announcement from upload")    
-            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, embedFrom=Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=self.tags) == False:
+            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, embedFrom=Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, isTagsNeeded=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create embed announcement from upload")
                 return  
