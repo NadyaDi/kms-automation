@@ -63,56 +63,56 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to enable like module")
                 return
-            
+             
             writeToLog("INFO","Step 2: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to home page")
                 return
-                        
+                         
             writeToLog("INFO","Step 3: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
-              
+               
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName[0], self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED create new channel")
                 return
-              
+               
             writeToLog("INFO","Step 5: Going navigate to entry page")            
             if self.common.entryPage.navigateToEntry(self.entryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to entry: " + self.entryName)
                 return 
-               
+                
             writeToLog("INFO","Step 6: Going to like the entry page")            
             if self.common.entryPage.LikeUnlikeEntry(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to like entry: " + self.entryName)
                 return   
-              
+               
             writeToLog("INFO","Step 7: Going to add comments to entry")  
             for i in range(2):
                 if self.common.entryPage.addComment(self.comments[i]) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 7: FAILED to add comment '" + self.comments[i] + "' to entry: " + self.entryName)
                     return
-                
-            writeToLog("INFO","Step 8: Going to publish entry to category")
+                 
+            writeToLog("INFO","Step 8: Going to publish entry to channel")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", self.channelName, publishFrom = enums.Location.ENTRY_PAGE, disclaimer=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName[0])
                 return
-             
+              
             writeToLog("INFO","Step 9: Going navigate to my channels page")  
             if self.common.channel.navigateToChannel(self.channelName[0], navigateFrom=enums.Location.MY_CHANNELS_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED navigate to channel: " + self.channelName[0])
                 return
-            
+             
             writeToLog("INFO","Step 10: Going to verify entry details in channel")
             if self.common.category.verifyEntryDetails(self.entryName, "1", "0", str(len(self.comments))) == False:
                 self.status = "Fail"

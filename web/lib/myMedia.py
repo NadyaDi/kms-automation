@@ -1465,7 +1465,8 @@ class MyMedia(Base):
             if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L) or \
-                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE):
+                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE) or \
+                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI):
                     self.click(self.MY_MEDIA_TITLE)
 
             elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:

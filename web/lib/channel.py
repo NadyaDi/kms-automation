@@ -146,7 +146,7 @@ class Channel(Base):
     CHANNEL_ENTRY_DELETE_BUTTON                         = ('xpath', '//a[contains(@aria-label,"Remove ENTRY_NAME")]')
     CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD                  = ('xpath', "//a[@id='next' and text()='Go To Channel']")
     CHANNEL_GO_BACK_TO_CHANNEL_BUTTON                   = ('xpath', "//a[@class='btn btn-link' and text()='Back to Channel']")
-    CHANNEL_MEMEBER_TAB_OWNER_LABLE                     = ('xpath', "//div[@class='span3' and contains(text(),'owner')]")
+    CHANNEL_MEMEBER_TAB_OWNER_LABLE                     = ('xpath', "//div[@class='span3' and contains(text(),'Owner')]")
     ADD_TO_CHANNEL_SEARCH_BAR                           = ('xpath', '//input[@class="searchForm__text" and @placeholder="SEARCH_TAB"]')
     ADD_TO_CHANNEL_MY_MEDIA_TABLE                       = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable "]')
     ADD_TO_CHANNEL_MY_MEDIA_TABLE_SIZE                  = ('xpath', '//table[@class="table table-condensed table-hover bulkCheckbox mymediaTable mediaTable "]/tbody/tr')
@@ -1696,10 +1696,18 @@ class Channel(Base):
             writeToLog("INFO","Failed to wait until set owner modal isn't visible")
             return False              
          
-        #Verify that user don't have set as owner button
-        if self.wait_element(self.CHANNEL_MEMEBER_TAB_OWNER_LABLE)  == False:
-            writeToLog("INFO","Failed to set user as owner - set as owner button still displayed")
-            return False  
+        sleep(2)
+        #Verify that user have the owner label under action
+        try:
+            ownerLabel = self.get_element(self.CHANNEL_MEMEBER_TAB_OWNER_LABLE) 
+            ownerLabelParent = ownerLabel.find_element_by_xpath("..")
+            if ownerLabelParent.get_attribute("data-id") != username:
+                writeToLog("INFO","Failed to set user as owner")
+                return False 
+        except :
+            writeToLog("INFO","Failed to verify user was set as owner")
+            return False 
+        
         sleep(2)
         return True
     

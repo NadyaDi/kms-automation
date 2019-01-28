@@ -86,7 +86,7 @@ class Test:
                 return    
             
             writeToLog("INFO","Step 4: select entries and create new playlists")
-            if self.common.myPlaylists.removeAddEntriesToPlaylistsAtSameTime(self.entryName1, self.listOfPlaylists, self.listOfNewPlaylists) == False:
+            if self.common.myPlaylists.removeAddEntriesToPlaylistsAtSameTime(self.entryName1, self.listOfNewPlaylists) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to select entries and create new playlists")
                 return 
