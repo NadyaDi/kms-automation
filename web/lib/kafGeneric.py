@@ -27,6 +27,8 @@ class KafGeneric(Base):
     KAF_EMBED_FROM_MEDIA_GALLERY_NAME           = ('xpath', '//a[contains(@id, "courseGallery") and text()="MEDIA_GALLERY_NAME"]')
 #    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//div[@class="btn-group singleSizeButton pull-right"]')
     KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[contains(@aria-label, "ENTRY_NAME") and text()="Select"]')
+    KAF_EMBED_RESULT_AFTER_SEARCH               = ('xpath', '//em[text()="ENTRY_NAME"]/ancestor::td[contains(@id,"eSearch-result-")]')
+    KAF_EMBED_EMBED_MEDIA_BTN                   = ('xpath', "//a[contains(@class,'embed-button') and contains(@href,'ENTRY_ID')]")
     KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE    = ('xpath', "//a[@data-original-title='Media Gallery']")
     KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
     KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
@@ -411,9 +413,20 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to make a search in embed page")
             return False 
         
-        tmpSelectBtn = (self.KAF_EMBED_SELECT_MEDIA_BTN[0], self.KAF_EMBED_SELECT_MEDIA_BTN[1].replace('ENTRY_NAME', entryName))
+        # Get an element witch contains the entry name
+        tmpResult = (self.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
+        entryElement = self.wait_element(tmpResult)
+        if entryElement == False:
+            writeToLog("INFO","FAILED to get after search result element")
+            return False        
+        
+        # Get the entry ID from the element
+        entryId = entryElement.get_attribute("id").split('-')[2]
+        tmpSelectBtn = (self.KAF_EMBED_EMBED_MEDIA_BTN[0], self.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
+        
+        # Use the entry ID to click on the '</> Embed' button
         if self.click(tmpSelectBtn, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on 'select' media button")
+            writeToLog("INFO","FAILED to click on the '</> Embed' button")
             return False
         
         self.clsCommon.general.waitForLoaderToDisappear()
