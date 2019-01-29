@@ -32,8 +32,6 @@ class Test:
     timeout_accured = "False"
     driver = None
     common = None
-    userName = "Free@mailinator.com"
-    userPass = "Kaltura1!"
         
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -48,7 +46,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver) 
             self.entryName1 = "Sort by media type - image"
             self.entryName2 = "Sort by media type - audio"
@@ -62,11 +60,6 @@ class Test:
             self.filterByVideo = {self.entryName1: False, self.entryName2: False, self.entryName3: True, self.entryNameQuiz: False}
             self.filterByQuiz = {self.entryName1: False, self.entryName2: False, self.entryName3: False, self.entryNameQuiz: True}
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to login to KMS")
-            if self.common.login.loginToKMS(self.userName, self.userPass) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login to KMS")
-                return 
                         
             writeToLog("INFO","Step 2: Going to navigate to add to channel page")
             if self.common.channel.navigateToAddToChannel(self.channelForEsearch) == False:
