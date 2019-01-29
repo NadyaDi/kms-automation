@@ -827,7 +827,7 @@ class BlackBoard(Base):
     def verifyBlackboardEmbedEntry(self, embedTitle, imageThumbnail='', delay=''):
         self.refresh()
         self.clsCommon.base.switch_to_default_content()
-        sleep(7)
+        sleep(11)
         
         tmpEmbedTitle= (self.clsCommon.kafGeneric.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[0], self.clsCommon.kafGeneric.KAF_EMBED_TITLE_AFTER_CREATE_EMBED[1].replace('EMBED_TITLE', embedTitle))
         try:
