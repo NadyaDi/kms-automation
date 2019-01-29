@@ -52,8 +52,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName1 = clsTestService.addGuidToString("Embed - Assignment submission entry", self.testNum)
-            self.entryName2 = clsTestService.addGuidToString("Embed - Not assignment submission entry", self.testNum)
+            self.entryName1 = clsTestService.addGuidToString("Embed_Assignment_submission_entry", self.testNum)
+            self.entryName2 = clsTestService.addGuidToString("Embed_Not_assignment_submission_entry", self.testNum)
             self.galleryName = "New1"
             self.activityName1 = clsTestService.addGuidToString("Embed - Assignment submission", self.testNum)
             self.activityName2 = clsTestService.addGuidToString("Embed - Not assignment submission", self.testNum)
