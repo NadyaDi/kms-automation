@@ -94,6 +94,7 @@ class  GlobalSearch(Base):
     # Author: Michal Zomper
     # the function verify the matedata for the searched entry in the global search 
     def VerifyEntryMetadataAfterGlobalSearch(self, entryName, thumbQRCodeResult, description):
+        sleep(2)
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
             # Verify thumbnail qr code
             result =  self.clsCommon.myMedia.getResultAfterSearch(entryName)
@@ -101,6 +102,7 @@ class  GlobalSearch(Base):
                 writeToLog("INFO","FAILED to find search word in global search")
                 return False
             
+            sleep(1)
             parent = result.find_element_by_xpath("..")
             entryHref = parent.get_attribute("href")
             entryId = entryHref.split("/")[len(entryHref.split("/"))-1]
