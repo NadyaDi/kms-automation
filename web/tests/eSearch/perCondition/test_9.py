@@ -41,8 +41,6 @@ class Test:
     
     channelDescription = "Description"
     channelTags = "Tags,"
-    userName1 = "Free@mailinator.com" # main user
-    userPass1 = "Kaltura1!"
     userName2 = "private"
     userPass2 = "123456"
     userName3 = "admin"
@@ -70,7 +68,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             
             # Entries for sort by in my media/global search/add to channel/channel/gallery/new video quiz
@@ -99,11 +97,6 @@ class Test:
 
             ##################### TEST STEPS - MAIN FLOW #############################################################  
             # Create entries and channels for sort by tests
-            writeToLog("INFO","Step 1: Going to login with user " + self.userName1)
-            if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login with " + self.userName1)
-                return
                               
             writeToLog("INFO","Step 2: Going to upload image type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
