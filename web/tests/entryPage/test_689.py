@@ -175,7 +175,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])
             self.common.myPlaylists.deleteMultiplePlaylists(self.playlistList)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
