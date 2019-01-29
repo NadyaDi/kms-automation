@@ -325,24 +325,6 @@ test_4325,1,0,0,0,eSearch - Sort by - Gallery - media tab - when search is made
 test_4326,1,0,0,0,eSearch - Sort by - Add new quiz - when search is made
 test_4327,1,0,0,0,eSearch - Sort by - Channel - pending tab - when search is made
 test_4328,1,0,0,0,eSearch - Sort by - Gallery - pending tab - when search is made
-test_4329,1,0,0,0,eSearch - Sort by media type - my media
-test_4330,1,0,0,0,eSearch - Sort by media type - channel page
-test_4331,1,0,0,0,eSearch - Sort by media type - my media with search
-test_4332,1,0,0,0,eSearch - Sort by media type - channel page with search
-test_4333,1,0,0,0,eSearch - Sort by media type - category page
-test_4334,1,0,0,0,eSearch - Sort by media type - category page with search
-test_4335,1,0,0,0,eSearch - Sort by media type - add to channel
-test_4336,1,0,0,0,eSearch - Sort by media type - add to category
-test_4337,1,0,0,0,eSearch - Sort by media type - add to channel with search
-test_4338,1,0,0,0,eSearch - Sort by media type - add to category page with search
-test_4339,1,0,0,0,eSearch - Sort by media type - pending tab channel page no search
-test_4340,1,0,0,0,eSearch - Sort by media type - pending tab category page no search
-test_4341,1,0,0,0,eSearch - Sort by media type - pending tab channel page with search
-test_4342,1,0,0,0,eSearch - Sort by media type - pending tab category page with search
-test_4354,1,0,0,0,eSearch - Filter by media type - add to channel SR tab no search
-test_4355,1,0,0,0,eSearch - Filter by media type - add to channel SR tab with search
-test_4356,1,0,0,0,eSearch - Filter by media type - add to category SR tab no search
-test_4343,1,0,0,0,eSearch - Filter by media type - add to channel SR tab with search
 test_4343,1,0,0,0,eSearch - Search In - My media
 test_4345,1,0,0,0,eSearch - Search In - Global page
 test_4346,1,0,0,0,eSearch - Search In - Add to channel - My media tab
@@ -550,7 +532,26 @@ test_4697,1,0,0,0,Approve/Reject - no search - Category Page - Pending tab
 test_4699,1,0,0,0,Krec - upload metadata
 test_4705,1,0,0,0,Filter by Channel Membership - with search - My Channels page
 test_4706,1,0,0,0,Filter by Channel Membership - no search - My Channels page
+test_4730,1,0,0,0,eSearch - Filter by media type - add to category
+test_4731,1,0,0,0,eSearch - Filter by media type - add to channel with search
+test_4732,1,0,0,0,eSearch - Filter by media type - add to category page with search
+test_4733,1,0,0,0,eSearch - Filter by media type - pending tab category page no search
+test_4734,1,0,0,0,eSearch - Filter by media type - pending tab channel page no search
+test_4735,1,0,0,0,eSearch - Filter by media type - pending tab channel page with search
+test_4736,1,0,0,0,eSearch - Filter by media type - pending tab category page with search
+test_4737,1,0,0,0,eSearch - Filter by media type - global search page
+test_4738,1,0,0,0,eSearch - Filter by media type - add to channel SR tab no search
+test_4739,1,0,0,0,eSearch - Filter by media type - add to channel SR tab with search
+test_4740,1,0,0,0,eSearch - Filter by media type - add to category SR tab no search
+test_4741,1,0,0,0,eSearch - Filter by media type - add to channel SR tab with search
 test_4715,1,0,0,0,Filters Section - with search - Global Page
+test_4716,1,0,0,0,eSearch - Filter by media type - my media no search
+test_4717,1,0,0,0,eSearch - Filter by media type - my media with search
+test_4718,1,0,0,0,eSearch - Filter by media type - channel page
+test_4719,1,0,0,0,eSearch - Filter by media type - channel page with search
+test_4720,1,0,0,0,eSearch - Filter by media type - category page
+test_4721,1,0,0,0,eSearch - Filter by media type - category page with search
+test_4722,1,0,0,0,eSearch - Filter by media type - add to channel
 test_4723,1,0,0,0,Filters Section - with search - My Media
 test_4724,1,0,0,0,Filters Section - no search - My Media
 test_4725,1,0,0,0,Filters Section - with search - Channel Page - Media Tab
