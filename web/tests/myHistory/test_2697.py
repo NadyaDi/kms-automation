@@ -247,7 +247,7 @@ class Test:
                 return              
             
             writeToLog("INFO","Step 27: Going to check that correct entries for all media filter are displayed")
-            if self.common.myHistory.verifyFiltersInMyMedia(self.filterByAllMedia) == False:
+            if self.common.myHistory.verifyFiltersInMyHistory(self.filterByAllMedia) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 27: FAILED to displayed correct entries for all media type")
                 return                                              
