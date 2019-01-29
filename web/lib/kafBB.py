@@ -35,8 +35,8 @@ class BlackBoard(Base):
     BB_ADD_COURSE_MODAL                                 = ('xpath', '//a[contains(@href,"/webapps/portal/execute/tabs/tabManageModules") and text()="Add Course Module"]')
     BB_COURSE_ADD_MODULE_SEARCH_FIELD                   = ('xpath', '//input[@id="txtSearch"]')
     BB_COURSE_ADD_MODULE_SEARCH_SUBMIN_BTN              = ('xpath', '//input[@type="submit" and @value="Go"]')
-    ADD_COURSE_MODULE_BTN                               = ('xpath', '//a[@id="MODULE_ID:-1addButton"]')
-    REMOVE_COURSE_MODULE_BTN                            = ('xpath', '//a[@id="MODULE_ID:-1removeButton"]')     
+    ADD_COURSE_MODULE_BTN                               = ('xpath', '//a[contains(@id,"-1addButton")]')
+    REMOVE_COURSE_MODULE_BTN                            = ('xpath', '//a[contains(@id,"-1removeButton")]')     
     COURSE_MODULE_NAME                                  = ('xpath','//span[@class="moduleTitle" and text()="MODULE_NAME"]')   
     BB_MEDIA_GALLERY_ENTRY_NAME                         = ('xpath', '//a[@class="item_link" and text()="ENTRY_NAME"]')  
     FEATURED_MEDIA_ICON                                 = ('xpath', '//a[@id="featured_ENTRY_NAME"]')   
@@ -205,29 +205,26 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to make a search in 'Add module'")
             return False 
         
-        tmp_add_module_element = (self.ADD_COURSE_MODULE_BTN[0], self.ADD_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId))
-        tmp_remove_module_element = (self.REMOVE_COURSE_MODULE_BTN[0], self.REMOVE_COURSE_MODULE_BTN[1].replace('MODULE_ID', moduleId))
-        
         if enable == True:
             #If 'remove' button is visible, click on remove and then add
-            if self.wait_visible(tmp_remove_module_element, timeout=3) != False:
-                if self.click(tmp_remove_module_element) == False:
+            if self.wait_visible(self.ADD_COURSE_MODULE_BTN, timeout=3) == False:    
+                if self.click(self.REMOVE_COURSE_MODULE_BTN) == False:
                     writeToLog("INFO","FAILED to remove " + searchTerm)
                     return False 
             
             # Click on 'add' button    
-            if self.click(tmp_add_module_element) == False:
+            if self.click(self.ADD_COURSE_MODULE_BTN) == False:
                     writeToLog("INFO","FAILED to add " + searchTerm)
                     return False                 
     
         else:
             #if 'add' button is is visible, click on add and then remove
-            if self.wait_visible(tmp_add_module_element) != False:
-                if self.click(tmp_add_module_element) == False:
+            if self.wait_visible(self.ADD_COURSE_MODULE_BTN) != False:
+                if self.click(self.ADD_COURSE_MODULE_BTN) == False:
                     writeToLog("INFO","FAILED to add " + searchTerm)
                     return False 
 
-            if self.click(tmp_remove_module_element) == False:
+            if self.click(self.REMOVE_COURSE_MODULE_BTN) == False:
                 writeToLog("INFO","FAILED to remove " + searchTerm)
                 return False 
             
