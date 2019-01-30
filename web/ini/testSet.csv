@@ -257,13 +257,13 @@ test_4621,1,0,0,0,KEA Clip video with captions
 test_4622,0,1,0,0,KEA Trim Quiz with caption and slide
 test_4742,1,0,0,0,KEA - Quiz Details section in KEA Editor
 test_4746,1,0,0,0,KEA - Quiz Details section in Entry Page
-test_4757,1,0,0,0,Quiz Details section in Entry Page
-test_4758,1,0,0,0,Quiz Details section in Entry Page
-test_4759,1,0,0,0,Quiz Scores section in Entry Page - Enabled
+test_4757,1,0,0,0,Quiz - Details - Download functionality
+test_4758,1,0,0,0,Quiz - Scores section in KEA Page
+test_4759,1,0,0,0,Quiz - Scores section in Entry Page - Enabled
 test_4766,1,0,0,0,Quiz - Experience section in KEA Page
 test_4767,1,0,0,0,Experience section in Entry Page
-test_4768,1,0,0,0,Quiz Scores section in Entry Page - Disabled
-test_4769,1,0,0,0,Quiz Scores section in Entry Page - Default
+test_4768,1,0,0,0,Quiz - Scores section in Entry Page - Disabled
+test_4769,1,0,0,0,Quiz - Scores section in Entry Page - Default
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
