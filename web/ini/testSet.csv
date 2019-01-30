@@ -260,6 +260,8 @@ test_4746,1,0,0,0,KEA - Quiz Details section in Entry Page
 test_4757,1,0,0,0,Quiz Details section in Entry Page
 test_4758,1,0,0,0,Quiz Details section in Entry Page
 test_4759,1,0,0,0,Quiz Scores section in Entry Page - Enabled
+test_4766,1,0,0,0,Quiz - Experience section in KEA Page
+test_4767,1,0,0,0,Experience section in Entry Page
 test_4768,1,0,0,0,Quiz Scores section in Entry Page - Disabled
 test_4769,1,0,0,0,Quiz Scores section in Entry Page - Default
 test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop

@@ -144,6 +144,8 @@ test_4742,KEA - Quiz Details section in KEA Editor,2438361-1,mediaspace.kaltura.
 test_4757,Quiz Details section in Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4758,Quiz Details section in Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4759,Quiz Scores section in Entry Page - Enabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
+test_4766,Quiz - Experience section in KEA Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
+test_4767,Quiz - Experience section in Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4768,Quiz Scores section in Entry Page - Disabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4769,Quiz Scores section in Entry Page - Default,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
@@ -471,29 +473,29 @@ test_4697,Approve/Reject - no search - Category Page - Pending tab,2443872,media
 test_4705,Filter by Channel Membership - with search - My Channels page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4706,Filter by Channel Membership - no search - My Channels page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4715,Filters Section - with search - Global Page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
-test_4716,eSearch - Filter by media type - my media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4717,eSearch - Filter by media type with search - my media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4718,eSearch - Filter by media type - channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4719,eSearch - Filter by media type with search - channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4720,eSearch - Filter by media type - category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4721,eSearch - Filter by media type with search - category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4722,eSearch - Filter by media type no search - add to channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4716,eSearch - Filter by media type - my media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4717,eSearch - Filter by media type with search - my media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4718,eSearch - Filter by media type - channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4719,eSearch - Filter by media type with search - channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4720,eSearch - Filter by media type - category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4721,eSearch - Filter by media type with search - category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4722,eSearch - Filter by media type no search - add to channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4723,Filters Section - with search - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4724,Filters Section - no search - My Media,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4725,Filters Section - with search - Channel Page - Media Tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_4726,Filters Section - no search - Channel Page - Media Tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
-test_4730,eSearch - Filter by media type no search - add to category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4731,eSearch - Filter by media type with search - add to channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4732,eSearch - Filter by media type with search - add to category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4733,eSearch - Filter by media type no search - pending tab category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4734,eSearch - Filter by media type no search - pending tab channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4735,eSearch - Filter by media type with search - pending tab channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4736,eSearch - Filter by media type with search - pending tab category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4737,eSearch - Filter by media type with search - global search,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4738,eSearch - Filter by media type no search - add to channel SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4739,eSearch - Filter by media type with search - add to channel SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4730,eSearch - Filter by media type no search - add to category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4731,eSearch - Filter by media type with search - add to channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4732,eSearch - Filter by media type with search - add to category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4733,eSearch - Filter by media type no search - pending tab category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4734,eSearch - Filter by media type no search - pending tab channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4735,eSearch - Filter by media type with search - pending tab channel,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4736,eSearch - Filter by media type with search - pending tab category,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4737,eSearch - Filter by media type with search - global search,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4738,eSearch - Filter by media type no search - add to channel SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4739,eSearch - Filter by media type with search - add to channel SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_1,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_2,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_3,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
