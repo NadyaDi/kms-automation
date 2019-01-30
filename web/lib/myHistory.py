@@ -38,6 +38,7 @@ class MyHistory(Base):
     MY_HISTORY_TABLE                                              = ('xpath', '//table[@class="table table-condensed table-hover mediaTable myHistoryTable full"]')
     MY_HISTORY_NO_MORE_RESULTS_ALERT                              = ('xpath', "//div[@id='myHistory_scroller_alert' and contains(text(),'There are no more media items.')]")
     MY_HISTORY_TABLE_SIZE                                         = ('xpath', "//table[@class='table table-condensed table-hover mediaTable myHistoryTable full']/tbody/tr") 
+    MY_HISTORY_REFRESH_BTN                                        = ('xpath', '//i[@class="icon-refresh"]')
     #=============================================================================================================
     # This method, clicks on the menu and My History
     def navigateToMyHistory(self, forceNavigate = False):
@@ -277,6 +278,12 @@ class MyHistory(Base):
     # @Author: Inbar Willman
     # Verify entries in my history page after filtering
     def verifyFiltersInMyHistory(self, entriesDict):
+        if self.click(self.MY_HISTORY_REFRESH_BTN) == False:
+            writeToLog("INFO","FAILED to click on refresh button")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+                    
         if self.clsCommon.myMedia.showAllEntries(searchIn = enums.Location.MY_HISTORY) == False:
             writeToLog("INFO","FAILED to show all entries in my media")
             return False
