@@ -55,6 +55,7 @@ class Kea(Base):
     KEA_TOGGLE_MENU_OPTION                        = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
     KEA_OPTION_NORMAL                             = ('xpath', "//label[contains(@class,'ng-star-inserted') and text()='OPTION_NAME']")  
     KEA_OPTION_ACTIVE                             = ('xpath', "//label[contains(@class,'ui-label-active') and text()='OPTION_NAME']")
+    KEA_OPTION_GRAYED_OUT                         = ('xpath', "//label[contains(@class,'ui-label-disabled') and text()='OPTION_NAME']")
     KEA_OPTION_INPUT_FIELD                        = ('xpath', "//input[@id='FIELD_NAME']")
     KEA_OPTION_TEXTAREA_FIELD                     = ('xpath', "//textarea[@id='FIELD_NAME']")  
     KEA_PREVIEW_ICON                              = ('xpath', "//i[@class='kicon-preview']") 
@@ -637,7 +638,7 @@ class Kea(Base):
     # This function can navigate to a specific entry and initiate the KEA Quiz option
     # This function work for both entries that have Quiz created or not
     # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
-    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=20):
+    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=25):
         self.switch_to_default_content()
         if navigateToEntry == True:
             sleep(timeOut)
@@ -661,8 +662,9 @@ class Kea(Base):
         if self.wait_element(start_button, 5, True) != False:
             if self.click(start_button, 5, True) == False:
                 writeToLog("INFO","FAILED to click on the Quiz Start button")
-                return False  
-                            
+                return False
+        
+        sleep(3)       
         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
             writeToLog("INFO","FAILED, the loading spinner remained in infinite loading")
             return False
@@ -705,7 +707,8 @@ class Kea(Base):
     # This function triggers a specific KEA Section and it can enable / disable or add an input for any available KEA option
     # keaCategory = must be enum
     # keaOption must be enum and have a map
-    def editQuizOptions(self, keaSection, keaOptionDict):
+    # If saveChanges = True, all the KEA changes will be saved by clicking on the done button and waiting for the spinner to disappear
+    def editQuizOptions(self, keaSection, keaOptionDict, saveChanges=False):
         if keaSection != '':
             tmpKEASection = (self.KEA_TOGGLE_MENU_OPTION[0], self.KEA_TOGGLE_MENU_OPTION[1].replace('OPTION_NAME', keaSection.value))
     
@@ -716,25 +719,63 @@ class Kea(Base):
         self.switchToKeaIframe()
         sleep(1)
         if self.click(tmpKEASection, 5, True) == False:
-            writeToLog("INFO", "Failed to click on the " + keaSection.value)
+            writeToLog("INFO", "Failed to click on the " + keaSection.value + " KEA section drop down menu")
             return False
                 
-        for options in keaOptionDict:
-            if keaOptionDict[options] == True:                
-                if self.changeKEAOptionState(options, True) == False:
-                    return False
-                
+        for options in keaOptionDict:                
+            if keaOptionDict[options] == True:   
+                if options == enums.KEAQuizOptions.NO_SEEKING_FORWARD:
+                    options = enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP
+                    if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to enable the " + options.value + " in order to enable the: " + enums.KEAQuizOptions.NO_SEEKING_FORWARD.value)
+                        return False
+                    
+                    sleep(1)
+                    options = enums.KEAQuizOptions.NO_SEEKING_FORWARD
+                    if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to enable the " + options.value)
+                        return False                
+             
+                elif self.changeKEAOptionState(options, True) == False:
+                    return False  
+                              
             elif keaOptionDict[options] == False:
                 if options == enums.KEAQuizOptions.DO_NOT_SHOW_SCORES:
                     options = enums.KEAQuizOptions.SHOW_SCORES
                     if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to disable the " + options.value + " by enabling the dependency option: " + enums.KEAQuizOptions.SHOW_SCORES.value)
                         return False
+
+                elif options == enums.KEAQuizOptions.NO_SEEKING_FORWARD:
+                    options = enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP
+                    if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to enable the " + options.value + " in order to enable the: " + enums.KEAQuizOptions.NO_SEEKING_FORWARD.value)
+                        return False
+                    
+                    sleep(1)
+                    options = enums.KEAQuizOptions.NO_SEEKING_FORWARD
+                    if self.changeKEAOptionState(options, False) == False:
+                        writeToLog("INFO", "FAILED to enable the " + options.value)
+                        return False  
                     
                 elif options == enums.KEAQuizOptions.SHOW_SCORES:
                     options = enums.KEAQuizOptions.DO_NOT_SHOW_SCORES
                     if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to disable the " + options.value + " by enabling the dependency option: " + enums.KEAQuizOptions.DO_NOT_SHOW_SCORES.value)
                         return False
-                   
+                    
+                elif options == enums.KEAQuizOptions.ALLOW_SKIP:
+                    options = enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP
+                    if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to disable the " + options.value + " by enabling the dependency option: " + enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP.value)
+                        return False
+                
+                elif options == enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP:
+                    options = enums.KEAQuizOptions.ALLOW_SKIP
+                    if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to disable the " + options.value + " by enabling the dependency option: " + enums.KEAQuizOptions.ALLOW_SKIP.value)
+                        return False
+                                       
                 else:
                     if self.changeKEAOptionState(options, False) == False:
                         return False
@@ -760,6 +801,11 @@ class Kea(Base):
         if self.click(tmpKEASection, 5, True) == False:
             writeToLog("INFO", "Failed to collapse the " + keaSection.value)
             return False
+        
+        if saveChanges == True:
+            if self.saveKeaChanges() == False:
+                writeToLog("INFO", "FAILED to save the KEA changes")
+                return False
                                     
         return True
     
@@ -773,7 +819,7 @@ class Kea(Base):
     def changeKEAOptionState(self, keaOption, stateEnabled):
         self.switchToKeaIframe()
         
-        if stateEnabled == True:
+        if stateEnabled == True:                        
             tmpKEAOption = (self.KEA_OPTION_ACTIVE[0], self.KEA_OPTION_ACTIVE[1].replace('OPTION_NAME', keaOption.value))
             if self.wait_element(tmpKEAOption, 1, True) != False:
                 writeToLog("INFO", "The " + keaOption.value + " is already enabled")
@@ -785,7 +831,7 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to enable " + keaOption.value + " option")
                     return False
 
-        elif stateEnabled == False:
+        elif stateEnabled == False:                    
             tmpKEAOptionActive = (self.KEA_OPTION_ACTIVE[0], self.KEA_OPTION_ACTIVE[1].replace('OPTION_NAME', keaOption.value))
             tmpKEAOptionNormal = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
             if self.wait_element(tmpKEAOptionActive, 1, True) == False and self.wait_element(tmpKEAOptionNormal, 1, True) != False:
@@ -844,7 +890,7 @@ class Kea(Base):
         if keaSection != '':
             tmpKEASection = (self.KEA_TOGGLE_MENU_OPTION[0], self.KEA_TOGGLE_MENU_OPTION[1].replace('OPTION_NAME', keaSection.value))
         else:
-            writeToLog("INFO", "Please specify in which KEA section we should enable or disable the options")
+            writeToLog("INFO", "Please specify in which KEA section we should verify the state of the options")
             return False
         
         sleep(1)
@@ -987,6 +1033,9 @@ class Kea(Base):
             
             if self.verifyKEAOptionState(enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP, False) == False:
                 return False
+            
+            if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, True) == False:
+                return False
         
         sleep(1)
         if self.click(tmpKEASection, 5, True) == False:
@@ -997,8 +1046,8 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # This function verifies that the default options are displayed after using the revert option
-    # keaSection = must use enums.KEAQuizSection
+    # This function can navigate to the Entry page while being in the KEA Page
+    # entryName = entry that you want to navigate to
     def navigateToEntryPageFromKEA(self, entryName):
         self.switch_to_default_content()
         
@@ -1006,19 +1055,9 @@ class Kea(Base):
             writeToLog("INFO","You are already in the " + entryName + " entry page")
             return True 
         
-        self.switchToKeaIframe()
-        tmp_button = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.DONE.value))
-
-        if self.wait_element(tmp_button, 3, True) != False:
-            if self.click(tmp_button, 5, True) == False:
-                writeToLog("INFO", "FAILED to click on the done button")
-                return False
-            else:
-                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 50) == False:
-                    writeToLog("INFO","FAILED to save the changes")
-                    return False  
-                
-                sleep(1)
+        if self.saveKeaChanges() == False:
+            writeToLog("INFO", "FAILED to save the KEA changes")
+            return False
                 
         tmp_button = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.GO_TO_MEDIA_PAGE.value))
         sleep(1)
@@ -1040,4 +1079,46 @@ class Kea(Base):
             return False
         
         sleep(2)    
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function saves any change performed within the KEA page by clicking on the done button and waiting for the changes to be performed
+    # if resumeEditing=True, we will click on the "Edit" button and wait for the kea options to be displayed
+    def saveKeaChanges(self, resumeEditing=False):
+        self.switchToKeaIframe()
+        
+        tmp_button_done = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.DONE.value))
+
+        if self.wait_element(tmp_button_done, 3, True) != False:
+            if self.click(tmp_button_done, 5, True) == False:
+                writeToLog("INFO", "FAILED to click on the done button")
+                return False
+
+            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 50) == False:
+                writeToLog("INFO","FAILED to save the changes")
+                return False  
+            
+            sleep(2)
+            
+        else:
+            writeToLog("INFO", "FAILED to find the 'done' button in order to save the changes")
+            return False
+        
+        if resumeEditing == True:
+            sleep(3)
+            tmp_button_edit = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.EDIT_QUIZ.value))
+            if self.wait_element(tmp_button_edit, 30, True) == False:
+                writeToLog("INFO", "FAILED to find the edit quiz button")
+                return False
+            
+            if self.click(tmp_button_edit, 3, True) == False:
+                writeToLog("INFO", "FAILED to click on the edit quiz button")
+                return False
+            
+            if self.wait_element(tmp_button_done, 30, True) == False:
+                writeToLog("INFO", "FAILED to load the edit quiz page")
+                return False
+            sleep(1)
+                        
         return True
