@@ -154,10 +154,10 @@ class Test:
                 else:
                     i = i + 1
                 
-                writeToLog("INFO","Step " + str(i) + ": Going to change the " + enums.KEAQuizSection.EXPERIENCE.value + " option by enabling the " + option[0].value)  
+                writeToLog("INFO","Step " + str(i) + ": Going to change the " + enums.KEAQuizSection.EXPERIENCE.value + " option by disabling the " + option[0].value)  
                 if self.common.kea.editQuizOptions(enums.KEAQuizSection.EXPERIENCE, option[2], saveChanges=True) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to change the " + enums.KEAQuizSection.EXPERIENCE.value + " option by enabling the " + option[0].value)   
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to change the " + enums.KEAQuizSection.EXPERIENCE.value + " option by disabling the " + option[0].value)   
                     return
                 else:
                     i = i + 1

@@ -1142,7 +1142,7 @@ class Player(Base):
                 writeToLog("INFO", "FAILED to move to the " + str(x+1) + " quiz page")
                 return False        
             
-            sleep(4)
+            sleep(6)
             #we collect the active question in order to verify if it matches with one from our dictionary  
             activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 120, True).text
                         
@@ -1356,6 +1356,7 @@ class Player(Base):
                 writeToLog("INFO", "FAILED to activate the welcome screen")
                 return False
         
+        sleep(2)
         #we click on the "PDF Download" button in order to trigger the download process
         if self.click(self.clsCommon.player.PLAYER_QUIZ_WELCOME_SCREEN_PDF_DOWNLOAD_BUTTON, 10, True) == False:
             writeToLog("INFO", "Failed to click on the download button")
@@ -1658,6 +1659,7 @@ class Player(Base):
             quizQuestions.append(activeQuestion)
             #we wait for the "Quiz Question" screen to no longer be present, and proceed further
             self.wait_while_not_visible(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10)
+            sleep(1)
             
         quizes = ", ".join(quizQuestions)
         writeToLog("INFO","The following Quiz Questions were skipped: " + quizes + "")
