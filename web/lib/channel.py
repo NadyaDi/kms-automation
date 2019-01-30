@@ -1691,6 +1691,8 @@ class Channel(Base):
             writeToLog("INFO","Failed to click on yes button")
             return False  
         
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(2)
         # Wait until set owner modal isn't visible anymore
         if self.wait_while_not_visible(self.CHANNEL_SET_OWNER_MODAL_CONTENT, timeout=30) == False:
             writeToLog("INFO","Failed to wait until set owner modal isn't visible")
