@@ -550,3 +550,4 @@ class KEAQuizOptions(Enum):
     ALLOW_ANSWER_CHANGE = "Allow Answers Change"
     ALLOW_SKIP          = "Allow Skip"
     DO_NOT_ALLOW_SKIP   = "Do not Allow Skip"
+    NO_SEEKING_FORWARD  = "No seeking forward"

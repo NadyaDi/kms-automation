@@ -195,7 +195,7 @@ class Common():
                 return False
             
         elif navigateTo == enums.Location.HOME:
-            if self.myHistory.navigateToHomePage(forceNavigate) == False:
+            if self.home.navigateToHomePage(forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to home page")
                 return False      
                                                             

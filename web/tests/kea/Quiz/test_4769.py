@@ -101,7 +101,7 @@ class Test:
                 i = i + 1
 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")
-            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=20) == False:
+            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to create a new Quiz for the " + self.entryName + " entry")
                 return
@@ -134,10 +134,10 @@ class Test:
                 i = i + 1
 
             for option in self.scoreOptionDefaultList:
-                writeToLog("INFO","Step " + str(i) + ":Going to verify the KEA Section " + enums.KEAQuizSection.SCORES.value + " changes for " +next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page")
+                writeToLog("INFO","Step " + str(i) + ":Going to verify the KEA Section " + enums.KEAQuizSection.SCORES.value + " changes for " + next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page")
                 if self.common.entryPage.verifyQuizOptionsInEntryPage(enums.KEAQuizSection.SCORES, option[0], option[1], keaOptionEnabled=True, navigateToEntryPageFromKEA=True, entryName=self.newEntryName) == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to verify the KEA Section " + enums.KEAQuizSection.SCORES.value + " changes for " +next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page")
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to verify the KEA Section " + enums.KEAQuizSection.SCORES.value + " changes for " + next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page")
                     return
                 else:
                     i = i + 1

@@ -106,7 +106,7 @@ class Test:
                 i = i + 1
                                  
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
-            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=20) == False:
+            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=25) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return  
