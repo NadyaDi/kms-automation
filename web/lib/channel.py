@@ -1692,12 +1692,12 @@ class Channel(Base):
             return False  
         
         self.clsCommon.general.waitForLoaderToDisappear()
-        sleep(2)
+        sleep(4)
         # Wait until set owner modal isn't visible anymore
-        if self.wait_while_not_visible(self.CHANNEL_SET_OWNER_MODAL_CONTENT, timeout=30) == False:
-            writeToLog("INFO","Failed to wait until set owner modal isn't visible")
-            return False              
-         
+#         if self.wait_while_not_visible(self.CHANNEL_SET_OWNER_MODAL_CONTENT, timeout=30) == False:
+#             writeToLog("INFO","Failed to wait until set owner modal isn't visible")
+#             return False              
+#          
         sleep(2)
         #Verify that user have the owner label under action
         try:
