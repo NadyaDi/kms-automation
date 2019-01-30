@@ -101,6 +101,7 @@ class Canvas(Base):
              
           
     def logOutOfCanvas(self):
+        self.clsCommon.base.switch_to_default_content()
         # Click on account button in main nav bar 
         if self.click(self.USER_ACCOUNT_BUTTON_IN_NAV_BAR) == False:
             writeToLog("INFO","FAILED to click on account button in main nav bar ")

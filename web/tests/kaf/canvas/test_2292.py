@@ -107,7 +107,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish entries to moderated gallery")
                 return 
-                
+            
+            sleep(3)    
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 4: Going to logout from main user")
             if self.common.canvas.logOutOfCanvas() == False:
@@ -127,7 +128,7 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to handle entries in gallery pending tab")
                 return 
             
-            sleep(2)
+            sleep(3) 
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 7: Going to logout from user: " + self.userName1)
             if self.common.canvas.logOutOfCanvas() == False:
