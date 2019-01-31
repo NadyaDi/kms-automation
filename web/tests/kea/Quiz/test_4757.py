@@ -67,7 +67,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add quiz for the " + self.entryName)  
                 return  
-
+            
+            sleep(10)
             writeToLog("INFO","Step 3: Going to verify that the PDF can be downloaded")
             if self.common.player.downloadQuizPDF(self.filePathDownloaded) == False:
                 self.status = "Fail"
