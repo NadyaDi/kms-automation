@@ -14,27 +14,25 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : D2L - Publish From Entry Page
+    # Test Name: Sakai - Edit Entry page - Disable comments
     # Test description:
-    # Upload entry
-    # Go to the entry page that was uploaded and publish it to course
-    # Go to the course that the entry was published to and verify that the entry display their
+    # Upload entry -> Go to entry page > Add comments
+    # Go to edit entry page -> option tab and  disabled comments option
+    # Go to entry page -> Check that comment isn't displayed and there is no option to add new comments 
     #================================================================================================================================
-    testNum     = "2905"
-    application = enums.Application.D2L
+    testNum     = "2931"
+    application = enums.Application.SAKAI
     supported_platforms = clsTestService.updatePlatforms(testNum)
-    
     
     status = "Pass"
     timeout_accured = "False"
-    driver = None
-    common = None
     # Test variables
     entryName = None
     description = "Description" 
     tags = "Tags,"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
-    galleryName = "New1"
+    commnet = "Comment"
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,53 +49,53 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Publish From Entry Page", self.testNum)
-        
+            self.entryName = clsTestService.addGuidToString("Edit Entry page - Disable comments", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
+                 
+            writeToLog("INFO","Step 1: Going to upload entry")   
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
-                return      
-              
-            writeToLog("INFO","Step 2: Going navigate to entry page")
-            if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED  navigate to entry page: " + self.entryName)
-                return           
-              
-            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
-                  
-            writeToLog("INFO","Step 5: Going to publish entry to gallery from entry page")
-            if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.ENTRY_PAGE) == False:
+                    
+            writeToLog("INFO","Step 2: Going navigate to entry page")    
+            if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom =enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "' to gallery '" + self.galleryName + "' from entry page")
-                return                 
+                writeToLog("INFO","Step 2: FAILED navigate to  entry '" + self.entryName + "' page")
+                return 
+                
+            writeToLog("INFO","Step 3: Going to add new comment to entry")
+            if self.common.entryPage.addComment(self.commnet) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 34: FAILED to add new comment")
+                return 
             
-            writeToLog("INFO","Step 6: Going to handle entry in pending tab")
-            if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName,"", self.entryName, navigate=True) == False:
+            writeToLog("INFO","Step 4: Going to navigate to edit entry page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to handle entry in pending tab")
-                return
+                writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
+                return    
             
-            writeToLog("INFO","Step 7: Going navigate to gallery page")
-            if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
+            writeToLog("INFO","Step 5: Going to click on option tab and enable - disabled comment")
+            if self.common.editEntryPage.changeEntryOptions(True, False, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED navigate to gallery: " + self.galleryName)
-                return             
-                          
-            writeToLog("INFO","Step 8: Going to search entry in gallery")
-            if self.common.channel.searchEntryInChannel(self.entryName) == False:
+                writeToLog("INFO","Step 5: FAILED to click on option tab and enable disabled comments option")
+                return    
+            
+            writeToLog("INFO","Step 6: Going to navigate to entry page")
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to find entry entry '" + self.entryName + "' in gallery '" + self.galleryName)
-                return               
+                writeToLog("INFO","Step 6: FAILED to navigate to entry page")
+                return   
+            
+            writeToLog("INFO","Step 7: Going to verify that comments section isn't displayed in entry page")
+            if self.common.entryPage.checkEntryCommentsSection(self.commnet, True, False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED - Comments section still displayed in entry page")
+                return   
+            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'D2L - Publish From Entry Page' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Sakai - Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

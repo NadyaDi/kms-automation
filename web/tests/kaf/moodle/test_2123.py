@@ -67,7 +67,7 @@ class Test:
                 return
                     
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
-            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+            if self.common.entryPage.navigateToEntry(self.entry, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           

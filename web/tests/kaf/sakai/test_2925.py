@@ -14,14 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : D2L - Publish From Entry Page
+    # Test Name : Sakai - Publish From Entry Page
     # Test description:
     # Upload entry
     # Go to the entry page that was uploaded and publish it to course
     # Go to the course that the entry was published to and verify that the entry display their
     #================================================================================================================================
-    testNum     = "2905"
-    application = enums.Application.D2L
+    testNum     = "2925"
+    application = enums.Application.SAKAI
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
@@ -62,7 +62,7 @@ class Test:
                 return      
               
             writeToLog("INFO","Step 2: Going navigate to entry page")
-            if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+            if self.common.entryPage.navigateToEntry(self.entryName,navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED  navigate to entry page: " + self.entryName)
                 return           
@@ -73,31 +73,25 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
                   
-            writeToLog("INFO","Step 5: Going to publish entry to gallery from entry page")
+            writeToLog("INFO","Step 4: Going to publish entry to gallery from entry page")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.ENTRY_PAGE) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "' to gallery '" + self.galleryName + "' from entry page")
+                writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "' to gallery '" + self.galleryName + "' from entry page")
                 return                 
             
-            writeToLog("INFO","Step 6: Going to handle entry in pending tab")
-            if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName,"", self.entryName, navigate=True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to handle entry in pending tab")
-                return
-            
-            writeToLog("INFO","Step 7: Going navigate to gallery page")
+            writeToLog("INFO","Step 5: Going navigate to gallery page")
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED navigate to gallery: " + self.galleryName)
+                writeToLog("INFO","Step 5: FAILED navigate to gallery: " + self.galleryName)
                 return             
                           
-            writeToLog("INFO","Step 8: Going to search entry in gallery")
+            writeToLog("INFO","Step 6: Going to search entry in gallery")
             if self.common.channel.searchEntryInChannel(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to find entry entry '" + self.entryName + "' in gallery '" + self.galleryName)
+                writeToLog("INFO","Step 6: FAILED to find entry entry '" + self.entryName + "' in gallery '" + self.galleryName)
                 return               
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'D2L - Publish From Entry Page' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Sakai - Publish From Entry Page' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

@@ -26,8 +26,8 @@ class Sakai(Base):
     SAKAI_NEW1_GALLERY_IN_NAV_BAR                       = ('xpath', "//a[@title='New1' and @role='menuitem']")
     SAKAI_MY_MEIDA_BUTTON_IN_MENU                       = ('xpath', "//span[@class='menuTitle' and contains(text(), 'My Media')]")
     SAKAI_MEDIA_GALLERY_BUTTON_IN_MENU                  = ('xpath', "//span[@class='menuTitle' and contains(text(), 'Media Gallery')]")
-#     JIVE_MEDIA_GALLEY_NEW1_IN_PLACES                    = ('xpath', "//span[@class='js-header-text' and contains(text(), 'New1')]")
-#     JIVE_USER_NAME                                      = ('xpath', "//span[@class='j-user-name j-navLabel']")
+    SAKAI_USER_NAVGATION_MENU                           = ('xpath', "//span[@class='topnav']")
+    SAKAI_USER_NAME                                     = ('xpath', "//a[@id='loginUser']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -149,12 +149,17 @@ class Sakai(Base):
             return False
          
         return True
-#         
-#            
-#     def getSakaiLoginUserName(self):
-#         try:
-#             userName = self.get_element_text(self.JIVE_USER_NAME)
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to get user name element")
-#             return False
-#         return userName.lower() 
+         
+            
+    def getSakaiLoginUserName(self):
+        self.clsCommon.base.switch_to_default_content()
+        if self.click(self.SAKAI_USER_NAVGATION_MENU) == False:
+            writeToLog("INFO","FAILED to click on user menu")
+            return False
+            
+        try:
+            userName = self.get_element_text(self.SAKAI_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName 

@@ -214,6 +214,10 @@ class EntryPage(Base):
                 return False
             
         elif navigateFrom == enums.Location.UPLOAD_PAGE:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+                self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                
             if self.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON, multipleElements=True) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.UPLOAD_PAGE))
                 return False  
