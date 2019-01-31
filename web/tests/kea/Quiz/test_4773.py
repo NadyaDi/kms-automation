@@ -121,18 +121,39 @@ class Test:
                 return
             else: 
                 i = i + 1
-                
-            writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
-            if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
-                return
-            else:
-                i = i + 1
  
             for option in self.experienceOptionDisableList:
                 self.common.base.navigate(self.entryUrl)
                 sleep(2)
+                writeToLog("INFO","Step " + str(i) + ": Going to navigate to KEA Quiz tab for " + self.newEntryName)  
+                if self.common.kea.initiateQuizFlow(self.newEntryName, navigateToEntry=True, timeOut=1) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KEA Quiz tab for " + self.newEntryName)  
+                    return 
+                else:
+                    i = i + 1
+                
+                #going to verify that the default options for experience are present in KEA page
+                writeToLog("INFO","Step " + str(i) + ": Going to revert to default all the " + enums.KEAQuizSection.EXPERIENCE.value + " changes")  
+                if self.common.kea.revertToDefaultInKEA(enums.KEAQuizSection.EXPERIENCE) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to revert to default all the " + enums.KEAQuizSection.EXPERIENCE.value + " changes")  
+                    return
+                else:
+                    i = i + 1
+                                        
+                self.common.base.switch_to_default_content() 
+                writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
+                if self.common.login.logOutOfKMS() == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
+                    return
+                else:
+                    i = i + 1
+                  
+                self.common.base.navigate(self.entryUrl)
+                sleep(2)
+                
                 if option == self.allowAnswerChangeEnabledList: 
                     writeToLog("INFO","Step " + str(i) + ": Going to answer to all of the available Quiz while using a Guest account")  
                     if self.common.player.selectQuizAnswer(self.questionDict, submitQuiz=False) == False:
@@ -148,7 +169,7 @@ class Test:
                 
                 #in order to verify that the "No seeking forward" and "Do not Allow Skip" options are disabled
                 if option == self.noSeekingForwardDisabledList or option == self.doNotAllowSkipDisabledList:
-                    writeToLog("INFO","Step " + str(i) + ": Going to verify the KEA Section " + enums.KEAQuizSection.EXPERIENCE.value + " changes for " +next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page") 
+                    writeToLog("INFO","Step " + str(i) + ": Going to verify the KEA Section " + enums.KEAQuizSection.EXPERIENCE.value + " changes for " + next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page") 
                     if self.common.entryPage.verifyQuizOptionsInEntryPage(enums.KEAQuizSection.EXPERIENCE, option[0], option[1], keaOptionEnabled=False, navigateToEntryPageFromKEA=False, entryName=self.newEntryName) == False:
                         self.status = "Fail"
                         writeToLog("INFO","Step " + str(i) + ": FAILED to verify the KEA Section" + enums.KEAQuizSection.EXPERIENCE.value + " changes for " + next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page") 
@@ -158,22 +179,22 @@ class Test:
                         
                 #in order to verify that the "Change Answer" and "Allow Skip" options are enabled
                 else:    
-                    writeToLog("INFO","Step " + str(i) + ": Going to verify the KEA Section " + enums.KEAQuizSection.EXPERIENCE.value + " changes for " +next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page") 
+                    writeToLog("INFO","Step " + str(i) + ": Going to verify the KEA Section " + enums.KEAQuizSection.EXPERIENCE.value + " changes for " + next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page") 
                     if self.common.entryPage.verifyQuizOptionsInEntryPage(enums.KEAQuizSection.EXPERIENCE, option[0], option[1], keaOptionEnabled=True, navigateToEntryPageFromKEA=False, entryName=self.newEntryName) == False:
                         self.status = "Fail"
                         writeToLog("INFO","Step " + str(i) + ": FAILED to verify the KEA Section" + enums.KEAQuizSection.EXPERIENCE.value + " changes for " + next(iter(option)).value + " that are properly displayed in the " + self.newEntryName + " entry page") 
                         return
                     else:
-                        i = i + 1               
-            #going to authenticate in order to delete the created entries              
-            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using: " + self.userName + " account")       
-            if self.common.login.loginToKMS(self.userName, self.password) == False:
-                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using: " + self.userName + " account")  
-                return False  
-            else:
-                i = i + 1 
+                        i = i + 1    
+                                                
+                writeToLog("INFO","Step " + str(i) + ": Going to authenticate using: " + self.userName + " account")       
+                if self.common.login.loginToKMS(self.userName, self.password) == False:
+                    writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using: " + self.userName + " account")  
+                    return False  
+                else:
+                    i = i + 1 
             ##################################################################
-            writeToLog("INFO","TEST PASSED: All the KEA Experience options had the default status active and were properly verified in the KEA Entry Page")
+            writeToLog("INFO","TEST PASSED: All the KEA Experience options has the default status and were properly verified in the KEA Entry Page and KEA Page")
         # if an exception happened we need to handle it and fail the test
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -182,7 +203,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-#             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass

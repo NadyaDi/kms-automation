@@ -1356,14 +1356,14 @@ class Player(Base):
                 writeToLog("INFO", "FAILED to activate the welcome screen")
                 return False
         
-        sleep(2)
+        sleep(5)
         #we click on the "PDF Download" button in order to trigger the download process
         if self.click(self.clsCommon.player.PLAYER_QUIZ_WELCOME_SCREEN_PDF_DOWNLOAD_BUTTON, 10, True) == False:
             writeToLog("INFO", "Failed to click on the download button")
             return False
         
         #we wait for three seconds, in order to make sure that our file has been downloaded successfully
-        sleep(3)
+        sleep(7)
         self.switch_to_default_content()
         
         #we verify that the downloaded file is present in the filePath location
