@@ -152,6 +152,11 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED navigate to media gallery")
                 return False 
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            if self.clsCommon.sakai.navigateToGallerySakai(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
+        
         return True
         
     

@@ -216,6 +216,21 @@ test_2507,1,0,0,0,Jive - My Media - Filter by media Type
 test_2523,1,0,0,0,Jive - Remove Media From Media Gallery
 test_2524,1,0,0,0,Jive - Upload Media From Media Gallery Page
 test_2525,1,0,0,0,Jive - Gallery Moderation
+test_2910,1,0,0,0,Sakai - View Collapsed Expanded Modes
+test_2911,1,0,0,0,Sakai - Upload media from desktop
+test_2914,1,0,0,0,Sakai - My Media - Search by Name / Description / Tags
+test_2915,0,1,0,0,Sakai - My Media - Sort Media
+test_2916,1,0,0,0,Sakai - My Media - Filter Media View Different Statuses
+test_2917,1,0,0,0,Sakai - My Media - Filter by media Type
+test_2919,1,0,0,0,Sakai - Remove Media From Media Gallery
+test_2920,1,0,0,0,Sakai - Upload Media From Media Gallery Page
+test_2921,1,0,0,0,Sakai - Gallery Moderation
+test_2923,1,0,0,0,Sakai - Publish after upload
+test_2924,1,0,0,0,Sakai - Publish from my media (single and multiple)
+test_2925,1,0,0,0,Sakai - Publish From Entry Page
+test_2930,1,0,0,0,Sakai - Edit Entry Metadata 
+test_2931,0,1,0,0,Sakai - Edit Entry page - Disable comments
+test_2932,0,1,0,0,Sakai - Edit Entry page - Close discussion
 test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history

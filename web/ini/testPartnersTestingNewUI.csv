@@ -88,6 +88,21 @@ test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation1@mailinator.
 test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2525,Jive - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,hrmanager,hrmanager
 test_2940,Sakai - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2910,Sakai - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2911,Sakai - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2914,Sakai - My Media - Search by Name / Description / Tags,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2915,Sakai - My Media - Sort Media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2916,Sakai - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,autostudent,Kaltura1!
+test_2917,Sakai - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2919,Sakai - Remove Media From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2920,Sakai - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2921,Sakai - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,autostudent,Kaltura1!
+test_2923,Sakai - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2924,Sakai - Publish from my media (single and multiple),,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2925,Sakai - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2930,Sakai - Edit Entry Metadata ,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2931,Sakai - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2932,Sakai - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456

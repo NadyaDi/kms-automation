@@ -84,7 +84,7 @@ class Test:
                 return      
                   
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
-            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+            if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
@@ -106,7 +106,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create temp folder on")
                 return
-                         
+                          
             step = 6
               
             for path in self.filePathDictionary:  
@@ -116,31 +116,31 @@ class Test:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to add attachment")
                     return   
-                  
-                step = step + 1   
                    
+                step = step + 1   
+                    
                 writeToLog("INFO","Step " + str(step) + ": Going to edit attachment")
                 if self.common.editEntryPage.editAttachmentFields(fileName, self.newAttachmentTitle, self.newAttachmentDescripiton) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to edit attachment fields")
                     return  
- 
+  
                 step = step + 1    
-               
+                
                 writeToLog("INFO","Step " + str(step) + ": Going to download attachment file from edit entry page")
                 if self.common.editEntryPage.downloadAttachmentFileFromEditPage(path, self.filePathDictionary[path][0]) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to download attachment file from edit entry page")
                     return 
-                 
-                step = step + 1  
                   
+                step = step + 1  
+                   
                 writeToLog("INFO","Step " + str(step) + ": Going to navigate to entry page")
                 if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to navigate to edit entry page")
                     return   
-                      
+                       
                 step = step + 1               
                        
                 writeToLog("INFO","Step " + str(step) + ": Going to download attachment file from entry page")
