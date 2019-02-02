@@ -189,7 +189,7 @@ class clsPractiTest:
     #=============================================================================================================
     # Function that returns all tests sets that are located under the given filter 
     #=============================================================================================================
-    def getPractiTestTestSetByFilterId(self, filterId):
+    def getPractiTestTestSetByFilterId(self, filterId, onlyExecuteAtNight=False):
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
         
         listTestSet = []    
@@ -204,7 +204,23 @@ class clsPractiTest:
             dctSets = json.loads(r.text)
             if len(dctSets["data"]) != 0:
                 for testSet in dctSets["data"]:
-                    listTestSet.append(testSet)
+                    # Execute test when "Execute at Night", PractiTest TestSet field, is set to True
+                    if onlyExecuteAtNight == True:
+                        try:
+                            #'---f-41840' = "Execute at Night"
+                            if testSet['attributes']['custom-fields']['---f-41840'] == 'yes':
+                                listTestSet.append(testSet)
+                                writeToLog("INFO","TestSet name: " + str(testSet['attributes']['name']) + "; ID: " + str(testSet['attributes']['display-id']) + 
+                                           " was added to list")
+                        # When "Execute at Night" is False        
+                        except:
+                            writeToLog("INFO","TestSet name: " + str(testSet['attributes']['name']) + "; ID: " + str(testSet['attributes']['display-id']) +
+                                       " was skipped")                            
+                    # Execute regardless "Execute at Night" PractiTest TestSet field
+                    else:
+                        listTestSet.append(testSet)
+                        writeToLog("INFO","TestSet name: " + str(testSet['attributes']['name']) + "; ID: " + str(testSet['attributes']['display-id']) + 
+                                   " was added to list")                        
             else:
                 writeToLog("INFO","No Test Sets found under filter id: '" + filterId + "'")
                 return False
