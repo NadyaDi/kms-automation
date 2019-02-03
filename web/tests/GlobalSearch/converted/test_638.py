@@ -58,7 +58,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Global search - Search Media", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Global Search - Search Media", self.testNum)
 
             ##################### TEST STEPS - MAIN FLOW ##################### 
 
@@ -75,14 +75,13 @@ class Test:
                 return 
   
             writeToLog("INFO","Step 3: Going to search entry in global search")
-            if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
+            if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch('"' + self.entryName + '"') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to search entry'" + self.entryName + "' in global search")
                 return 
                
             writeToLog("INFO","Step 4: Going to verify entry metadata after global search") 
             if self.common.globalSearch.VerifyEntryMetadataAfterGlobalSearch(self.entryName, self.thumbnailQrCodeResult, self.description) == False:
-            #if self.common.general.VerifyEntryMetadataAfterGlobalSearch("92F7D4B1-638-Global search - Search Media", self.thumbnailQrCodeResult, self.description) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify entry'" + self.entryName + "' metadata after global search")
                 return 
