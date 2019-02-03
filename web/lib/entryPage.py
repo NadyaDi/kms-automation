@@ -777,7 +777,8 @@ class EntryPage(Base):
                 tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
                 self.click(tmpEntryName)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
-                
+            
+            sleep(2)
             tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
             if self.click(tmpCaptionTime, timeout=15) == False:
                 writeToLog("INFO","FAILED to click on caption time in caption search result")
