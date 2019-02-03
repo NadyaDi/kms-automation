@@ -218,10 +218,12 @@ class EntryPage(Base):
                 self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
                 
+            sleep(2)
             if self.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON, multipleElements=True) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.UPLOAD_PAGE))
                 return False  
             
+            sleep(5)
             tmpEntryName = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
             if self.wait_element(tmpEntryName, 15) == False:
                 writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")

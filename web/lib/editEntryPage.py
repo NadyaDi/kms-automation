@@ -454,11 +454,15 @@ class EditEntryPage(Base):
             return False            
         sleep(3)
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        
         #Open "Actions" drop-down list 
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
             writeToLog("INFO","FAILED to click on Actions button")
             return False
-         
+        
         #Click on Edit button
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Edit button")
