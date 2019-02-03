@@ -70,6 +70,7 @@ test_2559,D2L - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,
 test_2903,D2L - Publish after upload,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2904,D2L - Publish from my media (single and multiple),,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2905,D2L - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_2908,D2L - Discussions BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2485,Jive - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!

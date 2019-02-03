@@ -260,6 +260,7 @@ test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recent
 test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page
 test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
+test_2908,1,0,0,0,D2L - Discussions BSE From My Media
 test_4543,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
 test_4458,0,1,0,0,KEA trim entry with slides
