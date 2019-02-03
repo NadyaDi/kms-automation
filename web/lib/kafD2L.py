@@ -27,6 +27,24 @@ class D2L(Base):
     D2L_SELECT_COURSE_NEW1_BUTTON                       = ('xpath', "//a[@class='d2l-link d2l-datalist-item-actioncontrol' and contains(text(), 'New1 - New1')]")
     D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE               = ('xpath', "//h2[@class='d2l-heading vui-heading-4']") # in entry page if need to do page down/up us this locator to grab the page
     D2L_USER_NAME                                       = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
+    D2L_CREATE_NEW_DISCUSSIONS_BTN                      = ('xpath', '//a[@id="NewDiscussionsButtonMenu"]')
+    D2L_NEW_FORUM_OPTION                                = ('xpath', '//a[@Class=" vui-dropdown-menu-item-link"]')
+    D2L_FORUM_TITLE                                     = ('xpath', '//input[@id="EDT_forumTitle"]')
+    D2L_DISCUSSION_EDITOR_ICON                          = ('xpath', '//a[@class="d2l-htmleditor-button"]')
+    D2L_INSERT_STUFF_IFRAME                             = ('xpath', '//iframe[@class="d2l-dialog-frame"]')
+    D2L_QA_APP_BSE_OPTION                               = ('xpath' , '//span[@class="d2l-textblock" and text()="QAapp BSE "]')
+    D2L_EMBED_INSERT_BTN                                = ('xpath', '//button[@class="d2l-button" and text()="Insert"]')
+    D2L_SAVE_AND_CLOSE_DISCUSSION                       = ('xpath', '//button[contains(@class,"2l-button") and text()="Save and Close"]')
+    D2L_DISCUSSIONS_LINK_BTN                            = ('xpath', '//a[@href="/d2l/le/6750/discussions/List"]')
+    D2L_NEW_FORUM_TITLE                                 = ('xpath', '//span[@class="vui-heading-1" and text()="New Forum"]')   
+    D2L_INSERT_STUFF_TITLE                              = ('xpath', '//span[@class="vui-heading-3" and text()="Insert Stuff"]')    
+    D2L_EMBED_IFRAME                                    = ('xpath', '//iframe[@id="remoteIframe"]')  
+    D2L_FORUM_DESCRIPTION_IFRAME                        = ('xpath', '//iframe[contains(@id, "forumDescription")]')  
+    D2L_FORUM_DESCRIPTION_ENTRY_IFRAME                  = ('xpath', '//iframe[contains(@title, "ENTRY_NAME")]')   
+    D2L_EMBED_DISCUSSION_MENU                           = ('xpath', '//a[@title="Actions for DISCUSSION_NAME"]')    
+    D2L_EMBED_DISCUSSION_DELETE_OPTION                  = ('xpath', '//span[@text()="Delete"]')
+    D2L_DELETE_DISCUSSION_CONFIRMATION_BTN              = ('xpath', '//button[@class="d2l-button" and text()="Yes"]')
+    D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[@data-message-text=""DISCUSSION_NAME"  has been deleted"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -145,3 +163,156 @@ class D2L(Base):
             return False
         return userName.lower() 
         
+    
+    # @Author: Inbar Willman
+    def createEmbedDiscussion(self, discussionTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+            writeToLog("INFO","FAILED navigate to New1 media gallery page")
+            return False 
+        
+        if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Discussions' button")
+            return False  
+        
+        if self.wait_element(self.D2L_CREATE_NEW_DISCUSSIONS_BTN) == False:
+            writeToLog("INFO","FAILED to display 'New' button")
+            return False           
+        
+        if self.click(self.D2L_CREATE_NEW_DISCUSSIONS_BTN) == False:
+            writeToLog("INFO","FAILED to click on new button")
+            return False 
+         
+        if self.click(self.D2L_NEW_FORUM_OPTION, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on new forum button")
+            return False                  
+        
+        if self.wait_element(self.D2L_FORUM_TITLE, timeout=15) == False:
+            writeToLog("INFO","FAILED to display forum title field")
+            return False    
+        
+        sleep(3)         
+        
+        if self.send_keys(self.D2L_FORUM_TITLE, discussionTitle)   == False:
+            writeToLog("INFO","FAILED to insert forum title field")
+            return False 
+        
+        sleep(3)
+        
+        if self.click(self.D2L_DISCUSSION_EDITOR_ICON) == False:
+                writeToLog("INFO","FAILED to click on editor icon")
+                return False 
+            
+        self.clsCommon.base.swith_to_iframe(self.D2L_INSERT_STUFF_IFRAME)
+        
+        if self.wait_element(self.D2L_INSERT_STUFF_TITLE) == False:
+                writeToLog("INFO","FAILED to display 'Insert Stuff' title")
+                return False                
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
+        if self.click(self.D2L_QA_APP_BSE_OPTION) == False:
+            writeToLog("INFO","FAILED to click on 'QAapp BSE' option")
+            return False  
+        
+        self.clsCommon.base.swith_to_iframe(self.D2L_EMBED_IFRAME)
+        
+        # In embed page, choose page to embed from and media
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False  
+        
+        sleep(4)
+   
+        # wait until the player display in the page
+        self.clsCommon.base.switch_to_default_content()
+        
+        # Switch to forum description iframe
+        self.swith_to_iframe(self.D2L_FORUM_DESCRIPTION_IFRAME)
+        
+        # Switch to entry iframe - in forum description
+        tmp_entry_iframe = (self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[0], self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[1].replace('ENTRY_NAME', entryName))
+        self.swith_to_iframe(tmp_entry_iframe)
+        
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        
+        self.clsCommon.base.switch_to_default_content()
+        
+        if self.click(self.D2L_SAVE_AND_CLOSE_DISCUSSION) == False:
+            writeToLog("INFO","FAILED to click on 'Save and Close' button")
+            return False 
+        
+        writeToLog("INFO","Success: Embed discussion was created successfully")
+        return True  
+    
+    
+    # @ Author: Inbar Willman
+    def verifyD2lEmbedEntry(self, entryName, imageThumbnail, delay, forceNavigate=False):
+        # Navigate to discussions page  
+        if forceNavigate == True: 
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to New1 media gallery page")
+                return False 
+        
+            if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Discussions' button")
+                return False  
+                                                 
+        tmp_entry_iframe = (self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[0], self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[1].replace('ENTRY_NAME', entryName))
+        self.swith_to_iframe(tmp_entry_iframe) 
+        
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        
+        sleep(3)
+        
+        # If entry type is video
+        if delay != '':   
+#            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                writeToLog("INFO","FAILED to play and verify video")
+                return False                
+        
+        # If entry type is image     
+        else:
+            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                writeToLog("INFO","FAILED to display correct image thumbnail")
+                return False
+        
+        self.clsCommon.base.switch_to_default_content()
+        writeToLog("INFO","Success embed was verified")
+        return True   
+    
+    
+    # @Author: Inbar WIllman
+    def deleteDiscussion(self, discussionName, forceNavigate=False):  
+        # Navigate to discussions page  
+        if forceNavigate == True: 
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to New1 media gallery page")
+                return False 
+        
+            if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'Discussions' button")
+                return False  
+            
+        tmp_discussion_menu = (self.D2L_EMBED_DISCUSSION_MENU[0], self.D2L_EMBED_DISCUSSION_MENU[1].replace('DISCUSSION_NAME', discussionName))
+        if self.click(tmp_discussion_menu) == False:
+            writeToLog("INFO","FAILED to click on embed discussion menu")
+            return False              
+            
+        if self.click(self.D2L_EMBED_DISCUSSION_DELETE_OPTION) == False:
+            writeToLog("INFO","FAILED to click on delete option")
+            return False   
+        
+        if self.click(self.D2l_DELETE_DISCUSSION_CONFIRMATION_BTN) == False:
+            writeToLog("INFO","FAILED to click 'Yes' on delete confirmation popup")
+            return False  
+        
+        tmp_delete_message = (self.D2L_DELETE_CONFIRMATION_MSG[0], self.D2L_DELETE_CONFIRMATION_MSG[1].replace('DISCUSSION_NAME', discussionName))   
+        if self.wait_visible(tmp_delete_message) == False:
+            writeToLog("INFO","FAILED to displayed delete confirmation message")
+            return False   
+        
+        writeToLog("INFO","Success: Embed discussion was deleted")    
+        return True                       
