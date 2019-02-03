@@ -86,18 +86,18 @@ class MyPlaylists(Base):
             
             
             if toCreateNewPlaylist != False:
-                self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName)
+                self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName, multipleElements=True)
                 sleep(3)
             
-                if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on create playlist Button")
+                if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on Create playlist Button")
                     return False
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
                 
                 sleep(2)
-                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on create playlist Button")
+                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on SAve playlist Button")
                     return False
                 
                 if currentLocation == enums.Location.MY_MEDIA:     
