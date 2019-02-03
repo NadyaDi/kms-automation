@@ -68,6 +68,7 @@ class MyPlaylists(Base):
                     sleep(7)  
                       
             elif currentLocation == enums.Location.ENTRY_PAGE: 
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
                 sleep(1)
                 # Click on action tab
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
