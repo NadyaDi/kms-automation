@@ -14,14 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name: Moodle : Entry page - Add captions And Search - remove caption
+    # Test Name: Sakai - Entry page - Add captions And Search - remove caption
     # Test description:
     # Upload entry ->Go to edit entry ->  'Captions' tab -> Upload a captions file -> Fill out the relevant fields-> 
     # Go back to the entry page and search caption
     # Go to edit entry and remove caption
     #================================================================================================================================
-    testNum     = "2123"
-    application = enums.Application.MOODLE
+    testNum     = "2934"
+    application = enums.Application.SAKAI
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
@@ -101,15 +101,15 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to displayed correct captions text")
                 return   
-            self.common.moodle.switchToMoodleIframe()
             
+            self.common.kafGeneric.switchToKAFIframeGeneric()            
             writeToLog("INFO","Step 8: Going to verify that caption display in the caption section in entry page and in the player")
             if self.common.entryPage.verifyAndClickCaptionSearchResult(self.captionTime2, self.captionText, self.expectedCaptionAfterSearch) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to edit entry page")
                 return   
             
-            self.common.moodle.switchToMoodleIframe()   
+            self.common.kafGeneric.switchToKAFIframeGeneric()     
             writeToLog("INFO","Step 9: Going navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 self.status = "Fail"
@@ -122,7 +122,7 @@ class Test:
                 writeToLog("INFO","Step 10: FAILED to remove added caption to entry '" + self.entryName + "'")
                 return
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Moodle: Add captions And Search' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Sakai - Add captions And Search' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
