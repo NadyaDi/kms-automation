@@ -61,7 +61,8 @@ class  GlobalSearch(Base):
             if self.click(self.GLOBAL_SEARCH_TEXTBOX, timeout=10, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on global search textbox")
                 return False
-                
+        
+        sleep(1)        
         if self.clear_and_send_keys(self.GLOBAL_SEARCH_TEXTBOX, searchWord + Keys.ENTER, multipleElements=True) == False:
             writeToLog("INFO","FAILED to insert search word to global search textbox")
             return False
