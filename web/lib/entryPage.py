@@ -772,10 +772,12 @@ class EntryPage(Base):
     # The function click on the caption time in the caption section in entry page and the verify that the caption appear on the player with the correct time              
     def clickOnCaptionSearchResult(self, captionTime, captionText, entryName=''):
         if self.clsCommon.isElasticSearchOnPage() == True:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L or\
+            localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
                 tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
                 self.click(tmpEntryName)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                
             tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
             if self.click(tmpCaptionTime, timeout=15) == False:
                 writeToLog("INFO","FAILED to click on caption time in caption search result")
