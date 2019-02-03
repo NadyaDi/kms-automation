@@ -4,6 +4,7 @@ import localSettings
 from logger import *
 from selenium.webdriver.common.keys import Keys
 import enums
+from email.mime import application
 
 
 class KafGeneric(Base):
@@ -412,7 +413,7 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to upload new entry to embed page embed page")
                 return False  
             
-            sleep(2)
+            sleep(3)
             
             # Click Save and embed
             if self.click(self.KAF_SAVE_AND_EMBED_UPLOAD_MEDIA) == False:
@@ -468,7 +469,16 @@ class KafGeneric(Base):
                 self.switch_to_default_content()
                 if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
                     writeToLog("INFO","FAILED to click on 'embed' button")
-                    return False                
+                    return False    
+                
+        if application == enums.Application.D2L:
+            sleep(5)
+            self.switch_to_default_content()
+            self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
+            
+            if self.click(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'insert' button")
+                return False                               
         
         return True   
     
@@ -513,8 +523,8 @@ class KafGeneric(Base):
             return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity, forceNavigate)
         elif application == enums.Application.CANVAS:
             return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
-#       elif application == enums.Application.D2L:
-#            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
+        elif application == enums.Application.D2L:
+            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
 #       elif application == enums.Application.JIVE:
 #            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay)                       
         else:
