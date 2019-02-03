@@ -78,6 +78,9 @@ class  GlobalSearch(Base):
             writeToLog("INFO","FAILED to search in global search ")
             return False
         
+        # Remove '"' (if exists) from the begining and end of the search word
+        searchWord = searchWord.replace('"', '')
+        
         result =  self.clsCommon.myMedia.getResultAfterSearch(searchWord)
         if result == False:
             writeToLog("INFO","FAILED to find search word in global search")
