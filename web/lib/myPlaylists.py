@@ -86,6 +86,7 @@ class MyPlaylists(Base):
             
             
             if toCreateNewPlaylist != False:
+                sleep(2)
                 self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName, multipleElements=True)
                 sleep(3)
             
@@ -119,8 +120,8 @@ class MyPlaylists(Base):
                     writeToLog("INFO","FAILED to Check for playlist: '" + playlistName + "' something went wrong")
                     return False
                 
-                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on create playlist Button")
+                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on Save playlist Button")
                     return False
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
@@ -128,13 +129,13 @@ class MyPlaylists(Base):
                 
                 if currentLocation == enums.Location.MY_MEDIA:
                     if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName + "; No confirm message is present")
                         return False
                 
                 else:
                     tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', playlistName))
                     if self.wait_visible(tmp_success_msg, 10) == False:
-                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName + "; No confirm message is present")
                         return False
                 
                 writeToLog("INFO","Entry: """ + str(entryName) + """ added to Playlist: """ + playlistName + "")
