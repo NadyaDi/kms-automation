@@ -99,6 +99,9 @@ class Test:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED - New entry is still processing")
                     return
+                 
+                # Refresh page
+                self.common.base.refresh()
                   
                 step = step + 1 
                   
