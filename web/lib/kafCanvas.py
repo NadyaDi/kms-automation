@@ -107,6 +107,7 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to click on account button in main nav bar ")
             return False
         
+        sleep(2)
         if self.click(self.USER_LOGOUT_BTN, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False
@@ -301,7 +302,11 @@ class Canvas(Base):
             if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
                 return False  
-         
+        
+        self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_DETAILS_TAB) 
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        sleep(1)
+        
         if self.click(self.CANVAS_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BTN) == False:
             writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
             return False
