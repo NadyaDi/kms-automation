@@ -7,7 +7,7 @@ import enums
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
-
+import collections
 
 class Test:
     
@@ -74,6 +74,7 @@ class Test:
                 self.entryName1: self.filePathVideo, 
                 self.entryName2: self.filePathImage,
                 self.entryName3: self.filePathAudio}
+            self.entriesToUpload = collections.OrderedDict(self.entriesToUpload)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             step = 1
             for entry in self.entriesToUpload:
