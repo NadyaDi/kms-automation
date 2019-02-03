@@ -959,6 +959,7 @@ class Admin(Base):
             writeToLog("INFO","FAILED to login to admin page")
             return False
         
+        sleep(2)
         #Navigate to CustometadatabrowseAndEmbed module
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/browseandembed') == False:
             writeToLog("INFO","FAILED to load 'browse and embed' page in admin")
