@@ -232,6 +232,7 @@ test_2930,1,0,0,0,Sakai - Edit Entry Metadata
 test_2931,0,1,0,0,Sakai - Edit Entry page - Disable comments
 test_2932,0,1,0,0,Sakai - Edit Entry page - Close discussion
 test_2934,1,0,0,0,Sakai - Entry page - Add captions And Search - remove caption
+test_2935,1,0,0,0,Sakai - Edit entry page - Thumbnail tab 
 test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history

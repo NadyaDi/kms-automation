@@ -155,7 +155,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON, timeout=5 ,multipleElements=True)
             self.get_body_element().send_keys(Keys.PAGE_DOWN)
         
@@ -777,7 +777,7 @@ class EditEntryPage(Base):
         self.clsCommon.general.waitForLoaderToDisappear()
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         sleep(2)
-        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20, multipleElements=True) == False:
+        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
         sleep(3)
