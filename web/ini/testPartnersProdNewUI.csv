@@ -133,6 +133,7 @@ test_2930,Sakai - Edit Entry Metadata ,,,pythonautomation1@mailinator.com,Kaltur
 test_2931,Sakai - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
 test_2932,Sakai - Edit Entry page - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
 test_2934,Sakai - Entry page - Add captions And Search - remove caption,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
+test_2935,Sakai - Edit entry page - Thumbnail tab ,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
