@@ -91,7 +91,7 @@ class Test:
             writeToLog("INFO","Step 4: Going navigate to audio entry: "+ self.audioEntryName)    
             if self.common.entryPage.navigateToEntry(self.audioEntryName, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 47: FAILED navigate to entry: " + self.audioEntryName)
+                writeToLog("INFO","Step 4: FAILED navigate to entry: " + self.audioEntryName)
                 return 
                         
             writeToLog("INFO","Step 5: Going to wait until media will finish processing")

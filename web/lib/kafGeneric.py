@@ -67,7 +67,7 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED switch to iframe")
                 return False
             
-            self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
+            self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=20)
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False
@@ -109,6 +109,11 @@ class KafGeneric(Base):
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             if self.clsCommon.sakai.switchToSakaiIframe()== False:
                 writeToLog("INFO","FAILED to switch to sakai iframe")
+                return False
+        
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            if self.clsCommon.sharePoint.switchToSharepointIframe() == False:
+                writeToLog("INFO","FAILED to switch to share point iframe")
                 return False
         
         return True
@@ -155,6 +160,11 @@ class KafGeneric(Base):
         
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             if self.clsCommon.sakai.navigateToGallerySakai(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
+
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            if self.clsCommon.sharePoint.navigateToGallerySharePoint(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to media gallery")
                 return False 
         
