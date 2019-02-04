@@ -99,6 +99,28 @@ class SharePoint(Base):
         return True
     
     
+        # Author: Michal Zomper
+    def navigateToGallerySharePoint(self, galleryName, forceNavigate=False):
+        if forceNavigate == False:
+            self.switchToSharepointIframe()
+            if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+                writeToLog("INFO","Success Already in gallery page")
+                return True
+        
+        self.clsCommon.base.switch_to_default_content()
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+            writeToLog("INFO","FAILED navigate to courses")
+            return False
+        sleep(5)
+           
+        self.switchToSharepointIframe()
+        if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
+            writeToLog("INFO","FAILED navigate to to course Media Gallery")
+            return False
+         
+        return True
+    
+    
 #     def navigateToUploadPageSharePoint(self):
 #         if self.navigateToMyMediaSharepoint() == False:
 #             return False
