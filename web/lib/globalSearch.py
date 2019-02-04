@@ -112,11 +112,10 @@ class  GlobalSearch(Base):
             entryId = entryHref.split("/")[len(entryHref.split("/"))-1]
             
             tmp_entryThum = (self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI[0], self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI[1].replace('ENTRY_ID', entryId))
-            try:
-                thumbElement = self.get_element(tmp_entryThum)
-            except NoSuchElementException:
+            thumbElement = self.wait_element(tmp_entryThum, multipleElements=True)
+            if thumbElement == False:
                 writeToLog("INFO","FAILED to find entry thumbnail element after global search")
-                return False
+                return False                
             
             thumQrCode =  self.clsCommon.qrcode.takeAndResolveElementQrCodeScreenshot(thumbElement) 
             if thumQrCode != thumbQRCodeResult:
