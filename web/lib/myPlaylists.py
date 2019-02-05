@@ -116,6 +116,7 @@ class MyPlaylists(Base):
                 writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
             
             else:
+                sleep(2)
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
                 tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlistName))   
                 if self.click(tmp_playlist_name) == False:
