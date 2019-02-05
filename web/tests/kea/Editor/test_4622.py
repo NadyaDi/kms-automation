@@ -104,7 +104,7 @@ class Test:
                 return
                         
             writeToLog("INFO","Step 7: Going to trim the entry from 10sec to 20sec")  
-            if self.common.kea.trimEntry(self.entryName, "0010", "0020", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, True) == False:
+            if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to trim the entry from 10sec to 20sec")
                 return
