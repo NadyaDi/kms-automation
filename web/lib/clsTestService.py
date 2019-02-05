@@ -177,10 +177,6 @@ def updatePlatforms(test_num):
                     else:
                         writeToLog("INFO","Unable to define environment: '" + env + "'")
                         
-                    if 'NewUI' in env:
-                        localSettings.LOCAL_SETTINGS_IS_NEW_UI = True
-                    else:
-                        localSettings.LOCAL_SETTINGS_IS_NEW_UI = False
     return supported_platforms        
 
 
