@@ -100,10 +100,12 @@ LOCAL_SETTINGS_KMS_MEDIA_SELECTION_URL      = None
 LOCAL_SETTINGS_KMS_HOME_URL                 = None
 LOCAL_SETTINGS_KMS_GALLERIES_URL            = None
 
-LOCAL_SETTINGS_PROD_ENVIRONMENT             = 'Prod'              
-LOCAL_SETTINGS_TESTING_ENVIRONMENT          = 'Testing'
+LOCAL_SETTINGS_TESTING_NEW_UI_ENV           = 'TestingNewUI'
+LOCAL_SETTINGS_TESTING_ENV                  = 'Testing'
+LOCAL_SETTINGS_PROD_NEW_UI_ENV              = 'ProdNewUI'
+LOCAL_SETTINGS_PROD_ENV                     = 'Prod'
+LOCAL_SETTINGS_ENV_NAME                     = LOCAL_SETTINGS_TESTING_ENV
 LOCAL_SETTINGS_IS_NEW_UI                    = True
-LOCAL_SETTINGS_RUN_ENVIRONMENT              = LOCAL_SETTINGS_TESTING_ENVIRONMENT
 
 # Partner credentials
 LOCAL_SETTINGS_PARTNER                      = None

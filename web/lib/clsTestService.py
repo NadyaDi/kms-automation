@@ -169,13 +169,8 @@ def updatePlatforms(test_num):
                     
                     # Set the environment
                     env = row['environment']
-                    if 'Testing' in env:
-                        # Update the localSetting run with running environment (prod/test)
-                        localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT = localSettings.LOCAL_SETTINGS_TESTING_ENVIRONMENT
-                    elif 'Prod' in env:
-                        localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT = localSettings.LOCAL_SETTINGS_PROD_ENVIRONMENT
-                    else:
-                        writeToLog("INFO","Unable to define environment: '" + env + "'")
+                    localSettings.LOCAL_SETTINGS_ENV_NAME = env    
+                    writeToLog("INFO","Going to test: '" + env + "' environment")
                         
     return supported_platforms        
 
