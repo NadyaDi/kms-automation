@@ -15,13 +15,18 @@ class SharePoint(Base):
     #====================================================================================================================================
     #Login locators:
     #====================================================================================================================================
-    LOGIN_USERNAME_FIELD                = ('xpath', "//input[@name='loginfmt']")
-    LOGIN_NEXT_BUTTON                   = ('xpath', "//input[@type='submit']")
-    LOGIN_PASSWORD_FIELD                = ('xpath', "//input[@name='passwd']")
-    LOGIN_NO_BUTTON                     = ('xpath', "//input[@id='idBtn_Back']")
-    USER_MENU_TOGGLE_BTN                = ('id', 'DeltaPlaceHolderPageTitleInTitleArea')
-    USER_LOGOUT_BTN                     = ('id', 'topframe.logout.label')
-    SP_MEDIA_SPACE_IFRAME               = ('xpath', "//iframe[contains(@src,'kalturasp2013.sharepoint.com')]")
+    LOGIN_USERNAME_FIELD                            = ('xpath', "//input[@name='loginfmt']")
+    LOGIN_NEXT_BUTTON                               = ('xpath', "//input[@type='submit']")
+    LOGIN_PASSWORD_FIELD                            = ('xpath', "//input[@name='passwd']")
+    LOGIN_NO_BUTTON                                 = ('xpath', "//input[@id='idBtn_Back']")
+    USER_MENU_TOGGLE_BTN                            = ('id', 'DeltaPlaceHolderPageTitleInTitleArea')
+    USER_LOGOUT_BTN                                 = ('xpath', "//span[contains(@id,'_ariaId_') and contains(text(), 'Sign out')]")
+    SP_MEDIA_SPACE_IFRAME                           = ('xpath', "//iframe[contains(@src,'kalturasp2013.sharepoint.com')]")
+    SP_PAGE_TITLE_IN_SP_IFRAME                      = ('xpath', "//div[contains(@class,'pageTitle_')]")
+    SP_MY_MEDIA_BUTTON_IN_NAV_MENU                  = ('xpath', "//div[contains(@class,'ms-Nav-linkText linkText') and contains(text(), 'My Media')]")
+    SP_NEW1_MEDIA_GALLERY_BUTTON_IN_NAV_MENU        = ('xpath', "//div[contains(@class,'ms-Nav-linkText linkText') and contains(text(), 'New1')]")
+    SP_USER_ACCOUNT_BUTTON                          = ('xpath', "//button[@id='O365_MeFlexPane_ButtonID']")
+    SP_USER_NAME                                    = ('xpath', "//span[@class='o365cs-mfp-userEmail o365cs-segoeRegular o365cs-display-Block o365cs-me-bidi ms-fcl-ns']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -75,15 +80,13 @@ class SharePoint(Base):
             # Check if 'Stay signed in?' appeared, and click No, if appeared
             self.click(self.LOGIN_NO_BUTTON, 10)
             # Verify logged in
-            el = self.get_element_text(self.USER_MENU_TOGGLE_BTN).strip()
-            if el in username:
-                writeToLog("INFO","Logged in as '" + username + "@" + password + "'")
-                # Get the username after login and set the variable. Will need this it some tests
-                localSettings.LOCAL_SETTINGS_USERNAME_AFTER_LOGIN = el
-                return True
-            else:
+            if self.wait_element(self.SP_USER_ACCOUNT_BUTTON, timeout=20) == False:
                 writeToLog("INFO","FAILED to login as '" + username + "@" + password + "' after 30 seconds.")
                 return False
+            else:
+                writeToLog("INFO","Logged in as '" + username + "@" + password + "'")
+                return True
+            
         except Exception as inst:
             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
@@ -92,13 +95,12 @@ class SharePoint(Base):
          
     def logOutOfSharepoint(self):
         # Click on the user menu button
+        if self.click(self.SP_USER_ACCOUNT_BUTTON, timeout=15) == False:
+            writeToLog("INFO","FAILED to click on user menu button")
+            return False
+
         if self.click(self.USER_LOGOUT_BTN) == False:
             writeToLog("INFO","FAILED to click on logout button")
-            return False
-        
-        # Verify login button is visible
-        if self.wait_visible(self.LOGIN_SIGN_IN_BTN, 10) == False:
-            writeToLog("INFO","FAILED verify user was logout")
             return False
          
         writeToLog("INFO","Success user was logout")   
@@ -127,20 +129,14 @@ class SharePoint(Base):
         return True
     
     
-#     def navigateToUploadPageSharePoint(self):
-#         if self.navigateToMyMediaSharepoint() == False:
-#             return False
-#         if self.switchToSharepointIframe() == False:
-#             return False
-#         return True
-#     
-#     def navigateToMyMediaSharepoint(self):
-#         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
-#             writeToLog("INFO","FAILED navigate to My Media")
-#             return False
-# 
-#         if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
-#             writeToLog("INFO","FAILED navigate to My Media")
-#             return False
-#         
-#         return True
+    def getSharePointLoginUserName(self):
+        if self.click(self.SP_USER_ACCOUNT_BUTTON, timeout=15) == False:
+            writeToLog("INFO","FAILED to click on user menu button")
+            return False
+        
+        try:
+            userName = self.get_element_text(self.SP_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName

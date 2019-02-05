@@ -239,6 +239,15 @@ test_2935,1,0,0,0,Sakai - Edit entry page - Thumbnail tab
 test_2938,1,0,0,0,Sakai - My Media -Delete through my media
 test_2939,1,0,0,0,Sakai -Delete through entry page
 test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
+test_2880,1,0,0,0,SharePoint - Preview all kinds of media from My Media and Gallery
+test_2881,1,0,0,0,Sharepoint - View Collapsed Expanded Modes
+test_2882,1,0,0,0,Sharepoint - Upload media from desktop
+test_2885,1,0,0,0,SharePoint - Gallery Moderation
+test_2890,1,0,0,0,Sharepoint - Edit metadata
+test_2891,0,1,0,0,Sharepoint - Disable comments
+test_2892,0,1,0,0,Sharepoint - Close discussion
+test_2898,1,0,0,0,Sharepoint - Delete through my media
+test_2899,1,0,0,0,Sharepoint - Delete through edit entry page
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history
@@ -289,7 +298,6 @@ test_4768,1,0,0,0,Quiz - Scores section in Entry Page - Disabled
 test_4769,1,0,0,0,Quiz - Scores section in Entry Page - Default
 test_4772,1,0,0,0,Quiz - Experience section in Entry Page - Disabled
 test_4773,1,0,0,0,Quiz - Experience section in Entry Page - Default
-test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters

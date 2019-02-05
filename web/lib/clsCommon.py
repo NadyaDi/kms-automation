@@ -281,6 +281,8 @@ class Common():
             return self.jive.switchToJiveIframe()
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             return self.sakai.switchToSakaiIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            return self.sharePoint.switchToSharepointIframe()
         else:
             self.base.switch_to_default_content()
             
