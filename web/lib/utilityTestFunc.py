@@ -14,11 +14,7 @@ from logger import *
 # Read from testPartners csv the test details(base URL, credentials, Practitest ID       
 def updateTestCredentials(case_str):    
     found = False
-    if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-        newuiStr = "NewUI"
-    else:
-        newuiStr = ""
-    testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newuiStr + '.csv'))
+    testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
     with codecs.open(testPartnersPath,'r',encoding='utf8') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
         for row in testPartners:
@@ -209,11 +205,7 @@ def clearFilesFromLogFolderPath(fileType):
 # Get all instances from csv file
 def getListOfInstances():
     instacesList = {} #[instance:(adminUsername,adminPassword)]
-    newUiStr = ''
-    if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-        newUiStr = 'NewUI'
-        
-    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT + newUiStr + '.csv'))
+    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
     with open(matrixPath, 'r') as csv_mat: #windows
         testRow = csv.DictReader(csv_mat)
         for row in testRow:
