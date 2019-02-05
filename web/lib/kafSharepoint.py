@@ -31,21 +31,27 @@ class SharePoint(Base):
     # Before implement any method, please use switchToSharepointIframe method, before addressing to media space elements
     # because you need to switch to Sharepoint media space iframe. And...!!! use 'self.switch_to_default_content' (Basic class) method
     # to return to default iframe in the end of use of Sharepoint media space methods or elements, meaning in the test or other classes.
-    #====================================================================================================================================
-    def switchToSharepointIframe(self):
-        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.KAF_SHAREPOINT:
+    #==================================================================================================================================== 
+    def switchToSharepointIframe(self):           
+        if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.PLAYER:
+            self.switch_to_default_content()
+            if self.swith_to_iframe(self.SP_MEDIA_SPACE_IFRAME) == False:
+                writeToLog("INFO","FAILED to switch to iframe")
+                return False
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_SHAREPOINT
+            return True
+                    
+        if self.wait_visible(self.SP_MEDIA_SPACE_IFRAME, 3) == False:
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_SHAREPOINT
             return True
         else:
-            if self.wait_visible(self.SP_MEDIA_SPACE_IFRAME, 60) == False:
-                writeToLog("INFO","FAILED to get iframe element")
-                return False
             if self.swith_to_iframe(self.SP_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
                 return False
             
         localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_SHAREPOINT
-        return True
-            
+        return True            
+                
                 
     def loginToSharepoint(self, username, password, url=''):
         try:
