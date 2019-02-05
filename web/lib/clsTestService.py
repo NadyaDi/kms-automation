@@ -17,6 +17,7 @@ import utilityTestFunc
 import shutil
 import glob, os
 from time import sleep
+from selenium.webdriver.remote.file_detector import FileDetector
 
 
 
