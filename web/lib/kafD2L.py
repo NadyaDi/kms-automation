@@ -42,9 +42,10 @@ class D2L(Base):
     D2L_FORUM_DESCRIPTION_IFRAME                        = ('xpath', '//iframe[contains(@id, "forumDescription")]')  
     D2L_FORUM_DESCRIPTION_ENTRY_IFRAME                  = ('xpath', '//iframe[contains(@title, "ENTRY_NAME")]')   
     D2L_EMBED_DISCUSSION_MENU                           = ('xpath', '//a[@title="Actions for DISCUSSION_NAME"]')    
-    D2L_EMBED_DISCUSSION_DELETE_OPTION                  = ('xpath', '//span[@text()="Delete"]')
+    D2L_EMBED_DISCUSSION_DELETE_OPTION                  = ('xpath', '//li[contains(@id,"DeleteForum") and @class="d2l-contextmenu-item d2l-last-visible-item"]')
     D2L_DELETE_DISCUSSION_CONFIRMATION_BTN              = ('xpath', '//button[@class="d2l-button" and text()="Yes"]')
-    D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[@data-message-text=""DISCUSSION_NAME"  has been deleted"]')
+    D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[contains(@data-message-text,"has been deleted")]')
+    D2L_QA_PROD_BSE_OPTION                              = ('xpath', '//span[@class="d2l-textblock" and text()="QA PROD BSE"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -210,16 +211,26 @@ class D2L(Base):
         
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         
-        if self.click(self.D2L_QA_APP_BSE_OPTION) == False:
-            writeToLog("INFO","FAILED to click on 'QAapp BSE' option")
-            return False  
+        if LOCAL_SETTINGS_RUN_ENVIRONMENT != 'Prod':
+            if self.click(self.D2L_QA_APP_BSE_OPTION) == False:
+                writeToLog("INFO","FAILED to click on 'QAapp BSE' option")
+                return False  
+        else:
+            if self.click(self.D2L_QA_PROD_BSE_OPTION) == False:
+                writeToLog("INFO","FAILED to click on 'QA PROD BSE' option")
+                return False              
         
         self.clsCommon.base.swith_to_iframe(self.D2L_EMBED_IFRAME)
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
-            writeToLog("INFO","FAILED to choose media in embed page")
-            return False  
+        if LOCAL_SETTINGS_RUN_ENVIRONMENT == 'Prod':
+            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+                writeToLog("INFO","FAILED to choose media in embed page")
+                return False            
+        else:
+            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+                writeToLog("INFO","FAILED to choose media in embed page")
+                return False  
         
         sleep(4)
    
@@ -294,23 +305,31 @@ class D2L(Base):
         
             if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Discussions' button")
-                return False  
+                return False 
             
         tmp_discussion_menu = (self.D2L_EMBED_DISCUSSION_MENU[0], self.D2L_EMBED_DISCUSSION_MENU[1].replace('DISCUSSION_NAME', discussionName))
-        if self.click(tmp_discussion_menu) == False:
-            writeToLog("INFO","FAILED to click on embed discussion menu")
-            return False              
-            
+        discussion_menu_element = self.wait_element(tmp_discussion_menu)
+        
+        if discussion_menu_element != False:
+            if ActionChains(self.driver).move_to_element(discussion_menu_element).click().perform() == False:
+                writeToLog("INFO","FAILED to click on embed discussion menu")
+                return False    
+        else:
+            writeToLog("INFO","FAILED to find embed discussion menu")
+            return False  
+        
+        sleep(2)    
+
         if self.click(self.D2L_EMBED_DISCUSSION_DELETE_OPTION) == False:
             writeToLog("INFO","FAILED to click on delete option")
-            return False   
+            return False
         
-        if self.click(self.D2l_DELETE_DISCUSSION_CONFIRMATION_BTN) == False:
+        if self.click(self.D2L_DELETE_DISCUSSION_CONFIRMATION_BTN) == False:
             writeToLog("INFO","FAILED to click 'Yes' on delete confirmation popup")
             return False  
         
-        tmp_delete_message = (self.D2L_DELETE_CONFIRMATION_MSG[0], self.D2L_DELETE_CONFIRMATION_MSG[1].replace('DISCUSSION_NAME', discussionName))   
-        if self.wait_visible(tmp_delete_message) == False:
+#        tmp_delete_message = (self.D2L_DELETE_CONFIRMATION_MSG[0], self.D2L_DELETE_CONFIRMATION_MSG[1].replace('DISCUSSION_NAME', discussionName))   
+        if self.wait_element(self.D2L_DELETE_CONFIRMATION_MSG) == False:
             writeToLog("INFO","FAILED to displayed delete confirmation message")
             return False   
         

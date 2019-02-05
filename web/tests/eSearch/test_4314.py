@@ -28,7 +28,7 @@ class Test:
     #    9. Scheduling Descending - The entries order should be from the first scheduling date to the latest scheduling date
     #    10. Scheduling Ascending - The entries order should be from the latest scheduling date to the first scheduling date
     #================================================================================================================================
-    testNum = "4313"
+    testNum = "4314"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

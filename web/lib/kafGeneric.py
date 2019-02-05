@@ -421,10 +421,22 @@ class KafGeneric(Base):
                 return False 
             
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-                self.switch_to_default_content()   
+                self.switch_to_default_content()  
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.switch_to_default_content()
+                self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
+                
+                if self.wait_element(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN, timeout=15) == False:
+                    writeToLog("INFO","FAILED to displayed 'insert' button")
+                    return False                  
+                if self.click(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN) == False:
+                    writeToLog("INFO","FAILED to click on 'insert' button")
+                    return False  
             
             sleep(2)
-            self.clsCommon.general.waitForLoaderToDisappear()  
+            self.clsCommon.general.waitForLoaderToDisappear() 
+            
             return True   
         
         self.wait_while_not_visible(self.KAF_EMBED_LOADING_MESSAGE, 80)                             
