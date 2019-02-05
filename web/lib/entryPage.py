@@ -647,9 +647,15 @@ class EntryPage(Base):
             self.clsCommon.jive.switchToJiveIframe()
             self.driver.execute_script("window.scrollTo(0, 180)") 
             self.clsCommon.player.switchToPlayerIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
+            sleep(1)
+            self.clsCommon.player.switchToPlayerIframe()
         else:
             self.clsCommon.player.switchToPlayerIframe()
-        
+            
         if entryType == enums.MediaType.VIDEO:
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
                 self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
@@ -683,7 +689,7 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to resolve qr code")
                 return False
             
-            if ((int(result)+1 == entryQRResult) or (entryQRResult == int(result))) == False:
+            if ((str(int(result)+1) == entryQRResult) or (entryQRResult == result)) == False:
                 writeToLog("INFO","FAILED to verify video, QR code isn't correct: the Qr code in the player is " + str(result) + "' but need to be '" + str(entryQRResult) + "'")
                 return False
         
