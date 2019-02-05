@@ -199,6 +199,8 @@ test_2559,1,0,0,0,D2L - Gallery Moderation
 test_2903,1,0,0,0,D2L - Publish after upload
 test_2904,1,0,0,0,D2L - Publish from my media (single and multiple)
 test_2905,1,0,0,0,D2L - Publish From Entry Page
+test_2906,1,0,0,0,D2L - Discussions Upload And Embed From BSE Page
+test_2907,1,0,0,0,D2L - Discussions BSE From Media Gallery
 test_2485,1,0,0,0,Jive - Edit Entry Metadata
 test_2486,0,1,0,0,Jive - Edit Entry page - Disable comments
 test_2487,0,1,0,0,Jive - Edit Entry page - Close discussion
@@ -213,6 +215,7 @@ test_2503,1,0,0,0,Jive - My Media - Search by Name / Description / Tags
 test_2505,1,0,0,0,Jive - My Media - Sort Media
 test_2506,1,0,0,0,Jive - My Media - Filter Media View Different Statuses
 test_2507,1,0,0,0,Jive - My Media - Filter by media Type
+test_2512,1,0,0,0,Jive - Embed media in document
 test_2523,1,0,0,0,Jive - Remove Media From Media Gallery
 test_2524,1,0,0,0,Jive - Upload Media From Media Gallery Page
 test_2525,1,0,0,0,Jive - Gallery Moderation
@@ -233,6 +236,8 @@ test_2931,0,1,0,0,Sakai - Edit Entry page - Disable comments
 test_2932,0,1,0,0,Sakai - Edit Entry page - Close discussion
 test_2934,1,0,0,0,Sakai - Entry page - Add captions And Search - remove caption
 test_2935,1,0,0,0,Sakai - Edit entry page - Thumbnail tab 
+test_2938,1,0,0,0,Sakai - My Media -Delete through my media
+test_2939,1,0,0,0,Sakai -Delete through entry page
 test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
