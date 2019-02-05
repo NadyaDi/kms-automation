@@ -73,20 +73,19 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entry '" + self.entryName + "'")
                 return 
-  
+              
             writeToLog("INFO","Step 3: Going to search entry in global search")
             if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch('"' + self.entryName + '"') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to search entry'" + self.entryName + "' in global search")
                 return 
-               
+             
             writeToLog("INFO","Step 4: Going to verify entry metadata after global search") 
             if self.common.globalSearch.VerifyEntryMetadataAfterGlobalSearch(self.entryName, self.thumbnailQrCodeResult, self.description) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify entry'" + self.entryName + "' metadata after global search")
                 return 
             
-                
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Global search - Search Media' was done successfully")
         # if an exception happened we need to handle it and fail the test       

@@ -22,7 +22,7 @@ class  GlobalSearch(Base):
     #=============================================================================================================
     GLOBAL_SEARCH_BUTTON_NEWUI                          = ('xpath', "//span[@class='hidden-tablet' and contains(text(),'Search')]")
     GLOBAL_SEARCH_TEXTBOX                               = ('xpath', "//input[@placeholder='Search all media' and @type='text']")
-    ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI           = ('xpath', "//a[@class='entryThumbnail  ' and @href='/media/ENTRY_ID']")
+    ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_IMG             = ('xpath', "//img[@class='entryThumbnail__img' and contains(@src,'/thumbnail/entry_id/ENTRY_ID/')]")
     ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_OLDUI           = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     ENTRY_PARENT_DESCRIPTION_AFTER_GLOBAL_SEARCH_NEWUI  = ('xpath', "//a[@class='cursor-pointer' and @href='/media/ENTRY_ID']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_NEWUI         = ('xpath', "//div[@class='results-entry__description hidden-phone']")
@@ -107,7 +107,8 @@ class  GlobalSearch(Base):
             entryHref = parent.get_attribute("href")
             entryId = entryHref.split("/")[len(entryHref.split("/"))-1]
             
-            tmp_entryThum = (self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI[0], self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI[1].replace('ENTRY_ID', entryId))
+            tmp_entryThum = (self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_IMG[0], self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_IMG[1].replace('ENTRY_ID', entryId))
+            
             thumbElement = self.wait_element(tmp_entryThum, multipleElements=True)
             if thumbElement == False:
                 writeToLog("INFO","FAILED to find entry thumbnail element after global search")
