@@ -113,6 +113,7 @@ class  GlobalSearch(Base):
                 writeToLog("INFO","FAILED to find entry thumbnail element after global search")
                 return False                
             
+            sleep(2)
             thumQrCode =  self.clsCommon.qrcode.takeAndResolveElementQrCodeScreenshot(thumbElement) 
             if thumQrCode != thumbQRCodeResult:
                 writeToLog("INFO","FAILED verify entry thumbnail QR code after global search")
