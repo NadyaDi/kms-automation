@@ -7,7 +7,7 @@ import enums
 from localSettings import *
 import localSettings
 from utilityTestFunc import *
-
+import collections
 
 class Test:
     
@@ -74,6 +74,7 @@ class Test:
                 self.entryName1: self.filePathVideo, 
                 self.entryName2: self.filePathImage,
                 self.entryName3: self.filePathAudio}
+            self.entriesToUpload = collections.OrderedDict(self.entriesToUpload)
             ########################## TEST STEPS - MAIN FLOW ####################### 
             step = 1
             for entry in self.entriesToUpload:
@@ -98,6 +99,9 @@ class Test:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED - New entry is still processing")
                     return
+                 
+                # Refresh page
+                self.common.base.refresh()
                   
                 step = step + 1 
                   
@@ -117,8 +121,10 @@ class Test:
                         return               
                           
                     step = step + 1 
-                      
+
                 writeToLog("INFO","Step " + str(step) + " : Going to add to exist playlist from entry page")
+                # Refresh page
+                self.common.base.refresh() 
                 if self.common.myPlaylists.addSingleEntryToPlaylist(entry, self.existPlaylist, toCreateNewPlaylist = False, currentLocation = enums.Location.ENTRY_PAGE) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to add entry to exist playlist from entry page")

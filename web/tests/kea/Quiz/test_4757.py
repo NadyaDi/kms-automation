@@ -54,7 +54,7 @@ class Test:
             ##################################################################
             self.entryName                  = clsTestService.addGuidToString("Quiz Details - Download functionality", self.testNum)
             self.entryNameQuiz              = clsTestService.addGuidToString("Quiz Details - Download functionality - Quiz", self.testNum)
-            self.filePathDownloaded         = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, self.entryNameQuiz + ".pdf")
+            self.filePathDownloaded         = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + self.entryNameQuiz + ".pdf"
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
@@ -86,7 +86,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
-            self.common.deleteFile(self.filePathDownloaded)
+            self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -155,7 +155,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","Already in edit entry page, Entry name: '" + entryName + "'")
             return True  
         
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON, timeout=5 ,multipleElements=True)
             self.get_body_element().send_keys(Keys.PAGE_DOWN)
         
@@ -454,11 +454,15 @@ class EditEntryPage(Base):
             return False            
         sleep(3)
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        
         #Open "Actions" drop-down list 
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
             writeToLog("INFO","FAILED to click on Actions button")
             return False
-         
+        
         #Click on Edit button
         if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_EDIT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on Edit button")
@@ -772,8 +776,15 @@ class EditEntryPage(Base):
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
         self.clsCommon.sendKeysToBodyElement(Keys.END)
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.base.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
+            self.clsCommon.sharePoint.switchToSharepointIframe()
         sleep(2)
-        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 20, multipleElements=True) == False:
+        
+        if self.click(self.EDIT_ENTRY_GO_TO_MEDIA_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on go to media button")
             return False
         sleep(3)

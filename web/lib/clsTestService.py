@@ -17,6 +17,7 @@ import utilityTestFunc
 import shutil
 import glob, os
 from time import sleep
+from selenium.webdriver.remote.file_detector import FileDetector
 
 
 
@@ -74,7 +75,10 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
         fp.set_preference('browser.download.folderList', 2) # custom location
         fp.set_preference('browser.download.manager.showWhenStarting', False)
         fp.set_preference('browser.download.dir', localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS)
-        fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'video/mpeg,video/avi,video/MP2T,video/3gpp,' +
+        fp.set_preference('browser.helperApps.alwaysAsk.force', False)
+        fp.set_preference('pdfjs.disabled', True)
+        fp.set_preference('plugin.scan.plid.all;true', False)
+        fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/pdf,video/mpeg,video/avi,video/MP2T,video/3gpp,' +
                             'video/quicktime,video/x-msvideo,video/x-flv,video/mp4,application/x-mpegURL,video/x-ms-wmv,' +
                             'video/x-ms-asf,image/bmp,image/x-png,image/gif,audio/wav,image/png,image/jpg,audio/x-ms-wma,application/vnd.ms-asf')
         fp.update_preferences()
@@ -165,18 +169,9 @@ def updatePlatforms(test_num):
                     
                     # Set the environment
                     env = row['environment']
-                    if 'Testing' in env:
-                        # Update the localSetting run with running environment (prod/test)
-                        localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT = localSettings.LOCAL_SETTINGS_TESTING_ENVIRONMENT
-                    elif 'Prod' in env:
-                        localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT = localSettings.LOCAL_SETTINGS_PROD_ENVIRONMENT
-                    else:
-                        writeToLog("INFO","Unable to define environment: '" + env + "'")
+                    localSettings.LOCAL_SETTINGS_ENV_NAME = env    
+                    writeToLog("INFO","Going to test: '" + env + "' environment")
                         
-                    if 'NewUI' in env:
-                        localSettings.LOCAL_SETTINGS_IS_NEW_UI = True
-                    else:
-                        localSettings.LOCAL_SETTINGS_IS_NEW_UI = False
     return supported_platforms        
 
 

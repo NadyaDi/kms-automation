@@ -80,6 +80,7 @@ class Upload(Base):
     RECORDER_SCREEN                             = ('xpath', '//video[@id="recorder"]')
     RECORDER_PLAY_BTN                           = ('xpath', '//a[@class="playkit-pre-playback-play-button"]')
     RECORDER_COUNTDOWN                          = ('xpath', '//div[contains(@class, "countdown countdown")]')
+    UPLOAD_CHOOSE_A_FILE_BUTTON                 = ('xpath', "//input[contains(@id,'fileinput')]") 
     #============================================================================================================
     
     def clickMediaUpload(self):
@@ -174,12 +175,18 @@ class Upload(Base):
                     # Because of miltiple run at same time, we apply random wait
                     timeDelay = random.uniform(1.1, 2.9)
                     sleep(timeDelay)      
-                              
+                             
+#                 # Set file path to upload - instead of clicking on UPLOAD_CHOOSE_A_FILE_BUTTON         
+#                 if self.send_keys(self.UPLOAD_CHOOSE_A_FILE_BUTTON, filePath, multipleElements=True) == False:
+#                     writeToLog("DEBUG","FAILED to set file path to upload")
+#                     continue            
+                
+                # TODO (Oleg Sigalov): Remove next part if previous code works (03/02/19)                
                 # Click Choose a file to upload
                 if self.click(self.CHOOSE_A_FILE_TO_UPLOAD_BUTTON) == False:
                     writeToLog("DEBUG","FAILED to click on 'Choose a file to upload' button")
                     continue
-                 
+                  
                 sleep(3)
                 # Type in a file path
                 if self.typeIntoFileUploadDialog(filePath) == False:
@@ -216,6 +223,16 @@ class Upload(Base):
                         if self.swith_to_iframe(self.clsCommon.canvas.CANVAS_EMBED_UPLOAD_IFRAME)  == False:
                             writeToLog("DEBUG","FAILED to switch to canvas upload embed iFrame")
                             continue
+                        
+                    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                        self.switch_to_default_content()
+                        self.clsCommon.base.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
+                        self.clsCommon.base.swith_to_iframe(self.clsCommon.d2l.D2L_EMBED_IFRAME)
+                        
+                    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+                        self.switch_to_default_content()
+                        self.swith_to_iframe(self.clsCommon.jive.JIVE_BSE_MAIN_IFRAME)
+                        self.swith_to_iframe(self.clsCommon.jive.JIVE_BSE_INNER_IFRAME)
                                                
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  

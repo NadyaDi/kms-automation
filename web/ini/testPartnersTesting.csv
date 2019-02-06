@@ -170,3 +170,24 @@ test_2697,Watch History - Filter media type - video,2373952-1,qakmstest.dev.kalt
 test_2702,Watch History - Filter by watch status,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_674,Playlists - Delete playlist,2362001-2,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_1592,Custom data,2378481-3,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_4543,KEA trim,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4455,KEA clip,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4458,KEA trim entry with slides,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4465,KEA clip entry with slides,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4482,KEA trim Quiz entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4513,KEA clip Quiz entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4535,KEA trim audio entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4544,KEA clip audio entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4562,KEA trim video with captions,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4621,KEA clip video with captions,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4622,KEA Trim Quiz with caption and slide,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4742,KEA - Quiz Details section in KEA Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4757,Quiz - Details - Download functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4758,Quiz - Scores section in KEA Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4759,Quiz - Scores section in Entry Page - Enabled,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4766,Quiz - Experience section in KEA Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4767,Quiz - Experience section in Entry Page - Enabled,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4768,Quiz - Scores section in Entry Page - Disabled,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4769,Quiz - Scores section in Entry Page - Default,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4772,Quiz - Experience section in Entry Page - Disabled,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!
+test_4773,Quiz - Experience section in Entry Page - Default,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,adi.millman@kaltura.com,kaltura1!

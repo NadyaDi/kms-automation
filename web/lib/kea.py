@@ -402,22 +402,18 @@ class Kea(Base):
             if self.click(self.KEA_EDITOR_TAB) == False:
                 writeToLog("INFO","FAILED to click on Editor Tab")
                 return False
+
+        if self.setEditorStartTime(splitStartTime) == False:
+            return False              
             
-        self.click(self.EDITOR_TIME_PICKER)           
-        if self.send_keys(self.EDITOR_TIME_PICKER, splitStartTime + Keys.ENTER) == False:
-            writeToLog("INFO","FAILED to insert start time into editor input field")
-            return False
-        
         sleep(1)
         if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
                 writeToLog("INFO","FAILED to click Split icon (time-line)")
                 return False
         sleep(1)
         
-        self.click(self.EDITOR_TIME_PICKER) 
-        if self.send_keys(self.EDITOR_TIME_PICKER, splitEndTime + Keys.ENTER) == False:
-            writeToLog("INFO","FAILED to insert start time into editor input field")
-            return False
+        if self.setEditorStartTime(splitEndTime) == False:
+            return False   
         
         sleep(1)
         if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
@@ -431,12 +427,42 @@ class Kea(Base):
         
         return True
     
+    
+    # @Author: Oleg Sigalov  
+    # Helper method to set the start time in KEA editor, under the left bottom player corner     
+    # splitStartTime: String to set the time, example: "00:10" represents 10 seconds
+    def setEditorStartTime(self, splitStartTime):
+        if self.click(self.EDITOR_TIME_PICKER) == False:
+            writeToLog("INFO","FAILED to click on input field")
+            return False 
         
+        # send_keys doesn't work, use instead:
+        self.driver.execute_script("arguments[0].value='" + splitStartTime + "'", self.wait_element(self.EDITOR_TIME_PICKER))
+        
+        if self.send_keys(self.EDITOR_TIME_PICKER, Keys.ENTER) == False:
+            writeToLog("INFO","FAILED to send Enter to input field")
+            return False
+        
+        # Verify marker moved correctly
+        markerElement = self.wait_element(self.EDITOR_REALTIME_MARKER)
+        if markerElement == False:
+            writeToLog("INFO","FAILED to get the marker element")
+            return False
+            
+        if markerElement.text != splitStartTime + ".00":
+            writeToLog("INFO","FAILED to set marker to:" + splitStartTime)
+            return False  
+
+        return True
+    
+    
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
     def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
-        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
+        if self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab) == False:
+            writeToLog("INFO","FAILED to split the entry: " + str(entryName))
+            return False            
         
         sleep(1)
         if self.click(self.EDITOR_SAVE_BUTTON) == False:

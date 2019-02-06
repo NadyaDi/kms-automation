@@ -199,6 +199,8 @@ test_2559,1,0,0,0,D2L - Gallery Moderation
 test_2903,1,0,0,0,D2L - Publish after upload
 test_2904,1,0,0,0,D2L - Publish from my media (single and multiple)
 test_2905,1,0,0,0,D2L - Publish From Entry Page
+test_2906,1,0,0,0,D2L - Discussions Upload And Embed From BSE Page
+test_2907,1,0,0,0,D2L - Discussions BSE From Media Gallery
 test_2485,1,0,0,0,Jive - Edit Entry Metadata
 test_2486,0,1,0,0,Jive - Edit Entry page - Disable comments
 test_2487,0,1,0,0,Jive - Edit Entry page - Close discussion
@@ -213,10 +215,43 @@ test_2503,1,0,0,0,Jive - My Media - Search by Name / Description / Tags
 test_2505,1,0,0,0,Jive - My Media - Sort Media
 test_2506,1,0,0,0,Jive - My Media - Filter Media View Different Statuses
 test_2507,1,0,0,0,Jive - My Media - Filter by media Type
+test_2509,1,0,0,0,Jive - Embed media in discussion
+test_2511,1,0,0,0,Jive - Discussions Upload And Embed From BSE Page
+test_2512,1,0,0,0,Jive - Embed media in document
 test_2523,1,0,0,0,Jive - Remove Media From Media Gallery
 test_2524,1,0,0,0,Jive - Upload Media From Media Gallery Page
 test_2525,1,0,0,0,Jive - Gallery Moderation
+test_2910,1,0,0,0,Sakai - View Collapsed Expanded Modes
+test_2911,1,0,0,0,Sakai - Upload media from desktop
+test_2914,1,0,0,0,Sakai - My Media - Search by Name / Description / Tags
+test_2915,0,1,0,0,Sakai - My Media - Sort Media
+test_2916,1,0,0,0,Sakai - My Media - Filter Media View Different Statuses
+test_2917,1,0,0,0,Sakai - My Media - Filter by media Type
+test_2919,1,0,0,0,Sakai - Remove Media From Media Gallery
+test_2920,1,0,0,0,Sakai - Upload Media From Media Gallery Page
+test_2921,1,0,0,0,Sakai - Gallery Moderation
+test_2923,1,0,0,0,Sakai - Publish after upload
+test_2924,1,0,0,0,Sakai - Publish from my media (single and multiple)
+test_2925,1,0,0,0,Sakai - Publish From Entry Page
+test_2930,1,0,0,0,Sakai - Edit Entry Metadata 
+test_2931,0,1,0,0,Sakai - Edit Entry page - Disable comments
+test_2932,0,1,0,0,Sakai - Edit Entry page - Close discussion
+test_2934,1,0,0,0,Sakai - Entry page - Add captions And Search - remove caption
+test_2935,1,0,0,0,Sakai - Edit entry page - Thumbnail tab 
+test_2938,1,0,0,0,Sakai - My Media -Delete through my media
+test_2939,1,0,0,0,Sakai -Delete through entry page
 test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
+test_3044,1,0,0,0,Sakai  - Announcment BSE From My Media
+test_2880,1,0,0,0,SharePoint - Preview all kinds of media from My Media and Gallery
+test_2881,1,0,0,0,Sharepoint - View Collapsed Expanded Modes
+test_2882,1,0,0,0,Sharepoint - Upload media from desktop
+test_2885,1,0,0,0,SharePoint - Gallery Moderation
+test_2886,1,0,0,0,Sharepoint - Search by tag / name / description
+test_2890,1,0,0,0,Sharepoint - Edit metadata
+test_2891,0,1,0,0,Sharepoint - Disable comments
+test_2892,0,1,0,0,Sharepoint - Close discussion
+test_2898,1,0,0,0,Sharepoint - Delete through my media
+test_2899,1,0,0,0,Sharepoint - Delete through edit entry page
 test_2565,1,0,0,0,Watch History - Add entry (Private) to watch list history
 test_2566,1,0,0,0,Watch History - Add entry (Published to channel- public) to watch list history
 test_2567,1,0,0,0,Watch History - delete entry (Published to channel) from watch list history
@@ -244,6 +279,7 @@ test_2742,1,0,0,0,Watch History - Entry appear in both continue watch and recent
 test_2750,1,0,0,0,Watch History - Recently Watched playlist in home page
 test_2755,0,1,0,0,Watch History - Recently Watched playlist in home page - audio
 test_2757,1,0,0,0,Watch History - Recently Watched playlist in home page - Quiz
+test_2908,1,0,0,0,D2L - Discussions BSE From My Media
 test_4543,1,0,0,0,KEA trim
 test_4455,1,0,0,0,KEA clip
 test_4458,0,1,0,0,KEA trim entry with slides
@@ -266,7 +302,6 @@ test_4768,1,0,0,0,Quiz - Scores section in Entry Page - Disabled
 test_4769,1,0,0,0,Quiz - Scores section in Entry Page - Default
 test_4772,1,0,0,0,Quiz - Experience section in Entry Page - Disabled
 test_4773,1,0,0,0,Quiz - Experience section in Entry Page - Default
-test_2882,1,0,0,0,KAF Sharepoint Upload media from desktop
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters

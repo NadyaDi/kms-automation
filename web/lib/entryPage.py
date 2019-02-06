@@ -214,10 +214,16 @@ class EntryPage(Base):
                 return False
             
         elif navigateFrom == enums.Location.UPLOAD_PAGE:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+                self.click(self.clsCommon.upload.UPLOAD_PAGE_TITLE)
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                
+            sleep(2)
             if self.click(self.clsCommon.upload.UPLOAD_GO_TO_MEDIA_BUTTON, multipleElements=True) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' from " + str(enums.Location.UPLOAD_PAGE))
                 return False  
             
+            sleep(5)
             tmpEntryName = (self.ENTRY_PAGE_ENTRY_TITLE[0], self.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
             if self.wait_element(tmpEntryName, 15) == False:
                 writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
@@ -641,9 +647,15 @@ class EntryPage(Base):
             self.clsCommon.jive.switchToJiveIframe()
             self.driver.execute_script("window.scrollTo(0, 180)") 
             self.clsCommon.player.switchToPlayerIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
+            sleep(1)
+            self.clsCommon.player.switchToPlayerIframe()
         else:
             self.clsCommon.player.switchToPlayerIframe()
-        
+            
         if entryType == enums.MediaType.VIDEO:
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
                 self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
@@ -677,7 +689,7 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to resolve qr code")
                 return False
             
-            if str(entryQRResult) != result:
+            if ((str(int(result)+1) == entryQRResult) or (entryQRResult == result)) == False:
                 writeToLog("INFO","FAILED to verify video, QR code isn't correct: the Qr code in the player is " + str(result) + "' but need to be '" + str(entryQRResult) + "'")
                 return False
         
@@ -766,10 +778,13 @@ class EntryPage(Base):
     # The function click on the caption time in the caption section in entry page and the verify that the caption appear on the player with the correct time              
     def clickOnCaptionSearchResult(self, captionTime, captionText, entryName=''):
         if self.clsCommon.isElasticSearchOnPage() == True:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L or\
+            localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
                 tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
                 self.click(tmpEntryName)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            
+            sleep(2)
             tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
             if self.click(tmpCaptionTime, timeout=15) == False:
                 writeToLog("INFO","FAILED to click on caption time in caption search result")

@@ -58,9 +58,15 @@ class Test:
             self.activityName1 = clsTestService.addGuidToString("Embed - Assignment submission", self.testNum)
             self.activityName2 = clsTestService.addGuidToString("Embed - Not assignment submission", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
-            localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
-            localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            
+            if LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1820181-1.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Blackboard@kaltura.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
             
             writeToLog("INFO","Step 1: Going to enable assignment submission")          
             if self.common.admin.enableDisabledAssignmentSubmission(True) == False:

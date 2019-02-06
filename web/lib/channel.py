@@ -171,6 +171,7 @@ class Channel(Base):
     CHANNEL_BULK_POP_UP_APPROVE                         = ('xpath', "//a[contains(@class,'btn btn-primary')][contains(text(),'Approve')]")
     CHANNEL_MEDIA_TAB_ACTIVE                            = ('xpath', "//a[@id='media-tab' and @aria-selected='true']")
     CHANNEL_ENTRY_PARENT_CHECKBOX                       = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']") 
+    CHANNEL_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD            = ('xpath', '//a[@id="next" and text()="Go To Media Gallery"]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -2180,7 +2181,7 @@ class Channel(Base):
 
     # Author: Michal Zomper
     #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
-    def addNewContentToChannelWithoutNavigate(self, uploadEntry):
+    def addNewContentToChannelWithoutNavigate(self, uploadEntry, application=enums.Application.MEDIA_SPACE):
         if self.click(self.CHANNEL_ADD_TO_CHANNEL_BUTTON) == False:
             writeToLog("INFO","FAILED to click add to Gallery button")
             return False     
@@ -2202,10 +2203,15 @@ class Channel(Base):
             writeToLog("INFO","FAILED to upload media from channel page: " + uploadEntry.name)
             return False
         
-        # Click 'Go To Channel'
-        if self.click(self.CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on 'Go To Channel'")
-            return False
+        if application == enums.Application.MEDIA_SPACE:
+            # Click 'Go To Channel'
+            if self.click(self.CHANNEL_GO_TO_CHANNEL_AFTER_UPLOAD, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'Go To Channel'")
+                return False
+        else:
+            if self.click(self.CHANNEL_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD) == False:
+                writeToLog("INFO","FAILED to click on 'Go To Media Gallery'")
+                return False                
         
         return True
     

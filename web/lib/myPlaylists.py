@@ -68,6 +68,7 @@ class MyPlaylists(Base):
                     sleep(7)  
                       
             elif currentLocation == enums.Location.ENTRY_PAGE: 
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
                 sleep(1)
                 # Click on action tab
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST, 30) == False:
@@ -86,18 +87,19 @@ class MyPlaylists(Base):
             
             
             if toCreateNewPlaylist != False:
-                self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName)
+                sleep(2)
+                self.clear_and_send_keys(self.CREATE_PLAYLIST_TEXT_FIELD, playlistName, multipleElements=True)
                 sleep(3)
             
-                if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on create playlist Button")
+                if self.click(self.CREATE_PLAYLIST_CREATE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on Create playlist Button")
                     return False
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
-                
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
                 sleep(2)
-                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on create playlist Button")
+                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on Save playlist Button")
                     return False
                 
                 if currentLocation == enums.Location.MY_MEDIA:     
@@ -114,13 +116,15 @@ class MyPlaylists(Base):
                 writeToLog("INFO","Playlist: '" + playlistName + "' successfully created")
             
             else:
+                sleep(2)
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
                 tmp_playlist_name = (self.PLAYLIST_CHECKBOX[0], self.PLAYLIST_CHECKBOX[1].replace('PLAYLIST_NAME', playlistName))   
                 if self.click(tmp_playlist_name) == False:
                     writeToLog("INFO","FAILED to Check for playlist: '" + playlistName + "' something went wrong")
                     return False
                 
-                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON) == False:
-                    writeToLog("INFO","FAILED to click on create playlist Button")
+                if self.click(self.CREATE_PLAYLIST_SAVE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on Save playlist Button")
                     return False
                 
                 self.clsCommon.general.waitForLoaderToDisappear()
@@ -128,13 +132,13 @@ class MyPlaylists(Base):
                 
                 if currentLocation == enums.Location.MY_MEDIA:
                     if self.wait_visible(self.CREATE_PLAYLIST_CONFIRM_MSG, 10) == False:
-                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName + "; No confirm message is present")
                         return False
                 
                 else:
                     tmp_success_msg =(self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[0], self.CREATE_PLAYLIST_CONFIRM_MSG_ENTRY_PAGE[1].replace('PLAYLIST_NAME', playlistName))
                     if self.wait_visible(tmp_success_msg, 10) == False:
-                        writeToLog("INFO","FAILED to to create playlist: " + playlistName)
+                        writeToLog("INFO","FAILED to to create playlist: " + playlistName + "; No confirm message is present")
                         return False
                 
                 writeToLog("INFO","Entry: """ + str(entryName) + """ added to Playlist: """ + playlistName + "")

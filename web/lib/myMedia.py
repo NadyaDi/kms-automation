@@ -548,7 +548,11 @@ class MyMedia(Base):
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_PUBLISH_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on publish button in entry page '" + entryName + "'")
                 return False
-
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+                self.click((self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName)))
+                self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                
             sleep(5)
             if self.click(self.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45, multipleElements=True) == False:
                 writeToLog("DEBUG","FAILED to click on publish button")
@@ -628,6 +632,9 @@ class MyMedia(Base):
             if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON, 30) == False:
                 writeToLog("INFO","FAILED to click on save button")
                 return False
+            
+            # Wait for loader to disappear
+            self.clsCommon.general.waitForLoaderToDisappear()            
 
             if self.wait_visible(self.MY_MEDIA_SAVE_MESSAGE_CONFIRM, 45) == False:
                 writeToLog("INFO","FAILED to find confirm save message")
@@ -1465,9 +1472,12 @@ class MyMedia(Base):
             if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L) or \
-                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE) or \
-                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI):
+                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE):
                     self.click(self.MY_MEDIA_TITLE)
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+                self.click(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON)
+                
 
             elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
                 self.click(self.MY_MEDIA_ACTIONS_BUTTON)

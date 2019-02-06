@@ -326,8 +326,10 @@ class Base:
                         if el.size['width']!=0 and el.size['height']!=0:
                             self.setImplicitlyWaitToDefault()
                             return el
-                    self.setImplicitlyWaitToDefault()
-                    return False
+                        
+                    if wait_until < datetime.datetime.now():
+                        self.setImplicitlyWaitToDefault()
+                        return False 
                 else:
                     el = self.get_element(locator)
                     self.setImplicitlyWaitToDefault()

@@ -4,6 +4,7 @@ import localSettings
 from logger import *
 from selenium.webdriver.common.keys import Keys
 import enums
+from email.mime import application
 
 
 class KafGeneric(Base):
@@ -17,24 +18,24 @@ class KafGeneric(Base):
     #=================================================================================================================================
     #Login locators:
     #====================================================================================================================================
-    KAF_MEDIA_GALLERY_TITLE                     = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
-    KAF_GALLERY_ADD_MEDIA_BUTTON                = ('xpath', "//a[@id='tab-addcontent']")
-    KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD        = ('xpath', "//a[@id='next' and contains(text(), 'Go To Media Gallery')]")
-    KAF_REFRSH_BUTTON                           = ('xpath', "//a[@id='automation-reload']") 
-    KAF_EMBED_FROM_MY_MEDIA_PAGE                = ('xpath', "//a[@id='media-tab']")
-    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_MULTIPLE  = ('xpath', "//a[@id='MediaGalleries-tab']")
-    KAF_EMBED_FROM_SR_PAGE                      = ('xpath', "//a[contains(@id,'courseGallery') and text()='Shared Repository']")
-    KAF_EMBED_FROM_MEDIA_GALLERY_NAME           = ('xpath', '//a[contains(@id, "courseGallery") and text()="MEDIA_GALLERY_NAME"]')
-#    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//div[@class="btn-group singleSizeButton pull-right"]')
-    KAF_EMBED_SELECT_MEDIA_BTN                  = ('xpath', '//a[contains(@aria-label, "ENTRY_NAME") and text()="Select"]')
-    KAF_EMBED_RESULT_AFTER_SEARCH               = ('xpath', '//em[text()="ENTRY_NAME"]/ancestor::td[contains(@id,"eSearch-result-")]')
-    KAF_EMBED_EMBED_MEDIA_BTN                   = ('xpath', "//a[contains(@class,'embed-button') and contains(@href,'ENTRY_ID')]")
-    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE    = ('xpath', "//a[@data-original-title='Media Gallery']")
-    KAF_SAVE_AND_EMBED_UPLOAD_MEDIA             = ('xpath', '//button[@data-original-title="Save and Embed"]')  
-    KAF_EMBED_TITLE_AFTER_CREATE_EMBED          = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
-    KAF_GRID_VIEW                               = ('xpath', "//button[@id='MyMediaGrid']")
-    KAF_SR_ENTRY_CHECKBOX                       = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
-    KAF_EMBED_LOADING_MESSAGE                   = ('xpath', '//div[@class="elementLoader"]')
+    KAF_MEDIA_GALLERY_TITLE                         = ('xpath', "//h1[@id='channel_title' and text()='Media Gallery']")
+    KAF_GALLERY_ADD_MEDIA_BUTTON                    = ('xpath', "//a[@id='tab-addcontent']")
+    KAF_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD            = ('xpath', "//a[@id='next' and contains(text(), 'Go To Media Gallery')]")
+    KAF_REFRSH_BUTTON                               = ('xpath', "//a[@id='automation-reload']") 
+    KAF_EMBED_FROM_MY_MEDIA_PAGE                    = ('xpath', "//a[@id='media-tab']")
+    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_MULTIPLE      = ('xpath', "//a[@id='MediaGalleries-tab']")
+    KAF_EMBED_FROM_SR_PAGE                          = ('xpath', "//a[contains(@id,'courseGallery') and text()='Shared Repository']")
+    KAF_EMBED_FROM_MEDIA_GALLERY_NAME               = ('xpath', '//a[contains(@id, "courseGallery") and text()="MEDIA_GALLERY_NAME"]')
+#    KAF_EMBED_SELECT_MEDIA_BTN                     = ('xpath', '//div[@class="btn-group singleSizeButton pull-right"]')
+    KAF_EMBED_SELECT_MEDIA_BTN                      = ('xpath', '//a[contains(@aria-label, "ENTRY_NAME") and text()="Select"]')
+    KAF_EMBED_RESULT_AFTER_SEARCH                   = ('xpath', '//em[text()="ENTRY_NAME"]/ancestor::td[contains(@id,"eSearch-result-")]')
+    KAF_EMBED_EMBED_MEDIA_BTN                       = ('xpath', "//a[contains(@class,'embed-button') and contains(@href,'ENTRY_ID')]")
+    KAF_EMBED_FROM_MEDIA_GALLERY_PAGE_SINGLE        = ('xpath', "//a[@data-original-title='Media Gallery']")
+    KAF_SAVE_AND_EMBED_UPLOAD_MEDIA                 = ('xpath', '//button[@data-original-title="Save and Embed"]')  
+    KAF_EMBED_TITLE_AFTER_CREATE_EMBED              = ('xpath', '//span[contains(text(), "EMBED_TITLE")]')
+    KAF_GRID_VIEW                                   = ('xpath', "//button[@id='MyMediaGrid']")
+    KAF_SR_ENTRY_CHECKBOX                           = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
+    KAF_EMBED_LOADING_MESSAGE                       = ('xpath', '//div[@class="elementLoader"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -66,7 +67,7 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED switch to iframe")
                 return False
             
-            self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=15)
+            self.wait_element(self.clsCommon.upload.UPLOAD_MENU_DROP_DOWN_ELEMENT, timeout=20)
             if self.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL, False, 30) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False
@@ -110,6 +111,11 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to switch to sakai iframe")
                 return False
         
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            if self.clsCommon.sharePoint.switchToSharepointIframe() == False:
+                writeToLog("INFO","FAILED to switch to share point iframe")
+                return False
+        
         return True
     
     
@@ -149,6 +155,16 @@ class KafGeneric(Base):
             
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
             if self.clsCommon.jive.navigateToGalleryJive(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            if self.clsCommon.sakai.navigateToGallerySakai(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
+
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            if self.clsCommon.sharePoint.navigateToGallerySharePoint(galleryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED navigate to media gallery")
                 return False 
         
@@ -407,7 +423,7 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED to upload new entry to embed page embed page")
                 return False  
             
-            sleep(2)
+            sleep(3)
             
             # Click Save and embed
             if self.click(self.KAF_SAVE_AND_EMBED_UPLOAD_MEDIA) == False:
@@ -415,10 +431,22 @@ class KafGeneric(Base):
                 return False 
             
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-                self.switch_to_default_content()   
+                self.switch_to_default_content()  
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.switch_to_default_content()
+                self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
+                
+                if self.wait_element(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN, timeout=15) == False:
+                    writeToLog("INFO","FAILED to displayed 'insert' button")
+                    return False                  
+                if self.click(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN) == False:
+                    writeToLog("INFO","FAILED to click on 'insert' button")
+                    return False  
             
             sleep(2)
-            self.clsCommon.general.waitForLoaderToDisappear()  
+            self.clsCommon.general.waitForLoaderToDisappear() 
+            
             return True   
         
         self.wait_while_not_visible(self.KAF_EMBED_LOADING_MESSAGE, 80)                             
@@ -445,7 +473,7 @@ class KafGeneric(Base):
         
         self.clsCommon.general.waitForLoaderToDisappear()
         
-        if application == enums.Application.MOODLE:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             if isAssignmentEnable == True:
                 if submitAssignment == True:
                     if self.clsCommon.moodle.submitMediaAsAssignment(True) == False:
@@ -463,7 +491,16 @@ class KafGeneric(Base):
                 self.switch_to_default_content()
                 if self.click(self.clsCommon.moodle.MOODLE_EMBED_BTN) == False:
                     writeToLog("INFO","FAILED to click on 'embed' button")
-                    return False                
+                    return False    
+                
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            sleep(5)
+            self.switch_to_default_content()
+            self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
+            
+            if self.click(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'insert' button")
+                return False                               
         
         return True   
     
@@ -508,10 +545,10 @@ class KafGeneric(Base):
             return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity, forceNavigate)
         elif application == enums.Application.CANVAS:
             return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
-#       elif application == enums.Application.D2L:
-#            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay)
-#       elif application == enums.Application.JIVE:
-#            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay)                       
+        elif application == enums.Application.D2L:
+            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
+        elif application == enums.Application.JIVE:
+            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)                       
         else:
             writeToLog("INFO","FAILED unknown application: " + application.value)   
             return False

@@ -22,7 +22,7 @@ class  GlobalSearch(Base):
     #=============================================================================================================
     GLOBAL_SEARCH_BUTTON_NEWUI                          = ('xpath', "//span[@class='hidden-tablet' and contains(text(),'Search')]")
     GLOBAL_SEARCH_TEXTBOX                               = ('xpath', "//input[@placeholder='Search all media' and @type='text']")
-    ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI           = ('xpath', "//a[@class='entryThumbnail  ' and @href='/media/ENTRY_ID']")
+    ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_IMG             = ('xpath', "//img[@class='entryThumbnail__img' and contains(@src,'/thumbnail/entry_id/ENTRY_ID/')]")
     ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_OLDUI           = ('xpath', "//img[@class='thumb_img' and @alt='Thumbnail for entry ENTRY_NAME']")
     ENTRY_PARENT_DESCRIPTION_AFTER_GLOBAL_SEARCH_NEWUI  = ('xpath', "//a[@class='cursor-pointer' and @href='/media/ENTRY_ID']")
     ENTRY_DESCRIPTION_AFTER_GLOBAL_SEARCH_NEWUI         = ('xpath', "//div[@class='results-entry__description hidden-phone']")
@@ -58,10 +58,7 @@ class  GlobalSearch(Base):
                 writeToLog("INFO","FAILED to click on global search button")
                 return False
             
-            if self.click(self.GLOBAL_SEARCH_TEXTBOX, timeout=10, multipleElements=True) == False:
-                writeToLog("INFO","FAILED to click on global search textbox")
-                return False
-                
+        sleep(1)        
         if self.clear_and_send_keys(self.GLOBAL_SEARCH_TEXTBOX, searchWord + Keys.ENTER, multipleElements=True) == False:
             writeToLog("INFO","FAILED to insert search word to global search textbox")
             return False
@@ -77,6 +74,9 @@ class  GlobalSearch(Base):
         if self.searchInGlobalsearch(searchWord) == False:
             writeToLog("INFO","FAILED to search in global search ")
             return False
+        
+        # Remove '"' (if exists) from the begining and end of the search word
+        searchWord = searchWord.replace('"', '')
         
         result =  self.clsCommon.myMedia.getResultAfterSearch(searchWord)
         if result == False:
@@ -107,14 +107,16 @@ class  GlobalSearch(Base):
             entryHref = parent.get_attribute("href")
             entryId = entryHref.split("/")[len(entryHref.split("/"))-1]
             
-            tmp_entryThum = (self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI[0], self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_NEWUI[1].replace('ENTRY_ID', entryId))
-            try:
-                thumbElement = self.get_element(tmp_entryThum)
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to find entry thumbnail element after global search")
-                return False
+            tmp_entryThum = (self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_IMG[0], self.ENTRY_THUMBNAIL_AFTER_GLOBAL_SEARCH_IMG[1].replace('ENTRY_ID', entryId))
             
-            thumQrCode =  self.clsCommon.qrcode.takeAndResolveElementQrCodeScreenshot(thumbElement) 
+            thumbElement = self.wait_element(tmp_entryThum, multipleElements=True)
+            if thumbElement == False:
+                writeToLog("INFO","FAILED to find entry thumbnail element after global search")
+                return False                
+            
+            sleep(2)
+            thumQrCode =  self.clsCommon.qrcode.resolveQrCode(self.clsCommon.qrcode.takeCustomQrCodeScreenshot(8.7,2.8,4.4,2))
+             
             if thumQrCode != thumbQRCodeResult:
                 writeToLog("INFO","FAILED verify entry thumbnail QR code after global search")
                 return False

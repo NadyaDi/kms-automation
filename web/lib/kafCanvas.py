@@ -43,6 +43,7 @@ class Canvas(Base):
     CANVAS_ENTRY_COURSE_FIELD_DROPDOWN                  = ('xpath', '//select[@id="sharedRepositories-Course"]')
     CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION           = ('xpath', '//option[@value="VALUE"]')
     CANVAS_EMBED_UPLOAD_IFRAME                          = ('xpath', '//iframe[@id="external_tool_button_frame"]')
+    CANVAS_ANNOUNCEMENT_DESCRIPTION_IFRAME              = ('xpath', '//iframe[contains(@id,"discussion-topic")]') 
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -103,10 +104,11 @@ class Canvas(Base):
     def logOutOfCanvas(self):
         self.clsCommon.base.switch_to_default_content()
         # Click on account button in main nav bar 
-        if self.click(self.USER_ACCOUNT_BUTTON_IN_NAV_BAR) == False:
+        if self.click(self.USER_ACCOUNT_BUTTON_IN_NAV_BAR, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on account button in main nav bar ")
             return False
         
+        sleep(2)
         if self.click(self.USER_LOGOUT_BTN, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False
@@ -202,7 +204,11 @@ class Canvas(Base):
             return False  
    
         # wait until the player display in the page
+        self.switch_to_default_content()
+        
+        self.swith_to_iframe(self.CANVAS_ANNOUNCEMENT_DESCRIPTION_IFRAME)
         self.swith_to_iframe(self.CANVAS_EMBED_ENTRY_IFRAME) 
+        
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
@@ -301,7 +307,11 @@ class Canvas(Base):
             if self.clsCommon.editEntryPage.navigateToEditEntryPageFromMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED navigate to entry '" + entryName + "' edit page")
                 return False  
-         
+        
+        self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_DETAILS_TAB) 
+        self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        sleep(1)
+        
         if self.click(self.CANVAS_SHARED_REPOSITORY_ADD_REQUIRED_METADATA_BTN) == False:
             writeToLog("INFO","FAILED to click on add required metadata to shared repository button")
             return False

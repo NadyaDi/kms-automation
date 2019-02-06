@@ -78,11 +78,17 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to publish entry to gallery")
                 return         
              
-            writeToLog("INFO","Step 5: Going to to create embed announcement from media gallery")    
-            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, self.galleryName, enums.Location.MEDIA_GALLARY, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create embed announcement from media gallery")
-                return  
+            writeToLog("INFO","Step 5: Going to to create embed announcement from media gallery")
+            if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+                if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, self.galleryName, enums.Location.MEDIA_GALLARY, False) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 5: FAILED to create embed announcement from media gallery")
+                    return  
+            else:
+                if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, self.galleryName, enums.Location.MEDIA_GALLARY, True) == False:
+                    self.status = "Fail"
+                    writeToLog("INFO","Step 5: FAILED to create embed announcement from media gallery")
+                    return  
              
             writeToLog("INFO","Step 6: Going to to verify embed announcement")    
             if self.common.kafGeneric.verifyEmbedEntry(self.announcementName, '', self.timeToStop, enums.Application.CANVAS) == False:

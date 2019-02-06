@@ -27,6 +27,19 @@ class Jive(Base):
     JIVE_PLACES_BUTTON_IN_NAVIGATION_BAR                = ('xpath', "//a[@href='/places' and contains(@class, 'j-globalNavLink')]")
     JIVE_MEDIA_GALLEY_NEW1_IN_PLACES                    = ('xpath', "//span[@class='js-header-text' and contains(text(), 'New1')]")
     JIVE_USER_NAME                                      = ('xpath', "//span[@class='j-user-name j-navLabel']")
+    JIVE_START_DISCUSSION_BTN                           = ('xpath', '//li[@id="jive-link-createThread"]')
+    JIVE_WRITE_DOCUMENT_BTN                             = ('xpath', '//li[@id="jive-link-createDocument"]')
+    JIVE_DISCUSSION_TITLE                               = ('xpath', '//input[@id="subject"]')
+    JIVE_WYSIWYG_BTN                                    = ('xpath', '//a[@id="wysiwygtext_extra"]')
+    JIVE_BSE_MAIN_IFRAME                                = ('xpath', '//iframe[@src="/kaltura-browse-and-embed.jspa"]')
+    JIVE_BSE_INNER_IFRAME                               = ('xpath', '//iframe[@id="browse_and_embed_frame"]')
+    JIVE_SAVE_DISCUSSION_BTN                            = ('xpath', '//button[@id="submitButton"]')
+    JIVE_DISPLAY_EMBED_FOR_EVERYONE_OPTION              = ('xpath', '//input[@id="js-all"]')
+    JIVE_EMBED_TITLE_IN_COMMUNITY                       = ('xpath', '//a[@class="title" and text()="EMBED_NAME"]')
+    JIVE_DELETE_DOCUMENT_EMBED_BTN                      = ('xpath', '//li[@id="jive-link-delete"]') 
+    JIVE_DELETE_DISCUSSION_EMBED_BTN                    = ('xpath', '//a[contains(@href,"thread-delete")]')   
+    JIVE_CONFIRM_DELETE_EMBED_BTN                       = ('xpath', '//input[@name="delete"]')    
+    JIVE_EMBED_ENTRY_IFRAME                             = ('xpath', '//iframe[contains(@src, "embedded-media-renderer")]')                
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -132,3 +145,135 @@ class Jive(Base):
             writeToLog("INFO","FAILED to get user name element")
             return False
         return userName.lower() 
+
+
+    # @Author: Inbar Willman
+    # isDiscussion=True: Create embed from discussion page
+    # isDocument=True: Create embed from document page
+    def createEmbedMedia(self, embedTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True, isDiscussion=True, isDocument=False):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+            writeToLog("INFO","FAILED navigate to courses 'New1'")
+            return False
+        
+        if isDiscussion == True:
+            if self.click(self.JIVE_START_DISCUSSION_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'discussion' button")
+                return False 
+            
+        elif isDocument == True:
+            if self.click(self.JIVE_WRITE_DOCUMENT_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'dociment' button")
+                return False 
+        else:
+            writeToLog("INFO","FAILED: Page to embed from wasn't given")
+            return False
+        
+        if self.send_keys(self.JIVE_DISCUSSION_TITLE, embedTitle) == False:
+            writeToLog("INFO","FAILED to insert title in embed page")
+            return False 
+        
+        if self.click(self.JIVE_WYSIWYG_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'wysisyg' button")
+            return False   
+        
+        if self.swith_to_iframe(self.JIVE_BSE_MAIN_IFRAME) == False:
+            writeToLog("INFO","FAILED to switch to jive main BSE iframe")
+            return False 
+        
+        if self.swith_to_iframe(self.JIVE_BSE_INNER_IFRAME) == False:
+            writeToLog("INFO","FAILED to switch to jive inner BSE iframe")
+            return False                    
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.JIVE, isTagsNeeded=isTagsNeeded) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False  
+        
+        sleep(4)
+   
+        self.clsCommon.base.switch_to_default_content()
+        
+#         if self.click(self.JIVE_DISPLAY_EMBED_FOR_EVERYONE_OPTION) == False:
+#             writeToLog("INFO","FAILED to click on 'The jive Community' option")
+#             return False              
+        
+        if self.click(self.JIVE_SAVE_DISCUSSION_BTN) == False:
+            writeToLog("INFO","FAILED to Save embed page")
+            return False 
+        
+        writeToLog("INFO","Success: Embed discussion/document was created successfully")
+        return True           
+    
+    
+    # @Author: Inbar Willman 
+    def verifyEmbedMedia(self, embedName, imageThumbnail, delay, forceNavigate=False):      
+        if forceNavigate == True:
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to courses 'New1'")
+                return False 
+            
+            sleep(5)
+            
+            tmp_embed_name = (self.JIVE_EMBED_TITLE_IN_COMMUNITY[0], self.JIVE_EMBED_TITLE_IN_COMMUNITY[1].replace('EMBED_NAME', embedName))
+            if self.click(tmp_embed_name) == False:
+                writeToLog("INFO","FAILED navigate to " + embedName + " embed page")
+                return False 
+             
+        self.swith_to_iframe(self.JIVE_EMBED_ENTRY_IFRAME)    
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        
+        sleep(3)
+        
+        # If entry type is video
+        if delay != '':   
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                writeToLog("INFO","FAILED to play and verify video")
+                return False                
+        
+        # If entry type is image     
+        else:
+            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                writeToLog("INFO","FAILED to display correct image thumbnail")
+                return False
+        
+        self.clsCommon.base.switch_to_default_content()
+        writeToLog("INFO","Success embed was verified")
+        return True     
+            
+    
+    # @Author: Inbar Willman
+    def deleteEmbedMedia(self, embedName, isDiscussion=True, isDocument=False, forceNavigate=False):
+        if forceNavigate == True:
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","FAILED navigate to courses 'New1'")
+                return False 
+            
+            tmp_embed_name = (self.JIVE_EMBED_TITLE_IN_COMMUNITY[0], self.JIVE_EMBED_TITLE_IN_COMMUNITY[1].replace('EMBED_NAME', embedName))
+            if self.click(tmp_embed_name) == False:
+                writeToLog("INFO","FAILED navigate to " + embedName + " embed page")
+                return False 
+            
+        if isDiscussion == True:
+            if self.click(self.JIVE_DELETE_DISCUSSION_EMBED_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'delete' button")
+                return False 
+        
+        if isDocument == True:
+            if self.click(self.JIVE_DELETE_DOCUMENT_EMBED_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'delete' button")
+                return False 
+        
+        sleep(2)
+                        
+        if self.click(self.JIVE_CONFIRM_DELETE_EMBED_BTN) == False:
+            writeToLog("INFO","FAILED to click on confirmation 'delete' button")
+            return False
+        
+        # Verify that embed was deleted
+        tmp_embed_name = (self.JIVE_EMBED_TITLE_IN_COMMUNITY[0], self.JIVE_EMBED_TITLE_IN_COMMUNITY[1].replace('EMBED_NAME', embedName))
+        if self.wait_element(tmp_embed_name) != False:   
+            writeToLog("INFO","FAILED: embed name is still displayed in community page")
+            return False  
+        
+        writeToLog("INFO","Success: Embed was deleted")
+        return True                                           
