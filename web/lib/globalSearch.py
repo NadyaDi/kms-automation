@@ -115,7 +115,8 @@ class  GlobalSearch(Base):
                 return False                
             
             sleep(2)
-            thumQrCode =  self.clsCommon.qrcode.takeAndResolveElementQrCodeScreenshot(thumbElement) 
+            thumQrCode =  self.clsCommon.qrcode.resolveQrCode(self.clsCommon.qrcode.takeCustomQrCodeScreenshot(8.7,2.8,4.4,2))
+             
             if thumQrCode != thumbQRCodeResult:
                 writeToLog("INFO","FAILED verify entry thumbnail QR code after global search")
                 return False

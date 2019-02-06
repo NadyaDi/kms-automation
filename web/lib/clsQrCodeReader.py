@@ -109,15 +109,12 @@ class QrCodeReader(Base):
         else:
             writeToLog("INFO","FAILED to take screenshot of the page")
             return False       
-        pageElement = self.get_element_attributes(('xpath', '/html/body'))
+
         # Crop the image
         img = Image.open(filePath)
-        if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / bottom))
-            
-        elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-            img2 = img.crop((pageElement['right'] /left , pageElement['bottom'] / top, pageElement['right'] / right , pageElement['bottom'] / bottom))
-            
+        writeToLog("INFO","DEBUG: img.width = " + str(img.width))
+        writeToLog("INFO","DEBUG: img.height = " + str(img.height))
+        img2 = img.crop((img.width / left, img.height / top, img.width / right, img.height / bottom))
         img2.save(filePath)
         
         return filePath
