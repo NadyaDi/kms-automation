@@ -19,6 +19,7 @@ class SharePoint(Base):
     LOGIN_NEXT_BUTTON                               = ('xpath', "//input[@type='submit']")
     LOGIN_PASSWORD_FIELD                            = ('xpath', "//input[@name='passwd']")
     LOGIN_NO_BUTTON                                 = ('xpath', "//input[@id='idBtn_Back']")
+    LOGIN_USE_ANOTHER_ACCOUNT_BUTTON                = ('xpath', "//div[@id='otherTileText']")
     USER_MENU_TOGGLE_BTN                            = ('id', 'DeltaPlaceHolderPageTitleInTitleArea')
     USER_LOGOUT_BTN                                 = ('xpath', "//span[contains(@id,'_ariaId_') and contains(text(), 'Sign out')]")
     SP_MEDIA_SPACE_IFRAME                           = ('xpath', "//iframe[contains(@src,'kalturasp2013.sharepoint.com')]")
@@ -63,8 +64,17 @@ class SharePoint(Base):
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Navigate to login page
             self.clsCommon.login.navigateToLoginPage(url, False)
-            # Enter test partner username
-            self.send_keys(self.LOGIN_USERNAME_FIELD, username)
+            sleep(1)
+            # look to see login user name display on we need to click on 'use another account'
+            if self.wait_visible(self.LOGIN_USERNAME_FIELD, timeout=5) == False:
+                # click on 'use another account'
+                if self.click(self.LOGIN_USE_ANOTHER_ACCOUNT_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on use another account button")
+                    return False
+                self.send_keys(self.LOGIN_USERNAME_FIELD, username)
+            else:
+                # Enter test partner username
+                self.send_keys(self.LOGIN_USERNAME_FIELD, username)
             sleep(1)
             # Click Next
             self.click(self.LOGIN_NEXT_BUTTON)
@@ -139,4 +149,5 @@ class SharePoint(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get user name element")
             return False
+        self.click(self.SP_USER_ACCOUNT_BUTTON, timeout=15)
         return userName

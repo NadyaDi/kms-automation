@@ -92,21 +92,15 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to login with gallery's owner")
                 return
-              
-            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
                 
             writeToLog("INFO","Step 5: Going to sort entries by Alphabetical & Image type")
             if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, self.galleryName, True, enums.Location.GALLERY_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to sort entries by Alphabetical & Image type")
                 return
-                
-            writeToLog("INFO","Step 6: Going to verify entries order - by Alphabetical & Image type")
-            if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify entries order - by Alphabetical & Image type")
-                return
-                     
+            sleep(2)    
+            self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI_ACTIVE, timeout=5, multipleElements=True)
+             
             writeToLog("INFO","Step 7: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
             if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName, self.entryName1, self.entryName2, navigate=False) == False:
                 self.status = "Fail"
@@ -157,6 +151,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
+            sleep(2)
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
             self.common.base.switch_to_default_content()
