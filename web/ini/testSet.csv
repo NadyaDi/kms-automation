@@ -215,6 +215,8 @@ test_2503,1,0,0,0,Jive - My Media - Search by Name / Description / Tags
 test_2505,1,0,0,0,Jive - My Media - Sort Media
 test_2506,1,0,0,0,Jive - My Media - Filter Media View Different Statuses
 test_2507,1,0,0,0,Jive - My Media - Filter by media Type
+test_2509,1,0,0,0,Jive - Embed media in discussion
+test_2511,1,0,0,0,Jive - Discussions Upload And Embed From BSE Page
 test_2512,1,0,0,0,Jive - Embed media in document
 test_2523,1,0,0,0,Jive - Remove Media From Media Gallery
 test_2524,1,0,0,0,Jive - Upload Media From Media Gallery Page
@@ -239,6 +241,7 @@ test_2935,1,0,0,0,Sakai - Edit entry page - Thumbnail tab
 test_2938,1,0,0,0,Sakai - My Media -Delete through my media
 test_2939,1,0,0,0,Sakai -Delete through entry page
 test_2940,1,0,0,0,Sakai - Preview all kinds of media from My Media and Gallery
+test_3044,1,0,0,0,Sakai  - Announcment BSE From My Media
 test_2880,1,0,0,0,SharePoint - Preview all kinds of media from My Media and Gallery
 test_2881,1,0,0,0,Sharepoint - View Collapsed Expanded Modes
 test_2882,1,0,0,0,Sharepoint - Upload media from desktop

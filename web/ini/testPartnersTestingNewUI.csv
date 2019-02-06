@@ -91,6 +91,8 @@ test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation1@mailinator.
 test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2525,Jive - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,hrmanager,hrmanager
 test_2512,Jive - Embed media in document,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2509,Jive - Embed media in discussion,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
+test_2511,Jive - Discussions Upload And Embed From BSE Page,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2940,Sakai - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_2910,Sakai - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_2911,Sakai - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
@@ -111,6 +113,7 @@ test_2934,Sakai - Entry page - Add captions And Search - remove caption,,,python
 test_2935,Sakai - Edit entry page - Thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_2938,Sakai - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_2939,Sakai  -Delete through entry page,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_3044,Sakai  - Announcment BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
