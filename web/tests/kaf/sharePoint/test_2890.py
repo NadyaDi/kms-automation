@@ -14,13 +14,12 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Oded Berihon
-    # Test Name: Share_Point - Edit Entry page - Disable comments
+    # Test Name : Share_Point - Edit Entry Metadata 
     # Test description:
-    # Upload entry -> Go to entry page > Add comments
-    # Go to edit entry page -> option tab and  disabled comments option
-    # Go to entry page -> Check that comment isn't displayed and there is no option to add new comments 
+    # upload media
+    # go to media edit page and change media: name / description / tags 
     #================================================================================================================================
-    testNum     = "2891"
+    testNum     = "2890"
     application = enums.Application.SHARE_POINT
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -28,9 +27,11 @@ class Test:
     timeout_accured = "False"
     # Test variables
     entryName = None
+    newEntryName = None
     description = "Description" 
+    newDescription = "Edit description"
     tags = "Tags,"
-    commnet = "Comment"
+    newTags = "Edit Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
 
     
@@ -49,7 +50,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Edit Entry page - Disable comments", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Entry Metadata", self.testNum)
+            self.newEntryName = clsTestService.addGuidToString("Edit Entry Metadata", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
                  
             writeToLog("INFO","Step 1: Going to upload entry")   
@@ -58,44 +60,33 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
                     
-            writeToLog("INFO","Step 2: Going navigate to entry page")    
-            if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom =enums.Location.MY_MEDIA) == False:
+            writeToLog("INFO","Step 2: Going navigate to edit entry page")    
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED navigate to  entry '" + self.entryName + "' page")
+                writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
                 
-            writeToLog("INFO","Step 3: Going to add new comment to entry")
-            if self.common.entryPage.addComment(self.commnet) == False:
+            writeToLog("INFO","Step 3: Going to change entry metadata  (entry name, description, tags)")
+            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 34: FAILED to add new comment")
-                return 
+                writeToLog("INFO","Step 3: FAILED to edit entry metadata")
+                return  
             
-            writeToLog("INFO","Step 4: Going to navigate to edit entry page")
-            if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
+            writeToLog("INFO","Step 4: Going navigate entry page")    
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.newEntryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
-                return    
+                writeToLog("INFO","Step 4: FAILED navigate to entry: " + self.newEntryName)
+                return
             
-            writeToLog("INFO","Step 5: Going to click on option tab and enable - disabled comment")
-            if self.common.editEntryPage.changeEntryOptions(True, False, False) == False:
+            writeToLog("INFO","Step 5: Going to verify entry new  metadata  (entry name, description, tags)")
+            # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
+            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.tags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to click on option tab and enable disabled comments option")
-                return    
-            
-            writeToLog("INFO","Step 6: Going to navigate to entry page")
-            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to entry page")
-                return   
-            
-            writeToLog("INFO","Step 7: Going to verify that comments section isn't displayed in entry page")
-            if self.common.entryPage.checkEntryCommentsSection(self.commnet, True, False) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED - Comments section still displayed in entry page")
-                return   
+                writeToLog("INFO","Step 5: FAILED to verify entry new  metadata")
+                return  
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Share_Point :Disable comments ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Share_Point - Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -105,7 +96,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            if self.common.myMedia.deleteSingleEntryFromMyMedia(self.newEntryName) == False:
+                self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

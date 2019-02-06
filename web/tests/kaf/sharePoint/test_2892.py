@@ -14,13 +14,13 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Oded Berihon
-    # Test Name: Share_Point - Edit Entry page - Disable comments
+    # Test Name: Share_Point - Edit Entry page - Close discussion
     # Test description:
     # Upload entry -> Go to entry page > Add comments
     # Go to edit entry page -> option tab and  disabled comments option
-    # Go to entry page -> Check that comment isn't displayed and there is no option to add new comments 
+    # Go to entry page -> Check that comment is displayed and there is no option to add new comments 
     #================================================================================================================================
-    testNum     = "2891"
+    testNum     = "2892"
     application = enums.Application.SHARE_POINT
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -32,7 +32,7 @@ class Test:
     tags = "Tags,"
     commnet = "Comment"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
-
+    
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -49,7 +49,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Edit Entry page - Disable comments", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Edit Entry page - Close discussion", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
                  
             writeToLog("INFO","Step 1: Going to upload entry")   
@@ -67,7 +67,7 @@ class Test:
             writeToLog("INFO","Step 3: Going to add new comment to entry")
             if self.common.entryPage.addComment(self.commnet) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 34: FAILED to add new comment")
+                writeToLog("INFO","Step 3: FAILED to add new comment")
                 return 
             
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
@@ -77,7 +77,7 @@ class Test:
                 return    
             
             writeToLog("INFO","Step 5: Going to click on option tab and enable - disabled comment")
-            if self.common.editEntryPage.changeEntryOptions(True, False, False) == False:
+            if self.common.editEntryPage.changeEntryOptions(False, True, False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to click on option tab and enable disabled comments option")
                 return    
@@ -89,13 +89,14 @@ class Test:
                 return   
             
             writeToLog("INFO","Step 7: Going to verify that comments section isn't displayed in entry page")
-            if self.common.entryPage.checkEntryCommentsSection(self.commnet, True, False) == False:
+            if self.common.entryPage.checkEntryCommentsSection(self.commnet, False, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED - Comments section still displayed in entry page")
                 return   
             
+            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Share_Point :Disable comments ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Share_Point - Edit Entry page - Close discussion' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
