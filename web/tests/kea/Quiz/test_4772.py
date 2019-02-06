@@ -175,7 +175,7 @@ class Test:
                 sleep(2)
                 if option == self.allowAnswerChangeDisabledList: 
                     writeToLog("INFO","Step " + str(i) + ": Going to answer to all of the available Quiz while using a Guest account")  
-                    if self.common.player.selectQuizAnswer(self.questionDict, submitQuiz=False) == False:
+                    if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=False, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
                         self.status = "Fail"
                         writeToLog("INFO","Step " + str(i) + ": FAILED to answer to all of the available Quiz while using a Guest account")
                         return                  
