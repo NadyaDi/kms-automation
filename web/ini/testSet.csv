@@ -302,6 +302,8 @@ test_4768,1,0,0,0,Quiz - Scores section in Entry Page - Disabled
 test_4769,1,0,0,0,Quiz - Scores section in Entry Page - Default
 test_4772,1,0,0,0,Quiz - Experience section in Entry Page - Disabled
 test_4773,1,0,0,0,Quiz - Experience section in Entry Page - Default
+test_4776,1,0,0,0,Quiz - Entry with all the KEA Quiz Question types - KEA Page
+test_4778,1,0,0,0,Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
@@ -312,8 +314,8 @@ test_3279,1,0,0,0,Collaboration co editor - Thumbnail tab
 test_3280,1,0,0,0,Collaboration co editor - Caption tab
 test_3281,1,0,0,0,Collaboration co publish
 test_3282,1,0,0,0,Collaboration negative test
-test_3283,1,0,0,0,Slide Deck Upload- A-sync upload
-test_3284,1,0,0,0,Slide Deck Upload- search slides
+test_3283,0,1,0,0,Slide Deck Upload- A-sync upload
+test_3284,0,1,0,0,Slide Deck Upload- search slides
 test_3881,1,0,0,0,SAML Login
 test_3902,1,0,0,0,Sort by - Galleries page
 test_3901,1,0,0,0,Sort by - My Channels - when search is made

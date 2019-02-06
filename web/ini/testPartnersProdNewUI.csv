@@ -186,6 +186,8 @@ test_4768,Quiz - Scores section in Entry Page - Disabled,2438361-1,mediaspace.ka
 test_4769,Quiz - Scores section in Entry Page - Default,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4772,Quiz - Experience section in Entry Page - Disabled,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4773,Quiz - Experience section in Entry Page - Default,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
+test_4776,Quiz - Entry with all the KEA Quiz Question types - KEA Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
+test_4778,Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page,2438361-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
