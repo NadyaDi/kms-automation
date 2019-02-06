@@ -21,51 +21,61 @@ class Kea(Base):
     #=============================================================================================================
     #Upload locators:
     #=============================================================================================================
-    KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON          = ('xpath', "//button[contains(@class,'question-type-button question-types-icon multiple-options-question-type')]")
-    KEA_SELECT_VIDEO_FOR_EDIT                     = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
-    KEA_LAUNCH                                    = ('xpath', "//i[@class='icon-editor']")
-    KEA_APP_DISPLAY                               = ('id', 'kea-anchor')
-    KEA_IFRAME                                    = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
-    KEA_QUIZ_PLAYER                               = ('id', 'quiz-player_ifp')
-    KEA_LOADING_SPINNER                           = ('class_name', 'spinner')
-    KEA_QUIZ_QUESTION_FIELD                       = ('id', 'questionTxt')
-    KEA_QUIZ_ANSWER                               = ('id', 'ANSWER_NUMBER')
-    KEA_EDITOR_TAB                                = ('xpath', "//a[@aria-label='Video Editor']") 
-    KEA_QUIZ_TAB                                  = ('xpath', "//a[@class='nav-button' and @aria-label='Quiz']") 
-    KEA_QUIZ_TAB_ACTIVE                           = ('xpath', "//a[@class='nav-button active' and @aria-label='Quiz']") 
-    KEA_QUIZ_ADD_ANSWER_BUTTON                    = ('xpath', '//div[@class="add-answer-btn"]') 
-    KEA_QUIZ_BUTTON                               = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="BUTTON_NAME"]')
-    EDITOR_TABLE                                  = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
-    EDITOR_TABLE_SIZE                             = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
-    EDITOR_NO_MORE_MEDIA_FOUND_MSG                = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
-    EDITOR_TIMELINE                               = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
-    EDITOR_TIME_PICKER                            = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
-    EDITOR_REALTIME_MARKER                        = ('xpath', "//span[@class='realtime-marker__head-box-time']")
-    EDITORT_TIMELINE_SPLIT_ICON                   = ('xpath', "//button[@aria-label='Split']")
-    EDITOR_TIMELINE_DELETE_BUTTON                 = ('xpath', "//button[@aria-label='Delete']")
-    EDITOR_SAVE_BUTTON                            = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
-    EDITOR_SAVE_A_COPY_BUTTON                     = ('xpath', "//button[@class='save-as-button branded-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ng-star-inserted']")
-    EDITOR_SAVE_BUTTON_CONF                       = ('xpath', "//button[@class='button modal-footer-buttons__save branded-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
-    EDITOR_SAVED_MSG                              = ('xpath', "//strong[contains(.,'Media was successfully saved.')]")
-    EDITOR_SAVED_OK_MSG                           = ('xpath', "//button[contains(.,'OK')]")
-    EDITOR_CREATE_BUTTON                          = ('xpath', "//button[contains(.,'Create')]")
-    EDITOR_SUCCESS_MSG                            = ('xpath', "//p-header[contains(.,'Success')]")
-    EDITOR_TOTAL_TIME                             = ('xpath', "//span[@class='total-time']")
-    EDITOR_GO_TO_MEDIA_PAGE_BUTTON                = ('xpath', "//a[contains(.,'Media Page')]")
-    KEA_ENTRY_NAME                                = ('xpath', "//span[@class='entry-name']")
-    KEA_TOGGLE_MENU_OPTION                        = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
-    KEA_OPTION_NORMAL                             = ('xpath', "//label[contains(@class,'ng-star-inserted') and text()='OPTION_NAME']")  
-    KEA_OPTION_ACTIVE                             = ('xpath', "//label[contains(@class,'ui-label-active') and text()='OPTION_NAME']")
-    KEA_OPTION_GRAYED_OUT                         = ('xpath', "//label[contains(@class,'ui-label-disabled') and text()='OPTION_NAME']")
-    KEA_OPTION_INPUT_FIELD                        = ('xpath', "//input[@id='FIELD_NAME']")
-    KEA_OPTION_TEXTAREA_FIELD                     = ('xpath', "//textarea[@id='FIELD_NAME']")  
-    KEA_PREVIEW_ICON                              = ('xpath', "//i[@class='kicon-preview']") 
-    KEA_LOADING_SPINNER_CONTAINER                 = ('xpath', "//div[@class='spinner-container']") 
-    KEA_PREVIEW_PLAY_BUTTON                       = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder']")
-    KEA_PREVIEW_CLOSE_BUTTON                      = ('xpath', '//i[contains(@class,"kCloseBtn")]')   
-    KEA_IFRAME_PREVIEW_PLAYER                     = ('xpath', "//iframe[@class='ng-star-inserted' and contains(@src,'iframeembed=true&playerId=kaltura_player')]")
-    KEA_IFRAME_BLANK                              = ('xpath', "//iframe[@title='Kaltura Editor Application']")  
-    KEA_QUIZ_OPTIONS_REVERT_TO_DEFAULT_BUTTON     = ('xpath', "//button[@class='link-button pull-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")    
+    KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON                                    = ('xpath', "//button[contains(@class,'multiple-options-question-type')]")
+    KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON_ACTIVE                             = ('xpath', "//button[contains(@class,'multiple-options-question-type ng-star-inserted active')]")
+    KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON_DEFAULT                            = ('xpath', "//button[contains(@class,'multiple-options-question-type active ng-star-inserted')]")
+    KEA_ADD_NEW_REFLECTION_POINT_BUTTON                                     = ('xpath', "//button[contains(@class,'reflection-point-question-type')]")
+    KEA_ADD_NEW_REFLECTION_POINT_BUTTON_ACTIVE                              = ('xpath', "//button[contains(@class,'reflection-point-question-type ng-star-inserted active')]")
+    KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON                                  = ('xpath', "//button[contains(@class,'true-false-question-type')]")
+    KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE                           = ('xpath', "//button[contains(@class,'true-false-question-type ng-star-inserted active')]")
+    KEA_ADD_NEW_ADD_QUESTION_TRUE_ANSWER_FIELD                              = ('xpath', "//textarea[@placeholder='Add the CORRECT Answer Here']")
+    KEA_ADD_NEW_QUESTION_FALSE_ANSWER_FIELD                                 = ('xpath', "//textarea[@placeholder='Add Additional Answer Here']")
+    KEA_ADD_NEW_QUESTION_HINT_AND_WHY_TOGGLE_MENU_BUTTON                    = ('xpath', "//button[@class='menu-button unbutton']")
+    KEA_ADD_NEW_QUESTION_HINT_BUTTON                                        = ('xpath', "//button[@class='unbutton menu-item' and contains(text(),'Hint')]")
+    KEA_ADD_NEW_QUESTION_WHY_BUTTON                                         = ('xpath', "//button[@class='unbutton menu-item' and contains(text(),'Why')]")
+    KEA_SELECT_VIDEO_FOR_EDIT                                               = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
+    KEA_LAUNCH                                                              = ('xpath', "//i[@class='icon-editor']")
+    KEA_APP_DISPLAY                                                         = ('id', 'kea-anchor')
+    KEA_IFRAME                                                              = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
+    KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
+    KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
+    KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
+    KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
+    KEA_EDITOR_TAB                                                          = ('xpath', "//a[@aria-label='Video Editor']") 
+    KEA_QUIZ_TAB                                                            = ('xpath', "//a[@class='nav-button' and @aria-label='Quiz']") 
+    KEA_QUIZ_TAB_ACTIVE                                                     = ('xpath', "//a[@class='nav-button active' and @aria-label='Quiz']") 
+    KEA_QUIZ_ADD_ANSWER_BUTTON                                              = ('xpath', '//div[@class="add-answer-btn"]') 
+    KEA_QUIZ_BUTTON                                                         = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="BUTTON_NAME"]')
+    EDITOR_TABLE                                                            = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
+    EDITOR_TABLE_SIZE                                                       = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
+    EDITOR_NO_MORE_MEDIA_FOUND_MSG                                          = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
+    EDITOR_TIMELINE                                                         = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
+    EDITOR_TIME_PICKER                                                      = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
+    EDITORT_TIMELINE_SPLIT_ICON                                             = ('xpath', "//button[@aria-label='Split']")
+    EDITOR_TIMELINE_DELETE_BUTTON                                           = ('xpath', "//button[@aria-label='Delete']")
+    EDITOR_SAVE_BUTTON                                                      = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVE_A_COPY_BUTTON                                               = ('xpath', "//button[@class='save-as-button branded-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ng-star-inserted']")
+    EDITOR_SAVE_BUTTON_CONF                                                 = ('xpath', "//button[@class='button modal-footer-buttons__save branded-button ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    EDITOR_SAVED_MSG                                                        = ('xpath', "//strong[contains(.,'Media was successfully saved.')]")
+    EDITOR_SAVED_OK_MSG                                                     = ('xpath', "//button[contains(.,'OK')]")
+    EDITOR_CREATE_BUTTON                                                    = ('xpath', "//button[contains(.,'Create')]")
+    EDITOR_SUCCESS_MSG                                                      = ('xpath', "//p-header[contains(.,'Success')]")
+    EDITOR_TOTAL_TIME                                                       = ('xpath', "//span[@class='total-time']")
+    EDITOR_GO_TO_MEDIA_PAGE_BUTTON                                          = ('xpath', "//a[contains(.,'Media Page')]")
+    KEA_ENTRY_NAME                                                          = ('xpath', "//span[@class='entry-name']")
+    KEA_TOGGLE_MENU_OPTION                                                  = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
+    KEA_OPTION_NORMAL                                                       = ('xpath', "//label[contains(@class,'ng-star-inserted') and text()='OPTION_NAME']")  
+    KEA_OPTION_ACTIVE                                                       = ('xpath', "//label[contains(@class,'ui-label-active') and text()='OPTION_NAME']")
+    KEA_OPTION_GRAYED_OUT                                                   = ('xpath', "//label[contains(@class,'ui-label-disabled') and text()='OPTION_NAME']")
+    KEA_OPTION_INPUT_FIELD                                                  = ('xpath', "//input[@id='FIELD_NAME']")
+    KEA_OPTION_TEXTAREA_FIELD                                               = ('xpath', "//textarea[@id='FIELD_NAME']")  
+    KEA_PREVIEW_ICON                                                        = ('xpath', "//i[@class='kicon-preview']") 
+    KEA_LOADING_SPINNER_CONTAINER                                           = ('xpath', "//div[@class='spinner-container']") 
+    KEA_PREVIEW_PLAY_BUTTON                                                 = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder']")
+    KEA_PREVIEW_CLOSE_BUTTON                                                = ('xpath', '//i[contains(@class,"kCloseBtn")]')   
+    KEA_IFRAME_PREVIEW_PLAYER                                               = ('xpath', "//iframe[@class='ng-star-inserted' and contains(@src,'iframeembed=true&playerId=kaltura_player')]")
+    KEA_IFRAME_BLANK                                                        = ('xpath', "//iframe[@title='Kaltura Editor Application']")  
+    KEA_QUIZ_OPTIONS_REVERT_TO_DEFAULT_BUTTON                               = ('xpath', "//button[@class='link-button pull-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")    
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -137,10 +147,10 @@ class Kea(Base):
                      
         self.switchToKeaIframe()    
            
-        # Click add new question button
-        if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
-            writeToLog("INFO","FAILED to click add question button")
-            return False 
+        # Enter in 'Multiple Choice' KEA Quiz Question screen
+        if self.selectQuestionType(enums.QuizQuestionType.Multiple) == False:
+            writeToLog("INFO", "FAILED to enter in " + enums.QuizQuestionType.Multiple.value + " Quiz Question screen")
+            return False             
  
         # Add question fields
         if self.fillQuizFields(questionText, answerText, additionalAnswerList) == False:
@@ -190,7 +200,7 @@ class Kea(Base):
     
     
     # @Author: Inbar Willman
-    def fillQuizFields(self, questionText, answerText, additionalAnswerList):   
+    def fillQuizFields(self, questionText, answerText, additionalAnswerList=''):   
         # Fill question text 
         if self.click(self.KEA_QUIZ_QUESTION_FIELD) == False:
             writeToLog("INFO","FAILED to click on question text field")
@@ -208,33 +218,35 @@ class Kea(Base):
         if self.send_keys(tmpFirstAnswer, answerText) == False:
             writeToLog("INFO","FAILED to fill first answer text field")
             return False
-         
-        # Fill second answer if there are just two answers
-        if len(additionalAnswerList) == 1:
-            tmpSecondAnswer = (self.KEA_QUIZ_ANSWER[0], self.KEA_QUIZ_ANSWER[1].replace('ANSWER_NUMBER', 'answer-text1'))
-            if self.click(tmpSecondAnswer) == False:
-                writeToLog("INFO","FAILED to click on second answer text field")
-                return False
-            if self.send_keys(tmpSecondAnswer, additionalAnswerList[0]) == False:
-                writeToLog("INFO","FAILED to fill second answer text field")
-                return False                
-         
-        else:
-            i = 1
-            for answer in additionalAnswerList:
-                tmpAnswer = (self.KEA_QUIZ_ANSWER[0], self.KEA_QUIZ_ANSWER[1].replace('ANSWER_NUMBER', 'answer-text' + str(i)))
-                if self.click(tmpAnswer) == False:
-                    writeToLog("INFO","FAILED to click on " + i +"th answer text field")
-                    return False                    
-                if self.send_keys(tmpAnswer, answer) == False:
-                    writeToLog("INFO","FAILED to fill " + i +"th answer text field")
-                    return False    
-                # Check if in the last answer, if not click add quiz button
-                if len(additionalAnswerList) != i:
-                    if self.click(self.KEA_QUIZ_ADD_ANSWER_BUTTON) == False:
-                        writeToLog("INFO","FAILED click add answer button")
-                        return False                           
-                i = i + 1
+        
+        # We verify if we want to user additional answers
+        if additionalAnswerList != '':
+            # Fill second answer if there are just two answers
+            if len(additionalAnswerList) == 1:
+                tmpSecondAnswer = (self.KEA_QUIZ_ANSWER[0], self.KEA_QUIZ_ANSWER[1].replace('ANSWER_NUMBER', 'answer-text1'))
+                if self.click(tmpSecondAnswer) == False:
+                    writeToLog("INFO","FAILED to click on second answer text field")
+                    return False
+                if self.send_keys(tmpSecondAnswer, additionalAnswerList[0]) == False:
+                    writeToLog("INFO","FAILED to fill second answer text field")
+                    return False                
+             
+            else:
+                i = 1
+                for answer in additionalAnswerList:
+                    tmpAnswer = (self.KEA_QUIZ_ANSWER[0], self.KEA_QUIZ_ANSWER[1].replace('ANSWER_NUMBER', 'answer-text' + str(i)))
+                    if self.click(tmpAnswer) == False:
+                        writeToLog("INFO","FAILED to click on " + i +"th answer text field")
+                        return False                    
+                    if self.send_keys(tmpAnswer, answer) == False:
+                        writeToLog("INFO","FAILED to fill " + i +"th answer text field")
+                        return False    
+                    # Check if in the last answer, if not click add quiz button
+                    if len(additionalAnswerList) != i:
+                        if self.click(self.KEA_QUIZ_ADD_ANSWER_BUTTON) == False:
+                            writeToLog("INFO","FAILED click add answer button")
+                            return False                           
+                    i = i + 1
                                
         return True
     
@@ -364,7 +376,10 @@ class Kea(Base):
         # Verify that we are in KEA page and app is displayed
         if self.wait_visible(self.KEA_APP_DISPLAY, 40) == False:
             writeToLog("INFO","FAILED to display KEA page")
-            return False              
+            return False 
+        
+        #sleeping two seconds in order to make sure that the loading screen is no longer present
+        sleep(2)             
         
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
@@ -608,11 +623,21 @@ class Kea(Base):
 
     # NOT FINISHED:
     # the following function will create a Quiz (within the given dictQuestions)
-    # Currently support question type=Multiple ONLY     
-    def quizCreation(self, entryName, dictQuestions, timeout=15): #TBD: dictDetails, dictScores, dictExperience
+    # Please follow the individual list structure for each Quiz Question type
+    # questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text', 'Why Text']
+    # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUEANDFALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
+    # questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point', 'Hint Text', 'Why Text']
+    # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
+    # TBD - Change order of the correct answer
+    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
         sleep(25)
-        self.searchAndSelectEntryInMediaSelection(entryName)
-        sleep(timeout) 
+        if self.searchAndSelectEntryInMediaSelection(entryName) == False:
+            writeToLog("INFO", "FAILED to navigate to " + entryName)
+            return False
+        sleep(timeout)
+        
+        # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" Quiz Questions)
+        questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
                    
         for questionNumber in dictQuestions:
             questionDetails = dictQuestions[questionNumber]
@@ -621,41 +646,206 @@ class Kea(Base):
             if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
                 writeToLog("INFO","FAILED to wait until spinner isn't visible")
                 return False 
-                    
+            
+            # Specifying the time stamp, where the Quiz Question should be placed within the entry
             timestamp = questionDetails[0]
             if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
                 writeToLog("INFO","FAILED to insert the time-stamp of question # " + questionNumber)
                 return False
             
+            # Creating the variable for the Quiz Question Type
             qestionType = questionDetails[1]
-            if qestionType == enums.QuizQuestionType.Multiple:
-                
-                # Click on add new multiple option question type button
-                if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
-                        writeToLog("INFO","FAILED to click on add new multiple option question type button")
-                        return False                 
+            if qestionType == enums.QuizQuestionType.Multiple:   
+                # We enter in the KEA Quiz Question Type screen
+                if self.selectQuestionType(qestionType) == False:
+                    writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+                    return False      
          
                 # Add question fields
-                QuizQuestion1AdditionalAnswers = [questionDetails[4], questionDetails[5], questionDetails[6]]
-                if self.fillQuizFields(questionDetails[2], questionDetails[3], QuizQuestion1AdditionalAnswers) == False:
-                    writeToLog("INFO","FAILED to fill question fields")
-                    return False 
-                 
-                # Save Question
-                if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
-                    writeToLog("INFO","FAILED to Save question")
-                    return False  
-                 
-                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
-                    writeToLog("INFO","FAILED to wait until spinner isn't visible")
-                    return False 
-                sleep(2)
+                # We verify if we have only one question
+                if questionDetails[4] != '':
+                    QuizQuestion1AdditionalAnswers = [questionDetails[4]]
                 
+                if questionDetails[5] != '':
+                    QuizQuestion1AdditionalAnswers.append(questionDetails[5])
+                    
+                if questionDetails[6] != '':
+                    QuizQuestion1AdditionalAnswers.append(questionDetails[6])
+                    
+                if len(QuizQuestion1AdditionalAnswers) >= 1:
+                    if self.fillQuizFields(questionDetails[2], questionDetails[3], QuizQuestion1AdditionalAnswers) == False:
+                        writeToLog("INFO","FAILED to fill question fields")
+                        return False
+                else:
+                    writeToLog("INFO", "Please make sure that you supply at least two question answers")
+                    return False
+                
+                # we verify if the value for the 'Hint' is present in the list
+                if len(questionDetails) >= 8:  
+                    # we verify if we want to create a Hint for the current Quiz Question
+                    if questionDetails[7] != '':
+                        if self.createHintAndWhy(questionDetails[7], whyText='') == False:
+                            writeToLog("INFO", "FAILED to create a Hint for the " + questionDetails[2] + " Quiz Question")
+                            return False
+                    else:
+                        writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+                    
+                    # we verify if the value for the 'Why' is present in the list
+                    if len(questionDetails) >= 9:
+                        # we verify if we want to create a Why for the current Quiz Question
+                        if questionDetails[8] != '':
+                            if self.createHintAndWhy(hintText='', whyText=questionDetails[8]) == False:
+                                writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
+                                return False
+                        else:
+                            writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+                else:
+                    writeToLog("INFO", "No 'Hint' or 'Why' will be created for the " + questionDetails[2] + " Quiz Question")
+                    
             elif qestionType == enums.QuizQuestionType.REFLECTION:
-                return False
-            else:
-                return False
+                # We enter in the KEA Quiz Question Type screen
+                if self.selectQuestionType(qestionType) == False:
+                    writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+                    return False    
                 
+                # We select the KEA Quiz Question title field
+                if self.click(questionField, 2, True) == False:
+                    writeToLog("INFO", "FAILED to select the reflection point text area")
+                    return False
+                
+                # We insert the title for the KEA Quiz Question type
+                if self.send_keys(questionField, questionDetails[2], True) == False:
+                    writeToLog("INFO", "FAILED to insert the " + questionDetails[2] + " reflection point")
+                    return False
+                
+                # We make sure that no 'Hint' or 'Why' are trying to be created for 'Reflection Point' Quiz Question
+                if len(questionDetails) >= 4:
+                    writeToLog("INFO", "Hint and Why are not supported for the Reflection Point Quiz Question")
+                    return False
+                
+            elif qestionType == enums.QuizQuestionType.TRUEANDFALSE:
+                # We enter in the KEA Quiz Question Type screen
+                if self.selectQuestionType(qestionType) == False:
+                    writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+                    return False    
+                
+                # We select the KEA Quiz Question title field
+                if self.click(questionField, 2, True) == False:
+                    writeToLog("INFO", "FAILED to select the reflection point text area")
+                    return False
+                
+                #we insert the Question title inside the Question text area
+                if self.send_keys(questionField, questionDetails[2], True) == False:
+                    writeToLog("INFO", "FAILED to insert the " + questionDetails[2] + " reflection point")
+                    return False
+                
+                # We insert the title for the KEA Quiz Question type
+                if questionDetails[3] and questionDetails[4] != '':
+                    if self.click(self.KEA_ADD_NEW_ADD_QUESTION_TRUE_ANSWER_FIELD, 3, True) == False:
+                        writeToLog("INFO", "FAILED to select the 'True' text area field")
+                        return False
+
+                    if self.clear_and_send_keys(self.KEA_ADD_NEW_ADD_QUESTION_TRUE_ANSWER_FIELD, questionDetails[3], True)== False:
+                        writeToLog("INFO", "FAILED to insert the " + questionDetails[3] + " text within the 'True' field")
+                        return False
+                    
+                    if self.click(self.KEA_ADD_NEW_QUESTION_FALSE_ANSWER_FIELD, 3, True) == False:
+                        writeToLog("INFO", "FAILED to select the 'False' text area field")
+                        return False
+
+                    if self.clear_and_send_keys(self.KEA_ADD_NEW_QUESTION_FALSE_ANSWER_FIELD, questionDetails[4], True)== False:
+                        writeToLog("INFO", "FAILED to insert the " + questionDetails[4] + " text within the 'False' field")
+                        return False
+                
+                # we verify if the value for the 'Hint' is present in the list
+                if len(questionDetails) >= 6:  
+                    # we verify if we want to create a Hint for the current Quiz Question
+                    if questionDetails[5] != '':
+                        if self.createHintAndWhy(questionDetails[5], whyText='') == False:
+                            writeToLog("INFO", "FAILED to create a Hint for the " + questionDetails[2] + " Quiz Question")
+                            return False
+                    else:
+                        writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+                    
+                    # we verify if the value for the 'Why' is present in the list
+                    if len(questionDetails) == 7:
+                        # we verify if we want to create a Why for the current Quiz Question
+                        if questionDetails[6] != '':
+                            if self.createHintAndWhy(hintText='', whyText=questionDetails[6]) == False:
+                                writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
+                                return False
+                        else:
+                            writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+                else:
+                    writeToLog("INFO", "No 'Hint' or 'Why' will be created for the " + questionDetails[2] + " Quiz Question")
+            
+            # We verify that the KEA Quiz Question type is supported
+            else:
+                writeToLog("INFO", "FAILED, please make sure that you're using a support KEA Quiz Question type, using enums(e.g enums.QuizQuestionType.type)")
+                return False
+                                            
+            # We save the KEA Quiz Question
+            if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
+                writeToLog("INFO","FAILED to Save question")
+                return False  
+             
+            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 35) == False:
+                writeToLog("INFO","FAILED to wait until spinner isn't visible")
+                return False 
+            sleep(2)
+        
+        # Edit the KEA Quiz Section if necessary by enabling or disabling any KEA option from the KEA Details, Scores and Experience sections
+        if dictDetails != '' or dictScores != '' or dictExperience != '':
+            # We verify if we modify more than one option for the same KEA Section
+            if type(dictDetails) is list:
+                for option in dictDetails:
+                    if self.editQuizOptions(enums.KEAQuizSection.DETAILS, option, saveChanges=False, resumeEditing=False) == False:
+                        writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.DETAILS.value + " KEA Section options")
+                        return False
+                        
+            else:
+                # We modify only one option for this specific KEA section
+                if dictDetails != '':
+                    if self.editQuizOptions(enums.KEAQuizSection.DETAILS, option, saveChanges=False, resumeEditing=False) == False:
+                        writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.DETAILS.value + " KEA Section options")
+                        return False
+                    
+            # We verify if we modify more than one option for the same KEA Section
+            if type(dictScores) is list:
+                for option in dictScores:
+                    if self.editQuizOptions(enums.KEAQuizSection.SCORES, option, saveChanges=False, resumeEditing=False) == False:
+                        writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.SCORES.value + " KEA Section options")
+                        return False
+                    
+            else:
+                # We modify only one option for this specific KEA section
+                if dictScores != '':
+                    if self.editQuizOptions(enums.KEAQuizSection.SCORES, option, saveChanges=False, resumeEditing=False) == False:
+                        writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.SCORES.value + " KEA Section options")
+                        return False
+                    
+            # We verify if we modify more than one option for the same KEA Section   
+            if type(dictExperience) is list:
+                for option in dictExperience:
+                    if self.editQuizOptions(enums.KEAQuizSection.EXPERIENCE, option, saveChanges=False, resumeEditing=False) == False:
+                        writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.EXPERIENCE.value + " KEA Section options")
+                        return False
+                
+            else:
+                # We modify only one option for this specific KEA section
+                if dictExperience != '':
+                    if self.editQuizOptions(enums.KEAQuizSection.EXPERIENCE, option, saveChanges=False, resumeEditing=False) == False:
+                        writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.EXPERIENCE.value + " KEA Section options")
+                        return False
+            
+            # We save all the changes performed from each KEA Section
+            if self.saveKeaChanges(resumeEditing=True) == False:
+                writeToLog("INFO", "FAILED to save the changes performed in the KEA Section")
+                return False
+        else:
+            writeToLog("INFO", "No changes for the KEA Sections was performed")
+        
+        # Save the KEA Quiz entry and navigate to the entry page
         self.switchToKeaIframe() 
         self.clickDone()
         return True
@@ -735,7 +925,7 @@ class Kea(Base):
     # keaCategory = must be enum
     # keaOption must be enum and have a map
     # If saveChanges = True, all the KEA changes will be saved by clicking on the done button and waiting for the spinner to disappear
-    def editQuizOptions(self, keaSection, keaOptionDict, saveChanges=False):
+    def editQuizOptions(self, keaSection, keaOptionDict, saveChanges=False, resumeEditing=False):
         if keaSection != '':
             tmpKEASection = (self.KEA_TOGGLE_MENU_OPTION[0], self.KEA_TOGGLE_MENU_OPTION[1].replace('OPTION_NAME', keaSection.value))
     
@@ -830,7 +1020,7 @@ class Kea(Base):
             return False
         
         if saveChanges == True:
-            if self.saveKeaChanges() == False:
+            if self.saveKeaChanges(resumeEditing) == False:
                 writeToLog("INFO", "FAILED to save the KEA changes")
                 return False
                                     
@@ -858,7 +1048,12 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to enable " + keaOption.value + " option")
                     return False
 
-        elif stateEnabled == False:                    
+        elif stateEnabled == False:
+            if keaOption == enums.KEAQuizOptions.ALLOW_DOWNLOAD or keaOption == enums.KEAQuizOptions.INSTRUCTIONS:
+                if self.verifyKEAOptionState(enums.KEAQuizOptions.SHOW_WELCOME_PAGE, False) == True:
+                    writeToLog("INFO", "The " + keaOption.value + " is already disabled due to the dependent option, " + enums.KEAQuizOptions.SHOW_WELCOME_PAGE.value)  
+                    return True
+                                  
             tmpKEAOptionActive = (self.KEA_OPTION_ACTIVE[0], self.KEA_OPTION_ACTIVE[1].replace('OPTION_NAME', keaOption.value))
             tmpKEAOptionNormal = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
             if self.wait_element(tmpKEAOptionActive, 1, True) == False and self.wait_element(tmpKEAOptionNormal, 1, True) != False:
@@ -1148,4 +1343,136 @@ class Kea(Base):
                 return False
             sleep(1)
                         
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function creates a hint and why while being in the 'Multiple Choices' or 'True and False' KEA Quiz Question type screen
+    # hintText = is the text that you want to be displayed in the hint screen ( use only str)
+    # whyText  = is the text that you want to be displayed in the why screen ( use only str)
+    # You can  create a hint without specifying a why, leaving the whyText as = ''
+    def createHintAndWhy(self, hintText='', whyText=''):
+        self.switchToKeaIframe()
+        
+        # we verify that we are in a KEA Quiz Question screen
+        saveButton = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.SAVE.value))
+        if self.wait_element(saveButton, 3, True) == False:
+            writeToLog("INFO", "FAILED, please make sure that you're in 'Multiple Choices' or 'True and False' KEA Quiz Question type screen")
+            return False
+        
+        # we used this locator in order to save the hint any why changes
+        applyButton = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.APPLY.value))
+
+        if hintText != '':
+            if self.click(self.KEA_ADD_NEW_QUESTION_HINT_AND_WHY_TOGGLE_MENU_BUTTON, 3, True) == False:
+                writeToLog("INFO", "FAILED to trigger the Hint and Why toggle menu")
+                return False
+            
+            if self.click(self.KEA_ADD_NEW_QUESTION_HINT_BUTTON, 3, True) == False:
+                writeToLog("INFO", "FAILED to select the 'Hint' option from the Hint and Why toggle menu")
+                return False
+            
+            # We use action chains in order to insert text within the fields, input text area being already active
+            action = ActionChains(self.driver)
+            try:
+                action.send_keys(hintText).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to insert " + hintText + " in the hint text field")
+                return False
+            # We wait one second in order to make sure that all the text was properly inserted
+            sleep(1)
+            # We save the changes
+            if self.click(applyButton, 3, True) == False:
+                writeToLog("INFO", "FAILED to click on the 'Apply button' in order to save the Hint changes")
+                return False
+            
+        if whyText != '':
+            if self.click(self.KEA_ADD_NEW_QUESTION_HINT_AND_WHY_TOGGLE_MENU_BUTTON, 3, True) == False:
+                writeToLog("INFO", "FAILED to trigger the Hint and Why toggle menu")
+                return False
+            
+            if self.click(self.KEA_ADD_NEW_QUESTION_WHY_BUTTON, 3, True) == False:
+                writeToLog("INFO", "FAILED to select the 'Why' option from the Hint and Why toggle menu")
+                return False
+            
+            # We use action chains in order to insert text within the fields, because the fields are already clicked
+            action = ActionChains(self.driver)
+            try:
+                action.send_keys(whyText).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to insert " + whyText + " in the 'why' text field")
+                return False
+            # We wait one second in order to make sure that all the text was properly inserted
+            sleep(1)
+            # We save the changes
+            if self.click(applyButton, 3, True) == False:
+                writeToLog("INFO", "FAILED to click on the 'Apply button' in order to save the Why changes")
+                return False
+
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function enters in any Quiz Question Type screen
+    # questionType must be enum ( e.g enums.QuizQuestionType.Multiple )
+    # we support 'Multiple Choice', 'True and False' and 'Reflection Point'
+    def selectQuestionType(self, qestionType):
+        self.switchToKeaIframe()
+        
+        if qestionType == enums.QuizQuestionType.Multiple:
+            # Verify if the KEA Quiz Question type is already highlighted
+            if self.wait_element(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON_ACTIVE, 2, True) != False or self.wait_element(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON_DEFAULT, 2, True) != False:
+                if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
+                    writeToLog("INFO","FAILED to activate the 'ADD NEW MULTIPLE' quiz type")
+                    return False
+                
+            # We highlight the KEA Quiz Question type and then access it
+            else:
+                if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
+                    writeToLog("INFO","FAILED to highlight the 'ADD NEW MULTIPLE' quiz type")
+                    return False
+
+                if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'ADD NEW MULTIPLE' quiz type")
+                    return False
+
+        elif qestionType == enums.QuizQuestionType.REFLECTION:
+            # Verify if the KEA Quiz Question type is already highlighted
+            if self.wait_element(self.KEA_ADD_NEW_REFLECTION_POINT_BUTTON_ACTIVE, 2, True) != False:
+                if self.click(self.KEA_ADD_NEW_REFLECTION_POINT_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'ADD NEW MULTIPLE' quiz type")
+                    return False
+                
+            # We highlight the KEA Quiz Question type and then access it
+            else:
+                if self.click(self.KEA_ADD_NEW_REFLECTION_POINT_BUTTON) == False:
+                    writeToLog("INFO","FAILED to highlight the 'Reflection Point' quiz type")
+                    return False
+
+                if self.click(self.KEA_ADD_NEW_REFLECTION_POINT_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'Reflection Point' quiz type")
+                    return False
+                    
+        elif qestionType == enums.QuizQuestionType.TRUEANDFALSE:
+            # Verify if the KEA Quiz Question type is already highlighted
+            if self.wait_element(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE, 2, True) != False:
+                if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'True and False' quiz type")
+                    return False
+                
+            # We highlight the KEA Quiz Question type and then access it
+            else:
+                if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON) == False:
+                    writeToLog("INFO","FAILED to highlight the 'True and False' quiz type")
+                    return False
+
+                if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'True and False' quiz type")
+                    return False
+                
+        # We verify that a supported KEA Quiz Question type has been used      
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you used a supported KEA Quiz Question type and that the value used was enum")
+            return False
+                
         return True
