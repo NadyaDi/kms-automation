@@ -104,7 +104,7 @@ LOCAL_SETTINGS_TESTING_NEW_UI_ENV           = 'TestingNewUI'
 LOCAL_SETTINGS_TESTING_ENV                  = 'Testing'
 LOCAL_SETTINGS_PROD_NEW_UI_ENV              = 'ProdNewUI'
 LOCAL_SETTINGS_PROD_ENV                     = 'Prod'
-LOCAL_SETTINGS_ENV_NAME                     = LOCAL_SETTINGS_TESTING_ENV
+LOCAL_SETTINGS_ENV_NAME                     = LOCAL_SETTINGS_TESTING_NEW_UI_ENV
 LOCAL_SETTINGS_IS_NEW_UI                    = True
 
 # Partner credentials
