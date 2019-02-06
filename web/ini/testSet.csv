@@ -246,6 +246,7 @@ test_2880,1,0,0,0,SharePoint - Preview all kinds of media from My Media and Gall
 test_2881,1,0,0,0,Sharepoint - View Collapsed Expanded Modes
 test_2882,1,0,0,0,Sharepoint - Upload media from desktop
 test_2885,1,0,0,0,SharePoint - Gallery Moderation
+test_2886,1,0,0,0,Sharepoint - Search by tag / name / description
 test_2890,1,0,0,0,Sharepoint - Edit metadata
 test_2891,0,1,0,0,Sharepoint - Disable comments
 test_2892,0,1,0,0,Sharepoint - Close discussion

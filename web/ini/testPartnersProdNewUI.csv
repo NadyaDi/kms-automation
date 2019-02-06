@@ -146,6 +146,7 @@ test_2881,Sharepoint - View Collapsed Expanded Modes,,,pythonautomation1@mailina
 test_2882,Sharepoint - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2880,SharePoint - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2885,SharePoint - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!,
+test_2886,Sharepoint - Search by tag / name / description,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2890,Sharepoint - Edit metadata,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2891,Sharepoint - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2892,Sharepoint - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
