@@ -79,7 +79,7 @@ class Test:
                 return         
              
             writeToLog("INFO","Step 5: Going to to create embed announcement from media gallery")
-            if localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT == 'Prod':
+            if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
                 if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, self.galleryName, enums.Location.MEDIA_GALLARY, False) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 5: FAILED to create embed announcement from media gallery")

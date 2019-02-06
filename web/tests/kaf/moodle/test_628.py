@@ -59,7 +59,7 @@ class Test:
             self.activityName2 = clsTestService.addGuidToString("Embed - Not assignment submission", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            if localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT == 'Prod':
+            if LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
                 localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1820181-1.kaf.kaltura.com/admin'
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Blackboard@kaltura.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
