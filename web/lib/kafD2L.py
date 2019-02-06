@@ -177,7 +177,9 @@ class D2L(Base):
         
         if self.wait_element(self.D2L_CREATE_NEW_DISCUSSIONS_BTN) == False:
             writeToLog("INFO","FAILED to display 'New' button")
-            return False           
+            return False  
+        
+        sleep(4)         
         
         if self.click(self.D2L_CREATE_NEW_DISCUSSIONS_BTN) == False:
             writeToLog("INFO","FAILED to click on new button")
