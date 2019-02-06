@@ -133,7 +133,7 @@ class Test:
                 return   
              
             writeToLog("INFO","Step 11: Going to publish entries to gallery")
-            if localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT == 'Prod':
+            if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
                 if self.common.kafGeneric.addMediaToGallery(self.galleryName, [self.videoEntryName2,self.audioEntryName,self.imageEntryName], isGalleryModerate=False) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 11: FAILED to publish entries to gallery")
