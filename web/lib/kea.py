@@ -51,6 +51,7 @@ class Kea(Base):
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                                          = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     EDITOR_TIMELINE                                                         = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
     EDITOR_TIME_PICKER                                                      = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
+    EDITOR_REALTIME_MARKER                                                  = ('xpath', "//span[@class='realtime-marker__head-box-time']")
     EDITORT_TIMELINE_SPLIT_ICON                                             = ('xpath', "//button[@aria-label='Split']")
     EDITOR_TIMELINE_DELETE_BUTTON                                           = ('xpath', "//button[@aria-label='Delete']")
     EDITOR_SAVE_BUTTON                                                      = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
