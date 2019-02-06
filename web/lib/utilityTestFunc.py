@@ -104,8 +104,9 @@ def setTestURLs(row):
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SAKAI_BASE_URL
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL
-        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media.jspa'
-        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/community/new1'
+#        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media.jspa'
+#        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/community/new1'
+        localSettings.LOCAL_SETTINGS_SITE_NEW1_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/site/New1'
 
     return
 

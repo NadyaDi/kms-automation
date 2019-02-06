@@ -14,12 +14,12 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Jive - Embed media in document
+    # Test Name : Jive - Embed media in discussion
     # Test description:
-    # upload media -> Click on 'Create' and choose 'Document' -> Click on wysisyg -> Choose media from My media tab -> Save emebed
+    # upload media -> Click on 'Create' and choose 'Discussion' -> Click on wysisyg -> Choose media from My media tab -> Save emebed
     # Verify that embed is displayed and played
     #================================================================================================================================
-    testNum     = "2512"
+    testNum     = "2509"
     application = enums.Application.JIVE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -29,7 +29,7 @@ class Test:
     entryName = None
     description = "Description" 
     tags = "Tags,"
-    documentName = None
+    discussionName = None
     timeToStop = "0:07"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
 
@@ -49,8 +49,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedDocumentFromMyMedia", self.testNum)
-            self.documentName = clsTestService.addGuidToString("Embed document from My Media", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedDiscussionFromMyMedia", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed discussion from My Media", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
                  
             writeToLog("INFO","Step 1: Going to upload entry")   
@@ -58,45 +58,45 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                        
+                          
             writeToLog("INFO","Step 2: Going navigate to edit entry page")    
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
-                    
+                      
             writeToLog("INFO","Step 3: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate entry page")
                 return
-                    
+                      
             writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
                 return  
-              
-            writeToLog("INFO","Step 5: Going to to create embed document")    
-            if self.common.jive.createEmbedMedia(self.documentName, self.entryName, isDiscussion=False, isDocument=True) == False:
+                
+            writeToLog("INFO","Step 5: Going to to create embed discussion")    
+            if self.common.jive.createEmbedMedia(self.discussionName, self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create embed document")
+                writeToLog("INFO","Step 5: FAILED to create embed discussion")
                 return
-             
-            writeToLog("INFO","Step 6: Going to to verify embed document")    
-            if self.common.jive.verifyEmbedMedia(self.documentName, '', self.timeToStop) == False:
+               
+            writeToLog("INFO","Step 6: Going to to verify embed discussion")    
+            if self.common.jive.verifyEmbedMedia(self.discussionName, '', self.timeToStop) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify embed document")
+                writeToLog("INFO","Step 6: FAILED to verify embed discussion")
                 return 
             
-#             writeToLog("INFO","Step 7: Going to to delete embed document")    
-#             if self.common.jive.deleteEmbedMedia('2565D2ED-2512-Embed video from My Media') == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 7: FAILED to delete embed document")
-#                 return                                                                     
+            writeToLog("INFO","Step 7: Going to to delete embed discussion")    
+            if self.common.jive.deleteEmbedMedia(self.discussionName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to delete embed discussion")
+                return                                                                     
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Jive - Embed media in document from My Media ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Jive - Embed media in discussion from My Media ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -107,6 +107,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.jive.deleteEmbedMedia(self.discussionName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

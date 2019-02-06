@@ -473,7 +473,7 @@ class KafGeneric(Base):
         
         self.clsCommon.general.waitForLoaderToDisappear()
         
-        if application == enums.Application.MOODLE:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             if isAssignmentEnable == True:
                 if submitAssignment == True:
                     if self.clsCommon.moodle.submitMediaAsAssignment(True) == False:
@@ -493,7 +493,7 @@ class KafGeneric(Base):
                     writeToLog("INFO","FAILED to click on 'embed' button")
                     return False    
                 
-        if application == enums.Application.D2L:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
             sleep(5)
             self.switch_to_default_content()
             self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
@@ -547,8 +547,8 @@ class KafGeneric(Base):
             return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
         elif application == enums.Application.D2L:
             return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
-#       elif application == enums.Application.JIVE:
-#            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay)                       
+        elif application == enums.Application.JIVE:
+            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)                       
         else:
             writeToLog("INFO","FAILED unknown application: " + application.value)   
             return False

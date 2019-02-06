@@ -28,6 +28,16 @@ class Sakai(Base):
     SAKAI_MEDIA_GALLERY_BUTTON_IN_MENU                  = ('xpath', "//span[@class='menuTitle' and contains(text(), 'Media Gallery')]")
     SAKAI_USER_NAVGATION_MENU                           = ('xpath', "//span[@class='topnav']")
     SAKAI_USER_NAME                                     = ('xpath', "//a[@id='loginUser']")
+    SAKAI_ANNOUNCEMENT_BTN                              = ('xpath', '//span[@class="menuTitle" and text()="Announcements"]')  
+    SAKAI_ANNOUNCEMENT_PAGE_TITLE                       = ('xpath', '//span[@class="siteTitle" and text()="New1:"]')
+    SAKAI_ADD_ANNOUNCEMENT_BTN                          = ('xpath', '//a[@title="Add"]')
+    SAKAI_INSERT_ANNOUNCEMENT_TITLE                     = ('xpath', '//input[@id="subject"]')
+    SAKAI_ANNOUNCEMENT_WYSIWYG                          = ('xpath', '//span[@class="cke_button_icon cke_button__kaltura_icon"]')
+    SAKAI_BSE_IFRAME                                    = ('xpath', '//iframe[contains(@src, "/media-gallery-tool/")]')
+#    SAKAI_EMBED_ENTRY_IFRAME                            = ('xpath', '//iframe[@class="cke_wysiwyg_frame cke_reset"]')
+    SAKAI_POST_ANNOUNCEMENT_BTN                         = ('xpath', '//input[@id="saveChanges"]')
+    SAKAI_EMBED_ANNOUNCEMENT_TITLE                      = ('xpath', '//a[contains(@title, "ANNOUNCEMENT_NAME")]')
+    SAKAI_EMBED_ENTRY_IFRAME                            = ('xpath', '//iframe[contains(@src, "/media-gallery-tool/")]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -163,3 +173,94 @@ class Sakai(Base):
             writeToLog("INFO","FAILED to get user name element")
             return False
         return userName 
+
+    
+    # @Author: Inbar Willman
+    def createEmbedAnnouncement(self, announcementTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_SITE_NEW1_URL) == False:
+            writeToLog("INFO","FAILED to navigate to 'New1' page")
+            return False    
+                    
+        if self.click(self.SAKAI_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'announcement' button")
+            return False   
+        
+        if self.wait_element(self.SAKAI_ANNOUNCEMENT_PAGE_TITLE) == False:
+            writeToLog("INFO","FAILED to displayed 'announcement' page title")
+            return False  
+        
+        self.switchToSakaiIframe()
+        
+        if self.click(self.SAKAI_ADD_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'add' button")
+            return False  
+        
+        if self.send_keys(self.SAKAI_INSERT_ANNOUNCEMENT_TITLE, announcementTitle) == False:
+            writeToLog("INFO","FAILED to insert announcement title")
+            return False 
+        
+        sleep(3)
+        
+        if self.click(self.SAKAI_ANNOUNCEMENT_WYSIWYG) == False:
+            writeToLog("INFO","FAILED to click on 'wysiwyg' button")
+            return False 
+        
+        if self.swith_to_iframe(self.SAKAI_BSE_IFRAME) == False:
+            writeToLog("INFO","FAILED to switch to BSE iframe")
+            return False 
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False 
+        
+#        self.clsCommon.base.switch_to_default_content()
+        self.switchToSakaiIframe()  
+        
+        if self.click(self.SAKAI_POST_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to save announcement")
+            return False 
+        
+        self.clsCommon.base.switch_to_default_content()
+        writeToLog("INFO","Success: embed was created")
+        return True
+    
+    
+    # @Author: Inbar Willman
+    def verifyEmbedAnnouncement(self, announcementName, imageThumbnail, delay, forceNavigate=False):
+        if forceNavigate == True:
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_SITE_NEW1_URL) == False:
+                writeToLog("INFO","FAILED to navigate to 'New1' page")
+                return False    
+                    
+            if self.click(self.SAKAI_ANNOUNCEMENT_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'announcement' button")
+                return False 
+        
+        self.switchToSakaiIframe() 
+        self.swith_to_iframe(self.SAKAI_EMBED_ENTRY_IFRAME)
+             
+        tmp_announcement_name = (self.SAKAI_EMBED_ANNOUNCEMENT_TITLE[0], self.SAKAI_EMBED_ANNOUNCEMENT_TITLE[1].replace('ANNOUNCEMENT_NAME', announcementName))
+        if self.click(tmp_announcement_name) == False:
+            writeToLog("INFO","FAILED to click on embed announcement title")
+            return False 
+         
+        self.clsCommon.player.switchToPlayerIframe()
+        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        
+        sleep(3)
+        
+        # If entry type is video
+        if delay != '':   
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+                writeToLog("INFO","FAILED to play and verify video")
+                return False                
+        
+        # If entry type is image     
+        else:
+            if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
+                writeToLog("INFO","FAILED to display correct image thumbnail")
+                return False
+        
+        self.clsCommon.base.switch_to_default_content()
+        writeToLog("INFO","Success embed was verified")
+        return True                         

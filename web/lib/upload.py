@@ -228,6 +228,11 @@ class Upload(Base):
                         self.switch_to_default_content()
                         self.clsCommon.base.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
                         self.clsCommon.base.swith_to_iframe(self.clsCommon.d2l.D2L_EMBED_IFRAME)
+                        
+                    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+                        self.switch_to_default_content()
+                        self.swith_to_iframe(self.clsCommon.jive.JIVE_BSE_MAIN_IFRAME)
+                        self.swith_to_iframe(self.clsCommon.jive.JIVE_BSE_INNER_IFRAME)
                                                
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  
