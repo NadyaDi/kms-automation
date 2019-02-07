@@ -692,6 +692,8 @@ class MyMedia(Base):
                     self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)
                     self.clsCommon.sharePoint.switchToSharepointIframe()
+                    self.click(self.clsCommon.category.CATEGORY_DETAILS_VIEW)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
                     
                 if self.click(tmpBtn) == False:
                     writeToLog("INFO","FAILED to click on the 'published' pop-up of: " + entryName)
@@ -714,6 +716,7 @@ class MyMedia(Base):
     # Author: Michal Zomper
     def verifyEntriesPrivacyInMyMedia(self, entriesList):
         for entry in entriesList:
+            sleep(1)
             if self.verifyEntryPrivacyInMyMedia(entry, entriesList[entry], forceNavigate=False) == False:
                 writeToLog("INFO","FAILED to verify entry '" + entry + "' label")
                 return False
@@ -1482,12 +1485,19 @@ class MyMedia(Base):
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE):
                     self.click(self.MY_MEDIA_TITLE)
             
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
                 self.click(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON)
                 
 
             elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
                 self.click(self.MY_MEDIA_ACTIONS_BUTTON)
+            
+            elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                    self.switch_to_default_content()
+                    self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                    self.clsCommon.sharePoint.switchToSharepointIframe()
+                    self.click(self.clsCommon.category.CATEGORY_DETAILS_VIEW)
 
             self.clsCommon.sendKeysToBodyElement(Keys.END)
 

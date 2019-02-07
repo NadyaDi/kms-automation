@@ -254,6 +254,9 @@ test_2880,SharePoint - Preview all kinds of media from My Media and Gallery,,,ad
 test_2881,Sharepoint - View Collapsed Expanded Modes,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2885,SharePoint - Gallery Moderation,,,admin_user,admin_pass,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!
 test_2886,Sharepoint - Search by tag / name / description,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
+test_2887,SharePoint - My Media - Filter by media Type,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
+test_2888,Sharepoint - My Media - Filter Media View Different Statuses,,,admin_user,admin_pass,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!
+test_2889,Sharepoint - Sort media all types,,,admin_user,admin_pass,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!
 test_2890,Sharepoint - Edit metadata,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2891,Sharepoint - Disable comments,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2892,Sharepoint - Close discussion,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!

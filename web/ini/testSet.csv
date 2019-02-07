@@ -248,6 +248,9 @@ test_2881,1,0,0,0,Sharepoint - View Collapsed Expanded Modes
 test_2882,1,0,0,0,Sharepoint - Upload media from desktop
 test_2885,1,0,0,0,SharePoint - Gallery Moderation
 test_2886,1,0,0,0,Sharepoint - Search by tag / name / description
+test_2887,1,0,0,0,SharePoint - My Media - Filter by media Type
+test_2888,1,0,0,0,Sharepoint - My Media - Filter Media View Different Statuses
+test_2889,1,0,0,0,Sharepoint - Sort media all types
 test_2890,1,0,0,0,Sharepoint - Edit metadata
 test_2891,0,1,0,0,Sharepoint - Disable comments
 test_2892,0,1,0,0,Sharepoint - Close discussion
