@@ -154,6 +154,7 @@ test_2889,Sharepoint - Sort media all types,,,pythonautomation1@mailinator.com,K
 test_2890,Sharepoint - Edit metadata,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2891,Sharepoint - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2892,Sharepoint - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_2894,Sharepoint - Add caption,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2895,Sharepoint - Thumbnails,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2898,Sharepoint - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2899,Sharepoint - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,

@@ -260,6 +260,7 @@ test_2889,Sharepoint - Sort media all types,,,admin_user,admin_pass,tester1@kalt
 test_2890,Sharepoint - Edit metadata,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2891,Sharepoint - Disable comments,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2892,Sharepoint - Close discussion,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
+test_2894,Sharepoint - Add caption,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2895,Sharepoint - Thumbnails,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2898,Sharepoint - Delete through my media,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2899,Sharepoint - Delete through edit entry page,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
