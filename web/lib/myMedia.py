@@ -686,6 +686,13 @@ class MyMedia(Base):
                 tmpEntry = self.replaceInLocator(self.MY_MEDIA_ENTRY_PARNET, "ENTRY_NAME", entryName)
                 entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
                 tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN[1].replace('ENTRY_ID', entryId))
+                
+                if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                    self.switch_to_default_content()
+                    self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                    self.clsCommon.sharePoint.switchToSharepointIframe()
+                    
                 if self.click(tmpBtn) == False:
                     writeToLog("INFO","FAILED to click on the 'published' pop-up of: " + entryName)
                     return False

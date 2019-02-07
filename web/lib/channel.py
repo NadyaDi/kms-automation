@@ -1488,7 +1488,7 @@ class Channel(Base):
                 if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.MEDIA_TYPE, filterMediaType) == False:
                     writeToLog("INFO","FAILED to set filter: " + str(filterMediaType) + " in my media")
                     return False                                                   
-        
+                
         except NoSuchElementException:
             return False
     
@@ -2560,10 +2560,20 @@ class Channel(Base):
               
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
-        while wait_until > datetime.datetime.now() and self.wait_while_not_visible(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1) == True:                       
+       #while wait_until > datetime.datetime.now() and self.wait_while_not_visible(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1) == True:  
+#         while( wait_until > datetime.datetime.now() or not(self.wait_elements(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1))) == False:
+        while wait_until > datetime.datetime.now(): 
             if self.wait_while_not_visible(loading_message, 7) == True:
-                    self.clsCommon.sendKeysToBodyElement(Keys.END)
-            
+                self.clsCommon.sendKeysToBodyElement(Keys.END)
+                if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                    self.switch_to_default_content()
+                    self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                    self.clsCommon.sharePoint.switchToSharepointIframe()
+                    self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True)
+                if self.wait_element(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1, multipleElements=True) != False:
+                    break
+                
         if self.is_present(no_entries_page_msg, 5) == True:
             writeToLog("INFO","Success, All media is display")
             sleep(1)

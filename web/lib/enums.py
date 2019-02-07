@@ -249,6 +249,7 @@ class KeaQuizButtons(Enum):
     DONE                       = 'Done'
     GO_TO_MEDIA_PAGE           = 'Go to Media Page'
     EDIT_QUIZ                  = 'Edit Quiz'
+    APPLY                      = 'Apply'
 
     
 class PlayerPart(Enum):

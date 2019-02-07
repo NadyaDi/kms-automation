@@ -158,6 +158,9 @@ class EditEntryPage(Base):
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON, timeout=5 ,multipleElements=True)
             self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            
+#        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            
         
         sleep(2)
         #Open "Actions" drop-down list 
@@ -1094,6 +1097,7 @@ class EditEntryPage(Base):
         if self.click(self.EDIT_ENTRY_UPLOAD_THUMBNAIL_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload thumbnail button")
             return False
+        sleep(4)
         self.clsCommon.upload.typeIntoFileUploadDialog(filePath)
         
         # verify that the upload progress bar disappear
