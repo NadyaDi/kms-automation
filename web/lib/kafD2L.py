@@ -214,7 +214,7 @@ class D2L(Base):
         
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         
-        if localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT != 'Prod':
+        if localSettings.LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
             if self.click(self.D2L_QA_APP_BSE_OPTION) == False:
                 writeToLog("INFO","FAILED to click on 'QAapp BSE' option")
                 return False  
@@ -226,8 +226,8 @@ class D2L(Base):
         self.clsCommon.base.swith_to_iframe(self.D2L_EMBED_IFRAME)
         
         # In embed page, choose page to embed from and media
-        if localSettings.LOCAL_SETTINGS_RUN_ENVIRONMENT == 'Prod':
-            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+        if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, True, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
                 writeToLog("INFO","FAILED to choose media in embed page")
                 return False            
         else:
