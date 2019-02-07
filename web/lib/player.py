@@ -95,6 +95,8 @@ class Player(Base):
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_QUESTION_NUMBER           = ('xpath', "//div[@class='reviewAnswerNr' and text()='NUMBER']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_HIGLIGHTED_ANSWER         = ('xpath', "//div[@class='single-answer-box-bk wide single-answer-box-bk-apply disable' and @role='button']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_GO_BACK_BUTTON            = ('xpath', "//div[@class='gotItBox' and text()='Got It !']")
+    PLAYER_TOUCH_OVERLAY                                        = ('xpath', "//div[@id='touchOverlay']")
+    
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -1129,6 +1131,9 @@ class Player(Base):
         givenQuestions     = len(questionDict)
         questionsFound     = 0
         
+        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
+        self.removeTouchOverlay()
+        
         if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
             writeToLog("INFO", "FAILED to pause the video")
             return False
@@ -1197,6 +1202,16 @@ class Player(Base):
         return True
     
     
+    # @Author: Oleg Sigalov
+    # Remove overlay from the player if exists (instert to 'touchOverlay' element 'style="display:none;"')
+    # This method doesn't return anything, because it removes only if exists
+    def removeTouchOverlay(self):
+        try:
+            overlayElement = self.wait_element(self.PLAYER_TOUCH_OVERLAY, 2, multipleElements=True)
+            self.driver.execute_script("arguments[0].setAttribute('style','display:none;')", overlayElement)
+        except:
+            pass
+    
     # @Author: Horia Cus
     # This function switches the KEA Player iframe based on the location
     # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
@@ -1222,6 +1237,8 @@ class Player(Base):
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
         if self.wait_element(completedTitle, 2, True) == False:
+            self.removeTouchOverlay()
+            
             if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 5, True) == False:
                 writeToLog("INFO", "FAILED to find the scrubber end screen button")
                 return False
