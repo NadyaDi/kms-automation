@@ -254,7 +254,8 @@ test_2889,1,0,0,0,Sharepoint - Sort media all types
 test_2890,1,0,0,0,Sharepoint - Edit metadata
 test_2891,0,1,0,0,Sharepoint - Disable comments
 test_2892,0,1,0,0,Sharepoint - Close discussion
-test_2895,0,1,0,0,Sharepoint - Thumbnails
+test_2894,1,0,0,0,Sharepoint - Add caption
+test_2895,1,0,0,0,Sharepoint - Thumbnails
 test_2898,1,0,0,0,Sharepoint - Delete through my media
 test_2899,1,0,0,0,Sharepoint - Delete through edit entry page
 test_2901,1,0,0,0,Sharepoint - Upload media from media gallery page
