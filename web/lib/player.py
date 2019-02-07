@@ -1030,7 +1030,7 @@ class Player(Base):
             ActionChains(self.driver).click(searchEl).send_keys(Keys.SPACE).perform()
             sleep(1)
             ActionChains(self.driver).send_keys(Keys.ENTER).perform()
-            
+            sleep(3)
             
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', slidesForSearchList[slide]))
             if self.wait_visible(slide_time) == False:

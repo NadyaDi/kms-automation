@@ -111,13 +111,11 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to search slides in slides menu bar")
                 return            
             
-            self.common.player.switchToPlayerIframe() 
-            writeToLog("INFO","Step 7: Going to close slides menu bar")
-            if self.common.base.click(self.common.player.PLAYER_SLIDE_SIDE_BAR_MENU, 30) == False:
-                writeToLog("INFO","Step 7: FAILED to click and open slides bar menu")
-                return
+            # Refresh page
+            self.common.base.refresh()
+            sleep(10)
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.DEFAULT
 
-            sleep(4)
             writeToLog("INFO","Step 8: Going to switch the player view so that the player will be in the big window and the slides in the small window")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
                 self.status = "Fail"
