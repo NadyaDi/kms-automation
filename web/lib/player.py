@@ -564,6 +564,11 @@ class Player(Base):
         if application == enums.Application.BLACK_BOARD:
             if self.clsCommon.blackBoard.switchToBlackboardIframe() == False:
                 return False
+            
+        if application == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.PAGE_UP)
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN, 2)
+            
         self.switchToPlayerIframe()     
         qrCodeSc = self.clsCommon.qrcode.takeQrCodeScreenshot()
         if qrCodeSc == False:

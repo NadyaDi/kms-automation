@@ -34,10 +34,13 @@ class Sakai(Base):
     SAKAI_INSERT_ANNOUNCEMENT_TITLE                     = ('xpath', '//input[@id="subject"]')
     SAKAI_ANNOUNCEMENT_WYSIWYG                          = ('xpath', '//span[@class="cke_button_icon cke_button__kaltura_icon"]')
     SAKAI_BSE_IFRAME                                    = ('xpath', '//iframe[contains(@src, "/media-gallery-tool/")]')
-#    SAKAI_EMBED_ENTRY_IFRAME                            = ('xpath', '//iframe[@class="cke_wysiwyg_frame cke_reset"]')
+    SAKAI_EMBED_ENTRY_IFRAME                            = ('xpath', '//iframe[@class="cke_wysiwyg_frame cke_reset"]')
     SAKAI_POST_ANNOUNCEMENT_BTN                         = ('xpath', '//input[@id="saveChanges"]')
     SAKAI_EMBED_ANNOUNCEMENT_TITLE                      = ('xpath', '//a[contains(@title, "ANNOUNCEMENT_NAME")]')
-    SAKAI_EMBED_ENTRY_IFRAME                            = ('xpath', '//iframe[contains(@src, "/media-gallery-tool/")]')
+    SAKAI_REMOVE_ANNOUNCEMENT_BTN                       = ('xpath', '//a[@title="Remove"]')
+    SAKAI_CONFIRM_REMOVE_ANNOUNCEMENT_BTN               = ('xpath', '//input[@name="eventSubmit_doDelete"]')
+    SAKAI_POST_ANNOUNCEMENT_HEADER                      = ('xpath', '//h3[contains(text(),"Post Announcement")]')
+    SAKAI_EMBED_ENTRY_THUMBNAIL                         = ('xpath', '//img[contains(@data-cke-saved-src, "thumbnail/entry_id")]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -213,8 +216,25 @@ class Sakai(Base):
             writeToLog("INFO","FAILED to choose media in embed page")
             return False 
         
-#        self.clsCommon.base.switch_to_default_content()
-        self.switchToSakaiIframe()  
+        sleep(5)
+        
+        # Switch to embed entry iframe
+        self.clsCommon.base.switch_to_default_content()
+        self.switchToSakaiIframe() 
+        self.swith_to_iframe(self.SAKAI_EMBED_ENTRY_IFRAME)
+        
+        if self.wait_element(self.SAKAI_EMBED_ENTRY_THUMBNAIL) == False:
+            writeToLog("INFO","FAILED to displayed emebed entry thumbnail")
+            return False 
+        
+        # Switch to sakai iframe
+        self.clsCommon.base.switch_to_default_content()
+        self.switchToSakaiIframe()         
+        
+        self.click(self.SAKAI_POST_ANNOUNCEMENT_HEADER)
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
+        sleep(3)
         
         if self.click(self.SAKAI_POST_ANNOUNCEMENT_BTN) == False:
             writeToLog("INFO","FAILED to save announcement")
@@ -236,14 +256,15 @@ class Sakai(Base):
                 writeToLog("INFO","FAILED to click on 'announcement' button")
                 return False 
         
+        self.switch_to_default_content()
         self.switchToSakaiIframe() 
-        self.swith_to_iframe(self.SAKAI_EMBED_ENTRY_IFRAME)
-             
+
         tmp_announcement_name = (self.SAKAI_EMBED_ANNOUNCEMENT_TITLE[0], self.SAKAI_EMBED_ANNOUNCEMENT_TITLE[1].replace('ANNOUNCEMENT_NAME', announcementName))
         if self.click(tmp_announcement_name) == False:
             writeToLog("INFO","FAILED to click on embed announcement title")
-            return False 
+            return False
          
+        self.swith_to_iframe(self.SAKAI_BSE_IFRAME) 
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
@@ -263,4 +284,43 @@ class Sakai(Base):
         
         self.clsCommon.base.switch_to_default_content()
         writeToLog("INFO","Success embed was verified")
-        return True                         
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    def deleteAnnouncement (self, announcementName, forceNavigate=False): 
+        # Get announcement title locator 
+        tmp_announcement_name = (self.SAKAI_EMBED_ANNOUNCEMENT_TITLE[0], self.SAKAI_EMBED_ANNOUNCEMENT_TITLE[1].replace('ANNOUNCEMENT_NAME', announcementName))
+         
+        if forceNavigate == True:
+            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_SITE_NEW1_URL) == False:
+                writeToLog("INFO","FAILED to navigate to 'New1' page")
+                return False    
+                    
+            if self.click(self.SAKAI_ANNOUNCEMENT_BTN) == False:
+                writeToLog("INFO","FAILED to click on 'announcement' button")
+                return False 
+        
+            self.switch_to_default_content()
+            self.switchToSakaiIframe() 
+
+            if self.click(tmp_announcement_name) == False:
+                writeToLog("INFO","FAILED to click on embed announcement title")
+                return False    
+        
+        self.switchToSakaiIframe() 
+        
+        if self.click(self.SAKAI_REMOVE_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'remove' button")
+            return False
+        
+        if self.click(self.SAKAI_CONFIRM_REMOVE_ANNOUNCEMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on confirm remove button")
+            return False              
+        
+        if self.wait_element(tmp_announcement_name) != False:
+            writeToLog("INFO","FAILED to delete " + announcementName + " , announcement is still displayed in page")
+            return False    
+        
+        writeToLog("INFO","Success: " + announcementName + " was deleted") 
+        return True        
