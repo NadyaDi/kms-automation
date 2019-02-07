@@ -233,6 +233,11 @@ class Upload(Base):
                         self.switch_to_default_content()
                         self.swith_to_iframe(self.clsCommon.jive.JIVE_BSE_MAIN_IFRAME)
                         self.swith_to_iframe(self.clsCommon.jive.JIVE_BSE_INNER_IFRAME)
+                        
+                    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+                        self.switch_to_default_content()
+                        self.clsCommon.sakai.switchToSakaiIframe()
+                        self.swith_to_iframe(self.clsCommon.sakai.SAKAI_BSE_IFRAME)                    
                                                
                     self.click(self.UPLOAD_PAGE_TITLE)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)  

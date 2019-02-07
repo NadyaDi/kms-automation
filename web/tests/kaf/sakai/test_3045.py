@@ -14,12 +14,12 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Sakai - Announcment BSE From My Media
+    # Test Name : Sakai - Announcment Upload And Embed From BSE Page Sakai
     # Test description:
-    # Go to course -> Click on 'Announcemnt' -> Click 'Add' -> Click on 'Kaltura Media' -> Select video in 'My Media' tab
+    # Go to course -> Click on 'Announcemnt' -> Click 'Add' -> Click on 'Kaltura Media' -> Click 'Add new' and upload new media
     # Click 'Save' -> Verify that embed is displayed and played
     #================================================================================================================================
-    testNum     = "3044"
+    testNum     = "3045"
     application = enums.Application.SAKAI
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -33,8 +33,8 @@ class Test:
     entryName2 = None
     description = "Description" 
     tags = "Tags,"
-    timeToStop = "0:07"
-    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
+    filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_5.png'
+    uploadThumbnailExpectedResult = 5
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -51,55 +51,31 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedAnnoncemntFromMyMedia", self.testNum)
-            self.announcementName = clsTestService.addGuidToString("Embed announcement from My Media", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedAnnoncemntFromUpload", self.testNum)
+            self.announcementName = clsTestService.addGuidToString("Embed announcement from Upload", self.testNum)
 
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            writeToLog("INFO","Step 1: Going to upload entry")   
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+            writeToLog("INFO","Step 1: Going to create embed announcement")    
+            if self.common.sakai.createEmbedAnnouncement(self.announcementName, self.entryName, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, isTagsNeeded=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
-                          
-            writeToLog("INFO","Step 2: Going navigate to edit entry page")    
-            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
-                return 
-                      
-            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate entry page")
-                return
-                      
-            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
-                return  
-             
-            writeToLog("INFO","Step 5: Going to create embed announcement")    
-            if self.common.sakai.createEmbedAnnouncement(self.announcementName, self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create embed announcement")
+                writeToLog("INFO","Step 1: FAILED to create embed announcement")
                 return 
             
-            writeToLog("INFO","Step 6: Going to verify embed announcement")    
-            if self.common.sakai.verifyEmbedAnnouncement(self.announcementName, '', self.timeToStop) == False:
+            writeToLog("INFO","Step 2: Going to verify embed announcement")    
+            if self.common.sakai.verifyEmbedAnnouncement(self.announcementName, self.uploadThumbnailExpectedResult, '') == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify embed announcement")
+                writeToLog("INFO","Step 2: FAILED to verify embed announcement")
                 return 
             
-            writeToLog("INFO","Step 7: Going to delete embed announcement")    
+            writeToLog("INFO","Step 3: Going to delete embed announcement")    
             if self.common.sakai.deleteAnnouncement(self.announcementName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to delete embed announcement")
+                writeToLog("INFO","Step 3: FAILED to delete embed announcement")
                 return                                                                                     
            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Sakai -  Announcment BSE From My Media' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Sakai -  Announcment BSE From upload' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
