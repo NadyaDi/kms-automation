@@ -604,6 +604,13 @@ class Player(Base):
                         self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                         self.get_body_element().send_keys(Keys.PAGE_DOWN)
                         
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                        self.switch_to_default_content()
+                        self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+                        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
+                        sleep(1)
+                        self.clsCommon.player.switchToPlayerIframe()
+                        
                     if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
                         writeToLog("INFO","FAILED to click Play Pause And Verify")
                         return False

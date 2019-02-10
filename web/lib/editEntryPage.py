@@ -574,7 +574,8 @@ class EditEntryPage(Base):
         if self.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
             writeToLog("INFO","FAILED to click on the caption tab")
             return False
-            
+        sleep(2)
+           
         if self.click(self.EDIT_ENTRY_UPLOAD_CAPTION_BUTTON, 20) == False:
             writeToLog("INFO","FAILED to click on upload caption file button")
             return False
@@ -635,6 +636,9 @@ class EditEntryPage(Base):
         
         tmpLabel = self.EDIT_ENTRY_VARIFY_CAPTION_ADDED_TO_CAPRION_TABLE[1].replace('LABEL_NAME', captionLabel)
         sleep(1)
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
         
         # find caption label click on the remove button in the label row
         elParent = self.driver.find_element_by_xpath(tmpLabel+"/ancestor::div[@class='row-fluid captionRow']")
