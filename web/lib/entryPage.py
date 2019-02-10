@@ -689,7 +689,12 @@ class EntryPage(Base):
                 writeToLog("INFO","FAILED to resolve qr code")
                 return False
             
-            if ((str(int(result)+1) == entryQRResult) or (entryQRResult == result)) == False:
+            # check the result is correct ... 
+            # for example:
+            # 1. if entryQRResult =5 and result =4 we will return true
+            # 2. if entryQRResult =5 and result =5 we will return true
+            # 3. if entryQRResult =5 and result =6 we will return true  
+            if ((str(int(result)+1) == entryQRResult) or (entryQRResult == result) or (str(int(result)-1) == entryQRResult)) == False:
                 writeToLog("INFO","FAILED to verify video, QR code isn't correct: the Qr code in the player is " + str(result) + "' but need to be '" + str(entryQRResult) + "'")
                 return False
         

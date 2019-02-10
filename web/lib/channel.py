@@ -1429,6 +1429,10 @@ class Channel(Base):
             self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB)
         
 #         if location == enums.Location.PENDING_TAB:
+        if self.searchEntryInPendingTab(rejectEntry) == False:
+            writeToLog("INFO","FAILED to search entry '" + rejectEntry + "' in pending tab")
+            return False 
+        
         tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', rejectEntry))
         entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
         if entryId == False:
@@ -1458,6 +1462,10 @@ class Channel(Base):
             self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB)
             
 #         if location == enums.Location.PENDING_TAB:
+        if self.searchEntryInPendingTab(approveEntry) == False:
+            writeToLog("INFO","FAILED to search entry '" + approveEntry + "' in pending tab")
+            return False 
+          
         tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', approveEntry))
         entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
         if entryId == False:
@@ -1478,8 +1486,34 @@ class Channel(Base):
         self.clsCommon.general.waitForLoaderToDisappear()                
         writeToLog("INFO","The following entry was approved : " + approveEntry)
         return True
+    
+    
+    # Author: Michal Zomper
+    def searchEntryInPendingTab(self, entryName):
+        sleep(1)
+        # Search Entry
+        searchBarElement = self.getSearchBarElementInPendingTab()
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get search bar element")
+            return False
+        searchBarElement.click()
+        searchLine = '"' + entryName + '"'
+
+        self.getSearchBarElementInPendingTab().send_keys(searchLine + Keys.ENTER)
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True
+    
+      
+    # Author: Michal Zomper
+    def getSearchBarElementInPendingTab(self):
+        try:
+            return self.get_element(self.CHANNEL_PENDING_TAB_SEARCH_BAR)
+        except:
+            writeToLog("INFO","FAILED get Search Bar element in pending tab")
+            return False
         
-        
+     
     # Author: Tzachi Guetta 
     def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate=True, location=enums.Location.CHANNEL_PAGE):
         try:         
