@@ -55,6 +55,17 @@ class Test:
             self.siteBlogTitle = clsTestService.addGuidToString(self.title, self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            #disable assignment submission in admin
+            if LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1820181-1.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Blackboard@kaltura.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            self.common.admin.enableDisabledAssignmentSubmission(False)
+            
             writeToLog("INFO","Step 1: Going to upload entry")    
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"

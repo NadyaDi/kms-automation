@@ -694,6 +694,7 @@ class MyMedia(Base):
                     self.clsCommon.sharePoint.switchToSharepointIframe()
                     self.click(self.clsCommon.category.CATEGORY_DETAILS_VIEW)
                     self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                    sleep(1)
                     
                 if self.click(tmpBtn) == False:
                     writeToLog("INFO","FAILED to click on the 'published' pop-up of: " + entryName)
@@ -808,6 +809,12 @@ class MyMedia(Base):
                             return False
 
                 else:
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                        self.switch_to_default_content()
+                        self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+                        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,3) 
+                        self.clsCommon.sharePoint.switchToSharepointIframe() 
+                        
                     tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
                     if self.click(tmpEntry, multipleElements=True) == False:
                         writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
