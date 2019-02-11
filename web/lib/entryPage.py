@@ -412,6 +412,10 @@ class EntryPage(Base):
         sleep(2)
         
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,1)
+            self.clsCommon.sharePoint.switchToSharepointIframe() 
             self.click(self.ENTRY_PAGE_COMMENTS_PART_TITLE)
             self.clsCommon.sendKeysToBodyElement(Keys.END)
         
