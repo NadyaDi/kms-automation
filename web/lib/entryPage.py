@@ -410,7 +410,7 @@ class EntryPage(Base):
             return False
         sleep(2)
         
-        if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15) == False:
+        if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on add comment button")
             return False
         self.clsCommon.general.waitForLoaderToDisappear()
