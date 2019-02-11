@@ -13,14 +13,14 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page
+    # Test Name : Quiz - Entry with all the KEA Quiz Question types - New Quiz with Anonymous User
     # Test description:
     # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered 
     # 'Multiple Choice' with four answers, hint and why
     # 'True and False' with two answers, hint and why
     # 'Reflection Point' with only reflection text
     #================================================================================================================================
-    testNum = "4778"
+    testNum = "4789"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -33,7 +33,11 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    typeTest = 'Quiz Entry New State with Media Owner user'
+    typeTest = 'Quiz Entry New State with Anonymous user'
+    entryUrl = ''
+    
+    userName = "python_automation"
+    password = "Kaltura1!"
             
     # Each list is used in order to create a different Quiz Question Type
     questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
@@ -46,10 +50,10 @@ class Test:
     questionAnswerThree      = ['Question Title for Reflection Point', '', False]
     
     # This Dictionary is used in order to verify the state of the answers ( answered / unanswered) from the active question screen
-    expectedQuizStateNew  = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
+    expectedQuizStateNew     = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
 
     # This Dictionary is used in order to create all the Quiz Question types within a single call
-    questionDict          = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
+    questionDict             = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -66,8 +70,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types New", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types New - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types An New", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types An New - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
@@ -85,12 +89,39 @@ class Test:
                 return  
             else:
                 i = i + 1
+               
+            self.entryUrl = self.common.base.driver.current_url
+
+            writeToLog("INFO","Step " + str(i) + ": Going to publish the " + self.entryName +" entry as unlisted ")
+            if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.newEntryName, enums.ChannelPrivacyType.UNLISTED, alreadyPublished=False, publishFrom=enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO", "Step " + str(i) + ": FAILED to publish the " + self.entryName + " entry as unlisted")
+                return
+            else:
+                i = i + 1
+                
+            writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
+            if self.common.login.logOutOfKMS() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
+                return
+            else:
+                i = i + 1
+
+            self.common.base.navigate(self.entryUrl)
+            sleep(2)
                              
             writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are unanswered")  
             if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=False, newQuiz=True, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are unanswered")
                 return  
+            else:
+                i = i + 1
+                
+            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + self.userName + " account")
+            if self.common.login.loginToKMS(self.userName, self.password) == False:
+                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + self.userName + " account")
+                return
             else:
                 i = i + 1
             ##################################################################

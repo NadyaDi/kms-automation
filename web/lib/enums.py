@@ -40,7 +40,7 @@ class QuizQuestionType(Enum):
         return str(self.value)
 
     Multiple            = 'Multiple Choice'       
-    TRUEANDFALSE        = "True/False"
+    TRUE_FALSE          = "True/False"
     REFLECTION          = "Reflection Point"
     
     

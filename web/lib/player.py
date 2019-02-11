@@ -102,6 +102,9 @@ class Player(Base):
     PLAYER_QUIZ_SUBMITTED_SCREEN_SCORE                          = ('xpath', "//span[@class='scoreBig']")  
     PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE       = ('xpath', "//li[@class='q-box' and @title='click to view the question and your answer']")     
     PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID    = ('xpath', "//li[contains(@class,'q-box') and @id='NUMBER']")
+    PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_FALSE_ID        = ('xpath', "//li[@class='q-box q-box-false' and @id='NUMBER']")
+    PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_TRUE_ID         = ('xpath', "//li[@class='q-box' and @id='NUMBER']")
+    PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID          = ('xpath', "//li[@class='q-box reflection-point-question' and @id='NUMBER']")
     PLAYER_QUIZ_SUBMITTED_SCREEN_DONE_BUTTON                    = ('xpath', "//div[@class='confirm-box' and text()='Done !']")
     PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON                  = ('xpath', "//div[@title='Submit your answers']")
     PLAYER_QUIZ_COMPLETED_SCREEN_REVIEW_BUTTON                  = ('xpath', "//div[@title='review your answers']")
@@ -1151,6 +1154,7 @@ class Player(Base):
     # questionDict must contain the following format: {questionName1:answerText1}
     # questionDict must have questionName:answerText
     # skipWelcomeScreen = True it will wait and click on the continue button
+    # Reflection Point questions, should not be present in the list
     # This function works only when the "ALLOW SKIP" option is enabled
     def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore=''):     
         if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen) == False:
@@ -1178,9 +1182,8 @@ class Player(Base):
                 writeToLog("INFO", "FAILED to move to the " + str(x+1) + " quiz page")
                 return False        
             
-            sleep(6)
-            #we collect the active question in order to verify if it matches with one from our dictionary  
-            activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 120, True).text
+            # We collect the active question in order to verify if it matches with one from our dictionary, if the question has not been founded within the 75 seconds, the test case will fail  
+            activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 75, True).text
                         
             if activeQuestion in questionDict:
                 #after the active question matches with one from our dictionary, we take the answer assigned for that question
@@ -1206,6 +1209,16 @@ class Player(Base):
                 #after each Quiz Question answered, we increment it by one, so at the end we will know if all the Quiz Question from our dictionary were answered or not        
                 questionsFound += 1
                 self.wait_while_not_visible(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 10)
+            
+            elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
+                writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
+                questionsFound += 1
+                givenQuestions += 1
+                
+                #if the active Quiz Question answer is not present in our dictionary, we will skip it
+                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
+                    writeToLog("INFO", "FAILED to skip the " + activeQuestion + " which was not found in the dictionary")
+                    return False
                 
             else:
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
@@ -1628,15 +1641,15 @@ class Player(Base):
         
         sleep(timeOut)
         #we verify if any of the elements that indicates if the user is at the beginning of entry is present or not
-        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 90, True) == False and self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 90, True) == False or forceResume == True:  
+        if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 1, True) == False and self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 1, True) == False or forceResume == True:  
             self.driver.refresh()
+            self.clsCommon.base.switch_to_default_content()
             
             if self.selectPlayerIframe(location) != True:
                 writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
                 return False
                 
-            sleep(5)
-            if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 10, True) == False:
+            if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 15, True) == False:
                 writeToLog("INFO", "FAILED to load the page after refreshing it")
                 return False 
         
@@ -1878,24 +1891,30 @@ class Player(Base):
     # @Author: Horia Cus
     # This function will verify that all the quiz elements are properly displayed based on the state, question type, expected quiz score and question details
     # questionDict must follow the following structure       = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
-        # questionMultiple     = ['mm:ss', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-        # questionTrueAndFalse = ['mm:ss', enums.QuizQuestionType.TRUEANDFALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
+        # questionMultipleWithHintAndWhy     = ['mm:ss', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
+        # questionMultipleWithOnlyHint       = ['mm:ss', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice']
+        # questionMultipleWithoutHintAndWhy  = ['mm:ss', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4']
+        # questionTrueAndFalse = ['mm:ss', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
         # questionReflection   = ['mm:ss', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
     # expectedQuizStateNew must have the following structure = {'1':questionAnswered,'2':questionUnANswered, '3':questionReflection} 
         # questionAnswered        = ['Question Title', 'Answer One', True]
         # questionUnANswered      = ['Question Title', '', False]
         # questionReflection      = ['Question Title', '', False]
-    # If the quiz is submitted, the submittedQuiz must = True, and the resumeQuiz, newQuiz to = False
-    # If the quiz is resumed, the resumeQuiz must = True, and the submittedQuiz, newQuiz to = False
-    # If the quiz is new, the newQuiz must = True, and the submittedQuiz, resumeQuiz to = False
+    # If the quiz state is submitted, the submittedQuiz must = True, and the resumeQuiz, newQuiz to = False
+    # If the quiz state is resumed, the resumeQuiz must = True, and the submittedQuiz, newQuiz to = False
+    # If the quiz state is new, the newQuiz must = True, and the submittedQuiz, resumeQuiz to = False
     # expectedQuizScore must contain the percentage of the expected quiz score ( use string e.g str(50) )
+    # Questions can be verified with or without hint and why, you can verify the Hint and Why using this structure for both True and False and Multiple Choice:
+        # Hint and Why = last two indexes from the list must contain ['Hint text' and 'Why Text']
+        # Only Hint = last index must contain ['Hint text']
+        # Without Hint and Why = last indexes must contain the answer text
     def quizVerification(self, questionDict, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, expectedQuizScore, location, timeOut=60):  
         if self.initiateQuizPlayback(location, 2, skipWelcomeScreen=True) == False:
             return False
         
         # We verify from the beginning the submitted quiz option, because we don't have the scrubber ( only Quiz Welcome screen and the Submitted Screen)
         if submittedQuiz == True:
-            if self.verifySubmittedScreen(expectedQuizScore, location, questionDict) == False:
+            if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, expectedQuestionsState, 5) == False:
                 return False
             
             # We dismiss the submitted screen, in order to verify the Question Screens and the scrubber
@@ -2089,6 +2108,7 @@ class Player(Base):
     # questionAnswered        = ['Question Title', 'Answer One', True]
     # questionUnANswered      = ['Question Title', '', False]
     # questionReflection      = ['Question Title', '', False]
+    # questionAnswered        = ['Question Title', 'Answer One', False] will still verify that the selected answer is present, because the same dictionary is used in the verifySubmittedScreen, where we check the state of the included answers
     def verifyQuestionScreenState(self, expectedQuestionsState, location):  
         if self.selectPlayerIframe(location) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
@@ -2107,8 +2127,8 @@ class Player(Base):
                     writeToLog("INFO", "FAILED, a question has been answered inside the " + questionTitleString + " Quiz Question, when it shouldn't be")
                     return False
                 
-            # The below condition will verify that desired answer is displayed as being selected / answered  
-            elif expectedQuestionsState[1] != '' and expectedQuestionsState[2] == True:
+            # The below condition will verify that desired answer is displayed as being selected / answered 
+            elif expectedQuestionsState[1] != '' or expectedQuestionsState[2] == True:
                 if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 3, True) == False:
                     writeToLog("INFO", "FAILED, no question is displayed as being selected inside the " + questionTitleString + " , when it should have")
                     return False
@@ -2138,7 +2158,11 @@ class Player(Base):
     # This function verify that the Submitted Screen is present along with the correct expected quiz score
     # expectedQuizScore = must be string but use only numbers ( e.g expectedQuizScore=str(50))
     # timeOut = maximum amount of time until the 'Submitted Screen' screen should be triggered and displayed
-    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', timeOut=30):  
+    # expectedQuestionsState must be dictionary with the following structure {'QUESTION NUMBER':questionList}
+        # questionListForCorrectAnswer     = ['question title', True]
+        # questionListForInvalidAnswer     = ['question title', False]
+        # questionListForReflectionPoint   = ['question title', False]
+    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30):  
         if self.selectPlayerIframe(location) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
@@ -2156,7 +2180,7 @@ class Player(Base):
             return False
         
         # If questionDict is empty, we will not verify the why
-        if questionDict != '':
+        if questionDict != '':            
             # We navigate to each specific question number
             for questionNumber in questionDict:
                 # We take the question details from the current list
@@ -2166,7 +2190,7 @@ class Player(Base):
                 quizQuestionNumber = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[1].replace('NUMBER', str(quizNumberID)))
                 
                 # We verify that in the dictionary we have a why
-                if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUEANDFALSE and len(questionDetails) >= 6:
+                if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUE_FALSE and len(questionDetails) >= 6:
                     if self.click(quizQuestionNumber, 1) == False:
                         writeToLog("INFO", "FAILED to navigate to the " + str(questionNumber) + " Include Answer screen")
                         return False
@@ -2202,6 +2226,30 @@ class Player(Base):
                 elif enums.QuizQuestionType.REFLECTION in questionDetails:
                     writeToLog("INFO", "AS EXPECTED: No 'WHY' is available for Reflection Quiz Questions")
                     
+        # We verify the state of the include answer screen based on the boolean = True, included answer is correct, = False, included answer is wrong
+        if expectedQuestionsState != '':
+            for questionNumber in expectedQuestionsState:
+                # We take the question details from the current list
+                expectedDetails = expectedQuestionsState[questionNumber]
+                quizNumberID = int(questionNumber) - 1
+                
+                # We verify that the answers that failed, are displayed properly in the include answer screen, along with Reflection Point
+                if expectedDetails.count(False) == 1:
+                    quizQuestionNumberFalse      = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_FALSE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_FALSE_ID[1].replace('NUMBER', str(quizNumberID)))
+                    quizQuestionNumberReflection = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID[1].replace('NUMBER', str(quizNumberID)))
+                    if self.wait_element(quizQuestionNumberFalse, 1, True) == False and self.wait_element(quizQuestionNumberReflection, 1, True) == False:
+                        writeToLog("INFO", "FAILED, the question " + questionDetails[0] + " is not displayed as false, when it should")
+                        return False
+                
+                # We verify that the answers that passed, are displayed properly in the include answer screen, along with Reflection Point   
+                elif expectedDetails.count(True) == 1:
+                    quizQuestionNumberTrue = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_TRUE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_TRUE_ID[1].replace('NUMBER', str(quizNumberID)))
+                    quizQuestionNumberReflection = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID[1].replace('NUMBER', str(quizNumberID)))
+                    if self.wait_element(quizQuestionNumberTrue, 1, True) == False  and self.wait_element(quizQuestionNumberReflection, 1, True) == False:
+                        writeToLog("INFO", "FAILED, the question " + questionDetails[0] + " is not displayed as true, when it should")
+                        return False
+                    
+        writeToLog("INFO", "ALL the details were properly displayed in the submitted screen")                    
         return True 
     
 
@@ -2233,7 +2281,7 @@ class Player(Base):
     # questionType must follow the following structure: enums.QuizQuestionType.Type
     # questionDetails must follow the following structure:     questionDict        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
         # questionMultiple     = ['mm:ss', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-        # questionTrueAndFalse = ['mm:ss', enums.QuizQuestionType.TRUEANDFALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
+        # questionTrueAndFalse = ['mm:ss', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
         # questionReflection   = ['mm:ss', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
     # expectedQuizStateNew must have the following structure = {'1':questionAnswered,'2':questionUnANswered, '3':questionReflection} 
         # questionAnswered        = ['Question Title', 'Answer One', True]
@@ -2257,7 +2305,7 @@ class Player(Base):
                 return False
 
         # We verify the active question based on the question type          
-        elif questionType == enums.QuizQuestionType.TRUEANDFALSE:
+        elif questionType == enums.QuizQuestionType.TRUE_FALSE:
             listInterval = questionDetails[3:5]
             hintTriggerNumber = 5
             hintText = questionDetails[5]
@@ -2288,7 +2336,7 @@ class Player(Base):
             writeToLog("INFO", "The  " + questionDetails[2] + " Question was not present at the expected time, expected time " + questionTime + "/ actual " + presentedTime )
             return False
 
-        if questionType == enums.QuizQuestionType.Multiple or questionType == enums.QuizQuestionType.TRUEANDFALSE:    
+        if questionType == enums.QuizQuestionType.Multiple or questionType == enums.QuizQuestionType.TRUE_FALSE:    
             # We take the answers that were given during the KEA editing process
             expectedQuestionAnswerList                  = listInterval
             expectedQuestionAnswersWithValidAnswers     = []
@@ -2321,8 +2369,9 @@ class Player(Base):
             else:
                 writeToLog("INFO", "No HINT is available for the " + questionDetails[2] + " Quiz Question")
         
-        # We verify the title, available answers and the state of the answers ( answered / unanswered )  
-        if self.verifyQuestionScreenState(expectedQuestionsState[questionNumber], location) == False:
-            return False
+        # We verify the title, available answers and the state of the answers ( answered / unanswered )
+        if questionType == enums.QuizQuestionType.Multiple or questionType == enums.QuizQuestionType.TRUE_FALSE:  
+            if self.verifyQuestionScreenState(expectedQuestionsState[questionNumber], location) == False:
+                return False
         
         return True
