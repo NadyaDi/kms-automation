@@ -330,7 +330,7 @@ class ChannelsSortBy(Enum):
     def __str__(self):
         return str(self.value)
 
-    MOST_RECENT               = 'Most Recent'  
+    CREATION_DATE             = 'Creation Date'  
     ALPHABETICAL_NEWUI        = "Alphabetically A-Z"
     ALPHABETICAL_OLDUI        = "Alphabetical"
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
