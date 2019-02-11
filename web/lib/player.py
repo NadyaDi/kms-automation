@@ -114,6 +114,8 @@ class Player(Base):
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_GO_BACK_BUTTON            = ('xpath', "//div[@class='gotItBox' and text()='Got It !']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_WHY_BUTTON                = ('xpath', "//div[@class='hint-why-box' and text()='WHY']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_CLOSE_BUTTON              = ('xpath', "//div[@class='header-container close-button']")
+    PLAYER_TOUCH_OVERLAY                                        = ('xpath', "//div[@id='touchOverlay']")
+
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -628,6 +630,13 @@ class Player(Base):
                         self.click(self.clsCommon.d2l.D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE, timeout=3)
                         self.get_body_element().send_keys(Keys.PAGE_DOWN)
                         
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                        self.switch_to_default_content()
+                        self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+                        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
+                        sleep(1)
+                        self.clsCommon.player.switchToPlayerIframe()
+                        
                     if self.clickPlayPauseAndVerify(delay, timeout, tolerance) == False:
                         writeToLog("INFO","FAILED to click Play Pause And Verify")
                         return False
@@ -1028,7 +1037,7 @@ class Player(Base):
             ActionChains(self.driver).click(searchEl).send_keys(Keys.SPACE).perform()
             sleep(1)
             ActionChains(self.driver).send_keys(Keys.ENTER).perform()
-            
+            sleep(3)
             
             slide_time = (self.PLAYER_SILDE_START_TIME[0], self.PLAYER_SILDE_START_TIME[1].replace('SLIDE_TIME', slidesForSearchList[slide]))
             if self.wait_visible(slide_time) == False:
@@ -1153,6 +1162,9 @@ class Player(Base):
         givenQuestions     = len(questionDict)
         questionsFound     = 0
         
+        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
+        self.removeTouchOverlay()
+        
         if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
             writeToLog("INFO", "FAILED to pause the video")
             return False
@@ -1228,6 +1240,16 @@ class Player(Base):
         return True
     
     
+    # @Author: Oleg Sigalov
+    # Remove overlay from the player if exists (instert to 'touchOverlay' element 'style="display:none;"')
+    # This method doesn't return anything, because it removes only if exists
+    def removeTouchOverlay(self):
+        try:
+            overlayElement = self.wait_element(self.PLAYER_TOUCH_OVERLAY, 2, multipleElements=True)
+            self.driver.execute_script("arguments[0].setAttribute('style','display:none;')", overlayElement)
+        except:
+            pass
+    
     # @Author: Horia Cus
     # This function switches the KEA Player iframe based on the location
     # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
@@ -1253,6 +1275,8 @@ class Player(Base):
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
         if self.wait_element(completedTitle, 2, True) == False:
+            self.removeTouchOverlay()
+            
             if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 5, True) == False:
                 writeToLog("INFO", "FAILED to find the scrubber end screen button")
                 return False

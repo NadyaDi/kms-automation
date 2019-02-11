@@ -29,16 +29,13 @@ class Test:
                 testIDsDct = self.practiTest.getPractiTestSessionInstances(prSessionInfo)
                 if (len (testIDsDct) > 0):
                     self.practiTest.createAutomationTestSetFile(prSessionInfo["hostname"], prSessionInfo["environment"], prSessionInfo["setPlatform"], testIDsDct)
-                    if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
-                        self.status = "Fail"
-                        writeToLog("INFO","Unable to set test set as processed") 
-                        return
-                    # Set host variable with the name of the remote host, which we got from the Testset
-                    
-                        
                 else:
-                    self.status = "Fail"
                     writeToLog("INFO","Unable to get test list")
+                                    
+                if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
+                    self.status = "Fail"
+                    writeToLog("INFO","Unable to set test set as processed") 
+                    return
          
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

@@ -142,20 +142,24 @@ test_2935,Sakai - Edit entry page - Thumbnail tab ,,,pythonautomation1@mailinato
 test_2938,Sakai - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
 test_2939,Sakai  -Delete through entry page,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
 test_3044,Sakai  - Announcment BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
-test_3045,Sakai  - Announcment Upload And Embed From BSE Page Sakai,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_3045,Sakai  - Announcment Upload And Embed From BSE Page Sakai,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!,
 test_2881,Sharepoint - View Collapsed Expanded Modes,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2882,Sharepoint - Upload media from desktop,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2880,SharePoint - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2885,SharePoint - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!,
 test_2886,Sharepoint - Search by tag / name / description,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_2887,SharePoint - My Media - Filter by media Type,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_2888,Sharepoint - My Media - Filter Media View Different Statuses,,,pythonautomation1@mailinator.com,Kaltura1!,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!,
+test_2889,Sharepoint - Sort media all types,,,pythonautomation1@mailinator.com,Kaltura1!,tester1@kalturasp2013.onmicrosoft.com,KalKaltura4!,
 test_2890,Sharepoint - Edit metadata,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2891,Sharepoint - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2892,Sharepoint - Close discussion,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
-test_2895,Sharepoint - Thumbnails,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
+test_2894,Sharepoint - Add caption,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_2895,Sharepoint - Thumbnails,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2898,Sharepoint - Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2899,Sharepoint - Delete through edit entry page,,,pythonautomation1@mailinator.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
-test_2901,Sharepoint - Upload media from media gallery page,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
-test_2902,Sharepoint - Remove media from media gallery,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
+test_2901,Sharepoint - Upload media from media gallery page,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_2902,Sharepoint - Remove media from media gallery,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_706,Publish to channel multiple,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_3277,Add collaborator co edit - details tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_3278,Add collaborator co edit - options tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,

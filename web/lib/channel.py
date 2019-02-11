@@ -1421,7 +1421,18 @@ class Channel(Base):
     
     # Author: Tzachi Guetta     
     def method_helper_rejectEntry(self, rejectEntry, location=''):
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            self.clsCommon.sharePoint.switchToSharepointIframe()
+            self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB)
+        
 #         if location == enums.Location.PENDING_TAB:
+        if self.searchEntryInPendingTab(rejectEntry) == False:
+            writeToLog("INFO","FAILED to search entry '" + rejectEntry + "' in pending tab")
+            return False 
+        
         tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', rejectEntry))
         entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
         if entryId == False:
@@ -1432,7 +1443,7 @@ class Channel(Base):
 #             tmpEntry = (self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[0], self.CHANNEL_ENTRY_IN_PENDING_TAB_PARENT[1].replace('ENTRY_NAME', rejectEntry))
 #             entryId = self.clsCommon.upload.extractEntryID(tmpEntry)
 #             tmpRejectBtn = (self.CHANNEL_REJECT_BUTTON[0], self.CHANNEL_REJECT_BUTTON[1].replace('ENTRY_ID', entryId))
-        
+        sleep(1)
         if self.click(tmpRejectBtn) == False:
             writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
             return False 
@@ -1443,7 +1454,18 @@ class Channel(Base):
         
     # Author: Tzachi Guetta     
     def method_helper_approveEntry(self, approveEntry, location=''):
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            self.clsCommon.sharePoint.switchToSharepointIframe()
+            self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB)
+            
 #         if location == enums.Location.PENDING_TAB:
+        if self.searchEntryInPendingTab(approveEntry) == False:
+            writeToLog("INFO","FAILED to search entry '" + approveEntry + "' in pending tab")
+            return False 
+          
         tmpEntry = (self.CHANNEL_ENTRY_PARENT_CHECKBOX[0], self.CHANNEL_ENTRY_PARENT_CHECKBOX[1].replace('ENTRY_NAME', approveEntry))
         entryId = self.clsCommon.upload.extractEntryIDFromCheckBox(tmpEntry)
         if entryId == False:
@@ -1456,7 +1478,7 @@ class Channel(Base):
 #             if entryId == False:
 #                 return False 
 #             tmpApproveBtn = (self.CHANNEL_APPROVE_BUTTON[0], self.CHANNEL_APPROVE_BUTTON[1].replace('ENTRY_ID', entryId))
-        
+        sleep(1)
         if self.click(tmpApproveBtn) == False:
             writeToLog("INFO","FAILED to approve entry: " + approveEntry)
             return False   
@@ -1464,8 +1486,34 @@ class Channel(Base):
         self.clsCommon.general.waitForLoaderToDisappear()                
         writeToLog("INFO","The following entry was approved : " + approveEntry)
         return True
+    
+    
+    # Author: Michal Zomper
+    def searchEntryInPendingTab(self, entryName):
+        sleep(1)
+        # Search Entry
+        searchBarElement = self.getSearchBarElementInPendingTab()
+        if searchBarElement == False:
+            writeToLog("INFO","FAILED to get search bar element")
+            return False
+        searchBarElement.click()
+        searchLine = '"' + entryName + '"'
+
+        self.getSearchBarElementInPendingTab().send_keys(searchLine + Keys.ENTER)
+        sleep(1)
+        self.clsCommon.general.waitForLoaderToDisappear()
+        return True
+    
+      
+    # Author: Michal Zomper
+    def getSearchBarElementInPendingTab(self):
+        try:
+            return self.get_element(self.CHANNEL_PENDING_TAB_SEARCH_BAR)
+        except:
+            writeToLog("INFO","FAILED get Search Bar element in pending tab")
+            return False
         
-        
+     
     # Author: Tzachi Guetta 
     def sortAndFilterInPendingTab(self, sortBy='', filterMediaType='', channelName='', navigate=True, location=enums.Location.CHANNEL_PAGE):
         try:         
@@ -2561,7 +2609,6 @@ class Channel(Base):
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeOut)  
        #while wait_until > datetime.datetime.now() and self.wait_while_not_visible(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1) == True:  
-#         while( wait_until > datetime.datetime.now() or not(self.wait_elements(self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG, 1))) == False:
         while wait_until > datetime.datetime.now(): 
             if self.wait_while_not_visible(loading_message, 7) == True:
                 self.clsCommon.sendKeysToBodyElement(Keys.END)
