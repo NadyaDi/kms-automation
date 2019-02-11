@@ -1675,6 +1675,9 @@ class Player(Base):
         #we create a list, so at the end of the function we will now each Quiz Question that was skipped
         quizQuestions = []
         
+        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
+        self.removeTouchOverlay()
+        
         #we click on the pause option so we make sure that we won't skip any Question Bubble
         #if the pause button is clicked and then the user clicks on the Quiz Question bubble, if the "ALLOW SKIP" option is not enabled, the user will remain in a pause state
         if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
@@ -1762,6 +1765,9 @@ class Player(Base):
         if availableQuestions <= 0:
             writeToLog("INFO", "FAILED to find any Question within the entry")
             return False      
+        
+        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
+        self.removeTouchOverlay()
         
         # we click on the pause button in order to make sure that we won't skip any question and to verify that the user is unable to navigate to the question screen using question bubbles
         if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
@@ -1894,6 +1900,9 @@ class Player(Base):
             if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
                 writeToLog("INFO", "FAILED to load the video")
                 return False
+        
+        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
+        self.removeTouchOverlay()
                 
         # We pause the video, in order to make sure that we won't miss any elements from the scrubber
         if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 30, True) == False:
