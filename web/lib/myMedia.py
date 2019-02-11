@@ -805,6 +805,10 @@ class MyMedia(Base):
                             return False
 
                 else:
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+                        self.get_body_element().send_keys(Keys.ARROW_DOWN, 3)
+                        sleep(2)
+                        
                     tmpEntry = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
                     if self.click(tmpEntry, multipleElements=True) == False:
                         writeToLog("INFO","FAILED to click on the drop-down list item: " + dropDownListItem.value)
