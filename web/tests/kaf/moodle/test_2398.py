@@ -52,6 +52,17 @@ class Test:
             self.activityTitle = clsTestService.addGuidToString("kaltura video resource from upload - image", self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            #disable assignment submission in admin
+            if LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1820181-1.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Blackboard@kaltura.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            self.common.admin.enableDisabledAssignmentSubmission(False)
+            
             writeToLog("INFO","Step 1: Going to create embed kaltura video resource from upload page")    
             if self.common.moodle.createEmbedActivity(self.entryName, self.activityTitle, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=self.tags) == False:
                 self.status = "Fail"

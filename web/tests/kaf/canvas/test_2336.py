@@ -102,7 +102,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to sort entries by Alphabetical & Image type")
                 return
-               
+            self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True)
+              
             writeToLog("INFO","Step 6: Going to verify entries order - by Alphabetical & Image type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
                 self.status = "Fail"
