@@ -72,6 +72,7 @@ class EntryPage(Base):
     ENTRY_SEARCH_DROP_DOWN_MENU                            = ('xpath', "//span[contains(@class,'hidden-phone hidden-tablet')]")
     ENTRY_SEARCH_DROP_DOWN_MENU_LIST                       = ('xpath', "//a[@role='menuitem' and text()='LABEL']")  
     ENTRY_SEARCH_RESULTS_CONTAINER                         = ('xpath', "//div[contains(@class,'results-details-container__group')]//div[2]//span[contains(., 'TEXT')]")
+    ENTRY_PAGE_COMMENTS_PART_TITLE                         = ('xpath', '//a[@id="comments-tab-tab"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -409,7 +410,9 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to add comment")
             return False
         sleep(2)
+        
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.click(self.ENTRY_PAGE_COMMENTS_PART_TITLE)
             self.clsCommon.sendKeysToBodyElement(Keys.END)
         
         if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
