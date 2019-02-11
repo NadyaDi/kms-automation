@@ -409,6 +409,8 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to add comment")
             return False
         sleep(2)
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+            self.clsCommon.sendKeysToBodyElement(Keys.END)
         
         if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on add comment button")
