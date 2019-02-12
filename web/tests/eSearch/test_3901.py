@@ -121,10 +121,10 @@ class Test:
                 writeToLog("INFO","Step 5: FAILED to displayed correct default sort after making a search")
                 return                                  
                
-            writeToLog("INFO","Step 6: Going verify sort channels by 'Most Recent' when search is made")
-            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostRecent) == False:
+            writeToLog("INFO","Step 6: Going verify sort channels by 'Creation Date' when search is made")
+            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.CREATION_DATE, self.sortByMostRecent) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED sort channels by 'Most Recent' when search is made")
+                writeToLog("INFO","Step 6: FAILED sort channels by 'Creation Date' when search is made")
                 return 
 
             writeToLog("INFO","Step 7: Going verify sort channels by 'Media Count' when search is made")
@@ -158,10 +158,10 @@ class Test:
                 writeToLog("INFO","Step 11 : FAILED clear search")
                 return             
 
-            writeToLog("INFO","Step 12: Going verify sort channels by 'Most Recent' when no search is made")
-            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostRecent) == False:
+            writeToLog("INFO","Step 12: Going verify sort channels by 'Creation Date' when no search is made")
+            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.CREATION_DATE, self.sortByMostRecent) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED sort channels by 'Most Recent' when no search is made")
+                writeToLog("INFO","Step 12: FAILED sort channels by 'Creation Date' when no search is made")
                 return 
 
             writeToLog("INFO","Step 13: Going verify sort channels by 'Media Count' when no search is made")

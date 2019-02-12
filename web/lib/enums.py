@@ -144,7 +144,7 @@ class SortBy(Enum):
     def __str__(self):
         return str(self.value)
 
-    MOST_RECENT             = 'Most Recent'  
+    MOST_RECENT             = 'Creation Date' # Changed from 'Most Recent' 
     VIEWS                   = 'Views'
     LIKES                   = 'Likes'
     ALPHABETICAL            = "Alphabetically - A to Z"
