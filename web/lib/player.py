@@ -1166,12 +1166,16 @@ class Player(Base):
         givenQuestions     = len(questionDict)
         questionsFound     = 0
         
-        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
-        self.removeTouchOverlay()
-        
-        if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
-            writeToLog("INFO", "FAILED to pause the video")
-            return False
+        try:
+            self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True)
+        except Exception:
+            # Remove overlay before click pause (insert to 'touchOverlay' element 'style="display:none;"')
+            self.removeTouchOverlay()
+            
+            if self.self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
+                writeToLog("INFO", "FAILED to pause the video")
+                return False
+            
         sleep(1)
         
         #availableQuestions will determine for how many times we will use the for loop
@@ -1417,14 +1421,13 @@ class Player(Base):
     def downloadQuizPDF(self, filePath):        
         self.switchToPlayerIframe()
         
-        sleep(3) 
         #we verify if the playing button is present, if so, we will click on it so we can trigger the Quiz Welcome screen
         if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 30, True) != False:
             if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 2, True) == False:
                 writeToLog("INFO", "FAILED to activate the welcome screen")
                 return False
         
-        sleep(5)
+        sleep(2)
         #we click on the "PDF Download" button in order to trigger the download process
         if self.click(self.clsCommon.player.PLAYER_QUIZ_WELCOME_SCREEN_PDF_DOWNLOAD_BUTTON, 10, True) == False:
             writeToLog("INFO", "Failed to click on the download button")
@@ -1927,14 +1930,17 @@ class Player(Base):
                 writeToLog("INFO", "FAILED to load the video")
                 return False
         
-        # Remove overlay before click pause (instert to 'touchOverlay' element 'style="display:none;"')
-        self.removeTouchOverlay()
-                
+        try:
         # We pause the video, in order to make sure that we won't miss any elements from the scrubber
-        if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 30, True) == False:
-            writeToLog("INFO", "FAILED to pause the video")
-            return False
-         
+            self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True)
+        except Exception:
+            # Remove overlay before click pause (insert to 'touchOverlay' element 'style="display:none;"')
+            self.removeTouchOverlay()
+            
+            if self.self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
+                writeToLog("INFO", "FAILED to pause the video")
+                return False
+                         
         sleep(1)        
         # We verify that the number of questions from our dictionary is the same with the number of the questions found in the scrubber, and the state of them
         if self.verifyQuestionBubbleState(expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, location) == False:
@@ -1973,7 +1979,7 @@ class Player(Base):
                 else:
                     tries += 1
                 
-                if len(questionDict) == tries:
+                if len(questionDict)+1 == tries:
                     writeToLog("INFO", "FAILED to find the Quiz Question screen that would match the question dictionary")
                     return False
         
@@ -2123,13 +2129,13 @@ class Player(Base):
         if presentedQuestion == questionTitleString:
             # The below condition will verify that no Answer is displayed as being selected / answered
             if expectedQuestionsState[1] == '' and expectedQuestionsState[2] == False:
-                if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 3, True) != False:
+                if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) != False:
                     writeToLog("INFO", "FAILED, a question has been answered inside the " + questionTitleString + " Quiz Question, when it shouldn't be")
                     return False
                 
             # The below condition will verify that desired answer is displayed as being selected / answered 
             elif expectedQuestionsState[1] != '' or expectedQuestionsState[2] == True:
-                if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 3, True) == False:
+                if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
                     writeToLog("INFO", "FAILED, no question is displayed as being selected inside the " + questionTitleString + " , when it should have")
                     return False
                 
