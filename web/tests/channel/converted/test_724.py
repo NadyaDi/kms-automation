@@ -214,7 +214,7 @@ class Test:
                 return 
                
             writeToLog("INFO","Step 25: Going verify sort channels by 'Most Recent'")
-            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostRecent) == False:
+            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.CREATION_DATE, self.sortByMostRecent) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 25: FAILED sort channels by 'Most Recent'")
                 return 

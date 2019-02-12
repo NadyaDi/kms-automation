@@ -19,6 +19,7 @@ class Test:
     # Creating a KEA Quiz Question with 'Multiple Choice' with hint and why
     # Creating a KEA Quiz Question with 'True and False' with hint and why
     # Creating a KEA Quiz Question with 'Reflection Point'
+    # Verify that the KEA Quiz questions were properly created within the KEA timeline section
     #================================================================================================================================
     testNum = "4776"
     
@@ -36,11 +37,12 @@ class Test:
     
     # Each list is used in order to create a different Quiz Question Type
     questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-    questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUEANDFALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True And False']
+    questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True And False']
     questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
-    
+
     # This Dictionary is used in order to create all the Quiz Question types within a single call
-    dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
+    dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
+    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -57,8 +59,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types KEA", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types KEA - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Question verification KEA", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question verification KEA - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
@@ -68,7 +70,7 @@ class Test:
                 return
             else:
                 i = i + 1
-                                       
+                                         
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=25) == False:
                 self.status = "Fail"
@@ -76,8 +78,25 @@ class Test:
                 return  
             else:
                 i = i + 1
+                 
+            writeToLog("INFO","Step " + str(i) + ": Going to navigate to KEA Page for " + self.newEntryName)  
+            if self.common.kea.launchKEA(self.newEntryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KEA Page tab for " + self.newEntryName)  
+                return 
+            else:
+                i = i + 1
+              
+            sleep(5)   
+            writeToLog("INFO","Step " + str(i) + ": Going to verify the quiz questions present in the KEA Timeline for the " + self.newEntryName + " entry")  
+            if self.common.kea.keaTimelineVerification(self.dictQuestions) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify the quiz questions present in the KEA Timeline for the " + self.newEntryName + " entry")
+                return  
+            else:
+                i = i + 1
             ##################################################################
-            writeToLog("INFO","TEST PASSED: All the KEA Quiz Question types were successfully created within the KEA Page")
+            writeToLog("INFO","TEST PASSED: All the KEA Quiz Question types were successfully created and verified within the KEA Page")
         # if an exception happened we need to handle it and fail the test
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

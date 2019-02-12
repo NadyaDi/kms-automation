@@ -76,7 +76,12 @@ class Kea(Base):
     KEA_PREVIEW_CLOSE_BUTTON                                                = ('xpath', '//i[contains(@class,"kCloseBtn")]')   
     KEA_IFRAME_PREVIEW_PLAYER                                               = ('xpath', "//iframe[@class='ng-star-inserted' and contains(@src,'iframeembed=true&playerId=kaltura_player')]")
     KEA_IFRAME_BLANK                                                        = ('xpath', "//iframe[@title='Kaltura Editor Application']")  
-    KEA_QUIZ_OPTIONS_REVERT_TO_DEFAULT_BUTTON                               = ('xpath', "//button[@class='link-button pull-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")    
+    KEA_QUIZ_OPTIONS_REVERT_TO_DEFAULT_BUTTON                               = ('xpath', "//button[@class='link-button pull-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    KEA_TIMELINE_SECTION_QUESTION_BUBBLE                                    = ('xpath', "//i[@class='kicon-quiz-cuepoint-inner']")
+    KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE                              = ('xpath', "//p[@class='question-tooltip__content']")
+    KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER                    = ('xpath', "//span[@class='question-tooltip__header__content']")
+    KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP                 = ('xpath', "//span[@class='question-tooltip__header__duration']")
+    KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER                              = ('xpath', "//span[@class='ng-tns-c14-1 ng-star-inserted' and contains(text(),'Total Q: QUESTION_NUMBER')]")                                                                
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -640,7 +645,7 @@ class Kea(Base):
     # the following function will create a Quiz (within the given dictQuestions)
     # Please follow the individual list structure for each Quiz Question type
     # questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text', 'Why Text']
-    # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUEANDFALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
+    # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
     # questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point', 'Hint Text', 'Why Text']
     # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
     # TBD - Change order of the correct answer
@@ -738,7 +743,7 @@ class Kea(Base):
                     writeToLog("INFO", "Hint and Why are not supported for the Reflection Point Quiz Question")
                     return False
                 
-            elif qestionType == enums.QuizQuestionType.TRUEANDFALSE:
+            elif qestionType == enums.QuizQuestionType.TRUE_FALSE:
                 # We enter in the KEA Quiz Question Type screen
                 if self.selectQuestionType(qestionType) == False:
                     writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
@@ -1468,7 +1473,7 @@ class Kea(Base):
                     writeToLog("INFO","FAILED to activate the 'Reflection Point' quiz type")
                     return False
                     
-        elif qestionType == enums.QuizQuestionType.TRUEANDFALSE:
+        elif qestionType == enums.QuizQuestionType.TRUE_FALSE:
             # Verify if the KEA Quiz Question type is already highlighted
             if self.wait_element(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE, 2, True) != False:
                 if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE) == False:
@@ -1508,3 +1513,70 @@ class Kea(Base):
         
         writeToLog("INFO","Success: 'Save' button and Quiz tab aren't displayed in editor")   
         return True       
+
+      
+    # @Author: Horia Cus
+    # This function will verify the quiz question number, timestamp and title in the KEA Timeline section
+    # questionDict must have the following structure {'NUMBER OF QUESTION':questionDetailsList}
+    # questionDetailsList must contain ['timestamp', enums.QuizQuestionType.Type, 'Question title']
+    def keaTimelineVerification(self, questionDict):
+        self.switchToKeaIframe()
+        if self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 5, True) == False:
+            writeToLog("INFO", "FAILED to find any quiz question pointer in the time line section")
+            return False
+        
+        # We take all the available quiz question pointers from the timeline KEA section
+        availableQuizInTimeLine = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        
+        # We verify that the number of the available quiz questions from the timeline, matches with the number of quiz questions given in the questionDict
+        if len(availableQuizInTimeLine) != len(questionDict):
+            writeToLog("INFO", "FAILED, in timeline section were found " + str(len(availableQuizInTimeLine)) + " questions, and in the dictionary were given " + str(len(questionDict)) + " questions")
+            return False
+        
+        totalQuestionNumber = (self.KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER[0], self.KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER[1].replace('QUESTION_NUMBER', str(len(availableQuizInTimeLine))))
+        
+        if self.wait_element(totalQuestionNumber, 1, True) == False:
+            writeToLog("INFO", "FAILED, the total number of question text doesn't match with the total number of questions from the KEA timeline section")
+            return False
+        
+        # We verify all the available quiz question pointers, by verifying the quiz number,time stamp and quiz title
+        for x in range(0, len(availableQuizInTimeLine)):
+            # We take the locator element for the current quiz number
+            currentQuestion = availableQuizInTimeLine[x]
+            
+            # We hover over the current quiz number, in order to verify the elements
+            try:
+                ActionChains(self.driver).move_to_element(currentQuestion).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to hover over the quiz number " + str(x+1))
+                return False
+            
+            # We take the quiz title and time stamp for the current quiz number
+            currentQuestionDetails = questionDict[str(x+1)]
+            
+            # We take the presented quiz number, title and time stamp
+            try:
+                questionNumberPresented     = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER, 1, True).text
+                questionTitlePresented      = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 1, True).text
+                questionTimestampPresented  = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP, 1, True).text
+            except Exception:
+                writeToLog("INFO", "FAILED to find the question details while hovering over the question: " + currentQuestionDetails[2])
+                return False
+            
+            # We verify that the quiz number, matches with the desired order from the questionDict
+            # First we verify the question number and then we verify the 'Question' text that its presented
+            if questionNumberPresented.count(str(x+1)) != 1 and questionNumberPresented.count('Question') != 1:
+                writeToLog("INFO", "FAILED, the question " + currentQuestionDetails[2] + " was not found at the number " + str(x+1))
+                return False
+            
+            # We verify that the presented title, matches with the desired one from the questionDict
+            if questionTitlePresented != currentQuestionDetails[2]:
+                writeToLog("INFO", "FAILED, the following question title was presented: " + questionTitlePresented + " instead of " + currentQuestionDetails[2] + " title that has been given in the dictionary")
+                return False
+            
+            # We verify that the presented time stamp, matches with the desired one from the questionDict
+            if questionTimestampPresented != currentQuestionDetails[0]:
+                writeToLog("INFO", "FAILED, the question " + currentQuestionDetails[2] + " has been found at timestamp : "  + questionTimestampPresented + " instead of " + currentQuestionDetails[0])
+                return False
+            
+        return True

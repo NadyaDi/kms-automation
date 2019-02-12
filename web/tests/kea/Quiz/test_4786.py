@@ -13,14 +13,14 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page
+    # Test Name : Quiz - KEA Quiz Question types - Resumed Quiz with Media Owner 
     # Test description:
-    # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered 
-    # 'Multiple Choice' with four answers, hint and why
-    # 'True and False' with two answers, hint and why
-    # 'Reflection Point' with only reflection text
+    # Verify that the user is able to resume a quiz entry after answering to the 'Multiple Choice' and watching the 'Reflection Point' question types
+    # We verify that the selected answer remained selected after refreshing the page
+    # We verify that the unanswered questions remained unanswered
+    # We verify that the 'Almost Done' screen is present at the end of the entry
     #================================================================================================================================
-    testNum = "4778"
+    testNum = "4786"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -33,23 +33,33 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    typeTest = 'Quiz Entry New State with Media Owner user'
+    typeTest = 'Quiz Entry Resumed State with Media Owner user'
             
     # Each list is used in order to create a different Quiz Question Type
-    questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-    questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
-    questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
+    questionMultiple         = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
+    questionTrueAndFalse     = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
+    questionReflection       = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
     
-    # Each list is used in order to verify that the quiz question types are unanswered
-    questionAnswerOne        = ['Question Title for Multiple Choice', '', False]
+    # Each list is used in order to verify the state of a Quiz Question Type ( answered / unanswered ) If True = the question is answered. If False = the question is unanswered
+    questionAnswerOne        = ['Question Title for Multiple Choice', 'question #1 option #1', True]
     questionAnswerTwo        = ['Question Title for True and False', '', False]
-    questionAnswerThree      = ['Question Title for Reflection Point', '', False]
+    questionAnswerThree      = ['Question Title for Reflection Point', '', True]
     
     # This Dictionary is used in order to verify the state of the answers ( answered / unanswered) from the active question screen
-    expectedQuizStateNew  = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
+    expectedQuizStateNew     = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
 
     # This Dictionary is used in order to create all the Quiz Question types within a single call
-    questionDict          = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
+    questionDict             = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
+    
+    # This values are used in order to find and answer to the quiz questions
+    questionName1            = "Question Title for Multiple Choice"
+    answerText1              = "question #1 option #1"
+        
+    #this dictionaries is used in order to answer to the Quiz Questions
+    #questionName is the question title
+    #answerText is the answer that should be present in the Question Name
+    answersDict = {questionName1:answerText1} 
+    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -66,8 +76,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types New", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types New - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types Resumed", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types Resumed - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
@@ -77,7 +87,7 @@ class Test:
                 return
             else:
                 i = i + 1
-                                          
+                                             
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
@@ -85,11 +95,27 @@ class Test:
                 return  
             else:
                 i = i + 1
-                             
-            writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are unanswered")  
-            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=False, newQuiz=True, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60) == False:
+                   
+            writeToLog("INFO","Step " + str(i) + ": Going to answer to a few Quiz Questions from the " + self.newEntryName + " entry")  
+            if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=False, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are unanswered")
+                writeToLog("INFO","Step " + str(i) + ": FAILED to answer to a few Quiz Questions from the " + self.newEntryName + " entry")  
+                return  
+            else:
+                i = i + 1            
+                
+            writeToLog("INFO","Step " + str(i) + ": Going to resume from the beginning the " + self.newEntryName + " entry")  
+            if self.common.player.resumeFromBeginningQuiz(enums.Location.ENTRY_PAGE, timeOut=1, forceResume=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to resume from the beginning the " + self.newEntryName + " entry")
+                return  
+            else:
+                i = i + 1
+            
+            writeToLog("INFO","Step " + str(i) + ": Going to verify all the available quiz questions from the " + self.newEntryName + " entry based on the state ( answered / unanswered)")  
+            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=True, newQuiz=False, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry based on the state ( answered / unanswered)")  
                 return  
             else:
                 i = i + 1
