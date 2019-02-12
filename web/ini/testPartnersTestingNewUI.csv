@@ -23,6 +23,9 @@ test_954,Moodle - Publish from my media to shared repository,,,pythonautomation1
 test_2397,Moodle - Embed media in site blogs from media gallery,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2398,Moodle - upload and Embed media in kaltura video resource,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2125,Moodle - Trim video,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2126,Moodle - Create clip,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_2122,Moodle - Change Cliping permissions,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2279,Canvas - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -275,6 +278,7 @@ test_739,Channel - Members tab,2370151,qakmstest.dev.kaltura.com,pythonautomatio
 test_703,Entry page - Replace video,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_692,Entry page - Side My Media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4803,Edit entry page - Change clipping permission,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3881,SAML Login,kaltura,com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_677,Add Entry from My Media to Several Playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_683,Create Empty Playlist,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
@@ -328,6 +332,12 @@ test_4772,Quiz - Experience section in Entry Page - Disabled,2438361,qakmstest.d
 test_4773,Quiz - Experience section in Entry Page - Default,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4776,Quiz - Entry with all the KEA Quiz Question types - KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4778,Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4786,Quiz - KEA Quiz Question types - Resumed Quiz with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4788,Quiz - KEA Quiz Question types - Submitted Quiz 100% score with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4789,Quiz - KEA Quiz Question types - New Quiz with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4790,Quiz - KEA Quiz Question types - New Quiz after Refresh with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4791,Quiz - KEA Quiz Question types - Submitted Quiz 0% score with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4792,Quiz - KEA Quiz Question types - Submitted Quiz 50% score with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

@@ -361,9 +361,10 @@ class Kea(Base):
     
     
     # @Author: Tzachi guetta
-    def launchKEA(self, entryName, navigateTo, navigateFrom):
-        if self.clsCommon.navigateTo(navigateTo, navigateFrom, entryName) == False:
-            return False
+    def launchKEA(self, entryName, navigateTo, navigateFrom, isCreateClippingPermissionIsOn=False):
+        if isCreateClippingPermissionIsOn == False:
+            if self.clsCommon.navigateTo(navigateTo, navigateFrom, entryName) == False:
+                return False
         
         if navigateTo == enums.Location.EDIT_ENTRY_PAGE:
             if self.click(self.KEA_LAUNCH) == False:
@@ -375,9 +376,13 @@ class Kea(Base):
                 writeToLog("INFO","FAILED to click on Actions button (at entry page)")
                 return False
             
-            if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_KEA_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on Actions -> Launch KEA button (at entry page)")
-                return False
+            if isCreateClippingPermissionIsOn == True:
+                if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_CREATE_CLIP_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on Actions -> 'Create clip' button (at entry page)")
+            else:
+                if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_KEA_BUTTON) == False:
+                    writeToLog("INFO","FAILED to click on Actions -> Launch KEA button (at entry page)")
+                    return False
             
         # Verify that we are in KEA page and app is displayed
         if self.wait_visible(self.KEA_APP_DISPLAY, 40) == False:
@@ -385,7 +390,11 @@ class Kea(Base):
             return False 
         
         #sleeping two seconds in order to make sure that the loading screen is no longer present
-        sleep(2)             
+        sleep(2)   
+        if isCreateClippingPermissionIsOn == True:
+            if self.verifyEditorForClippingPermission() == False:
+                writeToLog("INFO","FAILED to display just relevant editor buttons")
+                return False                           
         
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
@@ -393,14 +402,19 @@ class Kea(Base):
 
     # @Author: Tzachi guetta
     # interface to KEA's timeline functionalities: split, (set IN\out, delete, Fade IN\out - TBD)
-    def keaTimelinefunc(self,entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab):
-        if self.launchKEA(entryName, navigateTo, navigateFrom) == False:
+    def keaTimelinefunc(self,entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab, isCreateClippingPermissionIsOn=False):
+        if self.launchKEA(entryName, navigateTo, navigateFrom, isCreateClippingPermissionIsOn) == False:
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         
         sleep(2)
-        self.refresh()
-        sleep(3)
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON) 
+        else:
+            self.refresh()
+            
+        sleep(3)   
         self.switchToKeaIframe()
         sleep(3)
         
@@ -581,8 +595,8 @@ class Kea(Base):
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
-    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
-        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab)
+    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False, isCreateClippingPermissionIsOn=False):
+        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab, isCreateClippingPermissionIsOn)
         
         sleep(1)
         if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
@@ -1484,6 +1498,23 @@ class Kea(Base):
         return True
 
 
+    # @Author: Inbar Willman
+    # Check editor when user is able just to create clip in editor
+    def verifyEditorForClippingPermission(self):
+        # Verify that quiz tab isn't displayed
+        if self.wait_element(self.KEA_QUIZ_TAB, timeout=3) != False:
+            writeToLog("INFO","FAILED: Quiz tab is displayed in editor")
+            return False    
+        
+        # Verify that 'Save' button for trim isn't displayed       
+        if self.wait_element(self.EDITOR_SAVE_BUTTON, timeout=3) != False:
+            writeToLog("INFO","FAILED: 'Save' button is displayed in editor")
+            return False      
+        
+        writeToLog("INFO","Success: 'Save' button and Quiz tab aren't displayed in editor")   
+        return True       
+
+      
     # @Author: Horia Cus
     # This function will verify the quiz question number, timestamp and title in the KEA Timeline section
     # questionDict must have the following structure {'NUMBER OF QUESTION':questionDetailsList}
