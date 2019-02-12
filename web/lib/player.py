@@ -1166,9 +1166,10 @@ class Player(Base):
         givenQuestions     = len(questionDict)
         questionsFound     = 0
         
-        try:
-            self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True)
-        except Exception:
+        # We pause the video, in order to make sure that we won't miss any elements from the scrubber
+        if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) != False:
+            writeToLog("INFO", "AS EXPECTED, video was paused within the first second")
+        else:
             # Remove overlay before click pause (insert to 'touchOverlay' element 'style="display:none;"')
             self.removeTouchOverlay()
             
@@ -1930,10 +1931,10 @@ class Player(Base):
                 writeToLog("INFO", "FAILED to load the video")
                 return False
         
-        try:
         # We pause the video, in order to make sure that we won't miss any elements from the scrubber
-            self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True)
-        except Exception:
+        if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) != False:
+            writeToLog("INFO", "AS EXPECTED, video was paused within the first second")
+        else:
             # Remove overlay before click pause (insert to 'touchOverlay' element 'style="display:none;"')
             self.removeTouchOverlay()
             
