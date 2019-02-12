@@ -72,6 +72,7 @@ class EntryPage(Base):
     ENTRY_SEARCH_DROP_DOWN_MENU                            = ('xpath', "//span[contains(@class,'hidden-phone hidden-tablet')]")
     ENTRY_SEARCH_DROP_DOWN_MENU_LIST                       = ('xpath', "//a[@role='menuitem' and text()='LABEL']")  
     ENTRY_SEARCH_RESULTS_CONTAINER                         = ('xpath', "//div[contains(@class,'results-details-container__group')]//div[2]//span[contains(., 'TEXT')]")
+    ENTRY_PAGE_ACTIONS_DROPDOWNLIST_CREATE_CLIP_BUTTON     = ('xpath', '//span[@id="tabLabel-editor" and text()="Create Clip"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -315,7 +316,7 @@ class EntryPage(Base):
         return True        
     
     
-    def waitTillMediaIsBeingProcessed(self, timeout=210):
+    def waitTillMediaIsBeingProcessed(self, timeout=250):
         sleep(3)
         self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
         if self.wait_visible(self.clsCommon.player.PLAYER_IFRAME, 60) == False:
@@ -1108,3 +1109,17 @@ class EntryPage(Base):
             return False
         
         return True
+    
+    
+    # @Author: Inbar Willman
+    def chooseCreateClipOption(self):
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+            writeToLog("INFO","FAILED to click on 'Actions' dropdown")
+            return False  
+        
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_CREATE_CLIP_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'Create clip' option")
+            return False  
+        
+        writeToLog("INFO","Success: 'create clip' option was chosen")  
+        return True                         

@@ -81,6 +81,7 @@ test_702,1,0,0,0,Entry page - Attachments
 test_703,1,0,0,0,Entry page - Replace Media
 test_705,1,0,0,0,Categories - Search in category
 test_706,1,0,0,0,TODO
+test_4803,1,0,0,0,Edit entry page - Change clipping permission
 test_707,1,0,0,0,Categories - Add new media from my media to category
 test_709,0,1,0,0,Category - Entries details
 test_710,1,0,0,0,Categories - Edit Entry link
@@ -145,8 +146,11 @@ test_2118,1,0,0,0,Moodle - My Media - Filter by media Type
 test_2119,1,0,0,0,Moodle - Edit Entry Metadata
 test_2120,0,1,0,0,Moodle - Edit Entry page - Disable comments
 test_2121,0,1,0,0,Moodle - Edit Entry page - Close discussion
+test_2122,0,1,0,0,Moodle - Change Cliping permissions
 test_2123,1,0,0,0,Moodle - Entry page - Add captions And Search - remove caption
 test_2124,1,0,0,0,Moodle - Edit entry page - thumbnail tab
+test_2125,1,0,0,0,Moodle - Trim video
+test_2126,1,0,0,0,Moodle - Create clip
 test_2127,1,0,0,0,Moodle - Embed media in site blogs from my media
 test_2128,1,0,0,0,Moodle - Embed video resource from SR
 test_2276,1,0,0,0,Canvas - Edit entry page - thumbnail tab
@@ -312,6 +316,12 @@ test_4772,1,0,0,0,Quiz - Experience section in Entry Page - Disabled
 test_4773,1,0,0,0,Quiz - Experience section in Entry Page - Default
 test_4776,1,0,0,0,Quiz - Entry with all the KEA Quiz Question types - KEA Page
 test_4778,1,0,0,0,Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page
+test_4786,1,0,0,0,Quiz - KEA Quiz Question types - Resumed Quiz with Media Owner
+test_4788,1,0,0,0,Quiz - KEA Quiz Question types - Submitted Quiz 100% score with Media Owner
+test_4789,1,0,0,0,Quiz - KEA Quiz Question types - New Quiz with Anonymous User
+test_4790,1,0,0,0,Quiz - KEA Quiz Question types - New Quiz after Refresh with Anonymous User
+test_4791,1,0,0,0,Quiz - KEA Quiz Question types - Submitted Quiz 0% score with Media Owner
+test_4792,1,0,0,0,Quiz - KEA Quiz Question types - Submitted Quiz 50% score with Media Owner
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters

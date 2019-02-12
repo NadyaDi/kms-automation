@@ -14,12 +14,12 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Moodle - Trim video
+    # Test Name : Moodle - Create clip
     # Test description:
     # Upload entry
-    # Open kea and trim entry - > verify that entry was trimmed
+    # Open kea and clip entry - > verify that entry was trimmed
     #================================================================================================================================
-    testNum     = "2125"
+    testNum     = "2126"
     application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -49,7 +49,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.videoEntryName = clsTestService.addGuidToString("Upload media - Video", self.testNum)
-            expectedEntryDuration = "00:20"
+            expectedEntryDuration = "0:20"
         
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
@@ -71,15 +71,15 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return            
             
-            writeToLog("INFO","Step 4: Going to trim the entry from 30sec to 20sec")  
-            if self.common.kea.trimEntry(self.videoEntryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
+            writeToLog("INFO","Step 4: Going to clip the entry from 30sec to 20sec")  
+            if self.common.kea.clipEntry(self.videoEntryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to trim the entry from 30sec to 20sec")
+                writeToLog("INFO","Step 4: FAILED to clip the entry from 30sec to 20sec")
                 return
 
             writeToLog("INFO","Step 5: Going to collect the new entry's QR codes")  
-            self.captionList = self.common.player.collectQrTimestampsFromPlayer(self.videoEntryName)
-            if  self.captionList == False:
+            self.QRlist = self.common.player.collectQrTimestampsFromPlayer("Clip of " + self.videoEntryName)
+            if  self.QRlist == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to collect the new entry's QR codes")
                 return
@@ -87,12 +87,12 @@ class Test:
             self.isExist = ["5", "7", "22", "28"];
             self.isAbsent = ["12", "13", "15", "17"];
             writeToLog("INFO","Step 6: Going to verify the entry duration (using QR codes)")  
-            if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
+            if self.common.player.compareLists(self.QRlist, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify the entry duration (using QR codes)")
-                return                     
+                return        
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Moodle - Trim video' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Moodle - Create clip' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -102,7 +102,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.videoEntryName)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.videoEntryName, "Clip of " + self.videoEntryName])
             writeToLog("INFO","**************** Ended: teardown_method *******************")               
         except:
             pass            
