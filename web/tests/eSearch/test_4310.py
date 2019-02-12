@@ -115,10 +115,10 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to displayed correct default sort before making a search")
                 return                                 
                
-            writeToLog("INFO","Step 4: Going verify sort channels by 'Most Recent'")
-            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostRecent) == False:
+            writeToLog("INFO","Step 4: Going verify sort channels by 'Creation Date'")
+            if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.CREATION_DATE, self.sortByMostRecent) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED sort channels by 'Most Recent'")
+                writeToLog("INFO","Step 4: FAILED sort channels by 'Creation Date'")
                 return 
 
             writeToLog("INFO","Step 5: Going verify sort channels by 'Media Count'")
