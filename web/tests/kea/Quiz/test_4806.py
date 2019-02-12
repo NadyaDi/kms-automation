@@ -13,11 +13,11 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz Details - Download functionality - Media Owner
+    # Test Name :  Quiz - Details Section - Download functionality - Anonymous User in KMS
     # Test description:
-    # Verify that the Allow Download of Questions List option has proper functionality by downloading the PDF file for media owner
+    # Verify that the Allow Download of Questions List option has proper functionality by downloading the PDF file with Anonymous User
     #================================================================================================================================
-    testNum = "4757"
+    testNum = "4806"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -30,6 +30,8 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
+    entryUrl = ''
+    userName = 'python_automation'
     
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.Multiple, 'question #2 Title', 'question #2 option #1', 'question #2 option #2', 'question #2 option #3', 'question #2 option #4'] 
@@ -52,8 +54,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName                  = clsTestService.addGuidToString("Quiz Details - Download functionality", self.testNum)
-            self.entryNameQuiz              = clsTestService.addGuidToString("Quiz Details - Download functionality - Quiz", self.testNum)
+            self.entryName                  = clsTestService.addGuidToString("Quiz Details - Download functionality Anonymous", self.testNum)
+            self.entryNameQuiz              = clsTestService.addGuidToString("Quiz Details - Download functionality Anonymous - Quiz", self.testNum)
             self.filePathDownloaded         = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + self.entryNameQuiz + ".pdf"
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to create a new entry, " + self.entryName)  
@@ -62,21 +64,36 @@ class Test:
                 writeToLog("INFO","Step 1: FAILED to create a new entry, " + self.entryName)  
                 return
                   
-            writeToLog("INFO","Step 2: Going to add quiz for the " + self.entryName)  
+            writeToLog("INFO","Step 2: Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to add quiz for the " + self.entryName)  
+                writeToLog("INFO","Step 2: FAILED to create a new Quiz for the " + self.entryName + " entry")  
+                return
+
+            self.entryUrl = self.common.base.driver.current_url
+            
+            writeToLog("INFO","Step 3: Going to publish the " + self.entryNameQuiz +" entry as unlisted ")
+            if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.entryNameQuiz, enums.ChannelPrivacyType.UNLISTED, alreadyPublished=False, publishFrom=enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO", "Step 4: FAILED to publish the " + self.entryNameQuiz + " entry as unlisted")
+                return
+             
+            writeToLog("INFO","Step 4: Going to log out from the " + self.userName + " account")  
+            if self.common.login.logOutOfKMS() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to log out from the " + self.userName + " account")   
                 return  
             
-            sleep(10)
-            writeToLog("INFO","Step 3: Going to verify that the PDF can be downloaded, by media owner")
+            self.common.base.navigate(self.entryUrl)
+            sleep(2)
+            
+            writeToLog("INFO","Step 5: Going to verify that the PDF can be downloaded while using an Anonymous User")
             if self.common.player.downloadQuizPDF(self.filePathDownloaded) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to download the PDF file, by media owner")
+                writeToLog("INFO","Step 5: FAILED to download the PDF file, while using an Anonymous User")
                 return
                  
             ##################################################################
-            writeToLog("INFO","TEST PASSED: The download option for the Allow Download of Questions List option has proper functionality for media owner")
+            writeToLog("INFO","TEST PASSED: The download option for the Allow Download of Questions List option has proper functionality for Anonymous User")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
