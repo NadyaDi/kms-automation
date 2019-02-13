@@ -213,10 +213,10 @@ class Test:
                 writeToLog("INFO","Step 24: FAILED navigate to my channels page")
                 return 
                
-            writeToLog("INFO","Step 25: Going verify sort channels by 'Most Recent'")
+            writeToLog("INFO","Step 25: Going verify sort channels by 'Creation Date'")
             if self.common.channel.verifySortInMyChannels(enums.ChannelsSortBy.CREATION_DATE, self.sortByMostRecent) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 25: FAILED sort channels by 'Most Recent'")
+                writeToLog("INFO","Step 25: FAILED sort channels by 'Creation Date'")
                 return 
             
             if self.common.isElasticSearchOnPage() == True:
