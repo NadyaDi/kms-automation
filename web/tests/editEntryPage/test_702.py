@@ -67,9 +67,10 @@ class Test:
             self.filePathAudioDownload = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/audio.mp3'
             self.filePathAudioOriginalJenkinsNode = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/audios/audio.mp3'
             
-            self.filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
-            self.filePathVideoDownload = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/QR_Code_10sec.mp4'
-            self.filePathVideoOriginalJenkinsNode = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/videos/QR_Code_10sec.mp4'            
+            self.filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
+            self.filePathVideoDownload = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/10secQrMidLeftSmall.mp4'
+            self.filePathVideoOriginalJenkinsNode = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/videos/10secQrMidLeftSmall.mp4'
+                                        
             self.filePathDictionary ={
                 self.filePathImageOriginalJenkinsNode: [self.filePathImageDownload, self.filePathImage],
                 self.filePathAudioOriginalJenkinsNode: [self.filePathAudioDownload, self.filePathAudio],
