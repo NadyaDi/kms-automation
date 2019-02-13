@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - KEA Quiz Question types - Resumed Quiz with Media Owner 
+    # Test Name : Quiz - Resumed Quiz with Media Owner 
     # Test description:
     # Verify that the user is able to resume a quiz entry after answering to the 'Multiple Choice' and watching the 'Reflection Point' question types
     # We verify that the selected answer remained selected after refreshing the page
@@ -76,8 +76,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types Resumed", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types Resumed - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Resumed", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Resumed - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  

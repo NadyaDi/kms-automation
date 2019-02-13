@@ -74,7 +74,7 @@ class Test:
                 self.entryName3: self.filePath }
               
             writeToLog("INFO","Step 1: Going to enable secureEmbed in admin")
-            if self.common.admin.enableSecureEmbed(True) == False:
+            if self.common.admin.enableSecureEmbedPlaylist(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to Enable secure embed")
                 return                

@@ -85,8 +85,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question New KMS User in Channel", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question New KMS User in Channel - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - New State with KMS User in Channel", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - New State with KMS User in Channel - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  

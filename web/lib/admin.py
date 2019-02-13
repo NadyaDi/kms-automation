@@ -926,7 +926,7 @@ class Admin(Base):
     
     # @Author: Oleg Sigalov
     # This function enables the playlist secure embed module 
-    def enableSecureEmbed(self, isEnabled):
+    def enableSecureEmbedPlaylist(self, isEnabled):
         #Login to Admin
         if self.loginToAdminPage() == False:
             writeToLog("INFO","FAILED to login to admin page")
@@ -1003,4 +1003,34 @@ class Admin(Base):
             return False 
         
         writeToLog("INFO","Success, Gallery page size was updated")
-        return True  
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function will change the secure embed from Embed tab state
+    # if isEnabled = True, secureEmbed will be activated
+    # if isEnabled = False, secureEmbed will be deactivated
+    def enabledSecureEmbed(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Custometadata module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/embed') == False:
+            writeToLog("INFO","FAILED to load Embed page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable custometadata module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_SECURE_EMBED, selection) == False:
+            writeToLog("INFO","FAILED to set secureEmbed as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+            
+        writeToLog("INFO","Success, secureEmbed was set to: " + str(selection) + "'")
+        return True   

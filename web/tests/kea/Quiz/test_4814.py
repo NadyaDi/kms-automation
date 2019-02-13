@@ -46,11 +46,11 @@ class Test:
     questionTrueAndFalseEight   = ['00:45', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False Eight', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
     questionReflectionNine      = ['00:50', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point Nine']
     questionMultipleTen         = ['00:55', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice Ten', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-    questionTrueAndFalseEleven  = ['00:60', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False Eleven', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
-    questionReflectionTwelve    = ['00:65', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point Twelve']
-    questionMultipleThirteen    = ['00:70', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice Thirteen', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-    questionTrueAndFalseFourteen= ['00:75', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False Fourteen', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
-    questionReflectionFifteen   = ['00:80', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point Fifteen']
+    questionTrueAndFalseEleven  = ['01:00', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False Eleven', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
+    questionReflectionTwelve    = ['01:05', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point Twelve']
+    questionMultipleThirteen    = ['01:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice Thirteen', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
+    questionTrueAndFalseFourteen= ['01:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False Fourteen', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
+    questionReflectionFifteen   = ['01:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point Fifteen']
 
     # Each list is used in order to verify that all the Quiz Question types are answered
     questionAnswerOne           = ['Question Title for Multiple Choice One', 'question #1 option #1', True]
@@ -64,27 +64,62 @@ class Test:
     questionAnswerNine          = ['Question Title for Reflection Point Nine', '', True]
     questionAnswerTen           = ['Question Title for Multiple Choice Ten', 'question #1 option #1', True]
     questionAnswerEleven        = ['Question Title for True and False Eleven', 'True text', True]
-    questionAnswerThirteen      = ['Question Title for Reflection Point Thirteen', '', True]
-    questionAnswerFourteen      = ['Question Title for Multiple Choice Fourteen', 'question #1 option #1', True]
-    questionAnswerFifteen       = ['Question Title for True and False Fifteen', 'True text', True]
+    questionAnswerTwelve        = ['Question Title for Reflection Point Twelve', '', True]
+    questionAnswerThirteen      = ['Question Title for Multiple Choice Thirteen', 'question #1 option #1', True]
+    questionAnswerFourteen      = ['Question Title for True and False Fourteen', 'True text', True]
+    questionAnswerFifteen       = ['Question Title for Reflection Point Fifteen', '', True]
     
     # This Dictionary is used in order to verify the state of the answers ( answered / unanswered) from the active question screen
-    expectedQuizStateNew     = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
+    expectedQuizStateNew     = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree, '4':questionAnswerFour, '5':questionAnswerFive, '6':questionAnswerSix, '7':questionAnswerSeven, '8':questionAnswerEight, '9':questionAnswerNine, '10':questionAnswerTen, '11':questionAnswerEleven, '12':questionAnswerTwelve, '13':questionAnswerThirteen, '14':questionAnswerFourteen, '15':questionAnswerFifteen} 
 
     # This Dictionary is used in order to create all the Quiz Question types within a single call
     questionDict             = {'1':questionMultipleOne,'2':questionTrueAndFalseTwo,'3':questionReflectionThree, '4':questionMultipleFour,'5':questionTrueAndFalseFive,'6':questionReflectionSix, '7':questionMultipleSeven,'8':questionTrueAndFalseEight,'9':questionReflectionNine, '10':questionMultipleTen,'11':questionTrueAndFalseEleven,'12':questionReflectionTwelve, '13':questionMultipleThirteen,'14':questionTrueAndFalseFourteen,'15':questionReflectionFifteen}    
     # This values are used in order to find and answer to the quiz questions
-    questionName1            = "Question Title for Multiple Choice"
-    answerText1              = "question #1 option #1"
+    questionNameOne        = "Question Title for Multiple Choice One"
+    answerTextOne          = "question #1 option #1"
     
-    questionName2            = "Question Title for True and False"
-    answerText2              = "True text"
+    questionNameTwo        = "Question Title for True and False Two"
+    answerTextTwo          = "True text"
+    
+    questionNameFour       = "Question Title for Multiple Choice Four"
+    answerTextFour         = "question #1 option #1"
+    
+    questionNameFive       = "Question Title for True and False Five"
+    answerTextFive         = "True text"
+    
+    questionNameSeven      = "Question Title for Multiple Choice Seven"
+    answerTextSeven        = "question #1 option #1"
+    
+    questionNameEight      = "Question Title for True and False Eight"
+    answerTextEight        = "True text"
+    
+    questionNameTen        = "Question Title for Multiple Choice Ten"
+    answerTextTen          = "question #1 option #1"
+    
+    questionNameEleven     = "Question Title for True and False Eleven"
+    answerTextEleven       = "True text"
+    
+    questionNameThirteen   = "Question Title for Multiple Choice Thirteen"
+    answerTextThirteen     = "question #1 option #1"
+    
+    questionNameFourteen   = "Question Title for True and False Fourteen"
+    answerTextFourteen     = "True text"
+    
+    
         
     #this dictionaries is used in order to answer to the Quiz Questions
     #questionName is the question title
     #answerText is the answer that should be present in the Question Name
-    answersDict = {questionName1:answerText1,
-                   questionName2:answerText2} 
+    answersDict = {questionNameOne:answerTextOne,
+                   questionNameTwo:answerTextTwo,
+                   questionNameFour:answerTextFour,
+                   questionNameFive:answerTextFive,
+                   questionNameSeven:answerTextSeven,
+                   questionNameEight:answerTextEight,
+                   questionNameTen:answerTextTen,
+                   questionNameEleven:answerTextEleven,
+                   questionNameThirteen:answerTextThirteen,
+                   questionNameFourteen:answerTextFourteen} 
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
         return request.param
@@ -111,7 +146,7 @@ class Test:
                 return
             else:
                 i = i + 1
-
+  
             writeToLog("INFO","Step " + str(i) + ": Going to upload " + self.entryName +" entry")
             if self.common.upload.addYoutubeEntry(self.filePathYotubue, self.entryName) == False:
                 self.status = "Fail"
@@ -120,15 +155,15 @@ class Test:
                 return  
             else:
                 i = i + 1
-                                              
+                                               
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
-            if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
+            if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return  
             else:
                 i = i + 1
-                    
+                     
             writeToLog("INFO","Step " + str(i) + ": Going to answer to all the Quiz Questions from the " + self.newEntryName + " entry")  
             if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
                 self.status = "Fail"
@@ -136,7 +171,7 @@ class Test:
                 return  
             else:
                 i = i + 1            
-                 
+                  
             writeToLog("INFO","Step " + str(i) + ": Going to resume from the beginning the " + self.newEntryName + " entry")  
             if self.common.player.resumeFromBeginningQuiz(enums.Location.ENTRY_PAGE, timeOut=1, forceResume=True) == False:
                 self.status = "Fail"
