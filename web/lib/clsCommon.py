@@ -319,7 +319,7 @@ class Common():
         if filecmp.cmp(path1, path2) == False:
             writeToLog("INFO","FAILED to find match between two files")
             writeToLog("INFO","File Path 1: '" + path1 + "'")
-            writeToLog("INFO","File Path 1: '" + path2 + "'")
+            writeToLog("INFO","File Path 2: '" + path2 + "'")
             return False      
         else:
             writeToLog("INFO","Two files are identical (binary)")
