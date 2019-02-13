@@ -78,8 +78,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types Resumed Anonymous", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types Resumed Anonymous - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Resumed with Anonymous User", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Resumed with Anonymous User - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  

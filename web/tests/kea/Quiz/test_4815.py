@@ -13,14 +13,15 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - New Quiz with Anonymous User
+    # Test Name : Quiz - Secure Embed OFF - New Quiz with Anonymous User
     # Test description:
-    # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered 
+    # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered
+    # Verify that the secure embed off quiz entry has the same functionality and behavior like in KMS
     # 'Multiple Choice' with four answers, hint and why
     # 'True and False' with two answers, hint and why
     # 'Reflection Point' with only reflection text
     #================================================================================================================================
-    testNum = "4789"
+    testNum = "4815"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -33,11 +34,17 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    typeTest = 'Quiz Entry New State with Anonymous user'
-    entryUrl = ''
+    typeTest = 'Quiz Entry Embed OFF - New State with Anonymous user'
     
     userName = "python_automation"
     password = "Kaltura1!"
+    
+    instanceUrl = None
+    
+    # this variables are used in order to take the embed link, embed file, embed link
+    embedLink = None
+    embedLinkFilePath = "C:\\xampp\\htdocs\\index.html"
+    embedUrl = 'http://localhost/index.html'
             
     # Each list is used in order to create a different Quiz Question Type
     questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
@@ -70,10 +77,20 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Anonymous User New", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Anonymous User New - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Anonymous User New", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Anonymous User New - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            i = 1 
+            i = 1
+            self.instanceUrl = self.common.base.driver.current_url
+
+            writeToLog("INFO","Step " + str(i) + ": Going to enable secureEmbed in admin")
+            if self.common.admin.enableSecureEmbedPlaylist(False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to Enable secure embed")
+                return                
+            
+            self.common.base.navigate(self.instanceUrl)
+             
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -81,7 +98,7 @@ class Test:
                 return
             else:
                 i = i + 1
-                                          
+                                           
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
@@ -89,16 +106,9 @@ class Test:
                 return  
             else:
                 i = i + 1
-               
-            self.entryUrl = self.common.base.driver.current_url
-
-            writeToLog("INFO","Step " + str(i) + ": Going to publish the " + self.entryName +" entry as unlisted ")
-            if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.newEntryName, enums.ChannelPrivacyType.UNLISTED, alreadyPublished=False, publishFrom=enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO", "Step " + str(i) + ": FAILED to publish the " + self.entryName + " entry as unlisted")
-                return
-            else:
-                i = i + 1
-                
+ 
+            self.embedLink = self.common.entryPage.getEmbedLink()
+             
             writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -106,24 +116,40 @@ class Test:
                 return
             else:
                 i = i + 1
-
-            self.common.base.navigate(self.entryUrl)
-            sleep(2)
+ 
+            writeToLog("INFO","Step " + str(i) + ": Going to write the " + self.newEntryName  + " embed code in a file")
+            if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to write the " + self.newEntryName  + " embed code in a file")
+                return
+            else:
+                i = i + 1                
+             
+            writeToLog("INFO","Step " + str(i) + ": Going to navigate to embed entry page (by link)")
+            if self.common.base.navigate(self.embedUrl) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to embed entry page ( by link )")
+                return
+            else:
+                i = i + 1 
                              
             writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are unanswered")  
-            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=False, newQuiz=True, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60) == False:
+            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=False, newQuiz=True, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60, embed=True, secureEmbed=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are unanswered")
                 return  
             else:
-                i = i + 1
-                
+                i = i + 1 
+
+            self.common.base.navigate(self.instanceUrl)
+            sleep(2)
+    
             writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + self.userName + " account")
             if self.common.login.loginToKMS(self.userName, self.password) == False:
                 writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + self.userName + " account")
                 return
             else:
-                i = i + 1
+                i = i + 1           
             ##################################################################
             writeToLog("INFO","TEST PASSED: Entry Page has been successfully verified for a " + self.typeTest)
         # if an exception happened we need to handle it and fail the test
@@ -135,6 +161,8 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
+            self.common.deleteFile(self.embedLinkFilePath)
+            self.common.admin.enableSecureEmbedPlaylist(True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass

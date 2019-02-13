@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - Entry with all the KEA Quiz Question types - New Quiz after Refresh with Anonymous User
+    # Test Name : Quiz - New Quiz after Refresh with Anonymous User
     # Test description:
     # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered 
     # 'Multiple Choice' with four answers, hint and why
@@ -70,8 +70,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Question Types New Refresh", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Question Types New Refresh - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - New Refresh", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - New Refresh - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1 
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
