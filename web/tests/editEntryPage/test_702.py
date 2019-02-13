@@ -131,7 +131,15 @@ class Test:
                 if self.common.editEntryPage.downloadAttachmentFileFromEditPage(path, self.filePathDictionary[path][0]) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to download attachment file from edit entry page")
-                    return 
+                    return
+                
+                step = step + 1 
+                
+                writeToLog("INFO","Step " + str(step) + ": Going to delete download file from folder")    
+                if self.common.deleteFile(self.filePathDictionary[path][0]) == False:    
+                    self.status = "Fail"    
+                    writeToLog("INFO","Step " + str(step) + ": FAILED to delete download file from folder")    
+                    return     
                   
                 step = step + 1  
                    
