@@ -135,55 +135,56 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to verify the entry duration (using QR codes)")
                 return   
-             
-            writeToLog("INFO","Step 17: Going to logout as user 2")
+            
+            self.common.base.switch_to_default_content()
+            writeToLog("INFO","Step 14: Going to logout as user 2")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to logout from KMS")
+                writeToLog("INFO","Step 14: FAILED to logout from KMS")
                 return                            
              
-            writeToLog("INFO","Step 18: Going to perform login to KMS site as user - admin")
+            writeToLog("INFO","Step 15: Going to perform login to KMS site as user - admin")
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 18: FAILED to login as user - admin")
+                writeToLog("INFO","Step 15: FAILED to login as user - admin")
                 return   
             
-            writeToLog("INFO","Step 19: Going to navigate to edit entry page")
+            writeToLog("INFO","Step 16: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.videoEntryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 19: FAILED to navigate to edit entry page")
+                writeToLog("INFO","Step 16: FAILED to navigate to edit entry page")
                 return     
               
-            writeToLog("INFO","Step 20: Going to click on option tab and disabled clip permission to everyone")
+            writeToLog("INFO","Step 17: Going to click on option tab and disabled clip permission to everyone")
             if self.common.editEntryPage.changeEntryOptions(False, False, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 20: FAILED to click on option tab and disabled clip permission to everyone")
+                writeToLog("INFO","Step 17: FAILED to click on option tab and disabled clip permission to everyone")
                 return  
              
-            writeToLog("INFO","Step 21: Going to logout as admin")
+            writeToLog("INFO","Step 18: Going to logout as admin")
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 21: FAILED to logout from KMS")
+                writeToLog("INFO","Step 18: FAILED to logout from KMS")
                 return        
              
-            writeToLog("INFO","Step 22: Going to perform login to KMS as user 2")
+            writeToLog("INFO","Step 19: Going to perform login to KMS as user 2")
             if self.common.login.loginToKMS(self.user2, self.user2Pass) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 22: FAILED to login as user 2")
+                writeToLog("INFO","Step 19: FAILED to login as user 2")
                 return  
              
-            writeToLog("INFO","Step 23: Going to navigate to entry page (by link)")
+            writeToLog("INFO","Step 20: Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 23: FAILED to navigate to entry page link")
+                writeToLog("INFO","Step 20: FAILED to navigate to entry page link")
                 return   
             
-            writeToLog("INFO","Step 24: Going to verify that create clip option isn't available")
+            writeToLog("INFO","Step 21: Going to verify that create clip option isn't available")
             if self.common.entryPage.chooseCreateClipOption() == True:
                 self.status = "Fail"
-                writeToLog("INFO","Step 24: FAILED to verify that create clip option isn't available")
+                writeToLog("INFO","Step 21: FAILED to verify that create clip option isn't available")
                 return                                                            
-            writeToLog("INFO","Step 24: step above failed as expected")                                         
+            writeToLog("INFO","Step 21: step above failed as expected")                                         
             #########################################################################
             writeToLog("INFO","TEST PASSED: Enable clipping permission was done successfully")
         # If an exception happened we need to handle it and fail the test       
