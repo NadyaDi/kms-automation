@@ -322,6 +322,17 @@ test_4789,1,0,0,0,Quiz - KEA Quiz Question types - New Quiz with Anonymous User
 test_4790,1,0,0,0,Quiz - KEA Quiz Question types - New Quiz after Refresh with Anonymous User
 test_4791,1,0,0,0,Quiz - KEA Quiz Question types - Submitted Quiz 0% score with Media Owner
 test_4792,1,0,0,0,Quiz - KEA Quiz Question types - Submitted Quiz 50% score with Media Owner
+test_4804,1,0,0,0,Quiz - Submitted Quiz in Channel with Normal User
+test_4805,1,0,0,0,Quiz - Submitted Quiz with Media Owner and reopen it with Normal user ( New state for Quiz)
+test_4806,1,0,0,0,Quiz - Details Section - Download functionality - Anonymous User in KMS
+test_4807,1,0,0,0,Quiz - Answer Quiz (without submitting it) with KMS Anonymous and Refresh
+test_4808,1,0,0,0,Quiz - Submitted Quiz for Audio Entry
+test_4809,1,0,0,0,Quiz - Resumed Quiz for Audio Entry
+test_4810,1,0,0,0,Quiz - New Quiz for Audio Entry
+test_4811,1,0,0,0,Quiz - Submitted Quiz for Youtube Entry
+test_4812,1,0,0,0,Quiz - Resumed Quiz for Youtube Entry
+test_4813,1,0,0,0,Quiz - New Quiz for Youtube Entry
+test_4814,1,0,0,0,Quiz - Youtube based entry: Submitted Quiz with many Quiz Questions (15 questions)
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
