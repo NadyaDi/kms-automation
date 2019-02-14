@@ -60,10 +60,10 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to displayed correct default sort")
                 return 
 
-            writeToLog("INFO","Step 3: Going to sort galleries by most recent")
-            if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.MOST_RECENT, self.sortByMostRecentList) == False:
+            writeToLog("INFO","Step 3: Going to sort galleries by creation date")
+            if self.common.category.verifySortInGalleries(enums.ChannelsSortBy.CREATION_DATE, self.sortByMostRecentList) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to sort galleries by most recent")
+                writeToLog("INFO","Step 3: FAILED to sort galleries by creation date")
                 return   
             
             writeToLog("INFO","Step 4: Going to sort galleries by alphabetical A-Z")
