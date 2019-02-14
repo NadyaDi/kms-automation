@@ -191,14 +191,26 @@ test_4768,Quiz - Scores section in Entry Page - Disabled,6269,qakmstest.dev.kalt
 test_4769,Quiz - Scores section in Entry Page - Default,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
 test_4772,Quiz - Experience section in Entry Page - Disabled,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
 test_4773,Quiz - Experience section in Entry Page - Default,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4804,Quiz - Submitted Quiz in Channel with Normal User,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4805,Quiz - Submitted Quiz with Media Owner and reopen it with Normal user ( New state for Quiz),2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4806,Quiz - Details Section - Download functionality - Anonymous User in KMS,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4807,Quiz - Answer Quiz (without submitting it) with KMS Anonymous and Refresh,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4808,Quiz - Submitted Quiz for Audio Entry,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4809,Quiz - Resumed Quiz for Audio Entry,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4810,Quiz - New Quiz for Audio Entry,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4811,Quiz - Submitted Quiz for Youtube Entry,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4812,Quiz - Resumed Quiz for Youtube Entry,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4813,Quiz - New Quiz for Youtube Entry,2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4814,Quiz - Youtube based entry: Submitted Quiz with many Quiz Questions (15 questions),2438361,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4776,Quiz - Entry with all the KEA Quiz Question types - KEA Page,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4778,Quiz - New Quiz with Media Owner,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4786,Quiz - Resumed Quiz with Media Owner,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4788,Quiz - Submitted Quiz 100% score with Media Owner,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4789,Quiz - New Quiz with Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4790,Quiz - New Quiz after Refresh with Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4791,Quiz - Submitted Quiz 0% score with Media Owner,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4792,Quiz - Submitted Quiz 50% score with Media Owner,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4804,Quiz - Submitted Quiz in Channel with Normal User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4805,Quiz - Submitted Quiz with Media Owner and reopen it with Normal user ( New state for Quiz),6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4806,Quiz - Details Section - Download functionality - Anonymous User in KMS,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4807,Quiz - KEA Quiz Question types - Resumed Quiz with Anonymous user,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4808,Quiz - Submitted Quiz for Audio Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4809,Quiz - Resumed Quiz for Audio Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4810,Quiz - New Quiz for Audio Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4811,Quiz - Submitted Quiz for Youtube Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4812,Quiz - Resumed Quiz for Youtube Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4813,Quiz - New Quiz for Youtube Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4814,Quiz - Youtube based entry: Submitted Quiz with many Quiz Questions (15 questions),6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4815,Quiz - Secure Embed OFF - New Quiz with Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4816,Quiz - Secure Embed OFF - Answer Quiz (without submitting it) with Anonymous User and Refresh,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4817,Quiz - Secure Embed OFF - Submit Quiz (with score verification) with Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4818,Quiz - Secure Embed OFF - Download functionality - Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
