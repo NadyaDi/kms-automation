@@ -127,4 +127,26 @@ class Login(Base):
             writeToLog("INFO","FAILED to get user name element")
             return False
         return userName
-        
+    
+
+    def loginToKMSEmbed(self, username, password):
+        try:
+            # Going to select the embed iframe
+            self.clsCommon.player.switchToPlayerIframe(embed=True)
+            writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
+            # Enter test partner username
+            self.send_keys(self.LOGIN_USERNAME_FIELD, username)
+            # Enter test partner password
+            self.send_keys(self.LOGIN_PASSWORD_FIELD, password)
+            # Click Sign In
+            self.click(self.LOGIN_SIGN_IN_BTN)
+            # Wait page load
+            self.wait_for_page_readyState()
+            # Verify logged in
+            if self.wait_element(self.LOGIN_USERNAME_FIELD, 1, True) != False:
+                writeToLog("INFO", "FAILED to load the embed file, the authentication screen is still presented")
+                return False
+        except Exception as inst:
+            writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
+            self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
+            raise Exception(inst)

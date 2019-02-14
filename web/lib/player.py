@@ -28,7 +28,7 @@ class Player(Base):
     PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER                       = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-play')]")
     PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER                      = ('xpath', "//button[@class='btn comp playPauseBtn display-high icon-pause']")
     #PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder' and @aria-label='Play clip']")
-    PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[contains(@class, 'icon-play')]")
+    PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[contains(@class,'icon-play')]")
     PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER                      = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-pause')]")
     PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER                     = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-replay')]")
     PLAYER_GENERIC_PLAY_REPLAY_PASUSE_BUTTON_CONTROLS_CONTAINER = ('xpath', "//button[@data-plugin-name='playPauseBtn']")
@@ -139,7 +139,7 @@ class Player(Base):
                 #Switch to first iframe
                 if self.wait_element(self.PLAYER_EMBED_IFRAME_1, 5) != False:
                     self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_1, 1)
-                    
+
                 #Switch to second iframe
                 self.wait_element(self.PLAYER_EMBED_IFRAME_2, 5)
                 self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_2)
@@ -1943,7 +1943,7 @@ class Player(Base):
             # Remove overlay before click pause (insert to 'touchOverlay' element 'style="display:none;"')
             self.removeTouchOverlay()
             
-            if self.self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
+            if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
                 writeToLog("INFO", "FAILED to pause the video")
                 return False
                          
