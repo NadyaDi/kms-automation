@@ -15,10 +15,9 @@ class Test:
     #  @Author: Horia Cus
     # Test Name : Quiz - New Quiz after Refresh with Anonymous User
     # Test description:
-    # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered 
-    # 'Multiple Choice' with four answers, hint and why
-    # 'True and False' with two answers, hint and why
-    # 'Reflection Point' with only reflection text
+    # Verify that the user is able to a resume a quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types
+    # Verify that after watching 'Reflection Point' quiz questions type and performing refresh, all the quiz question types are unanswered
+    # Verify that after selecting an answer for 'Multiple Choice' quiz question type, and performing a refresh, all the quiz questions types are unanswered
     #================================================================================================================================
     testNum = "4790"
     
@@ -54,6 +53,16 @@ class Test:
 
     # This Dictionary is used in order to create all the Quiz Question types within a single call
     questionDict             = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
+
+    # This values are used in order to find and answer to the quiz questions
+    questionName1            = "Question Title for Multiple Choice"
+    answerText1              = "question #1 option #1"
+        
+    #this dictionaries is used in order to answer to the Quiz Questions
+    #questionName is the question title
+    #answerText is the answer that should be present in the Question Name
+    answersDict = {questionName1:answerText1} 
+
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -110,13 +119,13 @@ class Test:
             self.common.base.navigate(self.entryUrl)
             sleep(2)
                              
-            writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are unanswered")  
-            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=False, newQuiz=True, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60) == False:
+            writeToLog("INFO","Step " + str(i) + ": Going to answer to a few Quiz Questions from the " + self.newEntryName + " entry")  
+            if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=False, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are unanswered")
+                writeToLog("INFO","Step " + str(i) + ": FAILED to answer to a few Quiz Questions from the " + self.newEntryName + " entry")  
                 return  
             else:
-                i = i + 1
+                i = i + 1  
                 
             writeToLog("INFO","Step " + str(i) + ": Going to resume from the beginning the " + self.newEntryName + " entry")  
             if self.common.player.resumeFromBeginningQuiz(enums.Location.ENTRY_PAGE, timeOut=1, forceResume=True) == False:

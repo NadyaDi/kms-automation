@@ -13,15 +13,15 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - Secure Embed OFF - New Quiz with Anonymous User
+    # Test Name : Quiz - Secure Embed OFF - Submit Quiz (with score verification) with Anonymous User
     # Test description:
-    # Verify that the user is able to start a new quiz, with 'Multiple Choice', 'True and False' and 'Reflection Point' quiz question types unanswered
+    # Verify that the user is able to resume a submitted quiz entry after answering to the 'Multiple Choice', 'True and False' and watching the 'Reflection Point' question types
     # Verify that the secure embed off quiz entry has the same functionality and behavior like in KMS
-    # 'Multiple Choice' with four answers, hint and why
-    # 'True and False' with two answers, hint and why
-    # 'Reflection Point' with only reflection text
+    # We verify that the selected answer are resumed as being unanswered after refreshing the page
+    # We verify that no Quiz Question remained answered
+    # We verify that the 'Submitted Screen' is properly displayed with the expected score, 'Why' and included answer states
     #================================================================================================================================
-    testNum = "4815"
+    testNum = "4817"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -31,10 +31,10 @@ class Test:
     common = None
     
     # Test variables
-    description = "Description" 
-    tags = "Tags,"
+    description   = "Description" 
+    tags          = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    typeTest = 'Quiz Entry Embed OFF - New State with Anonymous user'
+    typeTest      = 'Quiz Entry Submitted State with 100% score after refresh with Anonymous User'
     
     userName = "python_automation"
     password = "Kaltura1!"
@@ -46,9 +46,9 @@ class Test:
     embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
             
     # Each list is used in order to create a different Quiz Question Type
-    questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
-    questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
-    questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
+    questionMultiple         = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
+    questionTrueAndFalse     = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
+    questionReflection       = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
     
     # Each list is used in order to verify that the quiz question types are unanswered
     questionAnswerOne        = ['Question Title for Multiple Choice', '', False]
@@ -57,9 +57,33 @@ class Test:
     
     # This Dictionary is used in order to verify the state of the answers ( answered / unanswered) from the active question screen
     expectedQuizStateNew     = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
+    
+
+    # Each list is used in order to verify that all the Quiz Question types are answered
+    questionAnswerOneSubmitted        = ['Question Title for Multiple Choice', 'question #1 option #1', True]
+    questionAnswerTwoSubmitted        = ['Question Title for True and False', 'True text', True]
+    questionAnswerThreeSubmitted      = ['Question Title for Reflection Point', '', True]
+    
+    # This Dictionary is used in order to verify the state of the answers ( answered / unanswered) from the active question screen
+    expectedQuizStateSubmitted = {'1':questionAnswerOneSubmitted,'2':questionAnswerTwoSubmitted, '3':questionAnswerThreeSubmitted} 
+
 
     # This Dictionary is used in order to create all the Quiz Question types within a single call
-    questionDict             = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection} 
+    questionDict             = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
+    
+    # This values are used in order to find and answer to the quiz questions
+    questionName1            = "Question Title for Multiple Choice"
+    answerText1              = "question #1 option #1"
+    
+    questionName2            = "Question Title for True and False"
+    answerText2              = "True text"
+        
+    #this dictionaries is used in order to answer to the Quiz Questions
+    #questionName is the question title
+    #answerText is the answer that should be present in the Question Name
+    answersDict = {questionName1:answerText1,
+                   questionName2:answerText2} 
+    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -76,18 +100,18 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Anonymous User New", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Anonymous User New - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Submitted and refresh with Anonymous User", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Submitted and refresh with Anonymous User - Quiz", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1
             self.instanceUrl = self.common.base.driver.current_url
-
+  
             writeToLog("INFO","Step " + str(i) + ": Going to turn off the secureEmbed in admin panel")
             if self.common.admin.enableSecureEmbedPlaylist(False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to turn off the secureEmbed in admin panel")
                 return                
-            
+              
             self.common.base.navigate(self.instanceUrl)
              
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
@@ -97,7 +121,7 @@ class Test:
                 return
             else:
                 i = i + 1
-                                           
+                                                
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
@@ -105,9 +129,9 @@ class Test:
                 return  
             else:
                 i = i + 1
- 
+                 
             self.embedLink = self.common.entryPage.getEmbedLink()
-             
+                  
             writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -115,7 +139,7 @@ class Test:
                 return
             else:
                 i = i + 1
- 
+  
             writeToLog("INFO","Step " + str(i) + ": Going to write the " + self.newEntryName  + " embed code in a file")
             if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
                 self.status = "Fail"
@@ -123,7 +147,7 @@ class Test:
                 return
             else:
                 i = i + 1                
-             
+              
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
                 self.status = "Fail"
@@ -131,15 +155,39 @@ class Test:
                 return
             else:
                 i = i + 1 
-                             
+                    
+            writeToLog("INFO","Step " + str(i) + ": Going to answer to all the Quiz Questions from the " + self.newEntryName + " entry")  
+            if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='', embed=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to answer to all the Quiz Questions from the " + self.newEntryName + " entry")  
+                return  
+            else:
+                i = i + 1
+                
+            writeToLog("INFO","Step " + str(i) + ": Going to verify that " + self.newEntryName + "'s entry submitted screen is properly displayed")  
+            if self.common.player.verifySubmittedScreen(str(100), enums.Location.ENTRY_PAGE, self.questionDict, self.expectedQuizStateSubmitted, 5, embed=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify that " + self.newEntryName + "'s entry submitted screen is properly displayed") 
+                return  
+            else:
+                i = i + 1         
+                 
+            writeToLog("INFO","Step " + str(i) + ": Going to resume from the beginning the " + self.newEntryName + " entry")  
+            if self.common.player.resumeFromBeginningQuiz(enums.Location.ENTRY_PAGE, timeOut=1, forceResume=True, embed=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to resume from the beginning the " + self.newEntryName + " entry")
+                return  
+            else:
+                i = i + 1
+            
             writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are unanswered")  
             if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateNew, submittedQuiz=False, resumeQuiz=False, newQuiz=True, expectedQuizScore=str(0), location=enums.Location.ENTRY_PAGE, timeOut=60, embed=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are unanswered")
                 return  
             else:
-                i = i + 1 
-
+                i = i + 1
+                
             self.common.base.navigate(self.instanceUrl)
     
             writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + self.userName + " account, in order to teardown")
@@ -147,7 +195,7 @@ class Test:
                 writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + self.userName + " account, in order to teardown")
                 return
             else:
-                i = i + 1           
+                i = i + 1 
             ##################################################################
             writeToLog("INFO","TEST PASSED: Entry Page has been successfully verified for a " + self.typeTest)
         # if an exception happened we need to handle it and fail the test

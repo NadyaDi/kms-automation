@@ -130,20 +130,18 @@ class Player(Base):
     # because you need to switch to player iframe. And...!!! use 'self.switch_to_default_content' (Basic class) method to 
     # return to default iframe in the end of use of player methods or elements, meaning in the test or other classes.
     #======================================================================================================================
-    def switchToPlayerIframe(self, embed=False, secureEmbed=True):
+    def switchToPlayerIframe(self, embed=False):
         if embed == True:
             if localSettings.TEST_CURRENT_IFRAME_ENUM == enums.IframeName.EMBED_PLAYER:
                 return True
             else:
                 localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.EMBED_PLAYER
-                if secureEmbed == True:
-                    #Switch to first iframe
-                    self.wait_visible(self.PLAYER_EMBED_IFRAME_1, 60)
-                    self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_1)
-                    return True
+                #Switch to first iframe
+                if self.wait_element(self.PLAYER_EMBED_IFRAME_1, 5) != False:
+                    self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_1, 1)
                     
                 #Switch to second iframe
-                self.wait_visible(self.PLAYER_EMBED_IFRAME_2, 60)
+                self.wait_element(self.PLAYER_EMBED_IFRAME_2, 5)
                 self.swith_to_iframe(self.PLAYER_EMBED_IFRAME_2)
                 return True
 
@@ -1160,8 +1158,8 @@ class Player(Base):
     # skipWelcomeScreen = True it will wait and click on the continue button
     # Reflection Point questions, should not be present in the list
     # This function works only when the "ALLOW SKIP" option is enabled
-    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore=''):     
-        if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen) == False:
+    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False):     
+        if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed) == False:
             return False
         
         # taking the available question numbers                
@@ -1251,12 +1249,12 @@ class Player(Base):
                 return False
             
             # We submit the quiz
-            if self.submitTheAnswers(location) != True:
+            if self.submitTheAnswers(location, embed) != True:
                 return False
             
             # We verify the expected quiz score
             if expectedQuizScore != '':
-                if self.verifySubmittedScreen(expectedQuizScore, location, questionDict) == False:
+                if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, embed) == False:
                     return False
              
         return True
@@ -1275,9 +1273,9 @@ class Player(Base):
     # @Author: Horia Cus
     # This function switches the KEA Player iframe based on the location
     # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
-    def selectPlayerIframe(self, location, embed=False, secureEmbed=True):     
+    def selectPlayerIframe(self, location, embed=False):     
         if location == enums.Location.ENTRY_PAGE:
-            self.switchToPlayerIframe(embed, secureEmbed)
+            self.switchToPlayerIframe(embed)
          
         elif location == enums.Location.KEA_PAGE:
             self.clsCommon.kea.switchToKEAPreviewPlayer()
@@ -1289,23 +1287,26 @@ class Player(Base):
     # This function navigates to the end screen and then submits the answers
     # In order to submit the answers, all the Quiz questions must be answered, you can use answerQuiz function for that
     # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
-    def submitTheAnswers(self, location):
-        if self.selectPlayerIframe(location) != True:
+    def submitTheAnswers(self, location, embed=False):
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
             return False
+        
+        if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 3, True) == False:
+            writeToLog("INFO", "FAILED to find the scrubber end screen button")
+            return False
+
+        if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
+            self.removeTouchOverlay()
+            if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the scrubber done bubble")
+                return False
         
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
         if self.wait_element(completedTitle, 2, True) == False:
-            self.removeTouchOverlay()
-            
-            if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 5, True) == False:
-                writeToLog("INFO", "FAILED to find the scrubber end screen button")
-                return False
+            writeToLog("INFO", "FAILED to load the Completed screen")            
 
-            if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 5, True) == False:
-                writeToLog("INFO", "FAILED to click on the scrubber end screen button")
-                return False
             
         if self.wait_element(completedTitle, 10, True) == True:
             writeToLog("INFO", "FAILED to load the completed screen")
@@ -1331,8 +1332,8 @@ class Player(Base):
     # @Author: Horia Cus
     # This function verifies if the play button is present and then trigger the playing process
     # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
-    def verifyAndClickOnPlay(self, location=enums.Location.ENTRY_PAGE, timeOut=3, embed=False, secureEmbed=True):
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def verifyAndClickOnPlay(self, location=enums.Location.ENTRY_PAGE, timeOut=3, embed=False):
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
             return False
         
@@ -1423,8 +1424,8 @@ class Player(Base):
     # @Author: Horia Cus
     # This function downloads the PDF file from  Allow Download of Questions List option
     # filePath must contain the following format: os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, name + ".extension")
-    def downloadQuizPDF(self, filePath):        
-        self.switchToPlayerIframe()
+    def downloadQuizPDF(self, filePath, embed=False):        
+        self.switchToPlayerIframe(embed)
         
         #we verify if the playing button is present, if so, we will click on it so we can trigger the Quiz Welcome screen
         if self.wait_element(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 30, True) != False:
@@ -1642,8 +1643,8 @@ class Player(Base):
     # @Author: Horia Cus
     # This function verifies if the user is within the playing screen or quiz welcome screen, if not it will automatically refresh the page
     # If forceResume=True, the function will automatically refresh the page, despite of the content displayed
-    def resumeFromBeginningQuiz(self,location=enums.Location.ENTRY_PAGE, timeOut=2, forceResume=False, embed=False, secureEmbed=True):     
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def resumeFromBeginningQuiz(self,location=enums.Location.ENTRY_PAGE, timeOut=2, forceResume=False, embed=False):     
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
@@ -1653,7 +1654,7 @@ class Player(Base):
             self.driver.refresh()
             self.clsCommon.base.switch_to_default_content()
             
-            if self.selectPlayerIframe(location) != True:
+            if self.selectPlayerIframe(location, embed) != True:
                 writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
                 return False
                 
@@ -1747,19 +1748,19 @@ class Player(Base):
     
     # @Author: Horia Cus
     # This function initiates the playing process from the beginning
-    def initiateQuizPlayback(self, location=enums.Location.ENTRY_PAGE, timeOut=2, skipWelcomeScreen=True, embed=False, secureEmbed=True):     
+    def initiateQuizPlayback(self, location=enums.Location.ENTRY_PAGE, timeOut=2, skipWelcomeScreen=True, embed=False):     
         sleep(timeOut)
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
         sleep(1)
         #we resume the entry from the beginning
-        if self.resumeFromBeginningQuiz(location, embed=embed, secureEmbed=secureEmbed) == False:
+        if self.resumeFromBeginningQuiz(location, embed=embed) == False:
             return False                  
         
         #we triggering the playing process
-        if self.verifyAndClickOnPlay(location, embed=embed, secureEmbed=secureEmbed) != True:
+        if self.verifyAndClickOnPlay(location, embed=embed) != True:
             return False
         
         #we dismiss the "Quiz Welcome Screen" if its enabled 
@@ -1916,13 +1917,13 @@ class Player(Base):
         # Hint and Why = last two indexes from the list must contain ['Hint text' and 'Why Text']
         # Only Hint = last index must contain ['Hint text']
         # Without Hint and Why = last indexes must contain the answer text
-    def quizVerification(self, questionDict, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, expectedQuizScore, location, timeOut=60, embed=False, secureEmbed=True):  
-        if self.initiateQuizPlayback(location, 2, True, embed, secureEmbed) == False:
+    def quizVerification(self, questionDict, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, expectedQuizScore, location, timeOut=60, embed=False):  
+        if self.initiateQuizPlayback(location, 2, True, embed) == False:
             return False
         
         # We verify from the beginning the submitted quiz option, because we don't have the scrubber ( only Quiz Welcome screen and the Submitted Screen)
         if submittedQuiz == True:
-            if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, expectedQuestionsState, 5, embed, secureEmbed) == False:
+            if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, expectedQuestionsState, 5, embed) == False:
                 return False
             
             # We dismiss the submitted screen, in order to verify the Question Screens and the scrubber
@@ -1948,7 +1949,7 @@ class Player(Base):
                          
         sleep(1)        
         # We verify that the number of questions from our dictionary is the same with the number of the questions found in the scrubber, and the state of them
-        if self.verifyQuestionBubbleState(expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, location, embed, secureEmbed) == False:
+        if self.verifyQuestionBubbleState(expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, location, embed) == False:
             return False        
          
         # We resume the playing process
@@ -1971,7 +1972,7 @@ class Player(Base):
                 
                 if presentedQuestion in questionDetails:
                     # We verify that all the quiz elements are properly displayed based on the state, question type, expected quiz score and question details                                             
-                    if self.quizVerificationMethodHelper(questionType, questionDetails, expectedQuestionsState, questionNumber, location, embed, secureEmbed) == False:
+                    if self.quizVerificationMethodHelper(questionType, questionDetails, expectedQuestionsState, questionNumber, location, embed) == False:
                         return False
                     
                     # We navigate to the next question or to the submitted / almost done screen
@@ -1990,7 +1991,7 @@ class Player(Base):
         
         # We verify that the 'Almost Done' screen is displayed for the quiz with new and/or resume status
         if newQuiz == True or resumeQuiz == True:
-            if self.verifyAlmostDoneScreen(location, 60, embed, secureEmbed) == False:
+            if self.verifyAlmostDoneScreen(location, 60, embed) == False:
                 writeToLog("INFO", "FAILED to display the Almost Done screen")
                 return False
         
@@ -2003,8 +2004,8 @@ class Player(Base):
     # In order to use this function, you must be in the Quiz Question Screen
     # hintString = contains the text present in the 'Hint Screen'
     # After the hint screen was checked, the 'Question Screen' is resumed
-    def hintVerification(self, hintString, location=enums.Location.ENTRY_PAGE, embed=False, secureEmbed=True):  
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def hintVerification(self, hintString, location=enums.Location.ENTRY_PAGE, embed=False):  
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
@@ -2054,8 +2055,8 @@ class Player(Base):
     # questionUnanswered      = ['Question unanswered', False]
     # If True is present in the list, it means that the question bubble should be displayed as answered
     # If False is present in the list, it means that the question bubble should be displayed as unanswered
-    def verifyQuestionBubbleState(self, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, location, embed=False, secureEmbed=True):  
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def verifyQuestionBubbleState(self, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, location, embed=False):  
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
@@ -2120,8 +2121,8 @@ class Player(Base):
     # questionUnANswered      = ['Question Title', '', False]
     # questionReflection      = ['Question Title', '', False]
     # questionAnswered        = ['Question Title', 'Answer One', False] will still verify that the selected answer is present, because the same dictionary is used in the verifySubmittedScreen, where we check the state of the included answers
-    def verifyQuestionScreenState(self, expectedQuestionsState, location, embed=False, secureEmbed=True):  
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def verifyQuestionScreenState(self, expectedQuestionsState, location, embed=False):  
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
@@ -2173,8 +2174,8 @@ class Player(Base):
         # questionListForCorrectAnswer     = ['question title', True]
         # questionListForInvalidAnswer     = ['question title', False]
         # questionListForReflectionPoint   = ['question title', False]
-    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30, embed=False, secureEmbed=True):  
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30, embed=False):  
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
@@ -2293,8 +2294,8 @@ class Player(Base):
     # @Author: Horia Cus
     # This function verify that the 'Almost Done' screen is present by checking the title and description
     # timeOut = maximum amount of time until the 'Almost Done' screen should be triggered and displayed
-    def verifyAlmostDoneScreen(self, location, timeOut=30, embed=False, secureEmbed=True):  
-        if self.selectPlayerIframe(location, embed, secureEmbed) != True:
+    def verifyAlmostDoneScreen(self, location, timeOut=30, embed=False):  
+        if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
@@ -2329,7 +2330,7 @@ class Player(Base):
     # We verify that the correct time is displayed, based on the scrubber time and questionDetails time
     # We verify that all the answers are present in the Quiz Question screen, based on the questionDetails
     # We verify if the hint is available for the active Quiz Question, based on the len of the questionDetails, and verify if the proper 'Hint' is displayed
-    def quizVerificationMethodHelper(self, questionType, questionDetails, expectedQuestionsState, questionNumber, location, embed=False, secureEmbed=True):
+    def quizVerificationMethodHelper(self, questionType, questionDetails, expectedQuestionsState, questionNumber, location, embed=False):
         # We verify the active question based on the question type
         if questionType == enums.QuizQuestionType.Multiple:
             listInterval = questionDetails[3:7]
@@ -2401,14 +2402,14 @@ class Player(Base):
             # We verify if a Hint should be present for the active quiz question
             if len(questionDetails) >= hintTriggerNumber:
                 # We verify the Hint Screen
-                if self.hintVerification(hintText, location, embed, secureEmbed) == False:
+                if self.hintVerification(hintText, location, embed) == False:
                     return False
             else:
                 writeToLog("INFO", "No HINT is available for the " + questionDetails[2] + " Quiz Question")
         
         # We verify the title, available answers and the state of the answers ( answered / unanswered )
         if questionType == enums.QuizQuestionType.Multiple or questionType == enums.QuizQuestionType.TRUE_FALSE:  
-            if self.verifyQuestionScreenState(expectedQuestionsState[questionNumber], location, embed, secureEmbed) == False:
+            if self.verifyQuestionScreenState(expectedQuestionsState[questionNumber], location, embed) == False:
                 return False
         
         return True
