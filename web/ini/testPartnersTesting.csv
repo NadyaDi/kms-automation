@@ -214,3 +214,7 @@ test_4815,Quiz - Secure Embed OFF - New Quiz with Anonymous User,6269,qakmstest.
 test_4816,Quiz - Secure Embed OFF - Answer Quiz (without submitting it) with Anonymous User and Refresh,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
 test_4817,Quiz - Secure Embed OFF - Submit Quiz (with score verification) with Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
 test_4818,Quiz - Secure Embed OFF - Download functionality - Anonymous User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
