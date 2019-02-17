@@ -252,6 +252,7 @@ test_1648,KAF BB - Upload new media to Faculty Repository and then publish entri
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2088,KAF BB - Upload From Embed As Standalone,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_1030,KAF BB - Gradebook,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2882,Sharepoint - Upload media from desktop,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2880,SharePoint - Preview all kinds of media from My Media and Gallery,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
 test_2881,Sharepoint - View Collapsed Expanded Modes,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!
@@ -352,7 +353,7 @@ test_4814,Quiz - Youtube based entry: Submitted Quiz with many Quiz Questions (1
 test_4815,Quiz - Secure Embed OFF - New Quiz with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4816,Quiz - Secure Embed OFF - Answer Quiz (without submitting it) with Anonymous User and Refresh,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4817,Quiz - Secure Embed OFF - Submit Quiz (with score verification) with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4818,Quiz - Secure Embed OFF - Download functionality - Anonymous User	,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4818,Quiz - Secure Embed OFF - Download functionality - Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
