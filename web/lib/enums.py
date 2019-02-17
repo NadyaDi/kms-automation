@@ -473,6 +473,7 @@ class BBContentPageMenusOptions(Enum):
     KALTURA_MEDIA             = 'Kaltura Media' 
     MORE_TOOLS                = 'More Tools'
     ANNOUNCEMENTS             = 'Announcements' 
+    KALTURA_VIDEO_QUIZ        = 'Kaltura Video Quiz'
     
 
 class SingleList(Enum):
@@ -552,3 +553,14 @@ class KEAQuizOptions(Enum):
     ALLOW_SKIP          = "Allow Skip"
     DO_NOT_ALLOW_SKIP   = "Do not Allow Skip"
     NO_SEEKING_FORWARD  = "No seeking forward"
+    
+    
+class KAFGradebookGradeOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    PERCENTAGE            = 'Percentage'
+    COMPLETE_INCOMPLETE   = 'Complete Incomplete'
+    LETTER                = 'Letter'
+    SCORE                 = 'Score'
+    TEXT                  = 'Text' 
