@@ -23,6 +23,7 @@ test_608,1,0,0,0,KAF BB - My Media - Search by Name / Description / Tags
 test_609,0,1,0,0,KAF BB - My Media - Sort Media
 test_610,1,0,0,0,KAF BB - My Media - Filter Media View Different Statuses
 test_611,1,0,0,0,KAF BB - My Media - Filter by media Type
+test_1030,1,0,0,0,KAF BB - Gradebook
 test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publish entries to course
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone

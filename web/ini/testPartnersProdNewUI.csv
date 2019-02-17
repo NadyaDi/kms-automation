@@ -54,6 +54,7 @@ test_114,KAF BB - Add Remove Featured Media Module,,,pythonautomation1@mailinato
 test_4424,KAF BB -upload media from media gallery page,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!,
 test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!,
 test_2088,KAF BB - Upload From Embed As Standalone,,,pythonautomation1@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!,
+test_1030,KAF BB - Gradebook,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!,
 test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!,
 test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!,
 test_2279,Canvas - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!,
