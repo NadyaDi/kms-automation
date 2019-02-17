@@ -538,17 +538,17 @@ class KafGeneric(Base):
     # 'imageThumbnail'' is the expecterQrCode of embed image - when the value different then '', means that the type is image
     # 'imageThumbnail' is the expecterQrCode of embed video - when the value different then '', means that the type is video
     # 'activity' is relevant just for moodle KAF
-    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False):
+    def verifyEmbedEntry(self, embedTitle, imageThumbnail='', delay='', application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False, isQuiz=False):
         if application == enums.Application.BLACK_BOARD:
-            return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay)
+            return self.clsCommon.blackBoard.verifyBlackboardEmbedEntry(embedTitle, imageThumbnail, delay, isQuiz)
         elif application == enums.Application.MOODLE:
-            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity, forceNavigate)
+            return self.clsCommon.moodle.verifyMoodleEmbedEntry(embedTitle, imageThumbnail, delay, activity, forceNavigate, isQuiz)
         elif application == enums.Application.CANVAS:
-            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
+            return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)
         elif application == enums.Application.D2L:
-            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)
+            return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)
         elif application == enums.Application.JIVE:
-            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate)                       
+            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)                       
         else:
             writeToLog("INFO","FAILED unknown application: " + application.value)   
             return False
@@ -723,4 +723,44 @@ class KafGeneric(Base):
             return False
         
         writeToLog("INFO","Success, media gallery metadata was verified successfully")
+        return True
+    
+    
+    # @Author: Inbar Willman
+    def logOutOfKAF(self):
+#         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
+#             if self.clsCommon.blackBoard.logOutOfBB() == False:
+#                 writeToLog("INFO","FAILED to log out from BB)
+#                 return False 
+#             
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
+            if self.clsCommon.moodle.logOutOfMoodle() == False:
+                writeToLog("INFO","FAILED navigate to log out from moodle")
+                return False 
+#             
+#         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+#             if self.clsCommon.canvas.navigateToGalleryCanvas(forceNavigate) == False:
+#                 writeToLog("INFO","FAILED navigate to media gallery")
+#                 return False 
+#         
+#         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+#             if self.clsCommon.d2l.navigateToGalleryD2L(galleryName, forceNavigate) == False:
+#                 writeToLog("INFO","FAILED navigate to media gallery")
+#                 return False   
+#             
+#         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE:
+#             if self.clsCommon.jive.navigateToGalleryJive(galleryName, forceNavigate) == False:
+#                 writeToLog("INFO","FAILED navigate to media gallery")
+#                 return False 
+#         
+#         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+#             if self.clsCommon.sakai.navigateToGallerySakai(galleryName, forceNavigate) == False:
+#                 writeToLog("INFO","FAILED navigate to media gallery")
+#                 return False 
+# 
+#         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+#             if self.clsCommon.sharePoint.navigateToGallerySharePoint(galleryName, forceNavigate) == False:
+#                 writeToLog("INFO","FAILED navigate to media gallery")
+#                 return False  
+
         return True

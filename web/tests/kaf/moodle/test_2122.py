@@ -54,8 +54,8 @@ class Test:
             self.videoEntryName = clsTestService.addGuidToString("Enable clipping permission", self.testNum)
             expectedEntryDuration = "0:20"
             self.galleryName = "New1"
-            self.user2 = 'student'
-            self.user2Pass = 'Kaltura1!'  
+            self.username2 = 'student'
+            self.userPass2 = 'Kaltura1!'  
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
@@ -64,34 +64,34 @@ class Test:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 1: FAILED to upload entry")
 #                 return          
-#                 
+#                    
 #             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
 #             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
 #                 return           
-#                 
+#                    
 #             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
 #             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
 #                 return
-#                 
+#                    
 #             writeToLog("INFO","Step 4: Going to get entry page URL")
 #             self.entryPageURL = self.common.base.driver.current_url  
-#             
+#                
 #             writeToLog("INFO","Step 5: Going to publish entry to media gallery")    
 #             if self.common.myMedia.publishSingleEntry(self.videoEntryName, '', '', [self.galleryName]) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 5: FAILED to publish entry to media gallery")
 #                 return
-#                
+#                   
 #             writeToLog("INFO","Step 6: Going to navigate to edit entry page")
 #             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.videoEntryName) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
 #                 return     
-#                
+#                   
 #             writeToLog("INFO","Step 7: Going to click on option tab and enable clip permission to everyone")
 #             if self.common.editEntryPage.changeEntryOptions(False, False, True) == False:
 #                 self.status = "Fail"
@@ -99,22 +99,22 @@ class Test:
 #                 return  
               
             writeToLog("INFO","Step 8: Going to logout as admin")
-            if self.common.login.logOutOfKMS() == False:
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to logout from KMS")
                 return        
               
-            writeToLog("INFO","Step 9: Going to perform login to KMS as user 2")
-            if self.common.login.loginToKMS(self.user2, self.user2Pass) == False:
+            writeToLog("INFO","Step 9: Going to login with : " + self.username2)
+            if  self.common.moodle.loginToMoodle(self.username2 , self.userPass2)  == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to login as user 2")
+                writeToLog("INFO","Step 9: FAILED to login with " + self.user2)
                 return  
-              
-            writeToLog("INFO","Step 10: Going to navigate to entry page (by link)")
-            if self.common.base.navigate(self.entryPageURL) == False:
+            
+            writeToLog("INFO","Step 10: Going to navigate media gallery")  
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.videoEntryName, self.galleryName)== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to navigate to entry page link")
-                return  
+                writeToLog("INFO","Step 10: FAILED to navigate media gallery")
+                return                  
              
             writeToLog("INFO","Step 11: Going to clip the entry from 30sec to 20sec")  
             if self.common.kea.clipEntry(self.videoEntryName, "00:10", "00:20", expectedEntryDuration, enums.Location.ENTRY_PAGE, enums.Location.MY_MEDIA, isCreateClippingPermissionIsOn=True) == False:
@@ -137,54 +137,54 @@ class Test:
                 writeToLog("INFO","Step 13: FAILED to verify the entry duration (using QR codes)")
                 return   
              
-            writeToLog("INFO","Step 17: Going to logout as user 2")
-            if self.common.login.logOutOfKMS() == False:
+            writeToLog("INFO","Step 14: Going to logout as user 2")
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to logout from KMS")
+                writeToLog("INFO","Step 14: FAILED to logout from KMS")
                 return                            
-             
-            writeToLog("INFO","Step 18: Going to perform login to KMS site as user - admin")
-            if self.common.loginAsUser() == False:
+              
+            writeToLog("INFO","Step 15: Going to login with main user")
+            if self.common.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 18: FAILED to login as user - admin")
+                writeToLog("INFO","Step 15: FAILED to login with main user")
                 return   
-            
-            writeToLog("INFO","Step 19: Going to navigate to edit entry page")
+             
+            writeToLog("INFO","Step 16: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.videoEntryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 19: FAILED to navigate to edit entry page")
+                writeToLog("INFO","Step 16: FAILED to navigate to edit entry page")
                 return     
-              
-            writeToLog("INFO","Step 20: Going to click on option tab and disabled clip permission to everyone")
+               
+            writeToLog("INFO","Step 17: Going to click on option tab and disabled clip permission to everyone")
             if self.common.editEntryPage.changeEntryOptions(False, False, False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 20: FAILED to click on option tab and disabled clip permission to everyone")
+                writeToLog("INFO","Step 17: FAILED to click on option tab and disabled clip permission to everyone")
                 return  
-             
-            writeToLog("INFO","Step 21: Going to logout as admin")
-            if self.common.login.logOutOfKMS() == False:
+              
+            writeToLog("INFO","Step 18: Going to logout as admin")
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 21: FAILED to logout from KMS")
+                writeToLog("INFO","Step 18: FAILED to logout from moodle")
                 return        
-             
-            writeToLog("INFO","Step 22: Going to perform login to KMS as user 2")
-            if self.common.login.loginToKMS(self.user2, self.user2Pass) == False:
+              
+            writeToLog("INFO","Step 19: Going to perform login to moodle as user 2")
+            if  self.common.moodle.loginToMoodle(self.username2 , self.userPass2)  == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 22: FAILED to login as user 2")
+                writeToLog("INFO","Step 19: FAILED to login as user 2")
                 return  
-             
-            writeToLog("INFO","Step 23: Going to navigate to entry page (by link)")
-            if self.common.base.navigate(self.entryPageURL) == False:
+              
+            writeToLog("INFO","Step 20: Going to navigate media gallery")  
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.videoEntryName, self.galleryName)== False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 23: FAILED to navigate to entry page link")
+                writeToLog("INFO","Step 20: FAILED to navigate media gallery")
                 return   
-            
-            writeToLog("INFO","Step 24: Going to verify that create clip option isn't available")
+             
+            writeToLog("INFO","Step 21: Going to verify that create clip option isn't available")
             if self.common.entryPage.chooseCreateClipOption() == True:
                 self.status = "Fail"
-                writeToLog("INFO","Step 24: FAILED to verify that create clip option isn't available")
+                writeToLog("INFO","Step 21: FAILED to verify that create clip option isn't available")
                 return                                                            
-            writeToLog("INFO","Step 24: step above failed as expected")  
+            writeToLog("INFO","Step 21: step above failed as expected")  
 
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Moodle - Enable clipping permission' was done successfully")
@@ -198,8 +198,8 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")  
             self.common.myMedia.deleteSingleEntryFromMyMedia("Clip of " +self.videoEntryName)
-            self.common.login.logOutOfKMS()
-            self.common.loginAsUser()
+            self.common.login.logOutOfMoodle()
+            self.common.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.videoEntryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:

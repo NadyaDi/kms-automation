@@ -70,6 +70,9 @@ class BlackBoard(Base):
     BB_TOOLS_OPTION_UNDER_TOOLS_MENU_IN_COURSE_PAGE     = ('xpath', "//span[@title= 'Tools' and contains(text(), 'Tools')]")
     BB_MEDIA_GALLEY_OPTION_IN_TOOLS_PAGE                = ('xpath', "//a[contains(text(), 'Media Gallery')]")
     BB_USER_NAME                                        = ('xpath', "//a[@id ='global-nav-link']")
+    BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU            = ('xpath', '//select[@id="gradingSchemaId"]')  
+    BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_OPTION          = ('xpath', '//option[text()="GRADE_OPTION"]') 
+    
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -595,11 +598,12 @@ class BlackBoard(Base):
             return False 
         
         # Verify that we are in the right page 
-        if menuOption!= enums.BBContentPageMenusOptions.KALTURA_MEDIA: 
-            tmpContentTypeTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', menuOption.value))
-            if self.is_visible(tmpContentTypeTitle) == False:
-                writeToLog("INFO","FAILED to displayed " + menuOption.value + " page")
-                return False                  
+        if menuOption!= enums.BBContentPageMenusOptions.KALTURA_MEDIA:
+            if menuOption != enums.BBContentPageMenusOptions.KALTURA_VIDEO_QUIZ: 
+                tmpContentTypeTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', menuOption.value))
+                if self.is_visible(tmpContentTypeTitle) == False:
+                    writeToLog("INFO","FAILED to displayed " + menuOption.value + " page")
+                    return False                  
             
         return True
         
@@ -824,7 +828,7 @@ class BlackBoard(Base):
     
     # @Author: Inbar Willman, Michal Zomper, Oleg Sigalov
     # Verify embed entry (video/image) in page
-    def verifyBlackboardEmbedEntry(self, embedTitle, imageThumbnail='', delay=''):
+    def verifyBlackboardEmbedEntry(self, embedTitle, imageThumbnail='', delay='', isQuiz=False):
         self.refresh()
         self.clsCommon.base.switch_to_default_content()
         sleep(11)
@@ -891,11 +895,16 @@ class BlackBoard(Base):
                 writeToLog("INFO","FAILED to play and verify video")
                 return False                
         
-        else:
+        elif imageThumbnail !='':
             sleep(5)
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
-                return False   
+                return False
+        
+        elif isQuiz == True:
+            writeToLog("INFO","Success: embed quiz was found in course page")
+            return True            
+               
     
         writeToLog("INFO","Embed media was successfully verified")    
         return True 
@@ -907,4 +916,75 @@ class BlackBoard(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get user name element")
             return False
-        return userName                             
+        return userName   
+    
+    
+    # @Author: Inbar Willman
+    def createKaltureVideoQuiz(self, galleryName, entryName, kalturaVideoQuizName, gradeOption=enums.KAFGradebookGradeOptions.SCORE):
+        if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.ASSESSMENTS, menuOption=enums.BBContentPageMenusOptions.KALTURA_VIDEO_QUIZ) == False:
+            writeToLog("INFO","FAILED to navigate to content kaltura video quiz page")
+            return False 
+         
+        self.switchToBlackboardEmbedKaltruaMedia()
+        
+        # Search in kaltura video quiz page
+        if self.clsCommon.kafGeneric.searchInEmbedPage(entryName) == False:
+            writeToLog("INFO","FAILED to make a search in embed page")
+            return False 
+        
+        # Get an element witch contains the entry name
+        tmpResult = (self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
+        entryElement = self.wait_element(tmpResult)
+        if entryElement == False:
+            writeToLog("INFO","FAILED to get after search result element")
+            return False        
+        
+        # Get the entry ID from the element
+        entryId = entryElement.get_attribute("id").split('-')[2]
+        tmpSelectBtn = (self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[0], self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
+        
+        # Use the entry ID to click on the '</> Embed' button
+        if self.click(tmpSelectBtn, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on the '</> Embed' button")
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()        
+ 
+        self.switch_to_default_content()
+ 
+        # Insert kaltura video quiz name
+        if self.click(self.CONTENT_KALTURA_MEDIA_NAME_FIELD) == False:
+            writeToLog("INFO","FAILED to click on title field")
+            return False  
+          
+        if self.send_keys(self.CONTENT_KALTURA_MEDIA_NAME_FIELD, kalturaVideoQuizName) == False:
+            writeToLog("INFO","FAILED to add quiz name")
+            return False
+        
+        tmpPageTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', 'Create Quiz Item'))
+        self.click(tmpPageTitle)
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
+        if self.click(self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU) == False:
+            writeToLog("INFO","FAILED to click on grade display menu")
+            return False 
+        
+        tmpGradeOption = (self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_OPTION[0], self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_OPTION[1].replace('GRADE_OPTION', gradeOption.value))
+        if self.click(tmpGradeOption) == False:
+            writeToLog("INFO","FAILED to click on " + gradeOption.text + " option")
+            return False             
+                   
+        if self.click(self.KAF_SUBMIT_BUTTON)  == False:
+            writeToLog("INFO","FAILED to click on 'submit' button")
+            return False     
+                 
+        writeToLog("INFO","Embed kaltura video quiz was created successfully")          
+        return True 
+    
+    
+    # @Author: Inbar Willman
+    def anwserQuizAsStudent(self, gradebookName, forceNavigate=True):
+        if forceNavigate == True:
+            if self.navigateToCourseMenuOptionPage(self.galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:   
+                writeToLog("INFO","FAILED to navigate to course content page")          
+                return True                                            
