@@ -372,6 +372,8 @@ class Kea(Base):
                 return False
             
         elif navigateTo == enums.Location.ENTRY_PAGE:
+            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
                 writeToLog("INFO","FAILED to click on Actions button (at entry page)")
                 return False
