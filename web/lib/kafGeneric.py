@@ -354,6 +354,7 @@ class KafGeneric(Base):
                 return False  
         
         if len(toRejectEntriesNames) != 0:
+            self.clsCommon.channel.showAllEntriesPendingTab()
             self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
             sleep(4)
             self.click(self.KAF_GRID_VIEW)
