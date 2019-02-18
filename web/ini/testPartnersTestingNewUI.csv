@@ -358,6 +358,8 @@ test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,2438361,qakmstest.dev.
 test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -635,3 +637,4 @@ test_4738,eSearch - Filter by media type no search - add to channel SR tab,24438
 test_4739,eSearch - Filter by media type with search - add to channel SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4852,Recscheduling - Create new single event,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Automation_User_1,Kaltura1!

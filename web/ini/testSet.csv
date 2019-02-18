@@ -342,6 +342,8 @@ test_4825,1,0,0,0,Quiz - Secure Embed ON - New Quiz with KMS User
 test_4826,1,0,0,0,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh
 test_4827,1,0,0,0,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user
 test_4828,1,0,0,0,Quiz - Secure Embed ON - Download functionality - KMS user
+test_4829,1,0,0,0,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor
+test_4830,1,0,0,0,Quiz - Change Question order for all Quiz Question Types - KEA Editor
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
@@ -636,3 +638,4 @@ test_4723,1,0,0,0,Filters Section - with search - My Media
 test_4724,1,0,0,0,Filters Section - no search - My Media
 test_4725,1,0,0,0,Filters Section - with search - Channel Page - Media Tab
 test_4726,1,0,0,0,Filters Section - no search - Channel Page - Media Tab
+test_4852,1,0,0,0,Recscheduling - Create new single event
