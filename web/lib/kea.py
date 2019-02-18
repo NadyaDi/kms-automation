@@ -1231,6 +1231,7 @@ class Kea(Base):
         self.switchToKeaIframe()
         
         tmpKEASection = (self.KEA_TOGGLE_MENU_OPTION[0], self.KEA_TOGGLE_MENU_OPTION[1].replace('OPTION_NAME', keaSection.value))
+        tmpKEAOptionSeeking = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', enums.KEAQuizOptions.NO_SEEKING_FORWARD.value))
         
         sleep(1)
         if self.click(tmpKEASection, 5, True) == False:
@@ -1271,8 +1272,11 @@ class Kea(Base):
             if self.verifyKEAOptionState(enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP, False) == False:
                 return False
             
-            if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, True) == False:
-                return False
+            if self.wait_element(tmpKEAOptionSeeking, 1, True) != False:   
+                if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, True) == False:
+                    return False
+            else:
+                writeToLog("INFO", "AS EXPECTED, no seeking forward option was found as disabled")
         
         sleep(1)
         if self.click(tmpKEASection, 5, True) == False:
