@@ -89,7 +89,7 @@ class Player(Base):
     PLAYER_QUIZ_QUESTION_SCREEN_HINT_BUTTON                     = ('xpath', "//div[@class='hint-why-box' and text()='HINT']")
     PLAYER_QUIZ_QUESTION_SCREEN_HINT_CONTAINER                  = ('xpath', "//div[@class='hint-container']")
     PLAYER_QUIZ_QUESTION_SCREEN_HINT_TEXT                       = ('xpath', "//div[@class='hint-container' and text()='HINT_TEXT']")
-    PLAYER_QUIZ_QUESTION_SCREEN_HINT_CLOSE_BUTTON               = ('xpath', "//div[@class='header-container close-button' and @title='Close hint']")
+    PLAYER_QUIZ_QUESTION_SCREEN_HINT_CLOSE_BUTTON               = ('xpath', "//div[@class='header-container close-button' and @role='button']")
     PLAYER_QUIZ_SCRUBBER_CURRENT_TIME_LABEL_SPECIFIC            = ('xpath', "//div[@data-plugin-name='currentTimeLabel' and text()='TIME']")
     PLAYER_QUIZ_SCRUBBER_SLIDER                                 = ('xpath', "//div[@role='slider' and @data-plugin-name='scrubber']")
     PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE                        = ('xpath', "//div[contains(@class,'bubble-window')]")
