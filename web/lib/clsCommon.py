@@ -19,6 +19,7 @@ from myMedia import MyMedia
 from myPlaylists import MyPlaylists
 from player import Player
 from upload import Upload
+from webcast import Webcast
 from home import Home
 from freeTrial import FreeTrial
 from kafBB import BlackBoard
@@ -64,6 +65,7 @@ class Common():
         self.freeTrail          = FreeTrial(self, driver)
         self.apiClientSession   = ApiClientSession(self, driver)
         self.globalSearch       = GlobalSearch(self, driver)
+        self.webcast            = Webcast(self, driver)
         ### KAF ###
         self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)

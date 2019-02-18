@@ -611,6 +611,7 @@ test_4697,1,0,0,0,Approve/Reject - no search - Category Page - Pending tab
 test_4699,1,0,0,0,Krec - upload metadata
 test_4705,1,0,0,0,Filter by Channel Membership - with search - My Channels page
 test_4706,1,0,0,0,Filter by Channel Membership - no search - My Channels page
+test_3130,1,0,0,0,Webcast - access control KS
 test_4730,1,0,0,0,eSearch - Filter by media type - add to category
 test_4731,1,0,0,0,eSearch - Filter by media type - add to channel with search
 test_4732,1,0,0,0,eSearch - Filter by media type - add to category page with search

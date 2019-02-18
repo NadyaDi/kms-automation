@@ -611,6 +611,7 @@ test_4699,Krec - upload metadata,1722461-2,qakmstest.dev.kaltura.com,tzachi.guet
 test_4705,Filter by Channel Membership - with search - My Channels page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4706,Filter by Channel Membership - no search - My Channels page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4715,Filters Section - with search - Global Page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_3130,Webcast - access control KS,2095431-2,qakmstest.dev.kaltura.com,tsviak@gmail.com,Kaltura1!,admin,123456
 test_4716,eSearch - Filter by media type - my media,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4717,eSearch - Filter by media type with search - my media,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4718,eSearch - Filter by media type - channel,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
