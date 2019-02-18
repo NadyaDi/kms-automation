@@ -54,6 +54,12 @@ class Admin(Base):
     ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
     ADMIN_ASSIGNMENT_SUBMISSION                     = ('xpath', '//select[@id="enableAssignmentSubmission"]')
     ADMIN_GALLERY_PAGE_SIZE                         = ('xpath', "//input[@id='pageSize']")
+    ADMIN_ADD_ALLOWEDUSERS                          = ('xpath', "//a[@class='add' and contains(text(),'+ Add \"allowedUsers\"')]")
+    ADMIN_SELECT_USERS                              = ('xpath', "//a[@class='button' and contains(text(),'Select Users')]")
+    ADMIN_ENTER_USER_TEXT_BOX                       = ('xpath', "//input[@id='SelectUsers-userName']")
+    ADMIN_SELECT_USER_FROM_LIST                     = ('xpath', "//strong[contains(text(), 'USER_NAME')]")
+    ADMIN_USER_IN_ALLOWEDUSER                       = ('xpath', "//input[@value='USER_NAME']")
+    ADMIN_CLICK_ON_SUBMIT                           = ('xpath', "//span[@class='ui-button-text' and contains(text(),'Submit')]")
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -1034,3 +1040,66 @@ class Admin(Base):
             
         writeToLog("INFO","Success, secureEmbed was set to: " + str(selection) + "'")
         return True   
+    
+    
+    # @Author: Michal Zomper
+    # Enable / Disable Recscheduling
+    def enableRecscheduling(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/recscheduling') == False:
+            writeToLog("INFO","FAILED to load recscheduling page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable category scheduling module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set recscheduling module as: " + str(selection))
+            return False
+         
+        #Check if the user is already in allowedUsers list
+        tmpUser= (self.ADMIN_USER_IN_ALLOWEDUSER[0], self.ADMIN_USER_IN_ALLOWEDUSER[1].replace('USER_NAME', localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.lower()))
+        if self.wait_element(tmpUser, timeout=5) == False:
+            #user isn't exist and need to be added to list
+            if self.click(self.ADMIN_ADD_ALLOWEDUSERS) == False:
+                writeToLog("INFO","FAILED to click on allowedUsers button")
+                return False
+            
+            #set user
+            asteriskElement = self.driver.find_element_by_xpath(".//legend[@class='num' and contains(text(), '*')]")
+            parentAsteriskElement = asteriskElement.find_element_by_xpath("..")
+    
+            sleep(1)
+            if self.click_child(parentAsteriskElement, self.ADMIN_SELECT_USERS, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on select users button")
+                return False
+            sleep(1)
+           
+            if self.click(self.ADMIN_ENTER_USER_TEXT_BOX) == False:
+                writeToLog("INFO","FAILED to click on user textbox")
+                return False
+            
+            if self.send_keys(self.ADMIN_ENTER_USER_TEXT_BOX, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME) == False:
+                writeToLog("INFO","FAILED to insert user name")
+                return False
+            sleep(2)
+ 
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN)
+            sleep(1)
+            self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
+            
+            if self.click(self.ADMIN_CLICK_ON_SUBMIT) == False:
+                writeToLog("INFO","FAILED to click on submit button")
+                return False
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+        
+        writeToLog("INFO","Success, recscheduling module was set to: " + str(selection) + "'")
+        return True    
