@@ -225,6 +225,8 @@ test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,mediaspace.kaltura.com
 test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
+test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
+test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_1027,Edit entry - thumbnail tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!,
@@ -607,3 +609,4 @@ test_31,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kalt
 test_32,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_33,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
 test_34,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!,
+test_4852,Recscheduling - Create new single event,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Automation_User_1,Kaltura1!,

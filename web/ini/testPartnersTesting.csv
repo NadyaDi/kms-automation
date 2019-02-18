@@ -218,3 +218,5 @@ test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,6269,qakmstest.dev.kal
 test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
 test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
 test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
