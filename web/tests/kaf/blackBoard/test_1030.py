@@ -87,38 +87,38 @@ class Test:
             self.studentUsername = 'kstudent'
             self.studentPassword = '123456'
             ######################### TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload entry")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
-               
-            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate entry page")
-                return
-               
-            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-                return
-             
-            writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
-            if self.common.kafGeneric.navigateToMyMediaKAF() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
-                return            
-               
-            writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
-            if self.common.kea.quizCreation('gradebook', self.dictQuestions, timeout=35) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
-                return  
+#             writeToLog("INFO","Step 1: Going to upload entry")    
+#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 1: FAILED to upload entry")
+#                 return
+#                
+#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
+#                 return
+#                
+#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+#                 return
+#              
+#             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
+#             if self.common.kafGeneric.navigateToMyMediaKAF() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
+#                 return            
+#                
+#             writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
+#             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+#                 return  
   
             writeToLog("INFO","Step 6: Going to CREATE embed kaltura video quiz")  
-            if self.common.blackBoard.createKaltureVideoQuiz(self.galleryName, self.entryName, self.kalturaVideoQuizName)== False:
+            if self.common.blackBoard.createKaltureVideoQuiz(self.galleryName, 'Gradebook 1233', self.kalturaVideoQuizName)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to CREATE embed kaltura video quiz")
                 return   

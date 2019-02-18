@@ -223,7 +223,7 @@ class Canvas(Base):
     
     
     # @Author: Inbar Willman
-    def verifyCanvasEmbedEntry(self, embedTitle, imageThumbnail, delay, forceNavigate=False):
+    def verifyCanvasEmbedEntry(self, embedTitle, imageThumbnail, delay, forceNavigate=False,isQuiz=False):
         # Navigate to announcements page  
         if forceNavigate == True: 
             if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL) == False:
