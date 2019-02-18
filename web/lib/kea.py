@@ -10,7 +10,6 @@ from general import General
 from selenium.webdriver.common.keys import Keys
 
 
-
 class Kea(Base):
     driver = None
     clsCommon = None
@@ -41,11 +40,13 @@ class Kea(Base):
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
+    KEA_QUIZ_ANSWER_GENERAL                                                 = ('xpath', "//textarea[contains(@id,'answer-text')]") 
     KEA_EDITOR_TAB                                                          = ('xpath', "//a[@aria-label='Video Editor']") 
     KEA_QUIZ_TAB                                                            = ('xpath', "//a[@class='nav-button' and @aria-label='Quiz']") 
     KEA_QUIZ_TAB_ACTIVE                                                     = ('xpath', "//a[@class='nav-button active' and @aria-label='Quiz']") 
     KEA_QUIZ_ADD_ANSWER_BUTTON                                              = ('xpath', '//div[@class="add-answer-btn"]') 
     KEA_QUIZ_BUTTON                                                         = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="BUTTON_NAME"]')
+    KEA_QUIZ_SHUFFLE_BUTTON                                                 = ('xpath', '//div[@class="shuffle-answers"]') 
     EDITOR_TABLE                                                            = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
     EDITOR_TABLE_SIZE                                                       = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                                          = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
@@ -81,7 +82,8 @@ class Kea(Base):
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE                              = ('xpath', "//p[@class='question-tooltip__content']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER                    = ('xpath', "//span[@class='question-tooltip__header__content']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP                 = ('xpath', "//span[@class='question-tooltip__header__duration']")
-    KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER                              = ('xpath', "//span[@class='ng-tns-c14-1 ng-star-inserted' and contains(text(),'Total Q: QUESTION_NUMBER')]")                                                                
+    KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER                              = ('xpath', "//span[@class='ng-tns-c14-1 ng-star-inserted' and contains(text(),'Total Q: QUESTION_NUMBER')]")
+    KEA_TIMELINE_SECTION_DRAG_HAND                                          = ('xpath', "//div[@class='answer-drag-handle']")                                                                                                                                
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -164,13 +166,9 @@ class Kea(Base):
             return False 
          
         # Save Question
-        if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
-            writeToLog("INFO","FAILED to Save question")
-            return False  
-         
-        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
-            writeToLog("INFO","FAILED to wait until spinner isn't visible")
-            return False  
+        if self.saveQuizChanges() == False:
+            writeToLog("INFO", "FAILED to save the changes")
+            return False
          
         return True
     
@@ -804,16 +802,11 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED, please make sure that you're using a support KEA Quiz Question type, using enums(e.g enums.QuizQuestionType.type)")
                 return False
                                             
-            # We save the KEA Quiz Question
-            if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
-                writeToLog("INFO","FAILED to Save question")
-                return False  
-             
-            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 35) == False:
-                writeToLog("INFO","FAILED to wait until spinner isn't visible")
-                return False 
-            sleep(2)
-        
+            # Save Question
+            if self.saveQuizChanges() == False:
+                writeToLog("INFO", "FAILED to save the changes")
+                return False
+            
         # Edit the KEA Quiz Section if necessary by enabling or disabling any KEA option from the KEA Details, Scores and Experience sections
         if dictDetails != '' or dictScores != '' or dictExperience != '':
             # We verify if we modify more than one option for the same KEA Section
@@ -1579,4 +1572,250 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED, the question " + currentQuestionDetails[2] + " has been found at timestamp : "  + questionTimestampPresented + " instead of " + currentQuestionDetails[0])
                 return False
             
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function can change the answer order by drag and drop or shuffle
+    # changeAnswerOrderDict must contain a list for each question that needs to be modified
+    # changeAnswerOrderDict = {'1':answerOrderOne} 
+    # This list is used in order to change the answer order using drag and drop
+    # index 0 = question title that must be found while hovering over the quiz question bubble
+    # index 1 = question answer that we want to move to a different location
+    # index 2 = question location where we want to move index 1
+    # answerOrderOne        = ['question #1 Title', 4, 1] ( answer from place four will be moved to the 1st place ) 
+    # This list is used in order to verify that the answer options are displayed in the desired order
+    # answerListOrderOne    = ['question #1 option #4', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3']
+    # This dictionary is used in order to verify the answer list order : verifyAnswerOrderDict = {'1':answerListOrderOne}
+    # If shuffle == True, there's no need to have an answersOrderDict
+    def changeAnswerOrder(self, changeAnswerOrderDict, answersOrderDict, shuffle=False, tries=4):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA editor
+        if self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15, True) == False:
+            writeToLog("INFO", "FAILED to find any quiz question pointer in the time line section")
+            return False
+        
+        # Take all the available quiz question pointers from the timeline KEA section
+        quizCuePoint = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        
+        # Iterate each available question
+        for questionNumber in changeAnswerOrderDict:
+            
+            # Take the details for the current question
+            questionDetails = changeAnswerOrderDict[questionNumber]
+            
+            # Create the locator for the current question
+            questionCuePoint = quizCuePoint[int(questionNumber) - 1]
+            
+            action = ActionChains(self.driver)
+            # Hover over the current question
+            try:
+                action.move_to_element(questionCuePoint).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to hover over the quiz " + questionDetails[0])
+                return False
+            
+            # Take the presented title from the hovered question
+            questionTitlePresented = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 5, True)
+            
+            # Verify that the question title was presented
+            if questionTitlePresented == False:
+                writeToLog("INFO", "FAILED to take the question title")
+                return False
+            else:
+                questionTitlePresented = questionTitlePresented.text
+            
+            
+            # Verify that the presented title is present also in our question details list
+            if questionTitlePresented in questionDetails:
+                # Enter in the quiz question editing screen
+                if self.clickElement(questionCuePoint) == False:
+                    writeToLog("INFO", "FAILED to select the question cue point for " + questionDetails[0])
+                    return False
+                
+                numberOfAnswers     = str(len(self.wait_elements(self.KEA_TIMELINE_SECTION_DRAG_HAND, 3)))
+                availableAnswers    = self.wait_elements(self.KEA_TIMELINE_SECTION_DRAG_HAND, 3)
+                
+                if shuffle == True:
+                    count = 0
+                    while True or count <= tries:
+                        # Take the current answer list presented, in order to verify that after we use the shuffle option, the list will change
+                        answerListPresentedFirst = self.takeAnswerListPresented()
+                        
+                        # Trigger the shuffle option
+                        if self.click(self.KEA_QUIZ_SHUFFLE_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the shuffle button")
+                        
+                        # Verify that the answer order is changed
+                        if self.verifyAnswersOrder(answerListPresentedFirst, shuffle=True) == False:
+                            count += 1
+                            writeToLog("INFO", "During the " + str(count) + " try, the same answer order has been displayed, going to retry")  
+                            if count > tries:
+                                writeToLog("INFO", "FAILED, the shuffle option has no functionality")
+                                return False
+                        else:
+                            break                   
+                    
+                elif shuffle == False:               
+                    # Verify that the answer number is available in the presented answer list
+                    if questionDetails[2] > int(numberOfAnswers):
+                        writeToLog("INFO", "FAILED, only " + numberOfAnswers + " number of answers are available")
+                        return False
+                    
+                    # Create the element for the answer that we want to move
+                    answerToBeMoved   = availableAnswers[questionDetails[1] - 1]
+                    # Create the element for the place where we want to move our answer
+                    # If we want to move the answer lower, we must specify only the answer that it should replace
+                    if questionDetails[1] < questionDetails[2]:
+                        placeToBeMoved     = availableAnswers[questionDetails[2] - 1]
+                    
+                    # If we want to move the answer higher, we must specify two location upper than the one where it would be placed
+                    elif questionDetails[1] > questionDetails[2]:
+                        # If the answer should be moved to the first position, we will use quiz question title as pointer
+                        if questionDetails[2] == 1:
+                            placeToBeMoved = self.wait_element(self.KEA_QUIZ_QUESTION_FIELD, 1, True)
+                        else:
+                            placeToBeMoved     = availableAnswers[questionDetails[2] - 2]
+                    
+                    # Move the answer to the desired new location
+                    try:
+                        action.move_to_element(answerToBeMoved).pause(1).drag_and_drop(answerToBeMoved, placeToBeMoved).perform()
+                        action.reset_actions()
+                    except Exception:
+                        writeToLog("INFO", "FAILED to hover over the quiz " + questionDetails[1])
+                        return False
+                    
+                    # Create the list attribute in order to verify that the answer order has been changed successfully
+                    answerList = answersOrderDict[questionNumber]
+                    
+                    # Verify that the answer order has been changed successfully
+                    if self.verifyAnswersOrder(answerList) == False:
+                        return False                   
+                    
+                # Save the changes
+                if self.saveQuizChanges() == False:
+                    writeToLog("INFO", "FAILED to save the Quiz changes for " + questionDetails[1] + " question")
+                    return False
+
+            else:
+                writeToLog("INFO", "FAILED to find the " + questionDetails[0] + " because the " + questionTitlePresented + " was presented")
+                return False
+
+        writeToLog("INFO", "Quiz answer's order has been changed successfully")
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will click on the save button and wait until the changes are saved
+    def saveQuizChanges(self):
+        # We save the KEA Quiz Question
+        if self.keaQuizClickButton(enums.KeaQuizButtons.SAVE) == False:
+            writeToLog("INFO","FAILED to click on the save button")
+            return False  
+        
+        # We wait until the changes were successfully saved
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 35) == False:
+            writeToLog("INFO","FAILED to wait until spinner isn't visible")
+            return False 
+        
+        sleep(1)
+        
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will verify that the answer that are presented matches with the answerList
+    # answerList = contains a list with all the available answers and the correct order
+    def verifyAnswersOrder(self, answerList, shuffle=False):
+        # Take the answer list presented
+        answerListPresented = self.takeAnswerListPresented()
+        
+        # Verify that the answer list that was first presented, no longer matches with the answer list that is now presented
+        if shuffle == True:
+            if answerListPresented == answerList:
+                writeToLog("INFO", "FAILED, the shuffle option kept the same structure")
+                return False
+        
+        # Verify that the answer list presented, matches with our desired answer list
+        else:
+            if answerListPresented != answerList:
+                writeToLog("INFO", "FAILED, the answer order doesn't match with the answer dictionary")
+                return False                     
+
+        writeToLog("INFO", "Answer order is properly displayed")
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will iterate through each answer field and return a list with all the available answers in the order that they were found
+    def takeAnswerListPresented(self):
+        answerFields = self.wait_elements(self.KEA_QUIZ_ANSWER_GENERAL, 1)
+        answerListPresented = []
+        
+        if answerFields == False:
+            writeToLog("INFO", "FAILED to take the elements for the answers")
+            return False
+        
+        # We iterate throguh each available answer field
+        for x in range(0, len(answerFields)):
+            # Select the answer input field
+            if self.clickElement(answerFields[x]) == False:
+                writeToLog("INFO", "FAILED to click on the answer field")
+                return False
+            
+            # Copy the answer text in clipboard
+            self.send_keys_to_element(answerFields[x], Keys.CONTROL + 'a')
+            self.send_keys_to_element(answerFields[x], Keys.CONTROL + 'c')
+            
+            # Take the answer text from clipboard
+            answerText = self.clsCommon.base.paste_from_clipboard()
+            
+            # Add the answer text to answer list
+            answerListPresented.append(answerText)
+        
+        return answerListPresented
+    
+    
+
+    # @Author: Horia Cus
+    # This function can change the question order from the KEA timeline section by moving in forward and / or backwards
+    # changeTimelineOrderDict = is a dictionary that contains as key the Quiz Number and as value the amount of seconds that we want to move the question forward and / or backwards
+    # e.g changeTimelineOrderDict = {'1':3, '2':2, '3':1}, question one will be moved by three seconds
+    def changeTimelineOrder(self, changeTimelineOrderDict):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA editor
+        if self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15, True) == False:
+            writeToLog("INFO", "FAILED to find any quiz question pointer in the time line section")
+            return False
+        
+        # Take all the available quiz question pointers from the timeline KEA section
+        quizCuePoint = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        
+        # Iterate each available question
+        for questionNumber in changeTimelineOrderDict:
+            
+            # Take the details for the current question ( number of seconds that the quiz should be moved by )
+            questionDetails = changeTimelineOrderDict[questionNumber]
+            
+            # Create the locator for the current question
+            questionCuePoint = quizCuePoint[int(questionNumber) - 1]
+            
+            # Enter in the quiz question editing screen
+            if self.clickElement(questionCuePoint) == False:
+                writeToLog("INFO", "FAILED to select the question cue point for " + questionNumber + " question number")
+                return False
+                
+            action = ActionChains(self.driver)
+            # Move the quiz number to a new timeline location
+            try:
+                action.move_to_element(questionCuePoint).pause(1).click_and_hold().move_by_offset(35.7*questionDetails, 0).release().perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to move question number " + str(questionNumber)  + " by " + str(questionDetails) + " seconds")
+                return False
+            
+            # Save the new timeline location
+            if self.saveQuizChanges() == False:
+                writeToLog("INFO", "FAILED to save the new timeline location for  " + str(questionNumber)  + " question number")
+                return False
+                        
         return True
