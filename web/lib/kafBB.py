@@ -927,28 +927,31 @@ class BlackBoard(Base):
          
         self.switchToBlackboardEmbedKaltruaMedia()
         
-        # Search in kaltura video quiz page
-        if self.clsCommon.kafGeneric.searchInEmbedPage(entryName) == False:
-            writeToLog("INFO","FAILED to make a search in embed page")
-            return False 
-        
-        # Get an element witch contains the entry name
-        tmpResult = (self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
-        entryElement = self.wait_element(tmpResult)
-        if entryElement == False:
-            writeToLog("INFO","FAILED to get after search result element")
-            return False        
-        
-        # Get the entry ID from the element
-        entryId = entryElement.get_attribute("id").split('-')[2]
-        tmpSelectBtn = (self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[0], self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
-        
-        # Use the entry ID to click on the '</> Embed' button
-        if self.click(tmpSelectBtn, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on the '</> Embed' button")
-            return False
-        
-        self.clsCommon.general.waitForLoaderToDisappear()        
+#         # Search in kaltura video quiz page
+#         if self.clsCommon.kafGeneric.searchInEmbedPage(entryName) == False:
+#             writeToLog("INFO","FAILED to make a search in embed page")
+#             return False 
+#         
+#         # Get an element which contains the entry name
+#         tmpResult = (self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
+#         entryElement = self.wait_element(tmpResult)
+#         if entryElement == False:
+#             writeToLog("INFO","FAILED to get after search result element")
+#             return False        
+#         
+#         # Get the entry ID from the element
+#         entryId = entryElement.get_attribute("id").split('-')[2]
+#         tmpSelectBtn = (self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[0], self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
+#         
+#         # Use the entry ID to click on the '</> Embed' button
+#         if self.click(tmpSelectBtn, multipleElements=True) == False:
+#             writeToLog("INFO","FAILED to click on the '</> Embed' button")
+#             return False
+#         
+#         self.clsCommon.general.waitForLoaderToDisappear()    
+        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:
+            writeToLog("INFO","FAILED to choose media in kaltura video quiz page")
+            return False               
  
         self.switch_to_default_content()
  

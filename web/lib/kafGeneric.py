@@ -548,8 +548,8 @@ class KafGeneric(Base):
             return self.clsCommon.canvas.verifyCanvasEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)
         elif application == enums.Application.D2L:
             return self.clsCommon.d2l.verifyD2lEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)
-        elif application == enums.Application.JIVE:
-            return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)                       
+#         elif application == enums.Application.JIVE:
+#             return self.clsCommon.jive.verifyJiveEmbedEntry(embedTitle, imageThumbnail, delay, forceNavigate, isQuiz)                       
         else:
             writeToLog("INFO","FAILED unknown application: " + application.value)   
             return False

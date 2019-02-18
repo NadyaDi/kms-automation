@@ -261,7 +261,7 @@ class D2L(Base):
     
     
     # @ Author: Inbar Willman
-    def verifyD2lEmbedEntry(self, entryName, imageThumbnail, delay, forceNavigate=False):
+    def verifyD2lEmbedEntry(self, entryName, imageThumbnail, delay, forceNavigate=False, isQuiz=False):
         # Navigate to discussions page  
         if forceNavigate == True: 
             if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:

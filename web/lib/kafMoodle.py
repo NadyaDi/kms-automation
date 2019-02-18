@@ -226,7 +226,7 @@ class Moodle(Base):
     
     
     # @Author: Inbar Willman
-    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False): 
+    def verifyMoodleEmbedEntry(self, embedTitle, imageThumbnail='', delay='', activity=enums.MoodleActivities.SITE_BLOG, forceNavigate=False, isQuiz=False): 
         # Navigate to site blog   
         if forceNavigate == True: 
             if activity == enums.MoodleActivities.SITE_BLOG:  
