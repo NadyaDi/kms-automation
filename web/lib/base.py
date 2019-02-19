@@ -280,16 +280,21 @@ class Base:
                         elements = self.get_elements(locator)
                         for el in elements:
                             if el.size['width']!=0 and el.size['height']!=0:
+                                self.setImplicitlyWaitToDefault()
                                 return el
                         return False
                     else:
-                        return self.get_element(locator)
+                        el = self.get_element(locator)
+                        self.setImplicitlyWaitToDefault()
+                        return el                        
                 if wait_until < datetime.datetime.now():
                     self.setImplicitlyWaitToDefault()
                     return False                
             except:
-                self.setImplicitlyWaitToDefault()
-                return False
+                if wait_until < datetime.datetime.now():
+                    self.setImplicitlyWaitToDefault()
+                    return False                 
+                pass
             
 
     # waits for the element to appear
