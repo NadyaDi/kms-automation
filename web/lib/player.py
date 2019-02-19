@@ -2205,13 +2205,13 @@ class Player(Base):
                 if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUE_FALSE and len(questionDetails) >= 6:
                     # We verify if the Quiz Question number is on the second submitted screen page, and navigate to it
                     if quizNumberID >= 13:
-                        if self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) != False:
+                        if self.wait_visible(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) != False:
                             if self.click(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) == False:
                                 writeToLog("INFO", "FAILED to navigate to the second submitted screen list")
                                 return False
                     # We verify if the Quiz Question number is on the first submitted screen page, and navigate to it
                     elif quizNumberID <= 12:
-                        if self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW, 1, True) != False:
+                        if self.wait_visible(self.PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW, 1, True) != False:
                             if self.click(self.PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW, 1, True) == False:
                                 writeToLog("INFO", "FAILED to navigate to the first submitted screen list")
                                 return False                    
@@ -2227,6 +2227,7 @@ class Player(Base):
                             writeToLog("INFO", "FAILED to click on the why button")
                             return False
                         
+                        sleep(1)
                         # we take the active why from the 'Why' screen
                         presentedWhy = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_HINT_CONTAINER, 3).text
                         # we take the expected why from our list
@@ -2260,13 +2261,13 @@ class Player(Base):
                 
                 # We verify if the Quiz Question number is on the second submitted screen page, and navigate to it
                 if quizNumberID >= 13:
-                    if self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) != False:
+                    if self.wait_visible(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) != False:
                         if self.click(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) == False:
                             writeToLog("INFO", "FAILED to navigate to the second submitted screen list")
                             return False
                 # We verify if the Quiz Question number is on the first submitted screen page, and navigate to it
                 elif quizNumberID <= 12:
-                    if self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW, 1, True) != False:
+                    if self.wait_visible(self.PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW, 1, True) != False:
                         if self.click(self.PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW, 1, True) == False:
                             writeToLog("INFO", "FAILED to navigate to the first submitted screen list")
                             return False    
