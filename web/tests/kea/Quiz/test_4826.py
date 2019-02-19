@@ -35,9 +35,6 @@ class Test:
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     typeTest = 'Quiz Entry Resumed State after Refresh with KMS user'
     
-    userName = "python_automation"
-    password = "Kaltura1!"
-    
     # this variables are used in order to take the embed link, embed file, embed link
     instanceUrl = None
     embedLink = None
@@ -87,6 +84,8 @@ class Test:
             ##################################################################
             self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed ON - KMS User Refresh", self.testNum)
             self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed ON - User User Refresh - Quiz", self.testNum)
+            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
+            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1
             self.instanceUrl = self.common.base.driver.current_url
@@ -117,10 +116,10 @@ class Test:
                 
             self.embedLink = self.common.entryPage.getEmbedLink()
                  
-            writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
+            writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
+                writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")   
                 return
             else:
                 i = i + 1
@@ -141,12 +140,12 @@ class Test:
             else:
                 i = i + 1 
                 
-            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + self.userName + " account, in order to verify secure embed ON")
-            if self.common.login.loginToKMSEmbed(self.userName, self.password) == False:
-                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + self.userName + " account, in order to verify secure embed ON")
+            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to verify secure embed ON")
+            if self.common.login.loginToKMSEmbed(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to verify secure embed ON")
                 return
             else:
-                i = i + 1  
+                i = i + 1    
                              
             writeToLog("INFO","Step " + str(i) + ": Going to answer to a few Quiz Questions from the " + self.newEntryName + " entry")  
             if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=False, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='', embed=True) == False:

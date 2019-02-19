@@ -35,10 +35,7 @@ class Test:
     showScoreEnabledWithIncludedAnswersEnabled       = "You completed the quiz and your score is 100 %\nPress any question to review how you performed"
     showScoreEnabledWithIncludedAnswersDisabled      = "You completed the quiz and your score is 100 %"
     showScoreDisabledWithIncludeAnswerDisabled       = "You completed the quiz"    
-    
-    userName = "python_automation"
-    password = "Kaltura1!"
-    
+        
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.Multiple, 'question #2 Title', 'question #2 option #1', 'question #2 option #2', 'question #2 option #3', 'question #2 option #4'] 
     questionNumber3 = ['00:20', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4']   
@@ -140,10 +137,10 @@ class Test:
                     i = i + 1
                    
                 self.common.base.switch_to_default_content() 
-                writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
+                writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
                 if self.common.login.logOutOfKMS() == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")   
                     return
                 else:
                     i = i + 1
@@ -165,9 +162,9 @@ class Test:
                 else:
                     i = i + 1   
                           
-                writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + self.userName + " account")       
-                if self.common.login.loginToKMS(self.userName, self.password) == False:
-                    writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + self.userName + " account")  
+                writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")       
+                if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+                    writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
                     return False  
                 else:
                     i = i + 1 

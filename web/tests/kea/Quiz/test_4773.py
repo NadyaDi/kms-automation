@@ -143,10 +143,10 @@ class Test:
                     i = i + 1
                                         
                 self.common.base.switch_to_default_content() 
-                writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
+                writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
                 if self.common.login.logOutOfKMS() == False:
                     self.status = "Fail"
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")   
                     return
                 else:
                     i = i + 1
@@ -187,9 +187,9 @@ class Test:
                     else:
                         i = i + 1    
                                                 
-                writeToLog("INFO","Step " + str(i) + ": Going to authenticate using: " + self.userName + " account")       
-                if self.common.login.loginToKMS(self.userName, self.password) == False:
-                    writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using: " + self.userName + " account")  
+                writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")       
+                if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+                    writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
                     return False  
                 else:
                     i = i + 1 
