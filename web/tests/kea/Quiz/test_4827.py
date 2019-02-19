@@ -93,6 +93,8 @@ class Test:
             ##################################################################
             self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed ON - Submitted and refresh with KMS User", self.testNum)
             self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed ON - Submitted and refresh with KMS User - Quiz", self.testNum)
+            self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
+            self.embedUrl = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1
             self.instanceUrl = self.common.base.driver.current_url
@@ -123,10 +125,10 @@ class Test:
                  
             self.embedLink = self.common.entryPage.getEmbedLink()
                   
-            writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + self.userName + " account")  
+            writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + self.userName + " account")   
+                writeToLog("INFO","Step " + str(i) + ": FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")   
                 return
             else:
                 i = i + 1
@@ -147,9 +149,9 @@ class Test:
             else:
                 i = i + 1 
                 
-            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + self.userName + " account, in order to verify secure embed ON")
-            if self.common.login.loginToKMSEmbed(self.userName, self.password) == False:
-                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + self.userName + " account, in order to verify secure embed ON")
+            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to verify secure embed ON")
+            if self.common.login.loginToKMSEmbed(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to verify secure embed ON")
                 return
             else:
                 i = i + 1  

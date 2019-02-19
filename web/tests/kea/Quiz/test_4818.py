@@ -32,9 +32,6 @@ class Test:
     tags = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
-    userName = "python_automation"
-    password = "Kaltura1!"
-    
     # this variables are used in order to take the embed link, embed file, embed link
     instanceUrl = None
     embedLink = None
@@ -65,6 +62,8 @@ class Test:
             self.entryName                  = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Download functionality Anonymous", self.testNum)
             self.entryNameQuiz              = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Download functionality Anonymous - Quiz", self.testNum)
             self.filePathDownloaded         = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + self.entryNameQuiz + ".pdf"
+            self.embedLinkFilePath          = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
+            self.embedUrl                   = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             self.instanceUrl = self.common.base.driver.current_url
   
@@ -90,10 +89,10 @@ class Test:
 
             self.embedLink = self.common.entryPage.getEmbedLink()
                   
-            writeToLog("INFO","Step 4: Going to log out from the " + self.userName + " account")  
+            writeToLog("INFO","Step 4: Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to log out from the " + self.userName + " account")   
+                writeToLog("INFO","Step 4: FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account") 
                 return
   
             writeToLog("INFO","Step 5: Going to write the " + self.entryNameQuiz  + " embed code in a file")
@@ -116,9 +115,9 @@ class Test:
             
             self.common.base.navigate(self.instanceUrl)
     
-            writeToLog("INFO","Step 8: Going to authenticate using " + self.userName + " account, in order to teardown")
-            if self.common.login.loginToKMS(self.userName, self.password) == False:
-                writeToLog("INFO", "Step 8:FAILED to authenticate using " + self.userName + " account, in order to teardown")
+            writeToLog("INFO","Step 8: Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
+            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+                writeToLog("INFO", "Step 8:FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
                 return                 
             ##################################################################
             writeToLog("INFO","TEST PASSED: The download option for the Allow Download of Questions List option has proper functionality for Anonymous User with embedSecure off")
