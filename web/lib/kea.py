@@ -648,7 +648,7 @@ class Kea(Base):
     # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
     # questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point', 'Hint Text', 'Why Text']
     # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
-    # TBD - Change order of the correct answer
+    # If you want to change the answer order you can use this function: changeAnswerOrder
     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
         sleep(25)
         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
@@ -668,11 +668,18 @@ class Kea(Base):
                 return False 
             
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
-            timestamp = questionDetails[0]
-            if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
-                writeToLog("INFO","FAILED to insert the time-stamp of question # " + questionNumber)
+            # click on the editor in order to higlight the timeline field and select all the text
+            if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             
+            timestamp = questionDetails[0]
+            
+            # replace the text present in the timestamp field with the new one
+            if self.send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
+                writeToLog("INFO", "FAILED to select the timeline field text")
+                return False
+        
             # Creating the variable for the Quiz Question Type
             qestionType = questionDetails[1]
             if qestionType == enums.QuizQuestionType.Multiple:   
@@ -709,11 +716,12 @@ class Kea(Base):
                             return False
                     else:
                         writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
-                    
+
                     # we verify if the value for the 'Why' is present in the list
                     if len(questionDetails) >= 9:
                         # we verify if we want to create a Why for the current Quiz Question
                         if questionDetails[8] != '':
+                            sleep(2)
                             if self.createHintAndWhy(hintText='', whyText=questionDetails[8]) == False:
                                 writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
                                 return False
@@ -786,11 +794,12 @@ class Kea(Base):
                             return False
                     else:
                         writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
-                    
+                        
                     # we verify if the value for the 'Why' is present in the list
                     if len(questionDetails) == 7:
                         # we verify if we want to create a Why for the current Quiz Question
                         if questionDetails[6] != '':
+                            sleep(2)
                             if self.createHintAndWhy(hintText='', whyText=questionDetails[6]) == False:
                                 writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
                                 return False
@@ -1386,6 +1395,7 @@ class Kea(Base):
             if self.click(self.KEA_ADD_NEW_QUESTION_HINT_AND_WHY_TOGGLE_MENU_BUTTON, 3, True) == False:
                 writeToLog("INFO", "FAILED to trigger the Hint and Why toggle menu")
                 return False
+            sleep(1)
             
             if self.click(self.KEA_ADD_NEW_QUESTION_HINT_BUTTON, 3, True) == False:
                 writeToLog("INFO", "FAILED to select the 'Hint' option from the Hint and Why toggle menu")
@@ -1409,6 +1419,7 @@ class Kea(Base):
             if self.click(self.KEA_ADD_NEW_QUESTION_HINT_AND_WHY_TOGGLE_MENU_BUTTON, 3, True) == False:
                 writeToLog("INFO", "FAILED to trigger the Hint and Why toggle menu")
                 return False
+            sleep(1)
             
             if self.click(self.KEA_ADD_NEW_QUESTION_WHY_BUTTON, 3, True) == False:
                 writeToLog("INFO", "FAILED to select the 'Why' option from the Hint and Why toggle menu")
@@ -1450,6 +1461,7 @@ class Kea(Base):
                 if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON) == False:
                     writeToLog("INFO","FAILED to highlight the 'ADD NEW MULTIPLE' quiz type")
                     return False
+                sleep(1)
 
                 if self.click(self.KEA_ADD_NEW_MULTIPLE_QUESTION_BUTTON_ACTIVE) == False:
                     writeToLog("INFO","FAILED to activate the 'ADD NEW MULTIPLE' quiz type")
@@ -1467,6 +1479,7 @@ class Kea(Base):
                 if self.click(self.KEA_ADD_NEW_REFLECTION_POINT_BUTTON) == False:
                     writeToLog("INFO","FAILED to highlight the 'Reflection Point' quiz type")
                     return False
+                sleep(1)
 
                 if self.click(self.KEA_ADD_NEW_REFLECTION_POINT_BUTTON_ACTIVE) == False:
                     writeToLog("INFO","FAILED to activate the 'Reflection Point' quiz type")
@@ -1484,6 +1497,7 @@ class Kea(Base):
                 if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON) == False:
                     writeToLog("INFO","FAILED to highlight the 'True and False' quiz type")
                     return False
+                sleep(1)
 
                 if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE) == False:
                     writeToLog("INFO","FAILED to activate the 'True and False' quiz type")
