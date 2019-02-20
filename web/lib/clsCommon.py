@@ -34,6 +34,7 @@ from kafCanvas import Canvas
 from kafD2L import D2L
 from kafJive import Jive
 from kafSakai import Sakai
+from recscheduling import Recscheduling
 
 
     #============================================================================================================
@@ -66,6 +67,7 @@ class Common():
         self.apiClientSession   = ApiClientSession(self, driver)
         self.globalSearch       = GlobalSearch(self, driver)
         self.webcast            = Webcast(self, driver)
+        self.recscheduling      = Recscheduling(self, driver)
         ### KAF ###
         self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
