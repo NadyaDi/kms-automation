@@ -91,13 +91,13 @@ class Test:
             self.instanceUrl = self.common.base.driver.current_url
  
             writeToLog("INFO","Step " + str(i) + ": Going to turn ON the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbedPlaylist(True) == False:
+            if self.common.admin.enableSecureEmbed(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to turn ON the secureEmbed in admin panel")
                 return                     
-             
+              
             self.common.base.navigate(self.instanceUrl)
-             
+              
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -105,7 +105,7 @@ class Test:
                 return
             else:
                 i = i + 1
-                                           
+                                            
             writeToLog("INFO","Step " + str(i) + ": Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
@@ -113,9 +113,9 @@ class Test:
                 return  
             else:
                 i = i + 1
-                
-            self.embedLink = self.common.entryPage.getEmbedLink()
                  
+            self.embedLink = self.common.entryPage.getEmbedLink()
+                  
             writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -123,7 +123,7 @@ class Test:
                 return
             else:
                 i = i + 1
- 
+  
             writeToLog("INFO","Step " + str(i) + ": Going to write the " + self.newEntryName  + " embed code in a file")
             if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
                 self.status = "Fail"
@@ -184,7 +184,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
             self.common.deleteFile(self.embedLinkFilePath)
-            self.common.admin.enableSecureEmbedPlaylist(False)
+            self.common.admin.enableSecureEmbed(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass

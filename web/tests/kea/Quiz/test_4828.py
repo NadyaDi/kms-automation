@@ -67,10 +67,10 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################
             self.instanceUrl = self.common.base.driver.current_url
   
-            writeToLog("INFO","Step 1: Going to turn off the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbedPlaylist(False) == False:
+            writeToLog("INFO","Step 1: Going to turn ON the secureEmbed in admin panel")
+            if self.common.admin.enableSecureEmbed(True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to turn off the secureEmbed in admin panel")
+                writeToLog("INFO","Step 1: FAILED to turn ON the secureEmbed in admin panel")
                 return                
               
             self.common.base.navigate(self.instanceUrl)
@@ -132,6 +132,7 @@ class Test:
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
             self.common.deleteFile(self.embedLinkFilePath)
             self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+            self.common.admin.enableSecureEmbed(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -106,7 +106,7 @@ class Test:
             self.instanceUrl = self.common.base.driver.current_url
   
             writeToLog("INFO","Step " + str(i) + ": Going to turn off the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbedPlaylist(False) == False:
+            if self.common.admin.enableSecureEmbed(False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to turn off the secureEmbed in admin panel")
                 return                

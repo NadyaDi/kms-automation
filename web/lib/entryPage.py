@@ -74,6 +74,7 @@ class EntryPage(Base):
     ENTRY_SEARCH_RESULTS_CONTAINER                         = ('xpath', "//div[contains(@class,'results-details-container__group')]//div[2]//span[contains(., 'TEXT')]")
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_CREATE_CLIP_BUTTON     = ('xpath', '//span[@id="tabLabel-editor" and text()="Create Clip"]')
     ENTRY_PAGE_COMMENTS_PART_TITLE                         = ('xpath', '//a[@id="comments-tab-tab"]')
+    ENTRY_PAGE_ELEMENT_LOADER_SHARE                        = ('xpath', '//div[@class="elementLoader"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -372,18 +373,22 @@ class EntryPage(Base):
     def getEmbedLink(self):
         if self.clickOnShareTab() == False:
             writeToLog("INFO","FAILED to click on share tab")
-            return False  
+            return False
+        sleep(2)  
         
         if self.chooseShareOption() == False:
             writeToLog("INFO","FAILED to click on embed tab")
             return False
-        sleep(3)
+        sleep(1)
+        
+        if self.wait_while_not_visible(self.ENTRY_PAGE_ELEMENT_LOADER_SHARE, 30) == False:
+            writeToLog("INFO", "FAILED, during the transition to embed tab, it remained in infinite loading")
+            return False
         
         self.clsCommon.sendKeysToBodyElement(Keys.END)
         if self.wait_while_not_visible(self.ENTRY_PAGE_LOADING) == False:
             writeToLog("INFO","FAILED - Loading message is still displayed")
             return False  
-         
         embed_text = self.get_element_text(self.ENTRY_PAGE_EMBED_TEXT_AREA)
         if embed_text == None:
             return False
