@@ -631,6 +631,9 @@ class EntryPage(Base):
             writeToLog("INFO","FAILED to click on download attachments icon")       
             return False   
         
+        # Wait to download file
+        sleep(10)
+        
         # Compare between uploaded file and download file 
         if self.clsCommon.compareBetweenTwoFilesBinary(originalPath, downloadPath) == False:
             writeToLog("INFO","Failed to click on to download file correctly")
