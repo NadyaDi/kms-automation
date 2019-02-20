@@ -68,19 +68,19 @@ class Test:
             self.instanceUrl = self.common.base.driver.current_url
   
             writeToLog("INFO","Step 1: Going to turn off the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbedPlaylist(False) == False:
+            if self.common.admin.enableSecureEmbed(False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to turn off the secureEmbed in admin panel")
                 return                
-              
+               
             self.common.base.navigate(self.instanceUrl)
-            
+             
             writeToLog("INFO","Step 2: Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a new entry, " + self.entryName)  
                 return
-                  
+                   
             writeToLog("INFO","Step 3: Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions) == False:
                 self.status = "Fail"

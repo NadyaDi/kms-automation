@@ -82,7 +82,7 @@ class Test:
             self.instanceUrl = self.common.base.driver.current_url
  
             writeToLog("INFO","Step " + str(i) + ": Going to turn ON the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbedPlaylist(True) == False:
+            if self.common.admin.enableSecureEmbed(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to turn ON the secureEmbed in admin panel")
                 return                
@@ -159,7 +159,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
             self.common.deleteFile(self.embedLinkFilePath)
-            self.common.admin.enableSecureEmbedPlaylist(False)
+            self.common.admin.enableSecureEmbed(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass

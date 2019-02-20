@@ -1016,7 +1016,7 @@ class Admin(Base):
     # This function will change the secure embed from Embed tab state
     # if isEnabled = True, secureEmbed will be activated
     # if isEnabled = False, secureEmbed will be deactivated
-    def enabledSecureEmbed(self, isEnabled):
+    def enableSecureEmbed(self, isEnabled):
         #Login to Admin
         if self.loginToAdminPage() == False:
             writeToLog("INFO","FAILED to login to admin page")
