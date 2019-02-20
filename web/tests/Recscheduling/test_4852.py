@@ -61,13 +61,16 @@ class Test:
             self.common = Common(self.driver)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            
+            self.common.recscheduling.navigateToMySchedule()
+            
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
                 return
                  
-       
+            
                  
             ##################################################################
             writeToLog("INFO","TEST PASSED: 'Home Page Playlist' was done successfully")
