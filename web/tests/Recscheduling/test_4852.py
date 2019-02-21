@@ -1,4 +1,4 @@
-import time, pytest
+import time, pytest, datetime
 import sys,os
 sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from clsCommon import Common
@@ -62,7 +62,19 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.recscheduling.navigateToMySchedule()
+            self.common.recscheduling.fillFileScheduleTags("tags")
+            self.common.base.click(self.common.recscheduling.SCHEDULE_EVENT_DESCRIPTION)
+            self.common.base.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, "description")
+            startDate = datetime.datetime.now().strftime("%d/%m/%Y")
+            endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
+        
+            startTime = time.time() + (60*60)
+            startTime= time.strftime("%I:%M %p",time.localtime(startTime))
+             
+            endTime = time.time() - (60*60)
+            endTime= time.strftime("%I:%M %p",time.localtime(endTime))
+            
+            self.common.recscheduling.createReschduleEventWithoutRecurrence("Event Title", startDate, endDate, startTime,endTime, "description", "tags", True, eventOrganizer='') 
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
