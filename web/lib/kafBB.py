@@ -953,7 +953,9 @@ class BlackBoard(Base):
         tmpPageTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', 'Create Quiz Item'))
         self.click(tmpPageTitle)
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-        sleep(3)
+        sleep(5)
+        
+        self.wait_element(self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU)
         
         if self.click(self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU) == False:
             writeToLog("INFO","FAILED to click on grade display menu")
