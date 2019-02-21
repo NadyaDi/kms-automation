@@ -72,7 +72,13 @@ class BlackBoard(Base):
     BB_USER_NAME                                        = ('xpath', "//a[@id ='global-nav-link']")
     BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU            = ('xpath', '//select[@id="gradingSchemaId"]')  
     BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_OPTION          = ('xpath', '//option[text()="GRADE_OPTION"]') 
-    
+    BB_COURSE_GRADE_CENTER                              = ('xpath', '//a[@title="Expand Grade Center"]')
+    BB_COURSE_FULL_GRADE_CENTER                         = ('xpath', '//a[@title="Full Grade Center"]')
+    BB_FULL_GRADE_CENTER_PAGE_TITLE                     = ('xpath', '//span[@id="pageTitleText" and contains(text(), "Full Grade Center")]')
+    BB_QUIZ_GRADE_FOR_ADMIN                             = ('xpath', '//div[@class="tabletLabel" and contains(text(),"QUIZ_NAME")]/..')
+    BB_GRADE_TAB_FOR_STUDENT                            = ('xpath', '//span[@title="Grade"]')
+    BB_MY_GRADES_TITLE                                  = ('xpath', '//span[text()="My Grades"]')
+    BB_QUIZ_GRADE_FOR_STUDENT                           = ('xpath', "//div[@class='cell gradable' and contains(text(),'QUIZ_NAME')]/..")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -924,34 +930,14 @@ class BlackBoard(Base):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.ASSESSMENTS, menuOption=enums.BBContentPageMenusOptions.KALTURA_VIDEO_QUIZ) == False:
             writeToLog("INFO","FAILED to navigate to content kaltura video quiz page")
             return False 
-         
-        self.switchToBlackboardEmbedKaltruaMedia()
         
-#         # Search in kaltura video quiz page
-#         if self.clsCommon.kafGeneric.searchInEmbedPage(entryName) == False:
-#             writeToLog("INFO","FAILED to make a search in embed page")
-#             return False 
-#         
-#         # Get an element which contains the entry name
-#         tmpResult = (self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.clsCommon.kafGeneric.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
-#         entryElement = self.wait_element(tmpResult)
-#         if entryElement == False:
-#             writeToLog("INFO","FAILED to get after search result element")
-#             return False        
-#         
-#         # Get the entry ID from the element
-#         entryId = entryElement.get_attribute("id").split('-')[2]
-#         tmpSelectBtn = (self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[0], self.clsCommon.kafGeneric.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
-#         
-#         # Use the entry ID to click on the '</> Embed' button
-#         if self.click(tmpSelectBtn, multipleElements=True) == False:
-#             writeToLog("INFO","FAILED to click on the '</> Embed' button")
-#             return False
-#         
-#         self.clsCommon.general.waitForLoaderToDisappear()    
+        self.switchToBlackboardEmbedKaltruaMedia()
+            
         if self.clsCommon.kafGeneric.embedMedia(entryName) == False:
             writeToLog("INFO","FAILED to choose media in kaltura video quiz page")
-            return False               
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()               
  
         self.switch_to_default_content()
  
@@ -967,6 +953,9 @@ class BlackBoard(Base):
         tmpPageTitle = (self.CONTENT_TYPE_TITLE[0], self.CONTENT_TYPE_TITLE[1].replace('CONTENT_TYPE', 'Create Quiz Item'))
         self.click(tmpPageTitle)
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        sleep(5)
+        
+        self.wait_element(self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU)
         
         if self.click(self.BB_KALTURA_VIDEO_QUIZ_GRADE_DISPLAY_MENU) == False:
             writeToLog("INFO","FAILED to click on grade display menu")
@@ -986,8 +975,82 @@ class BlackBoard(Base):
     
     
     # @Author: Inbar Willman
-    def anwserQuizAsStudent(self, gradebookName, forceNavigate=True):
-        if forceNavigate == True:
-            if self.navigateToCourseMenuOptionPage(self.galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:   
-                writeToLog("INFO","FAILED to navigate to course content page")          
-                return True                                            
+    def navigateToCourseFullGradeCenter(self, galleryName):
+        if self.navigateToGalleryBB(galleryName, forceNavigate=False) == False:
+            writeToLog("INFO","FAILED to navigate to course page")          
+            return False 
+        
+        self.switch_to_default_content()
+                    
+        if self.click(self.BB_COURSE_GRADE_CENTER) == False:
+            writeToLog("INFO","FAILED to click and expand grade center")          
+            return False 
+        
+        if self.click(self.BB_COURSE_FULL_GRADE_CENTER) == False:
+            writeToLog("INFO","FAILED to click on full grade center")          
+            return False
+        
+        # Verify that we are in full grade center page
+        if self.wait_element(self.BB_FULL_GRADE_CENTER_PAGE_TITLE) == False:
+            writeToLog("INFO","FAILED to navigate to full grade center page")          
+            return False   
+        
+        writeToLog("INFO","Success: navigate to full grade center page")          
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    def verifyQuizGradeAsAdmin(self, grade, quizName, galleryName):  
+        if self.navigateToCourseFullGradeCenter(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to course page")          
+            return False 
+        
+        tmpQuizGrade = (self.BB_QUIZ_GRADE_FOR_ADMIN[0], self.BB_QUIZ_GRADE_FOR_ADMIN[1].replace('QUIZ_NAME', quizName))
+        quiGradeElement = self.wait_element(tmpQuizGrade)
+        if quiGradeElement == False:
+            writeToLog("INFO","FAILED to display find quiz in full grade center")          
+            return False 
+            
+        if quiGradeElement.text != grade:
+            writeToLog("INFO","FAILED to display correct quiz grade")          
+            return False     
+        
+        writeToLog("INFO","Success: quiz grade is displayed correctly in full grade center")          
+        return True
+    
+    
+    # @Author: Inbar Willman 
+    # TO DO
+    def verifyQuizGradeAsStudent(self, grade, quizName, galleryName): 
+        if self.navigateToGalleryBB(galleryName, forceNavigate=False) == False:
+            writeToLog("INFO","FAILED to navigate to course page")          
+            return False 
+        
+        self.switch_to_default_content()                 
+        
+        if self.click(self.BB_GRADE_TAB_FOR_STUDENT) == False:
+            writeToLog("INFO","FAILED to click on grade tab")          
+            return False  
+        
+        # Verify that we are in 'My Grades' page
+        if self.wait_element(self.BB_MY_GRADES_TITLE) == False:
+            writeToLog("INFO","FAILED to display 'My grades' page title")          
+            return False   
+        
+        tmpQuizGradelocator = (self.BB_QUIZ_GRADE_FOR_STUDENT[0], self.BB_QUIZ_GRADE_FOR_STUDENT[1].replace('QUIZ_NAME', quizName))
+        tmpQuizGradeElement = self.wait_element(tmpQuizGradelocator)
+        if tmpQuizGradeElement == False:
+            writeToLog("INFO","FAILED to display find quiz in 'My Grades' page")          
+            return False 
+        
+        tmpQuizGradeTextList = tmpQuizGradeElement.text.split("\n")
+        tmpQuizGrade = tmpQuizGradeTextList[-1]
+            
+        if tmpQuizGrade != grade:
+            writeToLog("INFO","FAILED to display correct quiz grade")          
+            return False     
+        
+        writeToLog("INFO","Success: quiz grade is displayed correctly in 'My Grades' page")          
+        return True
+                   
+        return True 

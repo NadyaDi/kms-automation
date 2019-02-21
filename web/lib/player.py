@@ -1161,26 +1161,26 @@ class Player(Base):
     def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False):     
         if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed) == False:
             return False
-        
+         
         # taking the available question numbers                
         questionNumber     = self.get_elements(self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE)
         availableQuestions = len(questionNumber)
         givenQuestions     = len(questionDict)
         questionsFound     = 0
-        
+         
         # We pause the video, in order to make sure that we won't miss any elements from the scrubber
         if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) != False:
             writeToLog("INFO", "AS EXPECTED, video was paused within the first second")
         else:
             # Remove overlay before click pause (insert to 'touchOverlay' element 'style="display:none;"')
             self.removeTouchOverlay()
-            
+             
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 10, True) == False:
                 writeToLog("INFO", "FAILED to pause the video")
                 return False
-            
+             
         sleep(1)
-        
+         
         #availableQuestions will determine for how many times we will use the for loop
         for x in range(0,availableQuestions):
             #we use tmpQuizPage in order to navigate to the next Quiz Question page, by incrementing with +1 (using x value) from each run
@@ -1188,59 +1188,59 @@ class Player(Base):
             if self.click(tmpQuizPage, 30, True) == False:
                 writeToLog("INFO", "FAILED to move to the " + str(x+1) + " quiz page")
                 return False        
-            
+             
             # We collect the active question in order to verify if it matches with one from our dictionary, if the question has not been founded within the 75 seconds, the test case will fail  
             activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 75, True).text
-                        
+                         
             if activeQuestion in questionDict:
                 #after the active question matches with one from our dictionary, we take the answer assigned for that question
                 activeAnswer = questionDict[activeQuestion]
                 tmpAnswerName = (self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[0], self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[1].replace('ANSWER_TEXT', activeAnswer))
-                
+                 
                 if self.wait_element(tmpAnswerName, 5, True) == False:
                     writeToLog("INFO", "The " + activeAnswer + " has not been found in the " + activeQuestion + " question page")
                     return False
-                     
+                      
                 if self.click(tmpAnswerName, 10, True) == False:
                     writeToLog("INFO", "FAILED to select the " + activeAnswer + " answer")
                     return False
-                 
+                  
                 if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECT_BUTTON, 5, True) == False and self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
                     writeToLog("INFO", "FAILED to confirm the " + activeAnswer + " answer" )
                     return False
-                 
+                  
                 if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
                     writeToLog("INFO", "The " + activeAnswer + " is not displayed as being selected")
                     return  False   
-                
+                 
                 #after each Quiz Question answered, we increment it by one, so at the end we will know if all the Quiz Question from our dictionary were answered or not        
                 questionsFound += 1
                 self.wait_while_not_visible(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 10)
-            
+             
             elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
                 writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
                 questionsFound += 1
                 givenQuestions += 1
-                
+                 
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
                     writeToLog("INFO", "FAILED to skip the " + activeQuestion + " which was not found in the dictionary")
                     return False
-                
+                 
             else:
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
                     writeToLog("INFO", "FAILED to skip the " + activeQuestion + " which was not found in the dictionary")
                     return False
-
+ 
                 self.wait_while_not_visible(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10)
             sleep(1)
-        
+         
         # verify that all the Quiz Question from our dictionary were found  
         if questionsFound != givenQuestions:
             writeToLog("INFO", "FAILED to find all the questions from the dictionary")
             return False
-        
+         
         sleep(1)
         if submitQuiz == True:
             # We verify that all the available questions were answered
@@ -1257,7 +1257,7 @@ class Player(Base):
                 if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, embed) == False:
                     return False
              
-        return True
+            return True
     
     
     # @Author: Oleg Sigalov
@@ -1292,6 +1292,7 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
             return False
         
+        # Verify if the Done bubble is available, if so, we will navigate to it
         if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 3, True) != False:        
             if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
                 self.removeTouchOverlay()
@@ -1302,12 +1303,6 @@ class Player(Base):
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
         if self.wait_element(completedTitle, 60, True) == False:
-            writeToLog("INFO", "FAILED to load the Completed screen")            
-
-            
-        if self.wait_element(completedTitle, 10, True) == True:
-            writeToLog("INFO", "FAILED to load the completed screen")
-            return False
             
         if self.click(self.PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON, 30, True) == False:
             writeToLog("INFO", "FAILED to submit the answers")

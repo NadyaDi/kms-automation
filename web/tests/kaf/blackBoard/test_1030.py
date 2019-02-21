@@ -76,10 +76,11 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Quiz_Score_Enabled", self.testNum)
-            self.newEntryName = clsTestService.addGuidToString("Quiz_Score_Enabled - Quiz", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz_Score_Enabled - Quiz", self.testNum)
+            self.newEntryName = clsTestService.addGuidToString("Quiz_Score_Enabled-Quiz", self.testNum)
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
             self.uploadEntrieList = [self.entryToUpload] 
-            
+            self.expectedGrade = '66.66666'
             self.kalturaVideoQuizName = clsTestService.addGuidToString("gradebook", self.testNum) 
             
             self.galleryName = "New1"
@@ -87,75 +88,121 @@ class Test:
             self.studentUsername = 'kstudent'
             self.studentPassword = '123456'
             ######################### TEST STEPS - MAIN FLOW #######################
-#             writeToLog("INFO","Step 1: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return
-#                
-#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
-#                 return
-#                
-#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-#                 return
-#              
-#             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
-#             if self.common.kafGeneric.navigateToMyMediaKAF() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
-#                 return            
-#                
-#             writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
-#             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
-#                 return  
-  
-            writeToLog("INFO","Step 6: Going to CREATE embed kaltura video quiz")  
-            if self.common.blackBoard.createKaltureVideoQuiz(self.galleryName, 'Gradebook 1233', self.kalturaVideoQuizName)== False:
+            writeToLog("INFO","Step 1: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to CREATE embed kaltura video quiz")
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return
+                     
+            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                return
+                     
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                return
+                   
+            writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
+            if self.common.kafGeneric.navigateToMyMediaKAF() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
+                return            
+                     
+            writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
+            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+                return 
+     
+            writeToLog("INFO","Step 6 : Going to navigate to quiz entry page")  
+            if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6 : FAILED to navigate to quiz entry page")  
+                return
+     
+            writeToLog("INFO","Step 7 : Going to edit quiz name")  
+            if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7 : FAILED to edit quiz name")  
+                return 
+       
+            writeToLog("INFO","Step 8: Going to CREATE embed kaltura video quiz")  
+            if self.common.blackBoard.createKaltureVideoQuiz(self.galleryName, self.newEntryName, self.kalturaVideoQuizName)== False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 8: FAILED to CREATE embed kaltura video quiz")
                 return   
-            
-            writeToLog("INFO","Step 7: Going to logout from BB as main owner")  
+              
+            writeToLog("INFO","Step 9: Going to logout from BB as main owner")  
             if self.common.blackBoard.logOutOfBlackBoard() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to logout from BB as main owner")
+                writeToLog("INFO","Step 9: FAILED to logout from BB as main owner")
                 return     
-            
-            writeToLog("INFO","Step 8: Going to login to BB as student")  
+              
+            writeToLog("INFO","Step 10: Going to login to BB as student")  
             if self.common.blackBoard.loginToBlackBoard(self.studentUsername, self.studentPassword) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to login to BB as student")
+                writeToLog("INFO","Step 10: FAILED to login to BB as student")
                 return  
-            
-            writeToLog("INFO","Step 9: Going to navigate to course content page")  
+              
+            writeToLog("INFO","Step 11: Going to navigate to course content page")  
             if self.common.blackBoard.navigateToCourseMenuOptionPage(self.galleryName, BBCoursePages=enums.BBCoursePages.CONTENT) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to navigate to course content page")
+                writeToLog("INFO","Step 11: FAILED to navigate to course content page")
                 return  
-            
-            writeToLog("INFO","Step 10: Going to verify that quiz is displayed for user in course page")  
+               
+            writeToLog("INFO","Step 12: Going to verify that quiz is displayed for user in course page")  
             if self.common.kafGeneric.verifyEmbedEntry(self.kalturaVideoQuizName, '', '', isQuiz=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to verify that quiz is displayed for user in course page")
+                writeToLog("INFO","Step 12: FAILED to verify that quiz is displayed for user in course page")
                 return 
-            
-            writeToLog("INFO","Step 11: Going to answer quiz as student")  
+              
+            writeToLog("INFO","Step 13: Going to answer quiz as student")  
             if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to answer quiz as student")
-                return                                           
+                writeToLog("INFO","Step 13: FAILED to answer quiz as student")
+                return   
             
-      
+            self.common.player.switch_to_default_content()                                        
+             
+            writeToLog("INFO","Step 14: Going to logout from BB as student")  
+            if self.common.blackBoard.logOutOfBlackBoard() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to logout from BB as student")
+                return    
+             
+            writeToLog("INFO","Step 15: Going to login to BB as main user")  
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 15: FAILED to login to BB as main user")
+                return 
+ 
+            writeToLog("INFO","Step 15: Going to verify quiz grade")  
+            if self.common.blackBoard.verifyQuizGradeAsAdmin(self.expectedGrade, self.kalturaVideoQuizName, self.galleryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 15: FAILED to verify quiz grade")
+                return 
             
-                    
+            writeToLog("INFO","Step 16: Going to logout from BB as main owner")  
+            if self.common.blackBoard.logOutOfBlackBoard() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 16: FAILED to logout from BB as main owner")
+                return     
+              
+            writeToLog("INFO","Step 17: Going to login to BB as student")  
+            if self.common.blackBoard.loginToBlackBoard(self.studentUsername, self.studentPassword) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 17: FAILED to login to BB as student")
+                return  
+            
+            writeToLog("INFO","Step 18: Going to verify grade as student")  
+            if self.common.blackBoard.verifyQuizGradeAsStudent(self.expectedGrade, self.kalturaVideoQuizName, self.galleryName)  == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 18: FAILED to verify grade as student")
+                return                         
             
             #########################################################################
             writeToLog("INFO","TEST PASSED: Create embed kaltura media from media gallery page was done successfully")
@@ -168,9 +215,12 @@ class Test:
         try:
             self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
+            self.common.player.switch_to_default_content()
+            self.common.blackBoard.logOutOfBlackBoard()
+            self.common.blackBoard.loginAsUser()
             self.common.kafGeneric.switchToKAFIframeGeneric()
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery)
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
+            self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.kalturaVideoQuizName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
