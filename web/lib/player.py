@@ -1292,19 +1292,16 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
             return False
         
-        if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 3, True) == False:
-            writeToLog("INFO", "FAILED to find the scrubber end screen button")
-            return False
-
-        if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
-            self.removeTouchOverlay()
+        if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 3, True) != False:        
             if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
-                writeToLog("INFO", "FAILED to click on the scrubber done bubble")
-                return False
+                self.removeTouchOverlay()
+                if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the scrubber done bubble")
+                    return False
         
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
-        if self.wait_element(completedTitle, 2, True) == False:
+        if self.wait_element(completedTitle, 60, True) == False:
             writeToLog("INFO", "FAILED to load the Completed screen")            
 
             

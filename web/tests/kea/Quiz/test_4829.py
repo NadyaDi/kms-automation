@@ -56,7 +56,7 @@ class Test:
     changeAnswerOrderDict = {'1':answerOrderOne, '2':answerOrderTwo, '3':answerOrderThree} 
     
     # This dictionary is used in order to verify the answer list order
-    verifyAnswerOrderDict = {'1':answerListOrderOne, '2':answerListOrderTwo, '3':answerListOrderThree} 
+    expectedAnswerListDict = {'1':answerListOrderOne, '2':answerListOrderTwo, '3':answerListOrderThree} 
 
 
     #run test as different instances on all the supported platforms
@@ -97,13 +97,13 @@ class Test:
                 return
               
             writeToLog("INFO","Step 4: Going to verify that the answer order for " + self.entryNameQuiz + " can be changed by drag and drop")  
-            if self.common.kea.changeAnswerOrder(self.changeAnswerOrderDict, self.verifyAnswerOrderDict)== False:
+            if self.common.kea.changeAnswerOrder(self.changeAnswerOrderDict, self.expectedAnswerListDict)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to verify that the answer order for " + self.entryNameQuiz + " can be changed by drag and drop")  
                 return
             
             writeToLog("INFO","Step 5: Going to verify that the answer order for " + self.entryNameQuiz + " can be changed using shuffle option")  
-            if self.common.kea.changeAnswerOrder(self.changeAnswerOrderDict, self.verifyAnswerOrderDict, True)== False:
+            if self.common.kea.changeAnswerOrder(self.changeAnswerOrderDict, self.expectedAnswerListDict, True)== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify that the answer order for " + self.entryNameQuiz + " can be changed using shuffle option")  
                 return
