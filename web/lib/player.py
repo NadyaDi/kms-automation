@@ -1303,6 +1303,8 @@ class Player(Base):
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
         if self.wait_element(completedTitle, 60, True) == False:
+            writeToLog("INFO", "FAILED to found the Completed Screen")
+            return False
             
         if self.click(self.PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON, 30, True) == False:
             writeToLog("INFO", "FAILED to submit the answers")
