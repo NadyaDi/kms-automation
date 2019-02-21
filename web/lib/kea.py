@@ -32,6 +32,7 @@ class Kea(Base):
     KEA_ADD_NEW_QUESTION_HINT_AND_WHY_TOGGLE_MENU_BUTTON                    = ('xpath', "//button[@class='menu-button unbutton']")
     KEA_ADD_NEW_QUESTION_HINT_BUTTON                                        = ('xpath', "//button[@class='unbutton menu-item' and contains(text(),'Hint')]")
     KEA_ADD_NEW_QUESTION_WHY_BUTTON                                         = ('xpath', "//button[@class='unbutton menu-item' and contains(text(),'Why')]")
+    KEA_ADD_NEW_QUESTION_NUMBER                                             = ('xpath', "//span[@class='question-number']")
     KEA_SELECT_VIDEO_FOR_EDIT                                               = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
     KEA_LAUNCH                                                              = ('xpath', "//i[@class='icon-editor']")
     KEA_APP_DISPLAY                                                         = ('id', 'kea-anchor')
@@ -72,7 +73,8 @@ class Kea(Base):
     KEA_OPTION_INPUT_FIELD                                                  = ('xpath', "//input[@id='FIELD_NAME']")
     KEA_OPTION_TEXTAREA_FIELD                                               = ('xpath', "//textarea[@id='FIELD_NAME']")  
     KEA_PREVIEW_ICON                                                        = ('xpath', "//i[@class='kicon-preview']") 
-    KEA_LOADING_SPINNER_CONTAINER                                           = ('xpath', "//div[@class='spinner-container']") 
+    KEA_LOADING_SPINNER_CONTAINER                                           = ('xpath', "//div[@class='spinner-container']")
+    KEA_LOADING_SPINNER_QUIZ_PLAYER                                         = ('xpath', "//div[@id='loadingSpinner_quiz-player']") 
     KEA_PREVIEW_PLAY_BUTTON                                                 = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder']")
     KEA_PREVIEW_CLOSE_BUTTON                                                = ('xpath', '//i[contains(@class,"kCloseBtn")]')   
     KEA_IFRAME_PREVIEW_PLAYER                                               = ('xpath', "//iframe[@class='ng-star-inserted' and contains(@src,'iframeembed=true&playerId=kaltura_player')]")
@@ -83,7 +85,11 @@ class Kea(Base):
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER                    = ('xpath', "//span[@class='question-tooltip__header__content']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP                 = ('xpath', "//span[@class='question-tooltip__header__duration']")
     KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER                              = ('xpath', "//span[@class='ng-tns-c14-1 ng-star-inserted' and contains(text(),'Total Q: QUESTION_NUMBER')]")
-    KEA_TIMELINE_SECTION_DRAG_HAND                                          = ('xpath', "//div[@class='answer-drag-handle']")                                                                                                                                
+    KEA_TIMELINE_SECTION_DRAG_HAND                                          = ('xpath', "//div[@class='answer-drag-handle']")
+    KEA_PLAYER_CONTROLS_PLAY_BUTTON                                         = ('xpath', "//button[@class='player-control player-control__play-pause' and @aria-label='Play']")       
+    KEA_PLAYER_CONTROLS_PAUSE_BUTTON                                        = ('xpath', "//button[@class='player-control player-control__play-pause' and @aria-label='Pause']")
+    KEA_PLAYER_CONTROLS_NEXT_ARROW_BUTTON                                   = ('xpath', "//span[@class='arrows arrow-next']") 
+    KEA_PLAYER_CONTROLS_PREVIOUS_ARROW_BUTTON                               = ('xpath', "//span[@class='arrows arrow-back']")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -1397,10 +1403,12 @@ class Kea(Base):
                 return False
             sleep(1)
             
+            # access the Hint option
             if self.click(self.KEA_ADD_NEW_QUESTION_HINT_BUTTON, 3, True) == False:
                 writeToLog("INFO", "FAILED to select the 'Hint' option from the Hint and Why toggle menu")
                 return False
-            
+            # leave time for input field to be properly displayed
+            sleep(1)
             # We use action chains in order to insert text within the fields, input text area being already active
             action = ActionChains(self.driver)
             try:
@@ -1420,11 +1428,12 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED to trigger the Hint and Why toggle menu")
                 return False
             sleep(1)
-            
+            # access the Why option
             if self.click(self.KEA_ADD_NEW_QUESTION_WHY_BUTTON, 3, True) == False:
                 writeToLog("INFO", "FAILED to select the 'Why' option from the Hint and Why toggle menu")
                 return False
-            
+            # leave time for the input field to be properly displayed
+            sleep(1)
             # We use action chains in order to insert text within the fields, because the fields are already clicked
             action = ActionChains(self.driver)
             try:
@@ -1539,23 +1548,23 @@ class Kea(Base):
             return False
         
         # We take all the available quiz question pointers from the timeline KEA section
-        availableQuizInTimeLine = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        presentedQuestionsInTimeline = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
         
         # We verify that the number of the available quiz questions from the timeline, matches with the number of quiz questions given in the questionDict
-        if len(availableQuizInTimeLine) != len(questionDict):
-            writeToLog("INFO", "FAILED, in timeline section were found " + str(len(availableQuizInTimeLine)) + " questions, and in the dictionary were given " + str(len(questionDict)) + " questions")
+        if len(presentedQuestionsInTimeline) != len(questionDict):
+            writeToLog("INFO", "FAILED, in timeline section were found " + str(len(presentedQuestionsInTimeline)) + " questions, and in the dictionary were given " + str(len(questionDict)) + " questions")
             return False
         
-        totalQuestionNumber = (self.KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER[0], self.KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER[1].replace('QUESTION_NUMBER', str(len(availableQuizInTimeLine))))
+        totalQuestionNumber = (self.KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER[0], self.KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER[1].replace('QUESTION_NUMBER', str(len(presentedQuestionsInTimeline))))
         
         if self.wait_element(totalQuestionNumber, 1, True) == False:
             writeToLog("INFO", "FAILED, the total number of question text doesn't match with the total number of questions from the KEA timeline section")
             return False
         
         # We verify all the available quiz question pointers, by verifying the quiz number,time stamp and quiz title
-        for x in range(0, len(availableQuizInTimeLine)):
+        for x in range(0, len(presentedQuestionsInTimeline)):
             # We take the locator element for the current quiz number
-            currentQuestion = availableQuizInTimeLine[x]
+            currentQuestion = presentedQuestionsInTimeline[x]
             
             # We hover over the current quiz number, in order to verify the elements
             try:
@@ -1607,8 +1616,8 @@ class Kea(Base):
     # This list is used in order to verify that the answer options are displayed in the desired order
     # answerListOrderOne    = ['question #1 option #4', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3']
     # This dictionary is used in order to verify the answer list order : verifyAnswerOrderDict = {'1':answerListOrderOne}
-    # If shuffle == True, there's no need to have an answersOrderDict
-    def changeAnswerOrder(self, changeAnswerOrderDict, answersOrderDict, shuffle=False, tries=4):
+    # If shuffle == True, there's no need to have an expectedAnswerListDict
+    def changeAnswerOrder(self, changeAnswerOrderDict, expectedAnswerListDict, shuffle=False, tries=3):
         self.switchToKeaIframe()
         # Verify that we are in the KEA editor
         if self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15, True) == False:
@@ -1660,7 +1669,7 @@ class Kea(Base):
                     count = 0
                     while True or count <= tries:
                         # Take the current answer list presented, in order to verify that after we use the shuffle option, the list will change
-                        answerListPresentedFirst = self.takeAnswerListPresented()
+                        answerListPresentedFirst = self.extractAnswersListPresented()
                         
                         # Trigger the shuffle option
                         if self.click(self.KEA_QUIZ_SHUFFLE_BUTTON, 1, True) == False:
@@ -1679,7 +1688,7 @@ class Kea(Base):
                 elif shuffle == False:               
                     # Verify that the answer number is available in the presented answer list
                     if questionDetails[2] > int(numberOfAnswers):
-                        writeToLog("INFO", "FAILED, only " + numberOfAnswers + " number of answers are available")
+                        writeToLog("INFO", "FAILED, only " + numberOfAnswers + " number of answers are available, instead of " + str(questionDetails[2]))
                         return False
                     
                     # Create the element for the answer that we want to move
@@ -1706,7 +1715,7 @@ class Kea(Base):
                         return False
                     
                     # Create the list attribute in order to verify that the answer order has been changed successfully
-                    answerList = answersOrderDict[questionNumber]
+                    answerList = expectedAnswerListDict[questionNumber]
                     
                     # Verify that the answer order has been changed successfully
                     if self.verifyAnswersOrder(answerList) == False:
@@ -1748,12 +1757,12 @@ class Kea(Base):
     # answerList = contains a list with all the available answers and the correct order
     def verifyAnswersOrder(self, answerList, shuffle=False):
         # Take the answer list presented
-        answerListPresented = self.takeAnswerListPresented()
+        answerListPresented = self.extractAnswersListPresented()
         
         # Verify that the answer list that was first presented, no longer matches with the answer list that is now presented
         if shuffle == True:
             if answerListPresented == answerList:
-                writeToLog("INFO", "FAILED, the shuffle option kept the same structure")
+                writeToLog("INFO", "The shuffle option kept the same structure")
                 return False
         
         # Verify that the answer list presented, matches with our desired answer list
@@ -1768,7 +1777,7 @@ class Kea(Base):
 
     # @Author: Horia Cus
     # This function will iterate through each answer field and return a list with all the available answers in the order that they were found
-    def takeAnswerListPresented(self):
+    def extractAnswersListPresented(self):
         answerFields = self.wait_elements(self.KEA_QUIZ_ANSWER_GENERAL, 1)
         answerListPresented = []
         
@@ -1801,7 +1810,8 @@ class Kea(Base):
     # This function can change the question order from the KEA timeline section by moving in forward and / or backwards
     # changeTimelineOrderDict = is a dictionary that contains as key the Quiz Number and as value the amount of seconds that we want to move the question forward and / or backwards
     # e.g changeTimelineOrderDict = {'1':3, '2':2, '3':1}, question one will be moved by three seconds
-    def changeTimelineOrder(self, changeTimelineOrderDict):
+    # This function will not change the timeline properly if the zoom in / zoom out has been used
+    def changeQuestionOrderInTimeline(self, changeTimelineOrderDict):
         self.switchToKeaIframe()
         # Verify that we are in the KEA editor
         if self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15, True) == False:
@@ -1838,4 +1848,210 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED to save the new timeline location for  " + str(questionNumber)  + " question number")
                 return False
                         
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will verify that the entry can be played in KEA Editor and KEA Quiz page
+    # Verify that the entire entry can be watched from the beginning till the end
+    # Increment tries by one for each 15 seconds of the entry ( e.g Entry = 30 seconds, tries=2 )
+    def verifyPlayingProcess(self, tries=2):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA editor
+        if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 15, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA player play button")
+            return False
+        
+        # Take the entry time
+        entryTotalTime = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(" ", "")[1:]
+        
+        # Because the video resumes back to zero before the last second to be displayed, we have to issue this variable
+        if entryTotalTime[3:] == '00':
+            # with changes to the mm
+            entryTotalTimeVerify = str(int(entryTotalTime[:2])-1) + ':59'
+        else:
+            # with changes to ss
+            entryTotalTimeVerify = entryTotalTime[:3] + str(int(entryTotalTime[3:])-1)
+        
+        # Time presented inside the timeline cursor
+        realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        
+        # Verify if we are at the beginning of the entry
+        if self.resumeFromBeginningKEA(forceResume=False) == False:
+            writeToLog("INFO", "FAILED to start the entry from the beginning")
+            return False
+        
+        # Trigger the playing process
+        if self.click(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 2, True) == False:
+            writeToLog("INFO", "FAILED to click on the KEA play button")
+            return False
+        sleep(1)
+        
+        # Wait until the loading spinner is no longer present
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_QUIZ_PLAYER, 30) == False:
+            writeToLog("INFO", "FAILED to load the KEA entry video playing process")
+            return False
+        
+        # Set the real time to second one
+        x = 1
+        
+        # Wait until the timeline cursor reached the first second
+        startTimeLine = '00:00'
+        while startTimeLine == realTimeMarker:
+            startTimeLine = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        
+        # Because the speed for the playing process is higher than the loop run, we increment the number of tries by one for each 15 seconds
+        attempt = 0
+        
+        # We let the playing process to run until we reach the end of the entry
+        while realTimeMarker != entryTotalTimeVerify:
+            # We take the presented time from timeline cursor     
+            realTimeMarkerUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+            
+            # We take the real time based on 1 second of sleep and number of iteration from X
+            realTime = str(datetime.timedelta(seconds=x))[2:]
+            
+            # Verify that the presented time from the timeline cursor, matches with the expected time
+            if realTimeMarkerUpdated != realTime:
+                attempt += 1
+                writeToLog("INFO", "AS Expected, Presented time " + realTimeMarkerUpdated + " expected" + realTime + " during the " + str(attempt) + " attempt")
+
+                # For each 15 seconds, 1 try should be passed, if the number of attempts is higher than tries, will return false
+                if attempt > tries:
+                    writeToLog("INFO", "Timeline time was: " + realTimeMarkerUpdated + " and " + realTime + " was expected")
+                    return False 
+                # Take the presented time from the timeline cursor in order to compare it with entry total time
+                realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+            else:
+                # Take the presented time from the timeline cursor in order to compare it with entry total time
+                realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+                sleep(1)
+            
+            # Increment the real time by one for each run
+            x += 1
+            
+        writeToLog("INFO", "The entire entry has been successfully watched")
+        return True
+
+        
+    # @Author: Horia Cus
+    # This function will refresh the page if the playing process is already started or if the user is at a different time within the timeline than zero
+    def resumeFromBeginningKEA(self, forceResume=False):     
+        self.switchToKeaIframe()
+
+        # Verify if any of the elements that indicates if the user is at the beginning of entry is present or not
+        if self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text != '00:00.00' or self.wait_element(self.KEA_PLAYER_CONTROLS_PAUSE_BUTTON, 1) != False or forceResume == True:
+            # Refresh the page  
+            self.driver.refresh()
+            
+            # Change the iframe to default in order to be able to resume to KEA iframe
+            self.clsCommon.base.switch_to_default_content()
+            self.switchToKeaIframe()
+            
+            # Verify that the KEA page has been loaded successful
+            if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 15, True) == False:
+                writeToLog("INFO", "FAILED to find the KEA player play button")
+                return False
+        
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function verifies that the user is able to navigate forward and backwards to each quiz question using navigation buttons
+    # Verify that the proper question number and time stamp are displayed
+    def verifyKEANavigation(self):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA Page
+        if self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 30, True) == False:
+            writeToLog("INFO", "FAILED to find any quiz question pointer in the time line section")
+            return False
+        
+        # Verify if we are at the beginning of the entry
+        if self.resumeFromBeginningKEA(forceResume=False) == False:
+            writeToLog("INFO", "FAILED to start the entry from the beginning")
+            return False
+        
+        # We take all the available quiz question pointers from the timeline KEA section
+        presentedQuestionsInTimeline = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        
+        presentedQuestionDict = {}
+        
+        # Navigate to each Quiz Question using next option
+        for x in range(0, len(presentedQuestionsInTimeline)):
+            # Navigate to the next available question
+            if self.click(self.KEA_PLAYER_CONTROLS_NEXT_ARROW_BUTTON, 15, True) == False:
+                writeToLog("INFO", "FAILED to navigate to the " + str(x+1) + " question field")
+                return False
+            
+            # Take the details for the current question
+            try:
+                presentedQuestionNumber = self.wait_element(self.KEA_ADD_NEW_QUESTION_NUMBER, 5, True).text
+                presentedQuestionTime = self.wait_element(self.EDITOR_REALTIME_MARKER, 5, True).text
+            except Exception:
+                writeToLog("INFO", "FAILED to take the details after returning back to the first question")
+                return False
+            
+            # Verify that the expected question number is displayed 
+            if presentedQuestionNumber.count(str(x+1)) == 0:
+                writeToLog("INFO", "FAILED, question number " + str(x+1) + " was expected, instead " + presentedQuestionNumber + " is presented")
+                return False
+            
+            # Add the Question details inside the dictionary
+            presentedQuestionDict.update({presentedQuestionNumber:presentedQuestionTime})
+        
+        # Navigate back to the first question, using next arrow at the end of the last available question
+        if self.click(self.KEA_PLAYER_CONTROLS_NEXT_ARROW_BUTTON, 15, True) == False:
+            writeToLog("INFO", "FAILED to navigate to the " + str(x+1) + " question field")
+            return False
+        
+        # Take the details back from the first question
+        try:
+            presentedQuestionNumber = self.wait_element(self.KEA_ADD_NEW_QUESTION_NUMBER, 5, True).text
+            presentedQuestionTime   = self.wait_element(self.EDITOR_REALTIME_MARKER, 5, True).text
+        except Exception:
+            writeToLog("INFO", "FAILED to take the details after returning back to the first question")
+            return False
+        
+        # Verify that the user was resumed back to the first question   
+        if presentedQuestionNumber.count('1') != 1:
+            writeToLog("INFO", "FAILED, to resume to the first question after iterating all of the available Quiz Questions")
+            return False
+        
+        # Verify that the first time stamp that was presented matches with the current one
+        if presentedQuestionDict[presentedQuestionNumber] != presentedQuestionTime:
+            writeToLog("INFO", "FAILED, at first the " + presentedQuestionDict[presentedQuestionNumber] + " was present and now " + presentedQuestionTime + " time is presented")
+            return False
+        
+        presentedQuestionDictPrevious = {}
+        i = len(presentedQuestionDict)
+        for x in range(0, len(presentedQuestionDict)):
+            # Navigate to the previous question
+            if self.click(self.KEA_PLAYER_CONTROLS_PREVIOUS_ARROW_BUTTON, 5, True) == False:
+                writeToLog("INFO", "FAILED to navigate using previous arrow")
+                return False
+            
+            # Take the details for the current question
+            try:
+                presentedQuestionNumber = self.wait_element(self.KEA_ADD_NEW_QUESTION_NUMBER, 5, True).text
+                presentedQuestionTime   = self.wait_element(self.EDITOR_REALTIME_MARKER, 5, True).text
+            except Exception:
+                writeToLog("INFO", "FAILED to take the details after returning back to the first question")
+                return False
+            
+            # Verify that the expected question number is displayed 
+            if presentedQuestionNumber.count(str(i)) == 0:
+                writeToLog("INFO", "FAILED, question number " + str(x+1) + " was expected, instead " + presentedQuestionNumber + " is presented")
+                return False
+            
+            # Add the Question details inside the dictionary
+            presentedQuestionDictPrevious.update({presentedQuestionNumber:presentedQuestionTime})
+            
+            i -= 1
+        
+        # Verify that all the available Quiz Question were navigated forward and backward
+        if len(presentedQuestionDict) != len(presentedQuestionsInTimeline) or len(presentedQuestionDictPrevious) != len(presentedQuestionsInTimeline):
+            writeToLog("INFO", "FAILED " + str(len(presentedQuestionDict)) + " questions were found while navigating forward, " + str(len(presentedQuestionDictPrevious)) + " were found while navigating backwards, and " + len(presentedQuestionsInTimeline) + " were presented"  )
+            return False
+
+        writeToLog("INFO", "PASSED, all the quiz questions were properly navigated forward and backward")
         return True

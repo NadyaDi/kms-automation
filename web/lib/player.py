@@ -1292,11 +1292,8 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
             return False
         
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MEDIA_SPACE:
-            if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 3, True) == False:
-                writeToLog("INFO", "FAILED to find the scrubber end screen button")
-                return False
-
+        # Verify if the Done bubble is available, if so, we will navigate to it
+        if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 3, True) != False:        
             if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
                 self.removeTouchOverlay()
                 if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
@@ -1305,13 +1302,7 @@ class Player(Base):
         
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
-        if self.wait_element(completedTitle, 10, True) == False:
-            writeToLog("INFO", "FAILED to load the Completed screen")            
-
-           
-        if self.wait_element(completedTitle, 10, True) == True:
-            writeToLog("INFO", "FAILED to load the completed screen")
-            return False
+        if self.wait_element(completedTitle, 60, True) == False:
             
         if self.click(self.PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON, 30, True) == False:
             writeToLog("INFO", "FAILED to submit the answers")

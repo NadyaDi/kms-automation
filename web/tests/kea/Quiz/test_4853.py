@@ -44,7 +44,6 @@ class Test:
     embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
     
     channelPublish = 'KMS AUTOMATION - PRIVATE'
-    mediaOwner     = 'python_automation'
     newUserName    = 'python_normal'
     newUserPass    = 'Kaltura1!'
             
