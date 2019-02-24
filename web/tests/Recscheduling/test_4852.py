@@ -36,12 +36,13 @@ class Test:
     driver = None
     common = None
     # Test variables
-    entryName1 = None
-    entryName2 = None
-    entryName3 = None
-    entryDescription = "Description"
-    entryTags = "Tags,"
-
+    eventTitle = None
+    description = "Description"
+    tags = "Tags,"
+    startDate = None
+    endDate = None
+    startTime = None
+    endTime = None
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -59,12 +60,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            
-            ##################### TEST STEPS - MAIN FLOW ##################### 
-            
-            self.common.recscheduling.fillFileScheduleTags("tags")
-            self.common.base.click(self.common.recscheduling.SCHEDULE_EVENT_DESCRIPTION)
-            self.common.base.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, "description")
+            self.eventTitle = clsTestService.addGuidToString("Create new single event", self.testNum)
             startDate = datetime.datetime.now().strftime("%d/%m/%Y")
             endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
         
@@ -73,8 +69,12 @@ class Test:
              
             endTime = time.time() - (60*60)
             endTime= time.strftime("%I:%M %p",time.localtime(endTime))
+            ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.recscheduling.createReschduleEventWithoutRecurrence("Event Title", startDate, endDate, startTime,endTime, "description", "tags", True, eventOrganizer='') 
+
+
+            
+            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, startDate, endDate, startTime,endTime, self.description, self.tags, True, eventOrganizer='python_automation') 
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
