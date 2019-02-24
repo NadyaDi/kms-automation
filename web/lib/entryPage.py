@@ -26,7 +26,7 @@ class EntryPage(Base):
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON          = ('id', "tab-Delete")
     ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     ENTRY_PAGE_DOWNLOAD_TAB                                = ('xpath', "//a[@id='tab-download-tab']")
-    ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//h3[@class='muted' and contains(text(), 'Media is being processed')]")
+    ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//span[@class='media-processing__msg' and contains(text(), 'Media is being processed')]")
     ENTRY_PAGE_PLAYER_IFRAME                               = ('xpath',"//iframe[@id='kplayer_ifp' and @class='mwEmbedKalturaIframe']") 
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
     ENTRY_PAGE_PLAYER_IFRAME2                              = ('id','kplayer_ifp')
