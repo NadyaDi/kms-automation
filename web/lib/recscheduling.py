@@ -34,7 +34,8 @@ class  Recscheduling(Base):
     SCHEDULE_SAVE_EVENT                                 = ('xpath', "//button[@id='CreateEvent-btnSave' and contains(text(),'Save')]")
     SCHEDULE_SAVE_AND_EXIT_EVENT                        = ('xpath', "//button[@id='CreateEvent-btnCreateEvent' and contains(text(),'Save and Exit')]")
     SCHEDULE_CREATE_EVENT_SUCCESS_MESSAGE               = ('xpath', "//p[contains(text(),'Event created successfully.')]")
-    
+    SCHEDULE_EVENT_RESOURCES                            = ('xpath', "//input[@placeholder='Click here to search resource']")
+    SCHEDULE_EVENT_RESOURCE                             = ('xpath', "//div[@class='sol-label-text' and contains(text(),'RESOURCE_NAME')]")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -64,8 +65,8 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function create new reschedule event 
-    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, eventOrganizer='', isRecurrence=False, exitEvent=False):
-        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, eventOrganizer, exitEvent=False) == False:
+    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, resources='', eventOrganizer='', isRecurrence=False, exitEvent=False):
+        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, resources='', eventOrganizer='', exitEvent=False) == False:
             writeToLog("INFO","FAILED to create schdule event")
             return False
             
@@ -80,7 +81,7 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function create new reschedule event without recurrence
-    def createRescheduleEventWithoutRecurrence(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, eventOrganizer='', exitEvent=False): 
+    def createRescheduleEventWithoutRecurrence(self, title, startDate, endDate, startTime, endTime, description, tags, copyDetails, resources='', eventOrganizer='', exitEvent=False): 
         if self.navigateToCreateEventPage() == False:
             writeToLog("INFO","FAILED to enter create event page")
             return False
@@ -119,6 +120,26 @@ class  Recscheduling(Base):
                 return False
             sleep(2)
         
+        if resources != '':
+            if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
+                writeToLog("INFO","FAILED to click and open resource option")
+                return False
+            
+            if type(resources) is list: 
+                for resource in resources:
+                    tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
+                    if self.click(tmpResource) == False:
+                        writeToLog("INFO","FAILED to select event resource")
+                        return False
+            else:
+                tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
+                if self.click(tmpResource) == False:
+                    writeToLog("INFO","FAILED to select event resource")
+                    return False
+                
+            # click on the create event title to close the resource list
+            self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
+            
         # Enter text Description
         if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
             writeToLog("INFO","FAILED to click in description textbox")
@@ -132,7 +153,7 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to set event tags")
             return False
         
-        if CopyDetailsEventToRecording == False:
+        if copyDetails == False:
             writeToLog("INFO","FAILED to set event tags")
             return False
             

@@ -13,9 +13,9 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Recscheduling - Create new single event
+    # Test Name : Rescheduling - Create new single event
     # Test description:
-    #    1. Login with Rechscheduling admin user
+    #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
     #    3. Fill in all fields (description ,tags ) and select a resource
     #    4. Select start and end time
@@ -74,7 +74,7 @@ class Test:
 
 
             
-            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, startDate, endDate, startTime,endTime, self.description, self.tags, True, eventOrganizer='python_automation') 
+            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, startDate, endDate, startTime,endTime, self.description, self.tags, True, [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
@@ -85,7 +85,7 @@ class Test:
             
                  
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Home Page Playlist' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Rescheduling - Create new single event' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

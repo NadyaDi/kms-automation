@@ -564,3 +564,16 @@ class KAFGradebookGradeOptions(Enum):
     LETTER                = 'Letter'
     SCORE                 = 'Score'
     TEXT                  = 'Text' 
+    
+    
+class RecschedulingResourceOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    MAIN_AUDITORIUM             = 'Main Auditorium'
+    MAIN_CONFERENCE_ROOM        = 'Main Conference Room'
+    AUTOMATION_ROOM             = 'Automation Room'
+    SUMMER_CONFERENCE_ROOM      = 'Summer Conference Room'
+    FALL_CONFERENCE_ROOM        = 'Fall Conference Room' 
+    MAIN_STUDENT_LOUNGE         = 'Main Student Lounge'
+    QA_APP_ROOM                 = 'Qa App Room'
