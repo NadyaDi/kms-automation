@@ -205,7 +205,7 @@ class Test:
                 return                         
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: Create embed kaltura media from media gallery page was done successfully")
+            writeToLog("INFO","TEST PASSED: Gradebook test was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
