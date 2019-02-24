@@ -44,6 +44,16 @@ class Canvas(Base):
     CANVAS_ENTRY_COURSE_FIELD_DROPDOWN_OPTION           = ('xpath', '//option[@value="VALUE"]')
     CANVAS_EMBED_UPLOAD_IFRAME                          = ('xpath', '//iframe[@id="external_tool_button_frame"]')
     CANVAS_ANNOUNCEMENT_DESCRIPTION_IFRAME              = ('xpath', '//iframe[contains(@id,"discussion-topic")]') 
+    CANVAS_ADD_ASSIGNMENT_BTN                           = ('xpath', '//a[@title="Add Assignment"]')
+    CANVAS_ASSIGNMENT_TITLE                             = ('xpath', '//input[@id="assignment_name"]')
+    CANVAS_ASSIGNEMNT_SUBMISSION_TYPE_DROPDOWN          = ('xpath', '//select[@id="assignment_submission_type"]')
+    CANVAS_ASSIGNEMNT_EXTERNAL_SUBMISSION_TYPE_OPTION   = ('xpath', '//option[@value="external_tool"]')
+    CANVAS_FIND_EXTERNAL_TOOL_BTN                       = ('xpath', '//button[@id="assignment_external_tool_tag_attributes_url_find"]')
+    CANVAS_KALTURA_VIDEO_QUIZ_EXTERNAL_TOOL_CONFIGURE   = ('xpath', '//a[@class="name" and text()="Kaltura Video Quiz"]')
+    CANVAS_CONFIGURE_EXTERNAL_TOOL_TITLE                = ('xpath', '//span[@class="ui-dialog-title" and text()="Configure External Tool"]') 
+    CANVAS_EXTERNAL_TOOL_IFRAME                         = ('xpath', '//iframe[@id="resource_selection_iframe"]')          
+    CANVAS_CONFIGURE_EXTERNAL_TOOL_SELECT_BTN           = ('xpath', '//button[@class="add_item_button btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')  
+    CANVAS_SAVE_AND_PUBLISH_ASSIGNMENT_BTN              = ('xpath', '//button[@class="btn btn-default save_and_publish"]')        
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -331,4 +341,61 @@ class Canvas(Base):
          
         self.clsCommon.general.waitForLoaderToDisappear()
 
-        return True                 
+        return True      
+    
+    
+    # @Author: Inbar Willman
+    def createEmbedAssignment(self, assignmentTitle, entryName):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL) == False:
+            writeToLog("INFO","FAILED navigate to announcements page")
+            return False 
+        
+        if self.click(self.CANVAS_ADD_ASSIGNMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on create assignment button")
+            return False             
+        
+        if self.send_keys(self.CANVAS_ASSIGNMENT_TITLE, assignmentTitle)   == False:
+            writeToLog("INFO","FAILED to insert announcement title")
+            return False 
+        
+        if self.click(self.CANVAS_ASSIGNEMNT_SUBMISSION_TYPE_DROPDOWN) == False:
+            writeToLog("INFO","FAILED to click on submission type dropdown")
+            return False 
+                    
+        if self.click(self.CANVAS_ASSIGNEMNT_EXTERNAL_SUBMISSION_TYPE_OPTION) == False:
+            writeToLog("INFO","FAILED to click on 'external tool' option")
+            return False  
+        
+        if self.click(self.CANVAS_FIND_EXTERNAL_TOOL_BTN) == False:
+            writeToLog("INFO","FAILED to click on find external tool button")
+            return False  
+        
+        if self.wait_element(self.CANVAS_CONFIGURE_EXTERNAL_TOOL_TITLE) == False:
+            writeToLog("INFO","FAILED to display 'configure external tool' modal")
+            return False                                  
+
+        if self.click(self.CANVAS_KALTURA_VIDEO_QUIZ_EXTERNAL_TOOL_CONFIGURE) == False:
+            writeToLog("INFO","FAILED to click on 'kaltura video quiz' option")
+            return False            
+            
+        self.clsCommon.base.swith_to_iframe(self.CANVAS_EXTERNAL_TOOL_IFRAME)
+        
+        # In embed page, choose page to embed from and media
+        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False 
+        
+        self.switch_to_default_content()
+        
+        if self.click(self.CANVAS_CONFIGURE_EXTERNAL_TOOL_SELECT_BTN) == False:
+            writeToLog("INFO","FAILED to click on configure external tool select button")
+            return False
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
+        if self.click(self.CANVAS_SAVE_AND_PUBLISH_ASSIGNMENT_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False 
+        
+        writeToLog("INFO","Success: Embed assignment was created successfully")
+        return True               
