@@ -64,19 +64,19 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create a new entry, " + self.entryName)  
                 return
-                                                    
+                                                     
             writeToLog("INFO","Step 2: Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return  
-                                     
+                                      
             writeToLog("INFO","Step 3: Going to navigate to " + self.entryNameQuiz + " entry editor")  
             if self.common.kea.launchKEA(self.entryNameQuiz, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to " + self.entryNameQuiz + " entry editor") 
                 return
-             
+              
             writeToLog("INFO","Step 4: Going to verify that the " + self.entryNameQuiz + " can be fully played inside the KEA Page")  
             if self.common.kea.verifyPlayingProcess(tries=2) == False:
                 self.status = "Fail"

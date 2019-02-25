@@ -1,4 +1,5 @@
 import subprocess
+from web.autoit.AutoItDriverServer.autoitdriverserver_python.server import get_attribute
 try:
     import win32com.client
 except:
@@ -8,6 +9,8 @@ from base import *
 import clsTestService
 from general import General
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.action_chains import ActionChains
+import re
 
 
 class Kea(Base):
@@ -80,6 +83,8 @@ class Kea(Base):
     KEA_IFRAME_PREVIEW_PLAYER                                               = ('xpath', "//iframe[@class='ng-star-inserted' and contains(@src,'iframeembed=true&playerId=kaltura_player')]")
     KEA_IFRAME_BLANK                                                        = ('xpath', "//iframe[@title='Kaltura Editor Application']")  
     KEA_QUIZ_OPTIONS_REVERT_TO_DEFAULT_BUTTON                               = ('xpath', "//button[@class='link-button pull-right ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
+    KEA_TIMELINE_SECTION_CONTAINER                                          = ('xpath', "//div[@class='markers-container']")
+    KEA_TIMELINE_SECTION_QUESTION_BUBBLE_CONTAINER                          = ('xpath', "//div[@class='kea-timeline-stacked-item kea-timeline-cuepoint']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE                                    = ('xpath', "//i[@class='kicon-quiz-cuepoint-inner']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE                              = ('xpath', "//p[@class='question-tooltip__content']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER                    = ('xpath', "//span[@class='question-tooltip__header__content']")
@@ -89,7 +94,12 @@ class Kea(Base):
     KEA_PLAYER_CONTROLS_PLAY_BUTTON                                         = ('xpath', "//button[@class='player-control player-control__play-pause' and @aria-label='Play']")       
     KEA_PLAYER_CONTROLS_PAUSE_BUTTON                                        = ('xpath', "//button[@class='player-control player-control__play-pause' and @aria-label='Pause']")
     KEA_PLAYER_CONTROLS_NEXT_ARROW_BUTTON                                   = ('xpath', "//span[@class='arrows arrow-next']") 
-    KEA_PLAYER_CONTROLS_PREVIOUS_ARROW_BUTTON                               = ('xpath', "//span[@class='arrows arrow-back']")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
+    KEA_PLAYER_CONTROLS_PREVIOUS_ARROW_BUTTON                               = ('xpath', "//span[@class='arrows arrow-back']")
+    KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER                                = ('xpath', "//span[@class='ui-slider-handle ui-state-default ui-corner-all ui-clickable ng-star-inserted']")
+    KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER_VALUE                          = ('xpath', "//span[@class='ui-slider-handle ui-state-default ui-corner-all ui-clickable ng-star-inserted' and @style='left: VALUE%;']")
+    KEA_TIMELINE_CONTROLS_ZOOM_OUT_BUTTON                                   = ('xpath', "//button[contains(@class,'zoom_button') and @aria-label='Zoom out']")
+    KEA_TIMELINE_CONTROLS_ZOOM_IN_BUTTON                                    = ('xpath', "//button[contains(@class,'zoom_button') and @aria-label='Zoom in']")
+    KEA_TIMELINE_CONTROLS_ZOOM_IN_TOOLTIP                                   = ('xpath', "//div[@class='ui-tooltip-text ui-shadow ui-corner-all' and text()='Zoom in']")
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -1894,11 +1904,12 @@ class Kea(Base):
         
         # Set the real time to second one
         x = 1
+        realtTimeMakerElement = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True)
         
         # Wait until the timeline cursor reached the first second
         startTimeLine = '00:00'
         while startTimeLine == realTimeMarker:
-            startTimeLine = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+            startTimeLine = realtTimeMakerElement.text[:5]
         
         # Because the speed for the playing process is higher than the loop run, we increment the number of tries by one for each 15 seconds
         attempt = 0
@@ -1906,11 +1917,12 @@ class Kea(Base):
         # We let the playing process to run until we reach the end of the entry
         while realTimeMarker != entryTotalTimeVerify:
             # We take the presented time from timeline cursor     
-            realTimeMarkerUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+            realTimeMarkerUpdated = realtTimeMakerElement.text[:5]
             
             # We take the real time based on 1 second of sleep and number of iteration from X
             realTime = str(datetime.timedelta(seconds=x))[2:]
             
+            writeToLog("INFO", "AS Expected, Current time present in the marker " + str(realTimeMarkerUpdated) + " real time expected" + realTime)
             # Verify that the presented time from the timeline cursor, matches with the expected time
             if realTimeMarkerUpdated != realTime:
                 attempt += 1
@@ -1921,10 +1933,10 @@ class Kea(Base):
                     writeToLog("INFO", "Timeline time was: " + realTimeMarkerUpdated + " and " + realTime + " was expected")
                     return False 
                 # Take the presented time from the timeline cursor in order to compare it with entry total time
-                realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+                realTimeMarker = realtTimeMakerElement.text[:5]
             else:
                 # Take the presented time from the timeline cursor in order to compare it with entry total time
-                realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+                realTimeMarker = realtTimeMakerElement.text[:5]
                 sleep(1)
             
             # Increment the real time by one for each run
@@ -2055,3 +2067,118 @@ class Kea(Base):
 
         writeToLog("INFO", "PASSED, all the quiz questions were properly navigated forward and backward")
         return True
+    
+    
+    # @Author: Horia Cus
+    # This function will verify the KEA Timeline section and Navigation while using the zoom option
+    # Zoom option will be used by using the Zoom Level pointer forward and backwards
+    # Question Cue Point distance is verified after each zoom in call
+    # KEA Timline Container size is verified after each zoom in call
+    # KEA Zoom Level Pointer is verified after each zoom in call
+    def verifyZoomLevelInTimeline(self):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA Page
+        if self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA Timeline section")
+            return False
+        
+        # Taking the default size of the timeline container
+        containerDefaultSize = self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True).size['width']
+        
+        # Taking the zoom level elements
+        zoomLevelDefault        = (self.KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER_VALUE[0], self.KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER_VALUE[1].replace('VALUE', str(0)))
+#         zoomInButtonElement     = self.wait_element(self.KEA_TIMELINE_CONTROLS_ZOOM_IN_BUTTON, 5, True)
+        zoomOutButtonElement    = self.wait_element(self.KEA_TIMELINE_CONTROLS_ZOOM_OUT_BUTTON , 5, True)
+        zoomLevelPointer        = self.wait_element(self.KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER, 5, True)
+        
+        # Verify that we are at the beginning of the timeline section
+        if self.wait_element(zoomLevelDefault, 5, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA Timeline Zoom Level Pointer at the initial location ( beginning )")
+            return False
+        
+        action = ActionChains(self.driver)
+        
+        # Create a list that will be used in order to compare the initial size of a Question with the updated one after using the zoom option
+        questionListPresented = []
+        
+        # Use the zoom option until reaching the maximum length available
+        for x in range(0,15):
+            # Incrementing the zoom in option
+            zoomInPosition = x*5
+            # Taking the Zoom Pointer location before using the zoom option
+            pointerInitial  =  self.wait_element(self.KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER, 1, True).location['x']
+            
+            # Taking the Timeline Container size before using the zoom option
+            containerInitialSize = int(self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True).size['width'])
+            
+            # Verify if Questions are created within the timeline section
+            if self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_CONTAINER, 1) != False:
+                # Take all the available questions
+                presentedQuestions = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_CONTAINER, 1)
+                # Add question's position inside a list
+                for i in range (0, len(presentedQuestions)):  
+                    # Take the location attribute from the active question
+                    presentedQuestion = presentedQuestions[i].get_attribute('style').split()[1]
+                    # Convert the location attribute in integer
+                    presentedQuestionPosition = int(re.search(r'\d+', presentedQuestion).group())
+                    # Add the question location inside the question List
+                    questionListPresented.append(presentedQuestionPosition)
+                
+                # Verify that at least one time the Zoom option has been used
+                if len(questionListPresented) > len(presentedQuestions):
+                    # Comparing the last two sets of Questions ( before zoom option / after zoom option) and verify that the second set has a higher location
+                    # Take the last before / after zoom in list elements
+                    compareList = questionListPresented[-len(presentedQuestions)*2:]
+                    for k in range(0,len(presentedQuestions)-1):
+                        # Verify that the list that was created after zoom option has a higher location than the list that was created before that
+                        if compareList[k] > compareList[k+len(presentedQuestions)]:
+                            writeToLog("INFO", "FAILED, question number " + str(k+1) + " has been found at " + str(questionListPresented[k]) + " before zoom in, and at " + str(questionListPresented[k+len(presentedQuestions)]) + " after zoom in")
+                            return False
+                                                                                                                                                                                             
+            # Use the zoom in option, by drag and drop of Zoom Level Pointer element
+            try:
+                action.move_to_element(zoomLevelPointer).click_and_hold(zoomLevelPointer).move_to_element_with_offset(zoomOutButtonElement, 45+zoomInPosition, 0).release().pause(1).perform()
+#                 action.reset_actions()
+                sleep(2)
+            except Exception:
+                writeToLog("INFO", "FAILED to use zoom in option properly at the " + str(x+1) + " try")
+                return False
+            
+            # Take the Location for Zoom option Pointer after using the zoom in option
+            pointerUpdated          =  self.wait_element(self.KEA_TIMELINE_CONTROLS_ZOOM_LEVEL_POINTER, 1, True).location['x']
+            # Take the Timeline Container size after using the zoom in option
+            containerUpdatedSize    =  int(self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True).size['width'])
+            
+            # Verify that the Timeline pointer location has been changed after using the zoom in option
+            if pointerInitial >= pointerUpdated:
+                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
+                return False
+            
+            # Verify that the Timeline container size is bigger after using the zoom in option
+            if containerInitialSize >= containerUpdatedSize:
+                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
+                return False
+                       
+        # Use the zoom out option, by drag and drop of Zoom Level Pointer element, in order to reach zero state
+        try:
+            action.move_to_element(zoomLevelPointer).click_and_hold(zoomLevelPointer).move_to_element(zoomOutButtonElement).release(zoomLevelPointer).perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to use zoom out option till the end")
+            return False
+        sleep(2)
+        
+        containerZoomedOutSize    =  int(self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True).size['width'])  
+        
+        # Verify that the Initial Timeline Container size is the same after using the zoom in and zoom out option
+        if containerDefaultSize != containerZoomedOutSize:
+            writeToLog("INFO", "FAILED, the default Timeline size container was " + str(containerDefaultSize) + " and after we moved back to the initial position using zoom out option, it was " + str(containerZoomedOutSize))
+            return False
+        
+        # Verify that the Zoom Level pointer is displayed back at the beginning of the bar
+        if self.wait_element(zoomLevelDefault, 5, True) == False:
+            writeToLog("INFO", "FAILED, the Zoom Level Pointer was not set back to the original position")
+            return False  
+        
+        writeToLog("INFO", "Zoom Level has been successfully verified inside the KEA timeline section")
+        return True        
+    
