@@ -52,6 +52,7 @@ test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation1@mail
 test_2336,Canvas - Gallery Moderation,,,pythonautomation1@mailinator.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
 test_2294,Canvas - Publish from my media to shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2296,Canvas - Publish to course galleries from  shared repository,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_4856,Canvas - Gradebook,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
@@ -360,6 +361,8 @@ test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KM
 test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4855,Quiz - Submitting Quiz with Answer order changed - Entry Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4857,Quiz - Timeline section while Using Zoom Option - KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
