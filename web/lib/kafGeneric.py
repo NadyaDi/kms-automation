@@ -36,6 +36,7 @@ class KafGeneric(Base):
     KAF_GRID_VIEW                                   = ('xpath', "//button[@id='MyMediaGrid']")
     KAF_SR_ENTRY_CHECKBOX                           = ('xpath', '//input[@type="checkbox" and @title="ENTRY_NAME"]')
     KAF_EMBED_LOADING_MESSAGE                       = ('xpath', '//div[@class="elementLoader"]')
+    KAF_CLEAR_SREACH_ICON                           = ('xpath', "//i[@class='v2ui-close-icon']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -354,6 +355,8 @@ class KafGeneric(Base):
                 return False  
         
         if len(toRejectEntriesNames) != 0:
+            self.click(self.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+            self.clsCommon.general.waitForLoaderToDisappear()
             self.clsCommon.channel.showAllEntriesPendingTab()
             self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
             sleep(4)

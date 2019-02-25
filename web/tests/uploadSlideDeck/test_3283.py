@@ -163,7 +163,7 @@ class Test:
                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 14: FAILED to verify slide") 
-                  
+                    return
               
             #########################################################################
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - A-sync upload' was done successfully")            
