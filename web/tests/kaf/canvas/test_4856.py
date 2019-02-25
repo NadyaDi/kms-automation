@@ -83,13 +83,14 @@ class Test:
             self.newEntryName = clsTestService.addGuidToString("Quiz_Score_Enabled-Quiz", self.testNum)
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
             self.uploadEntrieList = [self.entryToUpload] 
+            self.ponitesPossible = '100'
             self.expectedGrade = '66.66666'
             self.kalturaVideoQuizName = clsTestService.addGuidToString("gradebook", self.testNum) 
             
             self.galleryName = "New1"
             
-            self.studentUsername = 'kstudent'
-            self.studentPassword = '123456'
+            self.studentUsername = 'studentautomation@mailinator.com'
+            self.studentPassword = 'Kaltura1!'
             
             ######################### TEST STEPS - MAIN FLOW #######################
 #             writeToLog("INFO","Step 1: Going to upload entry")    
@@ -97,48 +98,86 @@ class Test:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 1: FAILED to upload entry")
 #                 return
-#                       
+#                         
 #             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
 #             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
 #                 return
-#                       
+#                         
 #             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
 #             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
 #                 return
-#                     
+#                       
 #             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
 #             if self.common.kafGeneric.navigateToMyMediaKAF() == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
 #                 return            
-#                       
+#                         
 #             writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
 #             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
 #                 return 
-#       
+#         
 #             writeToLog("INFO","Step 6 : Going to navigate to quiz entry page")  
 #             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 6 : FAILED to navigate to quiz entry page")  
 #                 return
-#       
+#         
 #             writeToLog("INFO","Step 7 : Going to edit quiz name")  
 #             if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
 #                 self.status = "Fail"
 #                 writeToLog("INFO","Step 7 : FAILED to edit quiz name")  
 #                 return 
+#              
+#             writeToLog("INFO","Step 8 : Going to create embed assignment")  
+#             if self.common.canvas.createEmbedAssignment(self.kalturaVideoQuizName, self.newEntryName, self.ponitesPossible) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 8 : FAILED to create embed assignment")  
+#                 return  
             
-            writeToLog("INFO","Step 8 : Going to create embed assignment")  
-            if self.common.canvas.createEmbedAssignment(self.kalturaVideoQuizName, '541C634C-4856-Quiz_Score_Enabled-Quiz') == False:
+            writeToLog("INFO","Step 9 : Going to logout as main user")  
+            if self.common.canvas.logOutOfCanvas() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8 : FAILED to create embed assignment")  
-                return                                                    
+                writeToLog("INFO","Step 9 : FAILED to logout as main user")  
+                return
+            
+            writeToLog("INFO","Step 10 : Going to login as student")  
+            if self.common.canvas.loginToCanvas(self.studentUsername, self.studentPassword) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10 : FAILED to login as student")  
+                return  
+            
+            writeToLog("INFO","Step 11: Going to navigate to assignment page")  
+            if self.common.canvas.navigateToAssignmentPage('80F12BC1-4856-gradebook') == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to navigate to assignment page")
+                return             
+            
+            writeToLog("INFO","Step 12: Going to answer quiz as student")  
+            if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to answer quiz as student")
+                return  
+            
+            self.common.player.switch_to_default_content()                                        
+               
+            writeToLog("INFO","Step 13: Going to logout from Canvas as student")  
+            if self.common.canvas.logOutOfCanvas() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to logout from Canvas as student")
+                return    
+               
+            writeToLog("INFO","Step 14: Going to login to BB as main user")  
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to login to BB as main user")
+                return                                                                                                              
             
             #########################################################################
             writeToLog("INFO","TEST PASSED: Gradebook test was done successfully")
