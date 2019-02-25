@@ -2196,7 +2196,7 @@ class Player(Base):
                 quizQuestionNumber = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[1].replace('NUMBER', str(quizNumberID)))
                 
                 # We verify that in the dictionary we have a why
-                if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUE_FALSE and len(questionDetails) >= 6:
+                if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUE_FALSE in questionDetails and len(questionDetails) >= 6:
                     # We verify if the Quiz Question number is on the second submitted screen page, and navigate to it
                     if quizNumberID >= 13:
                         if self.wait_visible(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) != False:
@@ -2330,7 +2330,11 @@ class Player(Base):
         if questionType == enums.QuizQuestionType.Multiple:
             listInterval = questionDetails[3:7]
             hintTriggerNumber = 8
-            hintText = questionDetails[7]
+            try:
+                hintText = questionDetails[7]
+            except Exception:
+                writeToLog("INFO", "AS Expected, no hint was provided for the " + questionDetails[2] + " Quiz Question")
+                pass
             
             # We verify that the proper Quiz Question screen is displayed
             if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_MULTIPLE_CHOICE_CONTAINER, 5, True) == False:
@@ -2341,7 +2345,11 @@ class Player(Base):
         elif questionType == enums.QuizQuestionType.TRUE_FALSE:
             listInterval = questionDetails[3:5]
             hintTriggerNumber = 5
-            hintText = questionDetails[5]
+            try:
+                hintText = questionDetails[5]
+            except Exception:
+                writeToLog("INFO", "AS Expected, no hint was provided for the " + questionDetails[2] + " Quiz Question")
+                pass
             
             # We verify that the proper Quiz Question screen is displayed
             if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_TRUE_FALSE_CONTAINER, 5, True) == False:
