@@ -79,6 +79,8 @@ class BlackBoard(Base):
     BB_GRADE_TAB_FOR_STUDENT                            = ('xpath', '//span[@title="Grade"]')
     BB_MY_GRADES_TITLE                                  = ('xpath', '//span[text()="My Grades"]')
     BB_QUIZ_GRADE_FOR_STUDENT                           = ('xpath', "//div[@class='cell gradable' and contains(text(),'QUIZ_NAME')]/..")
+    BB_QUIZ_GRADE_TITLE_CELL                            = ('xpath', '//div[@class="gbDivWrapper" and text()="QUIZ_NAME"]')
+    BB_QUIZ_GRADE_DELETE_OPTION                         = ('xpath', '//a[@title="Delete Column"]') 
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -1008,7 +1010,7 @@ class BlackBoard(Base):
         tmpQuizGrade = (self.BB_QUIZ_GRADE_FOR_ADMIN[0], self.BB_QUIZ_GRADE_FOR_ADMIN[1].replace('QUIZ_NAME', quizName))
         quiGradeElement = self.wait_element(tmpQuizGrade)
         if quiGradeElement == False:
-            writeToLog("INFO","FAILED to display find quiz in full grade center")          
+            writeToLog("INFO","FAILED to find quiz in full grade center")          
             return False 
             
         if quiGradeElement.text != grade:
@@ -1044,7 +1046,7 @@ class BlackBoard(Base):
             return False 
         
         tmpQuizGradeTextList = tmpQuizGradeElement.text.split("\n")
-        tmpQuizGrade = tmpQuizGradeTextList[-1]
+        tmpQuizGrade = tmpQuizGradeTextList[-2]
             
         if tmpQuizGrade != grade:
             writeToLog("INFO","FAILED to display correct quiz grade")          
@@ -1053,4 +1055,48 @@ class BlackBoard(Base):
         writeToLog("INFO","Success: quiz grade is displayed correctly in 'My Grades' page")          
         return True
                    
-        return True 
+    
+    # @Author: Inbar Willman
+    def getBBLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.USER_MENU_TOGGLE_BTN)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName.lower()  
+    
+    
+    # @Author: Inbar Willman
+    def deleteGradeFromGradeCenter(self, grade, quizName, galleryName):
+        if self.navigateToCourseFullGradeCenter(galleryName) == False:
+            writeToLog("INFO","FAILED to navigate to course page")          
+            return False 
+        
+        tmpQuizMenu = (self.BB_QUIZ_GRADE_TITLE_CELL[0], self.BB_QUIZ_GRADE_TITLE_CELL[1].replace('QUIZ_NAME', quizName))
+        quizMenuParent = self.wait_element(tmpQuizMenu)
+        if quizMenuParent == False:
+            writeToLog("INFO","FAILED to find quiz title parent cell")          
+            return False 
+         
+        if quizMenuParent.find_element_by_xpath("//a[@title='Click for more options']").click() == False:
+            if self.click(tmpQuizMenu) == False:
+                writeToLog("INFO","FAILED to click on quiz title menu")          
+                return False  
+            
+        if self.click(self.BB_QUIZ_GRADE_DELETE_OPTION) == False:
+            writeToLog("INFO","FAILED to click on delete option")          
+            return False  
+        
+        if self.clsCommon.base.click_dialog_accept() == False:
+            writeToLog("INFO","FAILED click accept dialog")
+            return False                        
+        
+        # Verify that grade is no longer displayed in grade center
+        tmpQuizGradelocator = (self.BB_QUIZ_GRADE_FOR_STUDENT[0], self.BB_QUIZ_GRADE_FOR_STUDENT[1].replace('QUIZ_NAME', quizName))
+        tmpQuizGradeElement = self.wait_element(tmpQuizGradelocator)
+        if tmpQuizGradeElement == True:
+            writeToLog("INFO","FAILED to delete quia grade")          
+            return False 
+        
+        writeToLog("INFO","Success: Quiz grade was deleted")          
+        return True        
