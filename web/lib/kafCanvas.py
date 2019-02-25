@@ -53,7 +53,10 @@ class Canvas(Base):
     CANVAS_CONFIGURE_EXTERNAL_TOOL_TITLE                = ('xpath', '//span[@class="ui-dialog-title" and text()="Configure External Tool"]') 
     CANVAS_EXTERNAL_TOOL_IFRAME                         = ('xpath', '//iframe[@id="resource_selection_iframe"]')          
     CANVAS_CONFIGURE_EXTERNAL_TOOL_SELECT_BTN           = ('xpath', '//button[@class="add_item_button btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')  
-    CANVAS_SAVE_AND_PUBLISH_ASSIGNMENT_BTN              = ('xpath', '//button[@class="btn btn-default save_and_publish"]')        
+    CANVAS_SAVE_AND_PUBLISH_ASSIGNMENT_BTN              = ('xpath', '//button[@class="btn btn-default save_and_publish"]')     
+    CANVAS_ASSIGNMENT_POINTS_POSSIBLE                   = ('xpath', '//input[@id="assignment_points_possible"]')   
+    CANVAS_ASSIGNMENT_NAME_IN_ASSIGNMENTS_PAGE          = ('xpath', '//a[@class="ig-title" and contains(text(), "ASSIGNMENT_NAME")]')
+    #CANVAS_QUIZ_GRADE_FOR_ADMIN                         = ('xpath', '')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -260,10 +263,15 @@ class Canvas(Base):
                 return False                
         
         # If entry type is image     
-        else:
+        elif imageThumbnail !='':
+            sleep(5)
             if self.clsCommon.player.verifyThumbnailInPlayer(imageThumbnail) == False:
                 writeToLog("INFO","FAILED to display correct image thumbnail")
                 return False
+            
+        elif isQuiz == True:
+            writeToLog("INFO","Success: embed quiz was found in course page")
+            return True             
         
         self.clsCommon.base.switch_to_default_content()
         writeToLog("INFO","Success embed was verified")
@@ -345,9 +353,9 @@ class Canvas(Base):
     
     
     # @Author: Inbar Willman
-    def createEmbedAssignment(self, assignmentTitle, entryName):
+    def createEmbedAssignment(self, assignmentTitle, entryName, ponitesPossible):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL) == False:
-            writeToLog("INFO","FAILED navigate to announcements page")
+            writeToLog("INFO","FAILED navigate to assignment page")
             return False 
         
         if self.click(self.CANVAS_ADD_ASSIGNMENT_BTN) == False:
@@ -358,6 +366,10 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to insert announcement title")
             return False 
         
+        if self.clear_and_send_keys(self.CANVAS_ASSIGNMENT_POINTS_POSSIBLE, ponitesPossible) == False:
+            writeToLog("INFO","FAILED to insert possible points")
+            return False 
+                     
         if self.click(self.CANVAS_ASSIGNEMNT_SUBMISSION_TYPE_DROPDOWN) == False:
             writeToLog("INFO","FAILED to click on submission type dropdown")
             return False 
@@ -398,4 +410,29 @@ class Canvas(Base):
             return False 
         
         writeToLog("INFO","Success: Embed assignment was created successfully")
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def navigateToAssignmentPage(self, assignmentName):      
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL) == False:
+            writeToLog("INFO","FAILED navigate to assignment page")
+            return False   
+        
+        tmpAssignmentName = (self.CANVAS_ASSIGNMENT_NAME_IN_ASSIGNMENTS_PAGE[0], self.CANVAS_ASSIGNMENT_NAME_IN_ASSIGNMENTS_PAGE[1].replace('ASSIGNMENT_NAME', assignmentName))
+        if self.click(tmpAssignmentName) == False:
+            writeToLog("INFO","FAILED click on assignment " + assignmentName)
+            return False   
+        
+        writeToLog("INFO","Success: Navigate to assignment page")
+        return True               
+        
+    
+    # @ Author: Inbar Willman
+    # To Do
+    def verifyGradeAsAdminCanvas(self, grade, quizName):  
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_GRADEBOOK_URL) == False:
+            writeToLog("INFO","FAILED navigate to gradebook page")
+            return False
+                 
         return True               

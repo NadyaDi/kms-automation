@@ -79,7 +79,7 @@ class BlackBoard(Base):
     BB_GRADE_TAB_FOR_STUDENT                            = ('xpath', '//span[@title="Grade"]')
     BB_MY_GRADES_TITLE                                  = ('xpath', '//span[text()="My Grades"]')
     BB_QUIZ_GRADE_FOR_STUDENT                           = ('xpath', "//div[@class='cell gradable' and contains(text(),'QUIZ_NAME')]/..")
-    BB_QUIZ_GRADE_TITLE_CELL                            = ('xpath', '//div[@class="gbDivWrapper" and text()="QUIZ_NAME"]')
+    BB_QUIZ_GRADE_TITLE_DROPDOWN                        = ('xpath', "//div[@title='QUIZ_NAME']/ancestor::div[@class='gbDivWrapper']/descendant::a[@title='Click for more options']")
     BB_QUIZ_GRADE_DELETE_OPTION                         = ('xpath', '//a[@title="Delete Column"]') 
     #====================================================================================================================================
     #====================================================================================================================================
@@ -912,8 +912,7 @@ class BlackBoard(Base):
         elif isQuiz == True:
             writeToLog("INFO","Success: embed quiz was found in course page")
             return True            
-               
-    
+                   
         writeToLog("INFO","Embed media was successfully verified")    
         return True 
     
@@ -1067,21 +1066,15 @@ class BlackBoard(Base):
     
     
     # @Author: Inbar Willman
-    def deleteGradeFromGradeCenter(self, grade, quizName, galleryName):
+    def deleteGradeFromGradeCenter(self, quizName, galleryName):
         if self.navigateToCourseFullGradeCenter(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to course page")          
             return False 
         
-        tmpQuizMenu = (self.BB_QUIZ_GRADE_TITLE_CELL[0], self.BB_QUIZ_GRADE_TITLE_CELL[1].replace('QUIZ_NAME', quizName))
-        quizMenuParent = self.wait_element(tmpQuizMenu)
-        if quizMenuParent == False:
-            writeToLog("INFO","FAILED to find quiz title parent cell")          
+        tmpQuizMenu = (self.BB_QUIZ_GRADE_TITLE_DROPDOWN[0], self.BB_QUIZ_GRADE_TITLE_DROPDOWN[1].replace('QUIZ_NAME', quizName))
+        if self.click(tmpQuizMenu) == False:
+            writeToLog("INFO","FAILED to click on grade title dropdown")          
             return False 
-         
-        if quizMenuParent.find_element_by_xpath("//a[@title='Click for more options']").click() == False:
-            if self.click(tmpQuizMenu) == False:
-                writeToLog("INFO","FAILED to click on quiz title menu")          
-                return False  
             
         if self.click(self.BB_QUIZ_GRADE_DELETE_OPTION) == False:
             writeToLog("INFO","FAILED to click on delete option")          
@@ -1095,7 +1088,7 @@ class BlackBoard(Base):
         tmpQuizGradelocator = (self.BB_QUIZ_GRADE_FOR_STUDENT[0], self.BB_QUIZ_GRADE_FOR_STUDENT[1].replace('QUIZ_NAME', quizName))
         tmpQuizGradeElement = self.wait_element(tmpQuizGradelocator)
         if tmpQuizGradeElement == True:
-            writeToLog("INFO","FAILED to delete quia grade")          
+            writeToLog("INFO","FAILED to delete quiz grade")          
             return False 
         
         writeToLog("INFO","Success: Quiz grade was deleted")          

@@ -318,7 +318,7 @@ class EntryPage(Base):
         return True        
     
     
-    def waitTillMediaIsBeingProcessed(self, timeout=250):
+    def waitTillMediaIsBeingProcessed(self, timeout=300):
         sleep(3)
         self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
         if self.wait_visible(self.clsCommon.player.PLAYER_IFRAME, 60) == False:
