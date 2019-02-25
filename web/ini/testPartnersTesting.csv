@@ -222,3 +222,5 @@ test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,62
 test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4853,Quiz - Secure Embed ON - Published Entry in Private Channel with KMS user,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4854,Quiz - Video playing and Navigation process with Quiz Questions in KEA Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4855,Quiz - Submitting Quiz with Answer order changed - Entry Page,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4857,Quiz - Timeline section while Using Zoom Option - KEA Page,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456

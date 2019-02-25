@@ -180,6 +180,7 @@ test_2335,1,0,0,0,Canvas - Upload Media From Media Gallery Page
 test_2336,1,0,0,0,Canvas - Gallery Moderation
 test_2294,1,0,0,0,Canvas - Publish from my media to shared repository
 test_2296,1,0,0,0,Canvas - Publish to course galleries from  shared repository
+test_4856,1,0,0,0,Canvas - Gradebook
 test_2397,1,0,0,0,Moodle - Embed media in site blogs from media gallery
 test_2398,1,0,0,0,Moodle - upload and Embed media in kaltura video resource
 test_2510,1,0,0,0,Global Search for Category
@@ -344,6 +345,8 @@ test_4827,1,0,0,0,Quiz - Secure Embed ON - Submit Quiz (with score verification)
 test_4828,1,0,0,0,Quiz - Secure Embed ON - Download functionality - KMS user
 test_4829,1,0,0,0,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor
 test_4830,1,0,0,0,Quiz - Change Question order for all Quiz Question Types - KEA Editor
+test_4855,1,0,0,0,Quiz - Submitting Quiz with Answer order changed - Entry Page
+test_4857,1,0,0,0,Quiz - Timeline section while Using Zoom Option - KEA Page
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
