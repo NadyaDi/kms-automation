@@ -50,7 +50,7 @@ LOCAL_SETTINGS_AUTOIT_SERVICE_HOST20        = 'il-kmsnode20' + ':' + LOCAL_SETTI
 
 
 LOCAL_SETTINGS_APACHE_SERVER                = 'qa-auto-report'
-LOCAL_SETTINGS_APACHE_EMBED_PATH            = 'http://' + LOCAL_SETTINGS_APACHE_SERVER + '/embed/'
+LOCAL_SETTINGS_APACHE_EMBED_PATH            = 'http://' + LOCAL_SETTINGS_APACHE_SERVER + '/'
 LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER    = '/mnt/auto_kms_py1/embed/'
 
 
