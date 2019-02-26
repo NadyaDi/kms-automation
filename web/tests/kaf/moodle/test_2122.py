@@ -59,44 +59,44 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-#             writeToLog("INFO","Step 1: Going to upload entry ")  
-#             if self.common.upload.uploadEntry(self.filePathVideo, self.videoEntryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return          
-#                    
-#             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
-#             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
-#                 return           
-#                    
-#             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
-#                 return
-#                    
-#             writeToLog("INFO","Step 4: Going to get entry page URL")
-#             self.entryPageURL = self.common.base.driver.current_url  
-#                
-#             writeToLog("INFO","Step 5: Going to publish entry to media gallery")    
-#             if self.common.myMedia.publishSingleEntry(self.videoEntryName, '', '', [self.galleryName]) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 5: FAILED to publish entry to media gallery")
-#                 return
-#                   
-#             writeToLog("INFO","Step 6: Going to navigate to edit entry page")
-#             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.videoEntryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
-#                 return     
-#                   
-#             writeToLog("INFO","Step 7: Going to click on option tab and enable clip permission to everyone")
-#             if self.common.editEntryPage.changeEntryOptions(False, False, True) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 7: FAILED to click on option tab and enable clip permission to everyone")
-#                 return  
+            writeToLog("INFO","Step 1: Going to upload entry ")  
+            if self.common.upload.uploadEntry(self.filePathVideo, self.videoEntryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return          
+                    
+            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+                    
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+                    
+            writeToLog("INFO","Step 4: Going to get entry page URL")
+            self.entryPageURL = self.common.base.driver.current_url  
+                
+            writeToLog("INFO","Step 5: Going to publish entry to media gallery")    
+            if self.common.myMedia.publishSingleEntry(self.videoEntryName, '', '', [self.galleryName]) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to publish entry to media gallery")
+                return
+                   
+            writeToLog("INFO","Step 6: Going to navigate to edit entry page")
+            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.videoEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
+                return     
+                   
+            writeToLog("INFO","Step 7: Going to click on option tab and enable clip permission to everyone")
+            if self.common.editEntryPage.changeEntryOptions(False, False, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7: FAILED to click on option tab and enable clip permission to everyone")
+                return  
               
             writeToLog("INFO","Step 8: Going to logout as admin")
             if self.common.moodle.logOutOfMoodle() == False:
