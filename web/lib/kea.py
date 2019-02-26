@@ -1,5 +1,4 @@
 import subprocess
-from web.autoit.AutoItDriverServer.autoitdriverserver_python.server import get_attribute
 try:
     import win32com.client
 except:
