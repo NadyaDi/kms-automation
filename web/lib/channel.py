@@ -1347,6 +1347,9 @@ class Channel(Base):
                     return False 
                 sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
+                if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
+                    self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+                    self.clsCommon.general.waitForLoaderToDisappear()
         else:
             if toApproveEntriesNames != '':
                 if self.method_helper_approveEntry(toApproveEntriesNames, location) == False:
@@ -1354,6 +1357,9 @@ class Channel(Base):
                     return False
                 sleep(3) 
                 self.clsCommon.general.waitForLoaderToDisappear()
+                if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
+                    self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+                    self.clsCommon.general.waitForLoaderToDisappear()
         
         return True
     
@@ -1367,6 +1373,9 @@ class Channel(Base):
                     return False 
                 sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
+                if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
+                    self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+                    self.clsCommon.general.waitForLoaderToDisappear()
             
         else:
             if toRejectEntriesNames != '':
@@ -1374,7 +1383,10 @@ class Channel(Base):
                     writeToLog("INFO","FAILED to reject entry: " + toRejectEntriesNames)
                     return False 
                 sleep(3)
-                self.clsCommon.general.waitForLoaderToDisappear()               
+                self.clsCommon.general.waitForLoaderToDisappear() 
+                if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
+                    self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+                    self.clsCommon.general.waitForLoaderToDisappear()              
         
         return True
     
@@ -1496,9 +1508,6 @@ class Channel(Base):
     # Author: Michal Zomper
     def searchEntryInPendingTab(self, entryName):
         sleep(1)
-        if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) == True:
-            self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
-            self.clsCommon.general.waitForLoaderToDisappear()
             
         # Search Entry
         searchBarElement = self.getSearchBarElementInPendingTab()

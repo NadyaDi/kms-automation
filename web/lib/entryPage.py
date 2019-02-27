@@ -807,6 +807,7 @@ class EntryPage(Base):
             localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
                 tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
                 self.click(tmpEntryName)
+                sleep(1)
                 self.get_body_element().send_keys(Keys.PAGE_DOWN)
             
             sleep(2)
