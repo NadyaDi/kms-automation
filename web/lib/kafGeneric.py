@@ -355,8 +355,10 @@ class KafGeneric(Base):
                 return False  
         
         if len(toRejectEntriesNames) != 0:
-            self.click(self.KAF_CLEAR_SREACH_ICON, multipleElements=True)
-            self.clsCommon.general.waitForLoaderToDisappear()
+            if self.wait_element(self.KAF_CLEAR_SREACH_ICON,  multipleElements=True) == True:
+                self.click(self.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+                self.clsCommon.general.waitForLoaderToDisappear()
+                
             self.clsCommon.channel.showAllEntriesPendingTab()
             self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)
             sleep(4)

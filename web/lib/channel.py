@@ -429,6 +429,11 @@ class Channel(Base):
                 writeToLog("INFO","FAILED to navigate to my channels page")
                 return False
             sleep(3)
+            
+            if self.wait_element(self.CHANNEL_REMOVE_SEARCH_ICON) ==True:
+                self.click(self.CHANNEL_REMOVE_SEARCH_ICON)
+                self.clsCommon.general.waitForLoaderToDisappear()
+                
             if self.clsCommon.isElasticSearchOnPage() == True:
                 if self.click(self.MY_CHANNELS_SERACH_FIELD, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to click on name text field")
@@ -1491,6 +1496,10 @@ class Channel(Base):
     # Author: Michal Zomper
     def searchEntryInPendingTab(self, entryName):
         sleep(1)
+        if self.wait_element(self.KAF_CLEAR_SREACH_ICON,  multipleElements=True) == True:
+            self.click(self.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
         # Search Entry
         searchBarElement = self.getSearchBarElementInPendingTab()
         if searchBarElement == False:
