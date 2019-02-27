@@ -330,7 +330,7 @@ class BlackBoard(Base):
     def navigateToSharedRepositoryInBB(self):
         self.switchToBlackboardIframe()
         tmpGalleryTitle = (self.clsCommon.channel.CHANNEL_PAGE_TITLE[0], self.clsCommon.channel.CHANNEL_PAGE_TITLE[1].replace('CHANNEL_TITLE', "Shared Repository"))
-        if self.wait_element(tmpGalleryTitle, 10) == True:
+        if self.wait_element(tmpGalleryTitle, 20) == True:
             writeToLog("INFO","Success Already in Shared Repository page")
             return False
         
