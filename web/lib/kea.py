@@ -2179,5 +2179,87 @@ class Kea(Base):
             return False  
         
         writeToLog("INFO", "Zoom Level has been successfully verified inside the KEA timeline section")
-        return True        
+        return True
     
+    
+    # @Author: Horia Cus
+    # This function can delete any available Question displayed in the KEA Timeline section
+    # questionDeleteList must contain only the string of the Question Title
+    # E.g questionDeleteList = ['Quesion Title 1', 'Question Title 5']
+    def deleteQuestions(self, questionDeleteList):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA Page
+        if self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA Timeline section")
+            return False
+        
+        
+        # Take all the available quiz question cue points from the KEA Timline section
+        presentedInitialCuePointsInTimeline = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        presentedUpdatedCuePointsInTimeline = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        
+        i = 0
+        # Iterate through each Question that needs to be deleted
+        for questionToBeDeleted in questionDeleteList:
+            # Used in order to verify the number of Questions in Timeline section after we delete them
+            i += 1
+            
+            # Iterate through each Question Cue Point until finding the desired Question and delete it
+            for x in range(0, len(presentedUpdatedCuePointsInTimeline)):
+                
+                # Create the element for the current Question Cue Point
+                questionCuePoint = presentedUpdatedCuePointsInTimeline[x]
+                
+                action = ActionChains(self.driver)
+                # Hover over the current Question Cue Point
+                try:
+                    action.move_to_element(questionCuePoint).perform()
+                except Exception:
+                    writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point")
+                    return False
+                
+                # Take the presented title from the hovered Cue Point
+                questionTitlePresented = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 5, True)
+                
+                # Verify that the Question Title is presented while hovering over the Cue Point
+                if questionTitlePresented == False:
+                    writeToLog("INFO", "FAILED to take the question title from the question cue point number " + str(x+1))
+                    return False
+                else:
+                    # Take the Question Title presented on the hovered Cue Point
+                    questionTitlePresented = questionTitlePresented.text
+                    
+                # Verify if the Question Title Presented matches with Question Title from given List
+                if questionTitlePresented == questionToBeDeleted:
+                    # Access the Question Editing page
+                    if self.clickElement(questionCuePoint) == False:
+                        writeToLog("INFO", "FAILED to select the question cue point number " + str(x+1))
+                        return False
+                    
+                    # Delete the Question
+                    deleteButton = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', 'Delete'))
+                    if self.click(deleteButton, 5, True) == False:
+                        writeToLog("INFO", "FAILED to click on the Question delete button")
+                        return False
+                    
+                    # Wait for two seconds in order to give time for the Cue Point to disappear from KEA Timeline section and break from the loop
+                    sleep(2)
+                    break
+                    
+                else:
+                    # Verify if the Question that needs to be deleted was found within the maximum amount of tries
+                    if x+1 == len(presentedUpdatedCuePointsInTimeline):
+                        writeToLog("INFO", "FAILED to find the question: " + questionToBeDeleted + " inside the KEA Timeline section")
+                        return False
+                    
+            # Take the current number of Question Cue Points
+            presentedUpdatedCuePointsInTimeline = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+            
+            # Verify that the KEA Timeline section has been updated properly with the correct number of Question Cue Points
+            if len(presentedUpdatedCuePointsInTimeline)+i != len(presentedInitialCuePointsInTimeline):
+                writeToLog("INFO", "FAILED, after we deleted question " + questionToBeDeleted + " we expected " + len(presentedUpdatedCuePointsInTimeline) + " question numbers in timeline, but " + len(presentedInitialCuePointsInTimeline) + " are displayed")
+                return False
+
+        questionsDeleted = ", ".join(questionDeleteList)
+        writeToLog("INFO","The following Questions were deleted: " + questionsDeleted)
+        return True
