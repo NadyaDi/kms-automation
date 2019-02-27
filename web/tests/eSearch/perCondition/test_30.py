@@ -81,9 +81,11 @@ class Test:
 
             # Category tests in gallery/add to gallery tabs
             self.categoryForModerator = "category for eSearch moderator"
+            self.categoryForEsearch = 'eSearch category'
 
             # Channel for tests in channel/ add to channel tabs
             self.channelForModerator = "channel moderator for eSearch"
+            self.channelForEsearch  = "Channel for eSearch"
 
             self.entryPermissionList = [self.entryNameVideo, self.publishNameQuiz, self.entryNameImage, self.entryNameAudio, self.entryNameYoutube, self.entryNameWebCast]
             self.approveEntriesInChannel = [self.entryNameAudio, self.entryNameImage, self.publishNameQuiz, self.entryNameVideo, self.entryNameWebCast, self.entryNameYoutube]

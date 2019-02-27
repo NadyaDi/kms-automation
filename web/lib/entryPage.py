@@ -374,12 +374,12 @@ class EntryPage(Base):
         if self.clickOnShareTab() == False:
             writeToLog("INFO","FAILED to click on share tab")
             return False
-        sleep(2)  
+        sleep(3)  
         
         if self.chooseShareOption() == False:
             writeToLog("INFO","FAILED to click on embed tab")
             return False
-        sleep(1)
+        sleep(3)
         
         if self.wait_while_not_visible(self.ENTRY_PAGE_ELEMENT_LOADER_SHARE, 30) == False:
             writeToLog("INFO", "FAILED, during the transition to embed tab, it remained in infinite loading")

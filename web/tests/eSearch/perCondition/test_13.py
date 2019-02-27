@@ -52,8 +52,8 @@ class Test:
     entryName22 = "Filter by caption - without caption audio2"
     entryName4 = "Filter by caption - with caption video"
     entryName42 = "Filter by caption - without caption video2"
-    entryName5 = "Filter by caption - quiz"
-    entryName52 = "Filter by caption - quiz2"
+    entryName5 = "Filter by caption - with caption quiz"
+    entryName52 = "Filter by caption - without caption quiz2"
     entryNameQuiz1 = "Filter by caption - with caption quiz - Quiz"
     entryNameQuiz2 = "Filter by caption - without caption quiz2 - Quiz"
     audioEntryList = [entryName2, entryName22]
@@ -105,48 +105,48 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload an image entry")
                 return
-                  
+                   
             writeToLog("INFO","Step 3: Going to publish an image entry")
             if self.common.myMedia.publishSingleEntry(self.entryName1, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 3: FAILED to publish an image entry")
                 return
-                
+                 
             for entry in self.audioEntryList:      
                 writeToLog("INFO","Step 4: Going to upload an audio entry")
                 if self.common.upload.uploadEntry(self.filePath2, entry, self.entryDescription, self.entryTags) == None:
                     self.status = "Fail"
                     writeToLog("INFO","Step 4: FAILED to upload an audio entry")
                     return
-    
+     
                 writeToLog("INFO","Step 5: Going to publish an audio entry")
                 if self.common.myMedia.publishSingleEntry(entry, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                     writeToLog("INFO","Step 5: FAILED to publish an audio type entry")
                     return           
-                
+                 
             writeToLog("INFO","Step 6: Going to upload a youtube entry")
             if self.common.upload.clickAddYoutube() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload a youtube type entry")
                 return
-                   
+                    
             writeToLog("INFO","Step 7: Going to insert a youtube link")
             if self.common.upload.addYoutubeEntry(self.youtuebLink, self.entryName3) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to insert a youtube link")
                 return  
-                 
+                  
             writeToLog("INFO","Step 8: Going to publish the youtube entry")
             if self.common.myMedia.publishSingleEntry(self.entryName3, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 8: FAILED to publish the youtube entry")
                 return     
-               
+                
             for entry in self.videoEntryList:        
                 writeToLog("INFO","Step 9: Going to upload a video entry")            
                 if self.common.upload.uploadEntry(self.filePath3, entry, self.entryDescription, self.entryTags) == None:
                     self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED to upload a video entry")
                     return    
-                     
+                      
                 writeToLog("INFO","Step 10: Going to publish the specific video entry")
                 if self.common.myMedia.publishSingleEntry(entry, [self.categoryForModerator, self.categoryForEsearch], [self.channelForEsearch, self.SrChannelForEsearch, self.channelForModerator], publishFrom = enums.Location.MY_MEDIA) == False:
                     writeToLog("INFO","Step 10: FAILED to publish the specific video entry")
@@ -158,25 +158,25 @@ class Test:
                     self.status = "Fail"
                     writeToLog("INFO","Step 11: FAILED to upload a video entry for quiz")
                     return            
-                                                                               
+                                                                                
                 writeToLog("INFO","Step 12: Going to navigate to add new video quiz")
                 if self.common.upload.addNewVideoQuiz() == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 12: FAILED to navigate to the add new video quiz")
                     return  
-                      
+                       
                 writeToLog("INFO","Step 13: Going to search the uploaded entry and open KEA")
                 if self.common.kea.searchAndSelectEntryInMediaSelection(entry, False) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 13: FAILED to find the uploaded entry and open KEA")
                     return  
-                      
+                       
                 writeToLog("INFO","Step 14: Going to start quiz and add questions")
                 if self.common.kea.addQuizQuestion(self.QuizQuestion1, self.QuizQuestion1Answer1, self.QuizQuestion1AdditionalAnswers) == False:
                     self.status = "Fail"
                     writeToLog("INFO","Step 14: FAILED to start quiz and add questions")
                     return   
-                      
+                       
                 writeToLog("INFO","Step 15: Going to save quiz and navigate to media page")
                 if self.common.kea.clickDone() == False:
                     self.status = "Fail"
