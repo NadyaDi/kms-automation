@@ -1496,8 +1496,8 @@ class Channel(Base):
     # Author: Michal Zomper
     def searchEntryInPendingTab(self, entryName):
         sleep(1)
-        if self.wait_element(self.KAF_CLEAR_SREACH_ICON,  multipleElements=True) == True:
-            self.click(self.KAF_CLEAR_SREACH_ICON, multipleElements=True)
+        if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) == True:
+            self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
             self.clsCommon.general.waitForLoaderToDisappear()
             
         # Search Entry
