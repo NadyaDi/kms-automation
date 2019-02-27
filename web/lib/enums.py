@@ -331,11 +331,11 @@ class ChannelsSortBy(Enum):
         return str(self.value)
 
     CREATION_DATE             = 'Creation Date' # Changed from 'Most Recent'   
-    ALPHABETICAL_NEWUI        = "Alphabetically A-Z"
+    ALPHABETICAL_NEWUI        = "Alphabetically - A to Z" # "Alphabetically A-Z"
     ALPHABETICAL_OLDUI        = "Alphabetical"
     MEMBERS_AND_SUBSCRIBERS   = "Members & Subscribers"
     MEDIA_COUNT               = "Media Count"
-    ALPHABETICAL_Z_A_NEWUI    = "Alphabetically Z-A"
+    ALPHABETICAL_Z_A_NEWUI    = "Alphabetically - Z to A" #"Alphabetically Z-A"
     RELEVANCE                 = 'Relevance'
 
 class MyHistoryFilters(Enum):
