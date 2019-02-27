@@ -119,7 +119,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return  
-                 
+            
+            sleep(5)
             self.embedLink = self.common.entryPage.getEmbedLink()
                   
             writeToLog("INFO","Step 4: Going to publish the " + self.newEntryName + " entry in " + self.channelPublish + " channel")
@@ -132,9 +133,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")   
                 return
-            
-            self.embedLink = self.common.entryPage.getEmbedLink()
- 
+             
             writeToLog("INFO","Step 6: Going to write the " + self.newEntryName  + " entrie's embed code in a file")
             if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
                 self.status = "Fail"
