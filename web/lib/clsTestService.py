@@ -58,6 +58,7 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 def initialize(test,driverFix,duration=60):
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
+
     # Setup the test, initialize
     test = basicSetUp(test,driverFix,duration) #we set the timeout for each interval (video playing until the end) to be 35 (expect 30 sec video)
     # Start driver - Open browser and navigate to base URL
@@ -198,6 +199,13 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
         # Z:\\ - Is shared folder on il-AutoKmsJenkinsNode-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
         localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'Z:\\' + str(localSettings.LOCAL_SETTINGS_GUID)
 
+        # Create temp folder
+        try:     
+            os.makedirs(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+            writeToLog("INFO","Created folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+        except:
+            writeToLog("INFO","FAILED to create folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+    
     test.driver = testWebDriverLocalOrRemote(driverFix)        
         
     if ("version" in test.driver.capabilities):
