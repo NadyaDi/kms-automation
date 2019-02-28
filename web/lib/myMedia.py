@@ -126,7 +126,7 @@ class MyMedia(Base):
     FILTER_SINGLE_DATE_DAY                                      = ('xpath', "//div[contains(@class,'react-datepicker__day') and @aria-label='day-DAY_NUMBER']")
     FILTER_SELECT_FIELD_TEXT                                    = ('xpath', "//div[contains(text(),'DROPDOWNLIST_ITEM')]")
     FILTER_SELECT_FIELD_CATEGORY                                = ('xpath', "//span[@class='search-filters-group__title--desktop'][contains(text(),'DROPDOWNLIST_NAME')]")
-    ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found.' or text()='No Entries Found']")
+    ENTRY_NO_MEDIA_FOUND_MESSAGE                                = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No media found.' or text()='No Entries Found' or text()='There are no more media items.']")
     CHANNEL_PENDING_TAB_ICON                                    = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']")
     CHANNEL_PENDING_ENTRY_DATA                                  = ('xpath', "//tr[@id='ENTRY_ID_tr']")
     SEARCH_IN_CHOSEN_OPTION                                     = ('xpath', '//a[@id="fields-menu-toggle" and @data-toggle="dropdown"]')
