@@ -86,10 +86,16 @@ class Test:
             self.common.base.navigate(self.entryUrl)
             sleep(2)
             
-            writeToLog("INFO","Step 5: Going to verify that the PDF can be downloaded while using an Anonymous User")
+            writeToLog("INFO","Step 5: Going to create temp folder for download")
+            if self.common.createFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to create temp folder on")
+                return            
+            
+            writeToLog("INFO","Step 6: Going to verify that the PDF can be downloaded while using an Anonymous User")
             if self.common.player.downloadQuizPDF(self.filePathDownloaded) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to download the PDF file, while using an Anonymous User")
+                writeToLog("INFO","Step 6: FAILED to download the PDF file, while using an Anonymous User")
                 return
                  
             ##################################################################
