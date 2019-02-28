@@ -59,7 +59,7 @@ class Test:
             writeToLog("INFO","Step 1: Going to upload entry")  
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName1)
+                writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName)
                 return 
                                  
             writeToLog("INFO","Step 2: Going to publish entry from upload page")  
