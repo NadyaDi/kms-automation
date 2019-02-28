@@ -2745,7 +2745,7 @@ class Channel(Base):
             else:
                 writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
                 
-        if self.showAllEntriesInChannelCategoryPage(timeOut=75) == False:
+        if self.showAllEntriesInChannelCategoryPage(timeOut=90) == False:
             writeToLog("INFO","FAILED to show all entries in pending tab page")
             return False
         sleep(10)
