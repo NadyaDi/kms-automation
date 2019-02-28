@@ -1433,10 +1433,14 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to hover over download attachment icon")
             return False             
         
-        #Click on download icon   
+        # Click on download icon   
         if self.click(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
             writeToLog("INFO","FAILED to click on download attachment icon")
-            return False   
+            return False
+           
+        # Wait file to download
+        # TODO remove hardcode sleep
+        sleep(10)
         
         # Compare between uploaded file and download file
         writeToLog("INFO","Going to compare between uploaded file and download file")  
