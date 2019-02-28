@@ -55,7 +55,7 @@ class Test:
             self.common = Common(self.driver)
             ##################################################################
             self.entryName                  = clsTestService.addGuidToString("QuizDetails", self.testNum)
-            self.entryNameQuiz              = clsTestService.addGuidToString("QuizDetails", self.testNum)
+            self.entryNameQuiz              = clsTestService.addGuidToString("QuizDetails - Quiz", self.testNum)
             self.filePathDownloaded         = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + self.entryNameQuiz + ".pdf"
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to create a new entry, " + self.entryName)  
