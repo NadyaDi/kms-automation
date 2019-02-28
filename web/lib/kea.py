@@ -409,7 +409,12 @@ class Kea(Base):
         if isCreateClippingPermissionIsOn == True:
             if self.verifyEditorForClippingPermission() == False:
                 writeToLog("INFO","FAILED to display just relevant editor buttons")
-                return False                           
+                return False
+            
+        # We wait until the KEA page is successfully loaded
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 35) == False:
+            writeToLog("INFO","FAILED to wait until spinner isn't visible")
+            return False                         
         
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
@@ -1576,8 +1581,9 @@ class Kea(Base):
             currentQuestion = presentedQuestionsInTimeline[x]
             
             # We hover over the current quiz number, in order to verify the elements
+            action = ActionChains(self.driver)
             try:
-                ActionChains(self.driver).move_to_element(currentQuestion).perform()
+                action.move_to_element(currentQuestion).pause(1).perform()
             except Exception:
                 writeToLog("INFO", "FAILED to hover over the quiz number " + str(x+1))
                 return False
@@ -1648,7 +1654,7 @@ class Kea(Base):
             action = ActionChains(self.driver)
             # Hover over the current question
             try:
-                action.move_to_element(questionCuePoint).perform()
+                action.move_to_element(questionCuePoint).pause(1).perform()
             except Exception:
                 writeToLog("INFO", "FAILED to hover over the quiz " + questionDetails[0])
                 return False
