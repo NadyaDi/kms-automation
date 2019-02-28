@@ -74,6 +74,7 @@ class Test:
             
             writeToLog("INFO","Step 3: Going to publish the " + self.entryNameQuiz +" entry as unlisted ")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.entryNameQuiz, enums.ChannelPrivacyType.UNLISTED, alreadyPublished=False, publishFrom=enums.Location.MY_MEDIA) == False:
+                self.status = "Fail"
                 writeToLog("INFO", "Step 4: FAILED to publish the " + self.entryNameQuiz + " entry as unlisted")
                 return
              
