@@ -238,6 +238,16 @@ def handleException(test, inst, startTime=''):
 #===============================================================================
 def basicTearDown(test):
     practiTest = clsPractiTest()
+    
+    if isAutomationEnv() == True:
+        # Delete temp folder
+        try:     
+            shutil.rmtree(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+            writeToLog("INFO","Deleted folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+        except:
+            writeToLog("INFO","FAILED to delete folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+            return False    
+    
     try:
         if (test.driver != None):
             test.driver.quit()
