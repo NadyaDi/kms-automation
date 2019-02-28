@@ -2814,6 +2814,13 @@ class Channel(Base):
         while wait_until > datetime.datetime.now():                       
             if self.wait_while_not_visible(loading_message, 10) == True:
                     self.clsCommon.sendKeysToBodyElement(Keys.END)
+                    
+            if self.is_present(no_entries_page_msg, 2) == True:
+                writeToLog("INFO","Success, All media is display")
+                sleep(1)
+                # go back to the top of the page
+                self.clsCommon.sendKeysToBodyElement(Keys.HOME)
+                return True 
             
         if self.is_present(no_entries_page_msg, 5) == True:
             writeToLog("INFO","Success, All media is display")
