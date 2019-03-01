@@ -59,8 +59,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName                  = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Download functionality Anonymous", self.testNum)
-            self.entryNameQuiz              = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Download functionality Anonymous - Quiz", self.testNum)
+            self.entryName                  = clsTestService.addGuidToString("Quiz Download", self.testNum)
+            self.entryNameQuiz              = clsTestService.addGuidToString("Quiz Download - Quiz", self.testNum)
             self.filePathDownloaded         = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + self.entryNameQuiz + ".pdf"
             self.embedLinkFilePath          = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
             self.embedUrl                   = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
