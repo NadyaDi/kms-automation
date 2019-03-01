@@ -637,7 +637,12 @@ class Kea(Base):
             writeToLog("INFO","FAILED to click on 'Go to Media Page' button")
             return False
         
-        self.switch_to_default_content()
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            # Set iframe is player, to make sure switchToKAFIframeGeneric() will switch to default and then to KAF iframe
+            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
+            self.clsCommon.kafGeneric.switchToKAFIframeGeneric()
+        else:
+            self.switch_to_default_content()
         
         if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
             writeToLog("INFO","FAILED to wait Till Media Is Being Processed")

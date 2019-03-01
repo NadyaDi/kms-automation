@@ -74,13 +74,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 4 entries")
                 return
-                 
+                  
             writeToLog("INFO","Step 2: Going to publish entries 1-3 to Gallery")
             if self.common.kafGeneric.addNewContentToGallery(self.galleryName, self.uploadEntrieList, isGalleryModerate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entries 1-3 gallery")
                 return
-            
+             
             sleep(3) 
             self.common.base.switch_to_default_content()     
             writeToLog("INFO","Step 3: Going to logout from main user")
@@ -88,34 +88,34 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to logout from main user")
                 return  
-                                      
+                                       
             writeToLog("INFO","Step 4: Going to login with gallery's owner")
             if self.common.canvas.loginToCanvas(self.newUserId, self.newUserPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to login with gallery's owner")
                 return
-             
+              
             expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
-               
+                
             writeToLog("INFO","Step 5: Going to sort entries by Alphabetical & Image type")
             if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, self.galleryName, True, enums.Location.GALLERY_PAGE) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to sort entries by Alphabetical & Image type")
                 return
             self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True)
-              
+               
             writeToLog("INFO","Step 6: Going to verify entries order - by Alphabetical & Image type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify entries order - by Alphabetical & Image type")
                 return
-                    
+                     
             writeToLog("INFO","Step 7: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
             if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName, self.entryName1, self.entryName2, navigate=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to handle entries in Pending tab")
                 return
-            
+             
             sleep(3) 
             self.common.base.switch_to_default_content() 
             writeToLog("INFO","Step 8: Going to logout from gallery owner user")
@@ -123,24 +123,24 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to logout from gallery owner user")
                 return  
-             
+              
             writeToLog("INFO","Step 9: Going to login with main user")
             if self.common.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to login with main user")
                 return
-             
+              
             self.entries = {self.entryName1: enums.EntryPrivacyType.REJECTED, 
                             self.entryName2: enums.EntryPrivacyType.PUBLISHED,
                             self.entryName3: enums.EntryPrivacyType.PENDING, 
                             self.entryName4: enums.EntryPrivacyType.PRIVATE }
-             
+              
             writeToLog("INFO","Step 10: Going navigate to my media")
             if self.common.myMedia.navigateToMyMedia() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED navigate to my media")
                 return
-            
+             
             writeToLog("INFO","Step 11: Going to verify the entries' privacy on my-media")
             try:
                 for entry in self.entries:
