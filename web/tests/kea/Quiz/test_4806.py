@@ -54,8 +54,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName                  = clsTestService.addGuidToString("Quiz Details - Download functionality Anonymous KMS", self.testNum)
-            self.entryNameQuiz              = clsTestService.addGuidToString("Quiz Details - Download functionality Anonymous KMS - Quiz", self.testNum)
+            self.entryName                  = clsTestService.addGuidToString("Quiz Download", self.testNum)
+            self.entryNameQuiz              = clsTestService.addGuidToString("Quiz Download - Quiz", self.testNum)
             self.filePathDownloaded         = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + '/' + self.entryNameQuiz + ".pdf"
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to create a new entry, " + self.entryName)  
@@ -74,6 +74,7 @@ class Test:
             
             writeToLog("INFO","Step 3: Going to publish the " + self.entryNameQuiz +" entry as unlisted ")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.entryNameQuiz, enums.ChannelPrivacyType.UNLISTED, alreadyPublished=False, publishFrom=enums.Location.MY_MEDIA) == False:
+                self.status = "Fail"
                 writeToLog("INFO", "Step 4: FAILED to publish the " + self.entryNameQuiz + " entry as unlisted")
                 return
              
