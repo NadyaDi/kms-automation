@@ -199,10 +199,13 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
         # Z:\\ - Is shared folder on il-AutoKmsJenkinsNode-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
         localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'Z:\\' + str(localSettings.LOCAL_SETTINGS_GUID)
 
-        # Create temp folder
+        # Create temp folder and dummy file
         try:     
             os.makedirs(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","Created folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
+                        
+            with open(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + "/dummy.txt", "w") as file:
+                file.write("This is dummy file inside temp download folder")            
         except:
             writeToLog("INFO","FAILED to create folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
     
@@ -246,7 +249,6 @@ def basicTearDown(test):
             writeToLog("INFO","Deleted folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
         except:
             writeToLog("INFO","FAILED to delete folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
-            return False    
     
     try:
         if (test.driver != None):
