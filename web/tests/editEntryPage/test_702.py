@@ -102,11 +102,12 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return     
              
-            writeToLog("INFO","Step 5: Going to create temp folder for download")
-            if self.common.createFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create temp folder on")
-                return
+            # The temp folder created already in basicSetUp method !!! 
+#             writeToLog("INFO","Step 5: Going to create temp folder for download")
+#             if self.common.createFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 5: FAILED to create temp folder on")
+#                 return
                           
             step = 6
               
