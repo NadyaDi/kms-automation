@@ -418,6 +418,7 @@ class EntryPage(Base):
         sleep(2)
 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
             self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
             sleep(2)
             
