@@ -138,14 +138,15 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to verify the entry duration (using QR codes)")
                 return   
+            
+            self.common.base.switch_to_default_content()  
              
             writeToLog("INFO","Step 14: Going to logout as user 2")
             if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to logout from KMS")
                 return  
-            
-            self.common.base.switch_to_default_content()                          
+                                    
               
             writeToLog("INFO","Step 15: Going to login with main user")
             if self.common.moodle.loginToMoodle(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
