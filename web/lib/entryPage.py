@@ -418,9 +418,12 @@ class EntryPage(Base):
         sleep(2)
 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
-            self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
             self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
             sleep(2)
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+            self.clsCommon.sharePoint.switchToSharepointIframe() 
             
         if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on add comment button")
