@@ -444,7 +444,11 @@ class EditEntryPage(Base):
             if self.check_element(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX, isEnableEveryoneToCreateClip) == False:
                 writeToLog("INFO","FAILED to check/uncheck 'Enable everyone to create clips from this video' option")
                 return False
-                                    
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,3)  
+            sleep(1)  
+                              
         if self.click(self.EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False
