@@ -159,6 +159,7 @@ class Test:
                 writeToLog("INFO","Step 12: FAILED to click on 'New1' button in the navigation menu")
                 return   
             
+            sleep(6)
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED switch to share point iframe")

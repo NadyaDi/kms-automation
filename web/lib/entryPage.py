@@ -425,7 +425,7 @@ class EntryPage(Base):
 #             self.clsCommon.sharePoint.switchToSharepointIframe() 
 #             self.click(self.ENTRY_PAGE_COMMENTS_PART_TITLE)
 #             self.clsCommon.sendKeysToBodyElement(Keys.END)
-
+        sleep(2)
         if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on add comment button")
             return False
