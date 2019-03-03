@@ -127,9 +127,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
+            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) != False:
+                self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
             self.common.deleteFile(self.embedLinkFilePath)
-            self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
