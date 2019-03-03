@@ -428,7 +428,10 @@ class EditEntryPage(Base):
         if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
             writeToLog("INFO","FAILED to click on options tab")
             return False
-         
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,3) 
+            
         # Disable comments 
         if self.check_element(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX, isEnableComments) == False:
             writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
