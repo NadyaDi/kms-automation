@@ -58,31 +58,31 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                      
+                       
             writeToLog("INFO","Step 2: Going navigate to edit entry page")    
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
-                  
+                   
             writeToLog("INFO","Step 3: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate entry page")
                 return
-                  
+                   
             writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
                 return  
-              
+               
             writeToLog("INFO","Step 5: Going to create embed discussion")    
             if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create embed discussion")
                 return             
-              
+               
             writeToLog("INFO","Step 6: Going to to verify embed announcement")    
             if self.common.kafGeneric.verifyEmbedEntry(self.entryName, '', self.timeToStop, enums.Application.D2L) == False:
                 self.status = "Fail"
@@ -91,6 +91,7 @@ class Test:
              
             writeToLog("INFO","Step 7: Going to to delete embed announcement")    
             if self.common.d2l.deleteDiscussion(self.discussionName) == False:
+#             if self.common.d2l.deleteDiscussion("111111") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to delete embed announcement")
                 return              
@@ -106,7 +107,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.deleteDiscussion(self.discussionName, True)   
+            self.common.d2l.deleteDiscussion(self.discussionName, True)   
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
