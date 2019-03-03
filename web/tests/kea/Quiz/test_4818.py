@@ -72,51 +72,49 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to turn off the secureEmbed in admin panel")
                 return                
-               
+                
             self.common.base.navigate(self.instanceUrl)
-             
+              
             writeToLog("INFO","Step 2: Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a new entry, " + self.entryName)  
                 return
-                   
+                    
             writeToLog("INFO","Step 3: Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-
+ 
             self.embedLink = self.common.entryPage.getEmbedLink()
-                  
+                   
             writeToLog("INFO","Step 4: Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account") 
                 return
-  
+   
             writeToLog("INFO","Step 5: Going to write the " + self.entryNameQuiz  + " embed code in a file")
             if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to write the " + self.entryNameQuiz  + " embed code in a file")
                 return
-
+ 
             writeToLog("INFO","Step 6: Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate to embed entry page ( by link )")
                 return
-            
+             
             writeToLog("INFO","Step 7: Going to verify that the PDF can be downloaded while using an Anonymous User")
             if self.common.player.downloadQuizPDF(self.filePathDownloaded, embed=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to download the PDF file, while using an Anonymous User")
                 return
-            
-            self.common.base.navigate(self.instanceUrl)
-    
+             
             writeToLog("INFO","Step 8: Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
-            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD, url=self.instanceUrl + 'user/login') == False:
                 writeToLog("INFO", "Step 8:FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
                 return                 
             ##################################################################
