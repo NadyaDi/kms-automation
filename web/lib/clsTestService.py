@@ -204,8 +204,8 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
             os.makedirs(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","Created folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
                         
-            with open(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + "/dummy.txt", "w") as file:
-                file.write("This is dummy file inside temp download folder")            
+            with open(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + "/" + str(test.testNum) + "-dummy.txt", "w") as file:
+                file.write("This is dummy file inside temp download folder for test ID: " + str(test.testNum))            
         except:
             writeToLog("INFO","FAILED to create folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
     
