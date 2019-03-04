@@ -27,6 +27,7 @@ test_1030,1,0,0,0,KAF BB - Gradebook
 test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publish entries to course
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
+test_4872,1,0,0,0,Blackboard Ultra- Upload media from desktop
 test_628,1,0,0,0,Moodle - Assignment Submission Functionalities
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media

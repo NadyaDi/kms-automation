@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Michal Zomper
-    # Test Name : Blackboard ultra- Upload media from desktop
+    # Test Name : Blackboard Ultra- Upload media from desktop
     # Test description:
     # Test description:
     # upload 3 entries : video / Audio / Image
