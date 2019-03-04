@@ -99,47 +99,47 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1
             self.instanceUrl = self.common.base.driver.current_url
-             
+              
             writeToLog("INFO","Step 1: Going to turn ON the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbedPlaylist(True) == False:
+            if self.common.admin.enableSecureEmbed(True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to turn ON the secureEmbed in admin panel")
                 return                     
-               
+                
             self.common.base.navigate(self.instanceUrl)            
- 
+  
             writeToLog("INFO","Step 2: Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a new entry, " + self.entryName)  
                 return
-                                                 
+                                                  
             writeToLog("INFO","Step 3: Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return  
-            
+             
             sleep(5)
             self.embedLink = self.common.entryPage.getEmbedLink()
-                  
+                   
             writeToLog("INFO","Step 4: Going to publish the " + self.newEntryName + " entry in " + self.channelPublish + " channel")
             if self.common.myMedia.publishSingleEntry(self.newEntryName, '', self.channelPublish, publishFrom = enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 4: FAILED to publish the " + self.newEntryName + " entry in " + self.channelPublish + " channel")
                 return
-                 
+                  
             writeToLog("INFO","Step 5: Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")   
                 return
-             
+              
             writeToLog("INFO","Step 6: Going to write the " + self.newEntryName  + " entrie's embed code in a file")
             if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to write the " + self.newEntryName  + " entrie's embed code in a file")
                 return         
-              
+                 
             writeToLog("INFO","Step 7: Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
                 self.status = "Fail"

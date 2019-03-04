@@ -436,8 +436,8 @@ class Kea(Base):
             
         sleep(3)   
         self.switchToKeaIframe()
-        sleep(3)
-        
+        sleep(6)
+                
         if openEditorTab == True:
             if self.click(self.KEA_EDITOR_TAB) == False:
                 writeToLog("INFO","FAILED to click on Editor Tab")

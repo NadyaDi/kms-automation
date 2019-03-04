@@ -35,6 +35,7 @@ class Player(Base):
     PLAYER_CURRENT_TIME_LABEL                                   = ('xpath', "//div[@data-plugin-name='currentTimeLabel']")
     PLAYER_SLIDE_SIDE_BAR_MENU                                  = ('xpath', "//div[@id='sideBarContainerReminderContainer' and @class='icon-chapterMenu']")
     PLAYER_SLIDE_IN_SIDE_MENU                                   = ('xpath', "//li[@class='mediaBox slideBox']")
+    PLAYER_SLIDE_PRESENTED_IMAGE                                = ('xpath', "//img[@id='SynchImg']")
     PLAYER_VIEW_PIP                                             = ('id','pip')
     PLAYER_VIEW_SIDEBYSIDE                                      = ('id','sideBySide')
     PLAYER_VIEW_SINGLEVIEW                                      = ('id','singleView')
@@ -162,10 +163,14 @@ class Player(Base):
         sleep(sleepBeforePlay)
         self.switchToPlayerIframe(embed)
         if fromActionBar == True:
-            playButtonControlsEl = self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER)
-            playBtnWidth = playButtonControlsEl.size['width'] / 3
-            playBtnHeight = playButtonControlsEl.size['height'] / 1.1
-            
+            try:
+                playButtonControlsEl = self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER)
+                playBtnWidth = playButtonControlsEl.size['width'] / 3
+                playBtnHeight = playButtonControlsEl.size['height'] / 1.1
+            except Exception:
+                writeToLog("INFO", "FAILED to take the elements in order to click play using the action bar")
+                return False
+                
             if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, width=playBtnWidth, height=playBtnHeight) == False:
                 writeToLog("INFO","FAILED to click Play; fromActionBar = " + str(fromActionBar))
                 return False
@@ -217,7 +222,7 @@ class Player(Base):
     
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the Captions that were presented on the player - and return list of Captions codes (filters the duplicates)     
-    def collectCaptionsFromPlayer(self, entryName, embed=False, fromActionBar=True):
+    def collectCaptionsFromPlayer(self, entryName, embed=False, fromActionBar=True, quizPresented=False):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -228,8 +233,16 @@ class Player(Base):
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
             
-            if self.clickPlay(embed, fromActionBar, 60) == False:
-                return False       
+            if self.clickPlay(embed, fromActionBar, 10) == False:
+                if self.clickPlay(embed, False, 5) == False:
+                    writeToLog("INFO", "FAILED to click on the play button")
+                    return False
+                
+            if quizPresented == True:
+                self.switchToPlayerIframe()
+                if self.continueFromQuizWelcomeScreen() == False:
+                    writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
+                    return False       
             
             playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
             captionsList = [];
@@ -237,6 +250,21 @@ class Player(Base):
             while playback != False:
                 try:
                     captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT).text
+                    
+                    if quizPresented == True:
+                        # Verify if the Question Screen is displayed
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.3, True) != False:
+                            sleep(1)
+                            # Resume the playing process by skipping the Question Screen
+                            if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                                writeToLog("INFO", "FAILED to click on the Skip for now button")
+                                return False
+                            
+                            # Make sure that we capture only the Slide Images
+                            if self.wait_visible(self.PLAYER_CAPTIONS_TEXT, 1.5, True) == False:
+                                writeToLog("INFO", "FAILED to displayed the Captions after dismissing the Question Screen")
+                                return False                
+    
                     if captionText == False:
                         writeToLog("INFO","FAILED to extract caption from player")
                         return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
@@ -267,7 +295,7 @@ class Player(Base):
                     writeToLog("INFO","FAILED to wait Till Media Is Being Processed")
                     return False
             
-            if self.clickPlay(False, True, 60) == False:
+            if self.clickPlay(False, True, 10) == False:
                 return False       
             
             QRcode = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -310,12 +338,12 @@ class Player(Base):
                     return False 
             
             self.switchToPlayerIframe()
-            if self.clickPlay(sleepBeforePlay=60) == False:
+            if self.clickPlay(sleepBeforePlay=10) == False:
                 return False  
             
-            #Click continue button
-            if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON, 45) == False:
-                writeToLog("INFO","FAILED to click on Welcome Screen's continue button (Quiz Entry)")
+            #Move forward from the Quiz Welcome Screen
+            if self.continueFromQuizWelcomeScreen() == False:
+                writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
                 return False  
 
             replay = self.wait_element(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
@@ -326,6 +354,7 @@ class Player(Base):
                 
                 question = self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, timeout=30)
                 if question != False:
+                    sleep(1)
                     
                     questiondetails = self.extractQuizQuestionDetails()
                     questionList.update({str(key):questiondetails})
@@ -817,8 +846,9 @@ class Player(Base):
     
         
     # @ Author: Tzachi Guetta
-    # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)     
-    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True):
+    # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)
+    # If quizPresented = True, it will Skip all the Quiz Related screens, NOTICE that the QR Code for the second where the Question was presented, may not be captured     
+    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizPresented=False):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -833,14 +863,37 @@ class Player(Base):
             if self.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
                 return False
             
-            if self.clickPlay(embed, fromActionBar, 60) == False:
-                return False       
+            if self.clickPlay(embed, fromActionBar, 10) == False:
+                if self.clickPlay(embed, False, 1) == False:
+                    writeToLog("INFO", "FAILED to click on the play button")
+                    return False  
+                
+            if quizPresented == True:
+                self.switchToPlayerIframe()
+                if self.continueFromQuizWelcomeScreen() == False:
+                    writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
+                    return False  
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
             QRPathList = []
             
             while qrPath != False:
                 qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(False)
+                
+                if quizPresented == True:
+                    # Verify if the Question Screen is displayed
+                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.3, True) != False:
+                        sleep(1)
+                        # Resume the playing process by skipping the Question Screen
+                        if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the Skip for now button")
+                            return False
+                        
+                        # Make sure that we capture only the Slide Images
+                        if self.wait_visible(self.PLAYER_SLIDE_PRESENTED_IMAGE, 1.5, True) == False:
+                            writeToLog("INFO", "FAILED to displayed the Slide Images after dismissing the Question Screen")
+                            return False
+                        
                 if qrPath == False:
                     break
                     
@@ -861,6 +914,11 @@ class Player(Base):
                     writeToLog("INFO","FAILED to resolve QR code")
                 QRcodeList.append(qrResolve)
                 
+            
+            if quizPresented == True:
+                # Remove invalid elements ( None )  from the QR Code List
+                QRcodeList = [x for x in QRcodeList if x != None]
+                                
             self.clsCommon.base.switch_to_default_content()    
             return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
@@ -1663,7 +1721,7 @@ class Player(Base):
     # This function verifies if the Welcome Screen is enabled and then clicks on the "CONTINUE" button
     def continueFromQuizWelcomeScreen(self):
         #we verify if the "Continue" button specific for the Quiz "Welcome Screen" is present or not     
-        if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 10, True) != False:
+        if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
             writeToLog("INFO", "Continue button has been found in welcome screen")
         else:
             writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
@@ -1674,6 +1732,10 @@ class Player(Base):
             writeToLog("INFO", "FAILED to continue further from the welcome screen")
             return False
         sleep(1)
+        
+        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
+            writeToLog("INFO", "FAILED to load the video after continuing from the Quiz Welcome Screen")
+            return False
         
         return True
    
