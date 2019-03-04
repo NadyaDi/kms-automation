@@ -91,7 +91,6 @@ class Test:
              
             writeToLog("INFO","Step 7: Going to to delete embed announcement")    
             if self.common.d2l.deleteDiscussion(self.discussionName) == False:
-#             if self.common.d2l.deleteDiscussion("111111") == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to delete embed announcement")
                 return              
