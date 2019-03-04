@@ -345,9 +345,13 @@ test_4827,1,0,0,0,Quiz - Secure Embed ON - Submit Quiz (with score verification)
 test_4828,1,0,0,0,Quiz - Secure Embed ON - Download functionality - KMS user
 test_4829,1,0,0,0,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor
 test_4830,1,0,0,0,Quiz - Change Question order for all Quiz Question Types - KEA Editor
+test_4853,1,0,0,0,Quiz - Secure Embed ON - Published Entry in Private Channel with KMS user
+test_4854,1,0,0,0,Quiz - Video playing and Navigation process with Quiz Questions in KEA Page
 test_4855,1,0,0,0,Quiz - Submitting Quiz with Answer order changed - Entry Page
 test_4857,1,0,0,0,Quiz - Timeline section while Using Zoom Option - KEA Page
 test_4858,1,0,0,0,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page
+test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
+test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
@@ -643,5 +647,3 @@ test_4724,1,0,0,0,Filters Section - no search - My Media
 test_4725,1,0,0,0,Filters Section - with search - Channel Page - Media Tab
 test_4726,1,0,0,0,Filters Section - no search - Channel Page - Media Tab
 test_4852,1,0,0,0,Recscheduling - Create new single event
-test_4853,1,0,0,0,Quiz - Secure Embed ON - Published Entry in Private Channel with KMS user
-test_4854,1,0,0,0,Quiz - Video playing and Navigation process with Quiz Questions in KEA Page
