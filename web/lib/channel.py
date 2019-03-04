@@ -1350,6 +1350,7 @@ class Channel(Base):
                 if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
                     self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
                     self.clsCommon.general.waitForLoaderToDisappear()
+                    self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True)
         else:
             if toApproveEntriesNames != '':
                 if self.method_helper_approveEntry(toApproveEntriesNames, location) == False:
@@ -1360,6 +1361,7 @@ class Channel(Base):
                 if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
                     self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
                     self.clsCommon.general.waitForLoaderToDisappear()
+                    self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True)
         
         return True
     
@@ -1371,11 +1373,13 @@ class Channel(Base):
                 if self.method_helper_rejectEntry(rejectEntry, location) == False:
                     writeToLog("INFO","FAILED to reject entry: " + rejectEntry)
                     return False 
+                
                 sleep(3)
                 self.clsCommon.general.waitForLoaderToDisappear()
                 if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
                     self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
                     self.clsCommon.general.waitForLoaderToDisappear()
+                    self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True)
             
         else:
             if toRejectEntriesNames != '':
@@ -1386,7 +1390,8 @@ class Channel(Base):
                 self.clsCommon.general.waitForLoaderToDisappear() 
                 if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON,  multipleElements=True) != False:
                     self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, multipleElements=True)
-                    self.clsCommon.general.waitForLoaderToDisappear()              
+                    self.clsCommon.general.waitForLoaderToDisappear()    
+                    self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True)          
         
         return True
     

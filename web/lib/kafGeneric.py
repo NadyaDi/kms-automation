@@ -58,7 +58,12 @@ class KafGeneric(Base):
             if self.clsCommon.sakai.navigateToMyMediaSakai() == False:
                 writeToLog("INFO","FAILED navigate to My Media")
                 return False 
-            
+    
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            if self.clsCommon.blackBoardUltra.navigateToMyMediaBlackboardUltra() == False:
+                writeToLog("INFO","FAILED navigate to My Media")
+                return False     
+       
         else: 
             if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
                 writeToLog("INFO","FAILED navigate to My Media")
@@ -116,6 +121,11 @@ class KafGeneric(Base):
             if self.clsCommon.sharePoint.switchToSharepointIframe() == False:
                 writeToLog("INFO","FAILED to switch to share point iframe")
                 return False
+
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            if self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe() == False:
+                writeToLog("INFO","FAILED to switch to blackboard ultra iframe")
+                return False
         
         return True
     
@@ -169,6 +179,11 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED navigate to media gallery")
                 return False 
         
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            if self.clsCommon.blackBoardUltra.navigateToGalleryBlackBoardUltra(galleryName, forceNavigate) == False:
+                writeToLog("INFO","FAILED navigate to media gallery")
+                return False 
+            
         return True
         
     
@@ -358,6 +373,7 @@ class KafGeneric(Base):
             if self.wait_element(self.KAF_CLEAR_SREACH_ICON,  multipleElements=True) == True:
                 self.click(self.KAF_CLEAR_SREACH_ICON, multipleElements=True)
                 self.clsCommon.general.waitForLoaderToDisappear()
+                self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True)
                 
             self.clsCommon.channel.showAllEntriesPendingTab()
             self.click(self.KAF_REFRSH_BUTTON, multipleElements=True)

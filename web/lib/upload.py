@@ -505,6 +505,8 @@ class Upload(Base):
                 self.clsCommon.jive.switchToJiveIframe()
             elif self.getAppUnderTest() == enums.Application.SAKAI:
                 self.clsCommon.sakai.switchToSakaiIframe()
+            elif self.getAppUnderTest() == enums.Application.BLACKBOARD_ULTRA:
+                self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)
