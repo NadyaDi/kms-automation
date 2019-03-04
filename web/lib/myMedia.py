@@ -688,12 +688,7 @@ class MyMedia(Base):
                 tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN[1].replace('ENTRY_ID', entryId))
                 
                 if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
-                    self.switch_to_default_content()
-                    self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
-                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
-                    self.clsCommon.sharePoint.switchToSharepointIframe()
-                    self.click(self.clsCommon.category.CATEGORY_DETAILS_VIEW)
-                    self.get_body_element().send_keys(Keys.PAGE_DOWN)
+                    self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
                     sleep(1)
                     
                 if self.click(tmpBtn) == False:
@@ -701,10 +696,7 @@ class MyMedia(Base):
                     return False
                 sleep(3)
 
-                if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-                    tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId))
-                else:
-                    tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
+                tmpBtn = (self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[0], self.MY_MEDIA_ENTRY_PUBLISHED_BTN_OLD_UI[1].replace('ENTRY_ID', entryId) + "/descendant::strong[@class='valign-top']")
                 if str(expectedEntryPrivacy) in self.get_element_text(tmpBtn):
                     writeToLog("INFO","As Expected: The privacy of: '" + entryName + "' in My-media page is: '" + str(expectedEntryPrivacy) + "'")
                     return True
