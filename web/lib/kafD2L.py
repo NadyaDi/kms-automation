@@ -48,6 +48,7 @@ class D2L(Base):
     D2L_DELETE_DISCUSSION_CONFIRMATION_BTN              = ('xpath', '//button[@class="d2l-button" and text()="Yes"]')
     D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[contains(@data-message-text,"has been deleted")]')
     D2L_QA_PROD_BSE_OPTION                              = ('xpath', '//span[@class="d2l-textblock" and text()="QA PROD BSE"]')
+    D2L_EMBED_DISCUSSION_FRAME_TITLE                    = ('xpath', "//a[contains(@id, 'ForumContextMenu') and contains(@title,'GUID')]")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -272,18 +273,27 @@ class D2L(Base):
             if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Discussions' button")
                 return False  
-                                                 
+            
+        # Focus on the frame title
+        frameMenuBtnEl = self.wait_element((self.D2L_EMBED_DISCUSSION_FRAME_TITLE[0], self.D2L_EMBED_DISCUSSION_FRAME_TITLE[1].replace('GUID', localSettings.LOCAL_SETTINGS_GUID)))
+        if frameMenuBtnEl == False:
+            writeToLog("INFO","FAILED to get frame menu button")
+            return False
+        frameMenuBtnEl.send_keys('')           
+        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,6)            
+               
+        # Switch to embed iframe                                         
         tmp_entry_iframe = (self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[0], self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[1].replace('ENTRY_NAME', entryName))
         self.swith_to_iframe(tmp_entry_iframe) 
         
+        # Switch to player iframe
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
-        sleep(3)
+        sleep(6)
         
         # If entry type is video
         if delay != '':   
-#            localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER 
             if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
                 writeToLog("INFO","FAILED to play and verify video")
                 return False                
@@ -310,10 +320,10 @@ class D2L(Base):
             if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Discussions' button")
                 return False 
-            
+
         tmp_discussion_menu = (self.D2L_EMBED_DISCUSSION_MENU[0], self.D2L_EMBED_DISCUSSION_MENU[1].replace('DISCUSSION_NAME', discussionName))
         discussion_menu_element = self.wait_element(tmp_discussion_menu)
-        
+         
         if discussion_menu_element != False:
             if ActionChains(self.driver).move_to_element(discussion_menu_element).click().perform() == False:
                 writeToLog("INFO","FAILED to click on embed discussion menu")
@@ -324,7 +334,7 @@ class D2L(Base):
         
         sleep(2)    
 
-        if self.click(self.D2L_EMBED_DISCUSSION_DELETE_OPTION) == False:
+        if self.click(self.D2L_EMBED_DISCUSSION_DELETE_OPTION, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on delete option")
             return False
         
