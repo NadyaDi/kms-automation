@@ -14,6 +14,7 @@ class Application(Enum):
     JIVE                = 'Jive'
     SHARE_POINT         = 'Share Point'
     SAKAI               = 'Sakai'
+    BLACKBOARD_ULTRA    = 'Black Board ultra'
 
 
 class ChannelPrivacyType(Enum):
@@ -115,6 +116,7 @@ class IframeName(Enum):
     KAF_D2L                                 = 'KAF_D2L'
     KAF_JIVE                                = 'KAF_JIVE'
     KAF_SAKAI                               = 'KAF_SAKAI'
+    KAF_BLACKBOARD_ULTRA                    = 'KAF_BLACKBOARD_ULTRA'
 
     
     
