@@ -24,6 +24,8 @@ class Login(Base):
     def loginToKMS(self, username, password, url=''):
         try:
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
+            if url != '':
+                writeToLog("INFO","URL: " + url)
             # Navigate to login page
             self.navigateToLoginPage(url)
             # Enter test partner username

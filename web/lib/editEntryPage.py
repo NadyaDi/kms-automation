@@ -428,7 +428,10 @@ class EditEntryPage(Base):
         if self.clickOnEditTab(enums.EditEntryPageTabName.OPTIONS) == False:
             writeToLog("INFO","FAILED to click on options tab")
             return False
-         
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,3) 
+            
         # Disable comments 
         if self.check_element(self.EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX, isEnableComments) == False:
             writeToLog("INFO","FAILED to check/uncheck 'Disable comments' option")
@@ -444,7 +447,11 @@ class EditEntryPage(Base):
             if self.check_element(self.EDIT_ENTRY_CLIP_PERMISSION_EVERYONE_CHECKBOX, isEnableEveryoneToCreateClip) == False:
                 writeToLog("INFO","FAILED to check/uncheck 'Enable everyone to create clips from this video' option")
                 return False
-                                    
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,3)  
+            sleep(1)  
+                              
         if self.click(self.EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on save button")
             return False
@@ -1433,10 +1440,14 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to hover over download attachment icon")
             return False             
         
-        #Click on download icon   
+        # Click on download icon   
         if self.click(self.EDIT_ENTRY_DOWNLOAD_ATTACHMENT_ICON) == False:
             writeToLog("INFO","FAILED to click on download attachment icon")
-            return False   
+            return False
+           
+        # Wait file to download
+        # TODO remove hardcode sleep
+        sleep(10)
         
         # Compare between uploaded file and download file
         writeToLog("INFO","Going to compare between uploaded file and download file")  

@@ -1493,7 +1493,6 @@ class Player(Base):
         
         #we wait for three seconds, in order to make sure that our file has been downloaded successfully
         sleep(7)
-        self.switch_to_default_content()
         
         #we verify that the downloaded file is present in the filePath location
         if self.clsCommon.verifyFilePathLocationIsValid(filePath) == False:

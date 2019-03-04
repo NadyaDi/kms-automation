@@ -418,13 +418,13 @@ class EntryPage(Base):
         sleep(2)
 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
+            sleep(2)
             self.switch_to_default_content()
             self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
-            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,1)
+            self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
             self.clsCommon.sharePoint.switchToSharepointIframe() 
-            self.click(self.ENTRY_PAGE_COMMENTS_PART_TITLE)
-            self.clsCommon.sendKeysToBodyElement(Keys.END)
-
+            
         if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on add comment button")
             return False
@@ -756,38 +756,26 @@ class EntryPage(Base):
     # Author: Michal Zomper
     # The function search and verify caption in the caption section in entry page
     def verifyCaptionsSearchResult(self, captionTime, captionText):
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
-                writeToLog("INFO","FAILED to click on search icon")
-                return False
-            
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE \
-                or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
-                if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText + Keys.ENTER, multipleElements=False) == False:
-                    writeToLog("INFO","FAILED to insert caption search")
-                    return False
-            else:
-                if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText, multipleElements=False) == False:
-                    writeToLog("INFO","FAILED to insert caption search")
-                    return False
-            sleep(4)
-         
-            try:
-                captionResult = self.get_element(self.ENTRY_PAGE_CAPTION_SEARCH_RESULT).text
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to get caption search result element")
-                return False
-        else:
-            if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR_OLD_UI, captionText, multipleElements=False) == False:
+        if self.click(self.ENRTY_PAGE_SEARCH_ICON) == False:
+            writeToLog("INFO","FAILED to click on search icon")
+            return False
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE \
+            or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
+            if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText + Keys.ENTER, multipleElements=False) == False:
                 writeToLog("INFO","FAILED to insert caption search")
                 return False
-            sleep(4)
-            
-            try:
-                captionResult = self.get_element(self.ENTRY_PAGE_CAPTION_SEARCH_RESULT_OLD_UI).text
-            except NoSuchElementException:
-                writeToLog("INFO","FAILED to get caption search result element")
+        else:
+            if self.send_keys(self.ENTRY_PAGE_CAPTION_SEARCH_BAR, captionText, multipleElements=False) == False:
+                writeToLog("INFO","FAILED to insert caption search")
                 return False
+        sleep(4)
+     
+        try:
+            captionResult = self.get_element(self.ENTRY_PAGE_CAPTION_SEARCH_RESULT).text
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get caption search result element")
+            return False
             
         captionResult = captionResult.split("\n")
         for result in captionResult:
@@ -802,26 +790,19 @@ class EntryPage(Base):
     # Author: Michal Zomper
     # The function click on the caption time in the caption section in entry page and the verify that the caption appear on the player with the correct time              
     def clickOnCaptionSearchResult(self, captionTime, captionText, entryName=''):
-        if self.clsCommon.isElasticSearchOnPage() == True:
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L or\
-            localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
-                tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
-                self.click(tmpEntryName)
-                sleep(1)
-                self.get_body_element().send_keys(Keys.PAGE_DOWN)
-            
-            sleep(2)
-            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
-            if self.click(tmpCaptionTime, timeout=15) == False:
-                writeToLog("INFO","FAILED to click on caption time in caption search result")
-                return False
-            sleep(2)
-        else:
-            tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT_OLD_UI[1].replace('CAPTION_TIME', captionTime))
-            if self.click(tmpCaptionTime, timeout=15) == False:
-                writeToLog("INFO","FAILED to click on caption time in caption search result")
-                return False
-            sleep(2)
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L or\
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
+            tmpEntryName = (self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[0], self.clsCommon.entryPage.ENTRY_PAGE_ENTRY_TITLE[1].replace('ENTRY_NAME', entryName))
+            self.click(tmpEntryName)
+            sleep(1)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+        
+        sleep(2)
+        tmpCaptionTime = (self.ENTRY_PAGE_CAPTION_TIME_RESULT[0], self.ENTRY_PAGE_CAPTION_TIME_RESULT[1].replace('CAPTION_TIME', captionTime))
+        if self.click(tmpCaptionTime, timeout=15) == False:
+            writeToLog("INFO","FAILED to click on caption time in caption search result")
+            return False
+        sleep(2)
             
         if self.clsCommon.player.switchToPlayerIframe() == False:
             writeToLog("INFO","FAILED to switch to player frame in order to check caption on the player ")

@@ -86,7 +86,6 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
-            self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

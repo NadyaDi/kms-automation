@@ -101,14 +101,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return     
-             
-            writeToLog("INFO","Step 5: Going to create temp folder for download")
-            if self.common.createFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create temp folder on")
-                return
-                          
-            step = 6
+
+            step = 5
               
             for path in self.filePathDictionary:  
                 fileName = self.filePathDictionary[path][1].split("\\")[len(self.filePathDictionary[path][1].split("\\"))-1]   
@@ -186,7 +180,6 @@ class Test:
             self.common.handleTestFail(self.status)              
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

@@ -1018,7 +1018,7 @@ class MyMedia(Base):
             if self.clickActionsAndPublishFromMyMedia() == False:
                 writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
                 return False
-            sleep(3)
+            sleep(5)
 
             if privacy == enums.ChannelPrivacyType.UNLISTED:
                     if self.click(self.MY_MEDIA_PUBLISH_UNLISTED) == False:
@@ -1038,7 +1038,7 @@ class MyMedia(Base):
                     sleep(1)
                     self.clsCommon.general.waitForLoaderToDisappear()
 
-                    if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG, 20) == False:
+                    if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_AS_UNLISTED_MSG, 20) == False:
                         writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
                         return False
 

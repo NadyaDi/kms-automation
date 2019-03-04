@@ -27,7 +27,7 @@ class Canvas(Base):
     CANVAS_MEDIA_GALLERY_BUTTON_IN_NAV_BAR              = ('xpath', "//a[contains(@class, 'ontext_external_tool') and @title='Media Gallery']")
     CANVAS_DASHBOARD_BUTTON_IN_NAV_BAR                  = ('xpath', "//a[@id='global_nav_dashboard_link']")
     CANVAS_GALLERY_NEW1_IN_DASHBOARD_MENU               = ('xpath', "//div[@class='ic-DashboardCard' and @aria-label='New1']")
-    CANVAS_USER_NAME                                    = ('xpath', "//h2[@class='_16dxlnN _2nPix9- _3ofYXie _1vP3JKU']")
+    CANVAS_USER_NAME                                    = ('xpath', "//h2[@class='_3H7s5be _3jahoWo _2OBC5rb f7NtdN-']")
     CANVAS_ANNOUNCEMENTS_TAB                            = ('xpath', '//a[@title="Announcements"]')
     CANVAS_CREATE_ANNOUNCEMENT_BTN                      = ('xpath', '//a[@id="add_announcement"]')
     CANVAS_ANNOUNCEMENTS_TITLE                          = ('xpath', '//input[@id="discussion-title"]')

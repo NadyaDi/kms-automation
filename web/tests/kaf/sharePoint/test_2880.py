@@ -84,11 +84,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to click on 'My Media' button in navigation menu")
                 return    
-             
+            
+            sleep(6)
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED switch to share point iframe")
                 return 
+            
              
             self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_ACTIONS_BUTTON, timeout=20)
             if self.common.base.wait_visible(self.common.myMedia.MY_MEDIA_TITLE) == False:
@@ -157,6 +159,7 @@ class Test:
                 writeToLog("INFO","Step 12: FAILED to click on 'New1' button in the navigation menu")
                 return   
             
+            sleep(6)
             if self.common.kafGeneric.switchToKAFIframeGeneric()== False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED switch to share point iframe")

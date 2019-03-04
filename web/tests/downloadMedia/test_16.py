@@ -51,11 +51,11 @@ class Test:
             ########################################################################
             self.entryName = clsTestService.addGuidToString('entryName')
             self.filePathDownloaded = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, self.entryName + "_" + '(' + self.flavorsList[0] + ')'  + ".mp4")
-            writeToLog("INFO","SETUP: Going to create temp folder for download")
-            if self.common.createFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD) == False:
-                self.status = "Fail"
-                writeToLog("INFO","SETUP: FAILED to create temp folder on")
-                return
+#             writeToLog("INFO","SETUP: Going to create temp folder for download")
+#             if self.common.createFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","SETUP: FAILED to create temp folder on")
+#                 return
 #           TO-DO: move the below line to "crate evn test"
 #           self.common.admin.adminDownloadMedia(True)
             ########################## TEST STEPS - MAIN FLOW #######################
@@ -110,7 +110,6 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryName + '_Downloaded'])
-            self.common.deleteFolder(localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
