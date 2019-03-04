@@ -119,6 +119,7 @@ test_2938,Sakai - My Media -Delete through my media,,,pythonautomation1@mailinat
 test_2939,Sakai  -Delete through entry page,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_3044,Sakai  - Announcment BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_3045,Sakai  - Announcment Upload And Embed From BSE Page Sakai,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_4872,Blackboard Ultra- Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
