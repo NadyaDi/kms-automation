@@ -196,7 +196,7 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
         localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = os.path.abspath(os.path.join(LOCAL_SETTINGS_REMOTE_KMS_WEB_DIR,'temp','downloads'))
     
     if isAutomationEnv() == True:
-        # Z:\\ - Is shared folder on il-AutoKmsJenkinsNode-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
+        # Z:\\ - Is shared folder on il-autojenkins-qa.dev.kaltura.com/mnt/auto_kms_py1/downloads/
         localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS           = 'Z:\\' + str(localSettings.LOCAL_SETTINGS_GUID)
 
         # Create temp folder and dummy file
