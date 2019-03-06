@@ -74,7 +74,7 @@ class Test:
 
 
             
-            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, startDate, endDate, startTime,endTime, self.description, self.tags, True, [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
+            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, startDate, endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
