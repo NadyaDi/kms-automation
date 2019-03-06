@@ -61,8 +61,8 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.eventTitle = clsTestService.addGuidToString("Create new single event", self.testNum)
-            startDate = datetime.datetime.now().strftime("%d/%m/%Y")
-            endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
+            self.startDate = datetime.datetime.now().strftime("%d/%m/%Y")
+            self.endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
         
             startTime = time.time() + (60*60)
             startTime= time.strftime("%I:%M %p",time.localtime(startTime))
@@ -71,10 +71,9 @@ class Test:
             endTime= time.strftime("%I:%M %p",time.localtime(endTime))
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-
-
+            self.common.recscheduling.setRecurrenceRange(self.startDate,self.endDate,self.startTime,self.endTime)
             
-            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, startDate, endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
+            self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:

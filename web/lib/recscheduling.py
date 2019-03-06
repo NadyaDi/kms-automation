@@ -38,6 +38,13 @@ class  Recscheduling(Base):
     SCHEDULE_EVENT_RESOURCE                             = ('xpath', "//div[@class='sol-label-text' and contains(text(),'RESOURCE_NAME')]")
     SCHEDULE_COPE_DETAILS_BUTTON                        = ('xpath', "//input[@id='CreateEvent-eventCopyDetails']")
     SCHEDULE_COPE_DETAILS_NAME                          = ('xpath', "//input[@id='Entry-name']")
+    SCHEDULE_COPE_DETAILS_DESCRIPTION                   = ('xpath', "//textarea[@id='description']")
+    SCHEDULE_ADD_RECURRENCE_BUTTON                      = ('xpath', "//button[@id='CreateEvent-recurrenceMain']")
+    SCHEDULE_RECURRENCE_INTERVAL                        = ('xpath', "//label[@class='radio' and @for='EventRecurrence-recurrence-'RECURRENCE_INTERVAL']")
+    SCHEDULE_RECURRENCE_START_TIME                      = ('xpath', "//input[@id='EventRecurrence-startTime']")
+    SCHEDULE_RECURRENCE_END_TIME                        = ('xpath', "//input[@id='EventRecurrence-endTime']")
+    SCHEDULE_RECURRENCE_START_DATE_CALENDAR             = ('xpath', "//input[@id='EventRecurrence-start']")
+    SCHEDULE_RECURRENCE_END_DATE_CALENDAR               = ('xpath', "//input[@id='EventRecurrence-endby_date']")    
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -73,7 +80,9 @@ class  Recscheduling(Base):
             return False
             
         if isRecurrence == True:
-            writeToLog("INFO","FAILED to create schdule event")
+            if self.click(self.SCHEDULE_ADD_RECURRENCE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on add recurrence button")
+                return False
             
             
             
@@ -241,19 +250,129 @@ class  Recscheduling(Base):
         
         if copeDetailsDescriptio != '':
             # Click in Description text box
-            if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
+            if self.click(self.SCHEDULE_COPE_DETAILS_DESCRIPTION) == False:
                 writeToLog("INFO","FAILED to click in description textbox")
                 return False
-            
+             
             # Enter text Description
-            if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, copeDetailsDescriptio) == False:
+            if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_DESCRIPTION, copeDetailsDescriptio) == False:
                 writeToLog("INFO","FAILED to insert new description in 'Copy details from event to recording'")
                 return False
-        
-                  
+
         if  copeDetailsTags != '':
-            if self.fillFileScheduleTags(copeDetailsTags) == False:
+            if self.clsCommon.upload.fillFileUploadEntryTags(copeDetailsTags) == False:
                 writeToLog("INFO","FAILED to insert new tags in 'Copy details from event to recording'")
                 return False
             
+        return True
+    
+    
+    # recurrenceInterval - this parameter need to be send as an enum- scheduleRecurrenceInterval
+    def setEventRecurrence(self, recurrenceInterval):
+        # Choose the needed interval
+        tmpRecurrenceInterval = (self.SCHEDULE_RECURRENCE_INTERVAL[0], self.SCHEDULE_RECURRENCE_INTERVAL[1].replace('RECURRENCE_INTERVAL', recurrenceInterval.value))
+        if self.click(tmpRecurrenceInterval) == False:
+            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value)
+            return False
+            
+        if recurrenceInterval == enums.scheduleRecurrenceInterval.NONE:
+            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value)
+        
+        elif recurrenceInterval == enums.scheduleRecurrenceInterval.DAYS: 
+            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value) 
+            
+        elif recurrenceInterval == enums.scheduleRecurrenceInterval.WEEKS: 
+            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value) 
+            
+        elif recurrenceInterval == enums.scheduleRecurrenceInterval.MONTHS:  
+            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value)
+            
+            
+    
+    
+    
+    def setRecurrenceRange(self, reccurenceStartDate, reccurenceEndDate, reccurenceStartTime, reccurenceendTime): 
+        if self.clsCommon.editEntryPage.setScheduleStartDate(reccurenceStartDate) == False:
+            writeToLog("INFO","FAILED to set event start date")
+            return False
+        sleep(2) 
+        
+        if self.clsCommon.editEntryPage.setScheduleEndDate(reccurenceEndDate) == False:
+            writeToLog("INFO","FAILED to set event end date")
+            return False
+        sleep(2)  
+        
+        if len(reccurenceStartTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_START_TIME, reccurenceStartTime) == False:
+                writeToLog("INFO","FAILED to set event start time")
+                return False
+            sleep(2) 
+        
+        if len(reccurenceendTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_END_TIME, reccurenceendTime) == False:
+                writeToLog("INFO","FAILED to set event end time")
+                return False
+            sleep(2)
+        
+    
+    # Format desteStr - '24/01/2018'
+    # startOrEnd - String 'start' or 'end'
+    def setRecurrenceStartDate(self, dateStr):
+        return self.setScheduleDate(dateStr, 'start')
+    
+    
+    def setRecurrenceEndDate(self, dateStr):
+        return self.setScheduleDate(dateStr, 'end')
+        
+       
+    def setRecurrenceScheduleDate(self, dateStr, startOrEnd):
+        if startOrEnd.lower() == 'start':
+            locator = (self.EDIT_SCHEDULE_RECURRENCE_START_DATE_CALENDAR[0], self.SCHEDULE_RECURRENCE_START_DATE_CALENDAR[1] + "/following-sibling::span")
+        elif startOrEnd.lower() == 'end':
+            locator = (self.SCHEDULE_RECURRENCE_END_DATE_CALENDAR[0], self.SCHEDULE_RECURRENCE_END_DATE_CALENDAR[1] + "/following-sibling::span")
+        else:
+            writeToLog("INFO","FAILED, unknown Schedule start/stop type: '" + startOrEnd + "'")
+            return False            
+        # Extract from dateStr the day, month, year
+        day = dateStr.split('/')[0]
+        # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3'
+        intDay = int(day)
+        day = str(intDay)
+        formated_month = datetime.datetime.strptime(dateStr, "%d/%m/%Y")
+        month = formated_month.strftime("%b")
+        year = dateStr.split('/')[2]
+        
+        # Click on Start Date calendar
+        if self.click(locator) == False:
+                writeToLog("INFO","FAILED to click start date calendar")
+                return False
+            
+        # Set a year
+        # Click on the year - at the top of the calendar
+        if self.click(self.EDIT_ENTRY_SCHEDULING_CALENDAR_TOP) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False
+        
+        # Click again to show all years
+        if self.click(self.EDIT_ENTRY_SCHEDULING_CALENDAR_TOP, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False
+        
+        # Select a year
+        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[1].replace('YEAR', year))) == False:
+            writeToLog("INFO","FAILED to select the year")
+            return False        
+        
+        # Set Month
+        if self.click((self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[1].replace('MONTH', month))) == False:
+            writeToLog("INFO","FAILED to select the month")
+            return False
+        
+        # Set Day
+        # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
+        # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'
+        if self.clickOnDayFromDatePicker(day) == False:
+            writeToLog("INFO","FAILED to select the day")
+            return False        
+        
         return True
