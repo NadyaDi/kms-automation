@@ -579,3 +579,14 @@ class RecschedulingResourceOptions(Enum):
     FALL_CONFERENCE_ROOM        = 'Fall Conference Room' 
     MAIN_STUDENT_LOUNGE         = 'Main Student Lounge'
     QA_APP_ROOM                 = 'Qa App Room'
+    
+
+class scheduleRecurrenceInterval(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    NONE            = 'none'
+    DAYS            = 'days'
+    WEEKS           = 'weeks'
+    MONTHS          = 'months'
+
