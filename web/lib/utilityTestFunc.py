@@ -86,6 +86,7 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL  = (localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/announcements')
         localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL   = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/assignments'
         localSettings.LOCAL_SETTINGS_GALLERY_GRADEBOOK_URL      = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/gradebook'
+        localSettings.LOCAL_SETTINGS_GALLERY_GRADES_STUDENT_URL = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/grades'
 
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_D2L_BASE_URL
