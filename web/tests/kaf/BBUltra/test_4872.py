@@ -13,7 +13,7 @@ import ctypes
 
 class Test:
     #================================================================================================================================
-    # @Author: Michal Zomper
+    # @Author: Oded Berihon
     # Test Name : Blackboard Ultra- Upload media from desktop
     # Test description:
     # Test description:
@@ -125,7 +125,7 @@ class Test:
                 return   
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Blackboard - Upload media from desktop and verify player' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Blackboard ultra - Upload media from desktop and verify player' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
