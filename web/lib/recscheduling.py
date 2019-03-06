@@ -36,6 +36,8 @@ class  Recscheduling(Base):
     SCHEDULE_CREATE_EVENT_SUCCESS_MESSAGE               = ('xpath', "//p[contains(text(),'Event created successfully.')]")
     SCHEDULE_EVENT_RESOURCES                            = ('xpath', "//input[@placeholder='Click here to search resource']")
     SCHEDULE_EVENT_RESOURCE                             = ('xpath', "//div[@class='sol-label-text' and contains(text(),'RESOURCE_NAME')]")
+    SCHEDULE_COPE_DETAILS_BUTTON                        = ('xpath', "//input[@id='CreateEvent-eventCopyDetails']")
+    SCHEDULE_COPE_DETAILS_NAME                          = ('xpath', "//input[@id='Entry-name']")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -65,8 +67,8 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function create new reschedule event 
-    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, resources='', eventOrganizer='', isRecurrence=False, exitEvent=False):
-        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, resources='', eventOrganizer='', exitEvent=False) == False:
+    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName='', copeDetailsDescriptio='', copeDetailsTags='', resources='', eventOrganizer='', isRecurrence=False, exitEvent=False):
+        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, resources, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, eventOrganizer, exitEvent) == False:
             writeToLog("INFO","FAILED to create schdule event")
             return False
             
@@ -81,10 +83,11 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function create new reschedule event without recurrence
-    def createRescheduleEventWithoutRecurrence(self, title, startDate, endDate, startTime, endTime, description, tags, copyDetails, resources='', eventOrganizer='', exitEvent=False): 
+    def createRescheduleEventWithoutRecurrence(self, title, startDate, endDate, startTime, endTime, description, tags, copyDetails, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, resources='', eventOrganizer='', exitEvent=False): 
         if self.navigateToCreateEventPage() == False:
             writeToLog("INFO","FAILED to enter create event page")
             return False
+        sleep(2)
         
         if self.send_keys(self.SCHEDULE_EVENT_TITLE, title) == False:
             writeToLog("INFO","FAILED to insert event title")
@@ -140,11 +143,12 @@ class  Recscheduling(Base):
             # click on the create event title to close the resource list
             self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
             
-        # Enter text Description
+        # Click in Description text box
         if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
             writeToLog("INFO","FAILED to click in description textbox")
             return False
-            
+        
+        # Enter text Description
         if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, description) == False:
             writeToLog("INFO","FAILED to type in Description")
             return False
@@ -153,9 +157,15 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to set event tags")
             return False
         
+        # copyDetails == False mean that we need to insert new metadata 
         if copyDetails == False:
-            writeToLog("INFO","FAILED to set event tags")
-            return False
+            if self.click(self.SCHEDULE_COPE_DETAILS_BUTTON) == False:
+                writeToLog("INFO","FAILED to uncheck 'Copy details from event to recording' button")
+                return False
+            
+            if self.changeEventDetailsinRecording(copeDetailsName, copeDetailsDescriptio, copeDetailsTags) == False:
+                writeToLog("INFO","FAILED to set new metadata in 'Copy details from event to recording' section")
+                return False
             
         if exitEvent==False:
             if self.click(self.SCHEDULE_SAVE_EVENT) == False:
@@ -195,15 +205,6 @@ class  Recscheduling(Base):
             return False            
         sleep(1)
 
-#         if(localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_CHROME):
-#             # Remove the Mask over all the screen (over tags filed also)
-#             maskOverElement = self.get_element(self.clsCommon.channel.CHANNEL_REMOVE_TAG_MASK)
-#             self.driver.execute_script("arguments[0].setAttribute('style','display: none;')",(maskOverElement))
-#           
-#             if self.clickElement(tagsElement) == False:
-#                 writeToLog("DEBUG","FAILED to click on Tags filed")
-#                 return False    
-
         if self.send_keys(self.SCHEDULE_EVENT_INPUT_TAGS, tags) == True:
             sleep(2)
             return True
@@ -218,6 +219,7 @@ class  Recscheduling(Base):
         if self.navigateToMySchedule(forceNavigate) == False:
             writeToLog("INFO","FAILED navigate to My Schedule page")
             return False
+        sleep(2)
         
         if self.click(self.SCHEDULE_CREATE_EVENT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on create event button")
@@ -228,4 +230,30 @@ class  Recscheduling(Base):
             return False
             
         return True
+    
+    # @Author: Michal Zomper 
+    # The function insert new metadata in to the section 'Copy details from event to recording' 
+    def changeEventDetailsinRecording(self, copeDetailsName='', copeDetailsDescriptio='', copeDetailsTags=''):
+        if copeDetailsName != '':
+            if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_NAME, copeDetailsName) == False:
+                writeToLog("INFO","FAILED to insert new name in 'Copy details from event to recording'")
+                return False   
         
+        if copeDetailsDescriptio != '':
+            # Click in Description text box
+            if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
+                writeToLog("INFO","FAILED to click in description textbox")
+                return False
+            
+            # Enter text Description
+            if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, copeDetailsDescriptio) == False:
+                writeToLog("INFO","FAILED to insert new description in 'Copy details from event to recording'")
+                return False
+        
+                  
+        if  copeDetailsTags != '':
+            if self.fillFileScheduleTags(copeDetailsTags) == False:
+                writeToLog("INFO","FAILED to insert new tags in 'Copy details from event to recording'")
+                return False
+            
+        return True
