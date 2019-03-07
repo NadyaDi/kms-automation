@@ -289,7 +289,7 @@ class  Recscheduling(Base):
     # monthlyDayNumber - this parameter is for the number of day in monthly first option
     # monthlyMonthNumber - this parameter is for the number of month in monthly first and second option
     # monthlyDayName - this parameter is for the day name that in the second monthly option ,this parameter need to be send as an enum- scheduleRecurrenceMonthlyDayOfTheWeek
-    def setEventRecurrence(self, recurrenceInterval, dailyOption='', dailyDays='', weeklyDays='', weeklyDaysNames='', monthlyOption, monthlyDayNumber='',  monthlyMonthNumber='', monthlyDayName='' ):
+    def setEventRecurrence(self, recurrenceInterval, dailyOption='', dailyDays='', weeklyDays='', weeklyDaysNames='', monthlyOption='', monthlyDayNumber='',  monthlyMonthNumber='', monthlyDayName='' ):
         
         # Choose the needed interval
         tmpRecurrenceInterval = (self.SCHEDULE_RECURRENCE_INTERVAL[0], self.SCHEDULE_RECURRENCE_INTERVAL[1].replace('RECURRENCE_INTERVAL', recurrenceInterval.value))
