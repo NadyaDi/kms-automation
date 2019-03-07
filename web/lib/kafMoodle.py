@@ -59,7 +59,11 @@ class Moodle(Base):
     MOODLE_SR_REQUIRED_METADATA_FIELD                      = ('xpath', "//input[contains(@id,'sharedRepositories-Text')]")    
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_YES_BTN            = ('xpath', '//a[contains(@href, "/browseandembed/" and text()=" Yes, please ")]') 
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[@class="btn btn-large btn-primary btn-danger"]')
-    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")     
+    MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")   
+    MOODLE_ACTIVITY_PRECONFIGURED_TOOL                     = ('xpath', '//select[@id="id_typeid"]')  
+    MOODLE_PRECONFIGURED_TOOL_EXTERNAL_TOOL_OPTION         = ('xpath', '//option[contains(@domain, ""kaltura.com") and text()="2104601-5 BSE"]')
+    MOODLE_ACTIVITY_SELECT_CONTENT_BTN                     = ('xpath', '//input[@id="id_selectcontent"]')
+    MOODLE_EXTERNAL_TOOL_OPTION                            = ('xpath', '//input[@id="item_lti"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -328,7 +332,12 @@ class Moodle(Base):
         if activity == enums.MoodleActivities.KALTURA_VIDEO_RESOURCE:
             if self.click(self.MOODLE_KALTURA_VIDEO_RESOURCE_OPTION) == False:
                 writeToLog("INFO","FAILED to click on 'kaltura video resource' option")
-                return False  
+                return False 
+            
+        elif activity == enums.MoodleActivities.EXTERNAL_TOOL:
+            if self.click(self.MOODLE_EXTERNAL_TOOL_OPTION) == False:
+                writeToLog("INFO","FAILED to click on 'External tool' option")
+                return False                   
             
         if self.click(self.MOODLE_ADD_CHOSEN_ACTIVITY_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Add' button")
@@ -376,8 +385,21 @@ class Moodle(Base):
             # If activiry is kaltura video resource click on 'Add media' button
             if self.click(self.MOODLE_KALTURA_VIDEO_SOURCE_ADD_MEDIA_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Add media' button")
-                return False                
-             
+                return False  
+              
+        elif activity == enums.MoodleActivities.EXTERNAL_TOOL:
+            if self.click(self.MOODLE_ACTIVITY_PRECONFIGURED_TOOL) == False:
+                writeToLog("INFO","FAILED to click on preconfigured tool field")
+                return False   
+            
+            if self.click(self.MOODLE_PRECONFIGURED_TOOL_EXTERNAL_TOOL_OPTION) == False:
+                writeToLog("INFO","FAILED to click on 'Kaltura video quiz' option")
+                return False  
+            
+            if self.click(self.MOODLE_ACTIVITY_SELECT_CONTENT_BTN) == False:
+                writeToLog("INFO","FAILED to click on on 'Select Content' button")
+                return False                                
+                      
         else:
             # If activity isn't kaltura video resource click on wysiwyg
             if self.click(self.MOODLE_SITE_BLOG_WYSIWYG) == False:
@@ -397,9 +419,11 @@ class Moodle(Base):
             return False  
                 
         self.clsCommon.base.driver.switch_to_window(window_before) 
-        # wait until the player display in the page
-        self.clsCommon.player.switchToPlayerIframe()
-        self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
+        
+        if activity != enums.MoodleActivities.EXTERNAL_TOOL:
+            # wait until the player display in the page
+            self.clsCommon.player.switchToPlayerIframe()
+            self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         
         self.clsCommon.base.switch_to_default_content()
         if self.click(self.MOODLE_SITE_BLOG_SUBMIT_BTN) == False:
@@ -536,4 +560,25 @@ class Moodle(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get user name element")
             return False
-        return userName                      
+        return userName  
+    
+    
+    # @Author: Inbar Willman
+    def navigateToKalturaVideoQuizPage(self, videoQuizName):   
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_URL) == False:
+            writeToLog("INFO","FAILED to navigate to course page")
+            return False  
+        
+        embed_activity = (self.MOODLE_EMBED_ACTIVITY[0], self.MOODLE_EMBED_ACTIVITY[1].replace('ACTIVITY_NAME', videoQuizName))
+        if self.click(embed_activity) == False:
+            writeToLog("INFO","FAILED to click on embed activity title")
+            return False  
+        
+        writeToLog("INFO","Success: Navigate to Kaltura video quiz page")
+        return True            
+    
+    
+    # @Author: Inbar Willman
+    #TO DO
+    def verifyGradeAsStudentMoodle(self, grade, videoQuizName):   
+        return True                
