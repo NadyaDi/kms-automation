@@ -511,6 +511,7 @@ class MoodleActivities(Enum):
     
     KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
     SITE_BLOG                 = 'Site blog'
+    EXTERNAL_TOOL             = 'External Tool'
     
     
 class Ownership(Enum):

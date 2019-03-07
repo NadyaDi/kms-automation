@@ -98,37 +98,37 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                           
+                              
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                           
+                              
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                         
+                            
             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
             if self.common.kafGeneric.navigateToMyMediaKAF() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
                 return            
-                           
+                              
             writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return 
-           
+              
             writeToLog("INFO","Step 6 : Going to navigate to quiz entry page")  
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6 : FAILED to navigate to quiz entry page")  
                 return
-           
+               
             writeToLog("INFO","Step 7 : Going to edit quiz name")  
             if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
                 self.status = "Fail"
