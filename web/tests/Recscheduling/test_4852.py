@@ -71,7 +71,10 @@ class Test:
             endTime= time.strftime("%I:%M %p",time.localtime(endTime))
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            self.common.recscheduling.setRecurrenceRange(self.startDate,self.endDate,self.startTime,self.endTime)
+            self.common.base.select_from_combo_by_text(('xpath', "//select[@id='EventRecurrence-monthly_weekdays_index']") , 'fourth')
+            self.common.base.select_from_combo_by_text(('xpath', "//select[@id='EventRecurrence-monthly_weekdays_days']") , 'Thursday')
+            
+            self.common.recscheduling.setRecurrenceRange(self.startDate,self.endDate,startTime,endTime)
             
             self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
             

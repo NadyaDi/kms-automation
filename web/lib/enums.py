@@ -591,3 +591,44 @@ class scheduleRecurrenceInterval(Enum):
     WEEKS           = 'weeks'
     MONTHS          = 'months'
 
+
+class scheduleRecurrenceWeeklyDayOfTheWeek(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SUNDAY           = 'SU'
+    MONDAY           = 'MO'
+    TUESDAY          = 'TU'
+    WEDNESDAY        = 'WE'
+    THURSDAY         = 'TH'
+    FRIDAY           = 'FR'
+    SATURDAY         = 'SA'
+    
+
+class scheduleRecurrenceDailyOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    EVERY_X_DAYS     = 'none'
+    EVERY_WEEKDAY    = 'Every Weekday'
+    
+
+class scheduleRecurrenceMonthlyOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    DAY_X_OF_EVERY_Y_MONTHS     = 'day x of every y months'
+    BY_WEEKDAY                  = 'by weekday'
+
+
+class scheduleRecurrenceMonthlyDayOfTheWeek(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SUNDAY           = 'Sunday'
+    MONDAY           = 'Monday'
+    TUESDAY          = 'Tuesday'
+    WEDNESDAY        = 'Wednesday'
+    THURSDAY         = 'Thursday'
+    FRIDAY           = 'Friday'
+    SATURDAY         = 'Saturday'
