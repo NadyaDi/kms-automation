@@ -1,8 +1,9 @@
-pytest==3.2.3
+pytest==3.7.2
 openpyxl
 selenium
 requests
 pyperclip
 Pillow
-pywin32
 bottle
+pytest-xdist
+pywin32
