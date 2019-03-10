@@ -61,9 +61,15 @@ class Moodle(Base):
     MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN             = ('xpath', '//a[@class="btn btn-large btn-primary btn-danger"]')
     MOODLE_USER_NAME                                       = ('xpath', "//span[@class='userbutton']")   
     MOODLE_ACTIVITY_PRECONFIGURED_TOOL                     = ('xpath', '//select[@id="id_typeid"]')  
-    MOODLE_PRECONFIGURED_TOOL_EXTERNAL_TOOL_OPTION         = ('xpath', '//option[contains(@domain, ""kaltura.com") and text()="2104601-5 BSE"]')
+    MOODLE_PRECONFIGURED_TOOL_EXTERNAL_TOOL_OPTION         = ('xpath', '//option[contains(@domain, "kaltura.com") and text()="2104601-5 BSE"]')
     MOODLE_ACTIVITY_SELECT_CONTENT_BTN                     = ('xpath', '//input[@id="id_selectcontent"]')
     MOODLE_EXTERNAL_TOOL_OPTION                            = ('xpath', '//input[@id="item_lti"]')
+    MOODLE_EXTERNAL_TOOL_IFRAME                            = ('xpath', '//iframe[@id="contentitem-page-iframe"]')
+    MOODLE_EMBED_ACTIVITY_NAME_EDITING_OFF                 = ('xpath', '//span[@class="instancename" and text()="ACTIVITY_NAME"]')
+    MOODLE_ACTIVITY_TITLE_FOR_STUDENT_GRADES_PAGE          = ('xpath', '//a[contains(@title, "ACTIVITY_NAME")]/..')
+    MOODLE_ACTIVITY_GRADE_FOR_STUDENT                      = ('xpath', '//td[@headers="cat_9_9 ID_NUMBER grade" and text()="GRADE"]')
+    MOODLE_ACTIVITY_TITLE_FOR_ADMIN_GRADES_PAGE            = ('xpath', '//a[contains(@title, "ACTIVITY_NAME")]/..')
+    MOODLE_ACTIVITY_GRADE_FOR_ADMIN                        = ('xpath', '//td[contains(@id,"ID_NUMBER")]') 
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -408,16 +414,20 @@ class Moodle(Base):
         
         sleep(2)
         
-        # Get window after opening embed window and switch to this window
-        window_after = self.clsCommon.base.driver.window_handles[1]
-        self.clsCommon.base.driver.switch_to_window(window_after)
-        self.clsCommon.base.driver.maximize_window()
+        if activity != enums.MoodleActivities.EXTERNAL_TOOL:
+            # Get window after opening embed window and switch to this window
+            window_after = self.clsCommon.base.driver.window_handles[1]
+            self.clsCommon.base.driver.switch_to_window(window_after)
+            self.clsCommon.base.driver.maximize_window()
+            
+        else:
+            self.swith_to_iframe(self.MOODLE_EXTERNAL_TOOL_IFRAME) 
         
         # In embed page, choose page to embed from and media
         if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom=embedFrom, chooseMediaGalleryinEmbed=chooseMediaGalleryinEmbed, filePath=filePath, description=description, tags=tags, application=enums.Application.MOODLE, activity=enums.MoodleActivities.KALTURA_VIDEO_RESOURCE, isAssignmentEnable=isAssignmentEnable, submitAssignment=submitAssignment) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
-                
+             
         self.clsCommon.base.driver.switch_to_window(window_before) 
         
         if activity != enums.MoodleActivities.EXTERNAL_TOOL:
@@ -569,7 +579,7 @@ class Moodle(Base):
             writeToLog("INFO","FAILED to navigate to course page")
             return False  
         
-        embed_activity = (self.MOODLE_EMBED_ACTIVITY[0], self.MOODLE_EMBED_ACTIVITY[1].replace('ACTIVITY_NAME', videoQuizName))
+        embed_activity = (self.MOODLE_EMBED_ACTIVITY_NAME_EDITING_OFF[0], self.MOODLE_EMBED_ACTIVITY_NAME_EDITING_OFF[1].replace('ACTIVITY_NAME', videoQuizName))
         if self.click(embed_activity) == False:
             writeToLog("INFO","FAILED to click on embed activity title")
             return False  
@@ -579,6 +589,51 @@ class Moodle(Base):
     
     
     # @Author: Inbar Willman
-    #TO DO
     def verifyGradeAsStudentMoodle(self, grade, videoQuizName):   
-        return True                
+        if self.navigate(localSettings.LOCAL_SETTINGS_COURSE_STUDENT_GRADES_URL) == False:
+            writeToLog("INFO","FAILED to navigate to grades page")
+            return False  
+        
+        tmpGradeParent = (self.MOODLE_ACTIVITY_TITLE_FOR_STUDENT_GRADES_PAGE[0], self.MOODLE_ACTIVITY_TITLE_FOR_STUDENT_GRADES_PAGE[1].replace('ACTIVITY_NAME', videoQuizName))
+        tmpGradeParentElement = self.wait_element(tmpGradeParent)
+        if tmpGradeParentElement == False:
+            writeToLog("INFO","FAILED to find quiz in grades page")
+            return False              
+         
+        tmpGradeParentId = tmpGradeParentElement.get_attribute("id")  
+        tmpGrade = (self.MOODLE_ACTIVITY_GRADE_FOR_STUDENT[0], self.MOODLE_ACTIVITY_GRADE_FOR_STUDENT[1].replace('ID_NUMBER', tmpGradeParentId).replace('GRADE', grade))
+        if self.wait_element(tmpGrade) == False:
+            writeToLog("INFO","FAILED to display correct grade")
+            return False
+        
+        writeToLog("INFO","Success: Correct grade is displayed")
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    def verifyGradeAsAdminMoodle(self, grade, videoQuizName):    
+        if self.navigate(localSettings.LOCAL_SETTINGS_COURSE_ADMIN_GRADES_URL) == False:
+            writeToLog("INFO","FAILED to navigate to grades page")
+            return False        
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_RIGHT, 30)
+        
+        tmpActivityNameParent = (self.MOODLE_ACTIVITY_TITLE_FOR_ADMIN_GRADES_PAGE[0], self.MOODLE_ACTIVITY_TITLE_FOR_ADMIN_GRADES_PAGE[1].replace('ACTIVITY_NAME', videoQuizName))
+        tmpActivityNameParentElement = self.wait_element(tmpActivityNameParent)
+        if tmpActivityNameParentElement == False:
+            writeToLog("INFO","FAILED to find activity in grades page")
+            return False  
+        
+        tmpActivityNameId = tmpActivityNameParentElement.get_attribute("data-itemid")  
+        tmpGrade = (self.MOODLE_ACTIVITY_GRADE_FOR_ADMIN[0], self.MOODLE_ACTIVITY_GRADE_FOR_ADMIN[1].replace('ID_NUMBER', tmpActivityNameId))
+        tmpGradeElement = self.wait_element(tmpGrade)  
+        if tmpGradeElement == False:
+            writeToLog("INFO","FAILED to find grade cell in grades table")
+            return False   
+        
+        if  tmpGradeElement.text != grade:
+            writeToLog("INFO","FAILED to displayed correct grade")
+            return False 
+        
+        writeToLog("INFO","Success: Correct grade is displayed")
+        return True                                                          
