@@ -40,11 +40,13 @@ class  Recscheduling(Base):
     SCHEDULE_COPE_DETAILS_NAME                                              = ('xpath', "//input[@id='Entry-name']")
     SCHEDULE_COPE_DETAILS_DESCRIPTION                                       = ('xpath', "//textarea[@id='description']")
     SCHEDULE_ADD_RECURRENCE_BUTTON                                          = ('xpath', "//button[@id='CreateEvent-recurrenceMain']")
-    SCHEDULE_RECURRENCE_INTERVAL                                            = ('xpath', "//label[@class='radio' and @for='EventRecurrence-recurrence-'RECURRENCE_INTERVAL']")
+    SCHEDULE_RECURRENCE_INTERVAL                                            = ('xpath', "//label[@class='radio' and @for='EventRecurrence-recurrence-RECURRENCE_INTERVAL']")
     SCHEDULE_RECURRENCE_START_TIME                                          = ('xpath', "//input[@id='EventRecurrence-startTime']")
     SCHEDULE_RECURRENCE_END_TIME                                            = ('xpath', "//input[@id='EventRecurrence-endTime']")
     SCHEDULE_RECURRENCE_START_DATE_CALENDAR                                 = ('xpath', "//input[@id='EventRecurrence-start']")
     SCHEDULE_RECURRENCE_END_DATE_CALENDAR                                   = ('xpath', "//input[@id='EventRecurrence-endby_date']")
+    SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON                               = ('xpath', "//label[@class='radio' and @for='EventRecurrence-end_main-END_DTAR_OPTION']")
+    SCHEDULE_RECURRENCE_END_DATE_AFTER_X_OCCURRENCES                        = ('xpath', "//input[@id='EventRecurrence-endafter_occurrences']")
     SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS_RADIO_BUTTON                     = ('xpath', "//input[@id='EventRecurrence-daily_main-byDay']") # this locator is to choose the 'every X days' in daily option
     SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS                                  = ('xpath', "//input[@id='EventRecurrence-daily_days']") # this locator is to enter the number of how many days in daily option
     SCHEDULE_RECURRENCE_DAILY_WEEKDAY_RADIO_BUTTON                          = ('xpath', "//input[@id='EventRecurrence-daily_main-byWeekday']")
@@ -57,6 +59,7 @@ class  Recscheduling(Base):
     SCHEDULE_RECURRENCE_MONTHLY_WEEK_IN_THE_MONTH                           = ('xpath', "//select[@id='EventRecurrence-monthly_weekdays_index']") # this locator is for monthly option,this is the second option in monthly-the week in the month
     SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH                            = ('xpath', "//select[@id='EventRecurrence-monthly_weekdays_days']") # this locator is for monthly option,this is the second option in monthly-the day in the month
     SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER              = ('xpath', "//input[@id='EventRecurrence-monthly_weekdays_months']") # this locator is for monthly option,this is the second option in monthly-how many month
+    SCHEDULE_RECURRENCE_SAVE_BUTTON                                         = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
     
     #=============================================================================================================
     
@@ -87,20 +90,33 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function create new reschedule event 
-    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName='', copeDetailsDescriptio='', copeDetailsTags='', resources='', eventOrganizer='', isRecurrence=False, exitEvent=False):
-        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, resources, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, eventOrganizer, exitEvent) == False:
-            writeToLog("INFO","FAILED to create schdule event")
+    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName='', copeDetailsDescriptio='', copeDetailsTags='', resources='', eventOrganizer='', isRecurrence=False, exitEvent=False, recurrenceInterval='', dailyOption='', dailyDays='', weeklyDays='', weeklyDaysNames='', monthlyOption='', monthlyDayNumber='',  monthlyMonthNumber='', monthlyWeekdaysIndex='' , monthlyDayName='', optionTwoMonthlyMonthNumber='', endDateOption='', reccurenceStartTime='', reccurenceStartDate='', reccurenceEndTime='', reccurenceEndDate='', numberOfRecurrence=''):
+        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, resources, eventOrganizer, exitEvent) == False:
+            writeToLog("INFO","FAILED to create schedule event")
             return False
-            
+        sleep(2)
+        
         if isRecurrence == True:
             if self.click(self.SCHEDULE_ADD_RECURRENCE_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on add recurrence button")
                 return False
-            
-            
-            
-            
-            
+            sleep(1)
+            if self.setEventRecurrence(recurrenceInterval, dailyOption, dailyDays, weeklyDays, weeklyDaysNames, monthlyOption, monthlyDayNumber,  monthlyMonthNumber, monthlyWeekdaysIndex , monthlyDayName, optionTwoMonthlyMonthNumber, endDateOption, reccurenceStartTime, reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence) == False:
+                writeToLog("INFO","FAILED to set event recurrence")
+                return False
+        
+        sleep(5)
+        if self.click(self.SCHEDULE_SAVE_AND_EXIT_EVENT) == False:
+            writeToLog("INFO","FAILED click on save and exit event button")
+            return False
+            self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.wait_element(self.SCHEDULE_PAGE_TITLE, 15) == False:
+            writeToLog("INFO","FAILED to verify 'My Schedule page' display after clicking on save and exit event button")
+            return False
+        
+        writeToLog("INFO","Success, Event was created successfully") 
+        return True 
     
     
     # @Author: Michal Zomper 
@@ -157,7 +173,7 @@ class  Recscheduling(Base):
                         writeToLog("INFO","FAILED to select event resource")
                         return False
             else:
-                tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
+                tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resources.value))
                 if self.click(tmpResource) == False:
                     writeToLog("INFO","FAILED to select event resource")
                     return False
@@ -198,6 +214,8 @@ class  Recscheduling(Base):
             if self.wait_element(self.SCHEDULE_CREATE_EVENT_SUCCESS_MESSAGE) == False:
                 writeToLog("INFO","FAILED find event created success message")
                 return False
+            
+            sleep(5)
         else:
             if self.click(self.SCHEDULE_SAVE_AND_EXIT_EVENT) == False:
                 writeToLog("INFO","FAILED click on save and exit event button")
@@ -210,7 +228,8 @@ class  Recscheduling(Base):
             
         return True
             
-            
+       
+    # @Author: Michal Zomper      
     # The method supports BOTH single and multiple upload
     # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
     #        for example 'tags1,tags2,'
@@ -280,27 +299,24 @@ class  Recscheduling(Base):
         return True
     
     
+    # @Author: Michal Zomper 
     # recurrenceInterval - this parameter need to be send as an enum- scheduleRecurrenceInterval
     # dailyOption - this parameter need to be send as an enum- scheduleRecurrenceDailyOption
     # dailyDays - if in daily 'every X days' option was chosen this parameter will go the number of days
-    # weeklyDays - if weekly was chosen this parameter will go the number of weeks
-    # weeklyDaysNames - if weekly was chosen this parameter will have the day or days that the event need to recurrence, this parameter need to be send as an enum- scheduleRecurrenceWeeklyDayOfTheWeek
+    # weeklyWeeks - if weekly was chosen this parameter will go the number of weeks
+    # weeklyDaysNames - if weekly was chosen this parameter will have the day or days that the event need to recurrence, this parameter need to be send as an enum- scheduleRecurrenceDayOfTheWeek, take the day that have SHORT' in it like SUNDAY_SHORT
     # monthlyOption - this parameter need to be send as an enum- scheduleRecurrenceMonthlyOption
     # monthlyDayNumber - this parameter is for the number of day in monthly first option
-    # monthlyMonthNumber - this parameter is for the number of month in monthly first and second option
-    # monthlyDayName - this parameter is for the day name that in the second monthly option ,this parameter need to be send as an enum- scheduleRecurrenceMonthlyDayOfTheWeek
-    def setEventRecurrence(self, recurrenceInterval, dailyOption='', dailyDays='', weeklyDays='', weeklyDaysNames='', monthlyOption='', monthlyDayNumber='',  monthlyMonthNumber='', monthlyDayName='' ):
-        
+    # monthlyMonthNumber - this parameter is for the number of month in monthly first option
+    # monthlyWeekdaysIndex - this parameter is for the day index ,the first parameter of monthly second option, this parameter need to be send as an enum- scheduleRecurrenceMonthlyIndex
+    # monthlyDayName - this parameter is for the day name that in the second monthly option ,this parameter need to be send as an enum- scheduleRecurrenceDayOfTheWeek, take the day without  the 'SHORT' in it like SUNDAY
+    # optionTwoMonthlyMonthNumber - this parameter is for the number of month in monthly second option
+    def setEventRecurrence(self, recurrenceInterval, dailyOption='', dailyDays='', weeklyWeeks='', weeklyDaysNames='', monthlyOption='', monthlyDayNumber='',  monthlyMonthNumber='', monthlyWeekdaysIndex='' , monthlyDayName='', optionTwoMonthlyMonthNumber='',  endDateOption='', reccurenceStartTime='', reccurenceStartDate='', reccurenceEndTime='', reccurenceEndDate='', numberOfRecurrence=''):
         # Choose the needed interval
         tmpRecurrenceInterval = (self.SCHEDULE_RECURRENCE_INTERVAL[0], self.SCHEDULE_RECURRENCE_INTERVAL[1].replace('RECURRENCE_INTERVAL', recurrenceInterval.value))
         if self.click(tmpRecurrenceInterval) == False:
             writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value)
             return False
-            
-        if recurrenceInterval == enums.scheduleRecurrenceInterval.NONE:
-            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value)
-        
-        
         
         elif recurrenceInterval == enums.scheduleRecurrenceInterval.DAYS:
             if dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS:
@@ -313,28 +329,28 @@ class  Recscheduling(Base):
                     return False
             
             elif dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_WEEKDAY:
-                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_WEEKLY_RECUR_EVERY_X_WEEKS, weeklyDays) == False:
+                if self.click(self.SCHEDULE_RECURRENCE_DAILY_WEEKDAY_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to add number of weeks to the weekly option")
                     return False
                 
-                  
-                        
         elif recurrenceInterval == enums.scheduleRecurrenceInterval.WEEKS: 
+            if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_WEEKLY_EVERY_X_WEEKS, weeklyWeeks) == False:
+                writeToLog("INFO","FAILED to add number of days to the 'every X days' option")
+                return False
+            
             if type(weeklyDaysNames) is list: 
                 for dayInTheWeek in weeklyDaysNames:
-                    tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK', dayInTheWeek))
+                    tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK', dayInTheWeek.value))
                     if self.click(tmpDay) == False:
                         writeToLog("INFO","FAILED to select day '" + dayInTheWeek.value + "' in weekly option")
                         return False
                         
             else:   
-                tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK', weeklyDaysNames))
+                tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK', weeklyDaysNames.value))
                 if self.click(tmpDay) == False:
                     writeToLog("INFO","FAILED to select day '" + weeklyDaysNames.value + "' in weekly option")
                     return False  
                 
-                
-            
         elif recurrenceInterval == enums.scheduleRecurrenceInterval.MONTHS:  
             if monthlyOption == enums.scheduleRecurrenceMonthlyOption.DAY_X_OF_EVERY_Y_MONTHS:
                 if self.click(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_X_OF_EVERY_Y_MONTHS_RADIO_BUTTON) == False:
@@ -355,31 +371,55 @@ class  Recscheduling(Base):
                     writeToLog("INFO","FAILED to click on 'by weekday' radio button")
                     return False
                 
-                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_WEEK_IN_THE_MONTH , 'first') == False:
-                    writeToLog("INFO","FAILED to click on 'by weekday' radio button")
+                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_WEEK_IN_THE_MONTH , monthlyWeekdaysIndex.value) == False:
+                    writeToLog("INFO","FAILED to choose index or the day index for monthly second option")
                     return False
                     
-                if self.select_from_combo_by_text( self.SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH, monthlyDayName.value) == False:
-                    writeToLog("INFO","FAILED to click on 'by weekday' radio button")
+                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH, monthlyDayName.value) == False:
+                    writeToLog("INFO","FAILED to select day for monthly second option")
                     return False
     
-                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER  , monthlyMonthNumber) == False:
-                    writeToLog("INFO","FAILED to add number of month to the 'day X of every Y months' option")
+                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER  , optionTwoMonthlyMonthNumber) == False:
+                    writeToLog("INFO","FAILED to add number of month for monthly second option")
                     return False
-                
+        
+        if self.setRecurrenceRange(endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence) == False:
+            writeToLog("INFO","FAILED to set event recurrence range")
+            return False
+        
+        if self.click(self.SCHEDULE_RECURRENCE_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on recurrence save button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+
+        
+        writeToLog("INFO","Success, Event recurrence was set")   
         return True
     
     
-    
-    def setRecurrenceRange(self, reccurenceStartDate, reccurenceEndDate, reccurenceStartTime, reccurenceEndTime): 
+    # @Author: Michal Zomper 
+    # endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
+    # numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
+    def setRecurrenceRange(self, endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence =''): 
         if self.setRecurrenceStartDate(reccurenceStartDate) == False:
             writeToLog("INFO","FAILED to set event start date")
             return False
         sleep(2) 
         
-        if self.setRecurrenceEndDate(reccurenceEndDate) == False:
-            writeToLog("INFO","FAILED to set event end date")
+        tmpEndDate = (self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[0], self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[1].replace('END_DTAR_OPTION', endDateOption.value))
+        if self.click(tmpEndDate) == False:
+            writeToLog("INFO","FAILED to choose end date option")
             return False
+        
+        if endDateOption == enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES:
+            if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_END_DATE_AFTER_X_OCCURRENCES  , numberOfRecurrence) == False:
+                writeToLog("INFO","FAILED insert number of occurrences to end date")
+                return False
+            
+        elif endDateOption == enums.scheduleRecurrenceEndDateOption.END_BY:
+            if self.setRecurrenceEndDate(reccurenceEndDate) == False:
+                writeToLog("INFO","FAILED to set event end date")
+                return False
         sleep(2)  
         
         if len(reccurenceStartTime) != 0:
@@ -396,17 +436,19 @@ class  Recscheduling(Base):
         
         return True
         
-    
+    # @Author: Michal Zomper 
     # Format desteStr - '24/01/2018'
     # startOrEnd - String 'start' or 'end'
     def setRecurrenceStartDate(self, dateStr):
         return self.setRecurrenceScheduleDate(dateStr, 'start')
     
     
+    # @Author: Michal Zomper 
     def setRecurrenceEndDate(self, dateStr):
         return self.setRecurrenceScheduleDate(dateStr, 'end')
         
-       
+    
+    # @Author: Michal Zomper    
     def setRecurrenceScheduleDate(self, dateStr, startOrEnd):
         if startOrEnd.lower() == 'start':
             locator = (self.SCHEDULE_RECURRENCE_START_DATE_CALENDAR[0], self.SCHEDULE_RECURRENCE_START_DATE_CALENDAR[1] + "/following-sibling::span")
