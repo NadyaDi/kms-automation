@@ -511,6 +511,7 @@ class MoodleActivities(Enum):
     
     KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
     SITE_BLOG                 = 'Site blog'
+    EXTERNAL_TOOL             = 'External Tool'
     
     
 class Ownership(Enum):
@@ -579,3 +580,55 @@ class RecschedulingResourceOptions(Enum):
     FALL_CONFERENCE_ROOM        = 'Fall Conference Room' 
     MAIN_STUDENT_LOUNGE         = 'Main Student Lounge'
     QA_APP_ROOM                 = 'Qa App Room'
+    
+
+class scheduleRecurrenceInterval(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    NONE            = 'none'
+    DAYS            = 'days'
+    WEEKS           = 'weeks'
+    MONTHS          = 'months'
+
+
+class scheduleRecurrenceWeeklyDayOfTheWeek(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SUNDAY           = 'SU'
+    MONDAY           = 'MO'
+    TUESDAY          = 'TU'
+    WEDNESDAY        = 'WE'
+    THURSDAY         = 'TH'
+    FRIDAY           = 'FR'
+    SATURDAY         = 'SA'
+    
+
+class scheduleRecurrenceDailyOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    EVERY_X_DAYS     = 'none'
+    EVERY_WEEKDAY    = 'Every Weekday'
+    
+
+class scheduleRecurrenceMonthlyOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    DAY_X_OF_EVERY_Y_MONTHS     = 'day x of every y months'
+    BY_WEEKDAY                  = 'by weekday'
+
+
+class scheduleRecurrenceMonthlyDayOfTheWeek(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SUNDAY           = 'Sunday'
+    MONDAY           = 'Monday'
+    TUESDAY          = 'Tuesday'
+    WEDNESDAY        = 'Wednesday'
+    THURSDAY         = 'Thursday'
+    FRIDAY           = 'Friday'
+    SATURDAY         = 'Saturday'

@@ -415,7 +415,7 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to click on 'Save' button")
             return False 
         
-        tmpAssignmentPageTitle = (self.CANVAS_ASSIGNMENT_PAGE_TITLE[0], self.CANVAS_ASSIGNMENT_PAGE_TITLE[1].replace('VALUE', assignmentTitle))
+        tmpAssignmentPageTitle = (self.CANVAS_ASSIGNMENT_PAGE_TITLE[0], self.CANVAS_ASSIGNMENT_PAGE_TITLE[1].replace('ASSIGNMENT_NAME', assignmentTitle))
         if self.wait_element(tmpAssignmentPageTitle) == False:
             writeToLog("INFO","FAILED to displayed assignment title in assignment page")
             return False             

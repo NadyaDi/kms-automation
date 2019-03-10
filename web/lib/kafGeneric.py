@@ -407,8 +407,10 @@ class KafGeneric(Base):
         if application == enums.Application.MOODLE:
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
+                
+        sleep(10)
           
-        if self.wait_visible(self.KAF_EMBED_FROM_MY_MEDIA_PAGE, timeout=60) == False:
+        if self.wait_element(self.KAF_EMBED_FROM_MY_MEDIA_PAGE, timeout=60) == False:
                 writeToLog("INFO","FAILED to display embed page")
                 return False  
                         
@@ -493,7 +495,8 @@ class KafGeneric(Base):
             writeToLog("INFO","FAILED to click on the '</> Embed' button")
             return False
         
-        self.clsCommon.general.waitForLoaderToDisappear()
+#        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(10)
         
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MOODLE:
             if isAssignmentEnable == True:
