@@ -81,6 +81,8 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/local/kalturamediagallery/index.php?courseid=10'
         localSettings.LOCAL_SETTINGS_SITE_BLOG_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/blog/index.php'
         localSettings.LOCAL_SETTINGS_COURSE_URL                 = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/course/view.php?id=10'
+        localSettings.LOCAL_SETTINGS_COURSE_STUDENT_GRADES_URL  = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/grade/report/user/index.php?id=10'
+        localSettings.LOCAL_SETTINGS_COURSE_ADMIN_GRADES_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/grade/report/grader/index.php?id=10'
   
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_CANVAS_BASE_URL

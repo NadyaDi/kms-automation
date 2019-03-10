@@ -25,6 +25,7 @@ class BlackBoardUltra(Base):
     BB_ULTRA_USER_NAME                                  = ('xpath', "//bdi[contains(text(), 'USER_NAME')]")
     BB_ULTRA_PRIVECY_TURMS_BUTTON                       = ('xpath', "//button[@id='agree_button']")    
     BB_ULTRA_MY_MEDIA_BUTTON_IN_TOOLS_MENU              = ('xpath', "//span[@class='tool-title' and @title='Automation my media']")
+    BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE             = ('xpath', "//a[@class='content-title' and contains(text(), 'Automation media gallery')]")
 
     #====================================================================================================================================
     #====================================================================================================================================
@@ -137,7 +138,15 @@ class BlackBoardUltra(Base):
                 return False
         sleep(5)
          
-        self.clsCommon.blackBoard.switchToBlackboardIframe()
+        self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
+
+
+
+        
+#         if self.click(self.BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE) == False:
+#             writeToLog("INFO","FAILED to click on media gallery button")
+#             return False
+        
         if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
             writeToLog("INFO","FAILED navigate to to courses 'New1'")
             return False

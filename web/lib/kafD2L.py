@@ -49,6 +49,11 @@ class D2L(Base):
     D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[contains(@data-message-text,"has been deleted")]')
     D2L_QA_PROD_BSE_OPTION                              = ('xpath', '//span[@class="d2l-textblock" and text()="QA PROD BSE"]')
     D2L_EMBED_DISCUSSION_FRAME_TITLE                    = ('xpath', "//a[contains(@id, 'ForumContextMenu') and contains(@title,'GUID')]")
+    D2L_COURSE_CONTENT_TAB                              = ('xpath', '//a[@class="d2l-navigation-s-link" and text()="Content"]')
+    D2L_ADD_EXISTING_ACTIVITIES_DROPDOWN                = ('xpath', '//a[@title="Add activities to activity"]')
+    D2L_ADD_EXISTING_ACTIVITIES_OPTION                  = ('xpath', '//a[@class=" vui-dropdown-menu-item-link" and contains(text(),"BSE_EVIORMENT")]')
+    D2L_GRADEBOOK_EMBED_IFRAME                          = ('xpath', '//iframe[@id="QuickLinkSelectorFrame"]')
+    D2L_GRADEBOOK_TITLE                                 = ('xpath', '//a[@title=""ENTRY_NAME" - External Learning Tool"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -348,4 +353,48 @@ class D2L(Base):
             return False   
         
         writeToLog("INFO","Success: Embed discussion was deleted")    
-        return True                       
+        return True    
+    
+    
+    # @Author: Inbar Willman 
+    def createGradebook(self, entryName):  
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+            writeToLog("INFO","FAILED navigate to New1 media gallery page")
+            return False  
+        
+        if self.click(self.D2L_COURSE_CONTENT_TAB) == False:
+            writeToLog("INFO","FAILED to click on 'Content' tab")
+            return False      
+        
+        if self.click(self.D2L_ADD_EXISTING_ACTIVITIES_DROPDOWN) == False:
+            writeToLog("INFO","FAILED to click on 'Add Existing Activities' dropdown")
+            return False 
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN) 
+       
+        if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+            tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QA PROD BSE')) 
+            
+        elif localSettings.LOCAL_SETTINGS_ENV_NAME == 'TestingNewUI':
+            tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QAapp BSE ')) 
+            
+        if self.click(tmpBseEnviorment) == False:
+            writeToLog("INFO","FAILED to click on BSE option")
+            return False 
+        
+        self.swith_to_iframe(self.D2L_GRADEBOOK_EMBED_IFRAME)
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:
+            writeToLog("INFO","FAILED to choose media in BSE page")
+            return False  
+        
+        self.switch_to_default_content()  
+        
+        tmpGradebookTitle = (self.D2L_GRADEBOOK_TITLE[0], self.D2L_GRADEBOOK_TITLE[1].replace('ENTRY_NAME', entryName)) 
+        if self.wait_element(tmpGradebookTitle) == False:
+            writeToLog("INFO","FAILED to display gradebook title")
+            return False  
+                  
+        writeToLog("INFO","Success: Gradebook was created")
+        return True         
+                                                                   
