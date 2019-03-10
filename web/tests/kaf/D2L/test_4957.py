@@ -14,18 +14,14 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Moodle - Gradebook
+    # Test Name : D2L: Gradebook
     # Test description:
-    # Enable assignment submission module -> upload entry -> embed entry and create assignment submission
-    # -> verify that entry is displayed and played -> upload another entry -> embed entry and don't create assignment submission -> 
-    # Verify that entry is displayed and played
-    # Replace video for the uploaded entries -> Verify that the embed entry in assignment submission isn't replaced
-    # Verify that the embed entry (not assignment submission) is replaced
+    # Upload new media -> Create new quiz-> Go to course page -> Click on content tab ->  Click on 'Add Existing Activities' -> choose 'QAapp BSE" (testing)/ 'QA PROD BSE' (production)
+    # Choose in embed page quiz -> Login as student -> Answer the quiz -> Verify that grade is display for student and admin
     #================================================================================================================================
-    testNum     = "826"
-    application = enums.Application.MOODLE
+    testNum     = "4957"
+    application = enums.Application.D2L
     supported_platforms = clsTestService.updatePlatforms(testNum)
-    
     
     status = "Pass"
     timeout_accured = "False"
@@ -91,6 +87,7 @@ class Test:
             self.studentUsername = 'student'
             self.studentPassword = 'Kaltura1!'
             ##################### TEST STEPS - MAIN FLOW ##################### 
+                 
             writeToLog("INFO","Step 1: Going to to upload entry") 
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -128,67 +125,14 @@ class Test:
                 return
               
             writeToLog("INFO","Step 7 : Going to edit quiz name")  
-            if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
+            if self.common.d2l.createGradebook(self.newEntryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7 : FAILED to edit quiz name")  
                 return 
-              
-            writeToLog("INFO","Step 8 : Going to create kaltura video quiz")  
-            if self.common.moodle.createEmbedActivity(self.newEntryName, self.kalturaVideoQuizName, activity=enums.MoodleActivities.EXTERNAL_TOOL) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8 : FAILED to create kaltura video quiz")  
-                return  
-              
-            writeToLog("INFO","Step 9 : Going to logout as main user")  
-            if self.common.moodle.logOutOfMoodle() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9 : FAILED to logout as main user")  
-                return
-               
-            writeToLog("INFO","Step 10 : Going to login as student")  
-            if self.common.moodle.loginToMoodle(self.studentUsername, self.studentPassword) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10 : FAILED to login as student")  
-                return
-              
-            writeToLog("INFO","Step 11 : Going to navigate to Kaltura video quiz page")  
-            if self.common.moodle.navigateToKalturaVideoQuizPage(self.kalturaVideoQuizName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11 : FAILED to navigate to Kaltura video quiz page")  
-                return  
-              
-            writeToLog("INFO","Step 12: Going to answer quiz as student")  
-            if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to answer quiz as student")
-                return  
-             
-            writeToLog("INFO","Step 12: Going to verify grade as student")  
-            if self.common.moodle.verifyGradeAsStudentMoodle(self.expectedGrade, self.kalturaVideoQuizName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify grade as student")
-                return  
-             
-            writeToLog("INFO","Step 13 : Going to logout as student user")  
-            if self.common.moodle.logOutOfMoodle() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 13 : FAILED to logout as student user")  
-                return
-               
-            writeToLog("INFO","Step 14 : Going to login as main user")  
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 14 : FAILED to login as main user")  
-                return    
             
-            writeToLog("INFO","Step 15: Going to verify grade as admin")  
-            if self.common.moodle.verifyGradeAsAdminMoodle(self.expectedGrade, self.kalturaVideoQuizName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to verify grade as admin")
-                return                                                           
-  
+            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Moodle - Gradebook' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'D2L - Gradebook' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -198,13 +142,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.base.switch_to_default_content()
-            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.lower() in self.common.canvas.getMoodleLoginUserName()) == False:
-                self.common.canvas.logOutOfMoodle()
-                self.common.loginAsUser()
-            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
-            self.common.moodle.deleteEmbedActivity(self.kalturaVideoQuizName)
-            writeToLog("INFO","**************** Ended: teardown_method *******************")                       
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.d2l.deleteDiscussion(self.discussionName, True)   
+            writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
         clsTestService.basicTearDown(self)
