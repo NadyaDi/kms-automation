@@ -65,7 +65,11 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_SHARED_REPOSITORY_URL      = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/sharedRepository.jsp'
         
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
-        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL
+        if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+            localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL_PRODUCTION
+        elif localSettings.LOCAL_SETTINGS_ENV_NAME == 'TestingNewUI':
+            localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL_TESTING
+            
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Home.aspx'
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/My%20Media.aspx' 
         localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Media%20Gallery.aspx'  
