@@ -139,6 +139,9 @@ class BlackBoardUltra(Base):
         sleep(5)
          
         self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
+
+
+
         
 #         if self.click(self.BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE) == False:
 #             writeToLog("INFO","FAILED to click on media gallery button")
