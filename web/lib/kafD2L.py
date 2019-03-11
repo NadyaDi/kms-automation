@@ -56,15 +56,20 @@ class D2L(Base):
     D2L_GRADEBOOK_TITLE                                 = ('xpath', '//a[contains(@title,"External Learning Tool") and text()="GRADEBOOK_TITLE"]')
     D2L_EDIT_COURSE_TAB                                 = ('xpath', '//a[@class="d2l-navigation-s-link" and text()="Edit Course"]')
     D2L_GRADES_LINK                                     = ('xpath', '//a[@class="d2l-link vui-link" and contains(text(), "Grades")]')
-    D2L_QUIZ_GRADE_FOR_STUDENT                          = ('xpath', '//label[text()="GRADEBOOK_TITLE"]/ancestor::tr[@class="d_gd d2l-table-row-last"]/descendant::label[text()="GRADE"]')
+    D2L_QUIZ_GRADE_FOR_STUDENT                          = ('xpath', '//label[text()="GRADEBOOK_TITLE"]/ancestor::tr[contains(@class,"d2l-table-row-last")]/descendant::label[text()="GRADE"]')
     D2L_NOTIFICATION_ICON                               = ('xpath', '//button[@title="Update alerts"]')
     D2L_GRADEBOOK_TITLE_NOTIFICATION_MENU               = ('xpath', '//a[@class="d2l-link d2l-datalist-item-actioncontrol" and contains(text(), "GRADEBOOK_TITLE")]')
     D2L_GRADEBOOK_GRADE_NOTIFICATION_MENU               = ('xpath', '//a[@class="d2l-link d2l-datalist-item-actioncontrol" and contains(text(), "GRADE")]')
     D2L_STUDENT_GRADES_TITLE_PAGE                       = ('xpath', '//span[@class="vui-heading-1" and text()="Grades"]')
     D2L_GRADEBOOK_MENU_BTN_GRADES_PAGE_FOR_ADMIN        = ('xpath', '//a[@role="button" and @title="View Actions for GRADEBOOK_TITLE"]')
     D2L_GRADEBOOK_GRADE_ALL_OPTION                      = ('xpath', '//span[@class="dcm_i2" and text()="Grade All"]')
-    D2L_GRADE_ITEM_PAGE_TITLE                           = ('xpath', 'span[@class="vui-heading-1" and text()="Grade Item: GRADEBOOK_TITLE"]')
-    D2L_GRADEBOOK_GRADE_FOR_ADMIN                       = ('xpath', '//label[@id="z_cf" and text()=GRADE"]')
+    D2L_GRADE_ITEM_PAGE_TITLE                           = ('xpath', '//span[@class="vui-heading-1" and text()="Grade Item: GRADEBOOK_TITLE"]')
+    D2L_GRADEBOOK_GRADE_FOR_ADMIN                       = ('xpath', '//label[@id="z_cf" and text()="GRADE"]')
+    D2L_GRADEBOOK_ACTION_MENU                           = ('xpath', '//a[@data-contextmenuid="d2l_pageTitleActions"]')
+    D2L_DELETE_TOPIC_OPTION                             = ('xpath', '//span[text()="Delete Topic"]')
+    D2L_DELETE_PERMANANETLY_OPTION                      = ('xpath', '//input[@class="d2l-radio vui-input d2l-radio-track" and @value="true"]')
+    D2L_CONFIRM_GRADE_DELETE_BTN                        = ('xpath', '//button[@class="d2l-button" and text()="Delete"]')
+    D2L_DELETE_TOPIC_IFRAME                             = ('xpath', '//iframe[@class="d2l-dialog-frame"]')
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -467,17 +472,33 @@ class D2L(Base):
     
     
     # @Author: Inbar Willman
-    def verifyGradeAsStudentD2l(self, gradeNotification, gradeInGradesPage, gradebookTitle): 
+    def verifyGradeAsStudentD2l(self, gradeNotification, gradeInGradesPage, gradebookTitle, timeout=120): 
         self.switch_to_default_content()
         if self.click(self.D2L_NOTIFICATION_ICON) == False:
             writeToLog("INFO","FAILED to click on notification icon")
             return False 
         
-        tmpNotificationGradebookGrade = (self.D2L_GRADEBOOK_GRADE_NOTIFICATION_MENU [0], self.D2L_GRADEBOOK_GRADE_NOTIFICATION_MENU [1].replace('GRADE', gradeNotification)) 
-        if self.wait_element(tmpNotificationGradebookGrade) == False:
-            writeToLog("INFO","FAILED to display gradebook grade in notification menu")
-            return False             
+        # Get grade element in notification menu
+        tmpNotificationGradebookGrade = (self.D2L_GRADEBOOK_GRADE_NOTIFICATION_MENU [0], self.D2L_GRADEBOOK_GRADE_NOTIFICATION_MENU [1].replace('GRADE', gradeNotification))
         
+        isGradebookFound = False
+        wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)   
+        while wait_until > datetime.datetime.now(): 
+            # check if grade element is displayed in notification menu
+            if self.wait_element(tmpNotificationGradebookGrade, 2) == False:
+                writeToLog("INFO","Gradebook grade isn't displayed in notification menu")
+                continue
+            else:
+                isGradebookFound = True
+                break
+            self.refresh()
+            self.click(self.D2L_NOTIFICATION_ICON)
+            
+        if isGradebookFound == False:
+            writeToLog("INFO","FAILED to displayed gradebook grade in notification menu") 
+            return False   
+        
+        # Get gradebook title in notification menu
         tmpNotificationGradeTitle = (self.D2L_GRADEBOOK_TITLE_NOTIFICATION_MENU [0], self.D2L_GRADEBOOK_TITLE_NOTIFICATION_MENU [1].replace('GRADEBOOK_TITLE', gradebookTitle))
         
         if self.wait_element(tmpNotificationGradeTitle) == False:
@@ -527,4 +548,40 @@ class D2L(Base):
             return False  
         
         writeToLog("INFO","Success: Grade is displayed correctly")                
-        return True                       
+        return True    
+    
+    
+    # @Author: Inbar Willman
+    def deleteGradebook(self, gradebookTitle):     
+        if self.navigateToGradebookPage(gradebookTitle) == False:
+            writeToLog("INFO","FAILED to navigate to gradebook " + gradebookTitle + " page ")
+            return False  
+        
+        if self.click(self.D2L_GRADEBOOK_ACTION_MENU) == False:
+            writeToLog("INFO","FAILED to click on actions menu")
+            return False    
+        
+        if self.click(self.D2L_DELETE_TOPIC_OPTION) == False:
+            writeToLog("INFO","FAILED to click on 'delete topic' option")
+            return False 
+
+        self.swith_to_iframe(self.D2L_DELETE_TOPIC_IFRAME)
+        
+        self.wait_element(self.D2L_DELETE_PERMANANETLY_OPTION) 
+        
+        if self.click(self.D2L_DELETE_PERMANANETLY_OPTION) == False:
+            writeToLog("INFO","FAILED to choose 'delete permanently' option")
+            return False  
+        
+        if self.click(self.D2L_CONFIRM_GRADE_DELETE_BTN) == False:
+            writeToLog("INFO","FAILED to confirm deletion")
+            return False 
+        
+        # Verify that gradebook activity isn't displayed in page anymore
+        tmpGradebookTitle = (self.D2L_GRADEBOOK_TITLE[0], self.D2L_GRADEBOOK_TITLE[1].replace('GRADEBOOK_TITLE', gradebookTitle))
+        if self.wait_element(tmpGradebookTitle) != False:
+            writeToLog("INFO","FAILED delete gradebook - still displayed in page")
+            return False             
+        
+        writeToLog("INFO","Success: Gradebook activity was deleted")                
+        return True                     

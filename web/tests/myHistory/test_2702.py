@@ -121,46 +121,54 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to filter entries by watch status - start watching")
                 return   
             
-            writeToLog("INFO","Step 10: Going to check that correct entries for start watching filter are displayed")
+            self.common.base.refresh()
+            
+            writeToLog("INFO","Step 10: Going to filter entries by watch status - start watching - again")
+            if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.STARTED_WATCHING) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to filter entries by watch status - start watching - again")
+                return             
+            
+            writeToLog("INFO","Step 11: Going to check that correct entries for start watching filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByStartWatching) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to displayed correct entries for start watching")
+                writeToLog("INFO","Step 11: FAILED to displayed correct entries for start watching")
                 return
             
-            writeToLog("INFO","Step 11: Going to verify that only entries with " + enums.MyHistoryWatcheStatusItems.STARTED_WATCHING.value + " status are displayed")
+            writeToLog("INFO","Step 12: Going to verify that only entries with " + enums.MyHistoryWatcheStatusItems.STARTED_WATCHING.value + " status are displayed")
             if self.common.myHistory.verifyFilterWatchStatus(enums.MyHistoryWatcheStatusItems.STARTED_WATCHING) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to displayed only entries with " + enums.MyHistoryWatcheStatusItems.STARTED_WATCHING.value + " status")
+                writeToLog("INFO","Step 12: FAILED to displayed only entries with " + enums.MyHistoryWatcheStatusItems.STARTED_WATCHING.value + " status")
                 return  
             
-            writeToLog("INFO","Step 12: Going to filter entries by watch status - complete watching")
+            writeToLog("INFO","Step 13: Going to filter entries by watch status - complete watching")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 112: FAILED to filter entries by watch status - complete watching")
+                writeToLog("INFO","Step 13: FAILED to filter entries by watch status - complete watching")
                 return   
             
-            writeToLog("INFO","Step 13: Going to check that correct entries for complete watching filter are displayed")
+            writeToLog("INFO","Step 14: Going to check that correct entries for complete watching filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByCompletedWatching) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED to displayed correct entries for complete watching")
+                writeToLog("INFO","Step 14: FAILED to displayed correct entries for complete watching")
                 return
             
-            writeToLog("INFO","Step 14: Going to verify that only entries with " + enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING.value + " status are displayed")
+            writeToLog("INFO","Step 15: Going to verify that only entries with " + enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING.value + " status are displayed")
             if self.common.myHistory.verifyFilterWatchStatus(enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to displayed only entries with " + enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING.value + " status")
+                writeToLog("INFO","Step 15: FAILED to displayed only entries with " + enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING.value + " status")
                 return  
             
-            writeToLog("INFO","Step 15: Going to filter entries by watch status - All History")
+            writeToLog("INFO","Step 16: Going to filter entries by watch status - All History")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.ALL_HISTORY) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to filter entries by watch status - All history")
+                writeToLog("INFO","Step 16: FAILED to filter entries by watch status - All history")
                 return   
             
-            writeToLog("INFO","Step 16: Going to check that correct entries for complete watching filter are displayed")
+            writeToLog("INFO","Step 17: Going to check that correct entries for complete watching filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByAllHistory) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 16: FAILED to displayed correct entries for complete watching")
+                writeToLog("INFO","Step 17: FAILED to displayed correct entries for complete watching")
                 return                                                             
             #########################################################################
             writeToLog("INFO","TEST PASSED")

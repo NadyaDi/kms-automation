@@ -200,7 +200,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.base.switch_to_default_content()
             if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.lower() in self.common.canvas.getMoodleLoginUserName()) == False:
-                self.common.canvas.logOutOfMoodle()
+                self.common.canvas.logOutOfCanvas()
                 self.common.loginAsUser()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
             self.common.moodle.deleteEmbedActivity(self.kalturaVideoQuizName)
