@@ -121,7 +121,7 @@ class Player(Base):
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_WHY_BUTTON                = ('xpath', "//div[@class='hint-why-box' and text()='WHY']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_CLOSE_BUTTON              = ('xpath', "//div[@class='header-container close-button']")
     PLAYER_TOUCH_OVERLAY                                        = ('xpath', "//div[@id='touchOverlay']")
-
+    PLAYER_HOTSPOT_PRESENTED                                    = ('xpath', "//div[contains(@style,'text-rendering: geometricprecision')]")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -222,7 +222,7 @@ class Player(Base):
     
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the Captions that were presented on the player - and return list of Captions codes (filters the duplicates)     
-    def collectCaptionsFromPlayer(self, entryName, embed=False, fromActionBar=True, quizPresented=False):
+    def collectCaptionsFromPlayer(self, entryName, embed=False, fromActionBar=True, quizEntry=False):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -238,7 +238,7 @@ class Player(Base):
                     writeToLog("INFO", "FAILED to click on the play button")
                     return False
                 
-            if quizPresented == True:
+            if quizEntry == True:
                 self.switchToPlayerIframe()
                 if self.continueFromQuizWelcomeScreen() == False:
                     writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
@@ -251,7 +251,7 @@ class Player(Base):
                 try:
                     captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT).text
                     
-                    if quizPresented == True:
+                    if quizEntry == True:
                         # Verify if the Question Screen is displayed
                         if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.3, True) != False:
                             sleep(1)
@@ -847,8 +847,8 @@ class Player(Base):
         
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)
-    # If quizPresented = True, it will Skip all the Quiz Related screens, NOTICE that the QR Code for the second where the Question was presented, may not be captured     
-    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizPresented=False):
+    # If quizEntry = True, it will Skip all the Quiz Related screens, NOTICE that the QR Code for the second where the Question was presented, may not be captured     
+    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizEntry=False):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -868,7 +868,7 @@ class Player(Base):
                     writeToLog("INFO", "FAILED to click on the play button")
                     return False  
                 
-            if quizPresented == True:
+            if quizEntry == True:
                 self.switchToPlayerIframe()
                 if self.continueFromQuizWelcomeScreen() == False:
                     writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
@@ -880,7 +880,7 @@ class Player(Base):
             while qrPath != False:
                 qrPath = self.clsCommon.qrcode.takeQrCodeScreenshot(False)
                 
-                if quizPresented == True:
+                if quizEntry == True:
                     # Verify if the Question Screen is displayed
                     if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.3, True) != False:
                         sleep(1)
@@ -915,7 +915,7 @@ class Player(Base):
                 QRcodeList.append(qrResolve)
                 
             
-            if quizPresented == True:
+            if quizEntry == True:
                 # Remove invalid elements ( None )  from the QR Code List
                 QRcodeList = [x for x in QRcodeList if x != None]
                                 
@@ -2476,4 +2476,123 @@ class Player(Base):
             if self.verifyQuestionScreenState(expectedQuestionsState[questionNumber], location, embed) == False:
                 return False
         
+        return True
+    
+    
+    # @Author: Horia Cus
+    # hotspotList must contain the following structure ['Hotspot Title', 'link.address', enums.textStyle.Style, 'color code'
+    # location=enums.Location.ENTRY_PAGE
+    # To be Developed: Cue Point Verification interval, Location Hotspot
+    def hotspotVerification(self, hotspotsDict, location=enums.Location.ENTRY_PAGE, embed=False):        
+        if self.verifyAndClickOnPlay(location, 2, embed) == False:
+            return False
+        
+        # Verify that the expected hotspots are presented in the player
+        for hotspotNumber in hotspotsDict:
+            
+            # Take the presented hotspot for the current time
+            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
+            
+            # Verify that hotspots are presented in the Player
+            if presentedHotspots == False:
+                writeToLog("INFO", "Failed to extract the presented hotspots details")
+                return False
+            
+            # Take the details for the current hotspot
+            hotspotDetails = hotspotsDict[hotspotNumber]
+            
+            # Verify that the desired details for the current hotspot are presented properly in the player
+            for x in range(0, len(presentedHotspots)):
+                
+                # Verify that the hotspot title from the player and dictionary are a match
+                if hotspotDetails[0] in presentedHotspots[x].text:
+                    writeToLog("INFO", "AS Expected, " + hotspotDetails[0] + " hotspot has been found")
+                    
+                    try:
+                        hotspotStyleProperties = presentedHotspots[x].get_attribute('style').split()
+                        hotspotStyleFontWeight = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
+                        
+                        # Specify the correct font weight for the presented hotspot
+                        if hotspotStyleFontWeight == "lighter":
+                            hotspotStyleFontWeight = "thin"
+                            
+                        hotspotStyleFontColor  = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
+                    except Exception:
+                        writeToLog("INFO", "FAILED to take the hotspot properties for " + hotspotDetails[0])
+                        return False
+                    
+                    # Verify if a link should be presented within the hotspot
+                    if len(hotspotDetails) >= 2 and hotspotDetails[1] != '':
+                        # Access the hotspot link
+                        if self.clickElement(presentedHotspots[x]) == False:
+                            writeToLog("INFO", "FAILED to click on the " + presentedHotspots[x].text + " hotspot link")
+                            return False
+                                                
+                        # Take the hotspot link details and switch back to the player
+                        if self.switch_to_default_content() == False:
+                            writeToLog("INFO", "FAILED to switch to the default content, after clicking on the hotspot link")
+                            return False
+                        
+                        try:
+                            handles = self.driver.window_handles
+                            self.driver.switch_to.window(handles[1])
+                            presentedLink = self.clsCommon.base.driver.current_url
+                            self.driver.close()
+                            self.driver.switch_to.window(handles[0])
+                        except Exception:
+                            writeToLog("INFO", "FAILED to take proper details while switching between the KMS and hotspot link")
+                            return False
+                        
+                        if self.selectPlayerIframe(location, embed) == False:
+                            writeToLog("INFO", "FAILED to switch to the default content, after clicking on the hotspot link")
+                            return False
+                        
+                        # Verify that the presented link matches with the expected link
+                        if presentedLink != hotspotDetails[1]:
+                            writeToLog("INFO", "FAILED," + presentedLink + " link was presented but " + hotspotDetails[1] + " was expected")
+                            return False
+                    
+                    # Verify if the font weight should have been changed
+                    if len(hotspotDetails) >= 3 and hotspotDetails[2].value != '':
+                        # Verify that the expected font weight matches with the presented font weight
+                        if hotspotStyleFontWeight != hotspotDetails[2].value.lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[2].value.lower())
+                            return False
+                    else:
+                        # Verify that the default font weight is presented
+                        defaultFontWeight = enums.textStyle.NORMAL.value
+                        if hotspotStyleFontWeight != defaultFontWeight.lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + defaultFontWeight.lower())
+                            return False
+                        
+                    if len(hotspotDetails) >= 4 and hotspotDetails[3] != '':
+                        # Verify that the expected font color matches with the presented font color
+                        if hotspotStyleFontColor != hotspotDetails[3].lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[3].lower())
+                            return False
+                        
+                    else:
+                        # Verify that the default font color is presented
+                        defaultFontColor = 'white'
+                        if hotspotStyleFontColor != defaultFontColor:
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + defaultFontColor)
+                            return False
+                    
+                    break
+                
+                # Verify that we were able to find the expected hotspot within the number of tries
+                if x == len(presentedHotspots):
+                    writeToLog("INFO", "FAILED to find the " + hotspotDetails[0] + " inside the player")
+                    return False
+        
+        hotspotNameList = []
+        for hotspotNumber in hotspotsDict:
+            hotspotNameList.append(hotspotsDict[hotspotNumber][0])
+        
+        if len(hotspotNameList) > 1:   
+            hotspots = ", ".join(hotspotNameList)
+        else:
+            hotspots = hotspotNameList[0]
+        
+        writeToLog("INFO","The following hotspots were properly presented: " + hotspots + "")
         return True

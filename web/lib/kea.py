@@ -56,7 +56,12 @@ class Kea(Base):
     EDITOR_TIMELINE                                                         = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
     EDITOR_TIME_PICKER                                                      = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
     EDITOR_REALTIME_MARKER                                                  = ('xpath', "//span[@class='realtime-marker__head-box-time']")
-    EDITORT_TIMELINE_SPLIT_ICON                                             = ('xpath', "//button[@aria-label='Split']")
+    EDITOR_TIMELINE_OPTION_RESET                                            = ('xpath', "//button[@aria-label='Reset']")
+    EDITOR_TIMELINE_OPTION_UNDO                                             = ('xpath', "//button[@aria-label='Undo']")
+    EDITOR_TIMELINE_OPTION_REDO                                             = ('xpath', "//button[@aria-label='Redo']")
+    EDITOR_TIMELINE_SET_IN                                                  = ('xpath', "//i[contains(@class,'kicon-pin_left')]")
+    EDITOR_TIMELINE_SET_OUT                                                 = ('xpath', "//i[contains(@class,'kicon-pin_right')]")
+    EDITOR_TIMELINE_SPLIT_ICON                                              = ('xpath', "//button[@aria-label='Split']")
     EDITOR_TIMELINE_DELETE_BUTTON                                           = ('xpath', "//button[@aria-label='Delete']")
     EDITOR_SAVE_BUTTON                                                      = ('xpath', "//button[@class='button--save ui-button-secondary default-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only']")
     EDITOR_SAVE_A_COPY_BUTTON                                               = ('xpath', "//button[@class='save-as-button branded-button button--editor ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ng-star-inserted']")
@@ -66,6 +71,7 @@ class Kea(Base):
     EDITOR_CREATE_BUTTON                                                    = ('xpath', "//button[contains(.,'Create')]")
     EDITOR_SUCCESS_MSG                                                      = ('xpath', "//p-header[contains(.,'Success')]")
     EDITOR_TOTAL_TIME                                                       = ('xpath', "//span[@class='total-time']")
+    EDITOR_TOTAL_TIME_TOOLBAR                                               = ('xpath', "//span[contains(@class,'toolbar__total-time')]")
     EDITOR_GO_TO_MEDIA_PAGE_BUTTON                                          = ('xpath', "//a[contains(.,'Media Page')]")
     KEA_ENTRY_NAME                                                          = ('xpath', "//span[@class='entry-name']")
     KEA_TOGGLE_MENU_OPTION                                                  = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
@@ -89,6 +95,7 @@ class Kea(Base):
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER                    = ('xpath', "//span[@class='question-tooltip__header__content']")
     KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP                 = ('xpath', "//span[@class='question-tooltip__header__duration']")
     KEA_TIMELINE_SECTION_TOTAL_QUESTION_NUMBER                              = ('xpath', "//span[@class='ng-tns-c14-1 ng-star-inserted' and contains(text(),'Total Q: QUESTION_NUMBER')]")
+    KEA_TIMELINE_PRESENTED_SECTIONS                                         = ('xpath', "//div[contains(@class,'kea-timeline-stacked-item') and contains(@style,'background-image')]")
     KEA_TIMELINE_SECTION_DRAG_HAND                                          = ('xpath', "//div[@class='answer-drag-handle']")
     KEA_PLAYER_CONTROLS_PLAY_BUTTON                                         = ('xpath', "//button[@class='player-control player-control__play-pause' and @aria-label='Play']")       
     KEA_PLAYER_CONTROLS_PAUSE_BUTTON                                        = ('xpath', "//button[@class='player-control player-control__play-pause' and @aria-label='Pause']")
@@ -99,6 +106,23 @@ class Kea(Base):
     KEA_TIMELINE_CONTROLS_ZOOM_OUT_BUTTON                                   = ('xpath', "//button[contains(@class,'zoom_button') and @aria-label='Zoom out']")
     KEA_TIMELINE_CONTROLS_ZOOM_IN_BUTTON                                    = ('xpath', "//button[contains(@class,'zoom_button') and @aria-label='Zoom in']")
     KEA_TIMELINE_CONTROLS_ZOOM_IN_TOOLTIP                                   = ('xpath', "//div[@class='ui-tooltip-text ui-shadow ui-corner-all' and text()='Zoom in']")
+    KEA_CONFIRMATION_POP_UP_CONTINUE                                        = ('xpath', "//button[contains(@class,'button') and text()='Continue']")
+    KEA_CONFIRMATION_POP_UP_TITLE                                           = ('xpath', "//div[@class='kErrorMessageTitle']")
+    KEA_HOTSPOTS_TAB                                                        = ('xpath', "//a[@class='nav-button' and @aria-label='Hotspots']") 
+    KEA_HOTSPOTS_TAB_ACTIVE                                                 = ('xpath', "//a[@class='nav-button active' and @aria-label='Hotspots']") 
+    KEA_HOTSPOTS_ADD_NEW_BUTTON                                             = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Add Hotspot"]')
+    KEA_HOTSPOTS_DONE_BUTTON                                                = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Done"]')
+    KEA_HOTSPOTS_SAVE_BUTTON                                                = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Save"]')
+    KEA_HOTSPOTS_ADVANCED_SETTINGS                                          = ('xpath', '//button[@class="form-button" and text()="Advanced Settings"]')
+    KEA_HOTSPOTS_FORM_TEXT_INPUT_FIELD                                      = ('xpath', '//input[@id="inputText"]')
+    KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD                                      = ('xpath', '//input[@id="inputUrl"]')
+    KEA_HOTSPOTS_FORM_TEXT_STYLE                                            = ('xpath', '//label[contains(@class,"ui-dropdown-label ui-inputtext")]')
+    KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE                                      = ('xpath', '//span[contains(@class,"ng-star-inserted") and text()="TEXT_STYLE"]')
+    KEA_HOTSPOTS_FORM_TEXT_COLOR                                            = ('xpath', '//div[@class="sp-preview-inner"]')
+    KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE                                      = ('xpath', '//input[@class="sp-input"]')
+    KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER                                  = ('xpath', '//div[contains(@class,"kea-timeline-stacked-item kea-timeline-stacked-item--audio-disabled")]')
+    KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT                       = ('xpath', '//div[contains(@class,"content-item__handle--right")]')
+    KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT                        = ('xpath', '//div[contains(@class,"content-item__handle--left")]')
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -377,7 +401,7 @@ class Kea(Base):
     def launchKEA(self, entryName, navigateTo, navigateFrom, isCreateClippingPermissionIsOn=False):
         if isCreateClippingPermissionIsOn == False:
             if self.clsCommon.navigateTo(navigateTo, navigateFrom, entryName) == False:
-                return False
+                return False 
         
         if navigateTo == enums.Location.EDIT_ENTRY_PAGE:
             if self.click(self.KEA_LAUNCH) == False:
@@ -385,11 +409,18 @@ class Kea(Base):
                 return False
             
         elif navigateTo == enums.Location.ENTRY_PAGE:
+            if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+                writeToLog("INFO", "FAILED to wait until the " + entryName + " has been processed")
+                return False
+            
             self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON)
             self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            sleep(4)
             if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
                 writeToLog("INFO","FAILED to click on Actions button (at entry page)")
                 return False
+            
+            sleep(2)
             
             if isCreateClippingPermissionIsOn == True:
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_CREATE_CLIP_BUTTON) == False:
@@ -414,57 +445,68 @@ class Kea(Base):
         # We wait until the KEA page is successfully loaded
         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 35) == False:
             writeToLog("INFO","FAILED to wait until spinner isn't visible")
-            return False                         
+            return False
+        
+        sleep(3)                      
         
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
     
 
     # @Author: Tzachi guetta
-    # interface to KEA's timeline functionalities: split, (set IN\out, delete, Fade IN\out - TBD)
-    def keaTimelinefunc(self,entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab, isCreateClippingPermissionIsOn=False):
-        if self.launchKEA(entryName, navigateTo, navigateFrom, isCreateClippingPermissionIsOn) == False:
-            writeToLog("INFO","Failed to launch KEA for: " + entryName)
-            return False
-        
-        sleep(2)
-        
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
-            self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON) 
-        else:
-            self.refresh()
-            
-        sleep(3)   
-        self.switchToKeaIframe()
-        sleep(6)
-                
+    # interface to KEA's timeline functionalities: split, (Fade IN\out - TBD)
+    def editorTimelineActions(self, startTime, endTime='', openEditorTab=False, timelineAction=None):
+        self.switchToKeaIframe()            
         if openEditorTab == True:
             if self.click(self.KEA_EDITOR_TAB) == False:
                 writeToLog("INFO","FAILED to click on Editor Tab")
                 return False
-
-        if self.setEditorStartTime(splitStartTime) == False:
-            return False              
             
+        if self.setEditorStartTime(startTime) == False:
+            writeToLog("INFO", "FAILED to select the split start point")
+            return False                
         sleep(1)
-        if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
+            
+        if timelineAction == enums.KeaEditorTimelineOptions.DELETE:
+            if self.click(self.EDITOR_TIMELINE_SPLIT_ICON) == False:
+                    writeToLog("INFO","FAILED to click Split icon (time-line)")
+                    return False
+            sleep(1)
+            
+            if self.setEditorStartTime(endTime) == False:
+                return False   
+            
+            sleep(1)
+            if self.click(self.EDITOR_TIMELINE_SPLIT_ICON) == False:
                 writeToLog("INFO","FAILED to click Split icon (time-line)")
                 return False
-        sleep(1)
+            
+            sleep(1)
+            if self.click(self.EDITOR_TIMELINE_DELETE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click delete icon (time-line)")
+                return False
         
-        if self.setEditorStartTime(splitEndTime) == False:
-            return False   
-        
-        sleep(1)
-        if self.click(self.EDITORT_TIMELINE_SPLIT_ICON) == False:
-            writeToLog("INFO","FAILED to click Split icon (time-line)")
+        elif timelineAction == enums.KeaEditorTimelineOptions.SPLIT:
+            if self.click(self.EDITOR_TIMELINE_SPLIT_ICON) == False:
+                writeToLog("INFO","FAILED to click Split icon (time-line)")
+                return False
+            sleep(1)
+            
+        elif timelineAction == enums.KeaEditorTimelineOptions.SET_IN:
+            if self.click(self.EDITOR_TIMELINE_SET_IN, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Set In option")
+                return False
+            
+        elif timelineAction == enums.KeaEditorTimelineOptions.SET_OUT:
+            if self.click(self.EDITOR_TIMELINE_SET_OUT, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Set Out option")
+                return False
+            
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you used a supported timeline action")
             return False
-        
-        sleep(1)
-        if self.click(self.EDITOR_TIMELINE_DELETE_BUTTON) == False:
-            writeToLog("INFO","FAILED to click delete icon (time-line)")
-            return False
-        
+
+        writeToLog("INFO", "Timeline section has been successfully " + timelineAction.value + " edited")
         return True
     
     
@@ -499,29 +541,30 @@ class Kea(Base):
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
-    def trimEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False):
-        if self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab) == False:
+    def trimEntry(self, entryName, startTime, endTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False, isCreateClippingPermissionIsOn=False, timelineAction=enums.KeaEditorTimelineOptions.DELETE):
+        if self.launchKEA(entryName, navigateTo, navigateFrom, isCreateClippingPermissionIsOn) == False:
+            writeToLog("INFO","Failed to launch KEA for: " + entryName)
+            return False
+        sleep(2)
+        
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON) 
+        else:
+            self.refresh()
+            
+        sleep(3)   
+        self.switchToKeaIframe()
+        sleep(6)
+
+        if self.editorTimelineActions(startTime, endTime, openEditorTab, timelineAction) == False:
             writeToLog("INFO","FAILED to split the entry: " + str(entryName))
             return False            
         
         sleep(1)
-        if self.click(self.EDITOR_SAVE_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on Save")
+        if self.saveEditorChanges(saveCopy=False)== False:
+            writeToLog("INFO","FAILED to save the entry changes from KEA Editor Timeline")
             return False
-        
-        sleep(1)
-        if self.click(self.EDITOR_SAVE_BUTTON_CONF, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on Save confirmation button")
-            return False
-        
-        if self.wait_element(self.EDITOR_SAVED_MSG, 360) == False:
-            writeToLog("INFO","FAILED, ""Media was successfully saved."" - msg is missing")
-            return False
-        
-        if self.click(self.EDITOR_SAVED_OK_MSG, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on 'OK' after trimmed msg")
-            return False
-        
+                
         entryDuration = self.get_element_text(self.EDITOR_TOTAL_TIME, 10)
         self.switch_to_default_content()
         
@@ -615,21 +658,28 @@ class Kea(Base):
     # @Author: Tzachi guetta  
     # Currently support split only     
     # expectedEntryDuration = the duration of the new entry  
-    def clipEntry(self, entryName, splitStartTime, splitEndTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False, isCreateClippingPermissionIsOn=False):
-        self.keaTimelinefunc(entryName, splitStartTime, splitEndTime, navigateTo, navigateFrom, openEditorTab, isCreateClippingPermissionIsOn)
+    def clipEntry(self, entryName, startTime, endTime, expectedEntryDuration, navigateTo, navigateFrom, openEditorTab=False, isCreateClippingPermissionIsOn=False, timelineAction=enums.KeaEditorTimelineOptions.DELETE):
+        if self.launchKEA(entryName, navigateTo, navigateFrom, isCreateClippingPermissionIsOn) == False:
+            writeToLog("INFO","Failed to launch KEA for: " + entryName)
+            return False
+        sleep(2)
         
-        sleep(1)
-        if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on Save")
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+            self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON) 
+        else:
+            self.refresh()
+            
+        sleep(3)   
+        self.switchToKeaIframe()
+        sleep(6)
+        
+        if self.editorTimelineActions(startTime, endTime, openEditorTab, timelineAction) == False:
             return False
         
         sleep(1)
-        if self.click(self.EDITOR_CREATE_BUTTON, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on Save confirmation button")
-            return False
         
-        if self.wait_element(self.EDITOR_SUCCESS_MSG, 360) == False:
-            writeToLog("INFO","FAILED, ""Your media has been saved in My Media"" - message is missing")
+        if self.saveEditorChanges(saveCopy=True) == False:
+            writeToLog("INFO","FAILED to save a copy based on the changes that were performed to the KEA Editor timeline")
             return False
         
         sleep(1)
@@ -666,7 +716,7 @@ class Kea(Base):
         return False
 
 
-    # NOT FINISHED:
+    # @Author: Tzachi guetta  & Horia Cus
     # the following function will create a Quiz (within the given dictQuestions)
     # Please follow the individual list structure for each Quiz Question type
     # questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text', 'Why Text']
@@ -925,8 +975,8 @@ class Kea(Base):
             
         start_button = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', enums.KeaQuizButtons.START.value))
         
-        if self.wait_element(start_button, 5, True) != False:
-            if self.click(start_button, 5, True) == False:
+        if self.wait_element(start_button, 2, True) != False:
+            if self.click(start_button, 1, True) == False:
                 writeToLog("INFO","FAILED to click on the Quiz Start button")
                 return False
         
@@ -2273,4 +2323,488 @@ class Kea(Base):
 
         questionsDeleted = ", ".join(questionDeleteList)
         writeToLog("INFO","The following Questions were deleted: " + questionsDeleted)
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function can use any action option available for the KEA Editor ( Undo, Redo and Reset)
+    # It will verify that the KEA Section is presented with the proper time length, size and number of sections based on the action selected
+    # actionToBePerformed must contain enums ( e.g enums.KeaEditorTimelineOptions.REDO )
+    def timeLineUndoRedoReset(self, actionToBePerformed):
+        self.switchToKeaIframe()
+        
+        # Verify that we are in the KEA Page
+        if self.wait_element(self.KEA_TIMELINE_SECTION_CONTAINER, 30, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA Timeline section")
+            return False
+        
+        # Take the KEA Timeline section details before performing any action
+        presentedSectionsInitial       = self.wait_elements(self.KEA_TIMELINE_PRESENTED_SECTIONS, 5)
+        sectionListSizesInitial        = []
+        sectionListTotalTimeInitial    = []
+        presentedTotalTimeInitial      = self.wait_element(self.EDITOR_TOTAL_TIME_TOOLBAR, 2).text.replace('Total:', '')[1:6]
+        
+        # Take the size of section's container and the time length displayed within each presented section
+        for x in range(0, len(presentedSectionsInitial)):
+            sectionListSizesInitial.append(int(presentedSectionsInitial[x].size['width']))
+            sectionListTotalTimeInitial.append(presentedSectionsInitial[x].text)
+        
+        # Verify the action that needs to be performed
+        if actionToBePerformed == enums.KeaEditorTimelineOptions.RESET:
+            
+            # Verify that there are elements that can be reset
+            if len(presentedSectionsInitial) > 1 or sectionListSizesInitial[x] < 1065:
+                
+                # Click on the 'Reset' action button
+                if self.click(self.EDITOR_TIMELINE_OPTION_RESET, 3, True) == False:
+                    writeToLog("INFO", "FAILED to click on the Reset button")
+                    return False
+                
+                # Verify if the confirmation pop up is displayed
+                if self.wait_element(self.KEA_CONFIRMATION_POP_UP_TITLE, 3, True) != False:
+                    # Confirm the Reset action
+                    if self.click(self.KEA_CONFIRMATION_POP_UP_CONTINUE, 1, True) == False:
+                        writeToLog("INFO", "FAILED to confirm the Reset option changes")
+                        return False
+                else:
+                    writeToLog("INFO", "No confirmation pop up was presented for the reset action")
+                
+                # Take the elements for the presented sections
+                presentedSectionsUpdated            = self.wait_elements(self.KEA_TIMELINE_PRESENTED_SECTIONS, 5)
+                presentedTotalTimeUpdatedForSection = presentedSectionsUpdated[0].text[:5]
+                presentedTotalTimeUpdated           = self.wait_element(self.EDITOR_TOTAL_TIME_TOOLBAR, 2).text.replace('Total:', '')[1:6]
+                
+                # Verify that only one section is presented
+                if len(presentedSectionsUpdated) != 1:
+                    writeToLog("INFO", "FAILED, " + len(presentedSectionsUpdated) + " sections are displayed, instead of only one, after using the reset option")
+                    return False
+                
+                # Verify that the present section's time matches with the total time of the entry
+                if presentedTotalTimeUpdated != presentedTotalTimeUpdatedForSection:
+                    writeToLog("INFO", "FAILED, in the timeline section, ")
+                    return False
+            
+            # Return false if no 'Reset' action can be performed 
+            else:
+                writeToLog("INFO", "FAIFAILED, there's nothing to reset because no changes were performed within the timeline section")
+                return False                
+
+        # Verify the action that needs to be performed  
+        elif actionToBePerformed == enums.KeaEditorTimelineOptions.REDO:
+            
+            # Click on the 'Redo' action button
+            if self.click(self.EDITOR_TIMELINE_OPTION_REDO, 3, True) == False:
+                writeToLog("INFO", "FAILED to click on the Redo button")
+                return False
+            
+            # Wait one second to make sure that the UI is updated
+            sleep(1)
+            
+            # Take the KEA timeline section details after using the 'Redo' option
+            presentedSectionsUpdated        = self.wait_elements(self.KEA_TIMELINE_PRESENTED_SECTIONS, 5)
+            presentedTotalTimeUpdated       = self.wait_element(self.EDITOR_TOTAL_TIME_TOOLBAR, 2).text.replace('Total:', '')[1:6]
+            sectionListSizesUpdated         = []
+            sectionListTotalTimeUpdated     = []
+
+            
+            # Take the size of section's container and the time length displayed from each presented section
+            for x in range(0, len(presentedSectionsUpdated)):
+                sectionListSizesUpdated.append(int(presentedSectionsUpdated[x].size['width']))
+                sectionListTotalTimeUpdated.append(presentedSectionsUpdated[x].text)
+            
+            # Verify the 'Redo' action after a Delete
+            # Verify that a section has been deleted after using the 'Redo' action
+            if len(presentedSectionsUpdated) == len(presentedSectionsInitial) - 1:
+                # Verify that the updated total time for the entry is lower after a section has been deleted
+                if presentedTotalTimeUpdated > presentedTotalTimeInitial:
+                    writeToLog("INFO", "FAILED, the presented total time after using the Redo option for a Delete action, is not lower than the initial total time" )
+                    return False
+            
+            # Verify the 'Redo' action after a Set In / Set Out
+            elif len(presentedSectionsUpdated) == len(presentedSectionsInitial):
+                # Verify that a section has been set out / set in by checking its size ( set out / set in section remains at 2px width only after a split )
+                for x in range(0, len(sectionListSizesUpdated)):
+                    if sectionListSizesUpdated[x] < sectionListSizesInitial[x]:
+                        break
+                    
+                    if x + 1 == len(sectionListSizesInitial):
+                        writeToLog("INFO", "FAILED, no section has been set out / set in after using the 'Redo' action")
+                        return False
+                
+                # Verify that the time length of the entry has been decreased after resuming a set out / set in section
+                if presentedTotalTimeUpdated >= presentedTotalTimeInitial:
+                    writeToLog("INFO", "FAILED, the presented total time after using the Redo option for a Set Out / Set In action, is not higher than the initial total time" )
+                    return False
+            
+            # Verify the 'Redo' action after a Split
+            # Verify that the number of sections has been increased by one after using the 'Redo' action
+            elif len(presentedSectionsUpdated) == len(presentedSectionsInitial) + 1:
+                tries = 1
+                # Verify that the size for at least two section has been decreased after using the 'Redo' action in order to re-split the sections
+                for updatedSize in sectionListSizesUpdated:
+                    # Verify that the updatedSize for the section that has been re-split has been changed
+                    if updatedSize in sectionListSizesInitial:
+                        if len(sectionListSizesUpdated) == tries:
+                            writeToLog("INFO", "FAILED, section size has not been properly changed after a split performed by 'Redo'")
+                            return False
+                        tries += 1
+                        
+                tries = 1
+                # Verify that the time length for at least two section has been decreased after using the 'Redo' action in order to re-split the sections
+                for updatedTime in sectionListTotalTimeUpdated:
+                    # Verify that the updatedTime for the section that has been re-split has been changed
+                    if updatedTime in sectionListTotalTimeInitial:
+                        if len(sectionListTotalTimeUpdated) == tries:
+                            writeToLog("INFO", "FAILED, section time length has not been properly changed after a split performed by 'Redo'")
+                            return False
+                        tries += 1            
+
+        # Verify the action that needs to be performed
+        elif actionToBePerformed == enums.KeaEditorTimelineOptions.UNDO:
+                        
+            # Verify that at least one undo input can be performed for the current state
+            if len(presentedSectionsInitial) > 1 or sectionListSizesInitial[x] < 1065:
+                
+                # Click on the 'Undo' action button
+                if self.click(self.EDITOR_TIMELINE_OPTION_UNDO, 3, True) == False:
+                    writeToLog("INFO", "FAILED to click on the Undo button")
+                    return False
+                
+                # Wait one second to make sure that the UI is updated
+                sleep(1)
+                
+                # Take the KEA timeline section details after using the undo option
+                presentedSectionsUpdated = self.wait_elements(self.KEA_TIMELINE_PRESENTED_SECTIONS, 5)
+                
+                sectionListSizesUpdated     = []
+                sectionListTotalTimeUpdated = []
+                
+                # Take the size of section's container and the time length displayed from each presented section
+                for x in range(0, len(presentedSectionsUpdated)):
+                    sectionListSizesUpdated.append(int(presentedSectionsUpdated[x].size['width']))
+                    sectionListTotalTimeUpdated.append(presentedSectionsUpdated[x].text)
+                
+                # Verify the 'Undo' action after a SPLIT
+                # Verify that a section has been combined after using the 'Undo' action
+                if len(presentedSectionsUpdated) == len(presentedSectionsInitial) - 1:
+                    
+                    # Verify that the section's container size has been increased after using the 'Undo' action
+                    for x in range(0, len(presentedSectionsUpdated)):
+                        # Compare the initial size with the updated size and verify that the updated size for at least one section's container has been increased
+                        if sectionListSizesUpdated[x] > sectionListSizesInitial[x]:
+                            writeToLog("INFO", "Size has been increased for a section, after using the undo option, after a split")
+                            break
+                        
+                        # Verify that we were able to find an increase in size within the number of presented sections
+                        if x + 1 == len(presentedSectionsUpdated):
+                            writeToLog("INFO", "FAILED, after using the split option and then undo, the same number of sections were displayed")
+                            return False
+                                                                    
+                    # Verify that the section's time length has been increased after using the 'Undo' action
+                    for x in range(0, len(presentedSectionsUpdated)):
+                        # Compare the initial time length with the updated time length and verify that the time length for the updated section has been increased 
+                        if sectionListTotalTimeUpdated[x] > sectionListTotalTimeInitial[x]:
+                            writeToLog("INFO", "Time length has been increased for a section, after using the undo option, after a split")
+                            break
+                        
+                        # Verify that we were able to find an increase in time length within the number of presented sections
+                        else:
+                            if x + 1 == len(presentedSectionsUpdated):
+                                writeToLog("INFO", "FAILED, after splitting a section and then using the undo option, section time length didn't increased")
+                                return False
+                        
+                # Verify the 'Undo' option after a Set In and / or Set Out
+                # Verify that the same number of the presented section remained after using the 'Undo' action
+                elif len(presentedSectionsUpdated) == len(presentedSectionsInitial):
+                    
+                    # Verify that the size of at least one presented section has been increased after combining a set out / set in section
+                    for x in range(0, len(presentedSectionsUpdated)):
+                        if sectionListTotalTimeUpdated[x] > sectionListTotalTimeInitial[x]:
+                            writeToLog("INFO", "Time length has been increased for a section, after using the undo option")
+                            break
+                        
+                        # Verify that we were able to find an increase in size for at least one presented section within the number of presented sections
+                        else:
+                            if x + 1 == len(presentedSectionsUpdated):
+                                writeToLog("INFO", "FAILED, section time has not been increased for any available section, after using the undo option")
+                                return False
+                
+                # Verify the 'Undo' option after a Delete
+                # Verify that the number of sections has been increased by one than the initial presented section
+                elif len(presentedSectionsUpdated) == len(presentedSectionsInitial) + 1:
+                    
+                    # Verify that the time length information has been presented for each presented section
+                    if len(sectionListTotalTimeUpdated) != len(sectionListTotalTimeInitial) + 1:
+                        writeToLog("INFO", "FAILED, after the user deleted a section and used the Undo option, the previously section was not resumed")
+                        return False    
+                
+                # Return False if no criteria was match for the 'Undo' action
+                else:
+                    writeToLog("INFO", "FAILED, no undo changes were performed")
+                    return False
+            
+            # Return False if no elements can be undo            
+            else:
+                writeToLog("INFO", "FAILED, no undo option is available for the current state")
+                return False
+            
+        writeToLog("INFO", "KEA Timeline option has been successfully changed using the " + actionToBePerformed.value + " option")
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function will save the current entry with the latest changes performed within the KEA Editor Timeline
+    # if saveCopy = False, it will save the current entry with the latest changes performed
+    # if saveCopy = True, it will save the changes from the entry in a new entry
+    def saveEditorChanges(self, saveCopy=False):
+        self.switchToKeaIframe()
+        
+        # Save the current entry with all the changes that were performed within the KEA Timeline section  
+        if saveCopy == False:
+            if self.click(self.EDITOR_SAVE_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on the save Button from KEA Editor")
+                return False
+            
+            if self.click(self.EDITOR_SAVE_BUTTON_CONF, 1, True) == False:
+                writeToLog("INFO","FAILED to confirm the save pop up from KEA Editor")
+                return False
+            
+            if self.wait_element(self.EDITOR_SAVED_MSG, 360) == False:
+                writeToLog("INFO","FAILED, ""Media was successfully saved."" - was not presented within the 360 seconds")
+                return False
+            
+            if self.click(self.EDITOR_SAVED_OK_MSG, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to dismiss the confirmation pop up by clicking on the OK button")
+                return False
+            
+        # Save the changes that were performed within the KEA Timeline section as a new entry
+        elif saveCopy == True:
+            if self.click(self.EDITOR_SAVE_A_COPY_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on the Save a Copy button from KEA Editor")
+                return False
+            
+            if self.click(self.EDITOR_CREATE_BUTTON, 1, True) == False:
+                writeToLog("INFO","FAILED to confirm the save pop up from KEA Editor")
+                return False
+            
+            if self.wait_element(self.EDITOR_SUCCESS_MSG, 360) == False:
+                writeToLog("INFO","FAILED, ""Media was successfully saved."" - was not presented within the 360 seconds")
+                return False
+            
+        writeToLog("INFO", "Changes from KEA Editor timeline were saved properly")
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function will compare the entry length from Entry Page and KEA Page
+    def compareEntryDurationInKeaAndEntryPage(self, entryName, expectedDuration):
+        self.switch_to_default_content()
+        
+        # Navigate to the entry page
+        if self.clsCommon.navigateTo(navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA, nameValue=entryName) == False:
+            writeToLog("INFO", "FAILED to navigate to the Entry Page for " + entryName + " entry")
+            return False
+        
+        # Wait if the media is still being processed
+        if self.clsCommon.entryPage.waitTillMediaIsBeingProcessed() == False:
+            writeToLog("INFO", "FAILED to wait until the " + entryName + " has been processed")
+            return False
+        
+        self.clsCommon.player.switchToPlayerIframe()
+        
+        # Take the entry time length from the player
+        try:
+            entryDurationInEntryPage = self.wait_element(self.clsCommon.player.PLAYER_TOTAL_VIDEO_LENGTH, 75).text.replace('/','').strip()
+        except Exception:
+            writeToLog("INFO", "FAILED to take the entry duration from Entry Page for " + entryName + " entry")
+            return False
+        
+        # Going to add one more 0 at the beginning of the entry length if the video has less than 9 minutes in order to match the structure from KEA Page
+        if len(entryDurationInEntryPage) == 4 and entryDurationInEntryPage[0] == '0':
+            entryDurationInEntryPage = '0'+ entryDurationInEntryPage
+            
+        self.switch_to_default_content()
+        
+        # Navigate to the KEA Editor
+        if self.launchKEA(entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
+            writeToLog("INFO", "FAILED to navigate to the KEA page for " + entryName + " entry")
+            return False
+        
+        self.switchToKeaIframe()
+        
+        # Take the entry time length from the KEA section
+        try:
+            entryDurationInKea = self.wait_element(self.EDITOR_TOTAL_TIME, 60).text.replace('/','').strip()
+        except Exception:
+            writeToLog("INFO", "FAILED to take the entry duration from Entry Page for " + entryName + " entry")
+            return False
+        
+        self.switch_to_default_content()
+        
+        # Verify that the entry time length it's the same in both KEA Editor and Entry Page
+        if entryDurationInEntryPage != entryDurationInKea:
+            writeToLog("INFO","FAILED, " + entryDurationInEntryPage + " time has been presented in Entry Page and " + entryDurationInKea + " in KEA page" ) 
+            return False
+        
+        if entryDurationInEntryPage != expectedDuration:
+            writeToLog("INFO","FAILED, " + entryDurationInEntryPage + " time has been presented in Entry Page and KEA but " + expectedDuration + " was expected" ) 
+            return False
+        
+        writeToLog("INFO", "Entry duration matches in both Entry Page and KEA Page")
+        return True
+    
+    
+    # @Author: Horia Cus
+    # hotspotList must contain the following structure ['Hotspot Title', 'link.address', enums.textStyle.Style, 'color code'
+    # A hotspot list may contain only the hotspot title, or leave any other field empty
+    # hotspotOne    = ['Hotspot Title One', 'https://corp.kaltura.com/', enums.textStyle.BOLD, '#fa7c0d']
+    # hotspotTwo    = ['Hotspot Title Two', '', '', '#fa7c0d']
+    # hotspotThree  = ['Hotspot Title Three']
+    # hotspotsDict must contain the following structure  = {'1':hotspotOne,'2':hotspotTwo}
+    def hotspotCreation(self, hotspotsDict, openHotspotsTab=False):
+        self.switchToKeaIframe()  
+        
+        # Navigate to the Hotspot tab if needed
+        if openHotspotsTab == True:
+            if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
+                if self.click(self.KEA_HOTSPOTS_TAB, 1, True) == False:
+                    writeToLog("INFO","FAILED to select the Hotspots Tab")
+                    return False
+                
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 45) == False:
+                    writeToLog("INFO", "FAILED to load the Hotspot tab")
+                    return False
+                
+                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
+                    writeToLog("INFO", "FAILED, Hotspots tab is not displayed as being active")
+                    return False
+            else:
+                writeToLog("INFO", "Hotspots tab is already active")
+        
+        # Create all the desired Hotspots
+        for hotspotNumber in hotspotsDict:
+            
+            # Take the details for the current hotspot
+            hotspotDetails = hotspotsDict[hotspotNumber]
+            
+            # Create a new hotspot
+            if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Add new Button")
+                return False
+            
+            if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
+                writeToLog("INFO", "FAILED to activate the Advanced Settings for Hotspots")
+                return False
+            
+            # Insert the text for the current hotspot
+            if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_TEXT_INPUT_FIELD, hotspotDetails[0], True)== False:
+                writeToLog("INFO", "FAILED to insert " + hotspotDetails[0] + " text inside the Text Field")
+                return False
+            
+            # Verify if a link should be inserted
+            if len(hotspotDetails) > 1:
+                if hotspotDetails[1] != '':
+                    if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[1], True)== False:
+                        writeToLog("INFO", "FAILED to insert " + hotspotDetails[2] + " link inside the Link Field")
+                        return False        
+            
+            # Verify if the font style should be changed
+            if len(hotspotDetails) > 2:
+                if hotspotDetails[2] != '':
+                    textStyle = (self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[0], self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[1].replace("TEXT_STYLE",  hotspotDetails[2].value))
+                    if self.click(self.KEA_HOTSPOTS_FORM_TEXT_STYLE, 1, True) == False:
+                        writeToLog("INFO", "FAILED to activate the Text Color drop down menu")
+                        return False
+                    
+                    if self.click(textStyle, 1, True)== False:
+                        writeToLog("INFO", "FAILED to select the font style for  " + hotspotDetails[0] + " as " + hotspotDetails[2].value)
+                        return False
+            
+            # Verify if the font color should be changed
+            if len(hotspotDetails) > 3:
+                if hotspotDetails[3] != '':
+                    if self.click(self.KEA_HOTSPOTS_FORM_TEXT_COLOR, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the Hotspot Color value field")
+                        return False
+                    
+                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE, hotspotDetails[3], True) == False:
+                        writeToLog("INFO", "FAILED to select the font color for  " + hotspotDetails[0] + " as " + hotspotDetails[3].value)
+                        return False
+                    
+                    if self.clsCommon.sendKeysToBodyElement(Keys.ENTER) != True:
+                        writeToLog("INFO", "FAILED to save the color by clicking on the enter button")
+                        return False
+                    
+            # Verify if the font color should be changed
+            if len(hotspotDetails) > 4:
+                if hotspotDetails[4] != '':
+                    writeToLog("INFO", "WIP") # Change timestamp location
+
+            # Save the current hotspot in the hotspot list
+            if self.click(self.KEA_HOTSPOTS_DONE_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to save the KEA hotspots for " + hotspotDetails[0])
+                return False
+            
+        # Save the presented hotspots for the entry
+        if self.click(self.KEA_HOTSPOTS_SAVE_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to save the hotspot changes")
+            return False
+        
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
+            writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
+            return False
+        
+        
+        hotspotNameList = []
+        for hotspotNumber in hotspotsDict:
+            hotspotNameList.append(hotspotsDict[hotspotNumber][0])
+        
+        if len(hotspotNameList) > 1:   
+            hotspots = ", ".join(hotspotNameList)
+        else:
+            hotspots = hotspotNameList[0]
+        
+        writeToLog("INFO","The following hotspots were verified: " + hotspots + "")
+        return True
+    
+    
+    # @Author: Horia Cus
+    # hotspotsDict must contain the following structure  = {'1':hotspotOne,'2':hotspotTwo}
+    def hotspotCuePoint(self, hotspotName='testspecial', startTime=None, endTime=None):
+        self.switchToKeaIframe()  
+        
+        if self.wait_element(self.EDITOR_REALTIME_MARKER, 5, True) == False:
+            writeToLog("INFO", "FAILED To take the details")
+            
+        presentedHotspots = self.wait_elements(self.KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER, 15)
+        
+        if presentedHotspots == False:
+            writeToLog("INFO", "FAILED to take the presetend hotspots")
+            return False
+             
+        for x in range(0, len(presentedHotspots)):
+            presentedHotspot         = presentedHotspots[x]
+            presentedHotspotLocation = presentedHotspot.location['x']
+            presentedHotspotTitle    = presentedHotspot.text
+            hotspotContainerRight    = self.wait_element(self.KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT, 5, True)
+            
+            if presentedHotspotTitle == hotspotName:
+                writeToLog("INFO", "Continue to move")
+                if self.clickElement(presentedHotspot) == False:
+                    writeToLog("INFO", "FAILED to highlight the " + presentedHotspot.text + " hotspot")
+                    return False
+                
+            if presentedHotspotLocation == 96:
+                action = ActionChains(self.driver)
+                # Move the quiz number to a new timeline location
+                try:
+                    action.move_to_element(presentedHotspot).pause(1).click_and_hold().move_by_offset(-350.7, 0).release().perform()
+                except Exception:
+                    writeToLog("INFO", "FAILED to move questiseconds")
+                    return False
+                
+            if x == len(presentedHotspots):
+                writeToLog("INFO", "FAILED to find the expected hostpot within the presented hotspots")
+                return False            
+        
         return True

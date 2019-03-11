@@ -13,16 +13,16 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS User
+    # Test Name : Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user
     # Test description:
     # Verify that the user is able to resume a submitted quiz entry after answering to the 'Multiple Choice', 'True and False' and watching the 'Reflection Point' question types
-    # Verify that the secure embed ON quiz entry has the same functionality and behavior like in KMS
-    # We verify that the selected answer are resumed as being answered after refreshing the page
-    # We verify that no Quiz Question remained unanswered
+    # Verify that the secure embed off quiz entry has the same functionality and behavior like in KMS
+    # We verify that the selected answer are resumed as being unanswered after refreshing the page
+    # We verify that no Quiz Question remained answered
     # We verify that the 'Submitted Screen' is properly displayed with the expected score, 'Why' and included answer states
-    # Verify the submitted screen status in both embed page and entry page
+    # Verify that the Anonymous user is able to submit a quiz and that then a KMS user is able to start a new quiz from zero to the end
     #================================================================================================================================
-    testNum = "4827"
+    testNum = "4948"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -35,14 +35,10 @@ class Test:
     description   = "Description" 
     tags          = "Tags,"
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    typeTest      = 'Quiz Entry Submitted State with 100% score after refresh with KMS User'
-    
-    userName = "python_automation"
-    password = "Kaltura1!"
+    typeTest      = 'Embeded Quiz Entry Submitted State with 100% score with Anonymous User and KMS User'
     
     # this variables are used in order to take the embed link, embed file, embed link
     instanceUrl = None
-    quizEntryUrl = None
     embedLink = None
     embedLinkFilePath = localSettings.LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER
     embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
@@ -50,7 +46,16 @@ class Test:
     # Each list is used in order to create a different Quiz Question Type
     questionMultiple         = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text for Multiple Choice', 'Why Text For Multiple Choice']
     questionTrueAndFalse     = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text for True and False', 'Why Text For True and False']
-    questionReflection       = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']    
+    questionReflection       = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point']
+    
+    # Each list is used in order to verify that the quiz question types are unanswered
+    questionAnswerOne        = ['Question Title for Multiple Choice', '', False]
+    questionAnswerTwo        = ['Question Title for True and False', '', False]
+    questionAnswerThree      = ['Question Title for Reflection Point', '', False]
+    
+    # This Dictionary is used in order to verify the state of the answers ( answered / unanswered) from the active question screen
+    expectedQuizStateNew     = {'1':questionAnswerOne,'2':questionAnswerTwo, '3':questionAnswerThree} 
+    
 
     # Each list is used in order to verify that all the Quiz Question types are answered
     questionAnswerOneSubmitted        = ['Question Title for Multiple Choice', 'question #1 option #1', True]
@@ -93,22 +98,21 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             ##################################################################
-            self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed ON - Submitted and refresh with KMS User", self.testNum)
-            self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed ON - Submitted and refresh with KMS User - Quiz", self.testNum)
+            self.entryName       = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Submitted with Anonymous and KMS User", self.testNum)
+            self.newEntryName    = clsTestService.addGuidToString("Quiz - Secure Embed OFF - Submitted with Anonymous and KMS User - Quiz", self.testNum)
             self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
             self.embedUrl = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             i = 1
             self.instanceUrl = self.common.base.driver.current_url
- 
-            writeToLog("INFO","Step " + str(i) + ": Going to turn ON the secureEmbed in admin panel")
-            if self.common.admin.enableSecureEmbed(True) == False:
+  
+            writeToLog("INFO","Step " + str(i) + ": Going to turn off the secureEmbed in admin panel")
+            if self.common.admin.enableSecureEmbed(False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to turn ON the secureEmbed in admin panel")
-                return                    
+                writeToLog("INFO","Step " + str(i) + ": FAILED to turn off the secureEmbed in admin panel")
+                return                
               
             self.common.base.navigate(self.instanceUrl)
-             
             writeToLog("INFO","Step " + str(i) + ": Going to create a new entry, " + self.entryName)  
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -124,10 +128,8 @@ class Test:
                 return  
             else:
                 i = i + 1
-            
-            self.quizEntryUrl = self.common.base.driver.current_url
-            self.embedLink = self.common.entryPage.getEmbedLink()
-                  
+                 
+            self.embedLink = self.common.entryPage.getEmbedLink()  
             writeToLog("INFO","Step " + str(i) + ": Going to log out from the " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
@@ -143,7 +145,39 @@ class Test:
                 return
             else:
                 i = i + 1                
-              
+               
+            writeToLog("INFO","Step " + str(i) + ": Going to navigate to embed entry page (by link)")
+            if self.common.base.navigate(self.embedUrl) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to embed entry page ( by link )")
+                return
+            else:
+                i = i + 1 
+                    
+            writeToLog("INFO","Step " + str(i) + ": Going to answer to all the Quiz Questions from the " + self.newEntryName + " entry as Anonymous user")  
+            if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='', embed=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to answer to all the Quiz Questions from the " + self.newEntryName + " entry as Anonymous user")  
+                return  
+            else:
+                i = i + 1
+                
+            writeToLog("INFO","Step " + str(i) + ": Going to verify that " + self.newEntryName + "'s entry submitted screen is properly displayed")  
+            if self.common.player.verifySubmittedScreen(str(100), enums.Location.ENTRY_PAGE, self.questionDict, self.expectedQuizStateSubmitted, 5, embed=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify that " + self.newEntryName + "'s entry submitted screen is properly displayed") 
+                return  
+            else:
+                i = i + 1
+                
+            self.common.base.navigate(self.instanceUrl) 
+            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")
+            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
+                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account")
+                return
+            else:
+                i = i + 1
+                
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
                 self.status = "Fail"
@@ -152,46 +186,21 @@ class Test:
             else:
                 i = i + 1 
                 
-            writeToLog("INFO","Step " + str(i) + ": Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to verify secure embed ON")
-            if self.common.login.loginToKMSEmbed(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
-                writeToLog("INFO", "Step " + str(i) + ":FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to verify secure embed ON")
-                return
-            else:
-                i = i + 1  
-                    
-            writeToLog("INFO","Step " + str(i) + ": Going to answer to all the Quiz Questions from the " + self.newEntryName + " entry")  
+            writeToLog("INFO","Step " + str(i) + ": Going to answer to all the Quiz Questions from the " + self.newEntryName + " entry as KMS user")  
             if self.common.player.answerQuiz(self.answersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='', embed=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to answer to all the Quiz Questions from the " + self.newEntryName + " entry")  
-                return  
-            else:
-                i = i + 1      
-                 
-            writeToLog("INFO","Step " + str(i) + ": Going to resume from the beginning the " + self.newEntryName + " entry")  
-            if self.common.player.resumeFromBeginningQuiz(enums.Location.ENTRY_PAGE, timeOut=1, forceResume=True, embed=True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to resume from the beginning the " + self.newEntryName + " entry")
-                return  
-            else:
-                i = i + 1
-            
-            writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are submitted in embed page")  
-            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateSubmitted, submittedQuiz=True, resumeQuiz=False, newQuiz=False, expectedQuizScore=str(100), location=enums.Location.ENTRY_PAGE, timeOut=60, embed=True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are submitted in embed page")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to answer to all the Quiz Questions from the " + self.newEntryName + " entry as KMS user")  
                 return  
             else:
                 i = i + 1
                 
-            self.common.base.navigate(self.quizEntryUrl)
-            
-            writeToLog("INFO","Step " + str(i) + ": Going to verify that all the available quiz questions from the " + self.newEntryName + " entry are submitted in Entry page")  
-            if self.common.player.quizVerification(self.questionDict, self.expectedQuizStateSubmitted, submittedQuiz=True, resumeQuiz=False, newQuiz=False, expectedQuizScore=str(100), location=enums.Location.ENTRY_PAGE, timeOut=60) == False:
+            writeToLog("INFO","Step " + str(i) + ": Going to verify that " + self.newEntryName + "'s entry submitted screen is properly displayed")  
+            if self.common.player.verifySubmittedScreen(str(100), enums.Location.ENTRY_PAGE, self.questionDict, self.expectedQuizStateSubmitted, 5, embed=True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify all the available quiz questions from the " + self.newEntryName + " entry are submitted in Entry page")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify that " + self.newEntryName + "'s entry submitted screen is properly displayed") 
                 return  
             else:
-                i = i + 1
+                i = i + 1                    
             ##################################################################
             writeToLog("INFO","TEST PASSED: Entry Page has been successfully verified for a " + self.typeTest)
         # if an exception happened we need to handle it and fail the test
@@ -202,9 +211,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
+            self.common.base.navigate(self.instanceUrl) 
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
             self.common.deleteFile(self.embedLinkFilePath)
-            self.common.admin.enableSecureEmbed(False)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass

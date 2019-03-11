@@ -20,6 +20,7 @@ class Login(Base):
     USER_LOGOUT_BTN                     = ('xpath', "//i[@class='icon-signout']")
     USER_GUEST                          = ('xpath', "//span[@id='userMenuDisplayName' and contains(text(), 'Guest')]")
     USER_NAME                           = ('xpath', "//span[@id='userMenuDisplayName']")
+    AUTO_REDIRECT_LOG_IN_BUTTON         = ('xpath', "//a[text()='Click here to login']")
     #============================================================================================================
     def loginToKMS(self, username, password, url=''):
         try:
@@ -133,8 +134,17 @@ class Login(Base):
 
     def loginToKMSEmbed(self, username, password):
         try:
-            # Going to select the embed iframe
-            self.clsCommon.player.switchToPlayerIframe(embed=True)
+            # Going to select the embed iframe            
+            if self.wait_element(self.clsCommon.player.PLAYER_EMBED_IFRAME_1, 5) != False:
+                self.clsCommon.base.swith_to_iframe(self.clsCommon.player.PLAYER_EMBED_IFRAME_1, 1)
+                
+            if self.wait_element(self.AUTO_REDIRECT_LOG_IN_BUTTON, 5, True) != False:
+                if self.click(self.AUTO_REDIRECT_LOG_IN_BUTTON, 1) == False:
+                    writeToLog("INFO", "FAILED to navigate to the log in authentication page while auto redirect was OFF")
+                    return False
+                sleep(2)
+                self.switch_to_default_content()
+            
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Enter test partner username
             self.send_keys(self.LOGIN_USERNAME_FIELD, username)

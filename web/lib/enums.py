@@ -645,3 +645,25 @@ class scheduleRecurrenceMonthlyIndex(Enum):
     third           = 'third'
     fourth          = 'fourth'
     last            = 'last'
+    
+    
+ class KeaEditorTimelineOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    RESET     = 'Reset'
+    REDO      = 'Redo'
+    UNDO      = 'Undo'
+    DELETE    = 'Delete'
+    SET_IN    = 'Set In'
+    SET_OUT   = 'Set Out'
+    SPLIT     = 'Split'
+
+
+class textStyle(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    BOLD      = 'Bold'
+    THIN      = 'Thin'
+    NORMAL    = 'Normal'
