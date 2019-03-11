@@ -403,7 +403,7 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False, isTagsNeeded=True):
+    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False, isTagsNeeded=True, isGradebook=False):
         if application == enums.Application.MOODLE:
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
@@ -519,13 +519,14 @@ class KafGeneric(Base):
                     return False    
                 
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-            sleep(5)
-            self.switch_to_default_content()
-            self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
+            if isGradebook == False:
+                sleep(5)
+                self.switch_to_default_content()
+                self.swith_to_iframe(self.clsCommon.d2l.D2L_INSERT_STUFF_IFRAME)
             
-            if self.click(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN) == False:
-                writeToLog("INFO","FAILED to click on 'insert' button")
-                return False                               
+                if self.click(self.clsCommon.d2l.D2L_EMBED_INSERT_BTN) == False:
+                    writeToLog("INFO","FAILED to click on 'insert' button")
+                    return False                               
         
         return True   
     
