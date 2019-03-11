@@ -65,7 +65,11 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_SHARED_REPOSITORY_URL      = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/webapps/osv-kaltura-BBLEARN/jsp/sharedRepository.jsp'
         
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
-        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL
+        if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+            localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL_PRODUCTION
+        elif localSettings.LOCAL_SETTINGS_ENV_NAME == 'TestingNewUI':
+            localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL_TESTING
+            
         localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Home.aspx'
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/My%20Media.aspx' 
         localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/Media%20Gallery.aspx'  
@@ -77,6 +81,8 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/local/kalturamediagallery/index.php?courseid=10'
         localSettings.LOCAL_SETTINGS_SITE_BLOG_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/blog/index.php'
         localSettings.LOCAL_SETTINGS_COURSE_URL                 = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/course/view.php?id=10'
+        localSettings.LOCAL_SETTINGS_COURSE_STUDENT_GRADES_URL  = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/grade/report/user/index.php?id=10'
+        localSettings.LOCAL_SETTINGS_COURSE_ADMIN_GRADES_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/grade/report/grader/index.php?id=10'
   
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_CANVAS_BASE_URL
@@ -86,6 +92,7 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL  = (localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/announcements')
         localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL   = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/assignments'
         localSettings.LOCAL_SETTINGS_GALLERY_GRADEBOOK_URL      = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/gradebook'
+        localSettings.LOCAL_SETTINGS_GALLERY_GRADES_STUDENT_URL = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/courses/471/grades'
 
     elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
         localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_D2L_BASE_URL
@@ -105,6 +112,12 @@ def setTestURLs(row):
 #        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/my-media.jspa'
 #        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/community/new1'
         localSettings.LOCAL_SETTINGS_SITE_NEW1_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/site/New1'
+        
+    elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+        localSettings.LOCAL_SETTINGS_TEST_BASE_URL              = localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_ULTRA_BASE_URL
+        localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL              = localSettings.LOCAL_SETTINGS_TEST_BASE_URL
+        localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/tools'
+        localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/courses/_1177_1/outline'
 
     return
 

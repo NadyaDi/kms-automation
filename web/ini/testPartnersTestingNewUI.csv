@@ -26,6 +26,7 @@ test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation1@mail
 test_2125,Moodle - Trim video,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2126,Moodle - Create clip,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2122,Moodle - Change Cliping permissions,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_826,Moodle - Gradebook,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2279,Canvas - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -77,6 +78,7 @@ test_2905,D2L - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltu
 test_2908,D2L - Discussions BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2907,D2L - Discussions BSE From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2906,D2L - Discussions Upload And Embed From BSE Page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_4957,D2L - Gradebook,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2485,Jive - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
@@ -119,12 +121,17 @@ test_2938,Sakai - My Media -Delete through my media,,,pythonautomation1@mailinat
 test_2939,Sakai  -Delete through entry page,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_3044,Sakai  - Announcment BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
 test_3045,Sakai  - Announcment Upload And Embed From BSE Page Sakai,,,pythonautomation1@mailinator.com,Kaltura1!,sakaiauto,Kaltura1!
+test_4872,Blackboard Ultra- Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4876,Blackboard Ultra- Sort Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4859,Blackboard Ultra- Edit metadata,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4863,Blackboard Ultra- Add caption,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4871,Blackboard Ultra- View Collapsed Expanded Modes,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_4542,Playlists - Create Empty Playlist,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
-test_742,Channel moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_713,Category moderation,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_742,Channel moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_713,Category moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_706,Publish to channel multiple,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -145,7 +152,7 @@ test_643,Home Page Carousel,2370151,qakmstest.dev.kaltura.com,pythonautomation1@
 test_709,Category - Entries details,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_734,Channel - Entries details,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_731,Channel page Information,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_732,Channel page - Add New Media to channel,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_732,Channel page - Add New Media to channel,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_672,My media - Navigate to entry page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_665,My media - Search in my media,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_728,My Channels - Search as member,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -180,15 +187,15 @@ test_719,Categories - Enable / Disable Inherit permissions,2370151,qakmstest.dev
 test_1025,Categories - Sort media on category page,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_641,Navigation,2370151-2,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_644,Upload media from desktop and verify player,2370151,qakmstest.dev.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
-test_1556,Disclaimer - Before publish (agreeRequired = Yes),2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1558,Disclaimer - Before publish (agreeRequired = No),2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_876,Scheduling media - add media to channel via upload page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_869,Scheduling: add Publishing  - playlist flows,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_883,Scheduling: add Publishing Schedule via edit entry page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_894,Filter and Sort scheduling media in My-Media,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1555,Disclaimer - Before publish,2438361-2,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_16,Download Source File,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_675,Playlist reorder,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1556,Disclaimer - Before publish (agreeRequired = Yes),2501881-1,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1558,Disclaimer - Before publish (agreeRequired = No),2501881-1,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_876,Scheduling media - add media to channel via upload page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_869,Scheduling: add Publishing  - playlist flows,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_883,Scheduling: add Publishing Schedule via edit entry page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_894,Filter and Sort scheduling media in My-Media,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1555,Disclaimer - Before publish,2501881-1,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_16,Download Source File,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_675,Playlist reorder,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1594,Entry required field,2370071,qakmstest.dev.kaltura.com,tzachi.guetta@kaltura.com,Kaltura1!,Admin,123456
 test_733,Add media to channel via Add to,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_737,Edit entry link in channel,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
@@ -311,63 +318,63 @@ test_2702,Watch History - Filter by watch status,2373952,qakmstest.dev.kaltura.c
 test_3902,Sort by - Galleries page,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3901,Sort by - My Channels - when search is made,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4309,Sort by - Channels - when search is made,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4543,KEA trim,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4455,KEA clip,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4458,KEA trim entry with slides,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4465,KEA clip entry with slides,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4482,KEA trim Quiz entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4513,KEA clip Quiz entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4535,KEA trim audio entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4544,KEA clip audio entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4562,KEA trim video with captions,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4621,KEA clip video with captions,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4622,KEA Trim Quiz with caption and slide,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4742,KEA - Quiz Details section in KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4757,Quiz - Details - Download functionality,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4758,Quiz - Scores section in KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4759,Quiz - Scores section in Entry Page - Enabled,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4766,Quiz - Experience section in KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4767,Quiz - Experience section in Entry Page - Enabled,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4768,Quiz - Scores section in Entry Page - Disabled,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4769,Quiz - Scores section in Entry Page - Default,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4772,Quiz - Experience section in Entry Page - Disabled,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4773,Quiz - Experience section in Entry Page - Default,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4776,Quiz - Entry with all the KEA Quiz Question types - KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4778,Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4786,Quiz - Resumed Quiz with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4788,Quiz - Submitted Quiz 100% score with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4789,Quiz - New Quiz with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4790,Quiz - New Quiz after Refresh with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4791,Quiz - Submitted Quiz 0% score with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4792,Quiz - Submitted Quiz 50% score with Media Owner,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4804,Quiz - Submitted Quiz in Channel with Normal User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4805,Quiz - Submitted Quiz with Media Owner and reopen it with Normal user ( New state for Quiz),2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4806,Quiz - Details Section - Download functionality - Anonymous User in KMS,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4807,Quiz - Answer Quiz (without submitting it) with KMS Anonymous and Refresh,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4808,Quiz - Submitted Quiz for Audio Entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4809,Quiz - Resumed Quiz for Audio Entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4810,Quiz - New Quiz for Audio Entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4811,Quiz - Submitted Quiz for Youtube Entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4812,Quiz - Resumed Quiz for Youtube Entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4813,Quiz - New Quiz for Youtube Entry,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4814,Quiz - Youtube based entry: Submitted Quiz with many Quiz Questions (15 questions),2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4815,Quiz - Secure Embed OFF - New Quiz with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4816,Quiz - Secure Embed OFF - Answer Quiz (without submitting it) with Anonymous User and Refresh,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4817,Quiz - Secure Embed OFF - Submit Quiz (with score verification) with Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4818,Quiz - Secure Embed OFF - Download functionality - Anonymous User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4853,Quiz - Secure Embed ON - Published Entry in Private Channel with KMS user,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4854,Quiz - Video playing and Navigation process with Quiz Questions in KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4855,Quiz - Submitting Quiz with Answer order changed - Entry Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4857,Quiz - Timeline section while Using Zoom Option - KEA Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4858,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page,2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4908,Editor: Clip video entry (with Slides and Captions),2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4913,Editor: Clip Quiz entry (with Slides and Captions),2438361,qakmstest.dev.kaltura.com,kms.performence@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4543,KEA trim,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4455,KEA clip,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4458,KEA trim entry with slides,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4465,KEA clip entry with slides,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4482,KEA trim Quiz entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4513,KEA clip Quiz entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4535,KEA trim audio entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4544,KEA clip audio entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4562,KEA trim video with captions,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4621,KEA clip video with captions,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4622,KEA Trim Quiz with caption and slide,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4742,KEA - Quiz Details section in KEA Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4757,Quiz - Details - Download functionality,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4758,Quiz - Scores section in KEA Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4759,Quiz - Scores section in Entry Page - Enabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4766,Quiz - Experience section in KEA Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4767,Quiz - Experience section in Entry Page - Enabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4768,Quiz - Scores section in Entry Page - Disabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4769,Quiz - Scores section in Entry Page - Default,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4772,Quiz - Experience section in Entry Page - Disabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4773,Quiz - Experience section in Entry Page - Default,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4776,Quiz - Entry with all the KEA Quiz Question types - KEA Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4778,Quiz - Entry with all the KEA Quiz Question types - New Quiz with Media Owner - Entry Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4786,Quiz - Resumed Quiz with Media Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4788,Quiz - Submitted Quiz 100% score with Media Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4789,Quiz - New Quiz with Anonymous User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4790,Quiz - New Quiz after Refresh with Anonymous User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4791,Quiz - Submitted Quiz 0% score with Media Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4792,Quiz - Submitted Quiz 50% score with Media Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4804,Quiz - Submitted Quiz in Channel with Normal User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4805,Quiz - Submitted Quiz with Media Owner and reopen it with Normal user ( New state for Quiz),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4806,Quiz - Details Section - Download functionality - Anonymous User in KMS,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4807,Quiz - Answer Quiz (without submitting it) with KMS Anonymous and Refresh,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4808,Quiz - Submitted Quiz for Audio Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4809,Quiz - Resumed Quiz for Audio Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4810,Quiz - New Quiz for Audio Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4811,Quiz - Submitted Quiz for Youtube Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4812,Quiz - Resumed Quiz for Youtube Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4813,Quiz - New Quiz for Youtube Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4814,Quiz - Youtube based entry: Submitted Quiz with many Quiz Questions (15 questions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4815,Quiz - Secure Embed OFF - New Quiz with Anonymous User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4816,Quiz - Secure Embed OFF - Answer Quiz (without submitting it) with Anonymous User and Refresh,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4817,Quiz - Secure Embed OFF - Submit Quiz (with score verification) with Anonymous User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4818,Quiz - Secure Embed OFF - Download functionality - Anonymous User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4825,Quiz - Secure Embed ON - New Quiz with KMS User,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4826,Quiz - Secure Embed ON - Answer Quiz (without submitting it) with KMS user and Refresh,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4827,Quiz - Secure Embed ON - Submit Quiz (with score verification) with KMS user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4828,Quiz - Secure Embed ON - Download functionality - KMS user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4853,Quiz - Secure Embed ON - Published Entry in Private Channel with KMS user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4854,Quiz - Video playing and Navigation process with Quiz Questions in KEA Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4855,Quiz - Submitting Quiz with Answer order changed - Entry Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4857,Quiz - Timeline section while Using Zoom Option - KEA Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4858,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4908,Editor: Clip video entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4913,Editor: Clip Quiz entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!

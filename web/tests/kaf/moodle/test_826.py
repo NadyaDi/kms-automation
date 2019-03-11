@@ -1,5 +1,4 @@
 import sys,os
-from enums import Location
 sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from enum import *
 import time, pytest
@@ -15,21 +14,21 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Canvas: Gradebook
+    # Test Name : Moodle - Gradebook
     # Test description:
-    # Upload entry
-    # Go course -> Go to 'Announcements' tab -> Add new announcement -> In announcement, click on wysiwyg and choose media to embed from upload page
-    # Verify that the embed was created successfully 
-    # Verify that the embed was deleted successfully
+    # Enable assignment submission module -> upload entry -> embed entry and create assignment submission
+    # -> verify that entry is displayed and played -> upload another entry -> embed entry and don't create assignment submission -> 
+    # Verify that entry is displayed and played
+    # Replace video for the uploaded entries -> Verify that the embed entry in assignment submission isn't replaced
+    # Verify that the embed entry (not assignment submission) is replaced
     #================================================================================================================================
-    testNum     = "4856"
-    application = enums.Application.CANVAS
+    testNum     = "826"
+    application = enums.Application.MOODLE
     supported_platforms = clsTestService.updatePlatforms(testNum)
+    
     
     status = "Pass"
     timeout_accured = "False"
-    driver = None
-    common = None
     # Test variables
     description = "Description" 
     tags = "Tags,"
@@ -85,138 +84,127 @@ class Test:
             self.uploadEntrieList = [self.entryToUpload] 
             self.ponitesPossible = '100'
             self.expectedGrade = '66.67'
-            self.kalturaVideoQuizName = clsTestService.addGuidToString("gradebook", self.testNum) 
+            self.kalturaVideoQuizName = clsTestService.addGuidToString("Quiz_Gradebook-Quiz (00:30)", self.testNum) 
             
             self.galleryName = "New1"
             
-            self.studentUsername = 'studentautomation@mailinator.com'
+            self.studentUsername = 'student'
             self.studentPassword = 'Kaltura1!'
-            
-            ######################### TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload entry")    
+            ##################### TEST STEPS - MAIN FLOW ##################### 
+
+            writeToLog("INFO","Step 1: Going to to upload entry") 
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                              
+
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                              
+
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                            
+
             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
             if self.common.kafGeneric.navigateToMyMediaKAF() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
                 return            
-                              
+
             writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return 
-              
+
             writeToLog("INFO","Step 6 : Going to navigate to quiz entry page")  
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6 : FAILED to navigate to quiz entry page")  
                 return
-               
+
             writeToLog("INFO","Step 7 : Going to edit quiz name")  
             if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7 : FAILED to edit quiz name")  
-                return 
-               
-            writeToLog("INFO","Step 8 : Going to create embed assignment")  
-            if self.common.canvas.createEmbedAssignment(self.kalturaVideoQuizName, self.newEntryName, self.ponitesPossible) == False:
+
+            writeToLog("INFO","Step 8 : Going to create kaltura video quiz")  
+            if self.common.moodle.createEmbedActivity(self.newEntryName, self.kalturaVideoQuizName, activity=enums.MoodleActivities.EXTERNAL_TOOL) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8 : FAILED to create embed assignment")  
+                writeToLog("INFO","Step 8 : FAILED to create kaltura video quiz")  
                 return  
-             
-            self.common.base.switch_to_default_content()
-             
+              
             writeToLog("INFO","Step 9 : Going to logout as main user")  
-            if self.common.canvas.logOutOfCanvas() == False:
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9 : FAILED to logout as main user")  
                 return
-             
+               
             writeToLog("INFO","Step 10 : Going to login as student")  
-            if self.common.canvas.loginToCanvas(self.studentUsername, self.studentPassword) == False:
+            if self.common.moodle.loginToMoodle(self.studentUsername, self.studentPassword) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10 : FAILED to login as student")  
-                return  
-             
-            writeToLog("INFO","Step 11: Going to navigate to assignment page")  
-            if self.common.canvas.navigateToAssignmentPage(self.kalturaVideoQuizName) == False:
+                return
+              
+            writeToLog("INFO","Step 11 : Going to navigate to Kaltura video quiz page")  
+            if self.common.moodle.navigateToKalturaVideoQuizPage(self.kalturaVideoQuizName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to navigate to assignment page")
-                return             
-             
+                writeToLog("INFO","Step 11 : FAILED to navigate to Kaltura video quiz page")  
+                return  
+              
             writeToLog("INFO","Step 12: Going to answer quiz as student")  
             if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to answer quiz as student")
                 return  
              
-            self.common.base.switch_to_default_content()
-
-            writeToLog("INFO","Step 13 : Going to verify grade as student")  
-            if self.common.canvas.verifyGradeAsStudentCanvas(self.expectedGrade, self.kalturaVideoQuizName) == False:
+            writeToLog("INFO","Step 12: Going to verify grade as student")  
+            if self.common.moodle.verifyGradeAsStudentMoodle(self.expectedGrade, self.kalturaVideoQuizName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 13 : FAILED to verify grade as student")  
-                return                                        
-                 
-            writeToLog("INFO","Step 14: Going to logout from Canvas as student")  
-            if self.common.canvas.logOutOfCanvas() == False:
+                writeToLog("INFO","Step 12: FAILED to verify grade as student")
+                return  
+             
+            writeToLog("INFO","Step 13 : Going to logout as student user")  
+            if self.common.moodle.logOutOfMoodle() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 14: FAILED to logout from Canvas as student")
-                return    
-                 
-            writeToLog("INFO","Step 15: Going to login to Canvas as main user")  
+                writeToLog("INFO","Step 13 : FAILED to logout as student user")  
+                return
+               
+            writeToLog("INFO","Step 14 : Going to login as main user")  
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 15: FAILED to login to Canvas as main user")
-                return 
-              
-            writeToLog("INFO","Step 16: Going to verify gradebook grade as main user")  
-            if self.common.canvas.verifyGradeAsAdminCanvas(self.expectedGrade, self.kalturaVideoQuizName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 16: FAILED to verify gradebook grade as main user")
-                return 
+                writeToLog("INFO","Step 14 : FAILED to login as main user")  
+                return    
             
-            writeToLog("INFO","Step 17: Going to delete assignment")  
-            if self.common.canvas.deleteAssignment(self.kalturaVideoQuizName) == False:
+            writeToLog("INFO","Step 15: Going to verify grade as admin")  
+            if self.common.moodle.verifyGradeAsAdminMoodle(self.expectedGrade, self.kalturaVideoQuizName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 17: FAILED to delete assignment")
-                return                 
-            
-            #########################################################################
-            writeToLog("INFO","TEST PASSED: Gradebook test was done successfully")
-        # If an exception happened we need to handle it and fail the test       
+                writeToLog("INFO","Step 15: FAILED to verify grade as admin")
+                return                                                           
+  
+            ##################################################################
+            writeToLog("INFO","TEST PASSED: 'Moodle - Gradebook' was done successfully")
+        # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
             
     ########################### TEST TEARDOWN ###########################    
     def teardown_method(self,method):
         try:
-            self.common.handleTestFail(self.status)  
-            writeToLog("INFO","**************** Starting: teardown_method **************** ")
+            self.common.handleTestFail(self.status)
+            writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.base.switch_to_default_content()
-            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.lower() in self.common.canvas.getCanvasLoginUserName()) == False:
-                self.common.canvas.logOutOfCanvas()
+            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.lower() in self.common.canvas.getMoodleLoginUserName()) == False:
+                self.common.canvas.logOutOfMoodle()
                 self.common.loginAsUser()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
-            self.common.canvas.deleteAssignment(self.kalturaVideoQuizName)
-            writeToLog("INFO","**************** Ended: teardown_method *******************")
+            self.common.moodle.deleteEmbedActivity(self.kalturaVideoQuizName)
+            writeToLog("INFO","**************** Ended: teardown_method *******************")                       
         except:
             pass            
         clsTestService.basicTearDown(self)

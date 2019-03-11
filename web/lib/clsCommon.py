@@ -35,6 +35,7 @@ from kafD2L import D2L
 from kafJive import Jive
 from kafSakai import Sakai
 from recscheduling import Recscheduling
+from kafBBUltra import BlackBoardUltra
 
 
     #============================================================================================================
@@ -77,6 +78,7 @@ class Common():
         self.d2l                = D2L(self, driver)
         self.jive               = Jive(self, driver)
         self.sakai              = Sakai(self, driver)
+        self.blackBoardUltra    = BlackBoardUltra(self, driver)
         
     #=============================================================================================================
     # Locators:
@@ -158,6 +160,8 @@ class Common():
             return self.jive.loginToJive(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
         elif self.base.getAppUnderTest() == enums.Application.SAKAI:
             return self.sakai.loginToSakai(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
+        elif self.base.getAppUnderTest() == enums.Application.BLACKBOARD_ULTRA:
+            return self.blackBoardUltra.loginToBlackBoardUltra(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) 
     
     
     # Author: Tzachi Guetta     
@@ -296,6 +300,8 @@ class Common():
             return self.sakai.switchToSakaiIframe()
         elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
             return self.sharePoint.switchToSharepointIframe()
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            return self.blackBoardUltra.switchToBlackboardUltraIframe()
         else:
             self.base.switch_to_default_content()
             

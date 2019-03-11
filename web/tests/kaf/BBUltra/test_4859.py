@@ -13,24 +13,25 @@ import ctypes
 
 class Test:
     #================================================================================================================================
-    # @Author: Inbar Willman
-    # Test Name : D2L: Discussions BSE From My Media 
+    # @Author: Oded Berihon
+    # Test Name : BLACKBOARD_ULTRA - Edit Entry Metadata 
     # Test description:
-    # Upload new media -> Go to discussions -> Create new discussion -> click on wysisyg -> Choose media from 'My Media' tab
-    # Verify that embed is displayed and played 
+    # upload media
+    # go to media edit page and change media: name / description / tags 
     #================================================================================================================================
-    testNum     = "2908"
-    application = enums.Application.D2L
+    testNum     = "4859"
+    application = enums.Application.BLACKBOARD_ULTRA
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Pass"
     timeout_accured = "False"
     # Test variables
     entryName = None
+    newEntryName = None
     description = "Description" 
+    newDescription = "Edit description"
     tags = "Tags,"
-    discussionName = None
-    timeToStop = "0:07"
+    newTags = "Edit Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
 
     
@@ -49,8 +50,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromMyMedia", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed video from My Media", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Entry Metadata", self.testNum)
+            self.newEntryName = clsTestService.addGuidToString("Edit Entry Metadata", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
                  
             writeToLog("INFO","Step 1: Going to upload entry")   
@@ -58,44 +59,34 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                       
+                    
             writeToLog("INFO","Step 2: Going navigate to edit entry page")    
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
-                   
-            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                
+            writeToLog("INFO","Step 3: Going to change entry metadata  (entry name, description, tags)")
+            if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to navigate entry page")
-                return
-                   
-            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                writeToLog("INFO","Step 3: FAILED to edit entry metadata")
                 return  
-               
-            writeToLog("INFO","Step 5: Going to create embed discussion")    
-            if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName) == False:
+            
+            writeToLog("INFO","Step 4: Going navigate entry page")    
+            if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.newEntryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create embed discussion")
-                return             
-               
-            writeToLog("INFO","Step 6: Going to to verify embed announcement")    
-            if self.common.kafGeneric.verifyEmbedEntry(self.entryName, '', self.timeToStop, enums.Application.D2L) == False:
+                writeToLog("INFO","Step 4: FAILED navigate to entry: " + self.newEntryName)
+                return
+            
+            writeToLog("INFO","Step 5: Going to verify entry new  metadata  (entry name, description, tags)")
+            # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
+            if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.tags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to verify embed announcement")
-                return     
-             
-            writeToLog("INFO","Step 7: Going to to delete embed announcement")    
-            if self.common.d2l.deleteDiscussion(self.discussionName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to delete embed announcement")
-                return              
+                writeToLog("INFO","Step 5: FAILED to verify entry new  metadata")
+                return  
+            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Create embed discussion from My Media tab ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'BLACKBOARD_ULTRA - Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -105,8 +96,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
-            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.d2l.deleteDiscussion(self.discussionName, True)   
+            if self.common.myMedia.deleteSingleEntryFromMyMedia(self.newEntryName) == False:
+                self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

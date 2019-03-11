@@ -57,7 +57,7 @@ class Login(Base):
         if url == '':
             self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
             if verifyUrl == True:
-                self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, False)    
+                self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, verifyIn=True, isRegex=False)    
         else:
             self.navigate(url)
             if verifyUrl == True:

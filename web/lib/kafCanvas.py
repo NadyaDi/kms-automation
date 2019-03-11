@@ -49,14 +49,19 @@ class Canvas(Base):
     CANVAS_ASSIGNEMNT_SUBMISSION_TYPE_DROPDOWN          = ('xpath', '//select[@id="assignment_submission_type"]')
     CANVAS_ASSIGNEMNT_EXTERNAL_SUBMISSION_TYPE_OPTION   = ('xpath', '//option[@value="external_tool"]')
     CANVAS_FIND_EXTERNAL_TOOL_BTN                       = ('xpath', '//button[@id="assignment_external_tool_tag_attributes_url_find"]')
-    CANVAS_KALTURA_VIDEO_QUIZ_EXTERNAL_TOOL_CONFIGURE   = ('xpath', '//a[@class="name" and text()="Kaltura Video Quiz"]')
+    CANVAS_KALTURA_VIDEO_QUIZ_EXTERNAL_TOOL_CONFIGURE   = ('xpath', '//a[@class="name" and text()="Gradebook"]')
     CANVAS_CONFIGURE_EXTERNAL_TOOL_TITLE                = ('xpath', '//span[@class="ui-dialog-title" and text()="Configure External Tool"]') 
     CANVAS_EXTERNAL_TOOL_IFRAME                         = ('xpath', '//iframe[@id="resource_selection_iframe"]')          
     CANVAS_CONFIGURE_EXTERNAL_TOOL_SELECT_BTN           = ('xpath', '//button[@class="add_item_button btn btn-primary ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"]')  
     CANVAS_SAVE_AND_PUBLISH_ASSIGNMENT_BTN              = ('xpath', '//button[@class="btn btn-default save_and_publish"]')     
     CANVAS_ASSIGNMENT_POINTS_POSSIBLE                   = ('xpath', '//input[@id="assignment_points_possible"]')   
     CANVAS_ASSIGNMENT_NAME_IN_ASSIGNMENTS_PAGE          = ('xpath', '//a[@class="ig-title" and contains(text(), "ASSIGNMENT_NAME")]')
-    #CANVAS_QUIZ_GRADE_FOR_ADMIN                         = ('xpath', '')
+    CANVAS_ASSIGNMENT_GRADE_TITLE_FOR_ADMIN             = ('xpath', '//div[@title="ASSIGNMENT_NAME"]')
+    CANVAS_ASSIGNMENT_GRADE_FOR_ADMIN                   = ('xpath', '//a[@class="gradebook-cell-comment" and @data-assignment-id="ID_NAME"]/..')
+    CANVAS_ASSIGNMENT_GRADE_FOR_STUDENT                 = ('xpath', '//a[contains(@href,"/courses/471/assignments/") and text()="ASSIGNMENT_NAME"]/ancestor::tr[@class="student_assignment assignment_graded editable"]/descendant::span[@class="grade"]')
+    CANVAS_ASSIGNMENT_DROP_DOWN                         = ('xpath', '//span[@class="screenreader-only" and contains(text(), "ASSIGNMENT_NAME")]/..')
+    CANVAS_DELETE_ASSIGNMENT_OPTION                     = ('xpath', '//a[@aria-label="Delete Assignment ASSIGNMENT_NAME"]')
+    CANVAS_ASSIGNMENT_PAGE_TITLE                        = ('xpath', '//h1[@class="title" and contains(text(), "ASSIGNMENT_NAME")]')    
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -398,17 +403,23 @@ class Canvas(Base):
             return False 
         
         self.switch_to_default_content()
-        
+        sleep(4)
         if self.click(self.CANVAS_CONFIGURE_EXTERNAL_TOOL_SELECT_BTN) == False:
             writeToLog("INFO","FAILED to click on configure external tool select button")
             return False
         
+        sleep(4)
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         
         if self.click(self.CANVAS_SAVE_AND_PUBLISH_ASSIGNMENT_BTN) == False:
             writeToLog("INFO","FAILED to click on 'Save' button")
             return False 
         
+        tmpAssignmentPageTitle = (self.CANVAS_ASSIGNMENT_PAGE_TITLE[0], self.CANVAS_ASSIGNMENT_PAGE_TITLE[1].replace('ASSIGNMENT_NAME', assignmentTitle))
+        if self.wait_element(tmpAssignmentPageTitle) == False:
+            writeToLog("INFO","FAILED to displayed assignment title in assignment page")
+            return False             
+
         writeToLog("INFO","Success: Embed assignment was created successfully")
         return True    
     
@@ -428,11 +439,94 @@ class Canvas(Base):
         return True               
         
     
-    # @ Author: Inbar Willman
-    # To Do
-    def verifyGradeAsAdminCanvas(self, grade, quizName):  
+    # @Author: Inbar Willman
+    def verifyGradeAsAdminCanvas(self, grade, assignmentName):  
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_GRADEBOOK_URL) == False:
             writeToLog("INFO","FAILED navigate to gradebook page")
             return False
-                 
-        return True               
+        
+        # Get assignment name in grades cell
+        tmpAssignmentName = (self.CANVAS_ASSIGNMENT_GRADE_TITLE_FOR_ADMIN[0], self.CANVAS_ASSIGNMENT_GRADE_TITLE_FOR_ADMIN[1].replace('ASSIGNMENT_NAME', assignmentName))      
+        tmpAssignmentNameElement = self.wait_element(tmpAssignmentName) 
+        if tmpAssignmentNameElement == False:
+            writeToLog("INFO","FAILED to find assignment " + assignmentName + " name in grades page")
+            return False  
+        
+        # Get assignment name id number
+        tmpAssignmentNameIdAttribute = tmpAssignmentNameElement.get_attribute("id")  
+        tmpAssignmentNameId = tmpAssignmentNameIdAttribute.split("_")[-1]   
+        
+        # Get grade parent according to the assignment name ID
+        tmpGradeParent = (self.CANVAS_ASSIGNMENT_GRADE_FOR_ADMIN[0], self.CANVAS_ASSIGNMENT_GRADE_FOR_ADMIN[1].replace('ID_NAME', tmpAssignmentNameId)) 
+        tmpGradeParentElement = self.wait_element(tmpGradeParent)
+        
+        if tmpGradeParentElement.text not in grade:
+            writeToLog("INFO","FAILED to find assignment " + assignmentName + " grade")
+            return False 
+        
+        writeToLog("INFO","Success: " + assignmentName + " grade is display")              
+        return True  
+    
+    
+    # @Author: Inbar Willman   
+    def verifyGradeAsStudentCanvas(self, grade, assignmentName):   
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_GRADES_STUDENT_URL) == False:
+            writeToLog("INFO","FAILED navigate to grades page")
+            return False           
+        
+        tmpAssignmentGradeParent = (self.CANVAS_ASSIGNMENT_GRADE_FOR_STUDENT[0], self.CANVAS_ASSIGNMENT_GRADE_FOR_STUDENT[1].replace('ASSIGNMENT_NAME', assignmentName))  
+        tmpAssignmentGradeParentElement = self.wait_element(tmpAssignmentGradeParent)
+        
+        if tmpAssignmentGradeParentElement == False:
+            writeToLog("INFO","FAILED to find grade element")
+            return False 
+        
+        # Get student grade
+        gradeForStudent = tmpAssignmentGradeParentElement.text.split('\n')[-1]
+                       
+        if grade not in gradeForStudent:
+            writeToLog("INFO","FAILED to display grade for " + assignmentName)
+            return False  
+        
+        writeToLog("INFO","Success: " + assignmentName + " grade is display")              
+        return True   
+    
+    
+    # @Author: Inbar Willman
+    def deleteAssignment(self, assignmentName):     
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL) == False:
+            writeToLog("INFO","FAILED navigate to assignment page")
+            return False  
+        
+        tmpAssignmentDropDown = (self.CANVAS_ASSIGNMENT_DROP_DOWN[0], self.CANVAS_ASSIGNMENT_DROP_DOWN[1].replace('ASSIGNMENT_NAME', assignmentName))  
+        if self.click(tmpAssignmentDropDown) == False:
+            writeToLog("INFO","FAILED to click on assignment drop down icon")
+            return False 
+        
+        tmpDeleteAssignmentBtn = (self.CANVAS_DELETE_ASSIGNMENT_OPTION[0], self.CANVAS_DELETE_ASSIGNMENT_OPTION[1].replace('ASSIGNMENT_NAME', assignmentName))  
+        if self.click(tmpDeleteAssignmentBtn) == False:
+            writeToLog("INFO","FAILED to click on delete assignment option")
+            return False  
+        
+        if self.clsCommon.base.click_dialog_accept() == False:
+            writeToLog("INFO","FAILED click accept dialog")
+            return False    
+        
+        # Verify that assignment isn't displayed in page anymore
+        tmpAssignmentName = (self.CANVAS_ASSIGNMENT_NAME_IN_ASSIGNMENTS_PAGE[0], self.CANVAS_ASSIGNMENT_NAME_IN_ASSIGNMENTS_PAGE[1].replace('ASSIGNMENT_NAME', assignmentName)) 
+        if self.wait_element(tmpAssignmentName, 3) != False:
+            writeToLog("INFO","FAILED: " + assignmentName + " is still displayed in page")
+            return False 
+        
+        # Navigate to grades page and verify that assignment isn't displayed in grades page 
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_GRADEBOOK_URL) == False:
+            writeToLog("INFO","FAILED navigate to gradebook page")
+            return False
+        
+        tmpAssignmentGradeParent = (self.CANVAS_ASSIGNMENT_GRADE_FOR_STUDENT[0], self.CANVAS_ASSIGNMENT_GRADE_FOR_STUDENT[1].replace('ASSIGNMENT_NAME', assignmentName))  
+        if self.wait_element(tmpAssignmentGradeParent, 3) != False:
+            writeToLog("INFO","FAILED : " + assignmentName + " is still displayed in grades page")
+            return False  
+        
+        writeToLog("INFO","Success: " + assignmentName + " was deleted")              
+        return True                  

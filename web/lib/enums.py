@@ -14,6 +14,7 @@ class Application(Enum):
     JIVE                = 'Jive'
     SHARE_POINT         = 'Share Point'
     SAKAI               = 'Sakai'
+    BLACKBOARD_ULTRA    = 'Black Board ultra'
 
 
 class ChannelPrivacyType(Enum):
@@ -115,6 +116,7 @@ class IframeName(Enum):
     KAF_D2L                                 = 'KAF_D2L'
     KAF_JIVE                                = 'KAF_JIVE'
     KAF_SAKAI                               = 'KAF_SAKAI'
+    KAF_BLACKBOARD_ULTRA                    = 'KAF_BLACKBOARD_ULTRA'
 
     
     
@@ -509,6 +511,7 @@ class MoodleActivities(Enum):
     
     KALTURA_VIDEO_RESOURCE    = 'Kaltura Video Resource'    
     SITE_BLOG                 = 'Site blog'
+    EXTERNAL_TOOL             = 'External Tool'
     
     
 class Ownership(Enum):
@@ -577,9 +580,74 @@ class RecschedulingResourceOptions(Enum):
     FALL_CONFERENCE_ROOM        = 'Fall Conference Room' 
     MAIN_STUDENT_LOUNGE         = 'Main Student Lounge'
     QA_APP_ROOM                 = 'Qa App Room'
+    
+
+class scheduleRecurrenceInterval(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    NONE            = 'none'
+    DAYS            = 'days'
+    WEEKS           = 'weeks'
+    MONTHS          = 'months'
 
 
-class KeaEditorTimelineOptions(Enum):
+class scheduleRecurrenceDailyOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    EVERY_X_DAYS     = 'none'
+    EVERY_WEEKDAY    = 'Every Weekday'
+    
+
+class scheduleRecurrenceMonthlyOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    DAY_X_OF_EVERY_Y_MONTHS     = 'day x of every y months'
+    BY_WEEKDAY                  = 'by weekday'
+
+
+class scheduleRecurrenceDayOfTheWeek(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SUNDAY              = 'Sunday'
+    MONDAY              = 'Monday'
+    TUESDAY             = 'Tuesday'
+    WEDNESDAY           = 'Wednesday'
+    THURSDAY            = 'Thursday'
+    FRIDAY              = 'Friday'
+    SATURDAY            = 'Saturday'
+    SUNDAY_SHORT        = 'SU'
+    MONDAY_SHORT        = 'MO'
+    TUESDAY_SHORT       = 'TU'
+    WEDNESDAY_SHORT     = 'WE'
+    THURSDAY_SHORT      = 'TH'
+    FRIDAY_SHORT        = 'FR'
+    SATURDAY_SHORT      = 'SA'
+    
+    
+class scheduleRecurrenceEndDateOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    END_AFTER_X_OCCURRENCES     = 'endAfter'
+    END_BY                      = 'endBy'
+
+
+class scheduleRecurrenceMonthlyIndex(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    first           = 'first'
+    second          = 'second'
+    third           = 'third'
+    fourth          = 'fourth'
+    last            = 'last'
+    
+    
+ class KeaEditorTimelineOptions(Enum):
     def __str__(self):
         return str(self.value)
     

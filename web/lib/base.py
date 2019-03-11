@@ -723,7 +723,8 @@ class Base:
         
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
-    def verifyUrl(self, expectedUrl, isRegex=False, timeout=30):
+    # Set verifyIn = True if you want to verify you url 'in' (not ==) the current url (use it with isRegex=False)
+    def verifyUrl(self, expectedUrl, verifyIn=False, isRegex=False, timeout=30):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         while True:        
             currentUrl = self.driver.current_url
@@ -745,12 +746,18 @@ class Base:
                 newExpectedUrl = newExpectedUrl.replace('http://', '')
                 newExpectedUrl = newExpectedUrl.rstrip('/')
                 # Compare the URLs
-                if newExpectedUrl == newCurrentUrl:
-                    return True
+                if verifyIn == False:
+                    if newExpectedUrl == newCurrentUrl:
+                        return True
+                    else:
+                        if wait_until < datetime.datetime.now():
+                            return False
                 else:
-                    if wait_until < datetime.datetime.now():
-                        return False
-            
+                    if newExpectedUrl in newCurrentUrl:
+                        return True
+                    else:
+                        if wait_until < datetime.datetime.now():
+                            return False                            
             
     def wait_for_page_readyState(self, timeout=30):
         i = 0

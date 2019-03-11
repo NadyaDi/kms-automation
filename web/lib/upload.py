@@ -135,11 +135,21 @@ class Upload(Base):
     #  @Author: Tzachi Guetta    
     def extractEntryID (self, locator):
         try:
-            div = self.get_element(locator)
+            div = self.wait_element(locator)
+            if div == False:
+                writeToLog("INFO","FAILED to get entry element ID from 'extractEntryID' function")
+                return False
+            
+            try:
+                #send empty key to focus and show element on screen   
+                div.send_keys('')
+            except:
+                pass
+            
             href = div.get_attribute('href')
             entryID = href.split("/")[len(href.split("/"))-1]
-             
-        except NoSuchElementException:
+            
+        except Exception:
             writeToLog("INFO","FAILED to extract entry ID from entry, locator: '" + locator[1] + "'")
             return False
          
@@ -495,6 +505,8 @@ class Upload(Base):
                 self.clsCommon.jive.switchToJiveIframe()
             elif self.getAppUnderTest() == enums.Application.SAKAI:
                 self.clsCommon.sakai.switchToSakaiIframe()
+            elif self.getAppUnderTest() == enums.Application.BLACKBOARD_ULTRA:
+                self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
             # If upload single (method: uploadEntry)
             if uploadboxId == -1:
                 tagsElement = self.get_element(self.UPLOAD_ENTRY_DETAILS_ENTRY_TAGS)

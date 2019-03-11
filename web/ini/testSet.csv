@@ -27,6 +27,11 @@ test_1030,1,0,0,0,KAF BB - Gradebook
 test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publish entries to course
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
+test_4872,1,0,0,0,Blackboard Ultra- Upload media from desktop
+test_4863,1,0,0,0,Blackboard Ultra- Add captions
+test_4871,1,0,0,0,Blackboard Ultra- View Collapsed Expanded Modes
+test_4876,1,0,0,0,Blackboard Ultra- Sort Media
+test_4859,1,0,0,0,Blackboard Ultra- Edit metadata
 test_628,1,0,0,0,Moodle - Assignment Submission Functionalities
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
@@ -132,6 +137,7 @@ test_1558,1,0,0,0,Disclaimer - before upload
 test_1573,1,0,0,0,Home page playlist
 test_1592,1,0,0,0,Custom data
 test_1594,1,0,0,0,Entry required field
+test_826,1,0,0,0,Moodle - Gradebook
 test_2104,1,0,0,0,Moodle - Delete through my media
 test_2105,1,0,0,0,Moodle - Delete through edit entry page
 test_2106,1,0,0,0,Moodle - Publish after upload
@@ -207,6 +213,7 @@ test_2904,1,0,0,0,D2L - Publish from my media (single and multiple)
 test_2905,1,0,0,0,D2L - Publish From Entry Page
 test_2906,1,0,0,0,D2L - Discussions Upload And Embed From BSE Page
 test_2907,1,0,0,0,D2L - Discussions BSE From Media Gallery
+test_4957,1,0,0,0,D2L - Gradebook
 test_2485,1,0,0,0,Jive - Edit Entry Metadata
 test_2486,0,1,0,0,Jive - Edit Entry page - Disable comments
 test_2487,0,1,0,0,Jive - Edit Entry page - Close discussion
