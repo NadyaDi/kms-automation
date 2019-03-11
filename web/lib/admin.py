@@ -52,6 +52,7 @@ class Admin(Base):
     ADMIN_CUSTOM_DATA_PROFILE_ID_DROPDOWN           = ('xpath', '//dd[@id="profileId-element"]')
     ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION             = ('xpath', '//option[@value="PROFILE_ID"]')
     ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
+    ADMIN_AUTO_PLAY_ON_LOAD                         = ('id', 'autoPlayOnLoad')
     ADMIN_ASSIGNMENT_SUBMISSION                     = ('xpath', '//select[@id="enableAssignmentSubmission"]')
     ADMIN_GALLERY_PAGE_SIZE                         = ('xpath', "//input[@id='pageSize']")
     ADMIN_ADD_ALLOWEDUSERS                          = ('xpath', "//a[@class='add' and contains(text(),'+ Add \"allowedUsers\"')]")
@@ -1013,7 +1014,7 @@ class Admin(Base):
     
     
     # @Author: Horia Cus
-    # This function will change the secure embed from Embed tab state
+    # This function can change the secure embed to activated or deactivated
     # if isEnabled = True, secureEmbed will be activated
     # if isEnabled = False, secureEmbed will be deactivated
     def enableSecureEmbed(self, isEnabled):
@@ -1022,13 +1023,13 @@ class Admin(Base):
             writeToLog("INFO","FAILED to login to admin page")
             return False
         
-        #Navigate to Custometadata module
+        #Navigate to Embed module
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/embed') == False:
             writeToLog("INFO","FAILED to load Embed page in admin")
             return False
         sleep(1) 
         
-        #Enable/Disable custometadata module
+        #Enable/Disable secure embed
         selection = self.convertBooleanToYesNo(isEnabled)
         if self.select_from_combo_by_text(self.ADMIN_SECURE_EMBED, selection) == False:
             writeToLog("INFO","FAILED to set secureEmbed as: " + str(selection))
@@ -1102,4 +1103,34 @@ class Admin(Base):
             return False
         
         writeToLog("INFO","Success, recscheduling module was set to: " + str(selection) + "'")
-        return True    
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function can enable or disable auto play on player
+    # if isEnabled = True, auto player will be enabled
+    # if isEnabled = False, auto player will be disabled
+    def playerAutoPlayOnLoad(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Player module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/player') == False:
+            writeToLog("INFO","FAILED to load Player page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable auto play option
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_AUTO_PLAY_ON_LOAD, selection) == False:
+            writeToLog("INFO","FAILED to set auto play on load as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes the changes in admin page")
+            return False
+            
+        writeToLog("INFO","Success, Auto Play On load was set to: " + str(selection) + "'")
+        return True  
