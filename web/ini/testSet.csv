@@ -137,6 +137,7 @@ test_1558,1,0,0,0,Disclaimer - before upload
 test_1573,1,0,0,0,Home page playlist
 test_1592,1,0,0,0,Custom data
 test_1594,1,0,0,0,Entry required field
+test_826,1,0,0,0,Moodle - Gradebook
 test_2104,1,0,0,0,Moodle - Delete through my media
 test_2105,1,0,0,0,Moodle - Delete through edit entry page
 test_2106,1,0,0,0,Moodle - Publish after upload
@@ -212,6 +213,7 @@ test_2904,1,0,0,0,D2L - Publish from my media (single and multiple)
 test_2905,1,0,0,0,D2L - Publish From Entry Page
 test_2906,1,0,0,0,D2L - Discussions Upload And Embed From BSE Page
 test_2907,1,0,0,0,D2L - Discussions BSE From Media Gallery
+test_4957,1,0,0,0,D2L - Gradebook
 test_2485,1,0,0,0,Jive - Edit Entry Metadata
 test_2486,0,1,0,0,Jive - Edit Entry page - Disable comments
 test_2487,0,1,0,0,Jive - Edit Entry page - Close discussion
