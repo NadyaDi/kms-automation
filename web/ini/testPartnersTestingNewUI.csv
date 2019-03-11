@@ -26,6 +26,7 @@ test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation1@mail
 test_2125,Moodle - Trim video,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2126,Moodle - Create clip,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2122,Moodle - Change Cliping permissions,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
+test_826,Moodle - Gradebook,,,pythonautomation1@mailinator.com,Kaltura1!,automoodle,Kaltura1!
 test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2279,Canvas - My Media -Delete through my media,,,pythonautomation1@mailinator.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -77,6 +78,7 @@ test_2905,D2L - Publish From Entry Page,,,pythonautomation1@mailinator.com,Kaltu
 test_2908,D2L - Discussions BSE From My Media,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2907,D2L - Discussions BSE From Media Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2906,D2L - Discussions Upload And Embed From BSE Page,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
+test_4957,D2L - Gradebook,,,pythonautomation1@mailinator.com,Kaltura1!,autod2l,Kaltura1!
 test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2485,Jive - Edit Entry Metadata,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
 test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation1@mailinator.com,Kaltura1!,jiveauto,Kaltura1!
