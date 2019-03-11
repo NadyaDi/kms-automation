@@ -647,7 +647,7 @@ class scheduleRecurrenceMonthlyIndex(Enum):
     last            = 'last'
     
     
- class KeaEditorTimelineOptions(Enum):
+class KeaEditorTimelineOptions(Enum):
     def __str__(self):
         return str(self.value)
     
