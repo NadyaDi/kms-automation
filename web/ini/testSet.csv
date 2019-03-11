@@ -359,6 +359,14 @@ test_4857,1,0,0,0,Quiz - Timeline section while Using Zoom Option - KEA Page
 test_4858,1,0,0,0,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
+test_4937,0,1,0,0,Editor: Reset timeline functionality
+test_4938,0,1,0,0,Editor: Redo timeline functionality
+test_4939,0,1,0,0,Editor: Undo timeline functionality
+test_4948,0,1,0,0,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user
+test_4949,1,0,0,0,Quiz - Welcome screen behavior when autoplay true
+test_4954,1,0,0,0,Quiz - Player preview Sanity Check for an existing Quiz Entry
+test_4955,0,1,0,0,Editor: Trim Quiz entry (with Slides and Captions)
+test_4956,1,0,0,0,Hotspots: Verify that hotspots can be created for normal entries
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
