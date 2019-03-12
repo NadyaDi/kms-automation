@@ -101,11 +101,7 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.BLACKBOARD_ULTRA
     else:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
-            
-    # Update localSetting partner details(base URL, credentials, Practitest ID
-    if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
-        writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
-        raise Exception("Unable to find credentials for test") 
+     
     # Clear log folder
     utilityTestFunc.clearFilesFromLogFolderPath('.png')
     utilityTestFunc.clearFilesFromLogFolderPath('.log')    
@@ -115,7 +111,18 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
         hostname = localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL
     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO",str(localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST) + ": test_" + test.testNum + " Start on browser '" + browser + "'on host '" + hostname + "'")
-    writeToLog("INFO","NEW UI is " + str(localSettings.LOCAL_SETTINGS_IS_NEW_UI) + "; Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL)
+    writeToLog("INFO","NEW UI is " + str(localSettings.LOCAL_SETTINGS_IS_NEW_UI) + "; Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL) 
+    
+    try:        
+        # Update localSetting partner details(base URL, credentials, Practitest ID
+        if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
+            writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
+            return False
+    except:
+        return False
+    
+    return True
+
      
 #===============================================================================
 # the function writes to the log that we started sniffing http traffic
