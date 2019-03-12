@@ -241,7 +241,6 @@ def handleException(test, inst, startTime=''):
 #===============================================================================
 def basicTearDown(test):
     practiTest = clsPractiTest()
-    
     if isAutomationEnv() == True:
         # Delete temp folder
         try:     
@@ -254,11 +253,17 @@ def basicTearDown(test):
         if (test.driver != None):
             test.driver.quit()
             writeToLog("INFO", "tearDown: closed web driver")
-        if (isAutomationEnv() == True):
-            practiTest.setPractitestInstanceTestResults(test.status,str(test.testNum))            
-        writeToLog("INFO", "Finished tearDown function")
     except Exception as inst:
             test.status = handleException(test,inst,test.startTime)
+    
+    try:                    
+        if (isAutomationEnv() == True):
+            if practiTest.setPractitestInstanceTestResults(test.status,str(test.testNum)) == False:
+                writeToLog("INFO", "tearDown: FAILED report to PractiTest")
+    except Exception as inst:
+            writeToLog("INFO", "tearDown: FAILED report to PractiTest")
+            
+    writeToLog("INFO", "Finished tearDown function - LAST ROW")        
 
 
 #===============================================================================
@@ -286,16 +291,19 @@ def createScreenshot(test, scName=''):
     
 def initializeDriver(test, driverFix):
     writeToLog("INFO","initialize driver " + driverFix)
-    driver = test.driver
-    driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
-    driver.get(test.base_url)
-    utilityTestFunc.wait_for_page_readyState(driver)
+    try:
+        driver = test.driver
+        driver.implicitly_wait(localSettings.LOCAL_SETTINGS_IMPLICITLY_WAIT)
+        driver.get(test.base_url)
+        utilityTestFunc.wait_for_page_readyState(driver)
+    except Exception as inst:
+        raise Exception("Driver: FAILED to navigate to: " + str(test.base_url))        
     try:
         if (driverFix != ANDROID_CHROME):
             driver.maximize_window()
     except Exception as inst:
-        raise
-    return driver
+        raise Exception("Driver: FAILED to maximaize windows")
+    
 
         
 def cleanTempDownloadFolder():
