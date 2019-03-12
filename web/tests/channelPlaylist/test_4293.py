@@ -15,7 +15,7 @@ class Test:
     #================================================================================================================================
     # @Author: Oded.berihon @Test name Embed Channel Playlist
     # Test description:
-    # Upload entries - create Channel - publish the entries to channel and create channel playlist while adding the new entries to it .
+    # Upload entries - create Channel - publish the entries to channel and create channel playlist while adding the new entries to it.
     # Go back to edit channel playlist page grab the embed code and play it as stand alone page.
     #================================================================================================================================
     testNum     = "4293"
@@ -76,7 +76,6 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return    
-             
             
             writeToLog("INFO","Step 9: Going to create channel playlist")                                     
             if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
@@ -106,65 +105,65 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to navigate to to embed entry page")
                 return  
               
-#             writeToLog("INFO","Step 2: Going to upload Video type entry")            
-#             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
-#                 return
-#             
-#             writeToLog("INFO","Step 3: Going to upload audio type entry")
-#             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED failed to upload entry audio")
-#                 return 
-#             
-#             writeToLog("INFO","Step 4: Going to upload video type entry")            
-#             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED failed to upload entry video")
-#                 return                         
-#             
-#             writeToLog("INFO","Step 5: Going to create new channel")            
-#             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 5: FAILED to create Channel#1")
-#                 return
-#              
-#             writeToLog("INFO","Step 6: Going to publish entry1")
-#             if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-#                 writeToLog("INFO","Step 6: FAILED - could not publish Video to channel")
-#                 return
-#                 
-#             writeToLog("INFO","Step 7: Going to publish entry2")
-#             if self.common.myMedia.publishSingleEntry(self.entryName2, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-#                 writeToLog("INFO","Step 7: FAILED - could not publish audio to channel")
-#                 return
-#             
-#             writeToLog("INFO","Step 8: Going to publish entry3")
-#             if self.common.myMedia.publishSingleEntry(self.entryName3, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-#                 writeToLog("INFO","Step 8: FAILED - could not publish video to channel")
-#                 return
-#           
-#             expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
-#            
-#             writeToLog("INFO","Step 9: Going to create channel playlist")                                     
-#             if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO) == False:    
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
-#                 return 
-#             sleep(3)     
-#             
-#             writeToLog("INFO","Step 10: Going to verify entries order - by Alphabetical & video type")
-#             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.CHANNEL_PLAYLIST) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 10: FAILED to verify entries order - by Alphabetical & video type")
-#                 return
-#            
-#             writeToLog("INFO","Step 11: Going to delete channel playlist")              
-#             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 11: FAILED failed to delete channel playlist")
-#                 return      
+            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                return
+             
+            writeToLog("INFO","Step 3: Going to upload audio type entry")
+            if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED failed to upload entry audio")
+                return 
+             
+            writeToLog("INFO","Step 4: Going to upload video type entry")            
+            if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED failed to upload entry video")
+                return                         
+             
+            writeToLog("INFO","Step 5: Going to create new channel")            
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to create Channel#1")
+                return
+              
+            writeToLog("INFO","Step 6: Going to publish entry1")
+            if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO","Step 6: FAILED - could not publish Video to channel")
+                return
+                 
+            writeToLog("INFO","Step 7: Going to publish entry2")
+            if self.common.myMedia.publishSingleEntry(self.entryName2, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO","Step 7: FAILED - could not publish audio to channel")
+                return
+             
+            writeToLog("INFO","Step 8: Going to publish entry3")
+            if self.common.myMedia.publishSingleEntry(self.entryName3, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO","Step 8: FAILED - could not publish video to channel")
+                return
+           
+            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
+            
+            writeToLog("INFO","Step 9: Going to create channel playlist")                                     
+            if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO) == False:    
+                self.status = "Fail"
+                writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
+                return 
+            sleep(3)     
+             
+            writeToLog("INFO","Step 10: Going to verify entries order - by Alphabetical & video type")
+            if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.CHANNEL_PLAYLIST) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 10: FAILED to verify entries order - by Alphabetical & video type")
+                return
+            
+            writeToLog("INFO","Step 11: Going to delete channel playlist")              
+            if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED failed to delete channel playlist")
+                return      
             #########################################################################
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       

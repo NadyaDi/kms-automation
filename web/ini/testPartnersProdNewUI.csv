@@ -260,6 +260,9 @@ test_1027,Edit entry - thumbnail tab,2501881,mediaspace.kaltura.com,automation.k
 test_653,Free trial,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_643,Home Page Carousel,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_1555,Disclaimer - Before publish,2501881-1,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1556,Disclaimer - Before publish (agreeRequired = Yes),2501881-1,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1558,Disclaimer - Before publish (agreeRequired = No),2501881-1,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_709,Category - Entries details,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_734,Channel - Entries details,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_731,Channel page Information,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
@@ -288,18 +291,24 @@ test_1026,Publish from upload page,2370151,mediaspace.kaltura.com,pythonautomati
 test_716,Categories Type,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_651,Navigate to entry page from upload page,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1395,Channel Type (Open / Restricted / Private),2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_733,Add media to channel via Add to,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_735,Channel page - Search in channel,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
+test_737,Edit entry link in channel,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_736,Remove Entry from Channel,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_740,Enable/Disable comments in channel,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_730,My Channels - Create Channel,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_738,Channel page - Edit metadata,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_714,Categories - Enable Disable comments in category,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_712,Categories - Members tab,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_713,Category moderation,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,pythonautomation1@mailinator.com,Kaltura1!
+test_767,Create Channel Playlist,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_721,Categories - Import Mermbers,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_719,Categories - Enable / Disable Inherit permissions,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1025,Categories - Sort media on category page,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_641,Navigation,2370151-1,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_644,Upload media from desktop and verify player,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,python_automation,Kaltura1!
 test_1594,Entry required field,2373952-3,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_1592,Custom data,2378481-3,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_2565,Watch History - Add entry (Private) to watch list history,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,Watch History - Add entry (Published to channel- public) to watch list history,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2567,Watch History - delete entry (Published to channel) from watch list history,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -371,6 +380,8 @@ test_2693,Watch History - Search by name,2373952-4,mediaspace.kaltura.com,inbar.
 test_2702,Watch History - Filter by watch status,2373952-4,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3902,Sort by - Galleries page,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3901,Sort by - My Channels - when search is made,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
+test_4292,Use filters in channel playlist selection page,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
+test_4293,Embed channel playlist,2378481,mediaspace.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_4309,Sort by - Channels - when search is made,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4311,eSearch - Sort by - My Media - when search is made,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4314,eSearch - Sort by - Global search - when search is made,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
