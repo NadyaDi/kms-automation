@@ -129,7 +129,7 @@ class BlackBoardUltra(Base):
     # Author: Oded Berihon
     def navigateToGalleryBlackBoardUltra(self, galleryName, forceNavigate=False):
         if forceNavigate == False:
-            if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False
+            if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
 #             self.switchToBlackboardUltraIframe()
 #             if self.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
                 writeToLog("INFO","Success Already in my Gallery page")
