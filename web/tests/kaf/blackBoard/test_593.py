@@ -104,7 +104,7 @@ class Test:
             self.common.kafGeneric.switchToKAFIframeGeneric()
             
             writeToLog("INFO","Step 8: Going to verify that caption display in the caption section in entry page and in the player")
-            if self.common.entryPage.verifyAndClickCaptionSearchResult(self.captionTime2, self.captionText, self.expectedCaptionAfterSearch) == False:
+            if self.common.entryPage.verifyAndClickCaptionSearchResult(self.captionTime2, self.captionText, self.captionText) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to edit entry page")
                 return   
