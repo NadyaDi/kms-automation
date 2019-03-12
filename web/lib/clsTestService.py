@@ -56,6 +56,11 @@ def initializeAndLoginAsUser(test, driverFix, duration=60):
 # Load the driver
 #===============================================================================
 def initialize(test,driverFix,duration=60):
+    # Handle case when unable to find credentials for test
+    if localSettings.LOCAL_SETTINGS_LOGIN_USERNAME == '':
+        test.status = 'Fail'
+        raise Exception("Unable to find credentials for test: '" + test.testNum + "'")
+    
     if localSettings.LOCAL_SETTINGS_RUN_MDOE == localSettings.LOCAL_RUN_MODE:
         cleanTempQrCodeFolder()
 
@@ -262,8 +267,6 @@ def basicTearDown(test):
                 writeToLog("INFO", "tearDown: FAILED report to PractiTest")
     except Exception as inst:
             writeToLog("INFO", "tearDown: FAILED report to PractiTest")
-            
-    writeToLog("INFO", "Finished tearDown function - LAST ROW")        
 
 
 #===============================================================================

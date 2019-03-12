@@ -14,6 +14,12 @@ from logger import *
 # Read from testPartners csv the test details(base URL, credentials, Practitest ID       
 def updateTestCredentials(case_str):    
     found = False
+    # SET PARTNER DETAILS
+    localSettings.LOCAL_SETTINGS_PARTNER            = ''
+    localSettings.LOCAL_SETTINGS_LOGIN_USERNAME     = ''
+    localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD     = ''
+    localSettings.LOCAL_SETTINGS_ADMIN_USERNAME     = ''
+    localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = ''    
     testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
     with codecs.open(testPartnersPath,'r',encoding='utf8') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
