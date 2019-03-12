@@ -1481,6 +1481,7 @@ class MyMedia(Base):
             if (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.CANVAS) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L) or \
+                (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE):
                     self.click(self.MY_MEDIA_TITLE)
             

@@ -21,12 +21,13 @@ class BlackBoardUltra(Base):
     LOGIN_PASSWORD_FIELD                                = ('id', 'password')
     LOGIN_SIGN_IN_BTN                                   = ('id', 'entry-login')
     USER_LOGOUT_BTN                                     = ('xpath', "//span[@class='link-text' and contains(text(), 'Sign Out')]")
+    COURSES_TAB_MENU                                    = ('xpath', "//span[@class='link-text' and contains(text(), 'Courses')]")
+    COURSES_LIST_PAGE                                   = ('xpath', "//h4[@class='ellipsis' and @title='New1']")
     BB_ULTRA_MEDIA_SPACE_IFRAME                         = ('xpath', "//iframe[@id='lti-launch-iframe']")
     BB_ULTRA_USER_NAME                                  = ('xpath', "//bdi[contains(text(), 'USER_NAME')]")
     BB_ULTRA_PRIVECY_TURMS_BUTTON                       = ('xpath', "//button[@id='agree_button']")    
     BB_ULTRA_MY_MEDIA_BUTTON_IN_TOOLS_MENU              = ('xpath', "//span[@class='tool-title' and @title='Automation my media']")
-    BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE             = ('xpath', "//a[@class='content-title' and contains(text(), 'Automation media gallery')]")
-
+    BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE             = ('xpath', "//span[text()='New1']/ancestor::a[@class='content-title']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -125,30 +126,29 @@ class BlackBoardUltra(Base):
         return True  
      
      
-    # Author: Michal Zomper
+    # Author: Oded Berihon
     def navigateToGalleryBlackBoardUltra(self, galleryName, forceNavigate=False):
         if forceNavigate == False:
-            if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False:
+            if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 5) != False
+#             self.switchToBlackboardUltraIframe()
+#             if self.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
                 writeToLog("INFO","Success Already in my Gallery page")
                 return True
-         
+        sleep(2)   
+        
         if galleryName == "New1":
-            if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
-                writeToLog("INFO","FAILED navigate to courses 'New1'")
+            if self.click(self.COURSES_TAB_MENU)== False:
+                writeToLog("INFO","Success Already in my Gallery page")
+                return False
+            
+            if self.click(self.COURSES_LIST_PAGE)== False:
+                writeToLog("INFO","Success Already in my Gallery page")
                 return False
         sleep(5)
          
-        self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
-
-
-
-        
-#         if self.click(self.BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE) == False:
-#             writeToLog("INFO","FAILED to click on media gallery button")
-#             return False
-        
-        if self.wait_element(self.clsCommon.kafGeneric.KAF_MEDIA_GALLERY_TITLE, 15) == False:
-            writeToLog("INFO","FAILED navigate to to courses 'New1'")
+        self.switchToBlackboardUltraIframe()
+        if self.click(self.BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE) == False:
+            writeToLog("INFO","FAILED to click on media gallery button")
             return False
          
         return True
