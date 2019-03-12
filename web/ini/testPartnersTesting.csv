@@ -222,16 +222,16 @@ test_4829,Quiz - Change Answer order for multiple Quiz Questions - KEA Editor,62
 test_4830,Quiz - Change Question order for all Quiz Question Types - KEA Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4853,Quiz - Secure Embed ON - Published Entry in Private Channel with KMS user,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4854,Quiz - Video playing and Navigation process with Quiz Questions in KEA Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_4855,Quiz - Submitting Quiz with Answer order changed - Entry Page,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4857,Quiz - Timeline section while Using Zoom Option - KEA Page,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4858,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4908,Editor: Clip video entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4913,Editor: Clip Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4937,Editor: Reset timeline functionality,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4938,Editor: Redo timeline functionality,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4939,Editor: Undo timeline functionality,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4948,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4949,Quiz - Welcome screen behavior when autoplay true,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4955,Editor: Trim Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
-test_4956,Hotspots: Verify that hotspots can be created for normal entries,6269,qakmstest.dev.kaltura.com,AutoKEA,Aa123456,AutoKEA,Aa123456
+test_4855,Quiz - Submitting Quiz with Answer order changed - Entry Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4857,Quiz - Timeline section while Using Zoom Option - KEA Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4858,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4908,Editor: Clip video entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4913,Editor: Clip Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4937,Editor: Reset timeline functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4938,Editor: Redo timeline functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4939,Editor: Undo timeline functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4948,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4949,Quiz - Welcome screen behavior when autoplay true,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4955,Editor: Trim Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4956,Hotspots: Verify that hotspots can be created for normal entries,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
