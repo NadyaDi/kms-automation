@@ -102,16 +102,15 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
     else:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
      
-    # Clear log folder
+    os.environ["RUNNING_TEST_ID"] = test.testNum
+        # Clear log folder
     utilityTestFunc.clearFilesFromLogFolderPath('.png')
     utilityTestFunc.clearFilesFromLogFolderPath('.log')    
-    os.environ["RUNNING_TEST_ID"] = test.testNum
     hostname = 'Localhost'
     if isAutomationEnv() == True:
         hostname = localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL
     writeToLog("INFO","************************************************************************************************************************")
     writeToLog("INFO",str(localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST) + ": test_" + test.testNum + " Start on browser '" + browser + "'on host '" + hostname + "'")
-    writeToLog("INFO","NEW UI is " + str(localSettings.LOCAL_SETTINGS_IS_NEW_UI) + "; Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL) 
     
     try:        
         # Update localSetting partner details(base URL, credentials, Practitest ID
@@ -121,6 +120,7 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
     except:
         return False
     
+    writeToLog("INFO","NEW UI is " + str(localSettings.LOCAL_SETTINGS_IS_NEW_UI) + "; Page url: " + localSettings.LOCAL_SETTINGS_TEST_BASE_URL) 
     return True
 
      
