@@ -304,7 +304,7 @@ def initializeDriver(test, driverFix):
     except Exception as inst:
         raise Exception("Driver: FAILED to maximaize windows")
     
-
+    return driver
         
 def cleanTempDownloadFolder():
     folder = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, '')
