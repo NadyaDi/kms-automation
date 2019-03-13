@@ -737,7 +737,7 @@ class MyMedia(Base):
                     if self.click(self.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20, multipleElements=True) == False:
                         writeToLog("INFO","FAILED to click on filters button in my media")
                         return False
-                sleep(2)
+                sleep(3)
 
                 if dropDownListName == enums.SortAndFilter.DURATION or dropDownListName == enums.SortAndFilter.CAPTIONS or dropDownListName == enums.SortAndFilter.SINGLE_LIST:
                     tmpLocator = (self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace('DROPDOWNLIST_ITEM', dropDownListItem.value))
@@ -923,7 +923,10 @@ class MyMedia(Base):
 
             elif location == enums.Location.MY_PLAYLISTS or location == enums.Location.PENDING_TAB:
                 tmpEntry = self.replaceInLocator(self.clsCommon.myPlaylists.PLAYLIST_ENTRY_NAME_IN_PLAYLIST, "ENTRY_NAME", entryName)
-
+            
+            elif location == enums.Location.CHANNEL_PLAYLIST:
+                tmpEntry = self.replaceInLocator(self.clsCommon.channel.CHANNEL_PLAYLIST_ENTRY_NAME, "ENTRY_NAME", entryName)
+                 
             entrytop = self.get_element_attributes(tmpEntry, multipleElements=True)['top']
             writeToLog("INFO","The top of: '" + entryName + "' is: " + str(entrytop))
             return entrytop
@@ -1198,7 +1201,7 @@ class MyMedia(Base):
     #    also: the method will navigate to My media
     #    in categoryList / channelList will have all the names of the categories / channels to publish to
     # Known limitation: entries MUST be presented on the first page of my media
-    def publishEntriesFromMyMedia(self, entriesName, categoryList, channelList='', galleryList='',  disclaimer=False, showAllEntries=False):
+    def publishEntriesFromMyMedia(self, entriesName, categoryList='', channelList='', galleryList='',  disclaimer=False, showAllEntries=False):
         if self.navigateToMyMedia(forceNavigate = True) == False:
             writeToLog("INFO","FAILED Navigate to my media page")
             return False

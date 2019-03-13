@@ -724,7 +724,7 @@ class Base:
         
     # Verify expectedUrl = current URL, if isRegex is True, will verify when expectedUrl is regular expression
     # Set verifyIn = True if you want to verify you url 'in' (not ==) the current url (use it with isRegex=False)
-    def verifyUrl(self, expectedUrl, verifyIn=False, isRegex=False, timeout=30):
+    def verifyUrl(self, expectedUrl, isRegex=False, timeout=30, verifyIn=False):
         wait_until = datetime.datetime.now() + datetime.timedelta(seconds=timeout)
         while True:        
             currentUrl = self.driver.current_url

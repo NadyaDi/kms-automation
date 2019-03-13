@@ -103,10 +103,13 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
      
     os.environ["RUNNING_TEST_ID"] = test.testNum
-    # Clear log folder
-    if os.environ["RUNNING_TEST_ID"] != "":
-        utilityTestFunc.clearFilesFromLogFolderPath('.png')
-        utilityTestFunc.clearFilesFromLogFolderPath('.log')    
+    try:
+        # Clear log folder
+        if os.environ["RUNNING_TEST_ID"] != "":
+            utilityTestFunc.clearFilesFromLogFolderPath('.png')
+            utilityTestFunc.clearFilesFromLogFolderPath('.log') 
+    except:
+        pass  
     hostname = 'Localhost'
     if isAutomationEnv() == True:
         hostname = localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL
