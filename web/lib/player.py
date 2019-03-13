@@ -1096,9 +1096,9 @@ class Player(Base):
             self.click(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU)
             searchEl = self.get_element(self.PLAYER_SEARCH_TEXTBOX_IN_SLIDES_BAR_MENU)
             ActionChains(self.driver).click(searchEl).send_keys(slide).perform()
-            sleep(1)
+            sleep(2)
             ActionChains(self.driver).click(searchEl).send_keys(Keys.SPACE).perform()
-            sleep(1)
+            sleep(5)
             ActionChains(self.driver).send_keys(Keys.ENTER).perform()
             sleep(3)
             
