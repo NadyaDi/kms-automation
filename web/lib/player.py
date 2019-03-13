@@ -1249,6 +1249,7 @@ class Player(Base):
              
             # We collect the active question in order to verify if it matches with one from our dictionary, if the question has not been founded within the 75 seconds, the test case will fail  
             activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 75, True).text
+            sleep(1)
                          
             if activeQuestion in questionDict:
                 #after the active question matches with one from our dictionary, we take the answer assigned for that question
@@ -1279,10 +1280,11 @@ class Player(Base):
                 writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
                 questionsFound += 1
                 givenQuestions += 1
-                 
-                #if the active Quiz Question answer is not present in our dictionary, we will skip it
+                
+                sleep(1)
+                # If the Question is a Reflection Point, we will click on the continue button
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
-                    writeToLog("INFO", "FAILED to skip the " + activeQuestion + " which was not found in the dictionary")
+                    writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
                     return False
                  
             else:
@@ -1394,6 +1396,11 @@ class Player(Base):
             if self.click(self.PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER, 2, True) == False:
                 writeToLog("INFO", "FAILED to activate the preview screen")
                 return False
+            
+        sleep(0.5)
+        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 35) == False:
+            writeToLog("INFO", "FAILED to wait until the loading spinner disappeared")
+            return False
             
         return True
     
@@ -2522,7 +2529,8 @@ class Player(Base):
                         return False
                     
                     # Verify if a link should be presented within the hotspot
-                    if len(hotspotDetails) >= 2 and hotspotDetails[1] != '':
+                    if len(hotspotDetails) >= 3 and hotspotDetails[2] != '':
+                        sleep(1)
                         # Access the hotspot link
                         if self.clickElement(presentedHotspots[x]) == False:
                             writeToLog("INFO", "FAILED to click on the " + presentedHotspots[x].text + " hotspot link")
@@ -2539,24 +2547,21 @@ class Player(Base):
                             presentedLink = self.clsCommon.base.driver.current_url
                             self.driver.close()
                             self.driver.switch_to.window(handles[0])
+                            self.verifyAndClickOnPlay(location, 2, embed)
                         except Exception:
                             writeToLog("INFO", "FAILED to take proper details while switching between the KMS and hotspot link")
                             return False
                         
-                        if self.selectPlayerIframe(location, embed) == False:
-                            writeToLog("INFO", "FAILED to switch to the default content, after clicking on the hotspot link")
-                            return False
-                        
                         # Verify that the presented link matches with the expected link
-                        if presentedLink != hotspotDetails[1]:
-                            writeToLog("INFO", "FAILED," + presentedLink + " link was presented but " + hotspotDetails[1] + " was expected")
+                        if presentedLink != hotspotDetails[2]:
+                            writeToLog("INFO", "FAILED," + presentedLink + " link was presented but " + hotspotDetails[2] + " was expected")
                             return False
                     
                     # Verify if the font weight should have been changed
-                    if len(hotspotDetails) >= 3 and hotspotDetails[2].value != '':
+                    if len(hotspotDetails) >= 4 and hotspotDetails[3].value != '':
                         # Verify that the expected font weight matches with the presented font weight
-                        if hotspotStyleFontWeight != hotspotDetails[2].value.lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[2].value.lower())
+                        if hotspotStyleFontWeight != hotspotDetails[3].value.lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[3].value.lower())
                             return False
                     else:
                         # Verify that the default font weight is presented
@@ -2565,10 +2570,10 @@ class Player(Base):
                             writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + defaultFontWeight.lower())
                             return False
                         
-                    if len(hotspotDetails) >= 4 and hotspotDetails[3] != '':
+                    if len(hotspotDetails) >= 5 and hotspotDetails[4] != '':
                         # Verify that the expected font color matches with the presented font color
-                        if hotspotStyleFontColor != hotspotDetails[3].lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[3].lower())
+                        if hotspotStyleFontColor != hotspotDetails[4].lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[4].lower())
                             return False
                         
                     else:

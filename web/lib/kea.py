@@ -120,9 +120,11 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE                                      = ('xpath', '//span[contains(@class,"ng-star-inserted") and text()="TEXT_STYLE"]')
     KEA_HOTSPOTS_FORM_TEXT_COLOR                                            = ('xpath', '//div[@class="sp-preview-inner"]')
     KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE                                      = ('xpath', '//input[@class="sp-input"]')
+    KEA_HOTSPOTS_PLAYER_BUTTON                                              = ('xpath', "//div[@class='hotspot__button']")
     KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER                                  = ('xpath', '//div[contains(@class,"kea-timeline-stacked-item kea-timeline-stacked-item--audio-disabled")]')
     KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT                       = ('xpath', '//div[contains(@class,"content-item__handle--right")]')
     KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT                        = ('xpath', '//div[contains(@class,"content-item__handle--left")]')
+    KEA_PLAYER_CONTAINER                                                    = ('xpath', '//div[@class="player-container"]')
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -443,11 +445,11 @@ class Kea(Base):
                 return False
             
         # We wait until the KEA page is successfully loaded
-        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 35) == False:
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 45) == False:
             writeToLog("INFO","FAILED to wait until spinner isn't visible")
             return False
         
-        sleep(3)                      
+        sleep(5)                      
         
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
@@ -458,7 +460,7 @@ class Kea(Base):
     def editorTimelineActions(self, startTime, endTime='', openEditorTab=False, timelineAction=None):
         self.switchToKeaIframe()            
         if openEditorTab == True:
-            if self.click(self.KEA_EDITOR_TAB) == False:
+            if self.click(self.KEA_EDITOR_TAB, 45) == False:
                 writeToLog("INFO","FAILED to click on Editor Tab")
                 return False
             
@@ -2655,11 +2657,14 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # hotspotList must contain the following structure ['Hotspot Title', 'link.address', enums.textStyle.Style, 'color code'
+    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, 'link.address', enums.textStyle.Style, 'color code'
     # A hotspot list may contain only the hotspot title, or leave any other field empty
-    # hotspotOne    = ['Hotspot Title One', 'https://corp.kaltura.com/', enums.textStyle.BOLD, '#fa7c0d']
-    # hotspotTwo    = ['Hotspot Title Two', '', '', '#fa7c0d']
-    # hotspotThree  = ['Hotspot Title Three']
+    # hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '']
+    # hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, '', enums.textStyle.NORMAL, '']
+    # hotspotThree    = ['Hotspot Title Three', enums.keaLocation.CENTER, 'https://autothree.kaltura.com/', enums.textStyle.THIN, '']
+    # hotspotFour     = ['Hotspot Title Four', enums.keaLocation.BOTTOM_RIGHT, '', enums.textStyle.THIN, '']
+    # hotspotFive     = ['Hotspot Title Five', enums.keaLocation.BOTTOM_LEFT, '', enums.textStyle.THIN, '']
+    # hotspotsDict    = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
     # hotspotsDict must contain the following structure  = {'1':hotspotOne,'2':hotspotTwo}
     def hotspotCreation(self, hotspotsDict, openHotspotsTab=False):
         self.switchToKeaIframe()  
@@ -2667,7 +2672,7 @@ class Kea(Base):
         # Navigate to the Hotspot tab if needed
         if openHotspotsTab == True:
             if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
-                if self.click(self.KEA_HOTSPOTS_TAB, 1, True) == False:
+                if self.click(self.KEA_HOTSPOTS_TAB, 35, True) == False:
                     writeToLog("INFO","FAILED to select the Hotspots Tab")
                     return False
                 
@@ -2675,7 +2680,7 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to load the Hotspot tab")
                     return False
                 
-                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
+                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 2, True) == False:
                     writeToLog("INFO", "FAILED, Hotspots tab is not displayed as being active")
                     return False
             else:
@@ -2687,10 +2692,17 @@ class Kea(Base):
             # Take the details for the current hotspot
             hotspotDetails = hotspotsDict[hotspotNumber]
             
-            # Create a new hotspot
-            if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 1, True) == False:
-                writeToLog("INFO", "FAILED to click on the Add new Button")
-                return False
+            # Verify if the font color should be changed
+            if len(hotspotDetails) > 1 and hotspotDetails[1] != '':
+                if self.hotspotLocation(hotspotDetails[1]) == False:
+                    writeToLog("INFO", "FAILED to change the location for " + hotspotDetails[0] + " to " + hotspotDetails[1])
+                    return False
+                    
+            else:
+                # Create a new hotspot
+                if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the Add new Button")
+                    return False
             
             if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
                 writeToLog("INFO", "FAILED to activate the Advanced Settings for Hotspots")
@@ -2702,16 +2714,16 @@ class Kea(Base):
                 return False
             
             # Verify if a link should be inserted
-            if len(hotspotDetails) > 1:
-                if hotspotDetails[1] != '':
-                    if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[1], True)== False:
+            if len(hotspotDetails) > 2:
+                if hotspotDetails[2] != '':
+                    if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[2], True) == False:
                         writeToLog("INFO", "FAILED to insert " + hotspotDetails[2] + " link inside the Link Field")
                         return False        
             
             # Verify if the font style should be changed
-            if len(hotspotDetails) > 2:
-                if hotspotDetails[2] != '':
-                    textStyle = (self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[0], self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[1].replace("TEXT_STYLE",  hotspotDetails[2].value))
+            if len(hotspotDetails) > 3:
+                if hotspotDetails[3] != '':
+                    textStyle = (self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[0], self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[1].replace("TEXT_STYLE",  hotspotDetails[3].value))
                     if self.click(self.KEA_HOTSPOTS_FORM_TEXT_STYLE, 1, True) == False:
                         writeToLog("INFO", "FAILED to activate the Text Color drop down menu")
                         return False
@@ -2721,38 +2733,33 @@ class Kea(Base):
                         return False
             
             # Verify if the font color should be changed
-            if len(hotspotDetails) > 3:
-                if hotspotDetails[3] != '':
+            if len(hotspotDetails) > 4:
+                if hotspotDetails[4] != '':
                     if self.click(self.KEA_HOTSPOTS_FORM_TEXT_COLOR, 1, True) == False:
                         writeToLog("INFO", "FAILED to click on the Hotspot Color value field")
                         return False
                     
-                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE, hotspotDetails[3], True) == False:
-                        writeToLog("INFO", "FAILED to select the font color for  " + hotspotDetails[0] + " as " + hotspotDetails[3].value)
+                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE, hotspotDetails[4], True) == False:
+                        writeToLog("INFO", "FAILED to select the font color for  " + hotspotDetails[0] + " as " + hotspotDetails[4].value)
                         return False
                     
                     if self.clsCommon.sendKeysToBodyElement(Keys.ENTER) != True:
                         writeToLog("INFO", "FAILED to save the color by clicking on the enter button")
                         return False
-                    
-            # Verify if the font color should be changed
-            if len(hotspotDetails) > 4:
-                if hotspotDetails[4] != '':
-                    writeToLog("INFO", "WIP") # Change timestamp location
 
-            # Save the current hotspot in the hotspot list
+            # Save the settings hotspot in the hotspot list
             if self.click(self.KEA_HOTSPOTS_DONE_BUTTON, 1, True) == False:
                 writeToLog("INFO", "FAILED to save the KEA hotspots for " + hotspotDetails[0])
                 return False
             
-        # Save the presented hotspots for the entry
-        if self.click(self.KEA_HOTSPOTS_SAVE_BUTTON, 1, True) == False:
-            writeToLog("INFO", "FAILED to save the hotspot changes")
-            return False
-        
-        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
-            writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
-            return False
+            # Save the presented hotspots inside the entry
+            if self.click(self.KEA_HOTSPOTS_SAVE_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to save the hotspot changes")
+                return False
+            
+            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
+                writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
+                return False
         
         
         hotspotNameList = []
@@ -2807,4 +2814,63 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED to find the expected hostpot within the presented hotspots")
                 return False            
         
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function will click on the desired location from the player screen
+    # location must contain enum ( e.g enums.keaLocation.CENTER ) 
+    # For now we support Five types of locations, top right / left, buttom right / left and center
+    def hotspotLocation(self, location):
+        self.switchToKeaIframe()
+        
+        # Take the Hotspot Player Screen element details
+        hotspotScreen = self.wait_element(self.KEA_PLAYER_CONTAINER, 30, True)
+        
+        # Verify that the Hotspot Player Screen is presented
+        if hotspotScreen == False:
+            writeToLog("INFO", "FAILED to find the Hotspot screen")
+            return False
+        
+        # Set the off sets for the desired KEA Location
+        if location == enums.keaLocation.TOP_LEFT:
+            x = hotspotScreen.size['width']/500
+            y = hotspotScreen.size['height']/500
+            
+        elif location == enums.keaLocation.TOP_RIGHT:
+            x = hotspotScreen.size['width']/1.20
+            y = hotspotScreen.size['height']/500
+
+        elif location == enums.keaLocation.BOTTOM_LEFT:
+            x = hotspotScreen.size['width']/500
+            y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
+              
+        elif location == enums.keaLocation.BOTTOM_RIGHT:
+            x = hotspotScreen.size['width']/1.20
+            y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
+            
+        elif location == enums.keaLocation.CENTER:
+            # width size of the hotspot button, divided by two in order to align it to the center more properly
+            x = 128/2
+            
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA Location")
+            return False
+        
+        
+        action = ActionChains(self.driver)
+        # Move the quiz number to a new timeline location
+        try:
+            # Start the location from the Top Left corner and move it to the desired place
+            if location != enums.keaLocation.CENTER:
+                action.move_to_element_with_offset(hotspotScreen, 0, 0).pause(2).move_by_offset(x, y).pause(2).click().perform()
+            
+            # Start from the center of the element and move the element by negative x value in order to proper place the hotspot to the center
+            elif location == enums.keaLocation.CENTER:
+                action.move_to_element(hotspotScreen).pause(2).move_by_offset(-x, 0).pause(2).click().perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to set the KEA Location at " + location.value)
+            return False
+        
+        writeToLog("INFO", "KEA Location has been successfully set at " + location.value)
         return True
