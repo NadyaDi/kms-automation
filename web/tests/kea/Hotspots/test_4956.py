@@ -39,10 +39,12 @@ class Test:
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
-    hotspotOne      = ['Hotspot Title One', 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '00:15']
-    hotspotTwo      = ['Hotspot Title Two', '', enums.textStyle.NORMAL]
-    hotspotThree    = ['Hotspot Title Three', 'https://autothree.kaltura.com/', enums.textStyle.THIN]
-    hotspotsDict    = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree}
+    hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '']
+    hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, '', enums.textStyle.NORMAL, '']
+    hotspotThree    = ['Hotspot Title Three', enums.keaLocation.CENTER, 'https://autothree.kaltura.com/', enums.textStyle.THIN, '']
+    hotspotFour     = ['Hotspot Title Four', enums.keaLocation.BOTTOM_RIGHT, '', enums.textStyle.THIN, '']
+    hotspotFive     = ['Hotspot Title Five', enums.keaLocation.BOTTOM_LEFT, '', enums.textStyle.THIN, '']
+    hotspotsDict    = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -67,13 +69,13 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
-  
+     
             writeToLog("INFO","Step 2: Going to create a Quiz for " + self.entryName + " entry")
             if self.common.kea.launchKEA(self.entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a Quiz for " + self.entryName + " entry")
                 return
-        
+           
             writeToLog("INFO","Step 3: Going to navigate to edit entry page f entry")
             if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=True) == False:
                 self.status = "Fail"
@@ -81,10 +83,10 @@ class Test:
                 return
                         
             self.common.base.switch_to_default_content()
-            writeToLog("INFO","Step 4: Going to navigate to edit entry page f entry")
+            writeToLog("INFO","Step 4: Going to navigate to the entry page for " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to navigate to edit entry pantry")
+                writeToLog("INFO","Step 4: FAILED to navigate to the entry page for " + self.entryName)
                 return
             
             writeToLog("INFO","Step 4: Going to navigate to edit entry page f entry")

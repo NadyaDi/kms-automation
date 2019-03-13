@@ -2666,7 +2666,7 @@ class Channel(Base):
             else:
                 writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
                 
-        if self.clsCommon.myMedia.showAllEntries(searchIn) == False:
+        if self.clsCommon.myMedia.showAllEntries(searchIn, timeOut=120) == False:
             writeToLog("INFO","FAILED to show all entries in Add to channel")
             return False
         

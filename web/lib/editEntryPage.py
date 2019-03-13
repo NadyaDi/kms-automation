@@ -20,6 +20,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_PAGE_ENTRY_NAME_TITLE                            = ('xpath', "//span[@id='entryName' and contains(text(), 'ENTRY_NAME')]") # When using this locator, replace 'ENTRY_NAME' string with your real entry name
     EDIT_ENTRY_COLLABORATION_TAB                                = ('id', "collaboration-tab")
     EDIT_ENTRY_ADD_COLLABORATOR_BUTTON                          = ('xpath', "//i[@class='icon-plus icon-white']")  
+    EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE                      = ('xpath', "//div[@class='collaboratorsTable']")
+    EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE_DELETE_USER_BUTTON   = ('xpath', "//a[@title='Delete' and contains(@href,'userId=USER_ID')]")
+    EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE_USER_ROW             = ('xpath', "//tr[@id='collaborator_USER_ID']")  
     EDIT_ENTRY_ADD_USER_TEXTBOX                                 = ('id', "EditEntryCollaborator-userId")
     EDIT_ENTRY_CO_EDITOR_CHECKBOX                               = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Editor']")
     EDIT_ENTRY_CO_PUBLISHER_CHECKBOX                            = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Publisher']")
@@ -1642,7 +1645,46 @@ class EditEntryPage(Base):
 
         if self.wait_while_not_visible(self.EDIT_ENTRY_CHANGE_MEDIA_OWNER_POP_UP_TITLE, 30) == False:
             writeToLog("INFO","FAILED to save the changes")
-            return False 
+            return False
+        sleep(2)
         
         return True
+
+
+    # Author: Horia Cus
+    # This function will remove the desired user from collaborations
+    # userID = must contain the user id ( e.g python_automation)
+    def removeCollaborator(self, userID):
+        #Click on collaboration tab
+        if self.clickOnEditTab(enums.EditEntryPageTabName.COLLABORATION) == False:
+            writeToLog("INFO","FAILED to click on collaboration tab")
+            return False 
         
+        # Verify that the list with collaborators is displayed
+        if self.wait_element(self.EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE, 30, True) == False:
+            writeToLog("INFO", "FAILED to load the the collaboration members table")
+            return False
+        
+        # Trigger the delete process for the desired user
+        deleteUserButton = (self.EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE_DELETE_USER_BUTTON[0], self.EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE_DELETE_USER_BUTTON[1].replace('USER_ID', userID))
+        if self.click(deleteUserButton, 3, True) == False:
+            writeToLog("INFO", "FAILED to click on the delete button for " + userID + " user")
+            return False
+        
+        # Confirm the delete process for the desired user
+        sleep(2)
+        if self.click(self.EDIT_ENTRY_DELETE_CONFIRMATION_BTN, 5, True) == False:
+            writeToLog("INFO", "FAILED to confirm the delete prompt for " + userID)
+            return False
+        
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Verify that the desired user is no longer present in the collaboration list
+        sleep(1)
+        userRow = (self.EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE_USER_ROW[0], self.EDIT_ENTRY_COLLABORATION_MEMBERS_TABLE_USER_ROW[1].replace('USER_ID', userID))
+        if self.wait_element(userRow, 2, True) != False:
+            writeToLog("INFO", "FAILED, the table for " + userID + " is still presented after removing the user")
+            return False
+        
+        writeToLog("INFO", "The " + userID + " has been successfully removed from the Collaboration list")
+        return True

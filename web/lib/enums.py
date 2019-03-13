@@ -667,3 +667,14 @@ class textStyle(Enum):
     BOLD      = 'Bold'
     THIN      = 'Thin'
     NORMAL    = 'Normal'
+    
+    
+class keaLocation(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    TOP_RIGHT      = 'Top Right'
+    TOP_LEFT       = 'Top Left'
+    BOTTOM_RIGHT   = 'Bottom Right'
+    BOTTOM_LEFT    = 'Bottom Left'
+    CENTER         = 'Center'
