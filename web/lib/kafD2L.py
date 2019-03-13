@@ -28,8 +28,8 @@ class D2L(Base):
     D2L_SELECT_COURSE_NEW1_BUTTON                       = ('xpath', "//a[@class='d2l-link d2l-datalist-item-actioncontrol' and contains(text(), 'New1 - New1')]")
     D2L_HEANDL_ENTRY_WIDGET_IN_ENTRY_PAGE               = ('xpath', "//h2[@class='d2l-heading vui-heading-4']") # in entry page if need to do page down/up us this locator to grab the page
     D2L_USER_NAME                                       = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
-    D2L_CREATE_NEW_DISCUSSIONS_BTN                      = ('xpath', '//a[@id="NewDiscussionsButtonMenu"]')
-    D2L_NEW_FORUM_OPTION                                = ('xpath', "//span[contains(text(), 'New Forum')]")
+    D2L_CREATE_NEW_DISCUSSIONS_BTN                      = ('xpath', '//d2l-dropdown[@id="NewDiscussionsButtonMenu"]')
+    D2L_NEW_FORUM_OPTION                                = ('xpath', "//d2l-menu-item[@text='New Forum' and @class='d2l-contextmenu-item d2l-menu-item-first']")
     D2L_FORUM_TITLE                                     = ('xpath', '//input[@id="EDT_forumTitle"]')
     D2L_DISCUSSION_EDITOR_ICON                          = ('xpath', '//a[@class="d2l-htmleditor-button"]')
     D2L_INSERT_STUFF_IFRAME                             = ('xpath', '//iframe[@class="d2l-dialog-frame"]')
@@ -194,7 +194,7 @@ class D2L(Base):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
             writeToLog("INFO","FAILED navigate to New1 media gallery page")
             return False 
-        
+       
         if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
             writeToLog("INFO","FAILED to click on 'Discussions' button")
             return False  

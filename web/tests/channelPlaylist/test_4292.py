@@ -14,7 +14,6 @@ class Test:
     
     #================================================================================================================================
     # @Author: Oded.berihon @Test name: Filter in Channel Playlist
-
     # Test description:
     # Upload entries - create Channel - publish the entries to the channel and create channel playlist. 
     # Adding entries to it using the filters.
@@ -60,7 +59,7 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video1', self.testNum)
@@ -71,70 +70,57 @@ class Test:
             self.entriesNames = [self.entryName1, self.entryName2, self.entryName3]
             ########################## TEST STEPS - MAIN FLOW #######################
             
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
-                return    
-            
-            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 1: FAILED to upload entry Video")
                 return
             
-            writeToLog("INFO","Step 3: Going to upload audio type entry")
+            writeToLog("INFO","Step 2: Going to upload audio type entry")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED failed to upload entry audio")
+                writeToLog("INFO","Step 2: FAILED to upload entry audio")
                 return 
             
-            writeToLog("INFO","Step 4: Going to upload video type entry")            
+            writeToLog("INFO","Step 3: Going to upload video type entry")            
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED failed to upload entry video")
+                writeToLog("INFO","Step 3: FAILED to upload entry video")
                 return                         
             
-            writeToLog("INFO","Step 5: Going to create new channel")            
+            writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to create Channel#1")
+                writeToLog("INFO","Step 4: FAILED to create Channel#1")
                 return
              
-            writeToLog("INFO","Step 6: Going to publish entry1")
-            if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 6: FAILED - could not publish Video to channel")
-                return
-                
-            writeToLog("INFO","Step 7: Going to publish entry2")
-            if self.common.myMedia.publishSingleEntry(self.entryName2, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 7: FAILED - could not publish audio to channel")
-                return
-            
-            writeToLog("INFO","Step 8: Going to publish entry3")
-            if self.common.myMedia.publishSingleEntry(self.entryName3, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 8: FAILED - could not publish video to channel")
+            writeToLog("INFO","Step 5: Going to publish entries")
+            if self.common.myMedia.publishEntriesFromMyMedia([self.entryName1,self.entryName2,self.entryName3], "", [self.channelName]) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to publish entries to channel")
                 return
           
             expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
            
-            writeToLog("INFO","Step 9: Going to create channel playlist")                                     
-            if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO) == False:    
+            writeToLog("INFO","Step 6: Going to create channel playlist")                                     
+            if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO, savePlaylist=False) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED failed to create channel playlist")
+                writeToLog("INFO","Step 6: FAILED to create channel playlist")
                 return 
-            sleep(3)     
+            sleep(1)     
             
-            writeToLog("INFO","Step 10: Going to verify entries order - by Alphabetical & video type")
+            writeToLog("INFO","Step 7: Going to verify entries order - by Alphabetical & video type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.CHANNEL_PLAYLIST) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to verify entries order - by Alphabetical & video type")
+                writeToLog("INFO","Step 7: FAILED to verify entries order - by Alphabetical & video type")
                 return
-           
-            writeToLog("INFO","Step 11: Going to delete channel playlist")              
+            
+            self.common.base.click(self.common.channel.CHANNEL_SAVE_PLAYLIST_BUTTON)
+            sleep(3)
+            writeToLog("INFO","Step 8: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
                 self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED failed to delete channel playlist")
+                writeToLog("INFO","Step 8: FAILED to delete channel playlist")
                 return      
             #########################################################################
             writeToLog("INFO","TEST PASSED")
@@ -145,8 +131,11 @@ class Test:
     ########################### TEST TEARDOWN ###########################
     def teardown_method(self,method):
         try:
-            self.common.handleTestFail(self.status, leavePageExpected=True)
+            self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
+            # if channel playlist tab is still open we need to close it 
+            self.common.base.click(self.common.channel.CHANNEL_SAVE_PLAYLIST_BUTTON, timeout=5)
+            sleep(2)
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])                 
             self.common.channel.deleteChannel(self.channelName) 
             writeToLog("INFO","**************** Ended: teardown_method *******************")

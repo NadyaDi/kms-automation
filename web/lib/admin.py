@@ -64,7 +64,7 @@ class Admin(Base):
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
-        if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False, timeout=1) == True:
+        if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL, False, 1) == True:
             writeToLog("INFO","Already on Admin page")
             return True
             
@@ -82,7 +82,7 @@ class Admin(Base):
             password = localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD
         
         if forceNavigate == False:    
-            if self.verifyUrl("admin\/config" , True, timeout=3) == True:
+            if self.verifyUrl("admin\/config" ,timeout=3, verifyIn=True) == True:
                 return True  
                          
         if self.navigateToAdminPage() == False:

@@ -172,6 +172,7 @@ class Channel(Base):
     CHANNEL_MEDIA_TAB_ACTIVE                            = ('xpath', "//a[@id='media-tab' and @aria-selected='true']")
     CHANNEL_ENTRY_PARENT_CHECKBOX                       = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']") 
     CHANNEL_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD            = ('xpath', '//a[@id="next" and text()="Go To Media Gallery"]')
+    CHANNEL_PLAYLIST_ENTRY_NAME                         = ('xpath', "//span[@class='searchme' and text()='ENTRY_NAME']")
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -903,7 +904,7 @@ class Channel(Base):
             return False
         
 
-    def sortAndFilterInChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, sortBy='', filterMediaType=''):
+    def sortAndFilterInChannelPlaylist(self, channelName, playlisTitle, playlistDescription, playlistTag, sortBy='', filterMediaType='', savePlaylist=True):
         if self.navigateToChannelPlaylistTab(channelName) == False:
             writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
             return False 
@@ -944,7 +945,8 @@ class Channel(Base):
         if self.click(self.CHANNEL_PLAYLISTS_ADD_MEDIA_URL) == False:
             writeToLog("INFO","FAILED to click on add media url title :'" +  + "'")
             return False        
-                       
+        
+        sleep(1)     
         if sortBy != '':
             if self.clsCommon.myMedia.SortAndFilter(enums.SortAndFilter.SORT_BY, sortBy) == False:
                 writeToLog("INFO","FAILED to set sortBy: " + str(sortBy) + " in my media")
@@ -956,10 +958,10 @@ class Channel(Base):
                 return False       
         sleep(3)
         
-       
-        if self.click(self.CHANNEL_CANCEL_PLAYLIST_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on cancel")
-            return False 
+        if savePlaylist == True:
+            if self.click(self.CHANNEL_SAVE_PLAYLIST_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on cancel")
+                return False 
                
         return True  
     
