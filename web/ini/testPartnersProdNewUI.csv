@@ -655,3 +655,6 @@ test_32,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kalt
 test_33,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_34,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4852,Recscheduling - Create new single event,2370151,mediaspace.kaltura.com,pythonautomation1@mailinator.com,Kaltura1!,Automation_User_1,Kaltura1!
+test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
