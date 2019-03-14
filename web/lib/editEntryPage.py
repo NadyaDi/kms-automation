@@ -250,7 +250,7 @@ class EditEntryPage(Base):
         except NoSuchElementException:
             writeToLog("INFO","FAILED to find added user permissions in collaboration permissions table")
             return False
-        
+        sleep(2)
         writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
         return True 
     
