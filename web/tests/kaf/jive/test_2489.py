@@ -24,8 +24,7 @@ class Test:
     application = enums.Application.JIVE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     # Test variables
     entryName = None
     description = "Description" 
@@ -62,66 +61,57 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")   
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
                     
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
               
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return                
             
             writeToLog("INFO","Step 5: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to add caption")
                 return     
             
             writeToLog("INFO","Step 6: Navigate to entry page and play entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName, self.captionTime1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return     
             
             writeToLog("INFO","Step 7: Verify that correct caption text is displayed")
             if self.common.player.verifyCaptionText(self.captionText) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to displayed correct captions text")
                 return   
             
             self.common.kafGeneric.switchToKAFIframeGeneric()            
             writeToLog("INFO","Step 8: Going to verify that caption display in the caption section in entry page and in the player")
             if self.common.entryPage.verifyAndClickCaptionSearchResult(self.captionTime2, self.captionText, self.expectedCaptionAfterSearch) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to edit entry page")
                 return   
             
             self.common.kafGeneric.switchToKAFIframeGeneric()     
             writeToLog("INFO","Step 9: Going navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED navigate to edit entry page")
                 return              
             
             writeToLog("INFO","Step 10: Going to remove added caption")
             if self.common.editEntryPage.removeCaption(self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to remove added caption to entry '" + self.entryName + "'")
                 return
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Jive - Add captions And Search' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

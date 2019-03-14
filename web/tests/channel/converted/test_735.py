@@ -24,8 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -89,48 +88,42 @@ class Test:
                 
             writeToLog("INFO","Step 1: Going to change number of entries to display in channel page")            
             if self.common.admin.changNumberEentriesPageSizeForChannel(self.numberOfEntriesInChannelPage) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to change number of entries to display in channel page")
                 return
              
             writeToLog("INFO","Step 2: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to home page")
                 return
              
             writeToLog("INFO","Step 3: Going to upload 11 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to upload 11 entries")
                 return
 
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED create new channel")
                 return
             
             sleep(2)
             writeToLog("INFO","Step 5: Going to publish entries to channel")            
             if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, "", self.channelName, disclaimer=False, showAllEntries=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish entries to channel: " + self.channelName[0])
                 return
              
             writeToLog("INFO","Step 6: Going to make a search in channel - no results should be displayed")
             if self.common.channel.searchInChannelNoResults(self.searchWithNoResults, self.channelName[0]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to make a search and display correct message")
                 return   
             
             writeToLog("INFO","Step 7: Going to check that additional entries are displayed after loading")
             if self.common.channel.verifyChannelTableSizeBeforeAndAfterScrollingDownInPage(self.searchWithResults, self.pageBeforeScrolling, self.pageAfterScrolling, noQuotationMarks=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify all entries display in channel")
                 return      
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Channel page - Search in channel ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

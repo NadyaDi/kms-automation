@@ -23,7 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -56,53 +56,46 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.description) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create open category")
                 return
              
             writeToLog("INFO","Step 2: Going to clear cache")            
             if self.common.admin.clearCache() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to clear cache")
                 return
             
             writeToLog("INFO","Step 3: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
             
             writeToLog("INFO","Step 4: Going to add member to category")
             if self.common.category.addMemberToCategory(self.categoryName, self.userName, permission=enums.CategoryMemberPermission.MEMBER) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add member to category")
                 return  
              
             writeToLog("INFO","Step 5: Going to change member permission")
             if self.common.category.editCategoryMemberPermission(self.userName, permission = enums.ChannelMemberPermission.MODERATOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED change member permission")
                 return  
              
             writeToLog("INFO","Step 6: Going to delete member")
             if self.common.channel.deleteChannelMember(self.userName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to delete member")
                 return     
             
             writeToLog("INFO","Step 7: Going to add member to category")
             if self.common.category.addMemberToCategory(self.categoryName, self.userName, permission=enums.CategoryMemberPermission.MEMBER) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to add member to category")
                 return   
              
             writeToLog("INFO","Step 8: Going to set member as owner")
             if self.common.channel.setChannelMemberAsOwner(self.userName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to set member as owner")
                 return      
             sleep(3)                                             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Categories - Members tab' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

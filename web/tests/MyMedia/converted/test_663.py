@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -62,28 +61,25 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################  
             writeToLog("INFO","Step 1: Going to upload entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesName, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entries")
                 return
             
             writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED create new channel: " + self.channelName)
                 return
                
             writeToLog("INFO","Step 3: Going to publish entries to channel from My media page")
             if self.common.myMedia.publishEntriesFromMyMedia(self.entriesName, "", [self.channelName]) == False:
-                self.status = "Fail"        
                 writeToLog("INFO","Step 3: FAILED to publish entries to channel from My Media")
                 return    
             
             writeToLog("INFO","Step 4: Going to search entries in channel page")
             if self.common.channel.verifyIfMultipleEntriesInChannel(self.channelName, self.entriesName) == False:
-                self.status = "Fail"        
                 writeToLog("INFO","Step 4: FAILED to find entries in channel")
                 return                         
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Search in my media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

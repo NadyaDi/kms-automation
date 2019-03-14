@@ -26,8 +26,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -80,25 +79,21 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePathMedia, self.entryName, self.entryDescription, self.entryTag, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
                   
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
                   
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
                                       
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return     
 
@@ -108,7 +103,6 @@ class Test:
                 fileName = self.filePathDictionary[path][1].split("\\")[len(self.filePathDictionary[path][1].split("\\"))-1]   
                 writeToLog("INFO","Step " + str(step) + ": Going add attachment")
                 if self.common.editEntryPage.addAttachments(self.filePathDictionary[path][1], fileName, self.attachmentTitle, self.attachmentDescripiton) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to add attachment")
                     return   
                    
@@ -116,7 +110,6 @@ class Test:
                     
                 writeToLog("INFO","Step " + str(step) + ": Going to edit attachment")
                 if self.common.editEntryPage.editAttachmentFields(fileName, self.newAttachmentTitle, self.newAttachmentDescripiton) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to edit attachment fields")
                     return  
   
@@ -124,7 +117,6 @@ class Test:
                 
                 writeToLog("INFO","Step " + str(step) + ": Going to download attachment file from edit entry page")
                 if self.common.editEntryPage.downloadAttachmentFileFromEditPage(path, self.filePathDictionary[path][0]) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to download attachment file from edit entry page")
                     return
                 
@@ -132,7 +124,6 @@ class Test:
                 
                 writeToLog("INFO","Step " + str(step) + ": Going to delete download file from folder")    
                 if self.common.deleteFile(self.filePathDictionary[path][0]) == False:    
-                    self.status = "Fail"    
                     writeToLog("INFO","Step " + str(step) + ": FAILED to delete download file from folder")    
                     return     
                   
@@ -140,7 +131,6 @@ class Test:
                    
                 writeToLog("INFO","Step " + str(step) + ": Going to navigate to entry page")
                 if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to navigate to edit entry page")
                     return   
                        
@@ -148,7 +138,6 @@ class Test:
                        
                 writeToLog("INFO","Step " + str(step) + ": Going to download attachment file from entry page")
                 if self.common.entryPage.downloadAttachmentFromEntryPage(path, self.filePathDictionary[path][0]) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to download attachment file from entry page")
                     return 
                       
@@ -156,7 +145,6 @@ class Test:
                        
                 writeToLog("INFO","Step " + str(step) + ": Going to navigate to edit entry page")
                 if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to add attachment")
                     return   
                       
@@ -164,11 +152,11 @@ class Test:
            
                 writeToLog("INFO","Step " + str(step) + ": Going remove attachment file")
                 if self.common.editEntryPage.removeAttachmentFile() == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + ": FAILED to remove attachment file")
                     return  
                       
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

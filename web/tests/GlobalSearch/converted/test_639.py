@@ -29,8 +29,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -67,25 +66,21 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload new entry")            
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.description, self.tags, disclaimer=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload new entry: " + self.entryName)
                 return
              
             writeToLog("INFO","Step 2: Going to publish entry to category")
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, "", publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED publish entry '" + self.entryName + "' to category: " + self.categoryName)
                 return
              
             writeToLog("INFO","Step 3: Going navigate to entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to entry '"+ self.entryName +"' page")
                 return           
                
             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return
                
@@ -97,24 +92,22 @@ class Test:
              
             writeToLog("INFO","Step 6: Going to click on caption tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to click on caption tab")
                 return            
              
             writeToLog("INFO","Step 7: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to upload caption")
                 return     
             sleep(10)
             
             writeToLog("INFO","Step 8: Going to search and verify caption in global search")
             if self.common.globalSearch.serchAndVerifyCaptionInGlobalSearch(self.captionText, self.captionTime, self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to search for caption '" + self.captionText + "' in entry '" + self.entryName +"' after global search")
                 return 
              
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Global search - Search for Captions in Video' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

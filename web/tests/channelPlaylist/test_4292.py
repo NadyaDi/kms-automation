@@ -22,7 +22,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -72,31 +72,26 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry Video")
                 return
             
             writeToLog("INFO","Step 2: Going to upload audio type entry")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry audio")
                 return 
             
             writeToLog("INFO","Step 3: Going to upload video type entry")            
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to upload entry video")
                 return                         
             
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create Channel#1")
                 return
              
             writeToLog("INFO","Step 5: Going to publish entries")
             if self.common.myMedia.publishEntriesFromMyMedia([self.entryName1,self.entryName2,self.entryName3], "", [self.channelName]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish entries to channel")
                 return
           
@@ -104,14 +99,12 @@ class Test:
            
             writeToLog("INFO","Step 6: Going to create channel playlist")                                     
             if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO, savePlaylist=False) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to create channel playlist")
                 return 
             sleep(1)     
             
             writeToLog("INFO","Step 7: Going to verify entries order - by Alphabetical & video type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.CHANNEL_PLAYLIST) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify entries order - by Alphabetical & video type")
                 return
             
@@ -119,10 +112,10 @@ class Test:
             sleep(3)
             writeToLog("INFO","Step 8: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to delete channel playlist")
                 return      
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

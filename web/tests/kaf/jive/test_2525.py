@@ -24,8 +24,7 @@ class Test:
     application = enums.Application.JIVE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -71,26 +70,22 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload 4 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 4 entries")
                 return
                  
             writeToLog("INFO","Step 2: Going to publish entries 1-3 to Gallery")
             if self.common.kafGeneric.addNewContentToGallery(self.galleryName, self.uploadEntrieList, isGalleryModerate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entries 1-3 gallery")
                 return
             
             self.common.base.switch_to_default_content()     
             writeToLog("INFO","Step 3: Going to logout from main user")
             if self.common.jive.logOutOfJive() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to logout from main user")
                 return  
                                       
             writeToLog("INFO","Step 4: Going to login with gallery's owner")
             if self.common.jive.loginToJive(self.newUserId, self.newUserPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to login with gallery's owner")
                 return
              
@@ -98,32 +93,27 @@ class Test:
                
             writeToLog("INFO","Step 5: Going to sort entries by Alphabetical & Image type")
             if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, self.galleryName, True, enums.Location.GALLERY_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to sort entries by Alphabetical & Image type")
                 return
                
             writeToLog("INFO","Step 6: Going to verify entries order - by Alphabetical & Image type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify entries order - by Alphabetical & Image type")
                 return
                     
             writeToLog("INFO","Step 7: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
             if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName, self.entryName1, self.entryName2, navigate=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to handle entries in Pending tab")
                 return
             
             self.common.base.switch_to_default_content() 
             writeToLog("INFO","Step 8: Going to logout from gallery owner user")
             if self.common.jive.logOutOfJive() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to logout from gallery owner user")
                 return  
              
             writeToLog("INFO","Step 9: Going to login with main user")
             if self.common.jive.loginToJive(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to login with main user")
                 return
              
@@ -134,7 +124,6 @@ class Test:
              
             writeToLog("INFO","Step 10: Going navigate to my media")
             if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED navigate to my media")
                 return
             
@@ -143,13 +132,12 @@ class Test:
                 for entry in self.entries:
                     if self.common.myMedia.verifyEntryPrivacyInMyMedia(entry, self.entries.get(entry), forceNavigate=False) == False:
                         writeToLog("INFO","Step 11: FAILED verify privacy for entry: " + str(entry))  
-                        self.status = "Fail"
                         return                        
             except:
                 writeToLog("INFO","Step 11: FAILED verify privacy for entry: " + str(entry))  
-                self.status = "Fail"
                 return
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Jive - Gallery Moderated' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

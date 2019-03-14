@@ -24,7 +24,7 @@ class Test:
     testNum     = "706"
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -72,25 +72,21 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.entryDescription) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create parent category")
                 return
             
             writeToLog("INFO","Step 2: Going to clear cache")            
             if self.common.admin.clearCache() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to clear cache")
                 return
             
             writeToLog("INFO","Step 3: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
                         
             writeToLog("INFO","Step 4: Going to upload and publish 3 kind of entries to: " + self.categoryName )
             if self.common.category.addNewContentToCategory(self.categoryName, uploadEntrieList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to upload and publish 3 kind of entries to: " + self.categoryName)
                 return
             
@@ -98,11 +94,11 @@ class Test:
             for entry in self.entriesList:
                 writeToLog("INFO","Step 5: Going to verify that " + entry + ", is presented inside the category")
                 if self.common.entryPage.navigateToEntryPageFromCategoryPage(entry, self.categoryName) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step 5: FAILED to verify that " + entry + ", is presented inside the category")
                     return
             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Categories - Add New Media to category' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -24,8 +24,7 @@ class Test:
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     # Test variables
     entryName = None
     entryDescription = "Description"
@@ -60,32 +59,27 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
             
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return
                
             writeToLog("INFO","Step 3: Going to upload thumbnail in edit Entry Page")
             if self.common.editEntryPage.uploadThumbnail(self.uploadThumbnailFliePath, self.uploadThumbnailExpectedResult) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to upload thumbnail")
                 return
                                 
             writeToLog("INFO","Step 4: Going to navigate to entry page")            
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName, leavePage=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED navigate to entry page '" + self.entryName + "'")
                 return
             sleep(4)
               
             writeToLog("INFO","Step 5: Going to check the entry thumbnail in the player")
             if self.common.player.verifyThumbnailInPlayer(self.uploadThumbnailExpectedResult) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
              
@@ -93,19 +87,16 @@ class Test:
             writeToLog("INFO","Step 6: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return                  
                
             writeToLog("INFO","Step 7: Going to capture thumbnail")            
             if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult, playFromBarline=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to capture thumbnail")
                 return                                
                                  
             sleep(2)     
             writeToLog("INFO","Step 8: Going to navigate to entry page")            
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to entry page '" + self.entryName + "'")
                 return
                
@@ -119,29 +110,26 @@ class Test:
             self.common.switch_to_default_iframe_generic()
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return                  
                
             writeToLog("INFO","Step 11: Going to chose auto generate  thumbnail")            
             if self.common.editEntryPage.chooseAutoGthumbnail(self.autoGenerateSliceNumber, self.autoGenerateThumbnailExpectedResult) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to choose auto generate thumbnail")
                 return                                
                                  
             sleep(2)     
             writeToLog("INFO","Step 12: Going to navigate to entry page")            
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED navigate to entry page '" + self.entryName + "'")
                 return
                
             writeToLog("INFO","Step 13: Going to check the entry thumbnail in the player")
             if self.common.player.verifyThumbnailInPlayer(self.autoGenerateThumbnailExpectedResult) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED failed to logout from main user")
                 return                                         
             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Edit entry - thumbnail tab' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

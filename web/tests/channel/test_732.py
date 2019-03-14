@@ -29,8 +29,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -70,7 +69,6 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as End-user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as End-user")
                 return
               
@@ -81,24 +79,22 @@ class Test:
               
             writeToLog("INFO","Step 2: Going to upload 5 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
                  
-            writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
+            writeToLog("INFO","Step 3: Going to publish entries 1-3 to Moderated channel")
             if self.common.channel.addExistingContentToChannel("KMS-Automation_Moderate_Channel", [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=False, publishFrom = enums.Location.MY_CHANNELS_PAGE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
+                writeToLog("INFO","Step 3: FAILED to publish entries 1-3 to Moderated channel")
                 return
                              
-            writeToLog("INFO","Step 7: Going to ")
+            writeToLog("INFO","Step 4: Going to verify that entries display in channel")
             if self.common.channel.searchEntriesInChannel([self.entryName1, self.entryName2, self.entryName3], enums.Location.CHANNELS_PAGE, "KMS-Automation_Moderate_Channel") == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to ")
+                writeToLog("INFO","Step 4: FAILED to verify that entries display in channel")
                 return
-               
             
             ##################################################################
+            self.status = "Pass"
+            writeToLog("INFO","TEST PASSED: Channel page - Add New Media to channel was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

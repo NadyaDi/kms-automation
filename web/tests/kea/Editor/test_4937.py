@@ -24,8 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     
@@ -57,52 +56,45 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
               
             writeToLog("INFO","Step 2: Going to navigate to " + self.entryName + " entrie's KEA editor")  
             if self.common.kea.launchKEA(self.entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to " + self.entryName + "entrie's KEA editor") 
                 return        
    
             writeToLog("INFO","Step 3: Going to delete " + self.entryName + "'s 00:05 to 00:10 interval")  
             if self.common.kea.editorTimelineActions("00:05", '00:10', True, enums.KeaEditorTimelineOptions.DELETE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to delete " + self.entryName + "'s 00:05 to 00:10 interval") 
                 return
               
             writeToLog("INFO","Step 4: Going to split " + self.entryName + "'s section from second 00:15")  
             if self.common.kea.editorTimelineActions("00:15", '', True, enums.KeaEditorTimelineOptions.SPLIT) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to split " + self.entryName + "'s section from second 00:15")   
                 return            
   
             writeToLog("INFO","Step 5: Going to Set In " + self.entryName + "'s section from second 00:15 to 00:25")  
             if self.common.kea.editorTimelineActions("00:25", '', True, enums.KeaEditorTimelineOptions.SET_IN) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: Going to Set In " + self.entryName + "'s section from second 00:15 to 00:25")  
                 return
               
             writeToLog("INFO","Step 6: Going to reset the changes to the default state in KEA section")  
             if self.common.kea.timeLineUndoRedoReset(enums.KeaEditorTimelineOptions.RESET) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to reset the changes to the default state in KEA section") 
                 return
              
             writeToLog("INFO","Step 7: Going to save the KEA Editor Timeline section for " + self.entryName + " entry")
             if self.common.kea.saveEditorChanges(True)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to save the KEA Editor Timeline section for " + self.entryName + " entry")
                 return
             
             writeToLog("INFO","Step 8: Going to compare the time length of the entry from KEA Editor and Entry Page for " + self.entryNameClipped + " entry")
             if self.common.kea.compareEntryDurationInKeaAndEntryPage(self.entryNameClipped, '00:30')== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to compare the time length of the entry from KEA Editor and Entry Page for " + self.entryNameClipped + " entry")
                 return           
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED for an " + self.testType)            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

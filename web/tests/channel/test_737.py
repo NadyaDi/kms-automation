@@ -13,17 +13,16 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded.berihon @Test name : Edit link to edit entry page via Channel
-
+    # @Author: Oded.berihon 
+    #@Test name : Edit link to edit entry page via Channel
     # Test description:
     # Upload entry publish to channel and go to edit page with no search
-    # 
     #================================================================================================================================
     testNum     = "737"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -48,48 +47,39 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('edit link', self.testNum)
             self.channelName = clsTestService.addGuidToString('Channel edit link', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
-                return    
-            
-            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 1: FAILED to upload entry Video")
                 return
            
-            writeToLog("INFO","Step 3: Going to create new channel")            
+            writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to create Channel#1")
+                writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
            
-            writeToLog("INFO","Step 4: Going to publish entry1")
+            writeToLog("INFO","Step 3: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 4: FAILED - could not publish Video to channel")
+                writeToLog("INFO","Step 3: FAILED to publish Video to channel")
                 return
             
-            writeToLog("INFO","Step 5: Going to navigate to channel page")
+            writeToLog("INFO","Step 4: Going to navigate to channel page")
             if self.common.channel.navigateToChannel(self.channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE) == False:
-                writeToLog("INFO","Step 5: FAILED - could not navigate to channel page")
+                writeToLog("INFO","Step 4: FAILED navigate to channel page")
                 return
  
-            writeToLog("INFO","Step 6: Going to navigate to entry's edit page")            
+            writeToLog("INFO","Step 5: Going to navigate to entry's edit page")            
             if self.common.channel.navigateToEditEntryPageFromChannelWhenNoSearchIsMade(self.entryName1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to click entry Edit button, Entry name: '" + self.entryName1 + "'")
+                writeToLog("INFO","Step 5: FAILED to enter entry: '" + self.entryName1 + "' edit page from channel page")
                 return             
-
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

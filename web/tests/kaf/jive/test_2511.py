@@ -23,9 +23,7 @@ class Test:
     application = enums.Application.JIVE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
-    # Test variables
+    status = "Fail"
     entryName = None
     description = "Description" 
     tags = "Tags,"
@@ -55,23 +53,21 @@ class Test:
                 
             writeToLog("INFO","Step 1: Going to to create embed discussion")    
             if self.common.jive.createEmbedMedia(self.discussionName, self.entryName, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, isTagsNeeded=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create embed discussion")
                 return
                
             writeToLog("INFO","Step 2: Going to to verify embed discussion")    
             if self.common.jive.verifyEmbedMedia(self.discussionName, self.uploadThumbnailExpectedResult, '') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to verify embed discussion")
                 return 
             
             writeToLog("INFO","Step 3: Going to to delete embed discussion")    
             if self.common.jive.deleteEmbedMedia(self.discussionName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to delete embed discussion")
                 return                                                                     
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Jive - Embed media in document from My Media ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

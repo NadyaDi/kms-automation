@@ -24,8 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -73,32 +72,27 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry number 1")
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry number 1")
                 return
                
             writeToLog("INFO","Step 2: Going to upload entry number 2")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry number 2")
                 return
                 
             writeToLog("INFO","Step 3: Going to upload entry number 3")
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry number 3")
                 return
                      
             writeToLog("INFO","Step 4: Going to create new playlist with entries")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create new playlist '" + self.playlistName + "'")
                 return
                 
             writeToLog("INFO","Step 5: Going to get playlist id")            
             self.playlistID = self.common.myPlaylists.getPlaylistID(self.playlistName)
             if self.playlistID == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to get playlist '" + self.playlistName + "' id")
                 return   
                
@@ -114,49 +108,26 @@ class Test:
              
             writeToLog("INFO","Step 8: Going to navigate to home page")
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_TEST_BASE_URL) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to home page")
                 return
             
-            if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
-                writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.48, 2.21, 1.15, 1.07)  == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
-                    return
-                 
-                sleep(self.carouselInterval + 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.48, 2.21, 1.15, 1.07)  == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
-                    return
-                 
-                sleep(self.carouselInterval - 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.48, 2.21, 1.15, 1.07)  == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
-                    return
+            writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
+            if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 1.48, 2.21, 1.15, 1.07)  == False:
+                writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
+                return
              
-            elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
-                writeToLog("INFO","Step 9: Going to verify that the entries in the home page carousel are correct")
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName3, self.expectedQRCode3, 0.96, 2.65, 0.63, 0.91)  == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName3 + "' display in home page carousel")
-                    return
-                 
-                sleep(self.carouselInterval + 1) 
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 0.96, 2.65, 0.63, 0.91)  == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
-                    return
-                 
-                sleep(self.carouselInterval - 1)
-                if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 0.96, 2.65, 0.63, 0.91)  == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
-                    return
+            sleep(self.carouselInterval + 1)
+            if self.common.home.verifyEntryInHomePageCarousel(self.entryName2, self.expectedQRCode2, 1.48, 2.21, 1.15, 1.07)  == False:
+                writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName2 + "' display in home page carousel")
+                return
+             
+            sleep(self.carouselInterval - 1)
+            if self.common.home.verifyEntryInHomePageCarousel(self.entryName1, self.expectedQRCode1, 1.48, 2.21, 1.15, 1.07)  == False:
+                writeToLog("INFO","Step 9: FAILED verify entry '" + self.entryName1 + "' display in home page carousel")
+                return
                  
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Home Page carousel playlist' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -26,8 +26,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -63,34 +62,30 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload 2 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 2 entries")
                 return
                
             writeToLog("INFO","Step 2: Going to delete entry via the entry delete button")
             if self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to delete entry via the entry delete button")
                 return
             
             writeToLog("INFO","Step 3: Going to verify that entry '" + self.entryName1 + "' doesn't display in my media")
             if self.common.myMedia.verifyNoResultAfterSearchInMyMedia(self.entryName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED entry '" + self.entryName1 + "' still display in my media although it was deleted")
                 return
                 
             writeToLog("INFO","Step 4: Going to delete entry via 'action > delete")
             if self.common.myMedia.deleteEntriesFromMyMedia(self.entryName2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to delete entry '" + self.entryName2  +" entry via 'action > delete")
                 return
             
             writeToLog("INFO","Step 5: Going to verify that entry '" + self.entryName2 + "'  doesn't display in my media")
             if self.common.myMedia.verifyNoResultAfterSearchInMyMedia(self.entryName2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED entry '" + self.entryName2 + "' still display in my media although it was deleted")
                 return
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Delete single entry' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

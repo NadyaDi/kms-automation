@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -69,55 +68,46 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
                 
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page - start watching")
             if self.common.entryPage.navigateToEntry(self.entryStartWatching) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page " + self.entryStartWatching)
                 return  
                       
             writeToLog("INFO","Step 3: Going to play entry - not until the end")
             if self.common.player.navigateToEntryClickPlayPause(self.entryStartWatching, '0:02') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate and play entry not until the end")
                 return 
               
             writeToLog("INFO","Step 4: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to switch to default content")
                 return  
               
             writeToLog("INFO","Step 5: Going to navigate to uploaded entry page - complete watching")
             if self.common.entryPage.navigateToEntry(self.entryCompleteWatching) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to entry page " + self.entryCompleteWatching)
                 return  
                       
             writeToLog("INFO","Step 6: Going to play entry - not until the end")
             if self.common.player.navigateToEntryClickPlayPause(self.entryCompleteWatching, '0:23', timeout=50) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate and play entry not until the end")
                 return 
               
             writeToLog("INFO","Step 7: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to switch to default content")
                 return                                               
             
             writeToLog("INFO","Step 8: Going to navigate to history page")
             if self.common.myHistory.navigateToMyHistory(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate to history page")
                 return
             
             writeToLog("INFO","Step 9: Going to filter entries by watch status - start watching")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.STARTED_WATCHING) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to filter entries by watch status - start watching")
                 return   
             
@@ -125,52 +115,45 @@ class Test:
             
             writeToLog("INFO","Step 10: Going to filter entries by watch status - start watching - again")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.STARTED_WATCHING) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to filter entries by watch status - start watching - again")
                 return             
             
             writeToLog("INFO","Step 11: Going to check that correct entries for start watching filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByStartWatching) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to displayed correct entries for start watching")
                 return
             
             writeToLog("INFO","Step 12: Going to verify that only entries with " + enums.MyHistoryWatcheStatusItems.STARTED_WATCHING.value + " status are displayed")
             if self.common.myHistory.verifyFilterWatchStatus(enums.MyHistoryWatcheStatusItems.STARTED_WATCHING) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to displayed only entries with " + enums.MyHistoryWatcheStatusItems.STARTED_WATCHING.value + " status")
                 return  
             
             writeToLog("INFO","Step 13: Going to filter entries by watch status - complete watching")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to filter entries by watch status - complete watching")
                 return   
             
             writeToLog("INFO","Step 14: Going to check that correct entries for complete watching filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByCompletedWatching) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to displayed correct entries for complete watching")
                 return
             
             writeToLog("INFO","Step 15: Going to verify that only entries with " + enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING.value + " status are displayed")
             if self.common.myHistory.verifyFilterWatchStatus(enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to displayed only entries with " + enums.MyHistoryWatcheStatusItems.COMPLETED_WATCHING.value + " status")
                 return  
             
             writeToLog("INFO","Step 16: Going to filter entries by watch status - All History")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.WATCH_STATUS_MENU, dropDownListItem = enums.MyHistoryWatcheStatusItems.ALL_HISTORY) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to filter entries by watch status - All history")
                 return   
             
             writeToLog("INFO","Step 17: Going to check that correct entries for complete watching filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByAllHistory) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to displayed correct entries for complete watching")
                 return                                                             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

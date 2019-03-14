@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -64,44 +63,37 @@ class Test:
                 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                     
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return
                           
             writeToLog("INFO","Step 3: Going to add Collaborator in edit Entry Page")
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId, True, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to add user as a collaborator")
                 return
                  
             sleep(2)     
             writeToLog("INFO","Step 4: Going to publish the entry so the added user as a collaborator can see it")            
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryList, "") == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish entry '" + self.entryName + "'")
                 return
                  
             writeToLog("INFO","Step 5: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED failed to logout from main user")
                 return  
                                    
             writeToLog("INFO","Step 6: Going to login with the user that was added as Collaborator")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to login with the user that was added as Collaborator")
                 return                             
                
             writeToLog("INFO","Step 7: Going to try and delete entry with added as Collaborator user")
             if self.common.entryPage.deleteEntryFromEntryPage(self.entryName, enums.Location.CATEGORY_PAGE, self.categoryList[0]) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, the collaborator user succeed to delete entry although he don't have permission for it")
                 return
             writeToLog("INFO","Step 7: Previous Step Failed as Expected - the collaborator user don't have permission to delete the entry")
@@ -112,18 +104,16 @@ class Test:
             writeToLog("INFO","Step 8: Going navigate to edit entry page from category page")
             if self.common.category.navigateToEditEntryPageFromCategoryPage(self.entryName, self.categoryList[0]) == False: 
                 writeToLog("INFO","Step 8: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return False 
             
             writeToLog("INFO","Step 9: Going to try to add user as collaborator with added as Collaborator user")
             if self.common.editEntryPage.addCollaborator(self.entryName, self.newUserId2, True, False) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED, the collaborator user succeed to add user as a collaborator although he don't have permission for it")
                 return      
             writeToLog("INFO","Step 9: Previous Step Failed as Expected - the collaborator user don't have permission to add collaborator user")     
 
-            
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Collaboration negative test' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

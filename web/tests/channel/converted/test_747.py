@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -66,99 +65,85 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName1, self.description, self.tags, enums.ChannelPrivacyType.SHAREDREPOSITORY, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED create new channel: " + self.channelName1)
                 return
             
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName1, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
             
             writeToLog("INFO","Step 3: Going to add entry to channel: " + self.channelName1)
             if self.common.channel.addExistingContentToChannel(self.channelName1, self.entryName1, False, publishFrom=enums.Location.MY_CHANNELS_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add entry '" + self.entryName1 + "' to channel '" + self.channelName1 + "'")
                 return
             
             sleep(3)
             writeToLog("INFO","Step 4: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to logout from main user")
                 return  
                             
             writeToLog("INFO","Step 5: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to login with " + self.userName1)
                 return       
                         
             writeToLog("INFO","Step 6: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName2, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload entry")
                 return    
                         
             writeToLog("INFO","Step 7: Going to add entry to channel: " + self.channelName1)
             if self.common.channel.addExistingContentToChannel(self.channelName1, self.entryName2, False, publishFrom=enums.Location.CHANNELS_PAGE) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, user can add content to 'shared repository channel' although the user isn't a member in the channel")
                 return              
             writeToLog("INFO","Step 7 failed as expected: user '" + self.userName1 + "' isn't a member in channel '" + self.channelName1 + "' so he isn't able to add content")
                             
             writeToLog("INFO","Step 8: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName2, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED create new channel: " + self.channelName2)
                 return               
                             
             sleep(3)
             writeToLog("INFO","Step 9: Going to logout from user: " + self.userName1)
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to logout from user: " + self.userName1)
                 return  
                             
             writeToLog("INFO","Step 10: Going to login with main user")
             if self.common.loginAsUser()  == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to login with main user")
                 return                 
                             
             writeToLog("INFO","Step 11: Going to add user '" + self.userName1 +"' as member to channel '" + self.channelName1 + "'")
             if self.common.channel.addMembersToChannel(self.channelName1, self.userName1, permission=enums.ChannelMemberPermission.CONTRIBUTOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to add user '" + self.userName1 + "' as contributor to channel '" + self.channelName1 + "'")
                 return               
                             
             sleep(3)
             writeToLog("INFO","Step 12: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to logout from main user")
                 return  
                             
             writeToLog("INFO","Step 13: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to login with " + self.userName1)
                 return                  
                    
             writeToLog("INFO","Step 14: Going to add entry to channel: " + self.channelName1)
             if self.common.channel.addExistingContentToChannel(self.channelName1, self.entryName2, False, publishFrom=enums.Location.CHANNELS_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to add entry to channel '" + self.channelName1 + "'")
                 return           
             
             writeToLog("INFO","Step 15: Going to add entry to channel: " + self.channelName2 + " from shared repository channel: " + self.channelName1)
             if self.common.channel.addExistingContentToChannel(self.channelName2, self.entryName1, False, publishFrom=enums.Location.CHANNELS_PAGE, channelType=enums.ChannelPrivacyType.SHAREDREPOSITORY, sharedReposiytyChannel=self.channelName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add entry from shared repository channel to channel '" + self.channelName2 + "'")
                 return              
                             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Channel page - Shared Repository'  was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -26,8 +26,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -58,29 +57,26 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")  
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName1)
                 return 
                                  
             writeToLog("INFO","Step 2: Going to publish entry from upload page")  
             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entry' " + self.entryName + " to gallery upload page")
                 return 
             sleep(3)
             writeToLog("INFO","Step 3: Going navigate to gallery page")
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to gallery: " + self.galleryName)
                 return
                 
             writeToLog("INFO","Step 4: Going to verify entry published to category ")
             if self.common.channel.searchEntryInChannel(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to find entry ' " + self.entryName + "' in gallery: " + self.galleryName)
                 return 
            
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BlackBoard - Publish after upload' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -22,8 +22,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -60,19 +59,16 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
              
             writeToLog("INFO","Step 2: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return   
             
             writeToLog("INFO","Step 3: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
             
@@ -81,10 +77,10 @@ class Test:
             
             writeToLog("INFO","Step 4: Going to publish the entry while Disclaimer before published turned ON")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], disclaimer=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED publish entry (Disclaimer is on)")
                 return
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

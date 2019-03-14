@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -58,40 +57,35 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED create new channel")
                 return
             
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry")
                 return      
               
             writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return
                   
             writeToLog("INFO","Step 5: Going to publish entry to channel from entry page")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], publishFrom = enums.Location.ENTRY_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish entry to channel from entry page")
                 return                           
                           
             writeToLog("INFO","Step 6: Going to search entry in channel")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to find entry in channel")
                 return                                                                           
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

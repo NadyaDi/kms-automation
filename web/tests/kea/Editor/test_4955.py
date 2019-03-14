@@ -23,8 +23,7 @@ class Test:
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -98,13 +97,11 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
  
             writeToLog("INFO","Step 2: Going to create a Quiz for " + self.entryName + " entry")
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=30) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a Quiz for " + self.entryName + " entry")
                 return
  
@@ -112,38 +109,32 @@ class Test:
  
             writeToLog("INFO","Step 3: Going to navigate to edit entry page for " + self.quizEntryName + " entry")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.quizEntryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to edit entry page for " + self.quizEntryName + " entry")
                 return
  
             writeToLog("INFO","Step 4: Going to upload a slide deck for the " + self.quizEntryName + " entry")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to upload a slide deck for the " + self.quizEntryName + " entry")
                 return
  
             writeToLog("INFO","Step 5: Going to navigate to the Captions Edit Tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to the Captions Edit Tab")
                 return
  
             writeToLog("INFO","Step 6: Going to add caption for the " + self.quizEntryName + " entry")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to add caption for the " + self.quizEntryName + " entry")
                 return
 
             writeToLog("INFO","Step 7: Going to collect all the available Questions from the " + self.quizEntryName + " entry, before trim")
             self.quizQuestionsBeforeTrimming = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 5)
             if self.quizQuestionsBeforeTrimming == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to collect all the available Questions from the " + self.quizEntryName + " entry, before trim")
                 return
 
             writeToLog("INFO","Step 8: Going to compare the presented Quiz Questions with the Expected Quiz Questions, before trim")
             if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeTrimming) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before trim")
                 return
 
@@ -152,7 +143,6 @@ class Test:
             writeToLog("INFO","Step 9: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, before trim")
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
             if  self.QRlist == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, before trim")
                 return
 
@@ -160,7 +150,6 @@ class Test:
             self.isAbsentQR = ["33", "55", "100", "99"];
             writeToLog("INFO","Step 10: Going to verify that the presented Slides matches with the Expected slides, before trim")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to verify that the presented Slides matches with the Expected slides, before trim")
                 return
 
@@ -169,7 +158,6 @@ class Test:
             writeToLog("INFO","Step 11: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before trim")
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)
             if  self.captionList == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before trim")
                 return
 
@@ -177,26 +165,22 @@ class Test:
             self.isAbsent = ["Caption100search", "Caption32search"];
             writeToLog("INFO","Step 11: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before trim")
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before trim")
                 return
  
             writeToLog("INFO","Step 12: Going to clip the " + self.quizEntryName + " entry from second 12 to second 22, leaving a length of the entry of 20 seconds")
             if self.common.kea.trimEntry(self.quizEntryName, "00:12", "00:22", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, openEditorTab=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to clip the " + self.quizEntryName + " entry from second 12 to second 22, leaving a length of the entry of 20 seconds")
                 return
  
             writeToLog("INFO","Step 13: Going to collect all the available Questions from the " + self.quizEntryName + " entry, after trim")
             self.qestionCollectedAfterTrim = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 3)
             if self.qestionCollectedAfterTrim == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to collect all the available Questions from the " + self.quizEntryName + " entry, after trim")
                 return
  
             writeToLog("INFO","Step 14: Going to compare the presented Quiz Questions with the Expected Quiz Questions, after trim")
             if self.common.player.compareQuizQuestionDict(self.qestionCollectedAfterTrim, self.dictQuestionsClippedExist, self.dictQuestionsClippedAbsent) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, after trim")
                 return
  
@@ -205,7 +189,6 @@ class Test:
             writeToLog("INFO","Step 15: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, after trim")
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
             if  self.QRlist == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, after trim")
                 return
 
@@ -213,7 +196,6 @@ class Test:
             self.isAbsentQR = ["18", "14", "15", "17"];
             writeToLog("INFO","Step 16: Going to verify that the presented Slides matches with the Expected slides, after trim")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to verify that the presented Slides matches with the Expected slides, after trim")
                 return
 
@@ -222,7 +204,6 @@ class Test:
             writeToLog("INFO","Step 17: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, after trim")
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)
             if  self.captionList == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to collect all the presented captions from the " + self.quizEntryName + " entrie's player, after trim")
                 return
 
@@ -230,10 +211,10 @@ class Test:
             self.isAbsent = ["Caption18search", "Caption14search", "Caption15search", "Caption17search"];
             writeToLog("INFO","Step 18: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, after trim")
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, after trim")
                 return
-
+            ######################################################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED, all the elements were properly verified for a " + self.testType)
         # if an exception happened we need to handle it and fail the test
         except Exception as inst:

@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     # Test variables
     videoEntryName = None
     audioEntryName = None
@@ -72,59 +71,51 @@ class Test:
                  
             writeToLog("INFO","Step 1: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
                     
             writeToLog("INFO","Step 2: Going navigate to image entry: "+ self.imageEntryName)    
             if self.common.entryPage.navigateToEntry(self.imageEntryName, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to entry: " + self.imageEntryName)
                 return 
                 
             writeToLog("INFO","Step 3: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.IMAGE, "", "", self.ImageQrCodeResult) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to verify the entry '" + self.imageEntryName + "' in player")
                 return   
             
             writeToLog("INFO","Step 4: Going navigate to audio entry: "+ self.audioEntryName)    
             if self.common.entryPage.navigateToEntry(self.audioEntryName, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 47: FAILED navigate to entry: " + self.audioEntryName)
                 return 
                         
             writeToLog("INFO","Step 5: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED - New entry is still processing")
                 return 
             
             writeToLog("INFO","Step 6: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, self.audioLength, "", "") == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify the entry '" + self.audioEntryName + "' in player")
                 return   
    
             writeToLog("INFO","Step 7: Going navigate to video entry: "+ self.videoEntryName)    
             if self.common.entryPage.navigateToEntry(self.videoEntryName, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED navigate to entry: " + self.videoEntryName)
                 return 
                   
             writeToLog("INFO","Step 8: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED - New entry is still processing")
                 return 
             
             writeToLog("INFO","Step 9: Going to verify the entry in player")            
             if self.common.entryPage.verifyEntryViaType(enums.MediaType.VIDEO, self.vidoeLength, self.vidoeTimeToStop, self.videoQrCodeResult) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify the entry '" + self.videoEntryName + "' in player")
                 return   
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Jive - Upload media from desktop and verify player' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

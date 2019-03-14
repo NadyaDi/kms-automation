@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -70,35 +69,31 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload 3 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
             
             writeToLog("INFO","Step 2: Going to create Empty playlist")
             if self.common.myPlaylists.createEmptyPlaylist(self.entryName1, self.playlistName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Empty playlist")
                 return
 
             writeToLog("INFO","Step 3: Going to create playlist with 1 Entry")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName2, self.playlistName2, toCreateNewPlaylist=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create playlist with 1 Entry ")
                 return
             
             writeToLog("INFO","Step 4: Going to add 2 Entries to Multiple Playlists") 
             if self.common.myPlaylists.addEntriesToMultiplePlaylists(self.entriesList, self.listOfPlaylists, self.playlistName3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add Entry to Multiple Playlists")
                 return
             
             writeToLog("INFO","Step 5: Going to verify Entries in Playlists")
             if self.common.myPlaylists.verifyMultipleEntriesInMultiplePlaylists(self.entriesList, self.verifylistOfPlaylists, isExpected=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify Entries in Playlists")
                 return
             sleep(4)                                                       
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -53,40 +52,35 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ######################   
             writeToLog("INFO","Step 1: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create Channel")
                 return
  
             writeToLog("INFO","Step 2: Going to add member to channel")
             if self.common.channel.addMembersToChannel(self.channelName, self.username) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add member to channel")
                 return  
              
             writeToLog("INFO","Step 3: Going to change member permission")
             if self.common.channel.editChannelMemberPermission(self.username) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED change member permission")
                 return  
              
             writeToLog("INFO","Step 4: Going to delete member")
             if self.common.channel.deleteChannelMember(self.username) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to delete member")
                 return     
             
             writeToLog("INFO","Step 5: Going to add member to channel")
             if self.common.channel.addMembersToChannel(self.channelName, self.username) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to add member to channel")
                 return   
              
             writeToLog("INFO","Step 6: Going to set member as owner")
             if self.common.channel.setChannelMemberAsOwner(self.username) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to set member as owner")
                 return                                                   
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Channel - Members tab' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

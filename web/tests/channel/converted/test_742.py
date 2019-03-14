@@ -19,8 +19,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -64,25 +63,21 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to login to KMS with channel's owner")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login with channel's owner")
                 return
             
             writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED create new channel: " + self.channelName)
                 return
             
             writeToLog("INFO","Step 3: Going to logout from End-user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to logout from End-user")
                 return  
             
             writeToLog("INFO","Step 4: Going to perform login to KMS site as End-user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to login as End-user")
                 return
               
@@ -95,31 +90,26 @@ class Test:
               
             writeToLog("INFO","Step 5: Going to upload 5 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 5 entries")
                 return
                 
             writeToLog("INFO","Step 6: Going to set entry #4 as Unlisted")
             if self.common.myMedia.publishSingleEntryPrivacyToUnlistedInMyMedia(self.entryName4) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to set entry #4 as Unlisted")
                 return     
 
             writeToLog("INFO","Step 7: Going to publish entries 1-3 to Moderated channel")
             if self.common.channel.addExistingContentToChannel(self.channelName, [self.entryName1, self.entryName2, self.entryName3], isChannelModerate=True, publishFrom = enums.Location.CHANNELS_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to publish entries 1-3 to Moderated channel")
                 return
                  
             writeToLog("INFO","Step 8: Going to logout from End-user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED failed to logout from End-user")
                 return  
                                       
             writeToLog("INFO","Step 9: Going to login to KMS with channel's owner")
             if self.common.login.loginToKMS(self.newUserId, self.newUserPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to login with channel's owner")
                 return
              
@@ -127,31 +117,26 @@ class Test:
                
             writeToLog("INFO","Step 10: Going to sort entries by Alphabetical & Image type")
             if self.common.channel.sortAndFilterInPendingTab(enums.SortBy.ALPHABETICAL, enums.MediaType.IMAGE, self.channelName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to sort entries by Alphabetical & Image type")
                 return
                
             writeToLog("INFO","Step 11: Going to verify entries order - by Alphabetical & Image type")
             if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.PENDING_TAB) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify entries order - by Alphabetical & Image type")
                 return
                     
             writeToLog("INFO","Step 12: Going to handle entries in Pending tab: rejecting entry #1, Approving entry #2")
             if self.common.channel.handlePendingEntriesInChannel(self.channelName, self.entryName1, self.entryName2, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to handle entries in Pending tab")
                 return
              
             writeToLog("INFO","Step 13: Going to logout ")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED failed to logout")
                 return  
              
             writeToLog("INFO","Step 14: Going to perform login to KMS site End-user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to login as End-user")
                 return
              
@@ -166,13 +151,12 @@ class Test:
                 for entry in self.entries:
                     if self.common.myMedia.verifyEntryPrivacyInMyMedia(entry, self.entries.get(entry)) == False:
                         writeToLog("INFO","Step 15: FAILED verify privacy for entry: " + str(entry))  
-                        self.status = "Fail"
                         return                        
             except:
                 writeToLog("INFO","Step 15: FAILED verify privacy for entry: " + str(entry))  
-                self.status = "Fail"
                 return
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Channel Moderated' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

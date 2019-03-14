@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -61,58 +60,50 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.entryDescription, None) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create category")
                 return
             
             writeToLog("INFO","Step 2: Going to clear cache")            
             if self.common.admin.clearCache() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to clear cache")
                 return
             
             writeToLog("INFO","Step 3: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return     
             
             writeToLog("INFO","Step 4: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to upload entry")
                 return      
               
             writeToLog("INFO","Step 5: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 6: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED - New entry is still processing")
                 return
                   
             writeToLog("INFO","Step 7: Going to publish entry to category from entry page")
             if self.common.myMedia.publishSingleEntry(self.entryName, [self.categoryName], "", publishFrom = enums.Location.ENTRY_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to publish entry to category from entry page")
                 return                 
             
             writeToLog("INFO","Step 8: Going to navigate to category")
             if self.common.category.navigateToCategory(self.categoryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate to category")
                 return             
                           
             writeToLog("INFO","Step 9: Going to search entry in category")
             if self.common.category.searchEntryInCategory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to find entry in category")
                 return                                                                           
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Entry page - Publish to category from entry page' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

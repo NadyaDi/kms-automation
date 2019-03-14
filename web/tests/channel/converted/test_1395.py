@@ -29,8 +29,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -78,58 +77,49 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to create open channel") 
             if self.common.channel.createChannel(self.openChannelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create open channel")
                 return
              
             writeToLog("INFO","Step 2: Going to create restricted channel") 
             if self.common.channel.createChannel(self.restrictedChannelName, self.description, self.tags, enums.ChannelPrivacyType.RESTRICTED, False, True, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create restricted channel")
                 return
              
             writeToLog("INFO","Step 3: Going to create private channel") 
             if self.common.channel.createChannel(self.privateChannelName, self.description, self.tags, enums.ChannelPrivacyType.PRIVATE, False, True, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create private channel")
                 return
             
             sleep(2)
             writeToLog("INFO","Step 4: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to logout from main user")
                 return  
                               
             writeToLog("INFO","Step 5: Going to login with user " + self.userName)
             if self.common.login.loginToKMS(self.userName, self.userPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to login with " + self.userName)
                 return       
              
             writeToLog("INFO","Step 6: Going to add media to open channel with non member user")
             if self.common.channel.addNewContentToChannel(self.openChannelName, self.entry1, navigateFrom=enums.Location.CHANNELS_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to add media to open channel")
                 return
             sleep(3)
                         
             writeToLog("INFO","Step 7: Going to verify entry found in channel")
             if self.common.channel.searchEntryInChannel(self.entryName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to find entry '" + self.entryName1 + "' in channel: " + self.openChannelName)
                 return
              
             writeToLog("INFO","Step 8: Going to add content to restricted channel with non member user")
             if self.common.channel.addNewContentToChannel(self.restrictedChannelName, self.entry2, navigateFrom=enums.Location.CHANNELS_PAGE) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED, user is non member in restricted channel and should NOT have permission to add content")
                 return
             writeToLog("INFO","Step 8: preview step failed as expected: user is non member in restricted channel and should NOT have permission to add content")
              
             writeToLog("INFO","Step 9: Going to add content to private channel with non member user")
             if self.common.channel.addNewContentToChannel(self.privateChannelName, self.entry3, navigateFrom=enums.Location.CHANNELS_PAGE) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED, user is non member in private channel and should NOT have permission to add content")
                 return
             writeToLog("INFO","Step 9: preview step failed as expected: user is non member in private channel and can NOT find the channel")
@@ -137,68 +127,59 @@ class Test:
             sleep(2)
             writeToLog("INFO","Step 10: Going to logout from '" + self.userName + "' user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to logout from '" + self.userName + "' user")
                 return  
              
             writeToLog("INFO","Step 11: Going to login with main user")
             if self.common.loginAsUser()== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to login with main user")
                 return 
              
             writeToLog("INFO","Step 12: Going to add user as member in channel: " + self.restrictedChannelName)
             if self.common.channel.addMembersToChannel(self.restrictedChannelName, self.userName, permission=enums.ChannelMemberPermission.CONTRIBUTOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to add user '"+ self.userName + "' as a member in channel: " + self.restrictedChannelName)
                 return
             
             writeToLog("INFO","Step 13: Going to add user as member in channel: " + self.privateChannelName)
             if self.common.channel.addMembersToChannel(self.privateChannelName, self.userName, permission=enums.ChannelMemberPermission.CONTRIBUTOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to add user '"+ self.userName + "' as a member in channel: " + self.privateChannelName)
                 return
             
             sleep(2)
             writeToLog("INFO","Step 14: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to logout from main user")
                 return  
                               
             writeToLog("INFO","Step 15: Going to login with user " + self.userName)
             if self.common.login.loginToKMS(self.userName, self.userPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to login with " + self.userName)
                 return       
              
             writeToLog("INFO","Step 18: Going to add media to restricted channel with member user")
             if self.common.channel.addNewContentToChannel(self.restrictedChannelName, self.entry2, navigateFrom=enums.Location.CHANNELS_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED, user is a member in restricted channel and should have permission to add content")
                 return
             sleep(3)
             
             writeToLog("INFO","Step 19: Going to verify entry found in channel")
             if self.common.channel.searchEntryInChannel(self.entryName2, ) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to find entry '" + self.entryName2 + "' in channel: " + self.restrictedChannelName)
                 return
              
             writeToLog("INFO","Step 20: Going to add media to private channel with member user")
             if self.common.channel.addNewContentToChannel(self.privateChannelName, self.entry3, navigateFrom=enums.Location.CHANNELS_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED, user is a member in private channel and should have permission to add content")
                 return
             sleep(3)
             
             writeToLog("INFO","Step 21: Going to verify entry found in channel")
             if self.common.channel.searchEntryInChannel(self.entryName3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 21: FAILED to find entry '" + self.entryName3 + "' in channel: " + self.privateChannelName)
                 return
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Channels Type' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

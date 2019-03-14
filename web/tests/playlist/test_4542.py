@@ -24,8 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -76,29 +75,26 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload 6 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 6 entries")
                 return
 
             writeToLog("INFO","Step 2: Going to create playlist with 6 entries")
             if self.common.myPlaylists.addEntriesToMultiplePlaylists(self.entriesList, newPlaylistsName=self.playlistName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create playlist with 6 entries")
                 return
             
             writeToLog("INFO","Step 3: Going to delete entries from playlist")
             if self.common.myPlaylists.deleteEntriesFromPlalists(self.entriesListToDelete, self.playlistName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to delete entries from playlist")
                 return
             
             writeToLog("INFO","Step 4: Going to verify remaining Entries in Playlists")
             if self.common.myPlaylists.verifyMultipleEntriesInPlaylist(self.playlistName1, self.remainingEntriesInPlaylist, isExpected=True, forceNavigate=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify remaining  Entries in Playlists")
                 return
             sleep(4)                                                       
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

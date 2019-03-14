@@ -27,8 +27,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -73,26 +72,22 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                         
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return
                
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
-                self.status = "Fail"
                 return
                            
             writeToLog("INFO","Step 4: Going remove slides from time line")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")
-                self.status = "Fail"
                 return
               
             # remove deleted slides from  slides list (slidesQrCodeAndTimeList)
@@ -102,23 +97,21 @@ class Test:
                     self.slidesQrCodeAndTimeList.pop(slide)
             except:
                 writeToLog("INFO","Step 5: FAILED to remove slide item number " + str(slide) + "from slides main list")  
-                self.status = "Fail"
                 return 
             
             writeToLog("INFO","Step 6: Going to navigate to Entry Page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED navigate to entry page")
-                self.status = "Fail"
                 return
             sleep(4)
             
             writeToLog("INFO","Step 7: Going verify that the deleted slides doesn't appear in the player")
             if self.common.player.verifySlidesInPlayerSideBar(self.slidesQrCodeAndTimeList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to verify only the correct slides display in the player")
                 return  
              
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload -delete slide' was done successfully")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

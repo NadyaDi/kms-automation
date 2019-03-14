@@ -23,8 +23,7 @@ class Test:
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -66,35 +65,31 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
      
             writeToLog("INFO","Step 2: Going to create a Quiz for " + self.entryName + " entry")
             if self.common.kea.launchKEA(self.entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create a Quiz for " + self.entryName + " entry")
                 return
            
             writeToLog("INFO","Step 3: Going to navigate to edit entry page f entry")
             if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to edit entry pantry")
                 return
                         
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 4: Going to navigate to the entry page for " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to the entry page for " + self.entryName)
                 return
             
             writeToLog("INFO","Step 4: Going to navigate to edit entry page f entry")
             if self.common.player.hotspotVerification(self.hotspotsDict, enums.Location.ENTRY_PAGE, embed=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry pantry")
                 return
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: Entry Page has been successfully verified for a " + self.typeTest)
         # if an exception happened we need to handle it and fail the test
         except Exception as inst:

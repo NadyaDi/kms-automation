@@ -30,7 +30,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -81,7 +81,6 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.openCategoryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create open category")
                 return
              
@@ -89,7 +88,6 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.restrictedCategoryName, self.description, self.tags, privacy=KalturaPrivacyType.AUTHENTICATED_USERS, addContentToCategory=KalturaContributionPolicyType.MEMBERS_WITH_CONTRIBUTION_PERMISSION) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create restricted category")
                 return
              
@@ -97,58 +95,49 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.privateCategoryName, self.description, self.tags, privacy=KalturaPrivacyType.MEMBERS_ONLY, addContentToCategory=KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.CATEGORY_MEMBERS_ONLY) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to create private category")
                 return
             
             writeToLog("INFO","Step 4: Going to clear cache")            
             if self.common.admin.clearCache() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to clear cache")
                 return
             
             writeToLog("INFO","Step 5: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to home page")
                 return
             
             sleep(2)
             writeToLog("INFO","Step 6: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to logout from main user")
                 return  
                               
             writeToLog("INFO","Step 7: Going to login with user " + self.userName)
             if self.common.login.loginToKMS(self.userName, self.userPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to login with " + self.userName)
                 return       
              
             writeToLog("INFO","Step 8: Going to add media to open category with non member user")
             if self.common.category.addNewContentToCategory(self.openCategoryName, self.entry1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to add media to open category")
                 return
             sleep(3)
                         
             writeToLog("INFO","Step 9: Going to verify entry found in category")
             if self.common.category.searchEntryInCategory(self.entryName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to find entry '" + self.entryName1 + "' in category: " + self.openCategoryName)
                 return
              
             writeToLog("INFO","Step 10: Going to add content to restricted category with non member user")
             if self.common.category.addNewContentToCategory(self.restrictedCategoryName, self.entry2) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED, user is non member in restricted category and should NOT have permission to add content")
                 return
             writeToLog("INFO","Step 10: preview step failed as expected: user is non member in restricted category and should NOT have permission to add content")
              
             writeToLog("INFO","Step 11: Going to add content to private category with non member user")
             if self.common.category.addNewContentToCategory(self.privateCategoryName, self.entry3) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED, user is non member in private category and should NOT have permission to add content")
                 return
             writeToLog("INFO","Step 11: preview step failed as expected: user is non member in private category and can NOT find the category")
@@ -156,68 +145,59 @@ class Test:
             sleep(2)
             writeToLog("INFO","Step 12: Going to logout from '" + self.userName + "' user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to logout from '" + self.userName + "' user")
                 return  
              
             writeToLog("INFO","Step 13: Going to login with main user")
             if self.common.loginAsUser()== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to login with main user")
                 return 
              
             writeToLog("INFO","Step 14: Going to add user as member in category: " + self.restrictedCategoryName)
             if self.common.category.addMemberToCategory(self.restrictedCategoryName, self.userName, permission=enums.CategoryMemberPermission.CONTRIBUTOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to add user '"+ self.userName + "' as a member in category: " + self.restrictedCategoryName)
                 return
             
             writeToLog("INFO","Step 15: Going to add user as member in category: " + self.privateCategoryName)
             if self.common.category.addMemberToCategory(self.privateCategoryName, self.userName, permission=enums.CategoryMemberPermission.CONTRIBUTOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to add user '"+ self.userName + "' as a member in category: " + self.privateCategoryName)
                 return
             
             sleep(2)
             writeToLog("INFO","Step 16: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to logout from main user")
                 return  
                               
             writeToLog("INFO","Step 17: Going to login with user " + self.userName)
             if self.common.login.loginToKMS(self.userName, self.userPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to login with " + self.userName)
                 return       
              
             writeToLog("INFO","Step 18: Going to add media to restricted category with member user")
             if self.common.category.addNewContentToCategory(self.restrictedCategoryName, self.entry2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED, user is a member in restricted category and should have permission to add content")
                 return
             sleep(3)
             
             writeToLog("INFO","Step 19: Going to verify entry found in category")
             if self.common.category.searchEntryInCategory(self.entryName2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to find entry '" + self.entryName2 + "' in category: " + self.restrictedCategoryName)
                 return
              
             writeToLog("INFO","Step 20: Going to add media to private category with member user")
             if self.common.category.addNewContentToCategory(self.privateCategoryName, self.entry3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED, user is a member in private category and should have permission to add content")
                 return
             sleep(3)
             
             writeToLog("INFO","Step 21: Going to verify entry found in category")
             if self.common.category.searchEntryInCategory(self.entryName3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 21: FAILED to find entry '" + self.entryName3 + "' in category: " + self.privateCategoryName)
                 return
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Categories Type' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
