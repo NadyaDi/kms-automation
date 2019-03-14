@@ -23,7 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -55,29 +55,26 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                 
             writeToLog("INFO","Step 2: Going navigate to entry page via entry name")            
             if self.common.entryPage.navigateToEntry(self.entryName, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to entry ' " + self.entryName + "' via entry name")
                 return 
                  
             writeToLog("INFO","Step 3: Going navigate to my media")            
             if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to my media")
                 return   
                 
             writeToLog("INFO","Step 4: Going navigate to entry page via entry thumbnail")  
             if self.common.myMedia.navigateToEntryPageFromMyMediaViaThubnail(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED navigate to entry '" + self.entryName + "' via entry thumbnail")
                 return
              
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Navigate to entry page form my media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
