@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -50,20 +49,17 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry - to be trimmed")  
             if self.common.upload.uploadEntry(self.filePathVideo, self.videoEntryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
             
             writeToLog("INFO","Step 2: Going to trim the entry from 30sec to 20sec")  
             if self.common.kea.trimEntry(self.videoEntryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to trim the entry from 30sec to 20sec")
                 return
 
             writeToLog("INFO","Step 3: Going to collect the new entry's QR codes")  
             self.captionList = self.common.player.collectQrTimestampsFromPlayer(self.videoEntryName)
             if  self.captionList == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to collect the new entry's QR codes")
                 return
             
@@ -71,10 +67,10 @@ class Test:
             self.isAbsent = ["12", "13", "15", "17"];
             writeToLog("INFO","Step 4: Going to verify the entry duration (using QR codes)")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the entry duration (using QR codes)")
                 return        
-                
+            ###################################################################################
+            self.status = "Pass"    
             writeToLog("INFO","TEST PASSED")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

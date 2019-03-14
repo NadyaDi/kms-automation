@@ -28,8 +28,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -59,61 +58,53 @@ class Test:
             ######################### TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
              
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
              
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
               
             writeToLog("INFO","Step 4: Going to Search entry in My History page")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - New entry is displayed in my history page")
                 return
             writeToLog("INFO","Step 4: Previous Step Failed as Expected - The entry should not be displayed")
              
             writeToLog("INFO","Step 5: Going to play entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate and play entry")
                 return  
              
             writeToLog("INFO","Step 6: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to switch to default content")
                 return  
             
             writeToLog("INFO","Step 7: Going to navigate to My History and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED find entry in My History")
                 return   
             
             writeToLog("INFO","Step 8: Going to delete entry from My History")
             if self.common.myHistory.removeEntryFromWatchListMyHistory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to delete entry from My History")
                 return               
             
             writeToLog("INFO","Step 9: Going to verify that entry isn't displayed in My History")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED - Deleted entry is displayed in My History page")
                 return
             writeToLog("INFO","Step 9: Previous Step Failed as Expected - The entry should not be displayed")
               
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -22,8 +22,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -69,47 +68,41 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
             
             writeToLog("INFO","Step 2: Going to create Channel")
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PRIVATE, True, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Channel")
                 return
             
             writeToLog("INFO","Step 3: Going to set Future time-frame publishing to entry ")   
             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName=self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to set Future time-frame publishing to entry")
                 return
             
             writeToLog("INFO","Step 4: Going to publish the entry from Step #3")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to publish the entry from Step #3")
                 return
             
             writeToLog("INFO","Step 5: Verify if the entry is presented inside the channel from step #2 (Expected: should not be presented)")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName, isExpected=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED, Entry is presented although it shouldn't")
                 return
             
             writeToLog("INFO","Step 6: Going to set Past time-frame publishing to entry ")
             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, entryName=self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to set past time-frame publishing to entry")
                 return
             
             writeToLog("INFO","Step 7: Verify if the entry is presented inside the channel from step #2 (Expected: should be presented)")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName, isExpected=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, Entry is not presented although it should")
                 return
 
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

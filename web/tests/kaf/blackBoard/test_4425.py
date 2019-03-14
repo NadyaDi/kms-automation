@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -57,7 +56,6 @@ class Test:
                         
             writeToLog("INFO","Step 1: Going to upload entry")            
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
 
@@ -68,23 +66,22 @@ class Test:
 
             writeToLog("INFO","Step 3: Going navigate to gallery page")                                     
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to gallery page")
                 return 
             
             writeToLog("INFO","Step 4: Going to remove entry from gallery")                                     
             if self.common.channel.removeEntry(self.entryName) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
                 return 
             
             writeToLog("INFO","Step 5: Going to verify that entry doesn't display in gallery any more")                                     
             if self.common.channel.searchEntryInChannel(self.entryName) == True:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
                 return 
             writeToLog("INFO","Step 5: Preview step failed as expected - entry was removed from gallery and should not be found")
+            
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BlackBoard: Remove Media From Media Gallery' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

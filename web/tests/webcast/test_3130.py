@@ -24,8 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -52,35 +51,31 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to set webcast settings file")
             if self.common.webcast.setWebcastSetting(self.wcAccsesControlKS_settings)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to set webcast settings file")
                 return
             
             writeToLog("INFO","Step 2: Going to create " + self.entryNameWebCast + " entry")
             if self.common.upload.addWebcastEntry(self.entryNameWebCast, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create " + self.entryNameWebCast + " entry")
                 return
             
             writeToLog("INFO","Step 3: Open Edit Webcast Event page from create webcast page")
             if self.common.webcast.editWebCastEvent() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to open " + self.entryNameWebCast + " edit page")
                 return
             
             writeToLog("INFO","Step 4: Login to partner KMC")
             if self.common.webcast.loginToKMC() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to open KMC page")
                 return 
             
             writeToLog("INFO","Step 5: Running Webcast Sikulix script")
             if self.common.webcast.startSikulixScript() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to run sikulix webcast script")    
                 return
             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Webcast access control KS' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

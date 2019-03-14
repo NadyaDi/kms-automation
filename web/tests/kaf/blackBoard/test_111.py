@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -51,35 +50,31 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going verify that shared repository module doesn't exist")  
             if self.common.blackBoard.addRemoveSharedRepositoryModule(False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to remove shared repository module")
                 return 
                
             writeToLog("INFO","Step 2: Going navigate to blackboard main page") 
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to blackboard main page")
                 return
             
             writeToLog("INFO","Step 3: Going to add shared repository module")     
             if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add shared repository module")
                 return
             
             writeToLog("INFO","Step 4: Going navigate to blackboard main page") 
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED navigate to blackboard main page")
                 return
             
             writeToLog("INFO","Step 5: Going to remove shared repository module")     
             if self.common.blackBoard.addRemoveSharedRepositoryModule(False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to remove shared repository module") 
                 return
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BlackBoard: Enable / Disable faculty repository' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

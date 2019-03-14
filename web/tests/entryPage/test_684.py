@@ -24,8 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -69,7 +68,6 @@ class Test:
             for entry in self.entriesToUpload:
                 writeToLog("INFO","Step " + str(step) + " : Going to upload entry")
                 if self.common.upload.uploadEntry(self.entriesToUpload.get(entry), entry, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to upload entry - " + entry)
                     return    
                  
@@ -77,7 +75,6 @@ class Test:
                  
                 writeToLog("INFO","Step " + str(step) + " : Going to navigate to uploaded entry page")
                 if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to navigate to entry page")
                     return 
                            
@@ -85,7 +82,6 @@ class Test:
                   
                 writeToLog("INFO","Step " + str(step) + " : Going to wait until media will finish processing")
                 if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED - New entry is still processing")
                     return
                  
@@ -93,12 +89,12 @@ class Test:
                  
                 writeToLog("INFO","Step " + str(step) + " : Going to navigate to edit entry page")
                 if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(entry)== False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to navigate to edit entry page")
                     return  
                 
                 step = step + 1                                                                                                    
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

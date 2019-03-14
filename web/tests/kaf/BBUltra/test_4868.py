@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Oded Berihon
-    # Test Name : BLACKBOARD_ULTRA - Publish from my media (single and multiple)
+    # Test Name : Blackboard_Ultra - Publish from my media (single and multiple)
     # Test description:
     # upload 3 entries (video / audio /image )
     # In my media check one entry and then publish it  - go and check in the published gallery that the entry display
@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -68,63 +67,55 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
               
             writeToLog("INFO","Step 2: Going to publish single entry from my media")      
             if self.common.myMedia.publishSingleEntry(self.imageEntryName, "", "", [self.galleryName],  publishFrom = enums.Location.MY_MEDIA) == False: 
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish single entry from my media")
                 return   
             
             writeToLog("INFO","Step 3: Going navigate to gallery page")         
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to gallery page")
                 return  
             
             self.common.blackBoardUltra.switchToBlackboardUltraIframe() 
             writeToLog("INFO","Step 4: Going to verify that entry '" + self.imageEntryName + "' display in gallery")
             if self.common.channel.searchEntryInChannel(self.imageEntryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED verify that entry '" + self.imageEntryName + "' display in gallery")
                 return 
               
             writeToLog("INFO","Step 5: Going to publish multiple entries to gallery")
             if self.common.myMedia.publishEntriesFromMyMedia([self.videoEntryName, self.audioEntryName], '', '', [self.galleryName], showAllEntries=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish multiple entries to gallery")
                 return  
              
             writeToLog("INFO","Step 6: Going navigate to gallery page")         
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED navigate to gallery page")
                 return  
             
             self.common.blackBoardUltra.switchToBlackboardUltraIframe()
             writeToLog("INFO","Step 7: Going to verify that entry '" + self.audioEntryName + "' display in gallery")
             if self.common.channel.searchEntryInChannel(self.audioEntryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED verify that entry '" + self.audioEntryName + "' display in gallery")
                 return 
             
             writeToLog("INFO","Step 8: Going to clear search bar in gallery")
             if self.common.myMedia.clearSearch() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to clear search bar in gallery")
                 return 
             
             self.common.blackBoardUltra.switchToBlackboardUltraIframe()    
             writeToLog("INFO","Step 9: Going to verify that entry '" + self.videoEntryName + "' display in gallery")
             if self.common.channel.searchEntryInChannel(self.videoEntryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED verify that entry '" + self.videoEntryName + "' display in gallery")
                 return 
            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BLACKBOARD_ULTRA - Publish from my media (single and multiple)' was done successfully")
+            self.status = "Pass"
+            writeToLog("INFO","TEST PASSED: 'Blackboard_Ultra - Publish from my media (single and multiple)' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

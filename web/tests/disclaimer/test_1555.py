@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -59,22 +58,20 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
              
             writeToLog("INFO","Step 2: Going to upload entry while disclaimer turned ON")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=True) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
                
             writeToLog("INFO","Step 3: Going to navigate to Entry Page")
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to Entry Page")
                 return
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

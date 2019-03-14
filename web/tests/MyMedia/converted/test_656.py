@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -60,22 +59,20 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload 3 entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesList, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return                        
             
             writeToLog("INFO","Step 3: Going to add entries to playlist")
             if self.common.myPlaylists.addEntriesToPlaylist(self.entriesList, self.playlistName, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add entries to playlist")
                 return
                
             writeToLog("INFO","Step 4: Going to verify that all entries were added to playlist")
             if self.common.myPlaylists.verifyMultipleEntriesInPlaylist(self.playlistName, self.entriesList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to find all entries in playlist")
                 return                                
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Add multiple entries to playlist' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

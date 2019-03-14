@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -54,18 +53,17 @@ class Test:
                
             writeToLog("INFO","Step 1: Going to upload entry")  
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry' " + self.entryName1)
                 return 
             
             sleep(3)
             writeToLog("INFO","Step 2: Going navigate to entry page from upload page")
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to entry page '" + self.entryName + "' from upload page")
                 return
                 
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Navigate to entry page from upload page' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

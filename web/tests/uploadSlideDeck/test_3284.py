@@ -32,8 +32,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -78,19 +77,16 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload first entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry name: " + self.entryName)
                 return
                                      
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
                            
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
              
@@ -101,13 +97,11 @@ class Test:
              
             writeToLog("INFO","Step 5: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to entry page: " + self.entryName)
                 return  
             
             writeToLog("INFO","Step 6: Going to search slides in slides menu bar")
             if self.common.player.searchSlideInSlidesBarMenu(self.slidesWithName, len(self.slidesQrCodeAndTimeList)) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to search slides in slides menu bar")
                 return            
             
@@ -118,7 +112,6 @@ class Test:
 
             writeToLog("INFO","Step 8: Going to switch the player view so that the player will be in the big window and the slides in the small window")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to switch the player view")
                 return 
             
@@ -128,11 +121,11 @@ class Test:
                 sleep(2)
                 index = index + i + 4 
                 if self.common.player.verifySlideDisplayAtTheCorrctTime(self.slidesQrCodeAndTimeList[str(index)][1:], index) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step 9: FAILED to verify slide") 
                     return
               
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - A-sync upload' was done successfully")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -57,44 +56,37 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
               
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
               
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return    
             
             writeToLog("INFO","Step 5: Going to click on caption tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to click on caption tab")
                 return            
             
             writeToLog("INFO","Step 6: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return   
 
             writeToLog("INFO","Step 3: Going to collect all the presented captions on the player")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName)
             if  self.captionList == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to collect all the presented captions on the player")
                 return
             
@@ -102,20 +94,17 @@ class Test:
             self.isAbsent = ["Caption100search", "Caption32search"];
             writeToLog("INFO","Step 4: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the captions that were collected")
                 return               
              
             writeToLog("INFO","Step 2: Going to trim the entry from 30sec to 20sec")  
             if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to trim the entry from 30sec to 20sec")
                 return
  
             writeToLog("INFO","Step 3: Going to collect all the presented captions on the player (after the entry was trimmed)")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName)
             if  self.captionList == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to collect all the presented captions on the player (after the entry was trimmed)")
                 return
              
@@ -123,10 +112,10 @@ class Test:
             self.isAbsent = ["Caption12search", "Caption13search", "Caption15search", "Caption17search"];
             writeToLog("INFO","Step 4: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the captions that were collected")
                 return
-                
+            #############################################################################################
+            self.status = "Pass"   
             writeToLog("INFO","TEST PASSED")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

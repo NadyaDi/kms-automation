@@ -28,8 +28,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -63,31 +62,26 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user - Channel admin")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
              
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
               
             writeToLog("INFO","Step 3: Going to publish entry to unlisted")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate('', '', '', enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"        
                 writeToLog("INFO","Step 3: FAILED failed to publish entry to unlisted")
                 return          
              
             writeToLog("INFO","Step 4: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to entry page")
                 return           
              
             writeToLog("INFO","Step 5: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED - New entry is still processing")
                 return
              
@@ -96,113 +90,96 @@ class Test:
               
             writeToLog("INFO","Step 7: Going to Search entry in My History page")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED - New entry is displayed in my history page")
                 return
             writeToLog("INFO","Step 6: Previous Step Failed as Expected - The entry should not be displayed")
              
             writeToLog("INFO","Step 8: Going to play entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate and play entry")
                 return  
              
             writeToLog("INFO","Step 9: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to switch to default content")
                 return  
              
             writeToLog("INFO","Step 10: Going to navigate to my history and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED find entry in my history")
                 return    
              
             writeToLog("INFO","Step 11: Going to logout as admin channel")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to logout from KMS")
                 return        
              
             writeToLog("INFO","Step 12: Going to perform login to KMS site as user - Channel member")
             if self.common.login.loginToKMS(self.channelMemberUserId, self.channelMemberPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to login as user - Channel member")
                 return  
              
             writeToLog("INFO","Step 13: Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to navigate to entry page link")
                 return
              
             writeToLog("INFO","Step 14: Going to play entry as channel member")
             if self.common.player.clickPlayAndPause('0:05') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to navigate and play entry")
                 return  
              
             writeToLog("INFO","Step 15: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to switch to default content")
                 return  
              
             writeToLog("INFO","Step 16: Going to navigate to my history and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED find entry in my history")
                 return   
              
             writeToLog("INFO","Step 17: Going to logout as member channel")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to logout from KMS")
                 return                            
              
             writeToLog("INFO","Step 18: Going to perform login to KMS site as user - admin member")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to login as user")
                 return              
 
             writeToLog("INFO","Step 19: Going to changed played entry privacy to published")
             if self.common.myMedia.publishSingleEntry(self.entryName, [], self.channelList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to changed entry privacy")
                 return   
             
             writeToLog("INFO","Step 20: Going to logout as admin channel")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to logout from KMS")
                 return                            
             
             writeToLog("INFO","Step 21: Going to perform login to KMS site as user - channel member")
             if self.common.login.loginToKMS(self.channelMemberUserId, self.channelMemberPass) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to login as user - channel member")
                 return   
             
             writeToLog("INFO","Step 22: Going to navigate to my history and check for entry")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 22: FAILED find entry in my history")
                 return  
             
             writeToLog("INFO","Step 23: Going to logout as member channel")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 23: FAILED to logout from KMS")
                 return                            
              
             writeToLog("INFO","Step 24: Going to perform login to KMS site as user - admin member")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 24: FAILED to login as user")
                 return                               
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

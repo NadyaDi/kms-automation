@@ -23,8 +23,7 @@ class Test:
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     # Test variables
     entryName = None
     description = "Description"
@@ -56,13 +55,11 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to add new media to media gallery")  
             if self.common.kafGeneric.addNewContentToGallery(self.galleryName, self.uploadEntrieList, isGalleryModerate=False)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to add new media to media gallery")
                 return 
             
             writeToLog("INFO","Step 2: Going to navigate media gallery")  
             if self.common.kafGeneric.navigateToGallery(self.galleryName)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate media gallery")
                 return     
                     
@@ -70,11 +67,11 @@ class Test:
             sleep(5)
             writeToLog("INFO","Step 3: Going to make a search in media gallery and verify that entry is displayed in media gallery")  
             if self.common.channel.searchEntryInChannel(self.entryName)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to make a search in media gallery and verify that entry is displayed in media gallery")
                 return 
              
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: Add new media to media gallery was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -22,7 +22,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -64,25 +64,21 @@ class Test:
             
             writeToLog("INFO","Step 1: Going navigate to admin page") 
             if self.common.admin.enableCustomMetadata(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED navigate to admin page")
                 return
            
             writeToLog("INFO","Step 2: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to home page")
                 return
             
             writeToLog("INFO","Step 3: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry")
                 return
             
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create Channel#1")
                 return
            
@@ -103,7 +99,6 @@ class Test:
                          
             writeToLog("INFO","Step 8: Going to add customdata and publish")
             if self.common.myMedia.addCustomDataAndPublish(self.customfield1, customFieldDropdwon=enums.DepartmentDivision.ENGINEERING) == False: 
-                self.status = "Fail"        
                 writeToLog("INFO","Step 8: FAILED to add custom data fields")
                 return    
             
@@ -114,10 +109,10 @@ class Test:
             
             writeToLog("INFO","Step 10: Going to search entry in channel page")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName) == False:
-                self.status = "Fail"        
                 writeToLog("INFO","Step 10: FAILED to find entry in channel")
                 return                         
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Add custom metadata' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

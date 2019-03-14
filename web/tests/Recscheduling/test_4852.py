@@ -31,7 +31,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -85,13 +85,13 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
                 return
                  
             
                  
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Rescheduling - Create new single event' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

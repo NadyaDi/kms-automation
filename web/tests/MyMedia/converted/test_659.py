@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -58,16 +57,15 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload 3 entries")
             if self.common.upload.uploadMultipleEntries(self.filePath, self.entriesList, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
                
             writeToLog("INFO","Step 2: Going to delete uploaded entries")
             if self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED delete entries")
                 return
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Delete multiple entries' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

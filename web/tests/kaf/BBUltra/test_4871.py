@@ -27,8 +27,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -64,41 +63,36 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload 2 entries")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 2 entries")
                 return          
 
             writeToLog("INFO","Step 2: Going navigate to my media")  
             if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to my media")
                 return  
  
             writeToLog("INFO","Step 3: Going to change my media view to 'collapsed'")  
             if self.common.base.click(self.common.myMedia.MY_MEDIA_COLLAPSED_VIEW_BUTTON, timeout=15) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to change my media view to 'collapsed view'")
                 return 
                
             writeToLog("INFO","Step 4: Going to verify my media view")
             if self.common.myMedia.verifyMyMediaViewForEntris([self.entryName1, self.entryName2], viewType=enums.MyMediaView.COLLAPSED) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify my media view")
                 return
             
             writeToLog("INFO","Step 5: Going to change my media view to 'detailed'")  
             if self.common.base.click(self.common.myMedia.MY_MEDIA_DETAILED_VIEW_BUTTON, timeout=15) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to change my media view to 'detailed view'")
                 return 
                
             writeToLog("INFO","Step 6: Going to verify my media view")
             if self.common.myMedia.verifyMyMediaViewForEntris([self.entryName1, self.entryName2], viewType=enums.MyMediaView.DETAILED) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify my media view")
                 return
            
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BLACKBOARD_ULTRA - View Collapsed Expanded Modes' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

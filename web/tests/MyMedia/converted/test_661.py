@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -56,28 +55,25 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW #####################  
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                
             writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.entryDescription, self.entryTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED create new channel: " + self.channelName)
                 return
             
             writeToLog("INFO","Step 3: Going to publish entry to channel from My media page")
             if self.common.myMedia.publishEntriesFromMyMedia(self.entryName, "", [self.channelName]) == False:
-                self.status = "Fail"        
                 writeToLog("INFO","Step 3: FAILED to publish entry to channel from My Media")
                 return    
             
             writeToLog("INFO","Step 4: Going to search entry in channel page")
             if self.common.channel.verifyIfSingleEntryInChannel(self.channelName, self.entryName) == False:
-                self.status = "Fail"        
                 writeToLog("INFO","Step 4: FAILED to find entry in channel")
                 return                         
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Publish to channel - single' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

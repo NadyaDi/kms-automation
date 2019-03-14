@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -54,28 +53,25 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################      
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
             
             writeToLog("INFO","Step 2: Going to create empty playlist")
             if self.common.myPlaylists.createEmptyPlaylist(self.entryName, self.playlistName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create empty playlist")
                 return            
                
             writeToLog("INFO","Step 3: Going to add entry to playlist")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, self.playlistName, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add entry to playlist")
                 return
                
             writeToLog("INFO","Step 4: Going to verify that entry was added to playlist")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to find entry in playlist")
                 return                           
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Add single entry to existing playlist' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

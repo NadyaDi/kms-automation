@@ -18,8 +18,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -47,23 +46,21 @@ class Test:
             #Edit name, description and tags
 #             writeToLog("INFO","Step 1: Going to add new webcam recording")  
 #             if self.common.upload.addNewWebcamRecording(self.entryName, self.description, self.tags, timeToStopRecording="10") == False:
-#                 self.status = "Fail"
 #                 writeToLog("INFO","Step 1: FAILED to add new webcam recording")
 #                 return 
 #             
 #             writeToLog("INFO","Step 2: Going to to verify that new recording is displayed in My Media")  
 #             if self.common.myMedia.searchEntryMyMedia(self.entryName) == False:
-#                 self.status = "Fail"
 #                 writeToLog("INFO","Step 2: FAILED to found new rcording in My Media")
 #                 return 
             
             # Create new webcam while clicking record again        
             writeToLog("INFO","Step 1: Going to add new webcam recording")  
             if self.common.upload.addNewWebcamRecording(self.entryName, self.description, self.tags, timeToStopRecording="00:05", recordAgain=True, numOfRecordinAgain=3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to add new webcam recording")
                 return                  
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Add new recording")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

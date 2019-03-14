@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -56,28 +55,25 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return  
             
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return                      
                   
             writeToLog("INFO","Step 3: Going to delete from entry page")
             if self.common.entryPage.deleteEntryFromEntryPage(self.entryName, deleteFrom= enums.Location.ENTRY_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to delete entry from entry page")
                 return                   
              
             writeToLog("INFO","Step 4: Going to verify that entry '" + self.entryName + "'  doesn't display in my media")
             if self.common.myMedia.verifyNoResultAfterSearchInMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED entry '" + self.entryName + "' still display in my media although it was deleted")
                 return                                                                               
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
