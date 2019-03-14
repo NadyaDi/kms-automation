@@ -24,7 +24,6 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Fail"
-    timeout_accured = "False"
     driver = None
     common = None
     # Test variables

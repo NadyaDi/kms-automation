@@ -223,11 +223,7 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
     test.browserName = test.driver.capabilities['browserName']
     writeToLog("INFO","Browser " + test.driver.capabilities['browserName'] + " version is: " + test.browserVersion)
     test.driver.implicitly_wait(IMPLICITLY_WAIT_TIME_TO_WAIT)
-    
     test.base_url = localSettings.LOCAL_SETTINGS_TEST_BASE_URL
-    test.verificationErrors = []    
-    test.status = "Pass"
-    test.timeout_accured = "False"
     return test                 
 
 
