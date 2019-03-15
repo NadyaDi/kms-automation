@@ -70,7 +70,7 @@ class Test:
                 return           
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
-                self.status = "Fail"
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
               
