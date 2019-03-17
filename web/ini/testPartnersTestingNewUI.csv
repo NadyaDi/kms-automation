@@ -137,7 +137,7 @@ test_678,Playlists - Add entry from Entry Page to several playlists together,236
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_4542,Playlists - Create Empty Playlist,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_713,Category moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,pythonautomation1@gmail.com,Kaltura1!
+test_713,Category moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,pythonautomation1@mailinator.com,Kaltura1!
 test_706,Publish to channel multiple,2504261,qakmstest.dev.kaltura.com,pythonautomation1@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2504261,qakmstest.dev.kaltura.com,pythonautomation1@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2504261,qakmstest.dev.kaltura.com,pythonautomation1@gmail.com,Kaltura1!,python_automation,Kaltura1!
