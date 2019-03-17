@@ -103,7 +103,7 @@ class ApiClientSession:
 #             self.common.apiClientSession.createCategory(parentId, 'python_automation', 'testCategory', 'description', 'tags')
 #             self.common.apiClientSession.deleteCategory('testCategory')
 ###############################################################################################################################        
-    def createCategoryApi(self, client, parentId, owner, name, description=None, tags=None, privacy=KalturaPrivacyType.ALL, addContentToCategory= KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.PARTNER_ONLY, moderation=KalturaNullableBoolean.FALSE_VALUE):
+    def createCategoryApi(self, client, parentId, owner, name, description=None, tags=None, privacy=KalturaPrivacyType.ALL, addContentToCategory=KalturaContributionPolicyType.ALL, whoCanSeeTheCategory=KalturaAppearInListType.PARTNER_ONLY, moderation=KalturaNullableBoolean.FALSE_VALUE):
         category = KalturaCategory()
         category.parentId = parentId
         category.name = name
