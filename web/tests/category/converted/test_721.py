@@ -98,7 +98,8 @@ class Test:
             if self.common.category.importMemberFormCategory() == False:
                 writeToLog("INFO","Step 7: FAILED to import Members from parent category")
                 return 
-             
+            
+            self.driver.refresh()   
             writeToLog("INFO","Step 8: Going navigate to sub category edit page")
             if self.common.category.navigateToEditSubCategoryPage(self.parentCategoryName, self.subCategoryName, forcrNavigate=True) == False:
                 writeToLog("INFO","Step 8: FAILED navigate to sub category edit page")

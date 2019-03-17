@@ -123,8 +123,10 @@ class Category(Base):
             if self.wait_visible(tmpSubCategoryName, 5) != False:
                 writeToLog("INFO","Success Already in my category page")
                 return True
-    
+        
+        sleep(2)
         tmpParentCategoryName = (self.CATEGORY_NAME_NAV_BAR[0], self.CATEGORY_NAME_NAV_BAR[1].replace('CATEGORY_NAME', parentCategory))
+        sleep(1)
         if self.hover_on_element(tmpParentCategoryName) == False:
             writeToLog("INFO","FAILED to hover on parent category page")
             return False
