@@ -191,6 +191,8 @@ test_3275,Slide Deck Upload - add / remove chapters,2504261,mediaspace.kaltura.c
 test_3276,Slide Deck Upload - change slide location,2504261,mediaspace.kaltura.com,pythonautomation1@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3283,Slide Deck Upload- A-sync upload,2504261,mediaspace.kaltura.com,pythonautomation1@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3284,Slide Deck Upload- search slides,2504261,mediaspace.kaltura.com,pythonautomation1@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_869,Scheduling: add Publishing  - playlist flows,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_675,Playlist reorder,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4543,KEA trim,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4455,KEA clip,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4458,KEA trim entry with slides,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
