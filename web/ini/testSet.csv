@@ -377,6 +377,20 @@ test_4949,1,0,0,0,Quiz - Welcome screen behavior when autoplay true
 test_4954,1,0,0,0,Quiz - Player preview Sanity Check for an existing Quiz Entry
 test_4955,0,1,0,0,Editor: Trim Quiz entry (with Slides and Captions)
 test_4956,0,1,0,0,Hotspots: Verify that hotspots can be created for normal entries
+test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
+test_4999,1,0,0,0,Entitlements - Private Channel using Channels Page
+test_5009,1,0,0,0,Entitlements - Open Channel using Channels Page
+test_5010,1,0,0,0,Entitlements - Restricted Channel using Channels Page
+test_5011,1,0,0,0,Entitlements - Shared Repository Channel using Channels Page
+test_5012,1,0,0,0,Entitlements - Public Channel using Channels Page and Anonymous Users ON
+test_5013,1,0,0,0,Entitlements - Public Channel using Channels Page and Anonymous Users OFF
+test_5022,1,0,0,0,Entitlements - Entry Private with Initial Owner changed to Co Publisher
+test_5024,1,0,0,0,Entitlements - Private Channel using Global Page
+test_5025,1,0,0,0,Entitlements - Open Channel using Global Page
+test_5026,1,0,0,0,Entitlements - Restricted Channel using Global Page
+test_5027,1,0,0,0,Entitlements - Shared Repository Channel using Global Search
+test_5028,1,0,0,0,Entitlements - Public Channel using Global Page and Anonymous Users ON
+test_5036,1,0,0,0,Entitlements - Public Channel using Global Page and Anonymous Users OFF
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters

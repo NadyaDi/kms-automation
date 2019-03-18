@@ -1192,4 +1192,3 @@ class Admin(Base):
             
         writeToLog("INFO","Success, Allow Anonymous was set to: " + str(selection) + "'")
         return True
-      
