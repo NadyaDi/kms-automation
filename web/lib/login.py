@@ -63,8 +63,9 @@ class Login(Base):
             if verifyUrl == True:
                 self.clsCommon.myMedia.verifyUrl(url, False)
            
-        
-    def logOutOfKMS(self):
+    
+    # If allowAnonymous=False, we will no longer verify if the user is guest because the authentication screen is presented
+    def logOutOfKMS(self, allowAnonymous=True):
         # Click on the user menu button
         if self.click(self.USER_MENU_TOGGLE_BTN) == False:
             writeToLog("INFO","FAILED to click on user menu button")
@@ -77,10 +78,11 @@ class Login(Base):
             return False
         
         sleep(2)
-        # Verify user now is guest
-        if self.wait_visible(self.USER_GUEST, 5) == False:
-            writeToLog("INFO","FAILED verify user was logout")
-            return False
+        if allowAnonymous == True:
+            # Verify user now is guest
+            if self.wait_visible(self.USER_GUEST, 5) == False:
+                writeToLog("INFO","FAILED verify user was logout")
+                return False
         
         writeToLog("INFO","Success user was logout")   
         return True
@@ -162,3 +164,17 @@ class Login(Base):
             writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
             self.takeScreeshotGeneric("FAIL_LOGIN_TO_KMS")
             raise Exception(inst)
+        
+        
+    def logOutThenLogInToKMS(self,username, password, url='', allowAnonymous=True):
+        # Log Out from the account
+        if self.logOutOfKMS(allowAnonymous) == False:
+            writeToLog("INFO","FAILED to log out from the current KMS account")  
+            return False
+        
+        # Log In with the desired KMS account
+        if self.loginToKMS(username, password, url) == False:
+            writeToLog("INFO", "FAILED to authenticate to the " + username + " KMS account " )
+            return False
+        
+        return True
