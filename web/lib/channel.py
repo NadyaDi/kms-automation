@@ -982,7 +982,11 @@ class Channel(Base):
         return channelPlaylistID
 
 
-    def clickEmbedChannelPlaylistAndGetEmbedCode(self, playlisTitle):
+    def clickEmbedChannelPlaylistAndGetEmbedCode(self, playlisTitle, channelName):
+        if self.navigateToChannelPlaylistTab(channelName) == False:
+            writeToLog("INFO","FAILED to go to channel-playlist tab button: '" + channelName + "'" )
+            return False 
+        
         channelPlaylist_id = self.getChannelPlaylistID(playlisTitle)
         if channelPlaylist_id == False:
             writeToLog("INFO","FAILED to get playlist id")
