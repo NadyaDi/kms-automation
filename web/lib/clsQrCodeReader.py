@@ -70,7 +70,7 @@ class QrCodeReader(Base):
         img = Image.open(filePath)
         writeToLog("INFO","DEBUG: img.width = " + str(img.width))
         writeToLog("INFO","DEBUG: img.height = " + str(img.height))        
-        img2 = img.crop((img.width / 2.06, img.height / 1.7, img.width / 1.71, img.height / 1.2))
+        img2 = img.crop((img.width / 2.06, img.height / 2.1, img.width / 1.71, img.height / 1.2 ))
         img2.save(filePath) 
                
         return filePath

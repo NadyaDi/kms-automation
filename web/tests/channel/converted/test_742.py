@@ -57,7 +57,7 @@ class Test:
             self.entryName4 = clsTestService.addGuidToString('entryName4', self.testNum)
             self.entryName5 = clsTestService.addGuidToString('entryName5', self.testNum)
             self.channelName = clsTestService.addGuidToString("KMS-Automation_Moderate_Channel", self.testNum) 
-            self.newUserId = "pythonautomation1@gmail.com"
+            self.newUserId = "pythonautomation1@mailinator.com"
             self.newUserPass = "Kaltura1!"
             
             ##################### TEST STEPS - MAIN FLOW #####################
