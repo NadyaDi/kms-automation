@@ -13,7 +13,8 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded.berihon @Test name : Add Existing Media to channel
+    # @Author: Oded.berihon
+    # @Test name : Add Existing Media to channel
     # Test description:
     # Upload entry and 
     # create channel 
@@ -24,7 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -58,40 +59,35 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 1: FAILED to upload entry Video")
                 return
            
             writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
             
             writeToLog("INFO","Step 3: Going to navigate to channel page")
             if self.common.channel.navigateToChannel(self.channelName, navigateFrom=enums.Location.MY_CHANNELS_PAGE) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED - could not navigate to channel page")
+                writeToLog("INFO","Step 3: FAILED navigate to channel page")
                 return         
            
             writeToLog("INFO","Step 4: Going to add content to channel")            
             if self.common.channel.addExistingContentToChannel(self.channelName, self.entryName1, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add content to channel: '" + self.entryName1 + "'")
                 return     
             
             writeToLog("INFO","Step 5: Going navigate to channel page")   
             if self.common.channel.navigateToChannel(self.channelName, forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to channel page")
                 return  
              
             writeToLog("INFO","Step 6: Going to verify that entry was publish to channel")            
             if self.common.channel.searchEntryInChannel(self.entryName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify that entry was publish to channel: '" + self.entryName1 + "'")
                 return  
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

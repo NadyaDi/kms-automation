@@ -27,8 +27,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -73,84 +72,68 @@ class Test:
             for i in range(1,5):
                 writeToLog("INFO","Step " + str(i) + ": Going to upload new entry '" + eval('self.entryName'+str(i)))            
                 if self.common.upload.uploadEntry(self.filePath, eval('self.entryName'+str(i)), self.description, self.tags) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(i) + ": FAILED to upload new entry " + eval('self.entryName'+str(i)))
                     return     
                    
             writeToLog("INFO","Step 5: Going navigate to entry '" + self.entryName1 + "'")    
             if self.common.entryPage.navigateToEntry(self.entryName1, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED navigate to entry: " + self.entryName1)
                 return    
                      
             sleep(2) 
             writeToLog("INFO","Step 6: Going to add comments to entry: " + self.entryName1)  
             if self.common.entryPage.addComments(["Comment 1", "Comment 2"]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to add comments to entry: " + self.entryName1)
                 return     
                     
             writeToLog("INFO","Step 7: Going navigate to entry: "+ self.entryName3)    
             if self.common.entryPage.navigateToEntry(self.entryName3, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED navigate to entry: " + self.entryName3)
                 return 
                     
             sleep(2) 
             writeToLog("INFO","Step 8: Going to add comments to entry: " + self.entryName3)  
             if self.common.entryPage.addComments(["Comment 1", "Comment 2", "Comment 3"]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to add comments to entry: " + self.entryName3)
                 return    
                     
             writeToLog("INFO","Step 9: Going navigate to entry: "+ self.entryName4)    
             if self.common.entryPage.navigateToEntry(self.entryName4, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED navigate to entry: " + self.entryName4)
                 return 
 
             sleep(2) 
             writeToLog("INFO","Step 10: Going to add comment to entry: " + self.entryName4)  
             if self.common.entryPage.addComment("Comment 1") == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to add comment to entry: " + self.entryName4)
                 return    
                     
             writeToLog("INFO","Step 11: Going navigate to my media")    
             if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED navigate to my media")
                 return 
             sleep(3)
             
             writeToLog("INFO","Step 12: Going to sort my media by: Alphabetical")  
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.ALPHABETICAL, (self.entryName1, self.entryName2, self.entryName3, self.entryName4)) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to sort my media by Alphabetical")
                 return 
             sleep(1)
               
-            if self.common.isElasticSearchOnPage() == True:  
-                writeToLog("INFO","Step 13: Going to sort my media by: Most recent")
-                if self.common.myMedia.verifySortInMyMedia(enums.SortBy.CREATION_DATE_DESC, (self.entryName4, self.entryName3, self.entryName2, self.entryName1)) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED to sort my media by Most recent")
-                    return
-            else:
-                writeToLog("INFO","Step 13: Going to sort my media by: Most recent")   
-                if self.common.myMedia.verifySortInMyMedia(enums.SortBy.MOST_RECENT , (self.entryName4, self.entryName3, self.entryName2, self.entryName1)) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED to sort my media by Most recent")
-                    return
+            writeToLog("INFO","Step 13: Going to sort my media by: Most recent")
+            if self.common.myMedia.verifySortInMyMedia(enums.SortBy.CREATION_DATE_DESC, (self.entryName4, self.entryName3, self.entryName2, self.entryName1)) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13: FAILED to sort my media by Most recent")
+                return
          
             sleep(1)
             writeToLog("INFO","Step 14: Going to sort my media by: comments")    
             if self.common.myMedia.verifySortInMyMedia(enums.SortBy.COMMENTS, (self.entryName3, self.entryName1, self.entryName4, self.entryName2)) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to sort my media by comments")
                 return
 
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BlackBoard: My Media - Sort Media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

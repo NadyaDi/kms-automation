@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -80,178 +79,150 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
               
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryQuiz) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return  
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
                            
             writeToLog("INFO","Step 4: Going to navigate to add new video quiz")
             if self.common.upload.addNewVideoQuiz() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to click video quiz")
                 return  
                 
             writeToLog("INFO","Step 5: Going to search the uploaded entry and open KEA")
             if self.common.kea.searchAndSelectEntryInMediaSelection(self.entryQuiz, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to find entry and open KEA")
                 return  
                 
             writeToLog("INFO","Step 6: Going to start quiz and add questions")
             if self.common.kea.addQuizQuestion(self.QuizQuestion1, self.QuizQuestion1Answer1, self.QuizQuestion1AdditionalAnswers) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to start quiz and add questions")
                 return   
                 
             writeToLog("INFO","Step 7: Going to save quiz and navigate to media page")
             if self.common.kea.clickDone() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to save quiz and navigate to media page")
                 return 
   
             writeToLog("INFO","Step 8: Going to play quiz entry")
             if self.common.player.navigateToQuizEntryAndClickPlay(self.entryQuiz + " - Quiz", self.questionNumber) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to navigate and play entry")
                 return  
               
             writeToLog("INFO","Step 9: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to switch to default content")
                 return
               
             writeToLog("INFO","Step 10: Going to play audio entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryAudio, '0:05', toVerify=False, timeout=50) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to navigate and play audio entry")
                 return 
              
             writeToLog("INFO","Step 9: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to switch to default content")
                 return            
               
             writeToLog("INFO","Step 11: Going to play video entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryVideo, '0:05') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to navigate and play video entry")
                 return   
              
             writeToLog("INFO","Step 9: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to switch to default content")
                 return            
               
             writeToLog("INFO","Step 12: Going to 'play' image entry")
             if self.common.entryPage.navigateToEntry(self.entryImage) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to navigate and 'play' image entry")
                 return 
             
             writeToLog("INFO","Step 13: Going to navigate to history page")
             if self.common.myHistory.navigateToMyHistory(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to navigate to history page")
                 return
             
             writeToLog("INFO","Step 14: Going to filter entries by media type audio")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.MEDIA_TYPE, dropDownListItem = enums.MediaType.AUDIO) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to filter entries by media type audio")
                 return   
             
             writeToLog("INFO","Step 15: Going to check that correct entries for audio filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByAudio) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to displayed correct entries for audio type")
                 return   
             
             writeToLog("INFO","Step 16: Going to verify that only entries with " + enums.MediaType.AUDIO.value + " icon display")  
             if self.common.myMedia.verifyEntryTypeIcon([self.entryAudio], enums.MediaType.AUDIO) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED to filter and verify my media entries  by '" + enums.MediaType.AUDIO.value + "'")
                 return
             
             writeToLog("INFO","Step 17: Going to filter entries by media video audio")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.MEDIA_TYPE, dropDownListItem = enums.MediaType.VIDEO) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to filter entries by media type video")
                 return              
             
             writeToLog("INFO","Step 18: Going to check that correct entries for video filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByVideo) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to displayed correct entries for video type")
                 return   
             
             writeToLog("INFO","Step 19: Going to verify that only entries with " + enums.MediaType.VIDEO.value + " icon display")  
             if self.common.myMedia.verifyEntryTypeIcon([self.entryVideo], enums.MediaType.VIDEO) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to filter and verify my media entries  by '" + enums.MediaType.VIDEO.value + "'")
                 return 
             
             writeToLog("INFO","Step 20: Going to filter entries by media type quiz")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.MEDIA_TYPE, dropDownListItem = enums.MediaType.QUIZ) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED to filter entries by media type quiz")
                 return              
             
             writeToLog("INFO","Step 21: Going to check that correct entries for quiz filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByQuiz) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 21: FAILED to displayed correct entries for quiz type")
                 return   
             
             writeToLog("INFO","Step 22: Going to verify that only entries with " + enums.MediaType.QUIZ.value + " icon display")  
             if self.common.myMedia.verifyEntryTypeIcon([self.entryQuiz + " - Quiz"], enums.MediaType.QUIZ) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 22: FAILED to filter and verify my media entries  by '" + enums.MediaType.QUIZ.value + "'")
                 return  
             
             writeToLog("INFO","Step 23: Going to filter entries by media type audio")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.MEDIA_TYPE, dropDownListItem = enums.MediaType.IMAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 23: FAILED to filter entries by media type audio")
                 return                   
             
             writeToLog("INFO","Step 24: Going to check that correct entries for image filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByImage) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 24: FAILED to displayed correct entries for image type")
                 return   
             
             writeToLog("INFO","Step 25: Going to verify that only entries with " + enums.MediaType.IMAGE.value + " icon display")  
             if self.common.myMedia.verifyEntryTypeIcon([self.entryImage], enums.MediaType.IMAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 25: FAILED to filter and verify my media entries  by '" + enums.MediaType.IMAGE.value + "'")
                 return 
             
             writeToLog("INFO","Step 26: Going to filter entries by media type audio")
             if self.common.myHistory.filterInMyHistory(dropDownListName = enums.MyHistoryFilters.MEDIA_TYPE, dropDownListItem = enums.MediaType.ALL_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 26: FAILED to filter entries by media type audio")
                 return              
             
             writeToLog("INFO","Step 27: Going to check that correct entries for all media filter are displayed")
             if self.common.myHistory.verifyFiltersInMyHistory(self.filterByAllMedia) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 27: FAILED to displayed correct entries for all media type")
                 return                                              
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

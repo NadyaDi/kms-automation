@@ -13,7 +13,8 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded.berihon @Test name Embed Channel Playlist
+    # @Author: Oded.berihon 
+    # Test name: Embed Channel Playlist
     # Test description:
     # Upload entries - create Channel - publish the entries to channel and create channel playlist while adding the new entries to it.
     # Go back to edit channel playlist page grab the embed code and play it as stand alone page.
@@ -22,13 +23,13 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
-    entryName1 = "F5383AE8-767-Video2"  
-    entryName2 = "F5383AE8-767-Audio"
-    entryName3 = "F5383AE8-767-Video"
+    entryName1 = None 
+    entryName2 = None
+    entryName3 = None
     entryDescription = "description"
     entryTags = "tag,"
     entriesNames = None
@@ -36,10 +37,7 @@ class Test:
     channelDescription = "description"
     channelTags = "tag,"
     embedLink = None
-    embedLinkFilePath = 'Z:\\embed\\'
-    
-    
-#     embedLinkFilePath = localSettings.LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER
+    embedLinkFilePath = localSettings.LOCAL_SETTINGS_LINUX_EMBED_SHARED_FOLDER
     embedUrl = localSettings.LOCAL_SETTINGS_APACHE_EMBED_PATH
     
     
@@ -68,98 +66,74 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
-#             self.entryName1 = clsTestService.addGuidToString('Video1', self.testNum)
-#             self.entryName2 = clsTestService.addGuidToString('Video2', self.testNum)
-#             self.entryName3 = clsTestService.addGuidToString('Video3', self.testNum)
-#              self.channelName = clsTestService.addGuidToString('F5383AE8-767-Channel playlist', self.testNum)
-            self.playlisTitle = clsTestService.addGuidToString('Channel playlist', self.testNum)
+            self.entryName1 = clsTestService.addGuidToString('Video1', self.testNum)
+            self.entryName2 = clsTestService.addGuidToString('Video2', self.testNum)
+            self.entryName3 = clsTestService.addGuidToString('Video3', self.testNum)
+            self.channelName = clsTestService.addGuidToString('F5383AE8-4293-Embed Channel playlist', self.testNum)
+            self.playlisTitle = clsTestService.addGuidToString('Embed Channel playlist', self.testNum)
             self.entriesNames = [self.entryName1, self.entryName2, self.entryName3]
             self.embedLinkFilePath = self.embedLinkFilePath + clsTestService.addGuidToString('embed.html', self.testNum)
             self.embedUrl = self.embedUrl + clsTestService.addGuidToString('embed.html', self.testNum)            
             ########################## TEST STEPS - MAIN FLOW #######################
             
-            writeToLog("INFO","Step 1: Going to create channel playlist")                                     
-            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to create channel playlist")
-                return 
-            sleep(3)
-            
-            writeToLog("INFO","Step 2: Going navigate to channel playlist tab") 
-            if self.common.channel.navigateToChannelPlaylistTab(self.channelName) == False:  
-                self.status = "Fail" 
-                writeToLog("INFO","Step 2: FAILED navigate to channel playlist tab")
-                return                 
-            
-            writeToLog("INFO","Step 3: Going to get embed code")
-            self.embedLink = self.common.channel.clickEmbedChannelPlaylistAndGetEmbedCode(self.playlisTitle)
-            if self.embedLink == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to get embed code")
-                return  
-                 
-            writeToLog("INFO","Step 4: Going to write embed code in file")
-            if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to write embed code in file")
-                return 
-              
-            writeToLog("INFO","Step 5: Going to navigate to embed entry page (by link)")
-            if self.common.base.navigate(self.embedUrl) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED navigate to embed entry page")
-                return  
-              
-            writeToLog("INFO","Step 6: Going to upload Video type entry")            
+            writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to upload entry Video")
+                writeToLog("INFO","Step 1: FAILED to upload entry Video")
                 return
              
-            writeToLog("INFO","Step 7: Going to upload audio type entry")
+            writeToLog("INFO","Step 2: Going to upload audio type entry")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED failed to upload entry audio")
+                writeToLog("INFO","Step 2: FAILED failed to upload entry audio")
                 return 
              
-            writeToLog("INFO","Step 8: Going to upload video type entry")            
+            writeToLog("INFO","Step 3: Going to upload video type entry")            
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED failed to upload entry video")
-                return                         
-             
-            writeToLog("INFO","Step 9: Going to create new channel")            
+                writeToLog("INFO","Step 3: FAILED failed to upload entry video")
+                return             
+            
+            writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9: FAILED to create Channel#1")
-                return
-              
-            writeToLog("INFO","Step 10: Going to publish entries to channel")
-            if self.common.myMedia.publishEntriesFromMyMedia([self.entryName1,self.entryName2,self.entryName13], "", [self.channelName]) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to publish entries to channel")
-                return
-                 
-            expectedEntriesList = [self.entryName1, self.entryName2, self.entryName3]
-            writeToLog("INFO","Step 11: Going to create channel playlist")                                     
-            if self.common.channel.sortAndFilterInChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, enums.SortBy.ALPHABETICAL, enums.MediaType.VIDEO) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED failed to create channel playlist")
-                return 
-            sleep(3)     
-             
-            writeToLog("INFO","Step 12: Going to verify entries order - by Alphabetical & video type")
-            if self.common.myMedia.verifyEntriesOrder(expectedEntriesList, enums.Location.CHANNEL_PLAYLIST) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 12: FAILED to verify entries order - by Alphabetical & video type")
+                writeToLog("INFO","Step 4: FAILED to create Channel#1")
                 return
             
-            writeToLog("INFO","Step 13: Going to delete channel playlist")              
+            writeToLog("INFO","Step 5: Going to publish entries to channel")
+            if self.common.myMedia.publishEntriesFromMyMedia([self.entryName1,self.entryName2,self.entryName3], "", [self.channelName]) == False:
+                writeToLog("INFO","Step 5: FAILED to publish entries to channel")
+                return
+            
+            writeToLog("INFO","Step 6: Going navigate to channel playlist tab") 
+            if self.common.channel.navigateToChannelPlaylistTab(self.channelName) == False:  
+                writeToLog("INFO","Step 6: FAILED navigate to channel playlist tab")
+                return       
+            
+            writeToLog("INFO","Step 7: Going to create channel playlist")                                     
+            if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
+                writeToLog("INFO","Step 7: FAILED to create channel playlist")
+                return 
+            sleep(3)          
+            
+            writeToLog("INFO","Step 8: Going to get embed code")
+            self.embedLink = self.common.channel.clickEmbedChannelPlaylistAndGetEmbedCode(self.playlisTitle, self.channelName)
+            if self.embedLink == False:
+                writeToLog("INFO","Step 8: FAILED to get embed code")
+                return  
+                 
+            writeToLog("INFO","Step 9: Going to write embed code in file")
+            if self.common.writeToFile(self.embedLinkFilePath, self.embedLink) == False:
+                writeToLog("INFO","Step 9: FAILED to write embed code in file")
+                return 
+              
+            writeToLog("INFO","Step 10: Going to navigate to embed entry page (by link)")
+            if self.common.base.navigate(self.embedUrl) == False:
+                writeToLog("INFO","Step 10: FAILED navigate to embed entry page")
+                return  
+              
+            writeToLog("INFO","Step 11: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 13: FAILED failed to delete channel playlist")
+                writeToLog("INFO","Step 11: FAILED failed to delete channel playlist")
                 return      
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -68,7 +67,6 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
                   
@@ -80,28 +78,25 @@ class Test:
                
             writeToLog("INFO","Step 2: Going to upload 4 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 4 entries")
                 return 
               
             writeToLog("INFO","Step 3: Going to navigate to the last uploaded entry page")
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName4) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to " + self.entryName4 + " entry page")
                 return           
                              
             writeToLog("INFO","Step 4: Going to to click on My media option in Related media")
             if self.common.entryPage.selectRelatedMediaOption() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED click on 'My media' option")
                 return  
             
             writeToLog("INFO","Step 5: Going to to check uploaded entries in My Media side bar")
             if self.common.entryPage.checkMyMediaSideBarEntries(self.entriesList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED displayed My Media entries in side bar")
                 return                                                                                                  
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -38,6 +38,7 @@ test_4871,1,0,0,0,Blackboard Ultra- View Collapsed Expanded Modes
 test_4872,1,0,0,0,Blackboard Ultra- Upload media from desktop
 test_4875,1,0,0,0,Blackboard Ultra- Search by Name / Description / Tags
 test_4876,1,0,0,0,Blackboard Ultra- Sort Media
+test_4883,1,0,0,0,Blackboard Ultra- Upload media from media gallery page
 test_628,1,0,0,0,Moodle - Assignment Submission Functionalities
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
@@ -322,6 +323,7 @@ test_4621,1,0,0,0,KEA Clip video with captions
 test_4622,0,1,0,0,KEA Trim Quiz with caption and slide
 test_4742,1,0,0,0,KEA - Quiz Details section in KEA Editor
 test_4746,1,0,0,0,KEA - Quiz Details section in Entry Page
+test_4746,1,0,0,0,Quiz - Details section in Entry Page
 test_4757,1,0,0,0,Quiz - Details - Download functionality
 test_4758,1,0,0,0,Quiz - Scores section in KEA Page
 test_4759,1,0,0,0,Quiz - Scores section in Entry Page - Enabled

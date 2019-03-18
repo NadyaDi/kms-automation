@@ -182,6 +182,7 @@ test_4562,KEA trim video with captions,6269,qakmstest.dev.kaltura.com,adi.millma
 test_4621,KEA clip video with captions,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4622,KEA Trim Quiz with caption and slide,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4742,KEA - Quiz Details section in KEA Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4746,Quiz - Details section in Entry Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4757,Quiz - Details - Download functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4758,Quiz - Scores section in KEA Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4759,Quiz - Scores section in Entry Page - Enabled,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456

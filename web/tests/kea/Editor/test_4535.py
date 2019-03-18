@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -50,30 +49,27 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry - to be trimmed")  
             if self.common.upload.uploadEntry(self.filePathVideo, self.audioEntryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
             
             writeToLog("INFO","Step 2: Going to trim the entry from 30sec to 20sec")  
             if self.common.kea.trimEntry(self.audioEntryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to trim the entry from 30sec to 20sec")
                 return
 
             writeToLog("INFO","Step 3: Going to Navigate to entry page")  
             self.QRlist = self.common.entryPage.navigateToEntryPageFromMyMedia(self.audioEntryName)
             if  self.QRlist == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to Navigate to entry pagem")
                 return
 
             writeToLog("INFO","Step 4: Going to verify the Audio's duration after trim")  
             self.QRlist = self.common.entryPage.verifyEntryViaType(enums.MediaType.AUDIO, expectedEntryDuration)
             if  self.QRlist == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify the Audio's duration after trim")
                 return
-                
+            #################################################################################################
+            self.status = "Pass"   
             writeToLog("INFO","TEST PASSED")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -125,6 +125,8 @@ class Kea(Base):
     KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT                       = ('xpath', '//div[contains(@class,"content-item__handle--right")]')
     KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT                        = ('xpath', '//div[contains(@class,"content-item__handle--left")]')
     KEA_PLAYER_CONTAINER                                                    = ('xpath', '//div[@class="player-container"]')
+    KEA_ADD_NEW_OPEN_QUESTION_BUTTON                                        = ('xpath', "//button[contains(@class,'open-question-question-type')]")
+    KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE                                 = ('xpath', "//button[contains(@class,'open-question-question-type ng-star-inserted active')]")
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -725,7 +727,233 @@ class Kea(Base):
     # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
     # questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point', 'Hint Text', 'Why Text']
     # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
+    # questionOpen         = ['0:25', enums.QuizQuestionType.OPEN_QUESTION, 'Question title for Open-Q'] 
     # If you want to change the answer order you can use this function: changeAnswerOrder
+#     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
+#         sleep(25)
+#         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
+#             writeToLog("INFO", "FAILED to navigate to " + entryName)
+#             return False
+#         sleep(timeout)
+#         
+#         # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" Quiz Questions)
+#         questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
+#                    
+#         for questionNumber in dictQuestions:
+#             questionDetails = dictQuestions[questionNumber]
+#             
+#             self.switchToKeaIframe() 
+#             if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+#                 writeToLog("INFO","FAILED to wait until spinner isn't visible")
+#                 return False 
+#             
+#             # Specifying the time stamp, where the Quiz Question should be placed within the entry
+#             # click on the editor in order to higlight the timeline field and select all the text
+#             if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
+#                 writeToLog("INFO", "FAILED to click on the kea timeline field")
+#                 return False
+#             
+#             timestamp = questionDetails[0]
+#             
+#             # replace the text present in the timestamp field with the new one
+#             if self.send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
+#                 writeToLog("INFO", "FAILED to select the timeline field text")
+#                 return False
+#         
+#             # Creating the variable for the Quiz Question Type
+#             qestionType = questionDetails[1]
+#             if qestionType == enums.QuizQuestionType.Multiple:   
+#                 # We enter in the KEA Quiz Question Type screen
+#                 if self.selectQuestionType(qestionType) == False:
+#                     writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+#                     return False      
+#          
+#                 # Add question fields
+#                 # We verify if we have only one question
+#                 if questionDetails[4] != '':
+#                     QuizQuestion1AdditionalAnswers = [questionDetails[4]]
+#                 
+#                 if questionDetails[5] != '':
+#                     QuizQuestion1AdditionalAnswers.append(questionDetails[5])
+#                     
+#                 if questionDetails[6] != '':
+#                     QuizQuestion1AdditionalAnswers.append(questionDetails[6])
+#                     
+#                 if len(QuizQuestion1AdditionalAnswers) >= 1:
+#                     if self.fillQuizFields(questionDetails[2], questionDetails[3], QuizQuestion1AdditionalAnswers) == False:
+#                         writeToLog("INFO","FAILED to fill question fields")
+#                         return False
+#                 else:
+#                     writeToLog("INFO", "Please make sure that you supply at least two question answers")
+#                     return False
+#                 
+#                 # we verify if the value for the 'Hint' is present in the list
+#                 if len(questionDetails) >= 8:  
+#                     # we verify if we want to create a Hint for the current Quiz Question
+#                     if questionDetails[7] != '':
+#                         if self.createHintAndWhy(questionDetails[7], whyText='') == False:
+#                             writeToLog("INFO", "FAILED to create a Hint for the " + questionDetails[2] + " Quiz Question")
+#                             return False
+#                     else:
+#                         writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+# 
+#                     # we verify if the value for the 'Why' is present in the list
+#                     if len(questionDetails) >= 9:
+#                         # we verify if we want to create a Why for the current Quiz Question
+#                         if questionDetails[8] != '':
+#                             sleep(2)
+#                             if self.createHintAndWhy(hintText='', whyText=questionDetails[8]) == False:
+#                                 writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
+#                                 return False
+#                         else:
+#                             writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+#                 else:
+#                     writeToLog("INFO", "No 'Hint' or 'Why' will be created for the " + questionDetails[2] + " Quiz Question")
+#                     
+#             elif qestionType == enums.QuizQuestionType.REFLECTION:
+#                 # We enter in the KEA Quiz Question Type screen
+#                 if self.selectQuestionType(qestionType) == False:
+#                     writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+#                     return False    
+#                 
+#                 # We select the KEA Quiz Question title field
+#                 if self.click(questionField, 2, True) == False:
+#                     writeToLog("INFO", "FAILED to select the reflection point text area")
+#                     return False
+#                 
+#                 # We insert the title for the KEA Quiz Question type
+#                 if self.send_keys(questionField, questionDetails[2], True) == False:
+#                     writeToLog("INFO", "FAILED to insert the " + questionDetails[2] + " reflection point")
+#                     return False
+#                 
+#                 # We make sure that no 'Hint' or 'Why' are trying to be created for 'Reflection Point' Quiz Question
+#                 if len(questionDetails) >= 4:
+#                     writeToLog("INFO", "Hint and Why are not supported for the Reflection Point Quiz Question")
+#                     return False
+#                 
+#             elif qestionType == enums.QuizQuestionType.TRUE_FALSE:
+#                 # We enter in the KEA Quiz Question Type screen
+#                 if self.selectQuestionType(qestionType) == False:
+#                     writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+#                     return False    
+#                 
+#                 # We select the KEA Quiz Question title field
+#                 if self.click(questionField, 2, True) == False:
+#                     writeToLog("INFO", "FAILED to select the reflection point text area")
+#                     return False
+#                 
+#                 #we insert the Question title inside the Question text area
+#                 if self.send_keys(questionField, questionDetails[2], True) == False:
+#                     writeToLog("INFO", "FAILED to insert the " + questionDetails[2] + " reflection point")
+#                     return False
+#                 
+#                 # We insert the title for the KEA Quiz Question type
+#                 if questionDetails[3] and questionDetails[4] != '':
+#                     if self.click(self.KEA_ADD_NEW_ADD_QUESTION_TRUE_ANSWER_FIELD, 3, True) == False:
+#                         writeToLog("INFO", "FAILED to select the 'True' text area field")
+#                         return False
+# 
+#                     if self.clear_and_send_keys(self.KEA_ADD_NEW_ADD_QUESTION_TRUE_ANSWER_FIELD, questionDetails[3], True)== False:
+#                         writeToLog("INFO", "FAILED to insert the " + questionDetails[3] + " text within the 'True' field")
+#                         return False
+#                     
+#                     if self.click(self.KEA_ADD_NEW_QUESTION_FALSE_ANSWER_FIELD, 3, True) == False:
+#                         writeToLog("INFO", "FAILED to select the 'False' text area field")
+#                         return False
+# 
+#                     if self.clear_and_send_keys(self.KEA_ADD_NEW_QUESTION_FALSE_ANSWER_FIELD, questionDetails[4], True)== False:
+#                         writeToLog("INFO", "FAILED to insert the " + questionDetails[4] + " text within the 'False' field")
+#                         return False
+#                 
+#                 # we verify if the value for the 'Hint' is present in the list
+#                 if len(questionDetails) >= 6:  
+#                     # we verify if we want to create a Hint for the current Quiz Question
+#                     if questionDetails[5] != '':
+#                         if self.createHintAndWhy(questionDetails[5], whyText='') == False:
+#                             writeToLog("INFO", "FAILED to create a Hint for the " + questionDetails[2] + " Quiz Question")
+#                             return False
+#                     else:
+#                         writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+#                         
+#                     # we verify if the value for the 'Why' is present in the list
+#                     if len(questionDetails) == 7:
+#                         # we verify if we want to create a Why for the current Quiz Question
+#                         if questionDetails[6] != '':
+#                             sleep(2)
+#                             if self.createHintAndWhy(hintText='', whyText=questionDetails[6]) == False:
+#                                 writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
+#                                 return False
+#                         else:
+#                             writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+#                 else:
+#                     writeToLog("INFO", "No 'Hint' or 'Why' will be created for the " + questionDetails[2] + " Quiz Question")
+#             
+#             # We verify that the KEA Quiz Question type is supported
+#             else:
+#                 writeToLog("INFO", "FAILED, please make sure that you're using a support KEA Quiz Question type, using enums(e.g enums.QuizQuestionType.type)")
+#                 return False
+#                                             
+#             # Save Question
+#             if self.saveQuizChanges() == False:
+#                 writeToLog("INFO", "FAILED to save the changes")
+#                 return False
+#             
+#         # Edit the KEA Quiz Section if necessary by enabling or disabling any KEA option from the KEA Details, Scores and Experience sections
+#         if dictDetails != '' or dictScores != '' or dictExperience != '':
+#             # We verify if we modify more than one option for the same KEA Section
+#             if type(dictDetails) is list:
+#                 for option in dictDetails:
+#                     if self.editQuizOptions(enums.KEAQuizSection.DETAILS, option, saveChanges=False, resumeEditing=False) == False:
+#                         writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.DETAILS.value + " KEA Section options")
+#                         return False
+#                         
+#             else:
+#                 # We modify only one option for this specific KEA section
+#                 if dictDetails != '':
+#                     if self.editQuizOptions(enums.KEAQuizSection.DETAILS, option, saveChanges=False, resumeEditing=False) == False:
+#                         writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.DETAILS.value + " KEA Section options")
+#                         return False
+#                     
+#             # We verify if we modify more than one option for the same KEA Section
+#             if type(dictScores) is list:
+#                 for option in dictScores:
+#                     if self.editQuizOptions(enums.KEAQuizSection.SCORES, option, saveChanges=False, resumeEditing=False) == False:
+#                         writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.SCORES.value + " KEA Section options")
+#                         return False
+#                     
+#             else:
+#                 # We modify only one option for this specific KEA section
+#                 if dictScores != '':
+#                     if self.editQuizOptions(enums.KEAQuizSection.SCORES, option, saveChanges=False, resumeEditing=False) == False:
+#                         writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.SCORES.value + " KEA Section options")
+#                         return False
+#                     
+#             # We verify if we modify more than one option for the same KEA Section   
+#             if type(dictExperience) is list:
+#                 for option in dictExperience:
+#                     if self.editQuizOptions(enums.KEAQuizSection.EXPERIENCE, option, saveChanges=False, resumeEditing=False) == False:
+#                         writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.EXPERIENCE.value + " KEA Section options")
+#                         return False
+#                 
+#             else:
+#                 # We modify only one option for this specific KEA section
+#                 if dictExperience != '':
+#                     if self.editQuizOptions(enums.KEAQuizSection.EXPERIENCE, option, saveChanges=False, resumeEditing=False) == False:
+#                         writeToLog("INFO", "FAILED to change the " + enums.KEAQuizSection.EXPERIENCE.value + " KEA Section options")
+#                         return False
+#             
+#             # We save all the changes performed from each KEA Section
+#             if self.saveKeaChanges(resumeEditing=True) == False:
+#                 writeToLog("INFO", "FAILED to save the changes performed in the KEA Section")
+#                 return False
+#         else:
+#             writeToLog("INFO", "No changes for the KEA Sections was performed")
+#         
+#         # Save the KEA Quiz entry and navigate to the entry page
+#         self.switchToKeaIframe() 
+#         self.clickDone()
+#         return True
+
     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
         sleep(25)
         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
@@ -733,7 +961,7 @@ class Kea(Base):
             return False
         sleep(timeout)
         
-        # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" Quiz Questions)
+        # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" and "Open-Q" Quiz Questions)
         questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
                    
         for questionNumber in dictQuestions:
@@ -884,6 +1112,45 @@ class Kea(Base):
                             writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
                 else:
                     writeToLog("INFO", "No 'Hint' or 'Why' will be created for the " + questionDetails[2] + " Quiz Question")
+                    
+            elif qestionType == enums.QuizQuestionType.OPEN_QUESTION:
+                # We enter in the KEA Quiz Question Type screen
+                if self.selectQuestionType(qestionType) == False:
+                    writeToLog("INFO", "FAILED to enter in the " + qestionType.value + " Question screen")
+                    return False    
+                
+                # We select the KEA Quiz Question title field
+                if self.click(questionField, 2, True) == False:
+                    writeToLog("INFO", "FAILED to select the reflection point text area")
+                    return False
+                
+                # We insert the title for the KEA Quiz Question type
+                if self.send_keys(questionField, questionDetails[2], True) == False:
+                    writeToLog("INFO", "FAILED to insert the " + questionDetails[2] + " open-Q")
+                    return False
+                
+                # we verify if the value for the 'Hint' is present in the list
+                if len(questionDetails) >= 6:  
+                    # we verify if we want to create a Hint for the current Quiz Question
+                    if questionDetails[5] != '':
+                        if self.createHintAndWhy(questionDetails[5], whyText='') == False:
+                            writeToLog("INFO", "FAILED to create a Hint for the " + questionDetails[2] + " Quiz Question")
+                            return False
+                    else:
+                        writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+                        
+                    # we verify if the value for the 'Why' is present in the list
+                    if len(questionDetails) == 7:
+                        # we verify if we want to create a Why for the current Quiz Question
+                        if questionDetails[6] != '':
+                            sleep(2)
+                            if self.createHintAndWhy(hintText='', whyText=questionDetails[6]) == False:
+                                writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
+                                return False
+                        else:
+                            writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
+                else:
+                    writeToLog("INFO", "No 'Hint' or 'Why' will be created for the " + questionDetails[2] + " Quiz Question")          
             
             # We verify that the KEA Quiz Question type is supported
             else:
@@ -1582,6 +1849,24 @@ class Kea(Base):
                 if self.click(self.KEA_ADD_NEW_TRUE_FALSE_QUESTION_BUTTON_ACTIVE) == False:
                     writeToLog("INFO","FAILED to activate the 'True and False' quiz type")
                     return False
+                
+        elif qestionType == enums.QuizQuestionType.OPEN_QUESTION:
+            # Verify if the KEA Quiz Question type is already highlighted
+            if self.wait_element(self.KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE, 2, True) != False:
+                if self.click(self.KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'open-Q' quiz type")
+                    return False
+                
+            # We highlight the KEA Quiz Question type and then access it
+            else:
+                if self.click(self.KEA_ADD_NEW_OPEN_QUESTION_BUTTON) == False:
+                    writeToLog("INFO","FAILED to highlight the 'open-Q' quiz type")
+                    return False
+                sleep(1)
+
+                if self.click(self.KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE) == False:
+                    writeToLog("INFO","FAILED to activate the 'open-Q' quiz type")
+                    return False            
                 
         # We verify that a supported KEA Quiz Question type has been used      
         else:

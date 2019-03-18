@@ -1135,6 +1135,33 @@ class Admin(Base):
             
         writeToLog("INFO","Success, Auto Play On load was set to: " + str(selection) + "'")
         return True
+      
+    
+    # @Autor: Michal Zomper     
+    def enableImportchannel(self, isEnabled):
+        # Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+       
+        #Navigate to home module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/importchannel') == False:
+            writeToLog("INFO","FAILED to load import channel page in admin")
+            return False
+        sleep(1)
+       
+        #Enable/Disable import channel field
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set import channel module as: " + str(selection))
+            return False
+        
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes in admin page")
+            return False
+       
+        writeToLog("INFO","Success, Import channel module was set to '" +  str(selection) + "'")
+        return True
     
     
     # @Author: Horia Cus
@@ -1164,4 +1191,5 @@ class Admin(Base):
             return False
             
         writeToLog("INFO","Success, Allow Anonymous was set to: " + str(selection) + "'")
-        return True  
+        return True
+      

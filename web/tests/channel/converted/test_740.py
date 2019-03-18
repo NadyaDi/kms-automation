@@ -13,8 +13,8 @@ from utilityTestFunc import *
 class Test:
     
     #================================================================================================================================
-    # @Author: Oded.berihon @Test name : Enable/Disable comments in channel
-
+    # @Author: Oded.berihon
+    #  @Test name : Enable/Disable comments in channel
     # Test description:
     # Upload entry publish it to channel edit channel and enable comment go to entry in the channel and add comment 
     # go back to edit channel and disable comment go to entry and try to add comment.
@@ -24,7 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -53,68 +53,56 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initialize(self, driverFix)
+            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)      
             ########################################################################
             self.entryName1 = clsTestService.addGuidToString('Video', self.testNum)
             self.channelName = clsTestService.addGuidToString('Enable/Disable comments in channel', self.testNum)
             ########################## TEST STEPS - MAIN FLOW #######################
             
-            writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
-            if self.common.loginAsUser() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to login as user")
-                return    
-            
-            writeToLog("INFO","Step 2: Going to upload Video type entry")            
+            writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED failed to upload entry Video")
+                writeToLog("INFO","Step 1: FAILED to upload entry Video")
                 return
            
-            writeToLog("INFO","Step 3: Going to create new channel")            
+            writeToLog("INFO","Step 2: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to create Channel#1")
+                writeToLog("INFO","Step 2: FAILED to create Channel#1")
                 return
            
-            writeToLog("INFO","Step 4: Going to publish entry1")
+            writeToLog("INFO","Step 3: Going to publish entry1")
             if self.common.myMedia.publishSingleEntry(self.entryName1, [], [self.channelName], publishFrom = enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 4: FAILED - could not publish Video to channel")
+                writeToLog("INFO","Step 3: FAILED to publish Video to channel")
                 return
             
-            writeToLog("INFO","Step 5: Going to add comment to entry")                                     
+            writeToLog("INFO","Step 4: Going to add comment to entry")                                     
             if self.common.channel.addCommentToEntryFromChannel(self.channelName, self.entryName1, self.comment) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to add comment to entry")
+                writeToLog("INFO","Step 4: FAILED to add comment to entry")
                 return 
             
-            writeToLog("INFO","Step 6: Going navigate to edit channel page") 
+            writeToLog("INFO","Step 5: Going navigate to edit channel page") 
             if self.common.channel.navigateToEditChannelPage(self.channelName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to navigate to edit channel page")
+                writeToLog("INFO","Step 5: FAILED navigate to edit channel page")
                 return  
 
-            writeToLog("INFO","Step 7: Going to enable and disable comments in channel")                                     
+            writeToLog("INFO","Step 6: Going to disable comments in channel")                                     
             if self.common.channel.enableDisableCommentsInChannel(self.channelName, False) == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to add and disable comments in channel")
+                writeToLog("INFO","Step 6: FAILED to disable comments in channel")
                 return 
             
-            writeToLog("INFO","Step 8: Going to navigate to entry from channel page")      
+            writeToLog("INFO","Step 7: Going to navigate to entry from channel page")      
             if self.common.channel.navigateToEntryFromChannel(self.channelName, self.entryName1) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to edit channel page")
+                writeToLog("INFO","Step 7: FAILED to navigate to edit channel page")
                 return False
             
-            writeToLog("INFO","Step 9: Going to verify user can't add comment")
+            writeToLog("INFO","Step 8: Going to verify user can't add comment")
             if self.common.entryPage.checkEntryCommentsSection(self.comment, True, False) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 9:FAILED to verify user can't add comment") 
+                writeToLog("INFO","Step 8:FAILED to verify user can't add comment") 
                 return False
             
             sleep(3)   
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Enable/Disable comments in channel' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

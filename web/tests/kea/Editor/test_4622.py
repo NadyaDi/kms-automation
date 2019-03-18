@@ -19,8 +19,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -69,50 +68,42 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
             
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return
                
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
-                self.status = "Fail"
                 return
 
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return    
             
             writeToLog("INFO","Step 5: Going to click on caption tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to click on caption tab")
                 return            
             
             writeToLog("INFO","Step 6: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return
                         
             writeToLog("INFO","Step 7: Going to trim the entry from 10sec to 20sec")  
             if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to trim the entry from 10sec to 20sec")
                 return
             
             writeToLog("INFO","Step 8: Going to collect the new entry's QR codes")  
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.entryName)
             if  self.QRlist == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to collect the new entry's QR codes")
                 return
                         
@@ -120,14 +111,12 @@ class Test:
             self.isAbsentQR = ["12", "13", "15", "17"];
             writeToLog("INFO","Step 9: Going to verify the entry duration (using QR codes)")  
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify the entry duration (using QR codes)")
                 return
             
             writeToLog("INFO","Step 10: Going to collect all the presented captions on the player (after the entry was trimmed)")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName, fromActionBar=False)
             if  self.captionList == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to collect all the presented captions on the player (after the entry was trimmed)")
                 return
              
@@ -135,11 +124,11 @@ class Test:
             self.isAbsent = ["Caption12search", "Caption13search", "Caption15search", "Caption17search"];
             writeToLog("INFO","Step 11: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify the captions that were collected")
                 return
                 
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

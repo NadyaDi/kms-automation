@@ -25,8 +25,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -80,7 +79,6 @@ class Test:
             for entry in self.entriesToUpload:
                 writeToLog("INFO","Step " + str(step) + " : Going to upload entry")
                 if self.common.upload.uploadEntry(self.entriesToUpload.get(entry), entry, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to upload entry - " + entry)
                     return    
                   
@@ -88,7 +86,6 @@ class Test:
                   
                 writeToLog("INFO","Step " + str(step) + " : Going to navigate to uploaded entry page")
                 if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to navigate to entry page")
                     return 
                             
@@ -96,7 +93,6 @@ class Test:
                    
                 writeToLog("INFO","Step " + str(step) + " : Going to wait until media will finish processing")
                 if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED - New entry is still processing")
                     return
                  
@@ -108,7 +104,6 @@ class Test:
                 if step == 4:  
                     writeToLog("INFO","Step " + str(step) + " : Going to create empty playlist")
                     if self.common.myPlaylists.createEmptyPlaylist(entry, self.existPlaylist) == False:
-                        self.status = "Fail"
                         writeToLog("INFO","Step " + str(step) + " : FAILED to create empty playlist")
                         return 
                       
@@ -116,7 +111,6 @@ class Test:
                   
                     writeToLog("INFO","Step " + str(step) + " : Going to navigate to entry page")
                     if self.common.entryPage.navigateToEntry(entry) == False:
-                        self.status = "Fail"
                         writeToLog("INFO","Step " + str(step) + " : FAILED to navigate to entry page")
                         return               
                           
@@ -126,7 +120,6 @@ class Test:
                 # Refresh page
                 self.common.base.refresh() 
                 if self.common.myPlaylists.addSingleEntryToPlaylist(entry, self.existPlaylist, toCreateNewPlaylist = False, currentLocation = enums.Location.ENTRY_PAGE) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to add entry to exist playlist from entry page")
                     return   
                       
@@ -134,7 +127,6 @@ class Test:
                     
                 writeToLog("INFO","Step " + str(step) + " : Going to check entry in exist playlist")
                 if self.common.myPlaylists.verifySingleEntryInPlaylist(self.existPlaylist, entry) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to find entry in exist playlist")
                     return          
                     
@@ -142,7 +134,6 @@ class Test:
                      
                 writeToLog("INFO","Step " + str(step) + " : Going to navigate to entry page")
                 if self.common.entryPage.navigateToEntry(entry) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to navigate to entry page")
                     return                      
                       
@@ -157,7 +148,6 @@ class Test:
                                       
                 writeToLog("INFO","Step " + str(step) + " : Going to add to new playlist from entry page")
                 if self.common.myPlaylists.addSingleEntryToPlaylist(entry, self.newPlaylist, toCreateNewPlaylist = True, currentLocation = enums.Location.ENTRY_PAGE) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to add entry to new playlist from entry page")
                     return 
                                                                 
@@ -165,12 +155,12 @@ class Test:
                       
                 writeToLog("INFO","Step " + str(step) + " : Going to check entry in new  playlist")
                 if self.common.myPlaylists.verifySingleEntryInPlaylist(self.newPlaylist, entry) == False:
-                    self.status = "Fail"
                     writeToLog("INFO","Step " + str(step) + " : FAILED to find entry in new playlist")
                     return   
                       
                 step = step + 1                                                                                              
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

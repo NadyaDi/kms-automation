@@ -32,8 +32,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -92,190 +91,137 @@ class Test:
                    
             writeToLog("INFO","Step 1: Going to upload 2 entries")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 2 entries")
                 return  
                  
             writeToLog("INFO","Step 2: Going to set one entry as published")  
             if self.common.myMedia.publishEntriesFromMyMedia(self.entryName2, "", "", [self.galleryName]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entry '" + self.entryName2 + "'")
                 return 
                 
             writeToLog("INFO","Step 3: Going to publish entries to moderated gallery")  
             if self.common.kafGeneric.addNewContentToGallery(self.galleryName, uploadEntrieList, isGalleryModerate=True)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish entries to moderated gallery")
                 return 
                 
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 4: Going to logout from main user")
             if self.common.blackBoard.logOutOfBlackBoard() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to logout from user: " + self.userName1)
                 return  
                                    
             writeToLog("INFO","Step 5:Going to login with : " + self.userName1)
             if  self.common.blackBoard.loginToBlackBoard(self.userName1, self.userPass1)  == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to login with " + self.userName1)
                 return
                 
             writeToLog("INFO","Step 6: Going to handle entries in gallery pending tab")  
             if self.common.kafGeneric.handlePendingEntriesIngallery(self.galleryName, self.entryName3, self.entryName2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to handle entries in gallery pending tab")
                 return 
              
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 7: Going to logout from user: " + self.userName1)
             if self.common.blackBoard.logOutOfBlackBoard() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to logout from main user")
                 return  
                                     
             writeToLog("INFO","Step 8: Going to login with main user")
             if self.common.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to login with main user")
                 return
                
             writeToLog("INFO","Step 9: Going navigate to my media")  
             if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED navigate to my media")
                 return  
                
             sleep(1)
-            # New UI only !! this parameter will be click after every sort so each sort will only have only the chosen type 
             tmpStatus = (self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[0], self.common.myMedia.MY_MEDIA_DROPDOWNLIST_ITEM_NEW_UI[1].replace("DROPDOWNLIST_ITEM", enums.EntryPrivacyType.ALL_STATUSSES.value))
             writeToLog("INFO","Step 10: Going to verify that only entries with " + enums.EntryPrivacyType.PRIVATE.value + " icon display")
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 10: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
-                    return
-            else:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 10: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
-                    return
-                 
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PRIVATE) == False:
+                writeToLog("INFO","Step 10: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
+                return
+             
             writeToLog("INFO","Step 11: Going to verify my media entries by: " + enums.EntryPrivacyType.PRIVATE.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByPrivate) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to verify my media entries  by '" + enums.EntryPrivacyType.PRIVATE.value + "'")
                 return 
              
             writeToLog("INFO","Step 12: Going to verify entry privacy label: " + enums.EntryPrivacyType.PRIVATE.value)  
             if self.common.myMedia.verifyEntryPrivacyInMyMedia(self.entryName1, enums.EntryPrivacyType.PRIVATE, forceNavigate=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to verify that entry '" + self.entryName1 + "' label is '" + enums.EntryPrivacyType.PRIVATE.value + "'")
                 return 
              
             # close the filters
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.base.click(tmpStatus, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on 'All Status' button in filters")
-                    self.status = "Fail"
-                    return False
-                self.common.general.waitForLoaderToDisappear()
-                 
-                # close the filters
-                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in my media")
-                    self.status = "Fail"
-                    return False
+            if self.common.base.click(tmpStatus, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'All Status' button in filters")
+                return 
+            self.common.general.waitForLoaderToDisappear()
+             
+            # close the filters
+            if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click and close filters button in my media")
+                return 
              
             sleep(1)
             writeToLog("INFO","Step 13: Going to verify that only entries with " + enums.EntryPrivacyType.PUBLISHED.value + " icon display")
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
-                    return
-            else:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 13: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
-                    return
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PUBLISHED) == False:
+                writeToLog("INFO","Step 13: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
+                return
              
             writeToLog("INFO","Step 14: Going to verify my media entries by: " + enums.EntryPrivacyType.PUBLISHED.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByPublished) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to verify my media entries  by '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
                 return 
             
             writeToLog("INFO","Step 15: Going to verify entry privacy label: " + enums.EntryPrivacyType.PUBLISHED.value)  
             if self.common.myMedia.verifyEntryPrivacyInMyMedia(self.entryName2, enums.EntryPrivacyType.PUBLISHED, forceNavigate=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to verify that entry '" + self.entryName2 + "' label is '" + enums.EntryPrivacyType.PUBLISHED.value + "'")
                 return
             
             # remove privacy type from filter
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.base.click(tmpStatus, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on 'All Status' button in filters")
-                    self.status = "Fail"
-                    return False
-                self.common.general.waitForLoaderToDisappear()
-                
-                # close the filters
-                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in my media")
-                    self.status = "Fail"
-                    return False
+            if self.common.base.click(tmpStatus, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'All Status' button in filters")
+                return 
+            self.common.general.waitForLoaderToDisappear()
+            
+            # close the filters
+            if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click and close filters button in my media")
+                return 
                 
             sleep(1)
             writeToLog("INFO","Step 16: Going to verify that only entries with " + enums.EntryPrivacyType.REJECTED.value + " icon display")
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 16: FAILED to filter my media entries by '" + enums.EntryPrivacyType.REJECTED.value + "'")
-                    return
-            else:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 16: FAILED to filter my media entries by '" + enums.EntryPrivacyType.REJECTED.value + "'")
-                    return
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.REJECTED) == False:
+                writeToLog("INFO","Step 16: FAILED to filter my media entries by '" + enums.EntryPrivacyType.REJECTED.value + "'")
+                return
              
             writeToLog("INFO","Step 17: Going to verify my media entries by: " + enums.EntryPrivacyType.REJECTED.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByRejected) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to verify my media entries  by '" + enums.EntryPrivacyType.REJECTED.value + "'")
                 return 
             
             writeToLog("INFO","Step 18: Going to verify entry privacy label: " + enums.EntryPrivacyType.REJECTED.value)  
             if self.common.myMedia.verifyEntryPrivacyInMyMedia(self.entryName3, enums.EntryPrivacyType.REJECTED, forceNavigate=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to verify that entry '" + self.entryName3 + "' label is '" + enums.EntryPrivacyType.REJECTED.value + "'")
                 return
             
             # remove privacy type from filter
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.base.click(tmpStatus, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on 'All Status' button in filters")
-                    self.status = "Fail"
-                    return False
-                self.common.general.waitForLoaderToDisappear()
-                # close the filters
-                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in my media")
-                    self.status = "Fail"
-                    return False
+            if self.common.base.click(tmpStatus, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'All Status' button in filters")
+                return 
+            self.common.general.waitForLoaderToDisappear()
+            # close the filters
+            if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click and close filters button in my media")
+                return 
      
             sleep(1)
             writeToLog("INFO","Step 19: Going to verify that only entries with " + enums.EntryPrivacyType.PENDING.value + " icon display")
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 19: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PENDING.value + "'")
-                    return
-            else:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 19: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PENDING.value + "'")
-                    return
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.PENDING) == False:
+                writeToLog("INFO","Step 19: FAILED to filter my media entries by '" + enums.EntryPrivacyType.PENDING.value + "'")
+                return
              
             writeToLog("INFO","Step 20: Going to verify my media entries by: " + enums.EntryPrivacyType.PENDING.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByPending) == False:
@@ -290,45 +236,34 @@ class Test:
                 return
             
             # remove privacy type from filter
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.base.click(tmpStatus, multipleElements=True) == False:
-                    writeToLog("INFO","FAILED to click on 'All Status' button in filters")
-                    self.status = "Fail"
-                    return False
-                self.common.general.waitForLoaderToDisappear()
-                # close the filters
-                if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-                    writeToLog("INFO","FAILED to click and close filters button in my media")
-                    self.status = "Fail"
-                    return False
-                
+            if self.common.base.click(tmpStatus, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to click on 'All Status' button in filters")
+                return 
+            self.common.general.waitForLoaderToDisappear()
+            
+            # close the filters
+            if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
+                writeToLog("INFO","FAILED to click and close filters button in my media")
+                return 
             
             sleep(1)
             writeToLog("INFO","Step 22: Going to verify that only entries with " + enums.EntryPrivacyType.ALL_STATUSSES.value + " icon display")
-            if self.common.isElasticSearchOnPage() == True:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 22: FAILED to filter my media entries by '" + enums.EntryPrivacyType.ALL_STATUSSES.value + "'")
-                    return
-            else:
-                if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 22: FAILED to filter my media entries by '" + enums.EntryPrivacyType.ALL_STATUSSES.value + "'")
-                    return
+            if self.common.myMedia.SortAndFilter(enums.SortAndFilter.PRIVACY ,enums.EntryPrivacyType.ALL_STATUSSES) == False:
+                writeToLog("INFO","Step 22: FAILED to filter my media entries by '" + enums.EntryPrivacyType.ALL_STATUSSES.value + "'")
+                return
             
             writeToLog("INFO","Step 23: Going to verify my media entries by: " + enums.EntryPrivacyType.ALL_STATUSSES.value)  
             if self.common.myMedia.verifyFiltersInMyMedia(self.filterByAllMedia) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 23: FAILED to verify my media entries  by '" + enums.EntryPrivacyType.ALL_STATUSSES.value + "'")
                 return
             
             writeToLog("INFO","Step 24: Going to verify all entries privacy when filter set to: " + enums.EntryPrivacyType.ALL_STATUSSES.value)  
             if self.common.myMedia.verifyEntriesPrivacyInMyMedia(self.filterByAllMedia) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 24: FAILED to verify all entries privacy when filter set to : " + enums.EntryPrivacyType.ALL_STATUSSES.value)
                 return
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BlackBoard: My Media - Filter Media View Different Statuses' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

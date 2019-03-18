@@ -26,8 +26,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -58,19 +57,16 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePathVideo1, self.entryName, self.entryDescription, self.entryTag, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
                
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
                
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
             
@@ -79,34 +75,30 @@ class Test:
             
             writeToLog("INFO","Step 4: Going to play and verify entry")
             if self.common.player.clickPlayPauseAndVerify('0:05', clickPlayFromBarline=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to play and verify entry")
                 return       
             
             writeToLog("INFO","Step 5: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to switch to default content")
                 return                   
                
             writeToLog("INFO","Step 6: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate to edit entry page")
                 return                
                         
             writeToLog("INFO","Step 7: Going to replace entry media")
             if self.common.editEntryPage.replaceVideo(self.filePathVideo2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to replace entry media")
                 return             
             
             writeToLog("INFO","Step 8: Verify that video was replaced")
             if self.common.player.clickPauseAndVerify('0:08',clickPlayFromBarline=False, compareToStr='108') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to replace video")
                 return                                                                                    
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

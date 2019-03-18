@@ -22,7 +22,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -85,65 +85,56 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.openCategoryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Setup 1: FAILED to create category")
                 return
             
             writeToLog("INFO","Setup 2: Going to clear cache")            
             if self.common.admin.clearCache() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Setup 2: FAILED to clear cache")
                 return      
             
-            writeToLog("INFO","Setup 2: Going to update gallery page size")            
+            writeToLog("INFO","Setup 3: Going to update gallery page size")            
             if self.common.admin.setGallerypageSize(10) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Setup 2: FAILED to update gallery page size")
+                writeToLog("INFO","Setup 3: FAILED to update gallery page size")
                 return   
                   
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return        
                         
             writeToLog("INFO","Step 1.1: Going to upload 11 entries")  
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1.1: FAILED to upload entries")
                 return
 
             writeToLog("INFO","Step 2: Going to navigate to My Media")            
             if self.common.myMedia.navigateToMyMedia() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to My Media")
                 return 
              
             writeToLog("INFO","Step 2.1: Going to show all entries")            
             if self.common.myMedia.showAllEntries() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2.1: FAILED to show all entries")
                 return            
    
             writeToLog("INFO","Step 3: Going to publish entries to category from my media")
             if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.openCategoryName], showAllEntries=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to publish entries to category from my media")
                 return 
             
             writeToLog("INFO","Step 4: Going to make a search in category - no results should be displayed")
             if self.common.category.searchInCategoryNoResults(self.searchWithNoResults, self.openCategoryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to make a search and display correct message")
                 return   
             
             writeToLog("INFO","Step 5: Going to check that additional entries are displayed after loading")
             if self.common.category.verifyCategoryTableSizeBeforeAndAfterScrollingDownInPage(self.searchWithResults, self.pageBeforeScrolling, self.pageAfterScrolling, noQuotationMarks=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to display additional entries after loading")
                 return                     
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'search in category' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

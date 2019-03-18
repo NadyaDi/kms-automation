@@ -27,8 +27,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -70,40 +69,40 @@ class Test:
             self.entryName3 = clsTestService.addGuidToString('ImportChannel3', self.testNum)
             
             ########################## TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload entry")
+            writeToLog("INFO","Step 1: Going to enable import channel module in admin")
+            if self.common.admin.enableImportchannel(True) == False:
+                writeToLog("INFO","Step 1: FAILED to enable import channel module in admin")
+                return
             
             self.entriesList = [self.entryName1 ,self.entryName2 ,self.entryName3]
+            writeToLog("INFO","Step 2: Going to upload entry")
             for entry in self.entriesList:
                 if self.common.upload.uploadEntry(self.filePath, entry, self.entryDescription, self.entryTags) == None:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                    writeToLog("INFO","Step 2: FAILED to upload entry")
                     return
              
-            writeToLog("INFO","Step 2: Going to create Channel#1")
+            writeToLog("INFO","Step 3: Going to create Channel#1")
             if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to create Channel#1")
+                writeToLog("INFO","Step 3: FAILED to create Channel#1")
                 return
              
-            writeToLog("INFO","Step 3: Going to create Channel#2")
+            writeToLog("INFO","Step 4: Going to create Channel#2")
             if self.common.channel.createChannel(self.channelName2, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, True, True, True) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to create Channel#2")
+                writeToLog("INFO","Step 4: FAILED to create Channel#2")
                 return
              
-            writeToLog("INFO","Step 4: Going to publish single entry")
+            writeToLog("INFO","Step 5: Going to publish single entry")
             if self.common.channel.addExistingContentToChannel(self.channelName1, self.entriesList, False) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to publish entry to Channel#1")
+                writeToLog("INFO","Step 5: FAILED to publish entry to Channel#1")
                 return
              
-            writeToLog("INFO","Step 5: Going to import channel")
+            writeToLog("INFO","Step 6: Going to import channel")
             if self.common.channel.importChannel(self.channelName1, self.channelName2, self.entriesList) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to import channel 1 to Channel#2")
+                writeToLog("INFO","Step 6: FAILED to import channel 1 to Channel#2")
                 return
             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

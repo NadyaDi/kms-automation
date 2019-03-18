@@ -26,8 +26,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -59,52 +58,45 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
               
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
               
             writeToLog("INFO","Step 4: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to edit entry page")
                 return    
             
             writeToLog("INFO","Step 5: Going to click on caption tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to click on caption tab")
                 return            
             
             writeToLog("INFO","Step 6: Going to add caption")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return     
             
             writeToLog("INFO","Step 7: Navigate to entry page and play entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:06') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to upload caption")
                 return     
             
             writeToLog("INFO","Step 8: Verify that correct caption text is displayed")
             if self.common.player.verifyCaptionText(self.captionText) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to displayed correct captions text")
                 return                                                                                    
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

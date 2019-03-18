@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -69,19 +68,16 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to add shared repository module")     
             if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to add shared repository module")
                 
                 
             writeToLog("INFO","Step 2: Going to upload 3 entries: Video / Audio / Image")   
             if self.common.upload.uploadEntries(self.entriesToUpload, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 3 entries")
                 return
                
             writeToLog("INFO","Step 3: Going to publish entry to shared repository")
             if self.common.myMedia.publishEntriesFromMyMedia([self.imageEntryName], '', '', [self.galleryName], showAllEntries=True) == True:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED entry was publish to shared repository although the entry doesn't completed the required fields in order to publish to shared repository")
                 return
             writeToLog("INFO","Step 3: preview step failed as expected - entry doesn't have the required fields in order to publish to shared repository")
@@ -93,67 +89,56 @@ class Test:
              
             writeToLog("INFO","Step 5: Going to completed the required fields in entry '" + self.imageEntryName + "' order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.imageEntryName, self.SR_RequiredField) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to add required fields to entry '" + self.imageEntryName)
                 return
               
             writeToLog("INFO","Step 6: Going to completed the required fields in entry '" + self.audioEntryName + "' order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.audioEntryName, self.SR_RequiredField) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to add required fields to entry '" + self.audioEntryName)
                 return
              
             writeToLog("INFO","Step 7: Going to completed the required fields in entry '" + self.videoEntryName + "' order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.videoEntryName, self.SR_RequiredField) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to add required fields to entry '" + self.videoEntryName)
                 return
              
             writeToLog("INFO","Step 8: Going to publish multiple entries to shared repository")
             if self.common.myMedia.publishEntriesFromMyMedia([self.videoEntryName, self.audioEntryName, self.imageEntryName], '', '', [self.galleryName], showAllEntries=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to publish entries to shared repository")
                 return
              
             writeToLog("INFO","Step 9: Going navigate to shared repository gallery")
             if self.common.blackBoard.navigateToSharedRepositoryInBB() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED navigate to shared repository gallery")
                 return
             
             self.common.blackBoard.switchToBlackboardIframe()
             writeToLog("INFO","Step 10: Going to verify entry '" + self.imageEntryName + "' display in shared repository gallery")
             if self.common.channel.searchEntryInChannel(self.imageEntryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to find entry '" + self.imageEntryName + "' shared repository gallery")
                 return
             
             writeToLog("INFO","Step 11: Going to clear search textbox")
             if self.common.myMedia.clearSearch() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to clear search textbox")
                 return
         
             writeToLog("INFO","Step 12: Going to verify entry '" + self.audioEntryName + "' display in shared repository gallery")
             if self.common.channel.searchEntryInChannel(self.audioEntryName) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to find entry '" + self.audioEntryName + "' shared repository gallery")
                 return
             
             writeToLog("INFO","Step 13: Going to clear search textbox")
             if self.common.myMedia.clearSearch() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to clear search textbox")
                 return
             
             writeToLog("INFO","Step 14: Going to verify entry '" + self.videoEntryName + "' display in shared repository gallery")
             if self.common.channel.searchEntryInChannel(self.videoEntryName) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to find entry '" + self.videoEntryName + "' shared repository gallery")
                 return
-            
-            
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'BlackBoard: Adding media to Faculty Repository From My Media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

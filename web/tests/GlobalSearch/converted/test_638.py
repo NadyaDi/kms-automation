@@ -29,8 +29,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -64,29 +63,26 @@ class Test:
 
             writeToLog("INFO","Step 1: Going to upload entry")            
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload new entry: " + self.entryName)
                 return
        
             writeToLog("INFO","Step 2: Going to published entry")  
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, "") == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entry '" + self.entryName + "'")
                 return 
               
             writeToLog("INFO","Step 3: Going to search entry in global search")
             if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch('"' + self.entryName + '"') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to search entry'" + self.entryName + "' in global search")
                 return 
              
             writeToLog("INFO","Step 4: Going to verify entry metadata after global search") 
             if self.common.globalSearch.VerifyEntryMetadataAfterGlobalSearch(self.entryName, self.thumbnailQrCodeResult, self.description) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to verify entry'" + self.entryName + "' metadata after global search")
                 return 
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Global search - Search Media' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -28,8 +28,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -59,17 +58,16 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED create new channel: " + self.channelName)
                 return
             
             writeToLog("INFO","Step 2: Going to search and verify channel in global search")
             if self.common.globalSearch.serchAndVerifyChannelInGlobalSearch(self.channelName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to search channel'" + self.channelName + "' in global search")
                 return 
              
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Global search - Global Search for Channel' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -23,7 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -65,96 +65,82 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, 'description', 'tags') == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create category")
                 return
             
             writeToLog("INFO","Step 2: Going to enable channel categories module")            
             if self.common.admin.enableChannelCatrgories(True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to enable channel categories module")
                 return
             
             writeToLog("INFO","Step 3: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to home page")
                 return
 
             writeToLog("INFO","Step 4: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:        
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED failed to upload entry")
                 return
              
             writeToLog("INFO","Step 5: Going to create new channel")    
             if self.common.channel.createChannel(self.channelName, self.description, self.tags, enums.ChannelPrivacyType.OPEN, False, True, True, linkToCategoriesList=[self.categoryName]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED create new channel: " + self.channelName)
                 return
                    
             writeToLog("INFO","Step 6: Going to publish entry to channel")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", [self.channelName], publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED publish entry '" + self.entryName + "' to channel: " + self.channelName)
                 return
              
             writeToLog("INFO","Step 7: Going to add user '" + self.userName1 +"' as member to channel '" + self.channelName + "'")
             if self.common.channel.addMembersToChannel(self.channelName, self.userName1, permission=enums.ChannelMemberPermission.MEMBER) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to add user '" + self.userName1 + "' as member to channel '" + self.channelName + "'")
                 return               
                             
             sleep(2)
             writeToLog("INFO","Step 8: Going to logout from main user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to logout from main user")
                 return  
                              
             writeToLog("INFO","Step 9: Going to login with user " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to login with " + self.userName1)
                 return                 
                             
             writeToLog("INFO","Step 10: Going to add user '" + self.userName1 +"' as channel subscriber in '" + self.channelName + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to add user '" + self.userName1 + "' as channel subscriber in '" + self.channelName + "'")
                 return             
              
             sleep(2)
             writeToLog("INFO","Step 11: Going to logout from user: " + self.userName1)
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to logout from user: " + self.userName1)
                 return  
                              
             writeToLog("INFO","Step 12: Going to login with main user")
             if self.common.loginAsUser()  == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to login with main user")
                 return 
                             
             writeToLog("INFO","Step 13: Going navigate to category")  
             if self.common.category.navigateToCategory(self.categoryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED navigate to category: " + self.categoryName[0])
                 return
 
             writeToLog("INFO","Step 14: Going to click on channels tab in category page")
             if self.common.base.click(self.common.category.CATEGORY_BROWSE_CHANNELS_BUTTON, 10 , multipleElements=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to click on channels tab in category page")
                 return
             
             writeToLog("INFO","Step 15: Going to verify channel details that display on the thumbnail")    
             if self.common.channel.verifyChannelDetailsOnThumbnail(self.channelName, "1", "2", "1") == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED to verify channel details that display on the thumbnail")
                 return
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Categories - Browse channels' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

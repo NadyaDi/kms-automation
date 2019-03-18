@@ -27,8 +27,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -58,47 +57,41 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return
              
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
             
             writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to entry page")
                 return           
             
             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return
             
             writeToLog("INFO","Step 6: Going to play entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName, '0:05', timeout=60) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate and play entry")
                 return  
             
             writeToLog("INFO","Step 7: Going to switch to default content")
             if self.common.base.switch_to_default_content() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to switch to default content")
                 return  
             
             writeToLog("INFO","Step 8: Going to navigate to my history search entry by name")
             if self.common.myHistory.waitTillLocatorExistsInMyHistory(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED find entry in my history")
                 return               
               
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

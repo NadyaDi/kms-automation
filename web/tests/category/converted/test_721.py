@@ -24,7 +24,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -64,7 +64,6 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getParentId('galleries') 
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.parentCategoryName, self.description) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to create parent category")
                 return
             
@@ -72,80 +71,70 @@ class Test:
             self.common.apiClientSession.startCurrentApiClientSession()
             parentId = self.common.apiClientSession.getCategoryByName(self.parentCategoryName)
             if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.subCategoryName, self.description) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to create sub category")
                 return
              
             writeToLog("INFO","Step 3: Going to clear cache")            
             if self.common.admin.clearCache() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to clear cache")
                 return
             
             writeToLog("INFO","Step 4: Going navigate to home page")            
             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED navigate to home page")
                 return
             
             writeToLog("INFO","Step 5: Going to add members to parent category")
             if self.common.category.addMembersToCategory(self.parentCategoryName, self.membersList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to add members to parent category")
                 return  
             
             writeToLog("INFO","Step 6: Going navigate to sub category edit page")
             if self.common.category.navigateToEditSubCategoryPage(self.parentCategoryName, self.subCategoryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED navigate to sub category edit page")
                 return 
             
             writeToLog("INFO","Step 7: Going to import Members from parent category")
             if self.common.category.importMemberFormCategory() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to import Members from parent category")
                 return 
-             
+            
+            self.driver.refresh()   
             writeToLog("INFO","Step 8: Going navigate to sub category edit page")
             if self.common.category.navigateToEditSubCategoryPage(self.parentCategoryName, self.subCategoryName, forcrNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED navigate to sub category edit page")
                 return 
              
             writeToLog("INFO","Step 9: Going to verify that import members form parent category display in sub category member tab after import")
             if self.common.category.verifyMembersPermissionsInMemberTable(self.membersList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to verify that add members form parent category display in sub category member tab after import")
                 return 
              
             writeToLog("INFO","Step 10: Going to delete member")
             if self.common.channel.deleteChannelMember(self.userName2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to delete member")
                 return   
             sleep(3)
             
             writeToLog("INFO","Step 11: Going to add member to sub category")
             if self.common.category.addMemberToCategory(self.subCategoryName, self.userName2, permission=enums.CategoryMemberPermission.MEMBER, forceNavigate=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to add member to sub category")
                 return   
             sleep(3)
             
             writeToLog("INFO","Step 12: Going to change member permission")
             if self.common.category.editCategoryMemberPermission(self.userName1, permission = enums.CategoryMemberPermission.MODERATOR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED change member permission")
                 return  
             sleep(3)
             
             writeToLog("INFO","Step 13: Going to set member as owner")
             if self.common.channel.setChannelMemberAsOwner(self.userName3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to set member as owner")
                 return      
             sleep(3)                                             
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Categories - Import Mermbers' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

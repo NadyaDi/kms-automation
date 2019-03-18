@@ -30,8 +30,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -85,19 +84,16 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                                    
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
                 return
                           
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
                 return
                    
@@ -105,18 +101,15 @@ class Test:
             writeToLog("INFO","Step 4: Going to remove slides from slides main list (slidesQrCodeAndTimeList)")
             if self.common.editEntryPage.deleteSlidesFromTimeLine(self.entryName, self.deleteSlidesList) == False:
                 writeToLog("INFO","Step 4: FAILED to remove slides from time line")  
-                self.status = "Fail"
                 return 
                                     
             writeToLog("INFO","Step 5: Going change slides time")
             if self.common.editEntryPage.changeSlidesTimeInTimeLine(self.entryName, self.changeTimeOfSlidesList) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to change slide time in time line")
                 return
                        
             writeToLog("INFO","Step 6: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate to entry page: " + self.entryName)
                 return  
                 
@@ -124,16 +117,15 @@ class Test:
             writeToLog("INFO","Step 7: Going to change player view")
             if self.common.player.changePlayerView(enums.PlayerView.SWITCHVIEW) == False:
                 writeToLog("INFO","Step 7: FAILED change player view to: " + enums.PlayerView.SWITCHVIEW)
-                self.status = "Fail"
                 return
                 
             writeToLog("INFO","Step 8: Going to verify that the new slides display correctly")
             if self.common.player.verifyslidesThatChangedLocationInTimeLine(self.changeTimeOfSlidesList) == False:
                 writeToLog("INFO","Step 8: FAILED to verify slide change")
-                self.status = "Fail"
                 return
               
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Slide Deck Upload - change slide location' was done successfully")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

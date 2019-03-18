@@ -23,8 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -47,29 +46,26 @@ class Test:
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Login to SAP")
             if self.common.login.genericLogin('c5183441', '3Bc95nKA', 'https://video.sap.com/', ('id', 'j_username'), ('id', 'j_password'), ('id', 'logOnFormSubmit'), ('id', 'userMenuToggle')) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to Login to SAP")
                 return
              
             writeToLog("INFO","Step 2: Login to lib.mivideo.it.umich.edu")
             if self.common.login.genericLogin('kalturaz', 'Ycembrapplatcha5', 'http://lib.mivideo.it.umich.edu/user/login', ('id', 'login'), ('id', 'password'), ('id', 'loginSubmit'), ('id', 'userMenuToggleBtn')) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED Login to lib.mivideo.it.umich.edu")
                 return
  
             writeToLog("INFO","Step 3: Login to https://myvideo.siemens.com")
             if self.common.login.genericLogin('buki.peri@kaltura.com', 'DanNiz29!', 'https://myvideo.siemens.com', ('name', 'usr_name'), ('name', 'usr_password'), ('xpath', "//a[contains(@onclick, 'login_Password.submit()')]"), ('id', 'userMenuToggle')) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED Login to https://myvideo.siemens.com")
                 return        
              
             writeToLog("INFO","Step 4: Login to lib.mivideo.it.umich.edu")
             if self.common.login.genericLogin('ydw086', 'Demesne80155', 'https://media.qmplus.qmul.ac.uk/user/login', ('name', 'username'), ('name', 'password'), ('xpath', "//input[@type='submit']"), ('id', 'userMenuToggleBtn')) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED failed to upload video entry")
                 return                    
                   
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

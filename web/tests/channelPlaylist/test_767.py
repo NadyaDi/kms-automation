@@ -23,7 +23,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -72,25 +72,21 @@ class Test:
              
             writeToLog("INFO","Step 1: Going to upload Video type entry")            
             if self.common.upload.uploadEntry(self.filePath1, self.entryName1, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry Video")
                 return
               
             writeToLog("INFO","Step 2: Going to upload audio type entry")
             if self.common.upload.uploadEntry(self.filePath2, self.entryName2, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry audio")
                 return 
               
             writeToLog("INFO","Step 3: Going to upload video type entry")            
             if self.common.upload.uploadEntry(self.filePath3, self.entryName3, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED failed to upload entry video")
                 return                         
               
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create Channel#1")
                 return
                
@@ -111,17 +107,16 @@ class Test:
              
             writeToLog("INFO","Step 8: Going to create channel playlist")                                     
             if self.common.channel.createChannelPlaylist(self.channelName, self.playlisTitle, self.playlistDescription, self.playlistTag, self.entriesNames) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED failed to create channel playlist")
                 return 
             sleep(3)     
            
             writeToLog("INFO","Step 9: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED failed to delete channel playlist")
                 return      
             #########################################################################
+            self.tatus = "Pass"
             writeToLog("INFO","TEST PASSED: 'Create Channel Playlist' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
@@ -130,7 +125,7 @@ class Test:
     ########################### TEST TEARDOWN ###########################
     def teardown_method(self,method):
         try:
-            self.common.handleTestFail(self.status, leavePageExpected=True)
+            self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])                 
             self.common.channel.deleteChannel(self.channelName) 

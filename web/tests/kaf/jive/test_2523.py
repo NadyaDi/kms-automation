@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -57,29 +56,27 @@ class Test:
                         
             writeToLog("INFO","Step 1: Going to upload entry")            
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
 
             writeToLog("INFO","Step 2: Going to add entry to gallery")                                     
             if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, isGalleryModerate=False) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add entry to gallery")
                 return 
             
             writeToLog("INFO","Step 3: Going to remove entry from gallery")                                     
             if self.common.channel.removeEntry(self.entryName) == False:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
                 return 
             
             writeToLog("INFO","Step 4: Going to verify that entry doesn't display in gallery any more")                                     
             if self.common.channel.searchEntryInChannel(self.entryName) == True:    
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
                 return 
             writeToLog("INFO","Step 4: Preview step failed as expected - entry was removed from gallery and should not be found")
+            
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Jive - Remove Media From Media Gallery' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

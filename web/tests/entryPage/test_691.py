@@ -26,8 +26,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -69,46 +68,40 @@ class Test:
             
             writeToLog("INFO","Setup: Going to enable related media (side my media)")
             if self.common.admin.enableRelatedMedia(True, self.relatedLimit) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Setup: FAILED to enable related media (side my media)")
                 return            
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return              
                
             writeToLog("INFO","Step 2: Going to upload 4 entries")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload 4 entries")
                 return
             
             writeToLog("INFO","Step 2.1: Going to publish 4 entries")
             if self.common.myMedia.publishEntriesFromMyMedia(self.entriesList, [self.categoryName]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2.1: FAILED to publish 4 entries")
                 return
               
             writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
                 return                         
             
             writeToLog("INFO","Step 5: Going to verify count of entries in related section, expected:" + str(self.relatedLimit))
             if self.common.entryPage.verifyRelatedMediaCount(self.relatedLimit) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED displayed correct count of entries in related section")
                 return                                                                                                  
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

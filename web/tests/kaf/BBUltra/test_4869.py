@@ -25,8 +25,7 @@ class Test:
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -57,41 +56,36 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
               
             writeToLog("INFO","Step 2: Going navigate to entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED  navigate to entry page: " + self.entryName)
                 return           
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
                   
             writeToLog("INFO","Step 5: Going to publish entry to gallery from entry page")
             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryName], publishFrom = enums.Location.ENTRY_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to publish entry '" + self.entryName + "' to gallery '" + self.galleryName + "' from entry page")
                 return 
                             
             writeToLog("INFO","Step 6: Going navigate to gallery page")
             if self.common.kafGeneric.navigateToGallery(self.galleryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED navigate to gallery: " + self.galleryName)
                 return 
                         
             self.common.blackBoardUltra.switchToBlackboardUltraIframe()               
             writeToLog("INFO","Step 7: Going to search entry in gallery")
             if self.common.channel.searchEntryInChannel(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to find entry entry '" + self.entryName + "' in gallery '" + self.galleryName)
                 return               
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Blackboard Ultra - Publish From Entry Page' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

@@ -26,8 +26,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -56,52 +55,45 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
                 
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
                 
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
                          
             writeToLog("INFO","Step 4: Going to add new comment to entry")
             if self.common.entryPage.addComment(self.commnetText) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to add new comment")
                 return            
                
             writeToLog("INFO","Step 5: Going to navigate to edit entry page")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to edit entry page")
                 return    
              
             writeToLog("INFO","Step 6: Going to click on option tab and enable close discussion")
             if self.common.editEntryPage.changeEntryOptions(False, True, False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to click on option tab and enable close discussion option")
                 return    
              
             writeToLog("INFO","Step 7: Going to navigate to entry page")
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to navigate to entry page")
                 return   
             
             writeToLog("INFO","Step 8: Going to verify that add new comments box isn't displayed in entry page and entry's comment is displayed")
             if self.common.entryPage.checkEntryCommentsSection(self.commnetText, False, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED - add new comments box is displayed/entry's comment isn't displayed")
                 return                                                                                       
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

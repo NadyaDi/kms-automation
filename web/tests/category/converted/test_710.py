@@ -22,7 +22,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -56,25 +56,21 @@ class Test:
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                       
             writeToLog("INFO","Step 2: Going to publish entry to category")            
             if self.common.myMedia.publishSingleEntry(self.entryName, [self.categoryName], [], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to publish entry to category")
                 return            
                                         
             writeToLog("INFO","Step 3: Going to navigate to category page")            
             if self.common.category.navigateToCategory(self.categoryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to navigate to category page")
                 return             
                  
             writeToLog("INFO","Step 4: Going to refresh category")            
             if self.common.category.refreshNowCategory(60) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate to category page")
                 return   
             
@@ -84,10 +80,10 @@ class Test:
                              
             writeToLog("INFO","Step 5: Going to navigate to entry's edit page")            
             if self.common.category.navigateToEditEntryPageFromCategoryWhenNoSearchIsMade(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to click entry Edit button, Entry name: '" + self.entryName + "'")
                 return                                          
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Navigate to edit page from category page' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

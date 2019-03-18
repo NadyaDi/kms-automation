@@ -27,7 +27,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
+    status = "Fail"
     timeout_accured = "False"
     driver = None
     common = None
@@ -86,196 +86,145 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName1, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED create new channel: " + self.channelName1)
                 return
              
             sleep(3)
             writeToLog("INFO","Step 2: Going to logout from " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to logout from " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " user")
                 return  
                                   
             writeToLog("INFO","Step 3: Going to login with user " + self.userName2)
             if self.common.login.loginToKMS(self.userName2, self.userPass2) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to login with " + self.userName2)
                 return
                
             writeToLog("INFO","Step 4: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName3, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED create new channel: " + self.channelName3)
                 return
               
             writeToLog("INFO","Step 5: Going to add user '" + self.userName1 +"' as manager to channel '" + self.channelName3 + "'")
             if self.common.channel.addMembersToChannel(self.channelName3, self.userName1, permission=enums.ChannelMemberPermission.MANAGER) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to add user '" + self.userName1 + "' as manager to channel '" + self.channelName3 + "'")
                 return
               
             sleep(3)
             writeToLog("INFO","Step 6: Going to logout from " + self.userName2 + " user")
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to logout from " + self.userName2 + " user")
                 return  
                                   
             writeToLog("INFO","Step 7: Going to login with user " + self.userName3)
             if self.common.login.loginToKMS(self.userName3, self.userPass3) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to login with " + self.userName3)
                 return
               
             writeToLog("INFO","Step 8: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName4, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.OPEN, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED create new channel: " + self.channelName4)
                 return
   
             sleep(3)
             writeToLog("INFO","Step 9: Going to logout from " + self.userName3)
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 9: FAILED to logout from " + self.userName3)
                 return  
                                  
             writeToLog("INFO","Step 10: Going to login with : " + self.userName4)
             if self.common.login.loginToKMS(self.userName4, self.userPass4) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 10: FAILED to login with " + self.userName4)
                 return
               
             writeToLog("INFO","Step 11: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName5, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.SHAREDREPOSITORY, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED create new channel: " + self.channelName5)
                 return
   
             writeToLog("INFO","Step 12: Going to add user '" + self.userName1 +"' as manager to channel '" + self.channelName5 + "'")
             if self.common.channel.addMembersToChannel(self.channelName5, self.userName1, permission=enums.ChannelMemberPermission.MEMBER) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to add user '" + self.userName1 + "' as manager to channel '" + self.channelName5 + "'")
                 return
               
             sleep(3)
             writeToLog("INFO","Step 13: Going to logout from " + self.userName4)
             if self.common.login.logOutOfKMS() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 13: FAILED to logout from " + self.userName4)
                 return  
                                 
             writeToLog("INFO","Step 14: Going to login with : " + self.userName1)
             if self.common.login.loginToKMS(self.userName1, self.userPass1) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to login with " + self.userName1)
                 return
              
             writeToLog("INFO","Step 15: Going to create new channel")            
             if self.common.channel.createChannel(self.channelName2, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.SHAREDREPOSITORY, False, True, True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED create new channel: " + self.channelName2)
                 return
              
             writeToLog("INFO","Step 16: Going navigate to my channels page")
             if self.common.channel.navigateToChannels(forceNavigate=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 16: FAILED navigate to my channels page")
                 return 
              
             writeToLog("INFO","Step 17: Going to add user '" + self.userName1 +"' as channel subscriber in '" + self.channelName1 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName1, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 17: FAILED to add user '" + self.userName1 + "' as channel subscriber in '" + self.channelName1 + "'")
                 return
              
             writeToLog("INFO","Step 18: Going to add user '" + self.userName1 +"' as channel subscriber in '" + self.channelName4 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName4, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 18: FAILED to add user '" + self.userName1 + "' as channel subscriber in '" + self.channelName4 + "'")
                 return
              
             writeToLog("INFO","Step 19: Going to add user '" + self.userName1 +"' as channel subscriber in '" + self.channelName5 + "'")
             if self.common.channel.subscribeUserToChannel(self.channelName5, "1" , navigateFrom=enums.Location.CHANNELS_PAGE)== False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 19: FAILED to add user '" + self.userName1 + "' as channel subscriber in '" + self.channelName5 + "'")
                 return
             
             writeToLog("INFO","Step 20: Going navigate to my channels page")
             if self.common.channel.navigateToMyChannels() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 20: FAILED navigate to my channels page")
                 return 
             
-            if self.common.isElasticSearchOnPage() == True:
-                writeToLog("INFO","Step 21: Going to filter view channel by 'Channels I Manage' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MANAGER_NEWUI, self.channelsIManage) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 21: FAILED to filter  and verify view channels by: channels I Manage")
-                    return 
-                
+            writeToLog("INFO","Step 21: Going to filter view channel by 'Channels I Manage' and verify that only the correct channels display")
+            if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MANAGER_NEWUI, self.channelsIManage) == False:
+                writeToLog("INFO","Step 21: FAILED to filter  and verify view channels by: channels I Manage")
+                return 
+            
 #                 writeToLog("INFO","Step 22: Going to close filter button")
 #                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-#                     self.status = "Fail"
 #                     writeToLog("INFO","Step 22: FAILED to close filters button in my channels page")
 #                     return 
-                
-                writeToLog("INFO","Step 23: Going to filter view channel by 'Channels I am a member of' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MEMBER_NEWUI, self.channelsIAmAMemberOf) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 23: FAILED to filter and verify view channels by: Channels I am a member of")
-                    return 
-                
+            
+            writeToLog("INFO","Step 23: Going to filter view channel by 'Channels I am a member of' and verify that only the correct channels display")
+            if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MEMBER_NEWUI, self.channelsIAmAMemberOf) == False:
+                writeToLog("INFO","Step 23: FAILED to filter and verify view channels by: Channels I am a member of")
+                return 
+            
 #                 writeToLog("INFO","Step 24: Going to close filter button")
 #                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-#                     self.status = "Fail"
 #                     writeToLog("INFO","Step 24: FAILED to close filters button in my channels page")
 #                     return 
-                
-                writeToLog("INFO","Step 25: Going to filter view channel by 'Channels I am subscribed to' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SUBSCRIBER_NEWUI, self.channelsIAmSubscribedTo) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 25: FAILED to filter and verify  view channels by: Channels I am subscribed to")
-                    return 
-                
+            
+            writeToLog("INFO","Step 25: Going to filter view channel by 'Channels I am subscribed to' and verify that only the correct channels display")
+            if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SUBSCRIBER_NEWUI, self.channelsIAmSubscribedTo) == False:
+                writeToLog("INFO","Step 25: FAILED to filter and verify  view channels by: Channels I am subscribed to")
+                return 
+            
 #                 writeToLog("INFO","Step 26: Going to close filter button")
 #                 if self.common.base.click(self.common.myMedia.MY_MEDIA_FILTERS_BUTTON_NEW_UI, 20) == False:
-#                     self.status = "Fail"
 #                     writeToLog("INFO","Step 26: FAILED to close filters button in my channels page")
 #                     return 
-                
-                writeToLog("INFO","Step 27: Going to filter view channel by 'Shared Repositories I am a member of' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SHAREDREPOSITORIES_NEWUI, self.ChannelsSharedRepositoriesIAmAMemberOf) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 27: FAILED to filter and verify view channels by: Shared Repositories I am a member of")
-                    return
-            else:
-                writeToLog("INFO","Step 21: Going to filter view channel by 'Channels I Manage' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MANAGER_OLDUI, self.channelsIManage) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 22: FAILED to filter  and verify view channels by: channels I Manage")
-                    return 
-                
-                writeToLog("INFO","Step 22: Going to filter view channel by 'Channels I am a member of' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.MEMBER_OLDUI, self.channelsIAmAMemberOf) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 22: FAILED to filter and verify view channels by: Channels I am a member of")
-                    return 
-                
-                writeToLog("INFO","Step 23: Going to filter view channel by 'Channels I am subscribed to' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SUBSCRIBER_OLDUI, self.channelsIAmSubscribedTo) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 23: FAILED to filter and verify  view channels by: Channels I am subscribed to")
-                    return 
-                
-                writeToLog("INFO","Step 24: Going to filter view channel by 'Shared Repositories I am a member of' and verify that only the correct channels display")
-                if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SHAREDREPOSITORIES_OLDUI, self.ChannelsSharedRepositoriesIAmAMemberOf) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 24: FAILED to filter and verify view channels by: Shared Repositories I am a member of")
-                    return  
+            
+            writeToLog("INFO","Step 27: Going to filter view channel by 'Shared Repositories I am a member of' and verify that only the correct channels display")
+            if self.common.channel.verifyChannelsViaFilter(enums.ChannelsSortByMembership.SHAREDREPOSITORIES_NEWUI, self.ChannelsSharedRepositoriesIAmAMemberOf) == False:
+                writeToLog("INFO","Step 27: FAILED to filter and verify view channels by: Shared Repositories I am a member of")
+                return
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'My Channels - Filter view' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

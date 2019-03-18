@@ -27,8 +27,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -63,26 +62,22 @@ class Test:
             ########################## TEST STEPS - MAIN FLOW ####################### 
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return      
               
             writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate to entry page")
                 return           
               
             writeToLog("INFO","Step 3: Going to wait until media will finish processing")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED - New entry is still processing")
                 return
               
             writeToLog("INFO","Step 4: Going to get embed link")
             self.embedLink = self.common.entryPage.getEmbedLink()
             if self.embedLink == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to get embed link")
                 return  
              
@@ -94,10 +89,10 @@ class Test:
              
             writeToLog("INFO","Step 6: Going to navigate to embed entry page (by link)")
             if self.common.base.navigate(self.embedUrl) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to navigate to to embed entry page")
                 return                                                                         
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

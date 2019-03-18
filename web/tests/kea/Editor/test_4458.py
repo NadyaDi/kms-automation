@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -68,32 +67,27 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                          
             writeToLog("INFO","Step 2: Going to navigate to edit Entry Page")
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to edit entry page")
-                self.status = "Fail"
                 return
                 
             writeToLog("INFO","Step 3: Going add upload slide deck")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
                 writeToLog("INFO","Step 3: FAILED to add slides to entry time line")
-                self.status = "Fail"
                 return
             
             writeToLog("INFO","Step 4: Going to trim the entry from 30sec to 20sec")  
             if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to trim the entry from 30sec to 20sec")
                 return
             
             writeToLog("INFO","Step 5: Going to collect the new entry's QR codes")  
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.entryName)
             if self.QRlist == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to collect the new entry's QR codes")
                 return
                         
@@ -101,11 +95,11 @@ class Test:
             self.isAbsent = ["12", "13", "15", "17"];
             writeToLog("INFO","Step 6: Going to verify the entry duration (using QR codes)")  
             if self.common.player.compareLists(self.QRlist, self.isExist, self.isAbsent, enums.PlayerObjects.QR) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify the entry duration (using QR codes)")
                 return    
              
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")            
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:

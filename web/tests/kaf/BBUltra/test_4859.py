@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Oded Berihon
-    # Test Name : BLACKBOARD_ULTRA - Edit Entry Metadata 
+    # Test Name : Blackboard_Ultra - Edit Entry Metadata 
     # Test description:
     # upload media
     # go to media edit page and change media: name / description / tags 
@@ -23,8 +23,7 @@ class Test:
     application = enums.Application.BLACKBOARD_ULTRA
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     # Test variables
     entryName = None
     newEntryName = None
@@ -56,37 +55,33 @@ class Test:
                  
             writeToLog("INFO","Step 1: Going to upload entry")   
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
                     
             writeToLog("INFO","Step 2: Going navigate to edit entry page")    
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
                 
             writeToLog("INFO","Step 3: Going to change entry metadata  (entry name, description, tags)")
             if self.common.editEntryPage.changeEntryMetadata(self.entryName, self.newEntryName, self.newDescription, self.newTags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to edit entry metadata")
                 return  
             
             writeToLog("INFO","Step 4: Going navigate entry page")    
             if self.common.editEntryPage.navigateToEntryPageFromEditEntryPage(self.newEntryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED navigate to entry: " + self.newEntryName)
                 return
             
             writeToLog("INFO","Step 5: Going to verify entry new  metadata  (entry name, description, tags)")
             # We add the word 'tags' since we don't delete the tags that was insert when the entry was uploaded
             if self.common.entryPage.verifyEntryMetadata(self.newEntryName, self.newDescription, self.tags.lower()[:-1] + self.newTags.lower()[:-1]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to verify entry new  metadata")
                 return  
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'BLACKBOARD_ULTRA - Edit Entry Metadata ' was done successfully")
+            self.status = "Pass"
+            writeToLog("INFO","TEST PASSED: 'Blackboard_Ultra - Edit Entry Metadata ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

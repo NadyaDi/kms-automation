@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -66,46 +65,40 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED failed to upload entry")
                 return
                          
             writeToLog("INFO","Step 2: Going to add the entry to a playlist")
             if self.common.myPlaylists.addSingleEntryToPlaylist(self.entryName, toCreateNewPlaylist = True, playlistName = self.playlistName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to add the entry from to a playlist")
                 return 
             
             writeToLog("INFO","Step 3: Verify if the entry is presented inside the palylist from step #2 (Expected: should be presented)")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName, isExpected=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED, Entry is not presented although it should")
                 return                                  
 
             writeToLog("INFO","Step 4: Going to set Future time-frame publishing to entry ")   
             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryFutureStartDate, startTime=self.entryFutureStartTime, entryName=self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to set Future time-frame publishing to entry")
                 return
             
             writeToLog("INFO","Step 5: Verify if the entry is presented inside the palylist from step #2 (Expected: should be presented according https://kaltura.atlassian.net/browse/PSVAMB-4991)")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName, isExpected=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED, Entry is  presented although it shouldn't")
                 return 
             
             writeToLog("INFO","Step 6: Going to set Past time-frame publishing to entry ")
             if self.common.editEntryPage.addPublishingSchedule(startDate=self.entryPastStartDate, startTime=self.entryPastStartTime, entryName=self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to set past time-frame publishing to entry")
                 return
             
             writeToLog("INFO","Step 7: Verify if the entry is presented inside the palylist from step #2 (Expected: should be presented)")
             if self.common.myPlaylists.verifySingleEntryInPlaylist(self.playlistName, self.entryName, isExpected=True) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED, Entry is not presented although it should")
                 return      
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

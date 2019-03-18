@@ -21,8 +21,7 @@ class Test:
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     driver = None
     common = None
     # Test variables
@@ -62,42 +61,37 @@ class Test:
             
             writeToLog("INFO","Step 1: Going to perform login to KMS site as user")
             if self.common.loginAsUser() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to login as user")
                 return             
              
             writeToLog("INFO","Step 2: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED failed to upload entry")
                 return
               
             writeToLog("INFO","Step 3: Going to add flavors to the entry")
             if self.common.editEntryPage.addFlavorsToEntry(self.entryName, [self.flavorsList[0]]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED add flavors to the entry")
                 return           
               
             writeToLog("INFO","Step 4: Going to Download the flavor")
             if self.common.entryPage.downloadAFlavor(self.entryName, self.flavorsList[0]) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to Download the flavor")
                 return
             
             sleep(15)
             writeToLog("INFO","Step 5: Going to upload the downloaded  Flavor")
             if self.common.upload.uploadEntry(self.filePathDownloaded, self.entryName + '_Downloaded', "downloaded description", "downloadedtags1,downloadedtags2,") == None:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to upload the downloaded  Flavor")
                 return
                
             writeToLog("INFO","Step 6: Going to verify uploaded entry")
             if self.common.player.navigateToEntryClickPlayPause(self.entryName + '_Downloaded', "0:07") == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to verify uploaded entry")
                 return
 
             #########################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
