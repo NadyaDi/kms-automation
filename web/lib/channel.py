@@ -36,7 +36,7 @@ class Channel(Base):
     MY_CHANNELS_SERACH_FIELD_OLD_UI                     = ('xpath', "//input[@id='searchBar']")
     MY_CHANNELS_SERACH_FIELD                            = ('xpath', "//input[@class='searchForm__text' and @placeholder='Search For Channels']")
     MY_CHANNELS_EDIT_BUTTON                             = ('xpath', "//a[contains(@class,'edit')]")
-    MY_CHANNELS_HOVER                                   = ('xpath', "//*[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
+    MY_CHANNELS_HOVER                                   = ('xpath', "//p[@class='channel_content' and contains(text(), 'CHANNEL_NAME')]")
     EDIT_CHANNEL_DELETE                                 = ('xpath', "//a[@class='btn btn-danger' and contains(@href,'/channels/delete/')]")
     EDIT_CHANNEL_DELETE_CONFIRM                         = ('xpath', "//a[@class='btn btn-danger' and text()='Delete']")
     CHANNEL_PAGE_TITLE                                  = ('xpath', "//h1[@id='channel_title' and contains(text(), 'CHANNEL_TITLE')]")
