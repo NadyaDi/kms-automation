@@ -135,7 +135,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 14: Going to authenticate using " + self.coEditorUser)
-            if self.common.login.loginToKMS(self.coEditorUser, self.coPublisherPass) == False:
+            if self.common.login.loginToKMS(self.coEditorUser, self.coEditorPass) == False:
                 writeToLog("INFO","Step 14: FAILED to authenticate using " + self.coEditorUser)
                 return
             

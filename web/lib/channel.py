@@ -356,6 +356,10 @@ class Channel(Base):
             writeToLog("INFO","FAILED to navigate to Channels")
             return False
         
+        if self.wait_element(self.clsCommon.login.LOGIN_SIGN_IN_BTN, 1, True) != False:
+            writeToLog("INFO", "FAILED, authentication page is presented in Channels")
+            return False
+        
         return True
        
        
@@ -1128,8 +1132,8 @@ class Channel(Base):
 
     
     #  @Author: Oded berihon
-    def navigateToEntryFromChannel(self, channelName, entryName): 
-        if self.navigateToChannel(channelName) == False:
+    def navigateToEntryFromChannel(self, channelName, entryName, navigateFrom=enums.Location.MY_CHANNELS_PAGE): 
+        if self.navigateToChannel(channelName, navigateFrom) == False:
             writeToLog("INFO","FAILED to navigate to Channel page")
             return False
         

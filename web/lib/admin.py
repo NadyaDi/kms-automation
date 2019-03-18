@@ -53,6 +53,7 @@ class Admin(Base):
     ADMIN_CUSTOM_DATA_PROFILE_ID_OPTION             = ('xpath', '//option[@value="PROFILE_ID"]')
     ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
     ADMIN_AUTO_PLAY_ON_LOAD                         = ('id', 'autoPlayOnLoad')
+    ADMIN_ALLOW_ANONYMOUS                           = ('id', 'allowAnonymous')
     ADMIN_ASSIGNMENT_SUBMISSION                     = ('xpath', '//select[@id="enableAssignmentSubmission"]')
     ADMIN_GALLERY_PAGE_SIZE                         = ('xpath', "//input[@id='pageSize']")
     ADMIN_ADD_ALLOWEDUSERS                          = ('xpath', "//a[@class='add' and contains(text(),'+ Add \"allowedUsers\"')]")
@@ -1133,31 +1134,62 @@ class Admin(Base):
             return False
             
         writeToLog("INFO","Success, Auto Play On load was set to: " + str(selection) + "'")
-        return True  
+        return True
+      
     
-    
-    # @Autor: Michal Zomper      
+    # @Autor: Michal Zomper     
     def enableImportchannel(self, isEnabled):
         # Login to Admin
         if self.loginToAdminPage() == False:
             writeToLog("INFO","FAILED to login to admin page")
             return False
-        
+       
         #Navigate to home module
         if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/importchannel') == False:
             writeToLog("INFO","FAILED to load import channel page in admin")
             return False
-        sleep(1) 
-        
+        sleep(1)
+       
         #Enable/Disable import channel field
         selection = self.convertBooleanToYesNo(isEnabled)
         if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
             writeToLog("INFO","FAILED to set import channel module as: " + str(selection))
             return False
-         
+        
         if self.adminSave() == False:
             writeToLog("INFO","FAILED to save changes in admin page")
             return False
-        
+       
         writeToLog("INFO","Success, Import channel module was set to '" +  str(selection) + "'")
-        return True  
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function can enable or disable auto play on player
+    # if isEnabled = True, allow anonymous will be enabled
+    # if isEnabled = False, allow anonymous will be disabled
+    def allowAnonymous(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Authentication module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/auth') == False:
+            writeToLog("INFO","FAILED to load Authentication Page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable anonymous user option
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ALLOW_ANONYMOUS, selection) == False:
+            writeToLog("INFO","FAILED to set allow anonymous as: " + str(selection))
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes the changes in admin page")
+            return False
+            
+        writeToLog("INFO","Success, Allow Anonymous was set to: " + str(selection) + "'")
+        return True
+      

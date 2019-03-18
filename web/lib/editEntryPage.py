@@ -1685,6 +1685,6 @@ class EditEntryPage(Base):
         if self.wait_element(userRow, 2, True) != False:
             writeToLog("INFO", "FAILED, the table for " + userID + " is still presented after removing the user")
             return False
-        
+        sleep(1)
         writeToLog("INFO", "The " + userID + " has been successfully removed from the Collaboration list")
         return True

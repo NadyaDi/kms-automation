@@ -885,7 +885,7 @@ class Player(Base):
                 
                 if quizEntry == True:
                     # Verify if the Question Screen is displayed
-                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.3, True) != False:
+                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.5, True) != False:
                         sleep(1)
                         # Resume the playing process by skipping the Question Screen
                         if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
