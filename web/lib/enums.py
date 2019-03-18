@@ -43,6 +43,7 @@ class QuizQuestionType(Enum):
     Multiple            = 'Multiple Choice'       
     TRUE_FALSE          = "True/False"
     REFLECTION          = "Reflection Point"
+    OPEN_QUESTION       = 'Open Question'
     
     
 class DisclaimerDisplayArea(Enum):

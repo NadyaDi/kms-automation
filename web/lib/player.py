@@ -122,6 +122,9 @@ class Player(Base):
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_CLOSE_BUTTON              = ('xpath', "//div[@class='header-container close-button']")
     PLAYER_TOUCH_OVERLAY                                        = ('xpath', "//div[@id='touchOverlay']")
     PLAYER_HOTSPOT_PRESENTED                                    = ('xpath', "//div[contains(@style,'text-rendering: geometricprecision')]")
+    PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER          = ('xpath', "//div[@class='ivqContainer open-question']")
+    PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT              = ('xpath', '//textarea[@class="open-question-textarea"]')
+    PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN                 = ('xpath', '//button[@id="open-question-save"]')  
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -1216,7 +1219,7 @@ class Player(Base):
     # skipWelcomeScreen = True it will wait and click on the continue button
     # Reflection Point questions, should not be present in the list
     # This function works only when the "ALLOW SKIP" option is enabled
-    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False):     
+    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, openQuestionAnswer=''):     
         if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed) == False:
             return False
          
@@ -1279,14 +1282,29 @@ class Player(Base):
             elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
                 writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
                 questionsFound += 1
-                givenQuestions += 1
                 
                 sleep(1)
                 # If the Question is a Reflection Point, we will click on the continue button
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
                     writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
                     return False
-                 
+                
+            elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER) != False:
+                writeToLog("INFO", "AS EXPECTED, open-Q Screen has been found")  
+                questionsFound += 1
+                givenQuestions += 1
+                
+                sleep(1)
+                # Insert answer to the open-Q                              
+                if self.send_keys(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT, openQuestionAnswer) == False:
+                    writeToLog("INFO", "FAILED to add answer to open-Q")
+                    return False
+                                     
+                if self.click(self.PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN) == False:
+                    writeToLog("INFO", "FAILED to save answer to open-Q")
+                    return False   
+                
+                sleep(4)                 
             else:
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:

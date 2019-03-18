@@ -126,7 +126,7 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to click on account button in main nav bar ")
             return False
         
-        sleep(2)
+        sleep(4)
         if self.click(self.USER_LOGOUT_BTN, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False

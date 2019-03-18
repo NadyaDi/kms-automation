@@ -170,7 +170,7 @@ class Test:
                 return 
               
             writeToLog("INFO","Step 14: Going to verify grade as student")  
-            if self.common.d2l.verifyGradeAsStudentD2l(self.expectedGradeNotification, self.expectedGradeInGrades, 'B44EBA7F-4957-Quiz_Gradebook-Quiz (00:30)') == False:
+            if self.common.d2l.verifyGradeAsStudentD2l(self.expectedGradeNotification, self.expectedGradeInGrades, self.gradebookTitle) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14: FAILED to verify grade as student")
                 return
