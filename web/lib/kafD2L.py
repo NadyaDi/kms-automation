@@ -21,7 +21,7 @@ class D2L(Base):
     LOGIN_USERNAME_FIELD                                = ('id', 'userName')
     LOGIN_PASSWORD_FIELD                                = ('id', 'password')
     LOGIN_SIGN_IN_BTN                                   = ('xpath', "//button[@class='d2l-button' and contains(text(), 'Log In')]")
-    USER_MENU_TOGGLE_BTN                                = ('xpath', "//span[@class='d2l-navigation-s-personal-menu-text']")
+    USER_MENU_TOGGLE_BTN                                = ('xpath', "//d2l-navigation-button[@class='d2l-dropdown-opener']")
     USER_LOGOUT_BTN                                     = ('xpath', "//a[contains(@class,'d2l-link d2l') and contains(text(), 'Log Out')]")
     D2L_MEDIA_SPACE_IFRAME                              = ('xpath', "//iframe[contains(@src,'/d2l/lms/remoteplugins/lti/launchLti.d2l')]")
     D2L_SELECT_COURSES_BUTTON                           = ('xpath', "//div[@class='d2l-navigation-s-course-menu']")
@@ -133,7 +133,7 @@ class D2L(Base):
          
     def logOutOfD2L(self):
         # Click on the user menu button
-        if self.click(self.USER_MENU_TOGGLE_BTN) == False:
+        if self.click(self.USER_MENU_TOGGLE_BTN, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on user menu button")
             return False
         
