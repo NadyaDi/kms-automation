@@ -239,3 +239,16 @@ test_4956,Hotspots: Verify that hotspots can be created for normal entries,6269,
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4999,Entitlements - Private Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5009,Entitlements - Open Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5010,Entitlements - Restricted Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5011,Entitlements - Shared Repository Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5012,Entitlements - Public Channel using Channels Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5013,Entitlements - Public Channel using Channels Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5022,Entitlements - Entry Private with Initial Owner changed to Co Publisher,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5024,Entitlements - Private Channel using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5025,Entitlements - Open Channel using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5026,Entitlements - Restricted Channel using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5027,Entitlements - Shared Repository Channel using Global Search,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5028,Entitlements - Public Channel using Global Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5036,Entitlements - Public Channel using Global Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
