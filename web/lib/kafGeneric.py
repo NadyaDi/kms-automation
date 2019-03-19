@@ -319,7 +319,7 @@ class KafGeneric(Base):
             return False     
         sleep(4)
         
-        if self.click(self.clsCommon.category.CATEGORY_ADD_NEW_BUTTON) == False:
+        if self.click(self.clsCommon.category.CATEGORY_ADD_NEW_BUTTON, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on Add New at gallery page")
             return False
         sleep(2)
