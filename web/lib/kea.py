@@ -976,9 +976,10 @@ class Kea(Base):
                 writeToLog("INFO","FAILED to wait until spinner isn't visible")
                 return False 
             
+            sleep(3)
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
             # click on the editor in order to higlight the timeline field and select all the text
-            if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
+            if self.click(self.EDITOR_TIME_PICKER, 15, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             

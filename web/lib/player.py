@@ -1219,14 +1219,17 @@ class Player(Base):
     # skipWelcomeScreen = True it will wait and click on the continue button
     # Reflection Point questions, should not be present in the list
     # This function works only when the "ALLOW SKIP" option is enabled
-    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, openQuestionAnswer=''):     
+    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False):     
         if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed) == False:
             return False
          
         # taking the available question numbers                
         questionNumber     = self.get_elements(self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE)
         availableQuestions = len(questionNumber)
+        
+        # the number of questions that needs to be found and answered within the quiz entry
         givenQuestions     = len(questionDict)
+        # the number of questions that were found within the entry that matches with the given questions
         questionsFound     = 0
          
         # We pause the video, in order to make sure that we won't miss any elements from the scrubber
@@ -1281,7 +1284,9 @@ class Player(Base):
              
             elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
                 writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
+                # Due to the fact that Reflection Points cannot be answered, we increment the number of question found and given questions by one ( without being present in our questionDict)
                 questionsFound += 1
+                givenQuestions += 1
                 
                 sleep(1)
                 # If the Question is a Reflection Point, we will click on the continue button
@@ -1289,20 +1294,20 @@ class Player(Base):
                     writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
                     return False
                 
-            elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER) != False:
-                writeToLog("INFO", "AS EXPECTED, open-Q Screen has been found")  
-                questionsFound += 1
-                givenQuestions += 1
+            elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER, 1, True) != False:
+                writeToLog("INFO", "AS EXPECTED, open-Q Screen has been found")
                 
                 sleep(1)
                 # Insert answer to the open-Q                              
-                if self.send_keys(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT, openQuestionAnswer) == False:
+                if self.send_keys(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT, questionDict[1]) == False:
                     writeToLog("INFO", "FAILED to add answer to open-Q")
                     return False
                                      
                 if self.click(self.PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN) == False:
                     writeToLog("INFO", "FAILED to save answer to open-Q")
-                    return False   
+                    return False
+                
+                questionsFound += 1
                 
                 sleep(4)                 
             else:
