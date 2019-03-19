@@ -1071,6 +1071,8 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to navigate to course page")          
             return False 
         
+        sleep(3)
+        
         tmpQuizMenu = (self.BB_QUIZ_GRADE_TITLE_DROPDOWN[0], self.BB_QUIZ_GRADE_TITLE_DROPDOWN[1].replace('QUIZ_NAME', quizName))
         if self.click(tmpQuizMenu) == False:
             writeToLog("INFO","FAILED to click on grade title dropdown")          
