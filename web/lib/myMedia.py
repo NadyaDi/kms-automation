@@ -1486,7 +1486,7 @@ class MyMedia(Base):
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA) or \
                 (localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.JIVE):
-                    self.click(self.MY_MEDIA_TITLE)
+                    self.click(self.MY_MEDIA_TITLE, multipleElements=True)
             
             elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
                 self.click(self.clsCommon.myMedia.MY_MEDIA_ACTIONS_BUTTON)
