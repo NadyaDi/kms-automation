@@ -91,23 +91,37 @@ class Test:
             self.studentUsername = 'student'
             self.studentPassword = 'Kaltura1!'
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            if LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1820181-1.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Blackboard@kaltura.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://2104601-5.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'Freetrail@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            
+            writeToLog("INFO","Step 1: Going to disable assignment submission")          
+            if self.common.admin.enableDisabledAssignmentSubmission(False) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to disable assignment submission")
+                return 
 
-            writeToLog("INFO","Step 1: Going to to upload entry") 
+            writeToLog("INFO","Step 2: Going to to upload entry") 
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
+                writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
 
-            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                writeToLog("INFO","Step 3: FAILED to navigate entry page")
                 return
 
-            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
                 return
 
             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    

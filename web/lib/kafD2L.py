@@ -50,7 +50,7 @@ class D2L(Base):
     D2L_QA_PROD_BSE_OPTION                              = ('xpath', '//span[@class="d2l-textblock" and text()="QA PROD BSE"]')
     D2L_EMBED_DISCUSSION_FRAME_TITLE                    = ('xpath', "//a[contains(@id, 'ForumContextMenu') and contains(@title,'GUID')]")
     D2L_COURSE_CONTENT_TAB                              = ('xpath', '//a[@class="d2l-navigation-s-link" and text()="Content"]')
-    D2L_ADD_EXISTING_ACTIVITIES_DROPDOWN                = ('xpath', '//a[@title="Add activities to activity"]')
+    D2L_ADD_EXISTING_ACTIVITIES_DROPDOWN                = ('xpath', '//d2l-button[@title="Add activities to activity"]')
     D2L_ADD_EXISTING_ACTIVITIES_OPTION                  = ('xpath', '//span[text()="BSE_EVIORMENT"]')
     D2L_GRADEBOOK_EMBED_IFRAME                          = ('xpath', '//iframe[@id="QuickLinkSelectorFrame"]')
     D2L_GRADEBOOK_TITLE                                 = ('xpath', '//a[contains(@title,"External Learning Tool") and text()="GRADEBOOK_TITLE"]')

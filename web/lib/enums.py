@@ -546,18 +546,20 @@ class KEAQuizOptions(Enum):
     def __str__(self):
         return str(self.value)
 
-    QUIZ_NAME           = "Quiz Name"
-    SHOW_WELCOME_PAGE   = "Show Welcome Page"
-    ALLOW_DOWNLOAD      = "Allow Download of Questions List"
-    INSTRUCTIONS        = "Instructions" 
-    DO_NOT_SHOW_SCORES  = "Do Not Show Scores"
-    SHOW_SCORES         = "Show Scores"
-    INCLUDE_ANSWERS     = "Include Answers"
-    ALLOW_ANSWER_CHANGE = "Allow Answers Change"
-    ALLOW_SKIP          = "Allow Skip"
-    DO_NOT_ALLOW_SKIP   = "Do not Allow Skip"
-    NO_SEEKING_FORWARD  = "No seeking forward"
-    
+    QUIZ_NAME               = "Quiz Name"
+    SHOW_WELCOME_PAGE       = "Show Welcome Page"
+    ALLOW_DOWNLOAD          = "Allow Download of Questions List"
+    INSTRUCTIONS            = "Instructions" 
+    DO_NOT_SHOW_SCORES      = "Do Not Show Scores"
+    SHOW_SCORES             = "Show Scores"
+    INCLUDE_ANSWERS         = "Include Answers"
+    ALLOW_ANSWER_CHANGE     = "Allow Answers Change"
+    ALLOW_SKIP              = "Allow Skip"
+    DO_NOT_ALLOW_SKIP       = "Do not Allow Skip"
+    NO_SEEKING_FORWARD      = "No seeking forward"
+    ALLOW_MULTUPLE_ATTEMPTS = "Allow Multiple Attempts"
+    SET_NUMBER_OF_ATTEMPTS  = "Number of attempts (2-100)"
+    QUIZ_SCORE_TYPE         = "Score Type"
     
 class KAFGradebookGradeOptions(Enum):
     def __str__(self):
@@ -679,3 +681,14 @@ class keaLocation(Enum):
     BOTTOM_RIGHT   = 'Bottom Right'
     BOTTOM_LEFT    = 'Bottom Left'
     CENTER         = 'Center'
+
+
+class keaQuizScoreType(Enum):
+    def __str__(self):
+        return str(self.value)    
+    
+    LATEST        = "Latest"
+    FIRST         = "First" 
+    HIGHEST       = "Highest" 
+    LOWEST        = "Lowest"
+    AVERAGE       = "Average"

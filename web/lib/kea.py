@@ -127,6 +127,10 @@ class Kea(Base):
     KEA_PLAYER_CONTAINER                                                    = ('xpath', '//div[@class="player-container"]')
     KEA_ADD_NEW_OPEN_QUESTION_BUTTON                                        = ('xpath', "//button[contains(@class,'open-question-question-type')]")
     KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE                                 = ('xpath', "//button[contains(@class,'open-question-question-type ng-star-inserted active')]")
+    KEA_ALLOW_MULTIPLE_ATTEMPTS_OPTION_GRAYED_OUT                           = ('xpath', '//label[@class="ui-chkbox-label ng-star-inserted" and text()="Allow Multiple Attempts"]')
+    KEA_NUMBER_OF_ALLOW_ATTEMPTS_ARROW_UP                                   = ('xpath', '//button[@class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default"]')
+    KEA_SCORE_TYPE_DROP_DOWN                                                = ('xpath', '//label[contains(@class,"ui-dropdown-label ui-inputtext ui-corner-all ng-star-inserted")]')
+    KEA_SCORE_TYPE_OPTION                                                   = ('xpath', '//span[contains(@class, "ng-star-inserted") and text()="SCORE_TYPE"]')
     #============================================================================================================
     # @Author: Inbar Willman       
     def navigateToEditorMediaSelection(self, forceNavigate = False):
@@ -1322,7 +1326,12 @@ class Kea(Base):
                         return False                
              
                 elif self.changeKEAOptionState(options, True) == False:
-                    return False  
+                    return False 
+                
+                elif options == enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:
+                    if self.changeKEAOptionState(options, True) == False:
+                        writeToLog("INFO", "FAILED to enable the " + options.value)
+                        return False          
                               
             elif keaOptionDict[options] == False:
                 if options == enums.KEAQuizOptions.DO_NOT_SHOW_SCORES:
@@ -1366,22 +1375,39 @@ class Kea(Base):
                         return False
                 
             elif keaOptionDict[options] != '':
-                if options == enums.KEAQuizOptions.QUIZ_NAME:
-                    tmpKEAInputField = (self.KEA_OPTION_INPUT_FIELD[0], self.KEA_OPTION_INPUT_FIELD[1].replace('FIELD_NAME', 'quizName'))
+                if options == enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:
+                    for i in range(0, keaOptionDict[options]-2):
+                        if self.click(self.KEA_NUMBER_OF_ALLOW_ATTEMPTS_ARROW_UP) == False:
+                            writeToLog("INFO", "FAILED to click on arrow up")
+                            return False 
+                        
+                elif options == enums.KEAQuizOptions.QUIZ_SCORE_TYPE: 
+                    if self.click(self.KEA_SCORE_TYPE_DROP_DOWN) == False:
+                        writeToLog("INFO", "FAILED to click on score type dropdown")
+                        return False  
                     
-                elif options == enums.KEAQuizOptions.SHOW_WELCOME_PAGE:
-                    tmpKEAInputField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'welcomeMessage'))
+                    tmpScoreType = (self.KEA_SCORE_TYPE_OPTION[0], self.KEA_SCORE_TYPE_OPTION[1].replace('SCORE_TYPE', keaOptionDict[options]))    
+                    if self.click(tmpScoreType) == False:
+                        writeToLog("INFO", "FAILED to click on " + options.value + " score type")
+                        return False
+                                              
+                else:
+                    if options == enums.KEAQuizOptions.QUIZ_NAME:
+                        tmpKEAInputField = (self.KEA_OPTION_INPUT_FIELD[0], self.KEA_OPTION_INPUT_FIELD[1].replace('FIELD_NAME', 'quizName'))
+                    
+                    elif options == enums.KEAQuizOptions.SHOW_WELCOME_PAGE:
+                        tmpKEAInputField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'welcomeMessage'))
                 
-                if self.click(tmpKEAInputField, 5, True) == False:
-                    writeToLog("INFO", "FAILED to select the " + options.value + " option")
-                    return False
+                    if self.click(tmpKEAInputField, 5, True) == False:
+                        writeToLog("INFO", "FAILED to select the " + options.value + " option")
+                        return False
                 
-                if self.clear_and_send_keys(tmpKEAInputField, keaOptionDict[options], True) == False:
-                    writeToLog("INFO", "FAILED to clear and add " + keaOptionDict[options] + " text to the " + keaOptionDict.value)
-                    return False
+                    if self.clear_and_send_keys(tmpKEAInputField, keaOptionDict[options], True) == False:
+                        writeToLog("INFO", "FAILED to clear and add " + keaOptionDict[options] + " text to the " + keaOptionDict.value)
+                        return False
                 
-                sleep(3)
-                
+                    sleep(3) 
+                                                          
         sleep(1)  
         if self.click(tmpKEASection, 5, True) == False:
             writeToLog("INFO", "Failed to collapse the " + keaSection.value)
@@ -1411,10 +1437,15 @@ class Kea(Base):
                 return True
             
             else:
-                tmpKEAOption = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
-                if self.click(tmpKEAOption, 5, True) == False:
-                    writeToLog("INFO", "FAILED to enable " + keaOption.value + " option")
-                    return False
+                if keaOption.value == enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:
+                    if self.click(self.KEA_ALLOW_MULTIPLE_ATTEMPTS_OPTION_GRAYED_OUT) == False:
+                        writeToLog("INFO", "FAILED to enable " + keaOption.value + " option")
+                        return False                        
+                else:        
+                    tmpKEAOption = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
+                    if self.click(tmpKEAOption, 5, True) == False:
+                        writeToLog("INFO", "FAILED to enable " + keaOption.value + " option")
+                        return False
 
         elif stateEnabled == False:
             if keaOption == enums.KEAQuizOptions.ALLOW_DOWNLOAD or keaOption == enums.KEAQuizOptions.INSTRUCTIONS:
@@ -1423,7 +1454,10 @@ class Kea(Base):
                     return True
                                   
             tmpKEAOptionActive = (self.KEA_OPTION_ACTIVE[0], self.KEA_OPTION_ACTIVE[1].replace('OPTION_NAME', keaOption.value))
-            tmpKEAOptionNormal = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
+            if keaOption.value == enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:
+                tmpKEAOptionNormal = self.KEA_ALLOW_MULTIPLE_ATTEMPTS_OPTION_GRAYED_OUT
+            else:
+                tmpKEAOptionNormal = (self.KEA_OPTION_NORMAL[0], self.KEA_OPTION_NORMAL[1].replace('OPTION_NAME', keaOption.value))
             if self.wait_element(tmpKEAOptionActive, 1, True) == False and self.wait_element(tmpKEAOptionNormal, 1, True) != False:
                 writeToLog("INFO", "The " + keaOption.value + " is already disabled")
                 return True
