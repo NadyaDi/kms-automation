@@ -116,7 +116,7 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED failed to delete channel playlist")
                 return      
             #########################################################################
-            self.tatus = "Pass"
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Create Channel Playlist' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:

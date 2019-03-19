@@ -48,7 +48,9 @@ class D2L(Base):
     D2L_DELETE_DISCUSSION_CONFIRMATION_BTN              = ('xpath', '//button[@class="d2l-button" and text()="Yes"]')
     D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[contains(@data-message-text,"has been deleted")]')
     D2L_QA_PROD_BSE_OPTION                              = ('xpath', '//span[@class="d2l-textblock" and text()="QA PROD BSE"]')
-    D2L_EMBED_DISCUSSION_FRAME_TITLE                    = ('xpath', "//a[contains(@id, 'ForumContextMenu') and contains(@title,'GUID')]")
+    #D2L_EMBED_DISCUSSION_FRAME_TITLE                    = ('xpath', "//d2l-button-icon[@class='d2l-dropdown-opener' and contains(@text,'GUID')]")
+    D2L_EMBED_DISCUSSION_FRAME_TITLE                    = ('xpath', "//h2[contains(@class,'d2l-heading vui-heading-2 d2l-heading-none') and contains(text(),'GUID')")
+    
     D2L_COURSE_CONTENT_TAB                              = ('xpath', '//a[@class="d2l-navigation-s-link" and text()="Content"]')
     D2L_ADD_EXISTING_ACTIVITIES_DROPDOWN                = ('xpath', '//d2l-button[@title="Add activities to activity"]')
     D2L_ADD_EXISTING_ACTIVITIES_OPTION                  = ('xpath', '//span[text()="BSE_EVIORMENT"]')
@@ -296,10 +298,12 @@ class D2L(Base):
                 return False  
             
         # Focus on the frame title
+        #frameMenuBtnEl = self.wait_element((self.D2L_EMBED_DISCUSSION_FRAME_TITLE[0], self.D2L_EMBED_DISCUSSION_FRAME_TITLE[1].replace('GUID', localSettings.LOCAL_SETTINGS_GUID)))
         frameMenuBtnEl = self.wait_element((self.D2L_EMBED_DISCUSSION_FRAME_TITLE[0], self.D2L_EMBED_DISCUSSION_FRAME_TITLE[1].replace('GUID', localSettings.LOCAL_SETTINGS_GUID)))
         if frameMenuBtnEl == False:
             writeToLog("INFO","FAILED to get frame menu button")
             return False
+        
         frameMenuBtnEl.send_keys('')           
         self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,6)            
                
