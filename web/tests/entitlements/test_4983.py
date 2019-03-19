@@ -92,9 +92,6 @@ class Test:
             
             writeToLog("INFO","Step 7: Going to navigate to the entry page for " + self.entryName + " entry as " + self.coPublisherUser)
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
-                writeToLog("INFO","Step 7: FAILED to navigate to the entry page for " + self.entryName + " entry as " + self.coPublisherUser)
-                return
-
                 self.common.myMedia.clearSearch()
                 sleep(1)            
                 if self.common.myMedia.searchEntryMyMedia(self.entryName, forceNavigate=False) == False:
