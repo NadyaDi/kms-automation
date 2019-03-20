@@ -252,3 +252,8 @@ test_5026,Entitlements - Restricted Channel using Global Page,6269,qakmstest.dev
 test_5027,Entitlements - Shared Repository Channel using Global Search,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5028,Entitlements - Public Channel using Global Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5036,Entitlements - Public Channel using Global Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5045,Entitlements - Entry Private with Initial Owner changed to Co Viewer,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5046,Entitlements - Entry Private with Co Viewer,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5049,Entitlements - Open Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5051,Entitlements - Private Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5052,Entitlements - Restricted Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456

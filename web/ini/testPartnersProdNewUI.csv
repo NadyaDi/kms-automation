@@ -274,6 +274,11 @@ test_5026,Entitlements - Restricted Channel using Global Page,2501881,mediaspace
 test_5027,Entitlements - Shared Repository Channel using Global Search,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5028,Entitlements - Public Channel using Global Page and Anonymous Users ON,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5036,Entitlements - Public Channel using Global Page and Anonymous Users OFF,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5045,Entitlements - Entry Private with Initial Owner changed to Co Viewer,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5046,Entitlements - Entry Private with Co Viewer,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5049,Entitlements - Open Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5051,Entitlements - Private Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5052,Entitlements - Restricted Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2504461,mediaspace.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2504461,mediaspace.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
