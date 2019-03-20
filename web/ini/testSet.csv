@@ -367,16 +367,16 @@ test_4854,1,0,0,0,Quiz - Video playing and Navigation process with Quiz Question
 test_4855,1,0,0,0,Quiz - Submitting Quiz with Answer order changed - Entry Page
 test_4857,1,0,0,0,Quiz - Timeline section while Using Zoom Option - KEA Page
 test_4858,1,0,0,0,Quiz - Deleted Questions inside a Quiz entry - Submitted in Entry Page
-test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
-test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
-test_4937,0,1,0,0,Editor: Reset timeline functionality
-test_4938,0,1,0,0,Editor: Redo timeline functionality
-test_4939,0,1,0,0,Editor: Undo timeline functionality
 test_4948,0,1,0,0,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user
 test_4949,1,0,0,0,Quiz - Welcome screen behavior when autoplay true
 test_4954,1,0,0,0,Quiz - Player preview Sanity Check for an existing Quiz Entry
 test_4719,1,0,0,0,Quiz - quiz with open-Q only
 test_4799,1,0,0,0,Quiz - Retake quiz Latest score
+test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
+test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
+test_4937,0,1,0,0,Editor: Reset timeline functionality
+test_4938,0,1,0,0,Editor: Redo timeline functionality
+test_4939,0,1,0,0,Editor: Undo timeline functionality
 test_4955,0,1,0,0,Editor: Trim Quiz entry (with Slides and Captions)
 test_4956,0,1,0,0,Hotspots: Verify that hotspots can be created for normal entries
 test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
@@ -393,6 +393,14 @@ test_5026,1,0,0,0,Entitlements - Restricted Channel using Global Page
 test_5027,1,0,0,0,Entitlements - Shared Repository Channel using Global Search
 test_5028,1,0,0,0,Entitlements - Public Channel using Global Page and Anonymous Users ON
 test_5036,1,0,0,0,Entitlements - Public Channel using Global Page and Anonymous Users OFF
+test_4981,1,0,0,0,Entitlements - Entry Private with Initial Owner and Changed Owner
+test_4983,1,0,0,0,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher
+test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
+test_5045,1,0,0,0,Entitlements - Entry Private with Initial Owner changed to Co Viewer
+test_5046,1,0,0,0,Entitlements - Entry Private with Co Viewer
+test_5049,1,0,0,0,Entitlements - Open Category
+test_5051,1,0,0,0,Entitlements - Private Category
+test_5052,1,0,0,0,Entitlements - Restricted Category
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
@@ -688,6 +696,3 @@ test_4724,1,0,0,0,Filters Section - no search - My Media
 test_4725,1,0,0,0,Filters Section - with search - Channel Page - Media Tab
 test_4726,1,0,0,0,Filters Section - no search - Channel Page - Media Tab
 test_4852,1,0,0,0,Recscheduling - Create new single event
-test_4981,1,0,0,0,Entitlements - Entry Private with Initial Owner and Changed Owner
-test_4983,1,0,0,0,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher
-test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
