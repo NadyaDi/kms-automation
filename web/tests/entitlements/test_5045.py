@@ -14,13 +14,13 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Entitlements - Entry Private with Initial Owner changed to Co Publisher
+    # Test Name : Entitlements - Entry Private with Initial Owner changed to Co Viewer
     # Test description:
     # 1. Verify that the media owner its able to access the entry via media page
     # 2. Verify that the media owner of an entry can be changed
-    # 3. Verify that the initial media owner can receive co-publisher rights
+    # 3. Verify that the initial media owner can receive co-viewer rights
     #================================================================================================================================
-    testNum = "5022"
+    testNum = "5045"
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
@@ -30,7 +30,7 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "Initial Entry Owner changed to Co Publisher"
+    typeTest            = "Initial Entry Owner changed to Co Viewer"
     newMediaOwner       = "python_normal"
     newMediaOwnerPass   = "Kaltura1!"
     
@@ -58,7 +58,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Entitlements - Owner user changed to Co Publisher", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Entitlements - Owner user changed to Co Viewer", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
@@ -107,37 +107,29 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED to navigate to the entry page of " + self.entryName + " entry as " + self.newMediaOwner)
                 return
             
-            writeToLog("INFO","Step 9: Going to add " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " as Co Publisher of " + self.entryName + " entry ")
-            if self.common.editEntryPage.addCollaborator(self.entryName, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, False, True) == False:
-                writeToLog("INFO","Step 9: FAILED to add " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " as Co Publisher of " + self.entryName + " entry ")
+            writeToLog("INFO","Step 9: Going to add " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " as Co Viewer of " + self.entryName + " entry ")
+            if self.common.editEntryPage.addCollaborator(self.entryName, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, False, False, True) == False:
+                writeToLog("INFO","Step 9: FAILED to add " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " as Co Viewer of " + self.entryName + " entry ")
                 return
             
-            writeToLog("INFO","Step 10: Going to log out from " + self.newMediaOwner)
-            if self.common.login.logOutOfKMS() == False:
+            writeToLog("INFO","Step 10: Going to log out from " + self.newMediaOwner + " and authenticate with " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
+            if self.common.login.logOutThenLogInToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)  == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 10: FAILED to log out from " + self.newMediaOwner)
+                writeToLog("INFO","Step 10: FAILED to log out from " + self.newMediaOwner + " and authenticate with " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
                 return
             
-            writeToLog("INFO","Step 11: Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
-            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 11: FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
-                return
-            
-            writeToLog("INFO","Step 12: Going to navigate to the entry page for " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " while having Co Publisher rights")
+            writeToLog("INFO","Step 11: Going to navigate to the entry page for " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " while having Co Viewer rights")
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.entryName) == False:
                 self.common.myMedia.clearSearch()
                 sleep(1)            
                 if self.common.myMedia.searchEntryMyMedia(self.entryName, forceNavigate=False) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 12.1: FAILED to navigate to the entry page for " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
+                    writeToLog("INFO","Step 11.1: FAILED to navigate to the entry page for " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " while having Co Viewer rights")
                     return 
                 sleep(2)
                 if self.common.myMedia.clickEntryAfterSearchInMyMedia(self.entryName) == False:
-                    self.status = "Fail"
-                    writeToLog("INFO","Step 12.2: FAILED to navigate to the entry page for " + self.entryName + " entry as " +localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
+                    writeToLog("INFO","Step 11.2: FAILED to navigate to the entry page for " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " while having Co Viewer rights")
                     return                
-                sleep(5)
+                sleep(5)              
             ##################################################################
             writeToLog("INFO","TEST PASSED: Entry Page has been successfully verified for a " + self.typeTest)
         # if an exception happened we need to handle it and fail the test

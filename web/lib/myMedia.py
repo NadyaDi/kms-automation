@@ -595,9 +595,8 @@ class MyMedia(Base):
                 return False
 
             tmpCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', categoryList))
-
-            if self.click(tmpCategoryName, 30) == False:
-                writeToLog("INFO","FAILED to select published category '" + category + "'")
+            if self.click(tmpCategoryName, 30, True) == False:
+                writeToLog("INFO","FAILED to select published category '" + categoryList + "'")
                 return False
 
         sleep(2)
