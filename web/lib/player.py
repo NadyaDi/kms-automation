@@ -1421,7 +1421,7 @@ class Player(Base):
                 return False
             
         sleep(0.5)
-        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 35) == False:
+        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 15) == False:
             writeToLog("INFO", "FAILED to wait until the loading spinner disappeared")
             return False
             

@@ -1065,7 +1065,7 @@ class Category(Base):
         # Click on 'Add to gallery'
         if self.click(self.CATEGORY_ADD_TO_CATEGORY_BUTTON) == False:
             writeToLog("INFO","Step 2: FAILED to to click on 'Add to Gallery' button")
-            return 
+            return False
         
         # wait until loading message disappear
         sleep(1)

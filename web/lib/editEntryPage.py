@@ -26,6 +26,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_ADD_USER_TEXTBOX                                 = ('id', "EditEntryCollaborator-userId")
     EDIT_ENTRY_CO_EDITOR_CHECKBOX                               = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Editor']")
     EDIT_ENTRY_CO_PUBLISHER_CHECKBOX                            = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Publisher']")
+    EDIT_ENTRY_CO_VIEWER_CHECKBOX                               = ('xpath', "//label[contains(@class,'checkbox') and text()='Co-Viewer']")
     EDIT_ENTRY_ADD_COLLABORATOR_SAVE_BUTTON                     = ('xpath', "//a[contains(@class,'btn btn btn-primary')]")
     EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE                = ('id', "collaborator_USER_NAME")
     EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE     = ('xpath', "//td[@class='collaborationPermission' and contains(text(), 'USER_PERMISSION')]") # When using this locator, replace 'USER_PERMISSION' string with your real user_permission
@@ -185,7 +186,7 @@ class EditEntryPage(Base):
 
 
     # Author: Michal Zomper   
-    def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher):
+    def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher, isCoViewer=False):
         #Click on collaboration tab
         if self.clickOnEditTab(enums.EditEntryPageTabName.COLLABORATION) == False:
             writeToLog("INFO","FAILED to click on collaboration tab")
@@ -218,9 +219,16 @@ class EditEntryPage(Base):
             
         # Check if need to add co publisher
         if isCoPublisher == True:
-            # Click to add co editor
+            # Click to add co publisher
             if self.click(self.EDIT_ENTRY_CO_PUBLISHER_CHECKBOX, 30) == False:
                 writeToLog("INFO","FAILED to click on co publisher checkbox")
+                return False 
+            
+        # Check if need to add co viewer
+        if isCoViewer == True:
+            # Click to add co viewer
+            if self.click(self.EDIT_ENTRY_CO_VIEWER_CHECKBOX, 30) == False:
+                writeToLog("INFO","FAILED to click on co viewer checkbox")
                 return False 
                
         sleep(1)  
@@ -237,12 +245,23 @@ class EditEntryPage(Base):
             return False      
         
         # set the permissions locator 
-        if isCoEditor == True and isCoPublisher == True:
+        if isCoEditor == True and isCoPublisher == True and isCoViewer == False:
             tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Editor, Co-Publisher"))
-        elif isCoEditor == True and isCoPublisher == False:
+        elif isCoEditor == True and isCoPublisher == False and isCoViewer == False:
             tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Editor"))
-        elif isCoEditor == False and isCoPublisher == True:
-            tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Publisher"))   
+        elif isCoEditor == False and isCoPublisher == True and isCoViewer == False:
+            tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Publisher"))
+        elif isCoEditor == True and isCoPublisher == True and isCoViewer == True:
+            tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Editor, Co-Publisher, Co-Viewer"))
+        elif isCoEditor == True and isCoPublisher == False and isCoViewer == True:
+            tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Editor, Co-Viewer"))
+        elif isCoEditor == False and isCoPublisher == True and isCoViewer == True:
+            tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Publisher, Co-Viewer"))
+        elif isCoEditor == False and isCoPublisher == False and isCoViewer == True:
+            tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Viewer"))
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you've used a correct configuration" + str(isCoEditor) + " co-editor " + str(isCoPublisher) + " co publisher " + str(isCoViewer) + " co viewer")
+            return False
         
         # Check that the user permissions correctly were added to collaboration permissions table
         try:
