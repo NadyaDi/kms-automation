@@ -69,10 +69,10 @@ class Test:
 
             ##################### TEST STEPS - MAIN FLOW #####################
             
-            writeToLog("INFO","Step 1: Going to upload 4 entries")
+            writeToLog("INFO","Step 1: Going to upload  entry")
             if self.common.upload.uploadEntries(self.entriesToUpload, self.entryDescription, self.entryTags) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload 4 entries")
+                writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
                  
             writeToLog("INFO","Step 2: Going to publish entries 1-3 to Gallery")
