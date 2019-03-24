@@ -438,6 +438,7 @@ class MyPlaylists(Base):
                 else:
                     # Move down
                     moveY = moveY * heightOfEntry
+                sleep(2)
                 writeToLog("INFO","FOR DEBUG: X = " + str(moveX) + "; Y = " + str(moveY))
                 ActionChains(self.driver).drag_and_drop_by_offset(entriesTableList[indexEntryFrom-1], moveX, moveY).perform()
                 
