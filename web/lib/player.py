@@ -256,8 +256,8 @@ class Player(Base):
                     
                     if quizEntry == True:
                         # Verify if the Question Screen is displayed
-                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.3, True) != False:
-                            sleep(1)
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.5, True) != False:
+                            sleep(2)
                             # Resume the playing process by skipping the Question Screen
                             if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                                 writeToLog("INFO", "FAILED to click on the Skip for now button")
@@ -886,7 +886,7 @@ class Player(Base):
                 if quizEntry == True:
                     # Verify if the Question Screen is displayed
                     if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.5, True) != False:
-                        sleep(1)
+                        sleep(2)
                         # Resume the playing process by skipping the Question Screen
                         if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                             writeToLog("INFO", "FAILED to click on the Skip for now button")
@@ -2510,25 +2510,30 @@ class Player(Base):
     
     
     # @Author: Horia Cus
-    # hotspotList must contain the following structure ['Hotspot Title', 'link.address', enums.textStyle.Style, 'color code'
+    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
     # location=enums.Location.ENTRY_PAGE
-    # To be Developed: Cue Point Verification interval, Location Hotspot
+    # To be Developed: Cue Point Verification interval
     def hotspotVerification(self, hotspotsDict, location=enums.Location.ENTRY_PAGE, embed=False):        
         if self.verifyAndClickOnPlay(location, 2, embed) == False:
             return False
         
-        # Verify that the expected hotspots are presented in the player
+        # Verify that the expected hotspots with the expected style properties are presented in the player
         for hotspotNumber in hotspotsDict:
             
             # Take the presented hotspot for the current time
             presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
             
-            # Verify that hotspots are presented in the Player
+            # to do
+            # play all the entry, take the presented hotspot elements, append them to a list
+            # take the time stamp of each hotspot
+
+            
+            # Verify that at least one hotspot has been found in the Player
             if presentedHotspots == False:
                 writeToLog("INFO", "Failed to extract the presented hotspots details")
                 return False
             
-            # Take the details for the current hotspot
+            # Take the details for the iterated hotspot
             hotspotDetails = hotspotsDict[hotspotNumber]
             
             # Verify that the desired details for the current hotspot are presented properly in the player
@@ -2539,20 +2544,59 @@ class Player(Base):
                     writeToLog("INFO", "AS Expected, " + hotspotDetails[0] + " hotspot has been found")
                     
                     try:
+                        hotspotLocation        = presentedHotspots[x].location
                         hotspotStyleProperties = presentedHotspots[x].get_attribute('style').split()
                         hotspotStyleFontWeight = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
                         
-                        # Specify the correct font weight for the presented hotspot
+                        # Specify the correct font weight for the presented hotspot due to an inconsistency from KMS
                         if hotspotStyleFontWeight == "lighter":
                             hotspotStyleFontWeight = "thin"
                             
-                        hotspotStyleFontColor  = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
+                        hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
+                        hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
+                        hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
+                        hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
                     except Exception:
                         writeToLog("INFO", "FAILED to take the hotspot properties for " + hotspotDetails[0])
                         return False
                     
+                    # Verify the position of the hotspot within the player
+                    if len(hotspotDetails) >= 2 and hotspotDetails[1] != '':
+                        topRightDict            = {'x': 786, 'y': 1}
+                        topLeftDict             = {'x': 6, 'y': 1}
+                        centerDict              = {'x': 394, 'y': 270}
+                        bottomRightDict         = {'x': 786, 'y': 419}
+                        bottomLeftDict          = {'x': 6, 'y': 419}
+                        
+                        if hotspotDetails[1] == enums.keaLocation.TOP_RIGHT:
+                            if hotspotLocation != topRightDict:
+                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                                return False
+                            
+                        elif hotspotDetails[1] == enums.keaLocation.TOP_LEFT:
+                            if hotspotLocation != topLeftDict:
+                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                                return False
+                            
+                        elif hotspotDetails[1] == enums.keaLocation.CENTER:
+                            if hotspotLocation != centerDict:
+                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                                return False
+                            
+                        elif hotspotDetails[1] == enums.keaLocation.BOTTOM_RIGHT:
+                            if hotspotLocation != bottomRightDict:
+                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                                return False
+                            
+                        elif hotspotDetails[1] == enums.keaLocation.BOTTOM_LEFT:
+                            if hotspotLocation != bottomLeftDict:
+                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                                return False
+                        else:
+                            writeToLog("INFO", "No details for the " + hotspotDetails[0] + " were given from the dictionary")
+                    
                     # Verify if a link should be presented within the hotspot
-                    if len(hotspotDetails) >= 3 and hotspotDetails[2] != '':
+                    if len(hotspotDetails) >= 5 and hotspotDetails[4] != '':
                         sleep(1)
                         # Access the hotspot link
                         if self.clickElement(presentedHotspots[x]) == False:
@@ -2576,34 +2620,77 @@ class Player(Base):
                             return False
                         
                         # Verify that the presented link matches with the expected link
-                        if presentedLink != hotspotDetails[2]:
-                            writeToLog("INFO", "FAILED," + presentedLink + " link was presented but " + hotspotDetails[2] + " was expected")
+                        if presentedLink != hotspotDetails[4]:
+                            writeToLog("INFO", "FAILED," + presentedLink + " link was presented but " + hotspotDetails[4] + " was expected")
                             return False
                     
                     # Verify if the font weight should have been changed
-                    if len(hotspotDetails) >= 4 and hotspotDetails[3].value != '':
+                    if len(hotspotDetails) >= 6 and hotspotDetails[5].value != '':
                         # Verify that the expected font weight matches with the presented font weight
-                        if hotspotStyleFontWeight != hotspotDetails[3].value.lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[3].value.lower())
+                        if hotspotStyleFontWeight != hotspotDetails[5].value.lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font weight has been presented instead of expected: " + hotspotDetails[5].value.lower())
                             return False
                     else:
                         # Verify that the default font weight is presented
                         defaultFontWeight = enums.textStyle.NORMAL.value
                         if hotspotStyleFontWeight != defaultFontWeight.lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + defaultFontWeight.lower())
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font weight has been presented instead of expected: " + defaultFontWeight.lower())
                             return False
-                        
-                    if len(hotspotDetails) >= 5 and hotspotDetails[4] != '':
+                    
+                    # Verify if the font color should have been changed
+                    if len(hotspotDetails) >= 7 and hotspotDetails[6] != '':
                         # Verify that the expected font color matches with the presented font color
-                        if hotspotStyleFontColor != hotspotDetails[4].lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + hotspotDetails[4].lower())
+                        if hotspotStyleFontColor != hotspotDetails[6].lower():
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontColor + " font color has been presented instead of expected: " + hotspotDetails[6].lower())
                             return False
                         
                     else:
                         # Verify that the default font color is presented
                         defaultFontColor = 'white'
                         if hotspotStyleFontColor != defaultFontColor:
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font has been presented instead of expected: " + defaultFontColor)
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontColor + " font color has been presented instead of expected: " + defaultFontColor)
+                            return False
+                        
+                    # Verify if the background color should have been changed
+                    if len(hotspotDetails) >= 8 and hotspotDetails[7] != '':
+                        # Verify that the expected background color matches with the presented background color
+                        if hotspotStyleBackgroundColor != hotspotDetails[7]:
+                            writeToLog("INFO", "FAILED," + hotspotStyleBackgroundColor + " background has been presented instead of expected: " + hotspotDetails[7])
+                            return False
+                        
+                    else:
+                        # Verify that the default background color is presented
+                        defaultBackgroundColor = 'rgba(0,0,0,0.6)'
+                        if hotspotStyleBackgroundColor != defaultBackgroundColor:
+                            writeToLog("INFO", "FAILED," + hotspotStyleBackgroundColor + " background color has been presented instead of expected: " + defaultBackgroundColor)
+                            return False
+                        
+                    # Verify if the text size should have been changed
+                    if len(hotspotDetails) >= 9 and hotspotDetails[8] != '':
+                        # Verify that the expected text size matches with the presented text size
+                        if hotspotStyleFontSize != str(hotspotDetails[8]):
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontSize + " font size has been presented instead of expected: " + str(hotspotDetails[8]))
+                            return False
+                        
+                    else:
+                        # Verify that the default text size is presented
+                        defaultTextSize = '14'
+                        if hotspotStyleFontSize != defaultTextSize:
+                            writeToLog("INFO", "FAILED," + hotspotStyleFontSize + " font size has been presented instead of expected: " + defaultTextSize)
+                            return False
+                        
+                    # Verify if the roundness size should have been changed
+                    if len(hotspotDetails) >= 10 and hotspotDetails[9] != '':
+                        # Verify that the expected roundness size matches with the presented roundness size
+                        if hotspotStyleBorderRadius != str(hotspotDetails[9]):
+                            writeToLog("INFO", "FAILED," + hotspotStyleBorderRadius + " roundness size has been presented instead of expected: " + str(hotspotDetails[9]))
+                            return False
+                        
+                    else:
+                        # Verify that the default text size is presented
+                        defaultBorderRadius = '3'
+                        if hotspotStyleBorderRadius != defaultBorderRadius:
+                            writeToLog("INFO", "FAILED," + hotspotStyleBorderRadius + " roundness size has been presented instead of expected: " + defaultBorderRadius)
                             return False
                     
                     break

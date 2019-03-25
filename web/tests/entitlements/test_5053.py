@@ -14,13 +14,12 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Entitlements - Open Category
+    # Test Name : Entitlements - Open Category using Global Page
     # Test description:
-    # 1. Verify that an entry can be published inside a No Restricted Category
-    # 2. Verify that Normal KMS User, Member User are able to navigate to the category, entry published inside the category and add content to the category
-    # 3. Verify that Anonymous users, are able to navigate to the category, entry published inside the category but unable to contribute with content
+    # 1. Going to verify that the user is able to publish an entry inside a category
+    # 2. Going to verify that Anonymous User, KMS User and Category Member users are able to find both the entry, tag of the entry and category inside the Global Search results
     #================================================================================================================================
-    testNum = "5049"
+    testNum = "5053"
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
@@ -41,7 +40,7 @@ class Test:
     tags                 = "Tags,"
     entryName            = None
     entryDescription     = "description"
-    entryTags            = "tag1,"
+    entryTags            = "openauto,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -61,77 +60,77 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Entitlements - Open Category", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Entitlements - Open Category Entry Global Search", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
                 return
-            
+             
             writeToLog("INFO","Step 2: Going to publish the " + self.entryName + " to the " + self.categoryName)
             if self.common.myMedia.publishSingleEntry(self.entryName, self.categoryName, '') == False:
                 writeToLog("INFO","Step 2: FAILED to publish the " + self.entryName + " to the " + self.categoryName)
                 return
-            
+             
             writeToLog("INFO","Step 3: Going to log out from " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " and authenticate with KMS User" + self.normalMember)
             if self.common.login.logOutThenLogInToKMS(self.normalMember, self.userPass)  == False:
                 writeToLog("INFO","Step 3: FAILED to log out from " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " and authenticate with KMS User " + self.normalMember)
                 return
-     
-            writeToLog("INFO","Step 4: Going to verify that the " + self.categoryName + " can be accessed by KMS User " + self.normalMember)
-            if self.common.category.navigateToCategory(self.categoryName) == False:
-                writeToLog("INFO","Step 4: FAILED, the " + self.categoryName + " couldn't be accessed by KMS User " + self.normalMember)
+      
+            writeToLog("INFO","Step 4: Going to verify that for the " + self.normalMember + ", the " + self.categoryName + " category is displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyCategoryInGlobalSearch(self.categoryName) == False:
+                writeToLog("INFO","Step 4: FAILED, the "+ self.categoryName + " category was not present in the global search results, although it should be presented")
+                return
+              
+            writeToLog("INFO","Step 5: Going to verify that for the " + self.normalMember + " , the " + self.entryName + " entry is displayed in the global search results")
+            if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
+                writeToLog("INFO","Step 5: FAILED, the "+ self.entryName + " entry was expected to be presented in the global search results, while using " + self.normalMember)
                 return
             
-            writeToLog("INFO","Step 5: Going to verify that the " + self.entryName + " can be found by KMS User " + self.normalMember + " inside the " + self.categoryName)
-            if self.common.category.searchEntryInCategory(self.entryName) == False:
-                writeToLog("INFO","Step 5: FAILED, the " + self.entryName + " couldn't be found by KMS User " + self.normalMember + " inside the " + self.categoryName)
-                return
-            
-            writeToLog("INFO","Step 6: Going to verify that the KMS User " + self.normalMember + " its able to add content to " + self.categoryName)
-            if self.common.category.navigateToAddToCategory(self.categoryName) == False:
-                writeToLog("INFO","Step 6: FAILED the KMS User " + self.normalMember + " its unable to add content to " + self.categoryName)
-                return
+            writeToLog("INFO","Step 6: Going to verify that the tag: " + self.entryTags + " , was linked to the " + self.entryName + " entry and that it's displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyTagsInGlobalSearch(self.entryTags, self.entryName) == False:
+                writeToLog("INFO","Step 6: FAILED, the "+ self.entryTags + " couldn't be found in the Global Search results")
+                return 
             
             writeToLog("INFO","Step 7: Going to log out from " + self.normalMember + " and authenticate with Category Member " + self.categoryMember)
             if self.common.login.logOutThenLogInToKMS(self.categoryMember, self.userPass)  == False:
                 writeToLog("INFO","Step 7: FAILED to log out from " + self.normalMember + " and authenticate with Category Member " + self.categoryMember)
                 return
             
-            writeToLog("INFO","Step 8: Going to verify that the " + self.categoryName + " can be accessed by Category Member " + self.categoryMember)
-            if self.common.category.navigateToCategory(self.categoryName) == False:
-                writeToLog("INFO","Step 8: FAILED, the " + self.categoryName + " couldn't be accessed by Category Member " + self.categoryMember)
+            writeToLog("INFO","Step 8: Going to verify that for the " + self.categoryMember + ", the " + self.categoryName + " category is displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyCategoryInGlobalSearch(self.categoryName) == False:
+                writeToLog("INFO","Step 8: FAILED, the "+ self.categoryName + " category was not present in the global search results, although it should be presented")
+                return
+             
+            writeToLog("INFO","Step 9: Going to verify that for the " + self.categoryMember + " , the " + self.entryName + " entry is displayed in the global search results")
+            if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
+                writeToLog("INFO","Step 9: FAILED, the "+ self.entryName + " entry was expected to be presented in the global search results, while using " + self.categoryMember)
                 return
             
-            writeToLog("INFO","Step 9: Going to verify that the " + self.entryName + " can be found by Category Member " + self.categoryMember + " inside the " + self.categoryName)
-            if self.common.category.searchEntryInCategory(self.entryName) == False:
-                writeToLog("INFO","Step 9: FAILED, the " + self.entryName + " couldn't be found by Category Member " + self.categoryMember + " inside the " + self.categoryName)
-                return
-            
-            writeToLog("INFO","Step 10: Going to verify that the Category Member " + self.categoryMember + " its able to add content to " + self.categoryName)
-            if self.common.category.navigateToAddToCategory(self.categoryName) == False:
-                writeToLog("INFO","Step 10: FAILED the Category Member " + self.categoryMember + " its unable to add content to " + self.categoryName)
-                return
+            writeToLog("INFO","Step 10: Going to verify that the tag: " + self.entryTags + " , was linked to the " + self.entryName + " entry and that it's displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyTagsInGlobalSearch(self.entryTags, self.entryName) == False:
+                writeToLog("INFO","Step 10: FAILED, the "+ self.entryTags + " couldn't be found in the Global Search results")
+                return 
             
             writeToLog("INFO","Step 11: Going to log out from " + self.categoryMember + " and remain as " + self.anonymousUser)
             if self.common.login.logOutOfKMS()  == False:
                 writeToLog("INFO","Step 11: FAILED to log out from " + self.categoryMember + " and remain as " + self.anonymousUser)
                 return
             
-            writeToLog("INFO","Step 12: Going to verify that the " + self.categoryName + " can be accessed by " + self.anonymousUser)
-            if self.common.category.navigateToCategory(self.categoryName) == False:
-                writeToLog("INFO","Step 12: FAILED, the " + self.categoryName + " couldn't be accessed by " + self.anonymousUser)
+            writeToLog("INFO","Step 12: Going to verify that for the " + self.anonymousUser + ", the " + self.categoryName + " category is displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyCategoryInGlobalSearch(self.categoryName) == False:
+                writeToLog("INFO","Step 12: FAILED, the "+ self.categoryName + " category was not present in the global search results, although it should be presented")
+                return
+             
+            writeToLog("INFO","Step 13: Going to verify that for the " + self.anonymousUser + " , the " + self.entryName + " entry is displayed in the global search results")
+            if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
+                writeToLog("INFO","Step 13: FAILED, the "+ self.entryName + " entry was expected to be presented in the global search results, while using " + self.anonymousUser)
                 return
             
-            writeToLog("INFO","Step 13: Going to verify that the " + self.entryName + " can be found by " + self.anonymousUser + " inside the " + self.categoryName)
-            if self.common.category.searchEntryInCategory(self.entryName) == False:
-                writeToLog("INFO","Step 13: FAILED, the " + self.entryName + " couldn't be found by " + self.anonymousUser + " inside the " + self.categoryName)
-                return
-            
-            writeToLog("INFO","Step 14: Going to verify that the " + self.anonymousUser + " its unable to add content to " + self.categoryName)
-            if self.common.category.navigateToAddToCategory(self.categoryName) == True:
-                writeToLog("INFO","Step 14: FAILED the " + self.anonymousUser + " its able to add content to " + self.categoryName)
-                return           
+            writeToLog("INFO","Step 14: Going to verify that the tag: " + self.entryTags + " , was linked to the " + self.entryName + " entry and that it's displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyTagsInGlobalSearch(self.entryTags, self.entryName) == False:
+                writeToLog("INFO","Step 14: FAILED, the "+ self.entryTags + " couldn't be found in the Global Search results")
+                return     
             ##################################################################
             self.status="Pass"
             writeToLog("INFO","TEST PASSED: KMS has been successfully verified for a " + self.typeTest)

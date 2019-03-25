@@ -1586,7 +1586,13 @@ class Channel(Base):
     def navigateToMembersTab(self):
         if self.click(self.CHANNEL_MEMBERS_TAB) == False:
             writeToLog("INFO","Failed to click on members tab")
-            return False     
+            return False
+        sleep(2)
+        
+        if self.wait_while_not_visible(self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG, 40) == False:
+            writeToLog("INFO", "FAILED to navigate to the channel members tab")
+            return False
+           
         return True
     
     

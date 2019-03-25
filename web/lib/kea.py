@@ -56,6 +56,7 @@ class Kea(Base):
     EDITOR_TIMELINE                                                         = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
     EDITOR_TIME_PICKER                                                      = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
     EDITOR_REALTIME_MARKER                                                  = ('xpath', "//span[@class='realtime-marker__head-box-time']")
+    EDITOR_REALTIME_MARKER_CONTAINER                                        = ('xpath', "//div[contains(@class,'realtime-marker realtime-marker--sticky realtime-marker--no-box')]")
     EDITOR_TIMELINE_OPTION_RESET                                            = ('xpath', "//button[@aria-label='Reset']")
     EDITOR_TIMELINE_OPTION_UNDO                                             = ('xpath', "//button[@aria-label='Undo']")
     EDITOR_TIMELINE_OPTION_REDO                                             = ('xpath', "//button[@aria-label='Redo']")
@@ -118,12 +119,16 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD                                      = ('xpath', '//input[@id="inputUrl"]')
     KEA_HOTSPOTS_FORM_TEXT_STYLE                                            = ('xpath', '//label[contains(@class,"ui-dropdown-label ui-inputtext")]')
     KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE                                      = ('xpath', '//span[contains(@class,"ng-star-inserted") and text()="TEXT_STYLE"]')
-    KEA_HOTSPOTS_FORM_TEXT_COLOR                                            = ('xpath', '//div[@class="sp-preview-inner"]')
-    KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE                                      = ('xpath', '//input[@class="sp-input"]')
+    KEA_HOTSPOTS_FORM_COLOR                                                 = ('xpath', '//div[@class="sp-preview-inner"]')
+    KEA_HOTSPOTS_FORM_COLOR_VALUE                                           = ('xpath', '//input[@class="sp-input"]')
+    KEA_HOTSPOTS_FORM_TEXT_SIZE                                             = ('xpath', '//input[@id="textSize"]')
+    KEA_HOTSPOTS_FORM_ROUNDNESS                                             = ('xpath', '//input[@id="roundness"]')
     KEA_HOTSPOTS_PLAYER_BUTTON                                              = ('xpath', "//div[@class='hotspot__button']")
+    KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER                                   = ('xpath', "//div[contains(@class,'hotspot__container ui-draggable ui-draggable-handle')]")
     KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER                                  = ('xpath', '//div[contains(@class,"kea-timeline-stacked-item kea-timeline-stacked-item--audio-disabled")]')
-    KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT                       = ('xpath', '//div[contains(@class,"content-item__handle--right")]')
-    KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT                        = ('xpath', '//div[contains(@class,"content-item__handle--left")]')
+    KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT                       = ('xpath', '//div[contains(@class,"handle--right content-item__handle--selected")]')
+    KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT                        = ('xpath', '//div[contains(@class,"handle--left content-item__handle--selected")]')
+    KEA_TIMELINE_SECTION_HOTSPOT_TRIM_EDGE_BUTTONS                          = ('xpath', '//i[contains(@class,"kicon-trim_handle content-item__handle-icon")]')
     KEA_PLAYER_CONTAINER                                                    = ('xpath', '//div[@class="player-container"]')
     KEA_ADD_NEW_OPEN_QUESTION_BUTTON                                        = ('xpath', "//button[contains(@class,'open-question-question-type')]")
     KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE                                 = ('xpath', "//button[contains(@class,'open-question-question-type ng-star-inserted active')]")
@@ -2977,18 +2982,18 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, 'link.address', enums.textStyle.Style, 'color code'
-    # A hotspot list may contain only the hotspot title, or leave any other field empty
-    # hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '']
-    # hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, '', enums.textStyle.NORMAL, '']
-    # hotspotThree    = ['Hotspot Title Three', enums.keaLocation.CENTER, 'https://autothree.kaltura.com/', enums.textStyle.THIN, '']
-    # hotspotFour     = ['Hotspot Title Four', enums.keaLocation.BOTTOM_RIGHT, '', enums.textStyle.THIN, '']
-    # hotspotFive     = ['Hotspot Title Five', enums.keaLocation.BOTTOM_LEFT, '', enums.textStyle.THIN, '']
+    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
+    # A hotspot list may contain only the hotspot title
+    # If you want to specify only the Title, Location, and Text Size you can put '' string at the options that you don't want to be changed
+    # hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '#fafafa', '#fefefe', '', '']
+    # hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 5, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
+    # hotspotThree    = ['Hotspot Title Three', enums.keaLocation.CENTER, 15, 20, 'https://autothree.kaltura.com/', enums.textStyle.THIN, '', '', 12, 12]
+    # hotspotFour     = ['Hotspot Title Four', enums.keaLocation.BOTTOM_RIGHT, 20, 25, '', enums.textStyle.THIN, '', '', 12, 16]
+    # hotspotFive     = ['Hotspot Title Five', enums.keaLocation.BOTTOM_LEFT, 25, 30, '', enums.textStyle.BOLD, '', '', 18, 16]
     # hotspotsDict    = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
     # hotspotsDict must contain the following structure  = {'1':hotspotOne,'2':hotspotTwo}
     def hotspotCreation(self, hotspotsDict, openHotspotsTab=False):
         self.switchToKeaIframe()  
-        
         # Navigate to the Hotspot tab if needed
         if openHotspotsTab == True:
             if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
@@ -3034,37 +3039,92 @@ class Kea(Base):
                 return False
             
             # Verify if a link should be inserted
-            if len(hotspotDetails) > 2:
-                if hotspotDetails[2] != '':
-                    if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[2], True) == False:
-                        writeToLog("INFO", "FAILED to insert " + hotspotDetails[2] + " link inside the Link Field")
+            if len(hotspotDetails) > 4:
+                if hotspotDetails[4] != '':
+                    if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[4], True) == False:
+                        writeToLog("INFO", "FAILED to insert " + hotspotDetails[4] + " link inside the Link Field")
                         return False        
             
             # Verify if the font style should be changed
-            if len(hotspotDetails) > 3:
-                if hotspotDetails[3] != '':
-                    textStyle = (self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[0], self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[1].replace("TEXT_STYLE",  hotspotDetails[3].value))
+            if len(hotspotDetails) > 5:
+                if hotspotDetails[5] != '':
+                    textStyle = (self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[0], self.KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE[1].replace("TEXT_STYLE",  hotspotDetails[5].value))
                     if self.click(self.KEA_HOTSPOTS_FORM_TEXT_STYLE, 1, True) == False:
                         writeToLog("INFO", "FAILED to activate the Text Color drop down menu")
                         return False
                     
                     if self.click(textStyle, 1, True)== False:
-                        writeToLog("INFO", "FAILED to select the font style for  " + hotspotDetails[0] + " as " + hotspotDetails[2].value)
+                        writeToLog("INFO", "FAILED to select the font style for  " + hotspotDetails[0] + " as " + hotspotDetails[5].value)
                         return False
             
             # Verify if the font color should be changed
-            if len(hotspotDetails) > 4:
-                if hotspotDetails[4] != '':
-                    if self.click(self.KEA_HOTSPOTS_FORM_TEXT_COLOR, 1, True) == False:
-                        writeToLog("INFO", "FAILED to click on the Hotspot Color value field")
+            if len(hotspotDetails) > 6:
+                # Because Font Color and Background Color field have the same locators we use indexing [0] = Font color [1] = Background Color
+                colorPicker = self.wait_elements(self.KEA_HOTSPOTS_FORM_COLOR, 1)
+                if colorPicker == False:
+                    writeToLog("INFO", "FAILED to find the color picker option")
+                    return False
+                
+                if hotspotDetails[6] != '':
+                    if self.clickElement(colorPicker[0]) == False:
+                        writeToLog("INFO", "FAILED to click on the Hotspot Font Color button")
                         return False
                     
-                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_TEXT_COLOR_VALUE, hotspotDetails[4], True) == False:
-                        writeToLog("INFO", "FAILED to select the font color for  " + hotspotDetails[0] + " as " + hotspotDetails[4].value)
+                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_COLOR_VALUE, hotspotDetails[6], True) == False:
+                        writeToLog("INFO", "FAILED to select the font color for  " + hotspotDetails[0] + " as " + hotspotDetails[6].value)
                         return False
                     
                     if self.clsCommon.sendKeysToBodyElement(Keys.ENTER) != True:
                         writeToLog("INFO", "FAILED to save the color by clicking on the enter button")
+                        return False
+                    
+                    if self.clickElement(colorPicker[0]) == False:
+                        writeToLog("INFO", "FAILED to collapse the Hotspot Font Color tool tip menu")
+                        return False
+                    
+            # Verify if the background color should be changed
+            if len(hotspotDetails) > 7:
+                if hotspotDetails[7] != '':
+                    if self.clickElement(colorPicker[1]) == False:
+                        writeToLog("INFO", "FAILED to click on the Background Color button")
+                        return False
+                    
+                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_COLOR_VALUE, hotspotDetails[7], True) == False:
+                        writeToLog("INFO", "FAILED to select the background color for  " + hotspotDetails[0] + " as " + hotspotDetails[7].value)
+                        return False
+                    
+                    if self.clsCommon.sendKeysToBodyElement(Keys.ENTER) != True:
+                        writeToLog("INFO", "FAILED to save the color by clicking on the enter button")
+                        return False
+                    
+                    if self.clickElement(colorPicker[1]) == False:
+                        writeToLog("INFO", "FAILED to collapse the Background Color tool tip menu")
+                        return False
+                    
+            # Verify if the Font Size should be changed
+            if len(hotspotDetails) > 8:
+                if hotspotDetails[8] != '':
+                    # Selecting the Text Input Field
+                    if self.click(self.KEA_HOTSPOTS_FORM_TEXT_SIZE, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the form text size input field for " + hotspotDetails[0] + " hotspot")
+                        return False
+                    
+                    # Changing the value of the Text Size
+                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_TEXT_SIZE, str(hotspotDetails[8]), True) == False:
+                        writeToLog("INFO", "FAILED to change the font size to " + str(hotspotDetails[8]) + " for " + hotspotDetails[0] + " hotspot")
+                        return False
+                    
+            # Verify if the Roundness of the Hotspot Container should be changed
+            if len(hotspotDetails) > 9:
+                if hotspotDetails[9] != '':
+                    # Selecting the Roundness Input Field
+                    if self.click(self.KEA_HOTSPOTS_FORM_ROUNDNESS, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the roundness input field for " + hotspotDetails[0] + " hotspot")
+                        return False
+                    
+                    # Changing the value of the Roundness Size
+                    if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_ROUNDNESS, str(hotspotDetails[9]), True) == False:
+                        writeToLog("INFO", "FAILED to change the font size to " + str(hotspotDetails[9]) + " for " + hotspotDetails[0] + " hotspot")
                         return False
 
             # Save the settings hotspot in the hotspot list
@@ -3080,7 +3140,12 @@ class Kea(Base):
             if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
                 writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
                 return False
-        
+            
+            # Set the start time and end time for the hotspot
+            if hotspotDetails[2] != None or hotspotDetails[3] != None:
+                if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                    writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
+                    return False
         
         hotspotNameList = []
         for hotspotNumber in hotspotsDict:
@@ -3096,44 +3161,128 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # hotspotsDict must contain the following structure  = {'1':hotspotOne,'2':hotspotTwo}
-    def hotspotCuePoint(self, hotspotName='testspecial', startTime=None, endTime=None):
+    # This function will place the desired hotspot to the desired location
+    # startTime and endTime must be integer
+    # startTime represents the place from where the hotspot will be placed
+    # endTime represents the place from where the hotspots will end
+    def hotspotCuePoint(self, hotspotName, startTime=None, endTime=None):
         self.switchToKeaIframe()  
         
+        # Verify that the Hotspot section is present
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 5, True) == False:
-            writeToLog("INFO", "FAILED To take the details")
-            
-        presentedHotspots = self.wait_elements(self.KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER, 15)
+            writeToLog("INFO", "FAILED To verify that we are in the Hotspots Section")
+            return False
         
+        # Take entrie's total time length and presented hotspots
+        presentedHotspots = self.wait_elements(self.KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER, 15)
+        entryTotalTime    = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(' ', '')[1:]
+        m, s = entryTotalTime.split(':')
+        entryTotalTimeSeconds   = int(m) * 60 + int(s)
+        
+        # Verify that at least one hotspot is presented
         if presentedHotspots == False:
             writeToLog("INFO", "FAILED to take the presetend hotspots")
             return False
-             
+        
+        # Change the start time and end time for the desired hotspotName from the presented hotspots
         for x in range(0, len(presentedHotspots)):
             presentedHotspot         = presentedHotspots[x]
-            presentedHotspotLocation = presentedHotspot.location['x']
             presentedHotspotTitle    = presentedHotspot.text
-            hotspotContainerRight    = self.wait_element(self.KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT, 5, True)
+            presentedHotspotWidth    = presentedHotspot.size['width']
+            widthSizeForOneSecond    = presentedHotspotWidth/entryTotalTimeSeconds
             
+            # Verify that the hostpotName is a match with the presented Hotspots
             if presentedHotspotTitle == hotspotName:
-                writeToLog("INFO", "Continue to move")
+                # Highlight the correct hotspot in order to activate the editing options              
+                writeToLog("INFO", "Going to set for " + hotspotName + " start time to " + str(startTime) + " and end time to " + str(endTime))
                 if self.clickElement(presentedHotspot) == False:
                     writeToLog("INFO", "FAILED to highlight the " + presentedHotspot.text + " hotspot")
                     return False
                 
-            if presentedHotspotLocation == 96:
-                action = ActionChains(self.driver)
-                # Move the quiz number to a new timeline location
+                # Take the element that will be used in order to set the start time
+                hotspotContainerRight      = self.wait_element(self.KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT, 5, True)
+                
+                # Take the element that will be used in order to set the end time
+                hotspotContainerLeft       = self.wait_element(self.KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT, 5, True)
+                
+                # Verify that the hotspot options are available
+                if hotspotContainerRight == False or hotspotContainerLeft == False:
+                    writeToLog("INFO", "FAILED to select the " + presentedHotspot + " hotspot")
+                    return False
+
+                # The overlay element it's the real time marker that was dragged by action chain instead of the desired hotspot
                 try:
-                    action.move_to_element(presentedHotspot).pause(1).click_and_hold().move_by_offset(-350.7, 0).release().perform()
+                    overlayElement = self.wait_element(self.EDITOR_REALTIME_MARKER_CONTAINER, 5)
+                    self.driver.execute_script("arguments[0].setAttribute('style','display:none;')", overlayElement)
+                    sleep(1)
                 except Exception:
-                    writeToLog("INFO", "FAILED to move questiseconds")
+                    writeToLog("INFO", "FAILED to dismiss the real time maker while editing the cue points")
                     return False
                 
-            if x == len(presentedHotspots):
+                # Set the action chain for start time
+                actionStartTime = ActionChains(self.driver)
+                # Set the desired start time of the hotspot
+                if startTime != None:
+                    widthSizeInOrderToReachDesiredStartTime = widthSizeForOneSecond * startTime
+                    
+                    try:
+                        actionStartTime.drag_and_drop_by_offset(hotspotContainerLeft, widthSizeInOrderToReachDesiredStartTime, 0).pause(1).perform()
+                    except Exception:
+                        writeToLog("INFO", "FAILED to set the start time for " + hotspotName + " to " + str(startTime) + " second")
+                        return False
+                    
+                
+                # Set the action chain for end time
+                actionEndTime = ActionChains(self.driver)
+                # Set the desired end time of the hotspot 
+                if endTime != None:
+                    
+                    # Verify that the end time its within boundaries
+                    secondsToDecrease = 0
+                    if endTime > entryTotalTimeSeconds:
+                        writeToLog("INFO", "The end time of " + str(endTime) + " seconds, for " + hotspotName + " exceeds the entry total time of " + str(entryTotalTimeSeconds) + " seconds")
+                        return False
+                    
+                    # Take the number of seconds that we need to decrease in order to reach the desired end time
+                    while entryTotalTimeSeconds != endTime:
+                        entryTotalTimeSeconds -= 1
+                        secondsToDecrease += 1
+                    
+                    # Take the number of pixels that we need to decrease in order to reach the desired end time
+                    widthSizeInOrderToReachDesiredEndTime = widthSizeForOneSecond * secondsToDecrease
+                    
+                    try:
+                        actionEndTime.drag_and_drop_by_offset(hotspotContainerRight, -widthSizeInOrderToReachDesiredEndTime, 0).pause(1).perform()
+                    except Exception:
+                        writeToLog("INFO", "FAILED to set the end time for " + hotspotName + " to " + str(endTime) + " second")
+                        return False
+                
+                # Re-display the real time marker after changing the hotspot size
+                try:
+                    self.driver.execute_script("arguments[0].setAttribute('style','display;')", overlayElement)
+                    sleep(1)
+                except Exception:
+                    writeToLog("INFO", "FAILED to re display the real time maker after editing the hotspots cue points")
+                    return False
+                
+                # Save the new cue point changes
+                if self.click(self.KEA_HOTSPOTS_SAVE_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to save the hotspot changes")
+                    return False
+                
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
+                    writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
+                    return False
+                
+                break
+            
+            
+            # Verify that the hostpoName was a match with at least one presented hotspot 
+            if x + 1 == len(presentedHotspots):
                 writeToLog("INFO", "FAILED to find the expected hostpot within the presented hotspots")
-                return False            
-        
+                return False
+                   
+        writeToLog("INFO", "Hotspot: " + hotspotName + " has been successfully set to " + str(startTime) + " start time and " + str(endTime) + " end time")
         return True
     
     
@@ -3170,13 +3319,19 @@ class Kea(Base):
             y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
             
         elif location == enums.keaLocation.CENTER:
-            # width size of the hotspot button, divided by two in order to align it to the center more properly
-            x = 128/2
+            # In order to proper align the hotspot to the center we need to take container's width, if no container is presented we will divide by the default value 
+            containerSize = self.wait_element(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER).size['width']
+            if type(containerSize) is not int:
+                writeToLog("INFO", "No hotspots information that contains container size were given")
+                # Use the default value
+                containerSize = 128
+            
+            # width size of the hotspot button, divided by two in order to align it to the center properly
+            x = containerSize/2
             
         else:
             writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA Location")
             return False
-        
         
         action = ActionChains(self.driver)
         # Move the quiz number to a new timeline location
