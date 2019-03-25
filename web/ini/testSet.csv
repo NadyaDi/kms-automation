@@ -378,7 +378,9 @@ test_4937,0,1,0,0,Editor: Reset timeline functionality
 test_4938,0,1,0,0,Editor: Redo timeline functionality
 test_4939,0,1,0,0,Editor: Undo timeline functionality
 test_4955,0,1,0,0,Editor: Trim Quiz entry (with Slides and Captions)
-test_4956,0,1,0,0,Hotspots: Verify that hotspots can be created for normal entries
+test_4981,1,0,0,0,Entitlements - Entry Private with Initial Owner and Changed Owner
+test_4983,1,0,0,0,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher
+test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
 test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
 test_4999,1,0,0,0,Entitlements - Private Channel using Channels Page
 test_5009,1,0,0,0,Entitlements - Open Channel using Channels Page
@@ -393,14 +395,15 @@ test_5026,1,0,0,0,Entitlements - Restricted Channel using Global Page
 test_5027,1,0,0,0,Entitlements - Shared Repository Channel using Global Search
 test_5028,1,0,0,0,Entitlements - Public Channel using Global Page and Anonymous Users ON
 test_5036,1,0,0,0,Entitlements - Public Channel using Global Page and Anonymous Users OFF
-test_4981,1,0,0,0,Entitlements - Entry Private with Initial Owner and Changed Owner
-test_4983,1,0,0,0,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher
-test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
 test_5045,1,0,0,0,Entitlements - Entry Private with Initial Owner changed to Co Viewer
 test_5046,1,0,0,0,Entitlements - Entry Private with Co Viewer
 test_5049,1,0,0,0,Entitlements - Open Category
 test_5051,1,0,0,0,Entitlements - Private Category
 test_5052,1,0,0,0,Entitlements - Restricted Category
+test_5053,1,0,0,0,Entitlements - Open Category using Global Page
+test_5054,1,0,0,0,Entitlements - Private Category using Global Page
+test_5055,1,0,0,0,Entitlements - Restricted Category using Global Page
+test_4956,0,1,0,0,Hotspots: Verify that hotspots can be created for normal entries
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
