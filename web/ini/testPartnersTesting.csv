@@ -257,3 +257,6 @@ test_5046,Entitlements - Entry Private with Co Viewer,6269,qakmstest.dev.kaltura
 test_5049,Entitlements - Open Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5051,Entitlements - Private Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5052,Entitlements - Restricted Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5053,Entitlements - Open Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5054,Entitlements - Private Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5055,Entitlements - Restricted Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456

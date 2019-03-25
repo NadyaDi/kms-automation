@@ -393,6 +393,9 @@ test_4719,Quiz - Open-Q,5447,qakmstest.dev.kaltura.com,automation.kms@gmail.com,
 test_4799,Quiz - Retake quiz Latest score,5447,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,admin,123456
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots: Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4999,Entitlements - Private Channel using Channels Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5009,Entitlements - Open Channel using Channels Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -412,6 +415,9 @@ test_5046,Entitlements - Entry Private with Co Viewer,2501881,qakmstest.dev.kalt
 test_5049,Entitlements - Open Category,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5051,Entitlements - Private Category,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5052,Entitlements - Restricted Category,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5053,Entitlements - Open Category using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5054,Entitlements - Private Category using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5055,Entitlements - Restricted Category using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -693,6 +699,3 @@ test_4739,eSearch - Filter by media type with search - add to channel SR tab,244
 test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4852,Recscheduling - Create new single event,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
-test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!

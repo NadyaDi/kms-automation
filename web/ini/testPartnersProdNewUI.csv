@@ -279,6 +279,9 @@ test_5046,Entitlements - Entry Private with Co Viewer,2501881,mediaspace.kaltura
 test_5049,Entitlements - Open Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5051,Entitlements - Private Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5052,Entitlements - Restricted Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5053,Entitlements - Open Category using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5054,Entitlements - Private Category using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5055,Entitlements - Restricted Category using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2504461,mediaspace.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2504461,mediaspace.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
