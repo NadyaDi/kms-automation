@@ -128,7 +128,7 @@ class Kea(Base):
     KEA_ADD_NEW_OPEN_QUESTION_BUTTON                                        = ('xpath', "//button[contains(@class,'open-question-question-type')]")
     KEA_ADD_NEW_OPEN_QUESTION_BUTTON_ACTIVE                                 = ('xpath', "//button[contains(@class,'open-question-question-type ng-star-inserted active')]")
     KEA_ALLOW_MULTIPLE_ATTEMPTS_OPTION_GRAYED_OUT                           = ('xpath', '//label[@class="ui-chkbox-label ng-star-inserted" and text()="Allow Multiple Attempts"]')
-    KEA_NUMBER_OF_ALLOW_ATTEMPTS_ARROW_UP                                   = ('xpath', '//button[@class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default"]')
+    KEA_NUMBER_OF_ALLOW_ATTEMPTS                                            = ('xpath', '//input[@name="attemptsAllowed"]')
     KEA_SCORE_TYPE_DROP_DOWN                                                = ('xpath', '//label[contains(@class,"ui-dropdown-label ui-inputtext ui-corner-all ng-star-inserted")]')
     KEA_SCORE_TYPE_OPTION                                                   = ('xpath', '//span[contains(@class, "ng-star-inserted") and text()="SCORE_TYPE"]')
     #============================================================================================================
@@ -1377,10 +1377,9 @@ class Kea(Base):
                 
             elif keaOptionDict[options] != '':
                 if options == enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:
-                    for i in range(0, keaOptionDict[options]-2):
-                        if self.click(self.KEA_NUMBER_OF_ALLOW_ATTEMPTS_ARROW_UP) == False:
-                            writeToLog("INFO", "FAILED to click on arrow up")
-                            return False 
+                    if self.clear_and_send_keys(self.KEA_NUMBER_OF_ALLOW_ATTEMPTS, keaOptionDict[options]) == False:
+                        writeToLog("INFO", "FAILED to insert number of allow attempts")
+                        return False 
                         
                 elif options == enums.KEAQuizOptions.QUIZ_SCORE_TYPE: 
                     if self.click(self.KEA_SCORE_TYPE_DROP_DOWN) == False:
