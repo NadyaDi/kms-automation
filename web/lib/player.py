@@ -1219,7 +1219,7 @@ class Player(Base):
     # skipWelcomeScreen = True it will wait and click on the continue button
     # Reflection Point questions, should not be present in the list
     # This function works only when the "ALLOW SKIP" option is enabled
-    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False):     
+    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict=''):     
         if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed) == False:
             return False
          
@@ -1260,56 +1260,59 @@ class Player(Base):
             if activeQuestion in questionDict:
                 #after the active question matches with one from our dictionary, we take the answer assigned for that question
                 activeAnswer = questionDict[activeQuestion]
-                tmpAnswerName = (self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[0], self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[1].replace('ANSWER_TEXT', activeAnswer))
+                
+                # If it's an open-Q we want to skip this part, because the answer isn't displayed yet
+                if "Open-Q" not in  activeAnswer:
+                    tmpAnswerName = (self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[0], self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[1].replace('ANSWER_TEXT', activeAnswer))
                  
-                if self.wait_element(tmpAnswerName, 5, True) == False:
-                    writeToLog("INFO", "The " + activeAnswer + " has not been found in the " + activeQuestion + " question page")
-                    return False
+                    if self.wait_element(tmpAnswerName, 5, True) == False:
+                        writeToLog("INFO", "The " + activeAnswer + " has not been found in the " + activeQuestion + " question page")
+                        return False
                       
-                if self.click(tmpAnswerName, 10, True) == False:
-                    writeToLog("INFO", "FAILED to select the " + activeAnswer + " answer")
-                    return False
+                    if self.click(tmpAnswerName, 10, True) == False:
+                        writeToLog("INFO", "FAILED to select the " + activeAnswer + " answer")
+                        return False
                   
-                if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECT_BUTTON, 5, True) == False and self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
-                    writeToLog("INFO", "FAILED to confirm the " + activeAnswer + " answer" )
-                    return False
+                    if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECT_BUTTON, 5, True) == False and self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "FAILED to confirm the " + activeAnswer + " answer" )
+                        return False
                   
-                if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
-                    writeToLog("INFO", "The " + activeAnswer + " is not displayed as being selected")
-                    return  False   
+                    if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "The " + activeAnswer + " is not displayed as being selected")
+                        return  False   
                  
-                #after each Quiz Question answered, we increment it by one, so at the end we will know if all the Quiz Question from our dictionary were answered or not        
-                questionsFound += 1
-                self.wait_while_not_visible(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 10)
+                    #after each Quiz Question answered, we increment it by one, so at the end we will know if all the Quiz Question from our dictionary were answered or not        
+                    questionsFound += 1
+                    self.wait_while_not_visible(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 10)
              
-            elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
-                writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
-                # Due to the fact that Reflection Points cannot be answered, we increment the number of question found and given questions by one ( without being present in our questionDict)
-                questionsFound += 1
-                givenQuestions += 1
+                elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
+                    writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
+                    # Due to the fact that Reflection Points cannot be answered, we increment the number of question found and given questions by one ( without being present in our questionDict)
+                    questionsFound += 1
+                    givenQuestions += 1
                 
-                sleep(1)
-                # If the Question is a Reflection Point, we will click on the continue button
-                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
-                    writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
-                    return False
+                    sleep(1)
+                    # If the Question is a Reflection Point, we will click on the continue button
+                    if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
+                        writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
+                        return False
                 
-            elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER, 1, True) != False:
-                writeToLog("INFO", "AS EXPECTED, open-Q Screen has been found")
+                elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER, 1, True) != False:
+                    writeToLog("INFO", "AS EXPECTED, open-Q Screen has been found")
                 
-                sleep(1)
-                # Insert answer to the open-Q                              
-                if self.send_keys(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT, questionDict[1]) == False:
-                    writeToLog("INFO", "FAILED to add answer to open-Q")
-                    return False
+                    sleep(1)
+                    # Insert answer to the open-Q                              
+                    if self.send_keys(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT, activeAnswer) == False:
+                        writeToLog("INFO", "FAILED to add answer to open-Q")
+                        return False
                                      
-                if self.click(self.PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN) == False:
-                    writeToLog("INFO", "FAILED to save answer to open-Q")
-                    return False
+                    if self.click(self.PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN) == False:
+                        writeToLog("INFO", "FAILED to save answer to open-Q")
+                        return False
                 
-                questionsFound += 1
+                    questionsFound += 1
                 
-                sleep(4)                 
+                    sleep(4)                 
             else:
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
@@ -1337,7 +1340,7 @@ class Player(Base):
             
             # We verify the expected quiz score
             if expectedQuizScore != '':
-                if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, embed) == False:
+                if self.verifySubmittedScreen(expectedQuizScore, location, verifySubmittedScreenDict, expectedQuestionsStateDict, 30, embed) == False:
                     return False
              
             return True

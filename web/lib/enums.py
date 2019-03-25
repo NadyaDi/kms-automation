@@ -687,8 +687,8 @@ class keaQuizScoreType(Enum):
     def __str__(self):
         return str(self.value)    
     
-    LATEST        = "Latest"
-    FIRST         = "First" 
-    HIGHEST       = "Highest" 
-    LOWEST        = "Lowest"
-    AVERAGE       = "Average"
+    LATEST        = "Latest Attempt"
+    FIRST         = "First Attempt" 
+    HIGHEST       = "Highest Attempt" 
+    LOWEST        = "Lowest Attempt"
+    AVERAGE       = "Average of all Attempts"

@@ -83,18 +83,18 @@ class Test:
 #                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
 #                 return
 #                                                                
-#             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
-#             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
-#                 return
-#             
-#             writeToLog("INFO","Step 5: Going to navigate to KEA Quiz tab for " + self.entryName)  
-#             if self.common.kea.initiateQuizFlow(self.quizEntryName, navigateToEntry=True) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 5: FAILED to navigate to KEA Quiz tab for " + self.entryName)  
-#                 return 
-#             
+            writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
+            if self.common.kea.quizCreation('timeline.mp4', self.questionDict, timeout=35) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+                return
+             
+            writeToLog("INFO","Step 5: Going to navigate to KEA Quiz tab for " + self.entryName)  
+            if self.common.kea.initiateQuizFlow('timeline.mp4 - Quiz', navigateToEntry=True) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5: FAILED to navigate to KEA Quiz tab for " + self.entryName)  
+                return 
+             
             i = 6
              
             for option in self.keaAllScoreOptionsList:
@@ -109,7 +109,15 @@ class Test:
                         i = i + 1                     
                         optionNumber = optionNumber + 1
              
-               
+            self.common.base.switch_to_default_content()
+            
+            writeToLog("INFO","Step " + str(i) + ": Going to navigate to " + self.quizEntryName + " page")  
+            if self.common.entryPage.navigateToEntryPageFromMyHistory(self.quizEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to " + self.quizEntryName + " page")
+                return   
+            
+            
             ##################################################################
             self.status = "Pass"
             writeToLog("INFO","TEST PASSED: Open-Q is added sucssefully")
