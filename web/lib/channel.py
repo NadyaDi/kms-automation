@@ -194,7 +194,10 @@ class Channel(Base):
                 writeToLog("INFO","FAILED navigate to my channels")
                 return False
                 
-            
+            if self.wait_element(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON, timeout=10, multipleElements= True) == True:
+                self.click(self.clsCommon.kafGeneric.KAF_CLEAR_SREACH_ICON)
+                self.clsCommon.general.waitForLoaderToDisappear()
+                
             if self.searchAChannelInMyChannels(channelName) == False:
                 writeToLog("INFO","FAILED to search in my channels")
                 return False
