@@ -48,6 +48,11 @@ class  GlobalSearch(Base):
     GLOBAL_SEARCH_ENTRY_RESUTLT_NAME                    = ('xpath', '//span[@class="results-entry__name"]')
     GLOBAL_SEARCH_NO_RESULTS_ALERT_QUIZ                 = ('xpath', "//div[@id='quizMyMedia_scroller_alert']")
     GLOBAL_SEARCH_NO_RESULTS_ALERT_FLTER                = ('xpath', "//div[@class='no-results_body']")
+    GLOBAL_SEARCH_SHOW_MORE_DETAILS                     = ('xpath', "//span[@aria-label='Show More']")
+    GLOBAL_SEARCH_TAG_RESULT                            = ('xpath', "//span[contains(@class,'tag search-results') and @aria-label='TAG_NAME']")
+    GLOBAL_SEARCH_CONTAINER_RESULTS                     = ('xpath', "//div[contains(@class,'results-entry')]")
+    GLOBAL_SEARCH_LOADING_DETAILS                       = ('xpath', "//div[contains(@class,'scroll-loader-msg')]")
+    GLOBAL_SEARCH_CHANNEL_FOUND_CONTAINER               = ('xpath', "//div[@class='row-fluid channelSearchResult']")
     #============================================================================================================#
     
     # Author: Michal Zomper
@@ -87,7 +92,7 @@ class  GlobalSearch(Base):
             writeToLog("INFO","FAILED, the search word that was found is not the correct one. search word is: " + searchWord + " and what was found is: " + result.text)
             return False
             
-        writeToLog("INFO","Success, search word was found and verify")    
+        writeToLog("INFO","Success, search word: " + searchWord + ", was found and verify")    
         return True
     
     
@@ -469,4 +474,82 @@ class  GlobalSearch(Base):
                     return False
                  
         writeToLog("INFO","Success, Only the correct media display in global page")
+        return True
+    
+
+    # Author: Horia Cus
+    # The function will verify the tag results from global search
+    # If entryName contains the tag itself, the function will verify if the entry was displayed in the global search results
+    # If expectedChannelName contains the tag itself, the function will verify if the channel was displayed in the global search results
+    def serchAndVerifyTagsInGlobalSearch(self, tag, expectedEntryName='', expectedChannelName=''):
+        if self.searchInGlobalsearch(tag) == False:
+            writeToLog("INFO","FAILED to search in global search ")
+            return False
+        
+        # Remove the ',' from the suffix of the tag
+        tag = tag.replace(',', '')
+        
+        if expectedEntryName != '':
+            self.showAllEntriesInGloablPage(60)
+            sleep(2)
+            # Take the details from the presented entries
+            presentedEntries     = self.wait_elements(self.GLOBAL_SEARCH_CONTAINER_RESULTS, 3)
+            # Take the elements for each 'Show More' button
+            showMoreList         = self.wait_elements(self.GLOBAL_SEARCH_SHOW_MORE_DETAILS, 3)
+            
+            # Verify if at least one entry was found
+            if presentedEntries == False or showMoreList == False:
+                writeToLog("INFO", "FAILED, no matches were found while using " + tag + " tag")
+                return False
+        
+            # Activate all the details for each available container
+            for x in range(0, len(showMoreList)):
+                if self.clickElement(showMoreList[x]) == False:
+                    writeToLog("INFO", "FAILED to click on the " + str(x+1) + " entry show more button")
+                    return False
+                
+                sleep(0.2)
+                if self.wait_while_not_visible(self.GLOBAL_SEARCH_LOADING_DETAILS, 15) == False:
+                    writeToLog("INFO", "FAILED to load the entry details, after clicking on the show more button")
+                    return False
+            
+            # Verify that the tag was found inside the lists
+            tagLocator = (self.GLOBAL_SEARCH_TAG_RESULT[0], self.GLOBAL_SEARCH_TAG_RESULT[1].replace('TAG_NAME', tag))
+            if self.wait_element(tagLocator, 1, True) == False:
+                writeToLog("INFO", "FAILED to find the tag: " + tag)
+                return False
+        
+            # Verify that the tag used, called a desired entry
+            for x in range(0, len(presentedEntries)):
+                # Verify that the details from the current entry matches with the expected entryName
+                if presentedEntries[x].text.count(expectedEntryName) == 1:
+                    writeToLog("INFO", "The tag: " + tag + " was presented for the " + expectedEntryName + " inside the global search results")
+                    break
+                
+                # Verify that the entryName was found within the available tries
+                if x + 1 == len(presentedEntries):
+                    writeToLog("INFO", "FAILED to find the " + expectedEntryName + " based on the tag: " + tag)
+                    return False
+                
+        if expectedChannelName != '':
+            # Take the details from the presented channels
+            presentedChannels     = self.wait_elements(self.GLOBAL_SEARCH_CHANNEL_FOUND_CONTAINER, 3)
+            
+            if presentedChannels == False:
+                writeToLog("INFO", "FAILED, no channel was found while using " + tag + " tag")
+                return False
+            
+            # Verify that the tag used, called a desired channel
+            for x in range(0, len(presentedChannels)):
+                # Verify that the details from the current channel matches with the expected channelName
+                if presentedChannels[x].text.count(expectedChannelName.upper()) == 1:
+                    writeToLog("INFO", "The tag: " + tag + " was presented for the " + expectedChannelName + " inside the global search results")
+                    break
+                
+                # Verify that the channelName was found within the available tries
+                if x + 1 == len(presentedChannels):
+                    writeToLog("INFO", "FAILED to find the " + expectedChannelName + " based on the tag: " + tag)
+                    return False
+
+        writeToLog("INFO", "The tag: " + tag + " has been successfully find inside the Global Search Results")
         return True

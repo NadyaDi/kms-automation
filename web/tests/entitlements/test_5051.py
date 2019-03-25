@@ -125,9 +125,9 @@ class Test:
                 writeToLog("INFO","Step 12: FAILED the Contributor Member " + self.contributorMember + " its unable to add content to " + self.categoryName)
                 return
             
-            writeToLog("INFO","Step 13: Going to log out from " + self.categoryMember + " and remain as " + self.anonymousUser)
+            writeToLog("INFO","Step 13: Going to log out from " + self.contributorMember + " and remain as " + self.anonymousUser)
             if self.common.login.logOutOfKMS()  == False:
-                writeToLog("INFO","Step 13: FAILED to log out from " + self.categoryMember + " and remain as " + self.anonymousUser)
+                writeToLog("INFO","Step 13: FAILED to log out from " + self.contributorMember + " and remain as " + self.anonymousUser)
                 return
             
             writeToLog("INFO","Step 14: Going to verify that the " + self.categoryName + " can not be accessed by" + self.anonymousUser)

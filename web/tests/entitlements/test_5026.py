@@ -20,8 +20,8 @@ class Test:
     # 2. Publish an entry inside the Restricted Channel
     # 3. Add a member and a contributor to the Restricted channel
     # 4. Verify that the Channel owner its able to find the private channel inside the global search results
-    # 5. Verify that the Anonymous user is unable to find the private channel and entry inside the global search results
-    # 6. Verify that Logged in KMS users, Restricted Channel Members and Contributors are able to find the private channel and entry inside the global search results
+    # 5. Verify that the Anonymous user is unable to find the private channel, entry by tag and entry inside the global search results
+    # 6. Verify that Logged in KMS users, Restricted Channel Members and Contributors are able to find the private channel, entry by tag and entry inside the global search results
     #================================================================================================================================
     testNum = "5026"
 
@@ -45,11 +45,11 @@ class Test:
     tags                = "Tags,"
     entryName           = None
     entryDescription    = "Restricted Entry Description"
-    entryTags           = "restricted,"
+    entryTags           = "restrictechannelauto,"
     
     channelName         = None
     channelDescription  = "Restricted Channel Description"
-    channelTags         = "restricted,"
+    channelTags         = "restrictechannelauto,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -116,50 +116,65 @@ class Test:
             if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) != False:
                 writeToLog("INFO","Step 9: FAILED, the "+ self.entryName + " entry has been displayed in the global search results while it shouldn't")
                 return  
+            
+            writeToLog("INFO","Step 10: Going to verify that the tag: " + self.entryTags + " , doesn't link to the " + self.entryName + " entry, or " + self.channelName + " channel in global search results")
+            if self.common.globalSearch.serchAndVerifyTagsInGlobalSearch(self.entryTags, self.entryName, self.channelName) != False:
+                writeToLog("INFO","Step 10: FAILED, the "+ self.entryTags + " linked to the " + self.entryName + " entry, or " + self.channelName + " channel in global search results")
+                return
              
-            writeToLog("INFO","Step 10: Going to authenticate with , " + self.normalUser + " normal KMS user")
+            writeToLog("INFO","Step 11: Going to authenticate with , " + self.normalUser + " normal KMS user")
             if self.common.login.loginToKMS(self.normalUser, self.userPassword) == False:
-                writeToLog("INFO","Step 10: FAILED to authenticate with , " + self.normalUser + " normal KMS user")
+                writeToLog("INFO","Step 11: FAILED to authenticate with , " + self.normalUser + " normal KMS user")
                 return
              
-            writeToLog("INFO","Step 11: Going to verify that for the " + self.normalUser + ", the " + self.channelName + " channel is displayed in global search")
+            writeToLog("INFO","Step 12: Going to verify that for the " + self.normalUser + ", the " + self.channelName + " channel is displayed in global search")
             if self.common.globalSearch.serchAndVerifyChannelInGlobalSearch(self.channelName) == False:
-                writeToLog("INFO","Step 11: FAILED, the "+ self.channelName + " channel hasn't been found in in the global search results while it should")
+                writeToLog("INFO","Step 12: FAILED, the "+ self.channelName + " channel hasn't been found in in the global search results while it should")
                 return
              
-            writeToLog("INFO","Step 12: Going to verify that for the " + self.normalUser + " , the " + self.entryName + " entry is displayed in global search")
+            writeToLog("INFO","Step 13: Going to verify that for the " + self.normalUser + " , the " + self.entryName + " entry is displayed in global search")
             if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
-                writeToLog("INFO","Step 12: FAILED, the " + self.entryName + " entry hasn't been found displayed in in the global search results while it should")
+                writeToLog("INFO","Step 13: FAILED, the " + self.entryName + " entry hasn't been found displayed in in the global search results while it should")
+                return
+            
+            writeToLog("INFO","Step 14: Going to verify that the tag: " + self.entryTags + " , linked to the " + self.entryName + " entry, and " + self.channelName + " channel and that it's displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyTagsInGlobalSearch(self.entryTags, self.entryName, self.channelName) == False:
+                writeToLog("INFO","Step 14: FAILED, the "+ self.channelName + " channel, and " + self.entryName + " entry couldn't be found in  Global Search results, while using " + self.entryTags + " tag")
                 return 
             
-            writeToLog("INFO","Step 13: Going to log out from " + self.normalUser + " and authenticate with " + self.memberUser)
+            writeToLog("INFO","Step 15: Going to log out from " + self.normalUser + " and authenticate with " + self.memberUser)
             if self.common.login.logOutThenLogInToKMS(self.memberUser, self.userPassword) == False:
-                writeToLog("INFO","Step 13: FAILED to log out from " + self.normalUser + " and authenticate with " + self.memberUser)
+                writeToLog("INFO","Step 15: FAILED to log out from " + self.normalUser + " and authenticate with " + self.memberUser)
                 return
 
-            writeToLog("INFO","Step 14: Going to verify that for the " + self.memberUser + ", the " + self.channelName + " channel is displayed in global search")
+            writeToLog("INFO","Step 16: Going to verify that for the " + self.memberUser + ", the " + self.channelName + " channel is displayed in global search")
             if self.common.globalSearch.serchAndVerifyChannelInGlobalSearch(self.channelName) == False:
-                writeToLog("INFO","Step 14: FAILED, the "+ self.channelName + " channel hasn't been found in in the global search results while it should")
+                writeToLog("INFO","Step 16: FAILED, the "+ self.channelName + " channel hasn't been found in in the global search results while it should")
                 return
              
-            writeToLog("INFO","Step 15: Going to verify that for the " + self.memberUser + " , the " + self.entryName + " entry is displayed in global search")
+            writeToLog("INFO","Step 17: Going to verify that for the " + self.memberUser + " , the " + self.entryName + " entry is displayed in global search")
             if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
-                writeToLog("INFO","Step 15: FAILED, the " + self.entryName + " entry hasn't been found displayed in in the global search results while it should")
+                writeToLog("INFO","Step 17: FAILED, the " + self.entryName + " entry hasn't been found displayed in in the global search results while it should")
                 return 
             
-            writeToLog("INFO","Step 16: Going to log out from " + self.memberUser + " and authenticate with " + self.contributorUser)
+            writeToLog("INFO","Step 18: Going to log out from " + self.memberUser + " and authenticate with " + self.contributorUser)
             if self.common.login.logOutThenLogInToKMS(self.contributorUser, self.userPassword) == False:
-                writeToLog("INFO","Step 16: FAILED to log out from " + self.memberUser + " and authenticate with " + self.contributorUser)
+                writeToLog("INFO","Step 18: FAILED to log out from " + self.memberUser + " and authenticate with " + self.contributorUser)
                 return
             
-            writeToLog("INFO","Step 17: Going to verify that for the " + self.contributorUser + ", the " + self.channelName + " channel is displayed in global search")
+            writeToLog("INFO","Step 19: Going to verify that for the " + self.contributorUser + ", the " + self.channelName + " channel is displayed in global search")
             if self.common.globalSearch.serchAndVerifyChannelInGlobalSearch(self.channelName) == False:
-                writeToLog("INFO","Step 17: FAILED, the "+ self.channelName + " channel hasn't been found in in the global search results while it should")
+                writeToLog("INFO","Step 19: FAILED, the "+ self.channelName + " channel hasn't been found in in the global search results while it should")
                 return
              
-            writeToLog("INFO","Step 18: Going to verify that for the " + self.contributorUser + " , the " + self.entryName + " entry is displayed in global search")
+            writeToLog("INFO","Step 20: Going to verify that for the " + self.contributorUser + " , the " + self.entryName + " entry is displayed in global search")
             if self.common.globalSearch.serchAndVerifyEntryInGlobalSearch(self.entryName) == False:
-                writeToLog("INFO","Step 18: FAILED, the " + self.entryName + " entry hasn't been found displayed in in the global search results while it should")
+                writeToLog("INFO","Step 20: FAILED, the " + self.entryName + " entry hasn't been found displayed in in the global search results while it should")
+                return
+            
+            writeToLog("INFO","Step 21: Going to verify that the tag: " + self.entryTags + " , linked to the " + self.entryName + " entry, and " + self.channelName + " channel and that it's displayed in global search results")
+            if self.common.globalSearch.serchAndVerifyTagsInGlobalSearch(self.entryTags, self.entryName, self.channelName) == False:
+                writeToLog("INFO","Step 21: FAILED, the "+ self.channelName + " channel, and " + self.entryName + " entry couldn't be found in  Global Search results, while using " + self.entryTags + " tag")
                 return 
             ##################################################################
             self.status="Pass"
