@@ -127,10 +127,15 @@ class Test:
             if self.common.base.navigate(self.embedUrl) == False:
                 writeToLog("INFO","Step 10: FAILED navigate to embed entry page")
                 return  
-              
-            writeToLog("INFO","Step 11: Going to delete channel playlist")              
+            
+            writeToLog("INFO","Step 11: Going navigate to home page")              
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                writeToLog("INFO","Step 11: FAILED navigate to home page")
+                return  
+            
+            writeToLog("INFO","Step 12: Going to delete channel playlist")              
             if  self.common.channel.deleteChannelPlaylist(self.channelName, self.playlisTitle) == False:    
-                writeToLog("INFO","Step 11: FAILED failed to delete channel playlist")
+                writeToLog("INFO","Step 12: FAILED failed to delete channel playlist")
                 return      
             #########################################################################
             self.status = "Pass"

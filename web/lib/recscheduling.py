@@ -60,6 +60,7 @@ class  Recscheduling(Base):
     SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH                            = ('xpath', "//select[@id='EventRecurrence-monthly_weekdays_days']") # this locator is for monthly option,this is the second option in monthly-the day in the month
     SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER              = ('xpath', "//input[@id='EventRecurrence-monthly_weekdays_months']") # this locator is for monthly option,this is the second option in monthly-how many month
     SCHEDULE_RECURRENCE_SAVE_BUTTON                                         = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
+    SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE                                 = ('xpath', "//a[contains(text(), 'EVENT_TITLE')]]")
     
     #=============================================================================================================
     
@@ -500,3 +501,23 @@ class  Recscheduling(Base):
             return False        
         
         return True
+    
+    
+    def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, startTime, endTime, resource=''):
+        # add function test jump to the event start date
+        
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventTitle))
+        if self.wait_element(tmpEventTiltle) == False:
+            writeToLog("INFO","FAILED to find event title")
+            return False
+        
+        try:
+            eventParentEl = tmpEventTiltle.find_element_by_xpath("../..")
+            eventMetadata = self.get_element_text(eventParentEl)
+            if eventMetadata == None:
+                writeToLog("INFO","FAILED to find event element text")
+                return False
+        except:
+            writeToLog("INFO","FAILED to find event element text")
+            return False
+            
