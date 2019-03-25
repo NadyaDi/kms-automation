@@ -389,7 +389,7 @@ test_4939,Editor: Undo timeline functionality,2501881,qakmstest.dev.kaltura.com,
 test_4948,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4949,Quiz - Welcome screen behavior when autoplay true,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4719,Quiz - Open-Q,5447,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,admin,123456
+test_4917,Quiz - Open-Q,5447,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,admin,123456
 test_4799,Quiz - Retake quiz Latest score,5447,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,admin,123456
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots: Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
