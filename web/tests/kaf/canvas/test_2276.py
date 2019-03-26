@@ -97,7 +97,7 @@ class Test:
                 return                  
                
             writeToLog("INFO","Step 7: Going to capture thumbnail")            
-            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult, playFromBarline=False) == False:
+            if self.common.editEntryPage.captureThumbnail(self.timeToStopPlayer, self.captureThumbnailExpectedResult, playFromBarline=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to capture thumbnail")
                 return                                

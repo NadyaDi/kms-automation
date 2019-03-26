@@ -60,7 +60,7 @@ class  Recscheduling(Base):
     SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH                            = ('xpath', "//select[@id='EventRecurrence-monthly_weekdays_days']") # this locator is for monthly option,this is the second option in monthly-the day in the month
     SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER              = ('xpath', "//input[@id='EventRecurrence-monthly_weekdays_months']") # this locator is for monthly option,this is the second option in monthly-how many month
     SCHEDULE_RECURRENCE_SAVE_BUTTON                                         = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
-    SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE                                 = ('xpath', "//a[contains(text(), 'EVENT_TITLE')]]")
+    SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE                                 = ('xpath', "//a[contains(text(), 'EVENT_TITLE')]")
     
     #=============================================================================================================
     
@@ -502,22 +502,31 @@ class  Recscheduling(Base):
         
         return True
     
-    
-    def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, startTime, endTime, resource=''):
+    # eventTime - the time need to be both start and end time, for example: 4:00am-5:00pm 
+    def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, eventTime, resource=''):
         # add function test jump to the event start date
         
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventTitle))
-        if self.wait_element(tmpEventTiltle) == False:
-            writeToLog("INFO","FAILED to find event title")
-            return False
-        
         try:
-            eventParentEl = tmpEventTiltle.find_element_by_xpath("../..")
-            eventMetadata = self.get_element_text(eventParentEl)
+            event = self.wait_element(tmpEventTiltle)
+            if event == False:
+                writeToLog("INFO","FAILED to find event title")
+                return False
+        
+            eventParentEl = event.find_element_by_xpath("../..")
+            eventMetadata = eventParentEl.text
             if eventMetadata == None:
                 writeToLog("INFO","FAILED to find event element text")
                 return False
         except:
             writeToLog("INFO","FAILED to find event element text")
             return False
-            
+        
+        if eventTime.lower() in eventMetadata == False:
+            writeToLog("INFO","FAILED to find event time")
+            return False
+        
+        if resource != '':
+            if resource.value in eventMetadata == False:
+                writeToLog("INFO","FAILED to find event resource")
+                return False

@@ -67,7 +67,7 @@ class Test:
             startTime = time.time() + (60*60)
             startTime = time.strftime("%I:%M %p",time.localtime(startTime))
              
-            endTime = time.time() - (60*60)
+            endTime = time.time() + 2*(60*60)
             endTime = time.strftime("%I:%M %p",time.localtime(endTime))
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
@@ -81,7 +81,8 @@ class Test:
 #             
 #             self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
 #             
-            self.common.recscheduling.createRescheduleEvent(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, True, resources=enums.RecschedulingResourceOptions.AUTOMATION_ROOM, isRecurrence=True, exitEvent=False, recurrenceInterval=enums.scheduleRecurrenceInterval.MONTHS, monthlyOption=enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY, monthlyWeekdaysIndex=enums.scheduleRecurrenceMonthlyIndex.third, monthlyDayName=enums.scheduleRecurrenceDayOfTheWeek.SATURDAY, optionTwoMonthlyMonthNumber="5", endDateOption=enums.scheduleRecurrenceEndDateOption.END_BY, reccurenceStartTime=startTime, reccurenceEndTime=endTime ,reccurenceStartDate=self.startDate, reccurenceEndDate=self.endDate)
+#           self.common.recscheduling.createRescheduleEvent(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, True, resources=enums.RecschedulingResourceOptions.AUTOMATION_ROOM, isRecurrence=True, exitEvent=False, recurrenceInterval=enums.scheduleRecurrenceInterval.MONTHS, monthlyOption=enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY, monthlyWeekdaysIndex=enums.scheduleRecurrenceMonthlyIndex.third, monthlyDayName=enums.scheduleRecurrenceDayOfTheWeek.SATURDAY, optionTwoMonthlyMonthNumber="5", endDateOption=enums.scheduleRecurrenceEndDateOption.END_BY, reccurenceStartTime=startTime, reccurenceEndTime=endTime ,reccurenceStartDate=self.startDate, reccurenceEndDate=self.endDate)
+            self.common.recscheduling.verifyScheduleEventInMySchedulePage("automation", "startDate", "endDate", "03:32 PM-04:32 PM", resource=enums.RecschedulingResourceOptions.AUTOMATION_ROOM)
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:

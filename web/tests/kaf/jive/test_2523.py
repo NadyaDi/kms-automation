@@ -64,6 +64,7 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to add entry to gallery")
                 return 
             
+            sleep(2)
             writeToLog("INFO","Step 3: Going to remove entry from gallery")                                     
             if self.common.channel.removeEntry(self.entryName) == False:    
                 writeToLog("INFO","Step 3: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
