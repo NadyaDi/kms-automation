@@ -1247,6 +1247,12 @@ class Player(Base):
          
         #availableQuestions will determine for how many times we will use the for loop
         for x in range(0,availableQuestions):
+            # In order to make sure that the user passed the Question Screen transition properly
+            if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE, 15, True) == False:
+                writeToLog("INFO", "FAILED to find any quiz scrubber questions bubbles")
+                return False
+            sleep(0.2)
+            
             #we use tmpQuizPage in order to navigate to the next Quiz Question page, by incrementing with +1 (using x value) from each run
             tmpQuizPage = (self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[0], self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[1].replace('NUMBER', str(x))) 
             if self.click(tmpQuizPage, 30, True) == False:
@@ -2517,15 +2523,34 @@ class Player(Base):
         if self.verifyAndClickOnPlay(location, 2, embed) == False:
             return False
         
+        
+        presentedHotspotsList = []
+        
+        while len(presentedHotspotsList) != len(hotspotsDict):
+            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
+        
+            for x in range(0, len(presentedHotspots)):   
+                if presentedHotspots[x].text not in presentedHotspotsList:
+                    hotspotTitle                = presentedHotspots[x].text
+                    
+                    hotspotStyleProperties      = presentedHotspots[x].get_attribute('style').split()
+                    
+                    hotspotStyleFontWeight      = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
+                    hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
+                    hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
+                    hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
+                    hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
+                    
+                    
+                    
+                    presentedHotspotDetails     = [hotspotTitle, hotspotStyleFontColor, hotspotStyleFontSize, hotspotStyleBorderRadius, hotspotStyleBackgroundColor]
+                    presentedHotspotsList.append(presentedHotspotDetails)
+                
         # Verify that the expected hotspots with the expected style properties are presented in the player
         for hotspotNumber in hotspotsDict:
             
             # Take the presented hotspot for the current time
-            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
-            
-            # to do
-            # play all the entry, take the presented hotspot elements, append them to a list
-            # take the time stamp of each hotspot
+#             presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
 
             
             # Verify that at least one hotspot has been found in the Player

@@ -58,7 +58,7 @@ class Base:
                 if multipleElements == True:
                     elements = self.get_child_elements_by_type(parent, method, values)
                     for el in elements:
-                        if el.size['width']!=0 and el.size['height']!=0:
+                        if el.size['width']!=0 or el.size['height']!=0:
                             return el                    
                 else:
                     return self.get_child_element_by_type(parent, method, values)
@@ -216,7 +216,7 @@ class Base:
             if multipleElements == True:
                 elements = self.get_elements(locator)
                 for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         if el.is_displayed() == True:
                             return True            
             else:
@@ -279,7 +279,7 @@ class Base:
                     if multipleElements == True:
                         elements = self.get_elements(locator)
                         for el in elements:
-                            if el.size['width']!=0 and el.size['height']!=0:
+                            if el.size['width']!=0 or el.size['height']!=0:
                                 self.setImplicitlyWaitToDefault()
                                 return el
                         return False
@@ -307,7 +307,7 @@ class Base:
 #                 if multipleElements == True:
 #                     elements = self.get_elements(locator)
 #                     for el in elements:
-#                         if el.size['width']!=0 and el.size['height']!=0:
+#                         if el.size['width']!=0 or el.size['height']!=0:
 #                             return el
 #                     return False
 #                 else:
@@ -328,7 +328,7 @@ class Base:
                 if multipleElements == True:
                     elements = self.get_elements(locator)
                     for el in elements:
-                        if el.size['width']!=0 and el.size['height']!=0:
+                        if el.size['width']!=0 or el.size['height']!=0:
                             self.setImplicitlyWaitToDefault()
                             return el
                         
@@ -467,7 +467,7 @@ class Base:
             if multipleElements == True:
                 element = self.wait_element(locator, timeout, multipleElements=True)
                 if element != False:
-                    if (width!=0 and height!=0):
+                    if (width!=0 or height!=0):
                         ActionChains(self.driver).move_to_element_with_offset(element, width, height).click().perform()
                     else:
                         element.click()
@@ -477,7 +477,7 @@ class Base:
             if element == False:
                 return False
             else:
-                if (width!=0 and height!=0):
+                if (width!=0 or height!=0):
                     ActionChains(self.driver).move_to_element_with_offset(element, width, height).click().perform()
                 else:
                     element.click()
@@ -496,7 +496,7 @@ class Base:
             if multipleElements == True:
                 elements = self.get_child_elements(parent, locator)
                 for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         el.click()
                         return True
                 return False
@@ -519,7 +519,7 @@ class Base:
         try:
             if multipleElements == True:
                 for el in element:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         el.click()
                         return True
                 return False
@@ -540,7 +540,7 @@ class Base:
         try:
             if multipleElements == True:
                 for el in element:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         el.send_keys(text)
                         return True
                 return False
@@ -560,7 +560,7 @@ class Base:
             if multipleElements == True:
                 elements = self.get_elements(locator)
                 for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         el.send_keys(text)
                         return True
                 return False
@@ -579,7 +579,7 @@ class Base:
             if multipleElements == True:
                 elements = self.get_child_elements(parent, locator)
                 for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         el.send_keys(text)
                         return True
                 return False
@@ -598,7 +598,7 @@ class Base:
             if multipleElements == True:
                 elements = self.get_elements(locator)
                 for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         if el.click() == False:
                             writeToLog("INFO", "FAILED to click before typing in")
                             return False                        
@@ -623,7 +623,7 @@ class Base:
             if multipleElements == True:
                 elements = self.get_elements(locator)
                 for el in elements:
-                    if el.size['width']!=0 and el.size['height']!=0:
+                    if el.size['width']!=0 or el.size['height']!=0:
                         el.clear()                       
                         el.send_keys(text)
                         return True

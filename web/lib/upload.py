@@ -567,18 +567,24 @@ class Upload(Base):
     
     # @Author: Inbar Willman
     def addNewVideoQuiz(self):
-        # Click Add New
-        if self.click(General.ADD_NEW_DROP_DOWN_BUTTON) == False:
-            writeToLog("DEBUG","FAILED to click on 'Add New' button")
-            return False
+        for x in range(0, 3):
+            # Click Add New
+            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, 15, True) == False:
+                writeToLog("INFO","FAILED to click on 'Add New' button, during the " + str(x) + " try, in order to trigger the dropdown menu and select 'Video Quiz'")
+            else:
+                break
+            
+            if x == 2:
+                writeToLog("INFO", "FAILED to activate the 'Add New' drop down menu in order to select 'Video Quiz'")
+                return False
             
         # Click video quiz
         if self.clickVideoQuiz() == False:
-            writeToLog("DEBUG","FAILED to click on 'Video Quiz' button")
+            writeToLog("INFO","FAILED to click on 'Video Quiz' button")
             return False
 
         if self.wait_visible(self.VIDEO_QUIZ_PAGE_TITLE, 30) == False:
-            writeToLog("DEBUG","FAILED to navigate to add new video quiz page")
+            writeToLog("INFO","FAILED to navigate to add new video quiz page")
             return False
         
         return True
