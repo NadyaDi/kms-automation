@@ -31,7 +31,7 @@ class Test:
     typeTest            = "KEA Entry with Three Hotspots"
     description         = "Description"
     tags                = "Tags,"
-    entryName           = None
+    entryName           = "hotspot changed time"
     entryDescription    = "description"
     entryTags           = "tag1,"
 
@@ -66,28 +66,28 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Hotspots - creation for normal entry", self.testNum)
+#             self.entryName             = clsTestService.addGuidToString("Hotspots - creation for normal entry", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
 #             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
 #             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
 #                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
 #                 return
-#       
+#        
 #             writeToLog("INFO","Step 2: Going to create a Quiz for " + self.entryName + " entry")
 #             if self.common.kea.launchKEA(self.entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
 #                 writeToLog("INFO","Step 2: FAILED to create a Quiz for " + self.entryName + " entry")
 #                 return
-              
-            writeToLog("INFO","Step 3: Going to navigate to edit entry page f entry")
-            if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=True) == False:
-                writeToLog("INFO","Step 3: FAILED to navigate to edit entry pantry")
-                return
-                          
-            self.common.base.switch_to_default_content()
-            writeToLog("INFO","Step 4: Going to navigate to the entry page for " + self.entryName)
-            if self.common.entryPage.navigateToEntry(self.entryName) == False:
-                writeToLog("INFO","Step 4: FAILED to navigate to the entry page for " + self.entryName)
-                return
+#               
+#             writeToLog("INFO","Step 3: Going to navigate to edit entry page f entry")
+#             if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=True) == False:
+#                 writeToLog("INFO","Step 3: FAILED to navigate to edit entry pantry")
+#                 return
+#                           
+#             self.common.base.switch_to_default_content()
+#             writeToLog("INFO","Step 4: Going to navigate to the entry page for " + self.entryName)
+#             if self.common.entryPage.navigateToEntry(self.entryName) == False:
+#                 writeToLog("INFO","Step 4: FAILED to navigate to the entry page for " + self.entryName)
+#                 return
              
             writeToLog("INFO","Step 5: Going to navigate to edit entry page f entry")
             if self.common.player.hotspotVerification(self.hotspotsDict, enums.Location.ENTRY_PAGE, embed=False) == False:

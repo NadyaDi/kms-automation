@@ -84,35 +84,35 @@ class Test:
                 writeToLog("INFO","Step 6: FAILED to upload caption")
                 return   
 
-            writeToLog("INFO","Step 3: Going to collect all the presented captions on the player")  
+            writeToLog("INFO","Step 7: Going to collect all the presented captions on the player")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName)
             if  self.captionList == False:
-                writeToLog("INFO","Step 3: FAILED to collect all the presented captions on the player")
+                writeToLog("INFO","Step 7: FAILED to collect all the presented captions on the player")
                 return
             
             self.isExist = ["Caption5search", "Caption7search", "Caption12search", "Caption13search"];
             self.isAbsent = ["Caption100search", "Caption32search"];
-            writeToLog("INFO","Step 4: Going to verify the captions that were collected")  
+            writeToLog("INFO","Step 8: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                writeToLog("INFO","Step 4: FAILED to verify the captions that were collected")
+                writeToLog("INFO","Step 8: FAILED to verify the captions that were collected")
                 return               
              
-            writeToLog("INFO","Step 2: Going to trim the entry from 30sec to 20sec")  
+            writeToLog("INFO","Step 9: Going to trim the entry from 30sec to 20sec")  
             if self.common.kea.trimEntry(self.entryName, "00:10", "00:20", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 2: FAILED to trim the entry from 30sec to 20sec")
+                writeToLog("INFO","Step 9: FAILED to trim the entry from 30sec to 20sec")
                 return
  
-            writeToLog("INFO","Step 3: Going to collect all the presented captions on the player (after the entry was trimmed)")  
+            writeToLog("INFO","Step 10: Going to collect all the presented captions on the player (after the entry was trimmed)")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.entryName)
             if  self.captionList == False:
-                writeToLog("INFO","Step 3: FAILED to collect all the presented captions on the player (after the entry was trimmed)")
+                writeToLog("INFO","Step 10: FAILED to collect all the presented captions on the player (after the entry was trimmed)")
                 return
              
-            self.isExist = ["Caption5search", "Caption7search", "Caption22search", "Caption28search"];
+            self.isExist = ["Caption5search", "Caption7search", "Caption26search", "Caption28search"];
             self.isAbsent = ["Caption12search", "Caption13search", "Caption15search", "Caption17search"];
-            writeToLog("INFO","Step 4: Going to verify the captions that were collected")  
+            writeToLog("INFO","Step 11: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                writeToLog("INFO","Step 4: FAILED to verify the captions that were collected")
+                writeToLog("INFO","Step 11: FAILED to verify the captions that were collected")
                 return
             #############################################################################################
             self.status = "Pass"   

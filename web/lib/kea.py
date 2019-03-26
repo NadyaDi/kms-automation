@@ -1956,15 +1956,18 @@ class Kea(Base):
             writeToLog("INFO", "FAILED, the total number of question text doesn't match with the total number of questions from the KEA timeline section")
             return False
         
+        actions = {}
+        
         # We verify all the available quiz question pointers, by verifying the quiz number,time stamp and quiz title
         for x in range(0, len(presentedQuestionsInTimeline)):
             # We take the locator element for the current quiz number
             currentQuestion = presentedQuestionsInTimeline[x]
             
+            actions["action{0}".format(x)]= ActionChains(self.driver)
+            
             # We hover over the current quiz number, in order to verify the elements
-            action = ActionChains(self.driver)
             try:
-                action.move_to_element(currentQuestion).pause(1).perform()
+                actions["action{0}".format(x)].move_to_element(currentQuestion).pause(2).perform()
             except Exception:
                 writeToLog("INFO", "FAILED to hover over the quiz number " + str(x+1))
                 return False
@@ -1974,9 +1977,9 @@ class Kea(Base):
             
             # We take the presented quiz number, title and time stamp
             try:
-                questionNumberPresented     = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER, 1, True).text
-                questionTitlePresented      = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 1, True).text
-                questionTimestampPresented  = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP, 1, True).text
+                questionNumberPresented     = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER, 2, True).text
+                questionTitlePresented      = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 2, True).text
+                questionTimestampPresented  = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP, 2, True).text
             except Exception:
                 writeToLog("INFO", "FAILED to find the question details while hovering over the question: " + currentQuestionDetails[2])
                 return False
