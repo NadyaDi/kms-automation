@@ -1727,8 +1727,10 @@ class Kea(Base):
             if self.click(tmp_button_done, 5, True) == False:
                 writeToLog("INFO", "FAILED to click on the done button")
                 return False
-
-            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 50) == False:
+            
+            sleep(0.5)
+            
+            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 75) == False:
                 writeToLog("INFO","FAILED to save the changes")
                 return False  
             

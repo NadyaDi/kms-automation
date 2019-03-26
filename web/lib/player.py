@@ -1261,14 +1261,26 @@ class Player(Base):
              
             # We collect the active question in order to verify if it matches with one from our dictionary, if the question has not been founded within the 75 seconds, the test case will fail  
             activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 75, True).text
-            sleep(1)
+            
+            # Because Reflection Point can be only watch we verify it first
+            if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
+                writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
+                # Due to the fact that Reflection Points cannot be answered, we increment the number of question found and given questions by one ( without being present in our questionDict)
+                questionsFound += 1
+                givenQuestions += 1
+            
+                sleep(1)
+                # If the Question is a Reflection Point, we will click on the continue button
+                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
+                    writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
+                    return False
                          
-            if activeQuestion in questionDict:
+            elif activeQuestion in questionDict:
                 #after the active question matches with one from our dictionary, we take the answer assigned for that question
                 activeAnswer = questionDict[activeQuestion]
                 
                 # If it's an open-Q we want to skip this part, because the answer isn't displayed yet
-                if "Open-Q" not in  activeAnswer:
+                if "Open-Q" not in activeAnswer:
                     tmpAnswerName = (self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[0], self.PLAYER_QUIZ_QUESTION_SCREEN_ANSWER_TEXT[1].replace('ANSWER_TEXT', activeAnswer))
                  
                     if self.wait_element(tmpAnswerName, 5, True) == False:
@@ -1290,18 +1302,6 @@ class Player(Base):
                     #after each Quiz Question answered, we increment it by one, so at the end we will know if all the Quiz Question from our dictionary were answered or not        
                     questionsFound += 1
                     self.wait_while_not_visible(self.PLAYER_QUIZ_QUESTION_SCREEN_SELECTED_BUTTON, 10)
-             
-                elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 1, True) != False:
-                    writeToLog("INFO", "AS EXPECTED, Reflection Screen has been found and skipped")
-                    # Due to the fact that Reflection Points cannot be answered, we increment the number of question found and given questions by one ( without being present in our questionDict)
-                    questionsFound += 1
-                    givenQuestions += 1
-                
-                    sleep(1)
-                    # If the Question is a Reflection Point, we will click on the continue button
-                    if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
-                        writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
-                        return False
                 
                 elif self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER, 1, True) != False:
                     writeToLog("INFO", "AS EXPECTED, open-Q Screen has been found")
@@ -1315,10 +1315,10 @@ class Player(Base):
                     if self.click(self.PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN) == False:
                         writeToLog("INFO", "FAILED to save answer to open-Q")
                         return False
-                
                     questionsFound += 1
                 
-                    sleep(4)                 
+                    sleep(4)
+                                
             else:
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
                 if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:

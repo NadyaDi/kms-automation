@@ -569,7 +569,7 @@ class Upload(Base):
     def addNewVideoQuiz(self):
         for x in range(0, 3):
             # Click Add New
-            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, 15, True) == False:
+            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, 7, True) == False:
                 writeToLog("INFO","FAILED to click on 'Add New' button, during the " + str(x) + " try, in order to trigger the dropdown menu and select 'Video Quiz'")
             else:
                 break
