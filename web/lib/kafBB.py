@@ -859,7 +859,7 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to get id attribute from embed container")
             return False 
             
-        m = re.search('(_\d\d\d_)', parentId)
+        m = re.search('(_\d\d\d\d_)', parentId)
         if m:
             foundId = m.group(1)
         else:
