@@ -1168,6 +1168,7 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to stop player at time: " + str(timeToStop))
             return False
         
+        sleep(1)
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD:
             if self.clsCommon.blackBoard.switchToBlackboardIframe() == False:
                 writeToLog("INFO","FAILED to load blackboard iframe")

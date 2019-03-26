@@ -1077,12 +1077,12 @@ class Channel(Base):
         elif localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             if self.clickEntryPlusIcon(entryName) == False:
                 return False
-            
+        sleep(2)    
         # Set Remove button locator for old UI
         tmpEntryEemoveBtn = (self.CHANNEL_ENTRY_DELETE_BUTTON[0], self.CHANNEL_ENTRY_DELETE_BUTTON[1].replace('ENTRY_NAME', entryName))   
 
         sleep(2)
-        if self.click(tmpEntryEemoveBtn) == False:
+        if self.click(tmpEntryEemoveBtn, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on Remove button")
             return False 
         sleep(2)
