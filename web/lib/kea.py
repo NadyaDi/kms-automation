@@ -965,6 +965,14 @@ class Kea(Base):
 
     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
         sleep(25)
+
+        # Need this step in order to workaround an issue that may fail a test case after uploading an entry
+        if self.wait_element(self.clsCommon.upload.UPLOAD_PAGE_TITLE, 0.5, True) != False:
+            sleep(2) 
+            if self.clsCommon.navigateTo(enums.Location.HOME) == False:
+                writeToLog("INFO", "FAILED to navigate to home page")
+                return False
+        
         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
             writeToLog("INFO", "FAILED to navigate to " + entryName)
             return False

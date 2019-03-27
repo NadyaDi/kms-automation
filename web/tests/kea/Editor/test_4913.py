@@ -164,55 +164,55 @@ class Test:
                  
             self.isExist = ["Caption5search", "Caption7search", "Caption12search", "Caption13search"];
             self.isAbsent = ["Caption100search", "Caption32search"];
-            writeToLog("INFO","Step 11: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before clipping")  
+            writeToLog("INFO","Step 12: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before clipping")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                writeToLog("INFO","Step 11: FAILED to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before clipping")
+                writeToLog("INFO","Step 12: FAILED to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before clipping")
                 return               
                   
-            writeToLog("INFO","Step 12: Going to clip the " + self.quizEntryName + " entry from second 12 to second 22, leaving a length of the entry of 20 seconds")  
+            writeToLog("INFO","Step 13: Going to clip the " + self.quizEntryName + " entry from second 12 to second 22, leaving a length of the entry of 20 seconds")  
             if self.common.kea.clipEntry(self.quizEntryName, "00:12", "00:22", expectedEntryDuration, enums.Location.EDIT_ENTRY_PAGE, enums.Location.MY_MEDIA, openEditorTab=True) == False:
-                writeToLog("INFO","Step 12: FAILED to clip the " + self.quizEntryName + " entry from second 12 to second 22, leaving a length of the entry of 20 seconds")  
+                writeToLog("INFO","Step 13: FAILED to clip the " + self.quizEntryName + " entry from second 12 to second 22, leaving a length of the entry of 20 seconds")  
                 return
  
-            writeToLog("INFO","Step 13: Going to collect all the available Questions from the " + self.quizEntryNameClipped + " entry, after clipping")  
+            writeToLog("INFO","Step 14: Going to collect all the available Questions from the " + self.quizEntryNameClipped + " entry, after clipping")  
             self.qestionCollectedAfterClipping = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryNameClipped, 3)
             if self.qestionCollectedAfterClipping == False:
-                writeToLog("INFO","Step 13: FAILED to collect all the available Questions from the " + self.quizEntryNameClipped + " entry, after clipping")
+                writeToLog("INFO","Step 14: FAILED to collect all the available Questions from the " + self.quizEntryNameClipped + " entry, after clipping")
                 return  
              
-            writeToLog("INFO","Step 14: Going to compare the presented Quiz Questions with the Expected Quiz Questions, after clipping")  
+            writeToLog("INFO","Step 15: Going to compare the presented Quiz Questions with the Expected Quiz Questions, after clipping")  
             if self.common.player.compareQuizQuestionDict(self.qestionCollectedAfterClipping, self.dictQuestionsClippedExist, self.dictQuestionsClippedAbsent) == False:
-                writeToLog("INFO","Step 14: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, after clipping")   
+                writeToLog("INFO","Step 15: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, after clipping")   
                 return 
             
             self.common.base.refresh()
              
-            writeToLog("INFO","Step 15: Going to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")   
+            writeToLog("INFO","Step 16: Going to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")   
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryNameClipped, quizEntry=True)
             if  self.QRlist == False:
-                writeToLog("INFO","Step 15: FAILED to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")
+                writeToLog("INFO","Step 16: FAILED to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")
                 return
                          
             self.isExistQR = ["1", "7", "23", "28"];
             self.isAbsentQR = ["18", "14", "15", "17"];
-            writeToLog("INFO","Step 16: Going to verify that the presented Slides matches with the Expected slides, after clipping")
+            writeToLog("INFO","Step 17: Going to verify that the presented Slides matches with the Expected slides, after clipping")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
-                writeToLog("INFO","Step 16: FAILED to verify that the presented Slides matches with the Expected slides, after clipping")
+                writeToLog("INFO","Step 17: FAILED to verify that the presented Slides matches with the Expected slides, after clipping")
                 return
             
             self.common.base.refresh()
             
-            writeToLog("INFO","Step 17: Going to collect all the presented captions from the " + self.quizEntryNameClipped + " entrie's player, after clipping")  
+            writeToLog("INFO","Step 18: Going to collect all the presented captions from the " + self.quizEntryNameClipped + " entrie's player, after clipping")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryNameClipped, quizEntry=True)
             if self.captionList == False:
-                writeToLog("INFO","Step 17: FAILED to collect all the presented captions from the " + self.quizEntryNameClipped + " entrie's player, after clipping") 
+                writeToLog("INFO","Step 18: FAILED to collect all the presented captions from the " + self.quizEntryNameClipped + " entrie's player, after clipping") 
                 return
              
             self.isExist = ["Caption1search", "Caption7search", "Caption23search", "Caption28search"];
             self.isAbsent = ["Caption18search", "Caption14search", "Caption15search", "Caption17search"];
-            writeToLog("INFO","Step 18: Going to verify that the presented captions for " + self.quizEntryNameClipped + " entry displays the expected ones, after clipping") 
+            writeToLog("INFO","Step 19: Going to verify that the presented captions for " + self.quizEntryNameClipped + " entry displays the expected ones, after clipping") 
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
-                writeToLog("INFO","Step 18: FAILED to verify that the presented captions for " + self.quizEntryNameClipped + " entry displays the expected ones, after clipping") 
+                writeToLog("INFO","Step 19: FAILED to verify that the presented captions for " + self.quizEntryNameClipped + " entry displays the expected ones, after clipping") 
                 return
             #######################################################################################################
             self.status = "Pass"                
