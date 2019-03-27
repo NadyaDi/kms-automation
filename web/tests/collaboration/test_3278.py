@@ -30,7 +30,7 @@ class Test:
     entryName = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    newUserId = "Automation_User_1"
+    newUserId = "AutomationUser7"
     newUserPass = "Kaltura1!"
     EnableComments = True
     CloseDiscussion = True

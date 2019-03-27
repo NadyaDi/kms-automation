@@ -200,7 +200,7 @@ class EditEntryPage(Base):
         
         sleep(2)
         # Insert username to field
-        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, userId+"(tester1") == False:
+        if self.send_keys(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, userId) == False:
             writeToLog("INFO","FAILED to insert username")
             return False
         
