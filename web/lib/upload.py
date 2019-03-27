@@ -158,10 +158,12 @@ class Upload(Base):
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
     # IMPORTENT!! This method return None (not False) if failed and an entry ID if passed
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=3, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False, isTagsNeeded=True):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=4, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False, isTagsNeeded=True):
         for i in range(retries):
             try:
                 if i > 0:
+                    # Added this step in order to proper re launch the upload page
+                    self.clsCommon.navigateTo(enums.Location.HOME)
                     writeToLog("INFO","FAILED to upload after " + str(i) + " retries of " + str(retries) + ". Going to upload again...")
                 # Convert path for Windows
                 filePath = filePath.replace("/", "\\")
