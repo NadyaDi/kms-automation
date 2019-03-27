@@ -33,7 +33,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
     entryDescription = "Description"
     entryTags = "Tags,"
-    newUserId = "Automation_User_1"
+    newUserId = "AutomationUser7"
     newUserPass = "Kaltura1!"
     categoryList = [("Apps Automation Category")]
     channelList = ""
