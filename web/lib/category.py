@@ -861,7 +861,7 @@ class Category(Base):
             writeToLog("INFO","FAILED to click on add button")
             return False 
          
-        sleep(2)
+        sleep(3)
         # Wait until add member modal isn't displayed
         if self.wait_while_not_visible(self.clsCommon.channel.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
             writeToLog("INFO","FAILED to display add member popup")
