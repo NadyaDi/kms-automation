@@ -1,4 +1,5 @@
 import time, pytest, datetime
+from datetime import datetime
 import sys,os
 sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','..','lib')))
 from clsCommon import Common
@@ -61,16 +62,20 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.eventTitle = clsTestService.addGuidToString("Create new single event", self.testNum)
-            self.startDate = datetime.datetime.now().strftime("%d/%m/%Y")
+            
+            # we have 2 startDate that hold the same day for the event. one in format to create the event and the second one is in format so we can compare it to the date in the calendar
+            self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
+            self.startDateToVerifyEventIncalender = datetime.datetime.now().strftime("%B %d, %Y - %A")
             self.endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
-        
+
             startTime = time.time() + (60*60)
-            startTime = time.strftime("%I:%M %p",time.localtime(startTime))
+            startTime = time.strftime("%I:%M%p",time.localtime(startTime))
              
             endTime = time.time() + 2*(60*60)
-            endTime = time.strftime("%I:%M %p",time.localtime(endTime))
+            endTime = time.strftime("%I:%M%p",time.localtime(endTime))
+
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
+            self.common.recscheduling.setScheduleInMySchedulePage(self.startDateToVerifyEventIncalender)
                 
 #            self.common.base.click(self.common.recscheduling.SCHEDULE_ADD_RECURRENCE_BUTTON) 
 
@@ -82,7 +87,7 @@ class Test:
 #             self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
 #             
 #           self.common.recscheduling.createRescheduleEvent(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, True, resources=enums.RecschedulingResourceOptions.AUTOMATION_ROOM, isRecurrence=True, exitEvent=False, recurrenceInterval=enums.scheduleRecurrenceInterval.MONTHS, monthlyOption=enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY, monthlyWeekdaysIndex=enums.scheduleRecurrenceMonthlyIndex.third, monthlyDayName=enums.scheduleRecurrenceDayOfTheWeek.SATURDAY, optionTwoMonthlyMonthNumber="5", endDateOption=enums.scheduleRecurrenceEndDateOption.END_BY, reccurenceStartTime=startTime, reccurenceEndTime=endTime ,reccurenceStartDate=self.startDate, reccurenceEndDate=self.endDate)
-            self.common.recscheduling.verifyScheduleEventInMySchedulePage("automation", "startDate", "endDate", "03:32 PM-04:32 PM", resource=enums.RecschedulingResourceOptions.AUTOMATION_ROOM)
+            self.common.recscheduling.verifyScheduleEventInMySchedulePage("automation", self.startDateForCreateEvent, self.startDateToVerifyEventIncalender, self.endDate, startTime, endTime, resources=[enums.RecschedulingResourceOptions.AUTOMATION_ROOM, enums.RecschedulingResourceOptions.MAIN_AUDITORIUM])
             
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
