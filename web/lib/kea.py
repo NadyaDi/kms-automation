@@ -1672,8 +1672,8 @@ class Kea(Base):
             if self.verifyKEAOptionState(enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP, False) == False:
                 return False
             
-            if self.wait_element(tmpKEAOptionSeeking, 1, True) != False:   
-                if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, True) == False:
+            if self.wait_element(tmpKEAOptionSeeking, 1, False) != False:   
+                if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, False) == False:
                     return False
             else:
                 writeToLog("INFO", "AS EXPECTED, no seeking forward option was found as disabled")
