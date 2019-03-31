@@ -41,6 +41,7 @@ class Kea(Base):
     KEA_IFRAME                                                              = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
+    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and text()='Please wait while media is processing']") 
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
     KEA_QUIZ_ANSWER_GENERAL                                                 = ('xpath', "//textarea[contains(@id,'answer-text')]") 
@@ -462,6 +463,10 @@ class Kea(Base):
         
         sleep(5)                      
         
+        if self.wait_while_not_visible(self.KEA_MEDIA_IS_BEING_PROCESSED, 120) == False:
+            writeToLog("INFO", "FAILED to wait until the " + entryName + " has been processed during the launch kea")
+            return False
+        
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
     
@@ -559,6 +564,7 @@ class Kea(Base):
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         sleep(2)
+        
         
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
             self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON) 
@@ -978,6 +984,10 @@ class Kea(Base):
             return False
         sleep(timeout)
         
+        if self.wait_while_not_visible(self.KEA_MEDIA_IS_BEING_PROCESSED, 120) == False:
+            writeToLog("INFO", "FAILED to process the " + entryName + " during the launch")
+            return False
+        
         # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" and "Open-Q" Quiz Questions)
         questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
                    
@@ -992,7 +1002,7 @@ class Kea(Base):
             sleep(3)
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
             # click on the editor in order to higlight the timeline field and select all the text
-            if self.click(self.EDITOR_TIME_PICKER, 15, True) == False:
+            if self.click(self.EDITOR_TIME_PICKER, 30, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             
@@ -1241,7 +1251,7 @@ class Kea(Base):
     # This function can navigate to a specific entry and initiate the KEA Quiz option
     # This function work for both entries that have Quiz created or not
     # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
-    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=25):
+    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=40):
         self.switch_to_default_content()
         if navigateToEntry == True:
             sleep(timeOut)
