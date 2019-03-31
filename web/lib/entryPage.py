@@ -319,9 +319,10 @@ class EntryPage(Base):
     
     
     def waitTillMediaIsBeingProcessed(self, timeout=450):
-        sleep(3)
+        sleep(6)
         self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
         if self.wait_visible(self.clsCommon.player.PLAYER_IFRAME, 60) == False:
+            writeToLog("INFO", "FAILED to verify the player Iframe while waiting for the media to be processed ")
             return False
         return True
 
