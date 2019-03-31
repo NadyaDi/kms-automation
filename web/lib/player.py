@@ -909,9 +909,14 @@ class Player(Base):
             
             
             for qrPath in QRPathList:
+                # Changed value after using player version 2.75
                 # Crop the image
+#                 img = Image.open(qrPath)
+#                 img2 = img.crop((img.width / 2.04, img.height / 1.77, img.width / 1.71, img.height / 1.34))
+#                 img2.save(qrPath)           
+
                 img = Image.open(qrPath)
-                img2 = img.crop((img.width / 2.04, img.height / 1.77, img.width / 1.71, img.height / 1.34))
+                img2 = img.crop((img.width / 2.04, img.height / 1.67, img.width / 1.71, img.height / 1.24))
                 img2.save(qrPath)           
             
             QRcodeList = []
