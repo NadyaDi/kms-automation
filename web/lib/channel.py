@@ -275,7 +275,7 @@ class Channel(Base):
                 return False
             
             if self.selectChannelPrivacy(privacyType) == False:
-                writeToLog("INFO","FAILED to Choose Channel privacy")
+                writeToLog("INFO","FAILED to Choose Channel privacy as " + privacyType.value)
                 return False
             
             # Checking Channel options

@@ -41,6 +41,7 @@ class Kea(Base):
     KEA_IFRAME                                                              = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
+    KEA_LOADING_CONTAINER                                                   = ('xpath', "//div[contains(@class,'loading__container')]") 
     KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and text()='Please wait while media is processing']") 
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
@@ -75,6 +76,7 @@ class Kea(Base):
     EDITOR_TOTAL_TIME                                                       = ('xpath', "//span[@class='total-time']")
     EDITOR_TOTAL_TIME_TOOLBAR                                               = ('xpath', "//span[contains(@class,'toolbar__total-time')]")
     EDITOR_GO_TO_MEDIA_PAGE_BUTTON                                          = ('xpath', "//a[contains(.,'Media Page')]")
+    EDITOR_SEARCH_X_BUTTON                                                  = ('xpath', "//i[@class='v2ui-close-icon']")
     KEA_ENTRY_NAME                                                          = ('xpath', "//span[@class='entry-name']")
     KEA_TOGGLE_MENU_OPTION                                                  = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
     KEA_OPTION_NORMAL                                                       = ('xpath', "//label[contains(@class,'ng-star-inserted') and text()='OPTION_NAME']")  
@@ -168,6 +170,22 @@ class Kea(Base):
         
         sleep(6)
         
+        if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_NO_ENTRIES_FOUND, 1, True) != False:
+            writeToLog("INFO", "FAILED to find the " + entryName + " within the first try...")
+            sleep(10)
+            if self.click(self.EDITOR_SEARCH_X_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the X button in order to clear the search")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            self.clsCommon.myMedia.getSearchBarElement().click()
+            self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+        if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_NO_ENTRIES_FOUND, 1, True) != False:
+            writeToLog("INFO", "FAILED, the " + entryName + " couldn't be found inside the Editor after two tries")
+            return False
+        
         # Click on select button in order to open KEA
         if self.click(self.KEA_SELECT_VIDEO_FOR_EDIT) == False:
             writeToLog("INFO","FAILED to select entry and open KEA")
@@ -178,7 +196,11 @@ class Kea(Base):
         # Verify that we are in KEA page and app is displayed
         if self.wait_visible(self.KEA_APP_DISPLAY, 40) == False:
             writeToLog("INFO","FAILED to display KEA page")
-            return False              
+            return False
+        
+        if self.wait_while_not_visible(self.KEA_LOADING_CONTAINER, 60) == False:
+            writeToLog("INFO", "FAILED to wait until the KEA Loading container disappeared")
+            return False            
         
         return True
     
@@ -969,7 +991,7 @@ class Kea(Base):
 #         self.clickDone()
 #         return True
 
-    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
+    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=20):
         sleep(25)
 
         # Need this step in order to workaround an issue that may fail a test case after uploading an entry

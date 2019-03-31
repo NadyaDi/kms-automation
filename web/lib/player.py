@@ -6,7 +6,8 @@ from base import *
 import clsTestService
 import enums
 from PIL import Image
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import StaleElementReferenceException,\
+    MoveTargetOutOfBoundsException
 
 
 
@@ -25,6 +26,9 @@ class Player(Base):
     PLAYER_EMBED_IFRAME_2                                       = ('id', 'kaltura_player')
     PLAYER_SCREEN                                               = ('id', 'kplayer')
     PLAYER_SCREEN_LOADING_SPINNER                               = ('xpath', "//div[@id='loadingSpinner_kplayer']")
+    PLAYER_CONTROLS_CONTAINER_REAL_TIME                         = ('xpath', "//div[contains(@class,'currentTimeLabel display-high')]")
+    PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
+    PLAYER_TIMMER_BUTTON_CONTROLS_CONTAINER                     = ('xpath', "//span[contains(@class,'playHead PIE btn')]")
     PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER                       = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-play')]")
     PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER                      = ('xpath', "//button[@class='btn comp playPauseBtn display-high icon-pause']")
     #PLAYER_PLAY_BUTTON_IN_THE_MIDDLE_OF_THE_PLAYER              = ('xpath', "//a[@class='icon-play  comp largePlayBtn  largePlayBtnBorder' and @aria-label='Play clip']")
@@ -256,7 +260,7 @@ class Player(Base):
                     
                     if quizEntry == True:
                         # Verify if the Question Screen is displayed
-                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.5, True) != False:
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.6, True) != False:
                             sleep(2)
                             # Resume the playing process by skipping the Question Screen
                             if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
@@ -885,7 +889,7 @@ class Player(Base):
                 
                 if quizEntry == True:
                     # Verify if the Question Screen is displayed
-                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.5, True) != False:
+                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.6, True) != False:
                         sleep(2)
                         # Resume the playing process by skipping the Question Screen
                         if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
@@ -1251,7 +1255,11 @@ class Player(Base):
             if self.wait_element(self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE, 15, True) == False:
                 writeToLog("INFO", "FAILED to find any quiz scrubber questions bubbles")
                 return False
-            sleep(0.2)
+            sleep(0.1)            
+            if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.1, True) != False:
+                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to dismiss the Question Screen during the second try")
+                    return False
             
             #we use tmpQuizPage in order to navigate to the next Quiz Question page, by incrementing with +1 (using x value) from each run
             tmpQuizPage = (self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[0], self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[1].replace('NUMBER', str(x))) 
@@ -1271,7 +1279,7 @@ class Player(Base):
             
                 sleep(1)
                 # If the Question is a Reflection Point, we will click on the continue button
-                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
+                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                     writeToLog("INFO", "FAILED to use the continue button for the " + activeQuestion + " question")
                     return False
                          
@@ -1321,7 +1329,7 @@ class Player(Base):
                                 
             else:
                 #if the active Quiz Question answer is not present in our dictionary, we will skip it
-                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 30, True) == False:
+                if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                     writeToLog("INFO", "FAILED to skip the " + activeQuestion + " which was not found in the dictionary")
                     return False
  
@@ -1418,7 +1426,7 @@ class Player(Base):
     # @Author: Horia Cus
     # This function verifies if the play button is present and then trigger the playing process
     # location must be enum ( e.g location=enums.Location.ENTRY_PAGE)
-    def verifyAndClickOnPlay(self, location=enums.Location.ENTRY_PAGE, timeOut=3, embed=False):
+    def verifyAndClickOnPlay(self, location=enums.Location.ENTRY_PAGE, timeOut=30, embed=False):
         if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch to the " + location.value + " iframe")
             return False
@@ -1433,6 +1441,7 @@ class Player(Base):
         if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 15) == False:
             writeToLog("INFO", "FAILED to wait until the loading spinner disappeared")
             return False
+        sleep(0.1)
             
         return True
     
@@ -2523,219 +2532,251 @@ class Player(Base):
     # location=enums.Location.ENTRY_PAGE
     # To be Developed: Cue Point Verification interval
     def hotspotVerification(self, hotspotsDict, location=enums.Location.ENTRY_PAGE, embed=False):        
-        if self.verifyAndClickOnPlay(location, 2, embed) == False:
+        if self.verifyAndClickOnPlay(location, 30, embed) == False:
             return False
         
+        # Create the list that will contain details for each available hotspot
+        presentedHotspotsDetailsList = []
+        presentedHotspotsNameList    = []
         
-        presentedHotspotsList = []
-        
-        while len(presentedHotspotsList) != len(hotspotsDict):
-            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
-        
-            for x in range(0, len(presentedHotspots)):   
-                if presentedHotspots[x].text not in presentedHotspotsList:
-                    hotspotTitle                = presentedHotspots[x].text
-                    
-                    hotspotStyleProperties      = presentedHotspots[x].get_attribute('style').split()
-                    
-                    hotspotStyleFontWeight      = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
-                    hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
-                    hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
-                    hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
-                    hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
-                    
-                    
-                    
-                    presentedHotspotDetails     = [hotspotTitle, hotspotStyleFontColor, hotspotStyleFontSize, hotspotStyleBorderRadius, hotspotStyleBackgroundColor]
-                    presentedHotspotsList.append(presentedHotspotDetails)
-                
-        # Verify that the expected hotspots with the expected style properties are presented in the player
-        for hotspotNumber in hotspotsDict:
+        # Run the player until we took all the available hotspots
+        while self.wait_element(self.PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER, 0.1, True) == False:
+            # Take the current hotspots elements
+            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 60)
             
-            # Take the presented hotspot for the current time
-#             presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 15)
-
-            
-            # Verify that at least one hotspot has been found in the Player
-            if presentedHotspots == False:
-                writeToLog("INFO", "Failed to extract the presented hotspots details")
-                return False
-            
-            # Take the details for the iterated hotspot
-            hotspotDetails = hotspotsDict[hotspotNumber]
-            
-            # Verify that the desired details for the current hotspot are presented properly in the player
-            for x in range(0, len(presentedHotspots)):
-                
-                # Verify that the hotspot title from the player and dictionary are a match
-                if hotspotDetails[0] in presentedHotspots[x].text:
-                    writeToLog("INFO", "AS Expected, " + hotspotDetails[0] + " hotspot has been found")
-                    
+            # Verify that at least one hotspot has been found
+            if presentedHotspots != False:
+                # Iterate through each presented hotspot    
+                for x in range(0, len(presentedHotspots)):
                     try:
-                        hotspotLocation        = presentedHotspots[x].location
-                        hotspotStyleProperties = presentedHotspots[x].get_attribute('style').split()
-                        hotspotStyleFontWeight = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
-                        
-                        # Specify the correct font weight for the presented hotspot due to an inconsistency from KMS
-                        if hotspotStyleFontWeight == "lighter":
-                            hotspotStyleFontWeight = "thin"
+                        # Verify that the hotspot found its new
+                        if len(presentedHotspotsDetailsList) == 0 or any(presentedHotspots[x].text in sl for sl in presentedHotspotsDetailsList) == False:
+                            # Take the hotspot details
+                            hotspotStartTime            = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 1, True).text
                             
-                        hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
-                        hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
-                        hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
-                        hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
-                    except Exception:
-                        writeToLog("INFO", "FAILED to take the hotspot properties for " + hotspotDetails[0])
-                        return False
-                    
-                    # Verify the position of the hotspot within the player
-                    if len(hotspotDetails) >= 2 and hotspotDetails[1] != '':
-                        topRightDict            = {'x': 786, 'y': 1}
-                        topLeftDict             = {'x': 6, 'y': 1}
-                        centerDict              = {'x': 394, 'y': 270}
-                        bottomRightDict         = {'x': 786, 'y': 419}
-                        bottomLeftDict          = {'x': 6, 'y': 419}
-                        
-                        if hotspotDetails[1] == enums.keaLocation.TOP_RIGHT:
-                            if hotspotLocation != topRightDict:
-                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                            hotspotTitle                = presentedHotspots[x].text             
+                            hotspotStyleProperties      = presentedHotspots[x].get_attribute('style').split()
+                            
+                            hotspotStyleFontWeight      = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
+                            
+                            if hotspotStyleFontWeight == 'bold':
+                                hotspotStyleFontWeight = enums.textStyle.BOLD
+                                
+                            elif hotspotStyleFontWeight == 'normal':
+                                hotspotStyleFontWeight = enums.textStyle.NORMAL
+                                
+                            elif hotspotStyleFontWeight == 'lighter':
+                                hotspotStyleFontWeight = enums.textStyle.THIN
+                                
+                            else:
+                                writeToLog("INFO", "FAILED, unknown presented font weight " + hotspotStyleFontWeight)
                                 return False
                             
-                        elif hotspotDetails[1] == enums.keaLocation.TOP_LEFT:
-                            if hotspotLocation != topLeftDict:
-                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                            hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
+                            hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
+                            hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
+                            hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
+                            
+                            hotspotLocation             = presentedHotspots[x].location
+                            if hotspotLocation == {'x': 786, 'y': 1}:
+                                hotspotLocation = enums.keaLocation.TOP_RIGHT
+                            
+                            elif hotspotLocation == {'x': 6, 'y': 1}:
+                                hotspotLocation = enums.keaLocation.TOP_LEFT
+                                
+                            elif hotspotLocation == {'x': 394, 'y': 270}:
+                                hotspotLocation = enums.keaLocation.CENTER
+                                
+                            elif hotspotLocation == {'x': 786, 'y': 419}:
+                                hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
+                                
+                            elif hotspotLocation == {'x': 6, 'y': 419}:
+                                hotspotLocation = enums.keaLocation.BOTTOM_LEFT
+                            else:
+                                writeToLog("INFO", "FAILED, couldn't find a match with the kea location while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
                                 return False
                             
-                        elif hotspotDetails[1] == enums.keaLocation.CENTER:
-                            if hotspotLocation != centerDict:
-                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
+                            if self.clickElement(presentedHotspots[x]) == False:
+                                writeToLog("INFO", "FAILED to click on the hotspot: " + hotspotTitle)
                                 return False
                             
-                        elif hotspotDetails[1] == enums.keaLocation.BOTTOM_RIGHT:
-                            if hotspotLocation != bottomRightDict:
-                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
-                                return False
-                            
-                        elif hotspotDetails[1] == enums.keaLocation.BOTTOM_LEFT:
-                            if hotspotLocation != bottomLeftDict:
-                                writeToLog("INFO", "FAILED, the " + hotspotDetails[0] + " wasn't properly presented at the " + hotspotDetails[1].value +  " location")
-                                return False
-                        else:
-                            writeToLog("INFO", "No details for the " + hotspotDetails[0] + " were given from the dictionary")
-                    
-                    # Verify if a link should be presented within the hotspot
-                    if len(hotspotDetails) >= 5 and hotspotDetails[4] != '':
-                        sleep(1)
-                        # Access the hotspot link
-                        if self.clickElement(presentedHotspots[x]) == False:
-                            writeToLog("INFO", "FAILED to click on the " + presentedHotspots[x].text + " hotspot link")
-                            return False
-                                                
-                        # Take the hotspot link details and switch back to the player
-                        if self.switch_to_default_content() == False:
-                            writeToLog("INFO", "FAILED to switch to the default content, after clicking on the hotspot link")
-                            return False
-                        
-                        try:
                             handles = self.driver.window_handles
-                            self.driver.switch_to.window(handles[1])
-                            presentedLink = self.clsCommon.base.driver.current_url
-                            self.driver.close()
-                            self.driver.switch_to.window(handles[0])
-                            self.verifyAndClickOnPlay(location, 2, embed)
-                        except Exception:
-                            writeToLog("INFO", "FAILED to take proper details while switching between the KMS and hotspot link")
-                            return False
-                        
-                        # Verify that the presented link matches with the expected link
-                        if presentedLink != hotspotDetails[4]:
-                            writeToLog("INFO", "FAILED," + presentedLink + " link was presented but " + hotspotDetails[4] + " was expected")
-                            return False
-                    
-                    # Verify if the font weight should have been changed
-                    if len(hotspotDetails) >= 6 and hotspotDetails[5].value != '':
-                        # Verify that the expected font weight matches with the presented font weight
-                        if hotspotStyleFontWeight != hotspotDetails[5].value.lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font weight has been presented instead of expected: " + hotspotDetails[5].value.lower())
-                            return False
-                    else:
-                        # Verify that the default font weight is presented
-                        defaultFontWeight = enums.textStyle.NORMAL.value
-                        if hotspotStyleFontWeight != defaultFontWeight.lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontWeight + " font weight has been presented instead of expected: " + defaultFontWeight.lower())
-                            return False
-                    
-                    # Verify if the font color should have been changed
-                    if len(hotspotDetails) >= 7 and hotspotDetails[6] != '':
-                        # Verify that the expected font color matches with the presented font color
-                        if hotspotStyleFontColor != hotspotDetails[6].lower():
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontColor + " font color has been presented instead of expected: " + hotspotDetails[6].lower())
-                            return False
-                        
-                    else:
-                        # Verify that the default font color is presented
-                        defaultFontColor = 'white'
-                        if hotspotStyleFontColor != defaultFontColor:
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontColor + " font color has been presented instead of expected: " + defaultFontColor)
-                            return False
-                        
-                    # Verify if the background color should have been changed
-                    if len(hotspotDetails) >= 8 and hotspotDetails[7] != '':
-                        # Verify that the expected background color matches with the presented background color
-                        if hotspotStyleBackgroundColor != hotspotDetails[7]:
-                            writeToLog("INFO", "FAILED," + hotspotStyleBackgroundColor + " background has been presented instead of expected: " + hotspotDetails[7])
-                            return False
-                        
-                    else:
-                        # Verify that the default background color is presented
-                        defaultBackgroundColor = 'rgba(0,0,0,0.6)'
-                        if hotspotStyleBackgroundColor != defaultBackgroundColor:
-                            writeToLog("INFO", "FAILED," + hotspotStyleBackgroundColor + " background color has been presented instead of expected: " + defaultBackgroundColor)
-                            return False
-                        
-                    # Verify if the text size should have been changed
-                    if len(hotspotDetails) >= 9 and hotspotDetails[8] != '':
-                        # Verify that the expected text size matches with the presented text size
-                        if hotspotStyleFontSize != str(hotspotDetails[8]):
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontSize + " font size has been presented instead of expected: " + str(hotspotDetails[8]))
-                            return False
-                        
-                    else:
-                        # Verify that the default text size is presented
-                        defaultTextSize = '14'
-                        if hotspotStyleFontSize != defaultTextSize:
-                            writeToLog("INFO", "FAILED," + hotspotStyleFontSize + " font size has been presented instead of expected: " + defaultTextSize)
-                            return False
-                        
-                    # Verify if the roundness size should have been changed
-                    if len(hotspotDetails) >= 10 and hotspotDetails[9] != '':
-                        # Verify that the expected roundness size matches with the presented roundness size
-                        if hotspotStyleBorderRadius != str(hotspotDetails[9]):
-                            writeToLog("INFO", "FAILED," + hotspotStyleBorderRadius + " roundness size has been presented instead of expected: " + str(hotspotDetails[9]))
-                            return False
-                        
-                    else:
-                        # Verify that the default text size is presented
-                        defaultBorderRadius = '3'
-                        if hotspotStyleBorderRadius != defaultBorderRadius:
-                            writeToLog("INFO", "FAILED," + hotspotStyleBorderRadius + " roundness size has been presented instead of expected: " + defaultBorderRadius)
-                            return False
-                    
-                    break
+                            
+                            # Verify if the presented hotspot has a link attached
+                            if len(handles) != 1:
+                                # Take the hotspot link
+                                try:
+                                    self.driver.switch_to.window(handles[1])
+                                    sleep(2)
+                                    hotspotLink = self.clsCommon.base.driver.current_url
+                                    self.driver.close()
+                                    self.driver.switch_to.window(handles[0])
+                                    self.verifyAndClickOnPlay(location, 2, embed)
+                                except Exception:
+                                    writeToLog("INFO", "FAILED to take the presented link for " + hotspotTitle)
+                                    return False
+                            else:
+                                hotspotLink = ''
+                            
+                            # Take the element index from the presentedHotspotList
+                            presentedNumber = x
+                            
+                            # Verify for how much time the hotspot is presented
+                            isStillPresented = True
+                            while self.wait_element(self.PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER, 0.1, True) == False and isStillPresented == True:
+                                currentPresentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 0.1)
+                                
+                                # Verify if there are any hotspot available during the current time
+                                if currentPresentedHotspots == False:
+                                    isStillPresented = False
+                                
+                                # Verify for how much time the selected hotspot is displayed
+                                for x in range(0, len(currentPresentedHotspots)):
+                                    # Verify that the hotspot that was found is still present on the screen
+                                    if currentPresentedHotspots[x]._id == presentedHotspots[presentedNumber]._id:
+                                        hotspotEndTime = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 0.1, True).text
+                                        break
+                                    
+                                    # Verify that the hotspot that was found is no longer present
+                                    else:
+                                        if x + 1 == len(currentPresentedHotspots):
+                                            isStillPresented = False
+                                            break
+                            
+                            # Take the time value from the end and start positions
+                            hotspotStartTimeSeconds = int(hotspotStartTime.split(':')[1])
+                            hotspotStartTimeMinute  = int(hotspotStartTime.split(':')[0])
+                            hotspotEndTimeSeconds   = int(hotspotEndTime.split(':')[1])
+                            hotspotEndTimeMinute    = int(hotspotEndTime.split(':')[0])
+                            
+                            # Increase the value by one if necessary because there may be a gap of one second
+                            if hotspotStartTimeSeconds % 10 == 4 or hotspotStartTimeSeconds % 10 == 9:
+                                hotspotStartTimeSeconds += 1
+                                
+                            if hotspotEndTimeSeconds % 10 == 4 or hotspotEndTimeSeconds % 10 == 9:
+                                hotspotEndTimeSeconds += 1
+                            
+                            # Get the timeframe where the start and end position were set
+                            hotspotSetSecondToStart = hotspotStartTimeMinute * 60 + hotspotStartTimeSeconds
+                            hotspotSetSecondToEnd   = hotspotEndTimeMinute * 60 + hotspotEndTimeSeconds
+
+                            # Create a list that contains all the details necessary for the hotspot verification
+                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotSetSecondToStart, hotspotSetSecondToEnd, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius)]
+                            presentedHotspotsDetailsList.append(presentedHotspotDetails)
+                            presentedHotspotsNameList.append(hotspotTitle)
+                            hotspots = "\n".join(presentedHotspotsNameList)
+                            writeToLog("INFO", "The following hotspot: " + hotspotTitle + ", has been successfully added inside the presented hotspot list")
+                            
+                            # Check if we reached the end of the player
+                            if self.wait_element(self.PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER, 0.1, True) != False:
+                                writeToLog("INFO", "All of the following hotspots were found and added inside the list:\n" + hotspots)
+                                break
+                            
+                            # Continue the playing process in order to take the details for the next available new hotspots
+                            if self.resumeFromBeginningEntry() == False:
+                                return False
+                            
+                            break
+                    # This try catch help us when the element details are no longer available in DOM
+                    except StaleElementReferenceException:
+                        pass
                 
-                # Verify that we were able to find the expected hotspot within the number of tries
-                if x == len(presentedHotspots):
-                    writeToLog("INFO", "FAILED to find the " + hotspotDetails[0] + " inside the player")
+        # Verify the expected hotspots properties with the presented hotspots properties
+        for hotspotNumber in hotspotsDict:
+            # Take the details for the iterated hotspot from the given dictionary
+            currentExpectedList = hotspotsDict[hotspotNumber]
+            
+            # Verify the expected hotspots with presented hotspots
+            for x in range(0, len(presentedHotspotsDetailsList)):
+                currentPresentedList = presentedHotspotsDetailsList[x]
+                
+                # Verify that the presented hotspot title matches with the expected hotspot title
+                if currentExpectedList[0] in currentPresentedList[0]:                    
+                    # Set to the list the default value for Font Color if it wasn't set in hotspotDict
+                    if currentExpectedList[6] == '':
+                        currentExpectedList.insert(6, 'white')
+                        currentExpectedList.pop(7)
+                    
+                    # Set to the list the default value for Background Color if it wasn't set in hotspotDict
+                    if currentExpectedList[7] == '':
+                        currentExpectedList.insert(7, 'rgba(0,0,0,0.6)')
+                        currentExpectedList.pop(8)
+                    
+                    # Set to the list the default value for Font Size if it wasn't set in hotspotDict
+                    if currentExpectedList[8] == '':
+                        currentExpectedList.insert(8, 14)
+                        currentExpectedList.pop(9)
+                    
+                    # Set to the list the default value for Border Radius if it wasn't set in hotspotDict
+                    if currentExpectedList[9] == '':
+                        currentExpectedList.insert(9, 3)
+                        currentExpectedList.pop(10)
+                    
+                    # Verify that the expected hotspot details, matches with the presented hotspot details
+                    if currentExpectedList != currentPresentedList:
+                        # Create a list with the inconsitencies between the expected and presented hotspots
+                        inconsitencyList = []
+                        
+                        for x in range(len(currentExpectedList)):
+                            if currentExpectedList[x] != currentPresentedList[x]:
+                                inconsitencyList.append("FAILED, the following " + currentExpectedList[x] + " was expected but " + currentPresentedList[x] + " was presented\n")
+                        
+                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed " + str(inconsitencyList))
+                        return  False
+                    else:
+                        writeToLog("INFO", "The hotspot:" + currentExpectedList[0] + " has been successfully presented")
+                        break
+                
+                # Verify that the expected hotspot was found within the number of available presented hotspots
+                if x + 1 == len(presentedHotspotsDetailsList):
+                    writeToLog("INFO", "FAILED to find the " + currentExpectedList[0] + " inside the presented hotspot list: " + hotspots)
                     return False
         
-        hotspotNameList = []
+        # Create a list with the successfully verified hotspots
+        expectedHotspotNameList = []
         for hotspotNumber in hotspotsDict:
-            hotspotNameList.append(hotspotsDict[hotspotNumber][0])
+            expectedHotspotNameList.append(hotspotsDict[hotspotNumber][0])
         
-        if len(hotspotNameList) > 1:   
-            hotspots = ", ".join(hotspotNameList)
+        if len(expectedHotspotNameList) > 1:   
+            hotspots = "\n".join(expectedHotspotNameList)
         else:
-            hotspots = hotspotNameList[0]
+            hotspots = expectedHotspotNameList[0]
         
-        writeToLog("INFO","The following hotspots were properly presented: " + hotspots + "")
+        writeToLog("INFO","The following hotspots were properly presented:\n" + hotspots)
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will resume a played entry back to second and and start the playing process
+    def resumeFromBeginningEntry(self,):
+        # Stop the entry to the current location
+        if self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 0.2, True) == False:       
+            if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
+                writeToLog("INFO", "FAILED to pause the video")
+                return False
+            
+        timmerElement = self.wait_element(self.PLAYER_TIMMER_BUTTON_CONTROLS_CONTAINER, 1, True)
+        # Take the number of pixels that needs to be moved backwards in order to reach second zero
+        timmerElementPixelsToBeMoved = timmerElement.location['x']
+        
+        # Verify that we were able to find the timmer element
+        if timmerElement == False:
+            writeToLog("INFO", "FAILED to take the timmer elements")
+            return False
+
+        # Move the time control button to second zero
+        try:
+            ActionChains(self.driver).drag_and_drop_by_offset(timmerElement, -timmerElementPixelsToBeMoved, 0).release().pause(1).perform()
+        except MoveTargetOutOfBoundsException:
+            pass
+        
+        # Resume the playing process
+        if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
+            writeToLog("INFO", "FAILED to click on the play button")
+            return False
+        
+        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 35) == False:
+            writeToLog("INFO", "FAILED to load the video after it was resumed from the beginning")
+            return False
+        
         return True
