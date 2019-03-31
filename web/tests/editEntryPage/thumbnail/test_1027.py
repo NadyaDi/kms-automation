@@ -35,7 +35,7 @@ class Test:
     captureThumbnailExpectedResult = 7
     autoGenerateSliceNumber = 6
     autoGenerateThumbnailExpectedResult = 6
-    PlayFromBarline = False
+    PlayFromBarline = True
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
     uploadThumbnailFliePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_5.png'
     
