@@ -147,7 +147,7 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, before clipping")  
                 return
                            
-            self.isExistQR = ["1", "7", "8", "13", "17", "22", "28"];
+            self.isExistQR = ["3", "7", "8", "13", "17", "22", "28"];
             self.isAbsentQR = ["33", "55", "100", "99"];
             writeToLog("INFO","Step 10: Going to verify that the presented Slides matches with the Expected slides, before clipping")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
