@@ -692,3 +692,12 @@ class keaQuizScoreType(Enum):
     HIGHEST       = "Highest Attempt" 
     LOWEST        = "Lowest Attempt"
     AVERAGE       = "Average of all Attempts"
+    
+    
+class keaHotspotActions(Enum):
+    def __str__(self):
+        return str(self.value)    
+    
+    DUPLICATE    = "Duplicate"
+    EDIT         = "Edit"
+    DELETE       = "Delete"

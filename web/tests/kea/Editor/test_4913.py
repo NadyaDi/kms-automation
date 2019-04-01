@@ -162,7 +162,7 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before clipping")
                 return
                  
-            self.isExist = ["Caption5search", "Caption7search", "Caption12search", "Caption13search"];
+            self.isExist = ["Caption3search", "Caption7search", "Caption12search", "Caption13search"];
             self.isAbsent = ["Caption100search", "Caption32search"];
             writeToLog("INFO","Step 12: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before clipping")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
@@ -193,7 +193,7 @@ class Test:
                 writeToLog("INFO","Step 16: FAILED to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")
                 return
                          
-            self.isExistQR = ["1", "7", "23", "28"];
+            self.isExistQR = ["3", "7", "23", "28"];
             self.isAbsentQR = ["18", "14", "15", "17"];
             writeToLog("INFO","Step 17: Going to verify that the presented Slides matches with the Expected slides, after clipping")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:

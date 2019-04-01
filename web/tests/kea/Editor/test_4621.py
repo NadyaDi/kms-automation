@@ -90,7 +90,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to collect all the presented captions on the player")
                 return
             
-            self.isExist = ["Caption5search", "Caption7search", "Caption12search", "Caption13search"];
+            self.isExist = ["Caption3search", "Caption7search", "Caption12search", "Caption13search"];
             self.isAbsent = ["Caption100search", "Caption32search"];
             writeToLog("INFO","Step 4: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
@@ -108,7 +108,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to collect all the presented captions on the player (after the entry was clipped)")
                 return
              
-            self.isExist = ["Caption5search", "Caption7search", "Caption22search", "Caption28search"];
+            self.isExist = ["Caption3search", "Caption7search", "Caption22search", "Caption28search"];
             self.isAbsent = ["Caption12search", "Caption13search", "Caption15search", "Caption17search"];
             writeToLog("INFO","Step 4: Going to verify the captions that were collected")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
