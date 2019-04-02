@@ -2796,7 +2796,7 @@ class Player(Base):
 
     # @Author: Horia Cus
     # This function will resume a played entry back to second and and start the playing process
-    def resumeFromBeginningEntry(self,):
+    def resumeFromBeginningEntry(self,hotspots):
         # Stop the entry to the current location
         if self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 0.2, True) == False:       
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
