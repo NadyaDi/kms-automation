@@ -267,8 +267,9 @@ class Moodle(Base):
                 embed_activity = (self.MOODLE_EMBED_ACTIVITY[0], self.MOODLE_EMBED_ACTIVITY[1].replace('ACTIVITY_NAME', embedTitle))
                 if self.click(embed_activity) == False:
                     writeToLog("INFO","FAILED to click on embed activity title")
-                    return False                                        
-        
+                    return False  
+                                                      
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         self.clsCommon.base.switch_to_default_content()

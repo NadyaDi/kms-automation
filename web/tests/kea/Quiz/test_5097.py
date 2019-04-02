@@ -18,7 +18,7 @@ class Test:
     # Go to editor page and create quiz with open-Q only
     # Go to quiz page and verify that question is displayed properly and that user is able to answer it
     #================================================================================================================================
-    testNum = "4917"
+    testNum = "5907"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -63,31 +63,31 @@ class Test:
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("IVQ - Open-Q", self.testNum)          
             ######################### TEST STEPS - MAIN FLOW #######################
-#             writeToLog("INFO","Step 1: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return
-#              
-#             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-#                                 
-#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
-#                 return
-#                                 
-#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-#                 return
-#                                                                
-#             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
-#             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
-#                 return
+            writeToLog("INFO","Step 1: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return
+              
+            self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
+                                 
+            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                return
+                                 
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                return
+                                                                
+            writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
+            if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+                return
             
             writeToLog("INFO","Step 5 : Going to answer quiz open question")  
             if self.common.player.answerQuiz(self.quizQuestionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='100') == False:
