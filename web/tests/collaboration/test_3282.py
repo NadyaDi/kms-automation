@@ -32,8 +32,8 @@ class Test:
     entryName = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    newUserId = "Automation_User_1"
-    newUserId2 = "Automation_User_2"
+    newUserId = "AutomationUser7"
+    newUserId2 = "AutomationUser8"
     newUserPass = "Kaltura1!"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_Code_10sec.mp4'
     categoryList = [("Apps Automation Category")]

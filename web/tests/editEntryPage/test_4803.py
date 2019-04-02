@@ -52,7 +52,7 @@ class Test:
             self.videoEntryName = clsTestService.addGuidToString("Enable clipping permission", self.testNum)
             expectedEntryDuration = "0:20"
             self.user2 = 'private'
-            self.user2Pass = '123456'            
+            self.user2Pass = 'Kaltura1!'            
             
             ########################################################################
             self.entryName = clsTestService.addGuidToString('Add Captions', self.testNum)

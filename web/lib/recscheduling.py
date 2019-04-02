@@ -61,7 +61,7 @@ class  Recscheduling(Base):
     SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER              = ('xpath', "//input[@id='EventRecurrence-monthly_weekdays_months']") # this locator is for monthly option,this is the second option in monthly-how many month
     SCHEDULE_RECURRENCE_SAVE_BUTTON                                         = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
     SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE                                 = ('xpath', "//a[contains(text(), 'EVENT_TITLE')]")
-    
+    SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -502,9 +502,12 @@ class  Recscheduling(Base):
         
         return True
     
+    # @Author: Michal Zomper
     # eventTime - the time need to be both start and end time, for example: 4:00am-5:00pm 
-    def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, eventTime, resource=''):
-        # add function test jump to the event start date
+    def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, startTime, endTime, resources=''):
+        if self.setScheduleInMySchedulePage(startDate) == False:
+            writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
+            return False  
         
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventTitle))
         try:
@@ -522,11 +525,68 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to find event element text")
             return False
         
-        if eventTime.lower() in eventMetadata == False:
+        if startTime.lower()+"-"+endTime.lower() in eventMetadata == False:
             writeToLog("INFO","FAILED to find event time")
             return False
         
-        if resource != '':
-            if resource.value in eventMetadata == False:
-                writeToLog("INFO","FAILED to find event resource")
-                return False
+        if resources != '':
+            if type(resources) is list:
+                for resource in resources:
+                    if resource.value in eventMetadata == False:
+                        writeToLog("INFO","FAILED to find event resource: " + resource)
+                        return False
+            else:
+                if resources.value in eventMetadata == False:
+                        writeToLog("INFO","FAILED to find event resource: " + resources)
+                        return False
+        
+        writeToLog("INFO","Success, Event date and time display correctly in my schedule page")
+        return True
+    
+    
+    # @Author: Michal Zomper
+    # the function choose the needed date form calendar in my schedule page
+    def setScheduleInMySchedulePage(self, dateStr):
+        if self.click(self.SCHEDULE_JUMP_TO_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'jump to' button")
+            return False
+        
+        tmpDate = dateStr.split('-')[0]
+        tmpDate = tmpDate.split(',')
+        year = tmpDate[1][1:-1]
+        tmpDate = tmpDate[0].split(' ')
+        month =  tmpDate[0][:3]
+        # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3'
+        day = int(tmpDate[1])
+        day = str(day)     
+            
+        # Set a year
+        # Click on the year - at the top of the calendar
+        if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SCHEDULING_CALENDAR_TOP) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False
+        
+        # Click again to show all years
+        if self.click(self.clsCommon.editEntryPage.EDIT_ENTRY_SCHEDULING_CALENDAR_TOP, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on the top of the calendar, to select the year")
+            return False
+        
+        # Select a year
+        if self.click((self.clsCommon.editEntryPage.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[0], self.clsCommon.editEntryPage.EDIT_ENTRY_SCHEDULING_CALENDAR_YEAR[1].replace('YEAR', year))) == False:
+            writeToLog("INFO","FAILED to select the year")
+            return False        
+        
+        # Set Month
+        if self.click((self.clsCommon.editEntryPage.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[0], self.clsCommon.editEntryPage.EDIT_ENTRY_SCHEDULING_CALENDAR_MONTH[1].replace('MONTH', month))) == False:
+            writeToLog("INFO","FAILED to select the month")
+            return False
+        
+        # Set Day
+        # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
+        # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'
+        if self.clsCommon.editEntryPage.clickOnDayFromDatePicker(day) == False:
+            writeToLog("INFO","FAILED to select the day")
+            return False        
+        
+        return True
+        

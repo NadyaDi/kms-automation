@@ -32,7 +32,7 @@ class Test:
     channelList = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    newUserId = "Automation_User_1"
+    newUserId = "AutomationUser7"
     newUserPass = "Kaltura1!"
     newDescription = "Edit description"
     newTags = "Edit Tags,"

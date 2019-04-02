@@ -41,6 +41,8 @@ class Kea(Base):
     KEA_IFRAME                                                              = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
+    KEA_LOADING_CONTAINER                                                   = ('xpath', "//div[contains(@class,'loading__container')]") 
+    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and text()='Please wait while media is processing']") 
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
     KEA_QUIZ_ANSWER_GENERAL                                                 = ('xpath', "//textarea[contains(@id,'answer-text')]") 
@@ -74,6 +76,7 @@ class Kea(Base):
     EDITOR_TOTAL_TIME                                                       = ('xpath', "//span[@class='total-time']")
     EDITOR_TOTAL_TIME_TOOLBAR                                               = ('xpath', "//span[contains(@class,'toolbar__total-time')]")
     EDITOR_GO_TO_MEDIA_PAGE_BUTTON                                          = ('xpath', "//a[contains(.,'Media Page')]")
+    EDITOR_SEARCH_X_BUTTON                                                  = ('xpath', "//i[@class='v2ui-close-icon']")
     KEA_ENTRY_NAME                                                          = ('xpath', "//span[@class='entry-name']")
     KEA_TOGGLE_MENU_OPTION                                                  = ('xpath', "//span[contains(text(),'OPTION_NAME')]")
     KEA_OPTION_NORMAL                                                       = ('xpath', "//label[contains(@class,'ng-star-inserted') and text()='OPTION_NAME']")  
@@ -109,10 +112,12 @@ class Kea(Base):
     KEA_TIMELINE_CONTROLS_ZOOM_IN_TOOLTIP                                   = ('xpath', "//div[@class='ui-tooltip-text ui-shadow ui-corner-all' and text()='Zoom in']")
     KEA_CONFIRMATION_POP_UP_CONTINUE                                        = ('xpath', "//button[contains(@class,'button') and text()='Continue']")
     KEA_CONFIRMATION_POP_UP_TITLE                                           = ('xpath', "//div[@class='kErrorMessageTitle']")
+    KEA_CONFIRMATION_POP_UP_CONTAINER                                       = ('xpath', "//div[@class='kErrorMessage']")
     KEA_HOTSPOTS_TAB                                                        = ('xpath', "//a[@class='nav-button' and @aria-label='Hotspots']") 
     KEA_HOTSPOTS_TAB_ACTIVE                                                 = ('xpath', "//a[@class='nav-button active' and @aria-label='Hotspots']") 
     KEA_HOTSPOTS_ADD_NEW_BUTTON                                             = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Add Hotspot"]')
-    KEA_HOTSPOTS_DONE_BUTTON                                                = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Done"]')
+    KEA_HOTSPOTS_DONE_BUTTON_ADVANCED_SETTINGS                              = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Done"]')
+    KEA_HOTSPOTS_DONE_BUTTON_NORMAL                                         = ('xpath', '//button[contains(@class,"btn btn-save pull-right")]')
     KEA_HOTSPOTS_SAVE_BUTTON                                                = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Save"]')
     KEA_HOTSPOTS_ADVANCED_SETTINGS                                          = ('xpath', '//button[@class="form-button" and text()="Advanced Settings"]')
     KEA_HOTSPOTS_FORM_TEXT_INPUT_FIELD                                      = ('xpath', '//input[@id="inputText"]')
@@ -125,6 +130,12 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_ROUNDNESS                                             = ('xpath', '//input[@id="roundness"]')
     KEA_HOTSPOTS_PLAYER_BUTTON                                              = ('xpath', "//div[@class='hotspot__button']")
     KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER                                   = ('xpath', "//div[contains(@class,'hotspot__container ui-draggable ui-draggable-handle')]")
+    KEA_HOTSPOTS_PANEL_ITEM_TITLE                                           = ('xpath', "//div[contains(@class,'panel-item__title')]")
+    KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU                                  = ('xpath', "//i[@class='kicon-more']")
+    KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE                                = ('xpath', "//span[@class='ui-menuitem-text' and text()='Duplicate']")
+    KEA_HOTSPOTS_PANEL_ACTION_MENU_EDIT                                     = ('xpath', "//span[@class='ui-menuitem-text' and text()='Edit']")
+    KEA_HOTSPOTS_PANEL_ACTION_MENU_DELETE                                   = ('xpath', "//span[@class='ui-menuitem-text' and text()='Delete']")
+    KEA_HOTSPOTS_DELETE_POP_UP_CONFIRMATION_BUTTON                          = ('xpath', "//button[contains(@class,'ng-star-inserted') and text()='Delete Hotspot']")
     KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER                                  = ('xpath', '//div[contains(@class,"kea-timeline-stacked-item kea-timeline-stacked-item--audio-disabled")]')
     KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_RIGHT                       = ('xpath', '//div[contains(@class,"handle--right content-item__handle--selected")]')
     KEA_TIMELINE_SECTION_HOTSPOT_DRAG_CONTAINER_LEFT                        = ('xpath', '//div[contains(@class,"handle--left content-item__handle--selected")]')
@@ -167,6 +178,22 @@ class Kea(Base):
         
         sleep(6)
         
+        if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_NO_ENTRIES_FOUND, 1, True) != False:
+            writeToLog("INFO", "FAILED to find the " + entryName + " within the first try...")
+            sleep(10)
+            if self.click(self.EDITOR_SEARCH_X_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the X button in order to clear the search")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            self.clsCommon.myMedia.getSearchBarElement().click()
+            self.clsCommon.myMedia.getSearchBarElement().send_keys('"' + entryName + '"')
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+        if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_NO_ENTRIES_FOUND, 1, True) != False:
+            writeToLog("INFO", "FAILED, the " + entryName + " couldn't be found inside the Editor after two tries")
+            return False
+        
         # Click on select button in order to open KEA
         if self.click(self.KEA_SELECT_VIDEO_FOR_EDIT) == False:
             writeToLog("INFO","FAILED to select entry and open KEA")
@@ -177,7 +204,11 @@ class Kea(Base):
         # Verify that we are in KEA page and app is displayed
         if self.wait_visible(self.KEA_APP_DISPLAY, 40) == False:
             writeToLog("INFO","FAILED to display KEA page")
-            return False              
+            return False
+        
+        if self.wait_while_not_visible(self.KEA_LOADING_CONTAINER, 60) == False:
+            writeToLog("INFO", "FAILED to wait until the KEA Loading container disappeared")
+            return False            
         
         return True
     
@@ -462,6 +493,10 @@ class Kea(Base):
         
         sleep(5)                      
         
+        if self.wait_while_not_visible(self.KEA_MEDIA_IS_BEING_PROCESSED, 120) == False:
+            writeToLog("INFO", "FAILED to wait until the " + entryName + " has been processed during the launch kea")
+            return False
+        
         writeToLog("INFO","Success, KEA has been launched for: " + entryName) 
         return True
     
@@ -559,6 +594,7 @@ class Kea(Base):
             writeToLog("INFO","Failed to launch KEA for: " + entryName)
             return False
         sleep(2)
+        
         
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
             self.click(self.clsCommon.kafGeneric.KAF_REFRSH_BUTTON) 
@@ -963,12 +999,24 @@ class Kea(Base):
 #         self.clickDone()
 #         return True
 
-    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
+    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=20):
         sleep(25)
+
+        # Need this step in order to workaround an issue that may fail a test case after uploading an entry
+        if self.wait_element(self.clsCommon.upload.UPLOAD_PAGE_TITLE, 0.5, True) != False:
+            sleep(2) 
+            if self.clsCommon.navigateTo(enums.Location.HOME) == False:
+                writeToLog("INFO", "FAILED to navigate to home page")
+                return False
+        
         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
             writeToLog("INFO", "FAILED to navigate to " + entryName)
             return False
         sleep(timeout)
+        
+        if self.wait_while_not_visible(self.KEA_MEDIA_IS_BEING_PROCESSED, 120) == False:
+            writeToLog("INFO", "FAILED to process the " + entryName + " during the launch")
+            return False
         
         # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" and "Open-Q" Quiz Questions)
         questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
@@ -984,7 +1032,7 @@ class Kea(Base):
             sleep(3)
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
             # click on the editor in order to higlight the timeline field and select all the text
-            if self.click(self.EDITOR_TIME_PICKER, 15, True) == False:
+            if self.click(self.EDITOR_TIME_PICKER, 30, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             
@@ -1233,7 +1281,7 @@ class Kea(Base):
     # This function can navigate to a specific entry and initiate the KEA Quiz option
     # This function work for both entries that have Quiz created or not
     # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
-    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=25):
+    def initiateQuizFlow(self, entryName, navigateToEntry=False, timeOut=40):
         self.switch_to_default_content()
         if navigateToEntry == True:
             sleep(timeOut)
@@ -1664,8 +1712,8 @@ class Kea(Base):
             if self.verifyKEAOptionState(enums.KEAQuizOptions.DO_NOT_ALLOW_SKIP, False) == False:
                 return False
             
-            if self.wait_element(tmpKEAOptionSeeking, 1, True) != False:   
-                if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, True) == False:
+            if self.wait_element(tmpKEAOptionSeeking, 1, False) != False:   
+                if self.verifyKEAOptionState(enums.KEAQuizOptions.NO_SEEKING_FORWARD, False) == False:
                     return False
             else:
                 writeToLog("INFO", "AS EXPECTED, no seeking forward option was found as disabled")
@@ -3131,18 +3179,9 @@ class Kea(Base):
                         writeToLog("INFO", "FAILED to change the font size to " + str(hotspotDetails[9]) + " for " + hotspotDetails[0] + " hotspot")
                         return False
 
-            # Save the settings hotspot in the hotspot list
-            if self.click(self.KEA_HOTSPOTS_DONE_BUTTON, 1, True) == False:
+            # Save the current hotspot
+            if self.saveHotspotChanges(settingsChanges=True) == False:
                 writeToLog("INFO", "FAILED to save the KEA hotspots for " + hotspotDetails[0])
-                return False
-            
-            # Save the presented hotspots inside the entry
-            if self.click(self.KEA_HOTSPOTS_SAVE_BUTTON, 1, True) == False:
-                writeToLog("INFO", "FAILED to save the hotspot changes")
-                return False
-            
-            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
-                writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
                 return False
             
             # Set the start time and end time for the hotspot
@@ -3173,7 +3212,7 @@ class Kea(Base):
         self.switchToKeaIframe()  
         
         # Verify that the Hotspot section is present
-        if self.wait_element(self.EDITOR_REALTIME_MARKER, 5, True) == False:
+        if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
             writeToLog("INFO", "FAILED To verify that we are in the Hotspots Section")
             return False
         
@@ -3353,3 +3392,227 @@ class Kea(Base):
         
         writeToLog("INFO", "KEA Location has been successfully set at " + location.value)
         return True
+    
+    
+    # @Author: Horia Cus
+    # This function will save the changes performed within the Hotspot section
+    # If settingsChanges = True, means that changes were performed within the List and it will click on the done button first
+    def saveHotspotChanges(self, settingsChanges=True):
+        self.switchToKeaIframe()
+        
+        if settingsChanges == True:
+            # Save the settings hotspot changes
+            if self.click(self.KEA_HOTSPOTS_DONE_BUTTON_ADVANCED_SETTINGS, 1, True) == False:
+                if self.click(self.KEA_HOTSPOTS_DONE_BUTTON_NORMAL, 1, True) == False:
+                    writeToLog("INFO", "FAILED to save the KEA hotspots setting changes")
+                    return False
+        
+        # Save the presented hotspots inside the entry
+        if self.click(self.KEA_HOTSPOTS_SAVE_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to save the hotspot changes")
+            return False
+        
+        # Verify that the changes were saved
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 30) == False:
+            writeToLog("INFO", "FAILED to wait until the hotspot changes were saved")
+            return False
+        
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function can edit / delete and duplicate any presented  hotspotName
+    # hotspotName = contains the string of the hotspot title
+    # hotspotAction must  be enum ( e.g enums.keaHotspotActions.DUPLICATE )
+    def hotspotActions(self, hotspotName, hotspotAction, editHotspotDict=''):
+        self.switchToKeaIframe()
+        
+        # Take a list with all the available hotspots from the sidebar
+        hotspotsPanelTitle = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 30)
+        
+        if hotspotsPanelTitle == False:
+            writeToLog("INFO", "FAILED to find any available hotspots in the side bar panel")
+            return False
+        
+        # Take the location for the hotspotName from the presentedHotspots
+        hotspotLocation = None
+        for x in range(0, len(hotspotsPanelTitle)):
+            if hotspotsPanelTitle[x].text == hotspotName:
+                hotspotLocation = x
+                break
+            
+            if x + 1 == len(hotspotsPanelTitle):
+                writeToLog("INFO", "FAILED to find the " + hotspotName + " inside the sidebar panel")
+                return False
+        
+        # Create the element for hamburger menu
+        hotspotsActionMenu = self.wait_elements(self.KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU, 1)
+        
+        if hotspotsActionMenu == False:
+            writeToLog("INFO", "FAILED to find the action menu for the presented hotspots")
+            return False
+        
+        # Trigger the action menu for the desired hotspotName
+        if self.clickElement(hotspotsActionMenu[hotspotLocation]) == False:
+            writeToLog("INFO", "FAILED to trigger the action menu for hotspot: " + hotspotName)
+            return False
+        
+        if hotspotAction == enums.keaHotspotActions.DUPLICATE:
+            # Duplicate the hotspotName
+            if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Duplicate button for the hotspot: " + hotspotName)
+                return False
+            
+            # Add a special suffix for the duplicated hotspot in order to verify it in other function
+            action = ActionChains(self.driver)
+            
+            try:
+                action.send_keys(' Duplicated').perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to add Duplicated suffix for the " + hotspotName + " hotspot")
+                return False
+            
+            # Save the duplicated hotspot
+            if self.saveHotspotChanges(settingsChanges=True) == False:
+                writeToLog("INFO", "FAILED to save the changes for " + hotspotName + " Duplicated hotspot")
+                return False
+            
+        elif hotspotAction == enums.keaHotspotActions.EDIT:
+            # Edit the hotspotName
+            if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_EDIT, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Edit button for the hotspot: " + hotspotName)
+                return False
+            
+            # Add a suffix to the edited hotspotName in order to verify it in other function
+            action = ActionChains(self.driver)
+            
+            try:
+                action.send_keys(' Edited').perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to add Edited suffix for the " + hotspotName + " hotspot")
+                return False
+            
+            # Save the edited hotspot
+            if self.saveHotspotChanges(settingsChanges=True) == False:
+                writeToLog("INFO", "FAILED to save the changes for " + hotspotName + " Edited hotspot")
+                return False
+            
+        elif hotspotAction == enums.keaHotspotActions.DELETE:
+            # Trigger the delete process for the hotspotName
+            if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DELETE, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Delete button for the hotspot: " + hotspotName)
+                return False
+            
+            # Confirm the delete process
+            if self.click(self.KEA_HOTSPOTS_DELETE_POP_UP_CONFIRMATION_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Delete Hotspot button")
+                return False
+            
+            # Verify that the confirmation pop up is no longer present
+            if self.wait_while_not_visible(self.KEA_CONFIRMATION_POP_UP_CONTAINER, 10) == False:
+                writeToLog("INFO", "FAILED, the confirmation pop up is still present")
+                return False
+            
+            # Save the changes
+            if self.saveHotspotChanges(settingsChanges=False) == False:
+                writeToLog("INFO", "FAILED to save the changes after deleting the " + hotspotName + " hotspot")
+                return False
+        
+        # Verify that a valid action has been used during the function call
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you've used a supported hotspot action")
+            return False
+
+        writeToLog("INFO", "The hotspot " + hotspotName + " has been successfully " + hotspotAction.value + "ed")
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will verify that the expected hotspots are properly presented in the timeline section by
+    # Verifying the hotspot container size based on the duration
+    # Verifying the X location based on the start time
+    # Verifying the Y location based on the start and end time
+    # Verify the place order based on creation
+    # For hotspotDict structure please check hotspotCreation function
+    def hotspotTimelineVerification(self, hotspotsDict):
+        self.switchToKeaIframe()
+        # Verify that we are in the Hotspot Section
+        if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
+            writeToLog("INFO", "FAILED To verify that we are in the Hotspots Section")
+            return False        
+        
+        # Create a Blank Hotspot in order to take the properties that we need
+        if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to add a new hotspot in order to take its width")
+            return False
+        
+        if self.saveHotspotChanges(settingsChanges=True) == False:
+            writeToLog("INFO", "FAILED to save the blank hotspot")
+            return False
+        
+        presentedHotspots       = self.wait_elements(self.KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER, 15)
+        zeroSecondXValue        = None
+        
+        # Take the properties from the Blank Hotspot
+        for x in range(0, len(presentedHotspots)):
+            if presentedHotspots[x].text == '':
+                maximumHotspotSize        = presentedHotspots[x].size['width']
+                zeroSecondXValue          = presentedHotspots[x].location['x']
+                break
+            
+            if x + 1 == len(presentedHotspots):
+                writeToLog("INFO", "FAIELD to find the blank hotspot")
+                return False
+        
+        # Delete the Blank Hotspot
+        if self.hotspotActions('<Blank>', enums.keaHotspotActions.DELETE) == False:
+            writeToLog("INFO", "FAILED to delete the blank hotspot")
+            return False
+        
+        # Take the list with all the presented hotspots that will be iterated
+        presentedHotspots           = self.wait_elements(self.KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER, 15)
+        # Take entrie's length time
+        entryTotalTime              = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(' ', '')[1:]
+        m, s                        = entryTotalTime.split(':')
+        entryTotalTimeSeconds       = int(m) * 60 + int(s)
+        # Take the number of px needed for each second based on the entry time
+        widthSizeForOneSecond       = maximumHotspotSize/entryTotalTimeSeconds
+
+        # Verify that we have at least one hotspot presented
+        if presentedHotspots == False:
+            writeToLog("INFO", "FAILED to find any available hotspots within the timeline section")
+            return False
+
+        # Iterate through each presented hotspot
+        for x in range(0, len(presentedHotspots)):
+            # Take the hotspot details from the dictionary
+            expectedHotspot          = hotspotsDict[str(x+1)]
+            
+            # Take the presented hotspot details
+            presentedHotspot         = presentedHotspots[x]
+            presentedHotspotTitle    = presentedHotspot.text
+            presentedHotspotWidth    = presentedHotspot.size['width']
+            presentedHotspotXValue   = presentedHotspot.location['x']
+            presentedHotspotTime     = int(presentedHotspotWidth/widthSizeForOneSecond)
+            
+            expectedHotspotTime      = expectedHotspot[3] - expectedHotspot[2]
+            expectedHotspotXValue    = int(zeroSecondXValue + widthSizeForOneSecond * expectedHotspot[2])
+            
+            # Verify that the expected hotspot matches with the presented hotspot for the current location
+            if presentedHotspotTitle == expectedHotspot[0]:                
+                
+                # Verify that the width of the hotspot container matches with the expected duration
+                if presentedHotspotTime != expectedHotspotTime:
+                    writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
+                    return False
+                
+                # Verify that the presented hotspot is presented at the expected X location
+                if presentedHotspotXValue != expectedHotspotXValue:
+                    writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
+                    return False
+                
+            else:
+                writeToLog("INFO", "FAILED, " + presentedHotspotTitle + " was displayed at place " + str(x+1) + " while we expected " + expectedHotspot[0])
+                return False
+        
+        return True 
