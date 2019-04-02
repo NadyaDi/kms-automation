@@ -129,6 +129,10 @@ class Player(Base):
     PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_POINT_CONTAINER          = ('xpath', "//div[@class='ivqContainer open-question']")
     PLAYER_QUIZ_QUESTION_SCREEN_OPEN_QUESTION_TEXT              = ('xpath', '//textarea[@class="open-question-textarea"]')
     PLAYER_QUIZ_QUESTION_OPEN_QUESTION_SAVE_BTN                 = ('xpath', '//button[@id="open-question-save"]')  
+    PLAYER_QUIZ_WELCOME_SCREEN_TOTAL_ATTEMPTS                   = ('xpath', '//div[@class="retake-box" and text()="Total attempts available for this quiz: NUMBER_OF_ATTEMPTS"]')
+    PLAYER_SUBMITTED_SCREEN_CURRENT_ATTEMPT_NUMBER              = ('xpath', '//span[@class="retake-summary-text" and text()="This is attempt CURRENT_ATTEMPTS of TOTAL_ATTEMPTS"]')
+    PLAYER_SUBMITTED_SCREEN_TOTAL_SCORE                         = ('xpath', '//span[@class="retake-summary-score-text" and text()=", your score is TOTAL_SCORE based on SCORE_TYPE"]')
+    PLAYER_SUBMITTES_SCREEN_TAKE_THE_QUIZ_AGAIN_BTN             = ('xpath', '//div[@title="Take the Quiz again"]')
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -1228,8 +1232,13 @@ class Player(Base):
     # skipWelcomeScreen = True it will wait and click on the continue button
     # Reflection Point questions, should not be present in the list
     # This function works only when the "ALLOW SKIP" option is enabled
-    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict=''):     
-        if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed) == False:
+    # expectedNumberOfAttemptsWelcomeSreen = int: How many attempts user has, displayed in welcome screen
+    # currentNumberOfAttemptsSubmittedScreen = int: The number of the current attempt, displayed in submitted screen
+    # totalGivenAttempts = int: The total given number of attempts
+    # expectedGeneralQuizScore = String: Represent the score of all attempts based on the score type
+    # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
+    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='',expectedNumberOfAttemptsWelcomeSreen='', currentNumberOfAttemptsSubmittedScreen='', totalGivenAttempts='', expectedGeneralQuizScore='', scoreType=''):     
+        if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed, expectedNumberOfAttemptsWelcomeSreen) == False:
             return False
          
         # taking the available question numbers                
@@ -1359,7 +1368,7 @@ class Player(Base):
             
             # We verify the expected quiz score
             if expectedQuizScore != '':
-                if self.verifySubmittedScreen(expectedQuizScore, location, verifySubmittedScreenDict, expectedQuestionsStateDict, 30, embed) == False:
+                if self.verifySubmittedScreen(expectedQuizScore, location, verifySubmittedScreenDict, expectedQuestionsStateDict, 30, embed, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedGeneralQuizScore, scoreType) == False:
                     return False
              
             return True
@@ -1771,7 +1780,8 @@ class Player(Base):
 
     # @Author: Horia Cus
     # This function verifies if the Welcome Screen is enabled and then clicks on the "CONTINUE" button
-    def continueFromQuizWelcomeScreen(self):
+    # expectedNumberOfAttempts = int, How many attempts user has. Empty when user isn't able to retake the quiz again
+    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts=''):
         #we verify if the "Continue" button specific for the Quiz "Welcome Screen" is present or not     
         if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
             writeToLog("INFO", "Continue button has been found in welcome screen")
@@ -1779,6 +1789,20 @@ class Player(Base):
             writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
             return False
         
+        # If expected number of attempts != '', we expect to see total attempt message with the number of the available attempts
+        if expectedNumberOfAttempts != '':
+            # If we have no more attempts we shouldn't get allow attempt message
+            if expectedNumberOfAttempts == 0:
+                tmpAvailableAttemptMsg = (self.PLAYER_QUIZ_WELCOME_SCREEN_TOTAL_ATTEMPTS[0], self.PLAYER_QUIZ_WELCOME_SCREEN_TOTAL_ATTEMPTS[1].replace('NUMBER_OF_ATTEMPTS', str(expectedNumberOfAttempts)))
+                if self.wait_element(tmpAvailableAttemptMsg) == True:
+                    writeToLog("INFO", "FAILED: allow attempts message is displayed, although all attempts were used")
+                    return False
+            else:
+                tmpAvailableAttemptMsg = (self.PLAYER_QUIZ_WELCOME_SCREEN_TOTAL_ATTEMPTS[0], self.PLAYER_QUIZ_WELCOME_SCREEN_TOTAL_ATTEMPTS[1].replace('NUMBER_OF_ATTEMPTS', str(expectedNumberOfAttempts)))
+                if self.wait_element(tmpAvailableAttemptMsg) == False:
+                    writeToLog("INFO", "FAILED to display correct total attempts message")
+                    return False                
+
         #we click on the "continue" button and then wait one second in order to give time for the playing process to start
         if self.click(self.PLAYER_QUIZ_CONTINUE_BUTTON, 10, True) == False:
             writeToLog("INFO", "FAILED to continue further from the welcome screen")
@@ -1856,7 +1880,8 @@ class Player(Base):
     
     # @Author: Horia Cus
     # This function initiates the playing process from the beginning
-    def initiateQuizPlayback(self, location=enums.Location.ENTRY_PAGE, timeOut=2, skipWelcomeScreen=True, embed=False):     
+    # expectedNumberOfAttemptsWelcomeSreen = int: How many attempts user has. Empty when user isn't able to retake the quiz again
+    def initiateQuizPlayback(self, location=enums.Location.ENTRY_PAGE, timeOut=2, skipWelcomeScreen=True, embed=False, expectedNumberOfAttempts=''):     
         sleep(timeOut)
         if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
@@ -1874,7 +1899,7 @@ class Player(Base):
         #we dismiss the "Quiz Welcome Screen" if its enabled 
         sleep(1)
         if skipWelcomeScreen == True:
-            if self.continueFromQuizWelcomeScreen() == False:
+            if self.continueFromQuizWelcomeScreen(expectedNumberOfAttempts) == False:
                 return False
             
         if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
@@ -2282,7 +2307,11 @@ class Player(Base):
         # questionListForCorrectAnswer     = ['question title', True]
         # questionListForInvalidAnswer     = ['question title', False]
         # questionListForReflectionPoint   = ['question title', False]
-    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30, embed=False):  
+    # currentNumberOfAttemptsSubmittedScreen = Number: The number of the current attempt, displayed in submitted screen
+    # totalGivenAttempts = Number: The total given number of attempts
+    # expectedGeneralQuizScore = String: Represent the score of all attempts based on the score type
+    # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
+    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30, embed=False, currentNumberOfAttemptsSubmittedScreen='', totalGivenAttempts='', expectedGeneralQuizScore='', scoreType=''):  
         if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
@@ -2299,6 +2328,20 @@ class Player(Base):
             writeToLog("INFO", "FAILED, " + quizScore + " quiz score was displayed, instead of the expected: " + expectedQuizScore + " quiz score")
             return False
         
+        # If we have more than one attempt
+        if totalGivenAttempts != '':
+            # we verify that correct total score and score type are displayed
+            tmpTotalScore = (self.PLAYER_SUBMITTED_SCREEN_TOTAL_SCORE[0], self.PLAYER_SUBMITTED_SCREEN_TOTAL_SCORE[1].replace('TOTAL_SCORE', expectedGeneralQuizScore).replace('SCORE_TYPE', scoreType.value))
+            if self.wait_element(tmpTotalScore) == False:
+                writeToLog("INFO", "FAILED, score and score type aren't presented correctly")
+                return False
+            
+            # we verify that correct attempts (total and current) are displayed
+            tmpAttempts = (self.PLAYER_SUBMITTED_SCREEN_CURRENT_ATTEMPT_NUMBER[0], self.PLAYER_SUBMITTED_SCREEN_CURRENT_ATTEMPT_NUMBER[1].replace('CURRENT_ATTEMPTS', str(currentNumberOfAttemptsSubmittedScreen)).replace('TOTAL_ATTEMPTS', str(totalGivenAttempts)))    
+            if self.wait_element(tmpAttempts) == False:
+                writeToLog("INFO", "FAILED, attempts number isn't displayed correctly")
+                return False                
+
         # If questionDict is empty, we will not verify the why
         if questionDict != '':            
             # We navigate to each specific question number
@@ -2784,4 +2827,42 @@ class Player(Base):
             writeToLog("INFO", "FAILED to load the video after it was resumed from the beginning")
             return False
         
+        writeToLog("INFO","The following hotspots were properly presented: " + hotspots + "")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # This function verify the correct number of attempts is displayed before and after answering quiz when 'allow multiple attempts' is enabled
+    # AllAttempsList - List of dictionaries - each dictionary represent the questions and answers for each attempt
+    # expectedQuizScore = List of string: each string represent the current score (individual) of each attempt
+    # totalGivenAttempts = int: The total given number of attempts
+    # expectedAttemptGeneralScore = List of string: each string represent the total score after each attempts based on the score type
+    # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
+    def verifyQuizAttempts(self, AllAttempsList, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore=[], embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='', totalGivenAttempts='', expectedAttemptGeneralScore=[], scoreType=''):
+        for i in range(0,len(AllAttempsList)):
+            expectedNumberOfAttemptsWelcomeSreen = totalGivenAttempts - i
+            currentNumberOfAttemptsSubmittedScreen = i + 1               
+            
+            if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore[i], embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedAttemptGeneralScore[i], scoreType) == False:
+                writeToLog("INFO", "FAILED to answer quiz")
+                return False 
+            
+            # If we aren't in the last attempt click on 'take the quiz again'
+            if i != len(AllAttempsList) - 1:
+                if self.click(self.PLAYER_SUBMITTES_SCREEN_TAKE_THE_QUIZ_AGAIN_BTN) == False:
+                    writeToLog("INFO", "FAILED to click on 'Take the quiz again' button")
+                    return False  
+            # If we are in the last attempt verify that 'take the quiz again isn't display
+            else:
+                if self.wait_element(self.PLAYER_SUBMITTES_SCREEN_TAKE_THE_QUIZ_AGAIN_BTN) == True:
+                    writeToLog("INFO", "FAILED: 'Take the quiz again' button is display after the last attempt")
+                    return False
+                
+                if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed, 0) == False:
+                    writeToLog("INFO", "FAILED to display correct welcome screen")
+                    return False 
+            
+            self.clsCommon.base.refresh()                      
+            i = i + 1
+
+        return True    
