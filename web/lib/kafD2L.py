@@ -53,7 +53,7 @@ class D2L(Base):
     
     D2L_COURSE_CONTENT_TAB                              = ('xpath', '//a[@class="d2l-navigation-s-link" and text()="Content"]')
     D2L_ADD_EXISTING_ACTIVITIES_DROPDOWN                = ('xpath', '//d2l-button[@title="Add activities to activity"]')
-    D2L_ADD_EXISTING_ACTIVITIES_OPTION                  = ('xpath', '//span[text()="BSE_EVIORMENT"]')
+    D2L_ADD_EXISTING_ACTIVITIES_OPTION                  = ('xpath', "//d2l-menu-item[@class='d2l-contextmenu-item' and contains(@text, 'BSE_EVIORMENT')]")
     D2L_GRADEBOOK_EMBED_IFRAME                          = ('xpath', '//iframe[@id="QuickLinkSelectorFrame"]')
     D2L_GRADEBOOK_TITLE                                 = ('xpath', '//a[contains(@title,"External Learning Tool") and text()="GRADEBOOK_TITLE"]')
     D2L_EDIT_COURSE_TAB                                 = ('xpath', '//a[@class="d2l-navigation-s-link" and text()="Edit Course"]')
@@ -393,12 +393,12 @@ class D2L(Base):
             return False 
         
         self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN) 
-       
+             
         if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
             tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QA PROD BSE')) 
             
         elif localSettings.LOCAL_SETTINGS_ENV_NAME == 'TestingNewUI':
-            tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QAapp BSE ')) 
+            tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QAapp BSE'))  
             
         if self.click(tmpBseEnviorment) == False:
             writeToLog("INFO","FAILED to click on BSE option")
