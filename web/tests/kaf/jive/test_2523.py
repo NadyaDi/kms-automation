@@ -58,23 +58,34 @@ class Test:
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == None:
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-
-            writeToLog("INFO","Step 2: Going to add entry to gallery")                                     
+            
+            writeToLog("INFO","Step 2: Going to navigate to uploaded entry page")
+            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+                writeToLog("INFO","Step 2: FAILED to navigate to entry page")
+                return           
+                
+            writeToLog("INFO","Step 3: Going to wait until media will finish processing")
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                writeToLog("INFO","Step 3: FAILED - New entry is still processing")
+                return
+            
+            writeToLog("INFO","Step 4: Going to add entry to gallery")                                     
             if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, isGalleryModerate=False) == False:    
-                writeToLog("INFO","Step 2: FAILED to add entry to gallery")
+                writeToLog("INFO","Step 4: FAILED to add entry to gallery")
                 return 
             
-            sleep(2)
-            writeToLog("INFO","Step 3: Going to remove entry from gallery")                                     
+            self.common.kafGeneric.KAF_REFRSH_BUTTON
+            sleep(4)
+            writeToLog("INFO","Step 5: Going to remove entry from gallery")                                     
             if self.common.channel.removeEntry(self.entryName) == False:    
-                writeToLog("INFO","Step 3: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
+                writeToLog("INFO","Step 5: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
                 return 
             
-            writeToLog("INFO","Step 4: Going to verify that entry doesn't display in gallery any more")                                     
+            writeToLog("INFO","Step 6: Going to verify that entry doesn't display in gallery any more")                                     
             if self.common.channel.searchEntryInChannel(self.entryName) == True:    
-                writeToLog("INFO","Step 4: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
+                writeToLog("INFO","Step 6: FAILED entry '" + self.entryName + "' still display in gallery although he was removed")
                 return 
-            writeToLog("INFO","Step 4: Preview step failed as expected - entry was removed from gallery and should not be found")
+            writeToLog("INFO","Step 6: Preview step failed as expected - entry was removed from gallery and should not be found")
             
             ##################################################################
             self.status = "Pass"
