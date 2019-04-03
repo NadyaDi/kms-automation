@@ -36,6 +36,8 @@ class Kea(Base):
     KEA_ADD_NEW_QUESTION_WHY_BUTTON                                         = ('xpath', "//button[@class='unbutton menu-item' and contains(text(),'Why')]")
     KEA_ADD_NEW_QUESTION_NUMBER                                             = ('xpath', "//span[@class='question-number']")
     KEA_SELECT_VIDEO_FOR_EDIT                                               = ('xpath', '//a[@class="btn btn-small btn-primary btn-select-media"]')
+    KEA_VIDEO_EDITOR_TAB                                                    = ('xpath', "//a[@class='nav-button' and @aria-label='Video Editor']") 
+    KEA_VIDEO_EDITOR_TAB_ACTIVE                                             = ('xpath', "//a[@class='nav-button active' and @aria-label='Video Editor']")
     KEA_LAUNCH                                                              = ('xpath', "//i[@class='icon-editor']")
     KEA_APP_DISPLAY                                                         = ('id', 'kea-anchor')
     KEA_IFRAME                                                              = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
@@ -130,6 +132,7 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_ROUNDNESS                                             = ('xpath', '//input[@id="roundness"]')
     KEA_HOTSPOTS_PLAYER_BUTTON                                              = ('xpath', "//div[@class='hotspot__button']")
     KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER                                   = ('xpath', "//div[contains(@class,'hotspot__container ui-draggable ui-draggable-handle')]")
+    KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP                                 = ('xpath', "//span[@class='message__text']")
     KEA_HOTSPOTS_PANEL_ITEM_TITLE                                           = ('xpath', "//div[contains(@class,'panel-item__title')]")
     KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU                                  = ('xpath', "//i[@class='kicon-more']")
     KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE                                = ('xpath', "//span[@class='ui-menuitem-text' and text()='Duplicate']")
@@ -1334,7 +1337,7 @@ class Kea(Base):
                 if el.text == entryName:
                     self.setImplicitlyWaitToDefault()
                     writeToLog("INFO", "The " + entryName + " has been found in KEA page")
-                    return True
+                    break
                 else:
                     writeToLog("INFO", "The KEA entry-name doesn't matches with " + entryName + " entry")
                     return False
@@ -1344,6 +1347,13 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to find the " + entryName + " within the " + str(timeout) + " seconds")
                     return False
                 pass
+        
+        if self.wait_while_not_visible(self.KEA_LOADING_CONTAINER, 60) == False:
+            writeToLog("INFO", "FAILED to wait until the KEA page has been successfully loaded")
+            return False
+
+        writeToLog("INFO", "KEA Page is active for the " + entryName + " entry")
+        return True
                         
 
     # @Author: Horia Cus
@@ -3339,42 +3349,13 @@ class Kea(Base):
         # Take the Hotspot Player Screen element details
         hotspotScreen = self.wait_element(self.KEA_PLAYER_CONTAINER, 30, True)
         
-        # Verify that the Hotspot Player Screen is presented
-        if hotspotScreen == False:
-            writeToLog("INFO", "FAILED to find the Hotspot screen")
+        # Verify that we are able to take the X, Y coordinates for the desired location
+        if type(self.hotspotLocationCoordinates(location)) is not list:
+            writeToLog("INFO", "FAILED to take the coordinates for location " + location.value)
             return False
         
-        # Set the off sets for the desired KEA Location
-        if location == enums.keaLocation.TOP_LEFT:
-            x = hotspotScreen.size['width']/500
-            y = hotspotScreen.size['height']/500
-            
-        elif location == enums.keaLocation.TOP_RIGHT:
-            x = hotspotScreen.size['width']/1.20
-            y = hotspotScreen.size['height']/500
-
-        elif location == enums.keaLocation.BOTTOM_LEFT:
-            x = hotspotScreen.size['width']/500
-            y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
-              
-        elif location == enums.keaLocation.BOTTOM_RIGHT:
-            x = hotspotScreen.size['width']/1.20
-            y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
-            
-        elif location == enums.keaLocation.CENTER:
-            # In order to proper align the hotspot to the center we need to take container's width, if no container is presented we will divide by the default value 
-            containerSize = self.wait_element(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER).size['width']
-            if type(containerSize) is not int:
-                writeToLog("INFO", "No hotspots information that contains container size were given")
-                # Use the default value
-                containerSize = 128
-            
-            # width size of the hotspot button, divided by two in order to align it to the center properly
-            x = containerSize/2
-            
-        else:
-            writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA Location")
-            return False
+        # Take the X, Y coordinates for the desired location
+        x, y = self.hotspotLocationCoordinates(location)
         
         action = ActionChains(self.driver)
         # Move the quiz number to a new timeline location
@@ -3526,6 +3507,82 @@ class Kea(Base):
         writeToLog("INFO", "The hotspot " + hotspotName + " has been successfully " + hotspotAction.value + "ed")
         return True
     
+    
+    # @Author: Horia Cus
+    # This function can launch the KEA Editor for the desired entry name
+    # This function will open the specified keaTab while being in the KEA Editor
+    # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
+    # keaTab must contain enum ( e.g enums.keaTab.QUIZ)
+    def launchKEATab(self, entryName, keaTab, navigateToEntry=False, timeOut=1):
+        self.switch_to_default_content()
+        if navigateToEntry == True:
+            sleep(timeOut)
+            if self.launchKEA(entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
+                writeToLog("INFO","Failed to launch KEA for: " + entryName)
+                return False
+        
+        if self.verifyKeaEntryName(entryName, 60) == False:
+            writeToLog("INFO", "FAILED to load the page until the " + entryName + " was present")
+            return False
+        
+        if keaTab == enums.keaTab.QUIZ:
+            if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 1, True) != False:
+                writeToLog("INFO", "KEA Quiz tab is already active")
+            else:
+                if self.click(self.KEA_QUIZ_TAB, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the KEA Quiz tab")
+                    return False
+                
+                sleep(0.5)
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
+                    writeToLog("INFO", "FAILED to wait until the KEA Quiz tab has been successfully loaded")
+                    return False
+                
+                if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 1, True) == False:
+                    writeToLog("INFO", "FAILED, the KEA Quiz tab is not displayed as being enabled")
+                    return False
+        
+        elif keaTab == enums.keaTab.VIDEO_EDITOR:
+            if self.wait_element(self.KEA_VIDEO_EDITOR_TAB, 1, True) != False:
+                writeToLog("INFO", "KEA Video Editor tab is already active")
+            else:
+                if self.click(self.KEA_VIDEO_EDITOR_TAB, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the KEA Video Editor tab")
+                    return False
+                
+                sleep(0.5)
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
+                    writeToLog("INFO", "FAILED to wait until the KEA Video Editor tab has been successfully loaded")
+                    return False
+                
+                if self.wait_element(self.KEA_VIDEO_EDITOR_TAB_ACTIVE, 1, True) == False:
+                    writeToLog("INFO", "FAILED, the KEA Video Editor tab is not displayed as being enabled")
+                    return False
+                
+        elif keaTab == enums.keaTab.HOTSPOTS:
+            if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) != False:
+                writeToLog("INFO", "KEA Hotspots tab is already active")
+            else:
+                if self.click(self.KEA_HOTSPOTS_TAB, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the KEA Hotspots tab")
+                    return False
+                
+                sleep(0.5)
+                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
+                    writeToLog("INFO", "FAILED to wait until the KEA Hotspots tab has been successfully loaded")
+                    return False
+                
+                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
+                    writeToLog("INFO", "FAILED, the KEA Hotspots tab is not displayed as being enabled")
+                    return False
+                
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA section")
+            return False
+         
+        writeToLog("INFO", "The " + keaTab.value + " has been successfully opened")
+        return True
+    
 
     # @Author: Horia Cus
     # This function will verify that the expected hotspots are properly presented in the timeline section by
@@ -3534,7 +3591,8 @@ class Kea(Base):
     # Verifying the Y location based on the start and end time
     # Verify the place order based on creation
     # For hotspotDict structure please check hotspotCreation function
-    def hotspotTimelineVerification(self, hotspotsDict):
+    # expectedHotspotNumber = 5, will also verify that exactly five hotspots are presented
+    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None):
         self.switchToKeaIframe()
         # Verify that we are in the Hotspot Section
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
@@ -3542,7 +3600,7 @@ class Kea(Base):
             return False        
         
         # Create a Blank Hotspot in order to take the properties that we need
-        if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 1, True) == False:
+        if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 15, True) == False:
             writeToLog("INFO", "FAILED to add a new hotspot in order to take its width")
             return False
         
@@ -3582,17 +3640,31 @@ class Kea(Base):
         if presentedHotspots == False:
             writeToLog("INFO", "FAILED to find any available hotspots within the timeline section")
             return False
-
+        
+        # Verify that the expectedHostNumber matches with the number of the presentedHotspots
+        if expectedHotspotNumber != None:
+            if expectedHotspotNumber != len(presentedHotspots):
+                writeToLog("INFO", "FAILED, a number of " + str(expectedHotspotNumber) + " hotspots were expected but " + str(len(presentedHotspots)) + " hotspots were presented")
+                return False  
+            
+        # Create a list with the successfully verified hotspots
+        hotspotNameList = []       
+        
+        # Used in order to verify that the hotspot is displayed on the right Y location
+        previousYValue = -1
+        expectedHotspotVerified = 0
+        i = 1
         # Iterate through each presented hotspot
         for x in range(0, len(presentedHotspots)):
             # Take the hotspot details from the dictionary
-            expectedHotspot          = hotspotsDict[str(x+1)]
+            expectedHotspot          = hotspotsDict[str(i)]
             
             # Take the presented hotspot details
             presentedHotspot         = presentedHotspots[x]
             presentedHotspotTitle    = presentedHotspot.text
             presentedHotspotWidth    = presentedHotspot.size['width']
             presentedHotspotXValue   = presentedHotspot.location['x']
+            presentedHotspotYValue   = presentedHotspot.location['y']
             presentedHotspotTime     = int(presentedHotspotWidth/widthSizeForOneSecond)
             
             expectedHotspotTime      = expectedHotspot[3] - expectedHotspot[2]
@@ -3611,8 +3683,168 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
                     return False
                 
+                # Verify that the current iterated hotspot is displayed on a higher Y value than the previous hotspot
+                if presentedHotspotYValue <= previousYValue:
+                    writeToLog("INFO", "FAILED, the Y Location of " + presentedHotspotTitle + " was " + str(presentedHotspotYValue) + " while from the previous hotspot was " + str(previousYValue))
+                    return False
+                else:
+                    previousYValue = presentedHotspotYValue
+                
+                i += 1
+                expectedHotspotVerified += 1
+                hotspotNameList.append(expectedHotspot[0])
+                writeToLog("INFO", "The following hotspot has been successfully presented in the timeline section " + expectedHotspot[0])
+                
             else:
-                writeToLog("INFO", "FAILED, " + presentedHotspotTitle + " was displayed at place " + str(x+1) + " while we expected " + expectedHotspot[0])
-                return False
+                writeToLog("INFO", "The, " + presentedHotspotTitle + " hotspot was displayed at place " + str(x+1) + " while we wait for " + expectedHotspot[0])
+                i -= 1
+        if len(hotspotNameList) > 1:   
+            hotspots = "\n".join(hotspotNameList)
+        else:
+            hotspots = expectedHotspot[0]
         
-        return True 
+        # Verify that the expected hotspots were presented in the timeline section
+        if expectedHotspotVerified != len(hotspotsDict):
+            writeToLog("INFO", "FAILED, a number of " + str(expectedHotspotVerified) + " hotspots were found based on the hotspotDict, while we expected to verify: " + str(len(hotspotsDict)) + " number of hotspots from hotspotDict")
+            return False
+        else:
+            writeToLog("INFO", "ALL the " + str(len(hotspotsDict)) + " expected hotspots from the hotspotDict were properly found inside the timeline section")
+
+        writeToLog("INFO","The following hotspots were properly verified in the timeline section:\n" + hotspots)
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will return the X, Y value for the desired location
+    # location must contain enum ( e.g enums.keaLocation.CENTER ) 
+    def hotspotLocationCoordinates(self, location):
+        self.switchToKeaIframe()
+        
+        # Take the Hotspot Player Screen element details
+        hotspotScreen = self.wait_element(self.KEA_PLAYER_CONTAINER, 30, True)
+        
+        # Verify that the Hotspot Player Screen is presented
+        if hotspotScreen == False:
+            writeToLog("INFO", "FAILED to find the Hotspot screen")
+            return False
+        
+        # Set the off sets for the desired KEA Location
+        if location == enums.keaLocation.TOP_LEFT:
+            x = hotspotScreen.size['width']/500
+            y = hotspotScreen.size['height']/500
+            
+        elif location == enums.keaLocation.TOP_RIGHT:
+            x = hotspotScreen.size['width']/1.20
+            y = hotspotScreen.size['height']/500
+
+        elif location == enums.keaLocation.BOTTOM_LEFT:
+            x = hotspotScreen.size['width']/500
+            y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
+              
+        elif location == enums.keaLocation.BOTTOM_RIGHT:
+            x = hotspotScreen.size['width']/1.20
+            y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
+            
+        elif location == enums.keaLocation.CENTER:
+            # In order to proper align the hotspot to the center we need to take container's width, if no container is presented we will divide by the default value 
+            containerSize = self.wait_element(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 1, True)
+            
+            if containerSize != False:
+                containerSize = containerSize.size['width']
+                
+            elif type(containerSize) is not int:
+                writeToLog("INFO", "No hotspots information that contains container size were given")
+                # Use the default value
+                containerSize = 128
+                
+            else:
+                writeToLog("INFO", "FAILED to take the width size for the " + location.value + " location")
+                return False
+            
+            # width size of the hotspot button, divided by two in order to align it to the center properly
+            x = containerSize/2
+            y = 0
+        
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA Location")
+            return False
+        
+        locationCoordinatesList = [x,y]
+        
+        writeToLog("INFO", "The following coordinates were provided for " + location.value + " location, X: " + str(locationCoordinatesList[0]) + " and Y " + str(locationCoordinatesList[1]))
+        return locationCoordinatesList
+    
+    
+    # @Author: Horia Cus
+    # WIP
+    def hotspotToolTipVerification(self, location):
+        self.switchToKeaIframe()
+        
+        # Take the Hotspot Player Screen element details
+        hotspotScreen = self.wait_element(self.KEA_PLAYER_CONTAINER, 30, True)
+        
+        # Verify that we are able to take the X, Y coordinates for the desired location
+        if type(self.hotspotLocationCoordinates(location)) is not list:
+            writeToLog("INFO", "FAILED to take the coordinates for location " + location.value)
+            return False
+        
+        # Take the X, Y coordinates for the desired location
+        x, y = self.hotspotLocationCoordinates(location)
+        
+        action = ActionChains(self.driver)
+        # Move the quiz number to a new timeline location
+        try:
+            # Start the location from the Top Left corner and move it to the desired place
+            if location != enums.keaLocation.CENTER:
+                action.move_to_element_with_offset(hotspotScreen, 0, 0).pause(2).move_by_offset(x, y).pause(2).perform()
+                
+                if self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True) == False:
+                    writeToLog("INFO", "FAILED to display the hotspot tool tip while being at the location: "  + location.value)
+                    return False
+            
+            # Start from the center of the element and move the element by negative x value in order to proper place the hotspot to the center
+            elif location == enums.keaLocation.CENTER:
+                action.move_to_element(hotspotScreen).pause(2).move_by_offset(-x, 0).pause(2).perform()
+                
+            # Take the Add Hotspot details
+            addHotspotToolTip = self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True)
+            
+            # Verify that the Add Hotspot tool tip was presented
+            if addHotspotToolTip == False:
+                writeToLog("INFO", "FAILED to display the hotspot tool tip while being at the location: "  + location.value)
+                return False
+            
+            # Verify the Add Hotspot tool tip text
+            if addHotspotToolTip.text.strip() != 'Add hotspot here':
+                writeToLog("INFO", "FAILED, an invalid tool tip text was presented: " + addHotspotToolTip.text.strip())
+                return False
+                            
+            elif location == enums.keaLocation.TOP_LEFT:
+                hotspotToolTipLocation = {'x': 782, 'y': 268}
+                
+            elif location == enums.keaLocation.TOP_RIGHT:
+                hotspotToolTipLocation = {'x': 782, 'y': 268}
+                
+            elif location == enums.keaLocation.CENTER:
+                hotspotToolTipLocation = {'x': 782, 'y': 268}
+                
+            elif location == enums.keaLocation.BOTTOM_LEFT:
+                hotspotToolTipLocation = {'x': 782, 'y': 268}
+                
+            elif location == enums.keaLocation.BOTTOM_RIGHT:
+                hotspotToolTipLocation = {'x': 782, 'y': 268}
+
+            
+            # Verify the Add Hotspot tool tip location
+#             if addHotspotToolTip.location != hotspotToolTipLocation:
+#                 writeToLog("INFO", "FAILED, the tool tip for " + location.value + " was displayed at X:" + str(addHotspotToolTip.location['x']) + " and Y:" + addHotspotToolTip.location['y'] + " coordinates" )
+#                 return False
+                
+            ActionChains(self.driver).release().perform()
+            
+        except Exception:
+            writeToLog("INFO", "FAILED to set the KEA Location at " + location.value)
+            return False
+        
+        writeToLog("INFO", "KEA Location has been successfully set at " + location.value)
+        return True

@@ -14,12 +14,12 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Hotspots: Delete Hotspots
+    # Test Name : Hotspots: Edited Hotspots
     # Test description:
     # Create a new entry with Five hotspots, and verify them in both time line section and entry page
-    # Delete a hotspots, leaving four hotspots and verify the remaining ones in both time line section and entry page
+    # Edit one of the hotspots and then verify them in both time line section and entry page
     #================================================================================================================================
-    testNum = "5095"
+    testNum = "5104"
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
@@ -28,7 +28,7 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "For a new Entry that was verified while having five hotspots and then four in both timeline section and entry page"
+    typeTest            = "For a new Entry that was verified while having five hotspots and then one edited"
     description         = "Description"
     tags                = "Tags,"
     entryName           = None
@@ -40,16 +40,17 @@ class Test:
     
     # Each list contains the details that are used in the hotspot creation and verification
     hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotOneEdit  = ['Hotspot Title One Edited', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
     hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 5, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
     hotspotThree    = ['Hotspot Title Three', enums.keaLocation.CENTER, 15, 20, 'https://autothree.kaltura.com/', enums.textStyle.THIN, '', '', 12, 12]
     hotspotFour     = ['Hotspot Title Four', enums.keaLocation.BOTTOM_RIGHT, 20, 25, '', enums.textStyle.THIN, '', '', 12, 16]
     hotspotFive     = ['Hotspot Title Five', enums.keaLocation.BOTTOM_LEFT, 25, 30, '', enums.textStyle.BOLD, '', '', 18, 16]
     
     # This Dictionary is used in order to create and verify the hotspots
-    hotspotsDict           = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
+    hotspotsDict           = {'1':hotspotOne, '2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
     
     # This Dictionary is used in order to verify the hotspots after one hotspot has been deleted
-    hotspotsDictUpdated    = {'1':hotspotTwo, '2':hotspotThree, '3':hotspotFour, '4':hotspotFive}
+    hotspotsDictUpdated    = {'1':hotspotOneEdit, '2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -67,63 +68,63 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Hotspots - With one Hotspot Deleted", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Hotspots - With one Hotspot Edited", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
-            
+              
             writeToLog("INFO","Step 2: Going to navigate to the KEA Editor for " + self.entryName + " entry")
             if self.common.kea.launchKEA(self.entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to the KEA Editor for " + self.entryName + " entry")
                 return
-                   
+                     
             writeToLog("INFO","Step 3: Going to create hotspots for the " + self.entryName)
             if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=True) == False:
                 writeToLog("INFO","Step 3: FAILED to create hotspots for the " + self.entryName)
                 return
-              
-            writeToLog("INFO","Step 4: Going to verify the timeline section for " + self.entryName +" entry, before deleting the " + self.hotspotOne[0])
+                
+            writeToLog("INFO","Step 4: Going to verify the timeline section for " + self.entryName +" entry, before editing the " + self.hotspotOne[0])
             if self.common.kea.hotspotTimelineVerification(self.hotspotsDict, 5) == False:
-                writeToLog("INFO","Step 4: FAILED to verify the timeline section for " + self.entryName +" entry, before deleting the " + self.hotspotOne[0])
+                writeToLog("INFO","Step 4: FAILED to verify the timeline section for " + self.entryName +" entry, before editing the " + self.hotspotOne[0])
                 return
-             
+               
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 5: Going to navigate to the entry page for " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 5: FAILED to navigate to the entry page for " + self.entryName)
                 return
-               
-            writeToLog("INFO","Step 6: Going to verify the hotspots from the " + self.entryName + " entry, before deleting the " + self.hotspotOne[0])
+                 
+            writeToLog("INFO","Step 6: Going to verify the hotspots from the " + self.entryName + " entry, before editing the " + self.hotspotOne[0])
             if self.common.player.hotspotVerification(self.hotspotsDict, enums.Location.ENTRY_PAGE, embed=False) == False:
-                writeToLog("INFO","Step 6: FAILED to verify the hotspots from the " + self.entryName + " entry, before deleting the " + self.hotspotOne[0])
+                writeToLog("INFO","Step 6: FAILED to verify the hotspots from the " + self.entryName + " entry, before editing the " + self.hotspotOne[0])
                 return
-             
+               
             writeToLog("INFO","Step 7: Going to navigate to navigate to KEA " + enums.keaTab.HOTSPOTS.value  + " Section for the " + self.entryName + " entry")
             if self.common.kea.launchKEATab(self.entryName, enums.keaTab.HOTSPOTS, True, 0) == False:
                 writeToLog("INFO","Step 7: FAILED to navigate to navigate to KEA " + enums.keaTab.HOTSPOTS.value  + " Section for the " + self.entryName + " entry")
                 return
-               
-            writeToLog("INFO","Step 8: Going to Delete the " + self.hotspotOne[0] + " hotspot from " + self.entryName)
-            if self.common.kea.hotspotActions(self.hotspotOne[0], enums.keaHotspotActions.DELETE) == False:
-                writeToLog("INFO","Step 8: FAILED to Delete the " + self.hotspotOne[0] + " hotspot from " + self.entryName)
+                 
+            writeToLog("INFO","Step 8: Going to Edit the " + self.hotspotOne[0] + " hotspot from " + self.entryName)
+            if self.common.kea.hotspotActions(self.hotspotOne[0], enums.keaHotspotActions.EDIT) == False:
+                writeToLog("INFO","Step 8: FAILED to Edit the " + self.hotspotOne[0] + " hotspot from " + self.entryName)
+                return
+                
+            writeToLog("INFO","Step 9: Going to verify the timeline section for " + self.entryName +" entry, after editing the " + self.hotspotOne[0])
+            if self.common.kea.hotspotTimelineVerification(self.hotspotsDictUpdated, 5) == False:
+                writeToLog("INFO","Step 9: FAILED to verify the timeline section for " + self.entryName +" entry, after editing the " + self.hotspotOne[0])
                 return
               
-            writeToLog("INFO","Step 9: Going to verify the timeline section for " + self.entryName +" entry, after deleting the " + self.hotspotOne[0])
-            if self.common.kea.hotspotTimelineVerification(self.hotspotsDictUpdated, 4) == False:
-                writeToLog("INFO","Step 9: FAILED to verify the timeline section for " + self.entryName +" entry, after deleting the " + self.hotspotOne[0])
-                return
-            
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 10: Going to navigate to the entry page for " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate to the entry page for " + self.entryName)
                 return
-              
-            writeToLog("INFO","Step 11: Going to verify the hotspots from the " + self.entryName + " entry, after deleting the " + self.hotspotOne[0])
+               
+            writeToLog("INFO","Step 11: Going to verify the hotspots from the " + self.entryName + " entry, after editing the " + self.hotspotOne[0])
             if self.common.player.hotspotVerification(self.hotspotsDictUpdated, enums.Location.ENTRY_PAGE, embed=False) == False:
-                writeToLog("INFO","Step 11: FAILED to verify the hotspots from the " + self.entryName + " entry, after deleting the " + self.hotspotOne[0])
+                writeToLog("INFO","Step 11: FAILED to verify the hotspots from the " + self.entryName + " entry, after editing the " + self.hotspotOne[0])
                 return
             ##################################################################
             self.status = "Pass"

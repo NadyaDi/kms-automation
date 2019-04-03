@@ -712,4 +712,13 @@ class keaHotspotActions(Enum):
     DUPLICATE    = "Duplicate"
     EDIT         = "Edit"
     DELETE       = "Delete"
+    
+
+class keaTab(Enum):
+    def __str__(self):
+        return str(self.value)    
+    
+    QUIZ                 = "Quiz"
+    VIDEO_EDITOR         = "Video Editor"
+    HOTSPOTS             = "Hotspots"
 
