@@ -503,7 +503,6 @@ class  Recscheduling(Base):
         return True
     
     # @Author: Michal Zomper
-    # eventTime - the time need to be both start and end time, for example: 4:00am-5:00pm 
     def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, startTime, endTime, resources=''):
         if self.setScheduleInMySchedulePage(startDate) == False:
             writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
