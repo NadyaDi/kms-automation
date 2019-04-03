@@ -236,6 +236,10 @@ test_4949,Quiz - Welcome screen behavior when autoplay true,6269,qakmstest.dev.k
 test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4956,Hotspots: Verify that hotspots can be created for normal entries,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5095,Hotspots: Delete Hotspots,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5103,Hotspots: Duplicate Hotspots,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5104,Hotspots: Edited Hotspots,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5107,Hotspots: Hover player and safe zone to select hotspot position,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
