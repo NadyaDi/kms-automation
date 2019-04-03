@@ -1237,7 +1237,7 @@ class Player(Base):
     # totalGivenAttempts = int: The total given number of attempts
     # expectedGeneralQuizScore = String: Represent the score of all attempts based on the score type
     # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
-    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='',expectedNumberOfAttemptsWelcomeSreen='', currentNumberOfAttemptsSubmittedScreen='', totalGivenAttempts='', expectedGeneralQuizScore='', scoreType=''):     
+    def answerQuiz(self, questionDict, skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore='', embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='',expectedNumberOfAttemptsWelcomeSreen='', currentNumberOfAttemptsSubmittedScreen='', totalGivenAttempts='', expectedGeneralQuizScore='', scoreType='', showScore=True):     
         if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed, expectedNumberOfAttemptsWelcomeSreen) == False:
             return False
          
@@ -1368,7 +1368,7 @@ class Player(Base):
             
             # We verify the expected quiz score
             if expectedQuizScore != '':
-                if self.verifySubmittedScreen(expectedQuizScore, location, verifySubmittedScreenDict, expectedQuestionsStateDict, 30, embed, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedGeneralQuizScore, scoreType) == False:
+                if self.verifySubmittedScreen(expectedQuizScore, location, verifySubmittedScreenDict, expectedQuestionsStateDict, 30, embed, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedGeneralQuizScore, scoreType, showScore) == False:
                     return False
              
             return True
@@ -1779,7 +1779,6 @@ class Player(Base):
     
 
     # @Author: Horia Cus
-    # This function verifies if the Welcome Screen is enabled and then clicks on the "CONTINUE" button
     # expectedNumberOfAttempts = int, How many attempts user has. Empty when user isn't able to retake the quiz again
     def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts=''):
         #we verify if the "Continue" button specific for the Quiz "Welcome Screen" is present or not     
@@ -2050,15 +2049,14 @@ class Player(Base):
         # Hint and Why = last two indexes from the list must contain ['Hint text' and 'Why Text']
         # Only Hint = last index must contain ['Hint text']
         # Without Hint and Why = last indexes must contain the answer text
-    def quizVerification(self, questionDict, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, expectedQuizScore, location, timeOut=60, embed=False):  
-        if self.initiateQuizPlayback(location, 2, True, embed) == False:
+    def quizVerification(self, questionDict, expectedQuestionsState, submittedQuiz, resumeQuiz, newQuiz, expectedQuizScore, location, timeOut=60, embed=False, skipWelcomeScreen=True):  
+        if self.initiateQuizPlayback(location, 2, skipWelcomeScreen, embed) == False:
             return False
         
         # We verify from the beginning the submitted quiz option, because we don't have the scrubber ( only Quiz Welcome screen and the Submitted Screen)
         if submittedQuiz == True:
             if self.verifySubmittedScreen(expectedQuizScore, location, questionDict, expectedQuestionsState, 5, embed) == False:
                 return False
-            
             # We dismiss the submitted screen, in order to verify the Question Screens and the scrubber
             if self.click(self.PLAYER_QUIZ_SUBMITTED_SCREEN_DONE_BUTTON, 2, True) == False:
                 writeToLog("INFO", "FAILED to click on the 'Done' button from the Submitted Screen in order to trigger the playing process")
@@ -2311,7 +2309,7 @@ class Player(Base):
     # totalGivenAttempts = Number: The total given number of attempts
     # expectedGeneralQuizScore = String: Represent the score of all attempts based on the score type
     # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
-    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30, embed=False, currentNumberOfAttemptsSubmittedScreen='', totalGivenAttempts='', expectedGeneralQuizScore='', scoreType=''):  
+    def verifySubmittedScreen(self, expectedQuizScore, location, questionDict='', expectedQuestionsState='', timeOut=30, embed=False, currentNumberOfAttemptsSubmittedScreen='', totalGivenAttempts='', expectedGeneralQuizScore='', scoreType='', showScore=True):  
         if self.selectPlayerIframe(location, embed) != True:
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
@@ -2323,19 +2321,30 @@ class Player(Base):
             return False
          
         # We verify that the score is not present
-        quizScore = self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_SCORE, 1).text
-        if quizScore != expectedQuizScore:
-            writeToLog("INFO", "FAILED, " + quizScore + " quiz score was displayed, instead of the expected: " + expectedQuizScore + " quiz score")
-            return False
+        quizScore = self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_SCORE, 1)
+        if showScore == True:
+            if quizScore.text != expectedQuizScore:
+                writeToLog("INFO", "FAILED, " + quizScore + " quiz score was displayed, instead of the expected: " + expectedQuizScore + " quiz score")
+                return False
+        else:
+            if quizScore == True:
+                writeToLog("INFO", "FAILED, score is displayed although it shouldn't be displayed")
+                return False
         
         # If we have more than one attempt
         if totalGivenAttempts != '':
             # we verify that correct total score and score type are displayed
             tmpTotalScore = (self.PLAYER_SUBMITTED_SCREEN_TOTAL_SCORE[0], self.PLAYER_SUBMITTED_SCREEN_TOTAL_SCORE[1].replace('TOTAL_SCORE', expectedGeneralQuizScore).replace('SCORE_TYPE', scoreType.value))
-            if self.wait_element(tmpTotalScore) == False:
-                writeToLog("INFO", "FAILED, score and score type aren't presented correctly")
-                return False
-            
+            # If we are expecting to see score
+            if showScore == True:
+                if self.wait_element(tmpTotalScore) == False:
+                    writeToLog("INFO", "FAILED, score and score type aren't presented correctly")
+                    return False 
+            else:
+                if self.wait_element(tmpTotalScore) == True:
+                    writeToLog("INFO", "FAILED, score is displayed although it should be displayed")
+                    return False  
+                          
             # we verify that correct attempts (total and current) are displayed
             tmpAttempts = (self.PLAYER_SUBMITTED_SCREEN_CURRENT_ATTEMPT_NUMBER[0], self.PLAYER_SUBMITTED_SCREEN_CURRENT_ATTEMPT_NUMBER[1].replace('CURRENT_ATTEMPTS', str(currentNumberOfAttemptsSubmittedScreen)).replace('TOTAL_ATTEMPTS', str(totalGivenAttempts)))    
             if self.wait_element(tmpAttempts) == False:
@@ -2838,12 +2847,12 @@ class Player(Base):
     # totalGivenAttempts = int: The total given number of attempts
     # expectedAttemptGeneralScore = List of string: each string represent the total score after each attempts based on the score type
     # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
-    def verifyQuizAttempts(self, AllAttempsList, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore=[], embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='', totalGivenAttempts='', expectedAttemptGeneralScore=[], scoreType=''):
+    def verifyQuizAttempts(self, AllAttempsList, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore=[], embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='', totalGivenAttempts='', expectedAttemptGeneralScore=[], scoreType='', showScore=True):
         for i in range(0,len(AllAttempsList)):
             expectedNumberOfAttemptsWelcomeSreen = totalGivenAttempts - i
             currentNumberOfAttemptsSubmittedScreen = i + 1               
             
-            if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore[i], embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedAttemptGeneralScore[i], scoreType) == False:
+            if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore[i], embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedAttemptGeneralScore[i], scoreType, showScore) == False:
                 writeToLog("INFO", "FAILED to answer quiz")
                 return False 
             

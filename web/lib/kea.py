@@ -1039,9 +1039,17 @@ class Kea(Base):
             timestamp = questionDetails[0]
             
             # replace the text present in the timestamp field with the new one
-            if self.send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
+#             if self.send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
+#                 writeToLog("INFO", "FAILED to select the timeline field text")
+#                 return False
+
+            # replace the text present in the timestamp field with the new one
+            if self.send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
                 writeToLog("INFO", "FAILED to select the timeline field text")
                 return False
+            
+            sleep(3)
+            self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
         
             # Creating the variable for the Quiz Question Type
             qestionType = questionDetails[1]
@@ -1188,21 +1196,21 @@ class Kea(Base):
                     return False
                 
                 # we verify if the value for the 'Hint' is present in the list
-                if len(questionDetails) >= 6:  
+                if len(questionDetails) >= 4:  
                     # we verify if we want to create a Hint for the current Quiz Question
-                    if questionDetails[5] != '':
-                        if self.createHintAndWhy(questionDetails[5], whyText='') == False:
+                    if questionDetails[3] != '':
+                        if self.createHintAndWhy(questionDetails[3], whyText='') == False:
                             writeToLog("INFO", "FAILED to create a Hint for the " + questionDetails[2] + " Quiz Question")
                             return False
                     else:
                         writeToLog("INFO", "No hint was given for the " + questionDetails[2] + " Quiz Question")
                         
                     # we verify if the value for the 'Why' is present in the list
-                    if len(questionDetails) == 7:
+                    if len(questionDetails) == 5:
                         # we verify if we want to create a Why for the current Quiz Question
-                        if questionDetails[6] != '':
+                        if questionDetails[4] != '':
                             sleep(2)
-                            if self.createHintAndWhy(hintText='', whyText=questionDetails[6]) == False:
+                            if self.createHintAndWhy(hintText='', whyText=questionDetails[4]) == False:
                                 writeToLog("INFO", "FAILED to create a Why for the " + questionDetails[2] + " Quiz Question")
                                 return False
                         else:
