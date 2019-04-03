@@ -264,8 +264,8 @@ class Player(Base):
                     
                     if quizEntry == True:
                         # Verify if the Question Screen is displayed
-                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.6, True) != False:
-                            sleep(2)
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.67, True) != False:
+                            sleep(3)
                             # Resume the playing process by skipping the Question Screen
                             if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                                 writeToLog("INFO", "FAILED to click on the Skip for now button")
@@ -893,8 +893,8 @@ class Player(Base):
                 
                 if quizEntry == True:
                     # Verify if the Question Screen is displayed
-                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.6, True) != False:
-                        sleep(2)
+                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 0.68, True) != False:
+                        sleep(3)
                         # Resume the playing process by skipping the Question Screen
                         if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                             writeToLog("INFO", "FAILED to click on the Skip for now button")
@@ -1277,9 +1277,11 @@ class Player(Base):
             
             #we use tmpQuizPage in order to navigate to the next Quiz Question page, by incrementing with +1 (using x value) from each run
             tmpQuizPage = (self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[0], self.PLAYER_QUIZ_SCRUBBER_QUESTION_BUBBLE_NUMBER[1].replace('NUMBER', str(x))) 
-            if self.click(tmpQuizPage, 30, True) == False:
-                writeToLog("INFO", "FAILED to move to the " + str(x+1) + " quiz page")
-                return False        
+            if self.click(tmpQuizPage, 5, True) == False:
+                sleep(0.25)
+                if self.click(tmpQuizPage, 2, True) == False:
+                    writeToLog("INFO", "FAILED to move to the " + str(x+1) + " quiz page after two tries")
+                    return False        
              
             # We collect the active question in order to verify if it matches with one from our dictionary, if the question has not been founded within the 75 seconds, the test case will fail  
             activeQuestion = self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_QUESTION_DEFAULT, 75, True).text
@@ -2626,24 +2628,59 @@ class Player(Base):
                             hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
                             
                             hotspotLocation             = presentedHotspots[x].location
-                            if hotspotLocation == {'x': 786, 'y': 1}:
-                                hotspotLocation = enums.keaLocation.TOP_RIGHT
+                            # Verify the location for normal hotspots
+                            if hotspotTitle.count('Duplicated') == 0:
+                                if hotspotLocation == {'x': 786, 'y': 1}:
+                                    hotspotLocation = enums.keaLocation.TOP_RIGHT
+                                
+                                elif hotspotLocation == {'x': 6, 'y': 1}:
+                                    hotspotLocation = enums.keaLocation.TOP_LEFT
+                                    
+                                elif hotspotLocation == {'x': 394, 'y': 270}:
+                                    hotspotLocation = enums.keaLocation.CENTER
+                                    
+                                elif hotspotLocation == {'x': 786, 'y': 419}:
+                                    hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
+                                    
+                                elif hotspotLocation == {'x': 6, 'y': 419}:
+                                    hotspotLocation = enums.keaLocation.BOTTOM_LEFT
+                                else:
+                                    writeToLog("INFO", "FAILED, couldn't find a match with the kea location while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
+                                    return False
                             
-                            elif hotspotLocation == {'x': 6, 'y': 1}:
-                                hotspotLocation = enums.keaLocation.TOP_LEFT
+                            # Verify the location for duplicated hotspots
+                            elif hotspotTitle.count('Duplicated') == 1:
+                                if hotspotLocation == {'x': 786, 'y': 24}:
+                                    hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
-                            elif hotspotLocation == {'x': 394, 'y': 270}:
-                                hotspotLocation = enums.keaLocation.CENTER
+                                elif hotspotLocation == {'x': 6, 'y': 24}:
+                                    hotspotLocation = enums.keaLocation.TOP_LEFT
+                                    
+                                elif hotspotLocation == {'x': 394, 'y': 270}:
+                                    hotspotLocation = enums.keaLocation.CENTER
+                                    
+                                elif hotspotLocation == {'x': 786, 'y': 419}:
+                                    hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
+                                    
+                                elif hotspotLocation == {'x': 6, 'y': 419}:
+                                    hotspotLocation = enums.keaLocation.BOTTOM_LEFT
+                                else:
+                                    writeToLog("INFO", "FAILED, couldn't find a match with the kea location while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
+                                    return False
                                 
-                            elif hotspotLocation == {'x': 786, 'y': 419}:
-                                hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
-                                
-                            elif hotspotLocation == {'x': 6, 'y': 419}:
-                                hotspotLocation = enums.keaLocation.BOTTOM_LEFT
-                            else:
-                                writeToLog("INFO", "FAILED, couldn't find a match with the kea location while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
-                                return False
-                            
+                                try:
+                                    # Hide the main hotspot in order to be able to verify the link for the duplicated one
+                                    mainHotspotIndex = 0
+                                    hotspotTitleMain = hotspotTitle.replace(' Duplicated','')
+                                    for x in range(0, len(presentedHotspots)):
+                                        if presentedHotspots[x].text == hotspotTitleMain:
+                                            mainHotspotIndex = x
+ 
+                                    self.driver.execute_script("arguments[0].setAttribute('style','display:none;')", presentedHotspots[mainHotspotIndex])
+                                    sleep(0.5)
+                                except:
+                                    pass
+                                              
                             if self.clickElement(presentedHotspots[x]) == False:
                                 writeToLog("INFO", "FAILED to click on the hotspot: " + hotspotTitle)
                                 return False
@@ -2666,6 +2703,13 @@ class Player(Base):
                             else:
                                 hotspotLink = ''
                             
+                            if hotspotTitle.count('Duplicated') == 1:
+                                try:
+                                    self.driver.execute_script("arguments[0].setAttribute('style','display;')", presentedHotspots[mainHotspotIndex])
+                                    sleep(0.5)
+                                except:
+                                    pass
+                            
                             # Take the element index from the presentedHotspotList
                             presentedNumber = x
                             
@@ -2678,18 +2722,21 @@ class Player(Base):
                                 if currentPresentedHotspots == False:
                                     isStillPresented = False
                                 
-                                # Verify for how much time the selected hotspot is displayed
-                                for x in range(0, len(currentPresentedHotspots)):
-                                    # Verify that the hotspot that was found is still present on the screen
-                                    if currentPresentedHotspots[x]._id == presentedHotspots[presentedNumber]._id:
-                                        hotspotEndTime = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 0.1, True).text
-                                        break
-                                    
-                                    # Verify that the hotspot that was found is no longer present
-                                    else:
-                                        if x + 1 == len(currentPresentedHotspots):
-                                            isStillPresented = False
+                                try:
+                                    # Verify for how much time the selected hotspot is displayed
+                                    for x in range(0, len(currentPresentedHotspots)):
+                                        # Verify that the hotspot that was found is still present on the screen
+                                        if currentPresentedHotspots[x]._id == presentedHotspots[presentedNumber]._id:
+                                            hotspotEndTime = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 0.1, True).text
                                             break
+                                        
+                                        # Verify that the hotspot that was found is no longer present
+                                        else:
+                                            if x + 1 == len(currentPresentedHotspots):
+                                                isStillPresented = False
+                                                break
+                                except TypeError:
+                                    continue
                             
                             # Take the time value from the end and start positions
                             hotspotStartTimeSeconds = int(hotspotStartTime.split(':')[1])
@@ -2739,7 +2786,7 @@ class Player(Base):
                 currentPresentedList = presentedHotspotsDetailsList[x]
                 
                 # Verify that the presented hotspot title matches with the expected hotspot title
-                if currentExpectedList[0] in currentPresentedList[0]:                    
+                if currentExpectedList[0] == currentPresentedList[0]:                    
                     # Set to the list the default value for Font Color if it wasn't set in hotspotDict
                     if currentExpectedList[6] == '':
                         currentExpectedList.insert(6, 'white')
@@ -2767,9 +2814,11 @@ class Player(Base):
                         
                         for x in range(len(currentExpectedList)):
                             if currentExpectedList[x] != currentPresentedList[x]:
-                                inconsitencyList.append("FAILED, the following " + currentExpectedList[x] + " was expected but " + currentPresentedList[x] + " was presented\n")
+                                inconsitencyList.append("FAILED, Expected " + str("\n".join(currentExpectedList[x])) + " \n Presented " + str("\n".join(currentPresentedList[x])) + " \n")
                         
-                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed " + str(inconsitencyList))
+                        inconsitencies = "\n".join(inconsitencyList)
+                        
+                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed " + str(inconsitencies))
                         return  False
                     else:
                         writeToLog("INFO", "The hotspot:" + currentExpectedList[0] + " has been successfully presented")
@@ -2796,7 +2845,7 @@ class Player(Base):
 
     # @Author: Horia Cus
     # This function will resume a played entry back to second and and start the playing process
-    def resumeFromBeginningEntry(self,hotspots):
+    def resumeFromBeginningEntry(self,):
         # Stop the entry to the current location
         if self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 0.2, True) == False:       
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
@@ -2827,7 +2876,6 @@ class Player(Base):
             writeToLog("INFO", "FAILED to load the video after it was resumed from the beginning")
             return False
         
-        writeToLog("INFO","The following hotspots were properly presented: " + hotspots + "")
         return True
     
     
