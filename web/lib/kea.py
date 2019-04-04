@@ -138,6 +138,7 @@ class Kea(Base):
     KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP                                 = ('xpath', "//span[@class='message__text']")
     KEA_HOTSPOTS_PANEL_ITEM_TITLE                                           = ('xpath', "//div[contains(@class,'panel-item__title')]")
     KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU                                  = ('xpath', "//i[@class='kicon-more']")
+    KEA_HOTSPOTS_PANEL_ACTION_MENU_CONTAINER                                = ('xpath', "//div[contains(@class,'hotspot-action ui-menu ui-widget')]")
     KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE                                = ('xpath', "//span[@class='ui-menuitem-text' and text()='Duplicate']")
     KEA_HOTSPOTS_PANEL_ACTION_MENU_EDIT                                     = ('xpath', "//span[@class='ui-menuitem-text' and text()='Edit']")
     KEA_HOTSPOTS_PANEL_ACTION_MENU_DELETE                                   = ('xpath', "//span[@class='ui-menuitem-text' and text()='Delete']")
@@ -1035,46 +1036,54 @@ class Kea(Base):
             questionDetails = dictQuestions[questionNumber]
             
             self.switchToKeaIframe() 
-            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 30) == False:
+            if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 45) == False:
                 writeToLog("INFO","FAILED to wait until spinner isn't visible")
                 return False 
             
-            sleep(3)
+            sleep(1.5)
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
             # click on the editor in order to higlight the timeline field and select all the text
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+                
             if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             sleep(1)
-            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
             
+            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
+             
             if timePickerHighlighted == False:
                 writeToLog("INFO", "Time picker input field couldn't be highlighted during the first try")
-                
+                 
                 if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                     writeToLog("INFO", "FAILED to click on the kea timeline field")
                     return False
                 sleep(1)
-                
+                 
                 timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
                 if timePickerHighlighted == False:
                     writeToLog("INFO", "FAILED to highlight the time picker input field during the second time")
                     return False
     
             timestamp = questionDetails[0]
-            
-            # replace the text present in the timestamp field with the new one
-#             if self.send_keys(self.EDITOR_TIME_PICKER, timestamp + Keys.ENTER) == False:
-#                 writeToLog("INFO", "FAILED to select the timeline field text")
-#                 return False
 
             # replace the text present in the timestamp field with the new one
             if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
                 writeToLog("INFO", "FAILED to select the timeline field text")
                 return False
             
-            sleep(3)
+            if int(questionNumber) >= 2:
+                if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
+                    writeToLog("INFO", "FAILED to select the timeline field text")
+                    return False
+            
+            sleep(1.5)
             self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
+            
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.clsCommon.sendKeysToBodyElement(Keys.ARROW_UP, 4)
+                sleep(1.5)
         
             # Creating the variable for the Quiz Question Type
             qestionType = questionDetails[1]
@@ -3465,10 +3474,26 @@ class Kea(Base):
             return False
         
         # Trigger the action menu for the desired hotspotName
-        if self.clickElement(hotspotsActionMenu[hotspotLocation]) == False:
-            writeToLog("INFO", "FAILED to trigger the action menu for hotspot: " + hotspotName)
+        presentedHotspotsTitle  = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 1)
+        hotspotNameIndex = 0
+        
+        for x in range(0, len(presentedHotspotsTitle)):
+            if presentedHotspotsTitle[x].text == hotspotName:
+                hotspotNameIndex = x
+                break
+            
+            if x + 1 == len(presentedHotspotsTitle):
+                writeToLog("INFO", "FAILED to find the " + hotspotName + " hotspot inside the panel")
+                return False
+        
+        if self.clickElement(presentedHotspotsTitle[hotspotNameIndex]) == False:
+            writeToLog("INFO", "FAILED to highligth the " + hotspotName + " hotspot")
             return False
         
+        if self.clickElement(hotspotsActionMenu[hotspotLocation]) == False:
+            writeToLog("INFO", "FAILED to trigger the action menu for hotspot: " + hotspotName + " at the second try")
+            return False
+            
         if hotspotAction == enums.keaHotspotActions.DUPLICATE:
             # Duplicate the hotspotName
             if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE, 1, True) == False:
@@ -3826,7 +3851,8 @@ class Kea(Base):
     # 1. a proper tool tip is displayed while being in any player location, including protected zone
     # 2. the tool tip disappears after exiting the player screen
     # 3. the tool tip is properly displayed, based on the desired location
-    def hotspotToolTipVerification(self, location, hostpot=False):
+    # 4. If expectedHotspot = True, we will verify that the Add Hotspot tool tip is not available
+    def hotspotToolTipVerification(self, location, expectedHotspot=False):
         self.switchToKeaIframe()
         
         # Take the Hotspot Player Screen element details
@@ -3834,7 +3860,7 @@ class Kea(Base):
         
         action = ActionChains(self.driver)
         
-        if hostpot == True:
+        if expectedHotspot == True:
             presentedHotspots = self.wait_elements(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 10)
             
             if len(presentedHotspots) < 1:
@@ -3957,9 +3983,9 @@ class Kea(Base):
     # @Author: Horia Cus
     # This function will move the desired hotspot to the new hotspot location
     # hotspotName = contains the string of the Hotspot Title
-    # hotspotLocation = contains the enum of the desired new location for the hotspot ( e.g enums.keaLocation.CENTER ) 
+    # hotspotNewLocation = contains the enum of the desired new location for the hotspot ( e.g enums.keaLocation.CENTER ) 
     # If the desired new hotspotLocation is already took by other hotspot, the function will return False
-    def changeHotspotLocation(self, hotspotName, hotspotLocation):
+    def changeHotspotLocation(self, hotspotName, hotspotNewLocation):
         self.switchToKeaIframe()
         
         # Take the list of the presented hotspots
@@ -3981,13 +4007,13 @@ class Kea(Base):
                 return False
         
         # Create a list with the new details for a new hotspot
-        hotspotLocationDetailsList = [hotspotLocation.value, hotspotLocation]
+        hotspotLocationDetailsList = [hotspotNewLocation.value, hotspotNewLocation]
         
         hotspotDict = {'1': hotspotLocationDetailsList}
         
         # Create a new hotspot that is created at the desired new location
         if self.hotspotCreation(hotspotDict) == False:
-            writeToLog("INFO", "FAILED to create a new hotspot in order to take the coordinates for the desired location" + hotspotLocation.value)
+            writeToLog("INFO", "FAILED to create a new hotspot in order to take the coordinates for the desired location" + hotspotNewLocation.value)
             return False
 
         # Take the list with the updated presented hotspots
@@ -3999,13 +4025,13 @@ class Kea(Base):
         try:
             action.drag_and_drop(hotspotLocationElement[hotspotIndex], hotspotLocationElement[-1]).pause(2).perform()
         except Exception:
-            writeToLog("INFO", "FAILED to move the " + hotspotName + " to the " + hotspotLocation.value + " location")
+            writeToLog("INFO", "FAILED to move the " + hotspotName + " to the " + hotspotNewLocation.value + " location")
             return False
         
         # Delete the hotspot that was created in order to move the hotspotName to the new location
-        if self.hotspotActions(hotspotLocation.value, enums.keaHotspotActions.DELETE) == False:
-            writeToLog("INFO", "FAILED to delete the new hotspot that was created in order to take the coordinates" + hotspotLocation.value)
+        if self.hotspotActions(hotspotNewLocation.value, enums.keaHotspotActions.DELETE) == False:
+            writeToLog("INFO", "FAILED to delete the new hotspot that was created in order to take the coordinates" + hotspotNewLocation.value)
             return False
                
-        writeToLog("INFO", "The hotspot: " + hotspotName + " has been successfully moved to the new location: " + hotspotLocation.value)
+        writeToLog("INFO", "The hotspot: " + hotspotName + " has been successfully moved to the new location: " + hotspotNewLocation.value)
         return True
