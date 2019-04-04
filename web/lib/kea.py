@@ -53,13 +53,14 @@ class Kea(Base):
     KEA_QUIZ_TAB_ACTIVE                                                     = ('xpath', "//a[@class='nav-button active' and @aria-label='Quiz']") 
     KEA_QUIZ_ADD_ANSWER_BUTTON                                              = ('xpath', '//div[@class="add-answer-btn"]') 
     KEA_QUIZ_BUTTON                                                         = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="BUTTON_NAME"]')
-    KEA_QUIZ_SHUFFLE_BUTTON                                                 = ('xpath', '//div[@class="shuffle-answers"]') 
+    KEA_QUIZ_SHUFFLE_BUTTON                                                 = ('xpath', '//div[@class="shuffle-answers"]')
+    KEA_QUIZ_LOADING_CONTAINER                                              = ('xpath', '//div[@class="loading-backdrop show ng-star-inserted"]')
     EDITOR_TABLE                                                            = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]')
     EDITOR_TABLE_SIZE                                                       = ('xpath', '//table[@class="table table-condensed table-hover mymediaTable mediaTable full"]/tbody/tr')
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                                          = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     EDITOR_TIMELINE                                                         = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
     EDITOR_TIME_PICKER                                                      = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
-    EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER                                = ('xpath', "//p-inputmask[contains(@class,'ng-touched ng-dirty ui-inputwrapper-focus')]")
+    EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER                                = ('xpath', "//p-inputmask[@id='jump-to__input' and contains(@class,'focus')]")
     EDITOR_REALTIME_MARKER                                                  = ('xpath', "//span[@class='realtime-marker__head-box-time']")
     EDITOR_REALTIME_MARKER_CONTAINER                                        = ('xpath', "//div[contains(@class,'realtime-marker realtime-marker--sticky realtime-marker--no-box')]")
     EDITOR_TIMELINE_OPTION_RESET                                            = ('xpath', "//button[@aria-label='Reset']")
@@ -1022,6 +1023,10 @@ class Kea(Base):
         if self.wait_while_not_visible(self.KEA_MEDIA_IS_BEING_PROCESSED, 120) == False:
             writeToLog("INFO", "FAILED to process the " + entryName + " during the launch")
             return False
+        self.switchToKeaIframe()
+        if self.wait_while_not_visible(self.KEA_QUIZ_LOADING_CONTAINER, 120) == False:
+            writeToLog("INFO", "FAILED to load the quiz screen")
+            return False
         
         # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" and "Open-Q" Quiz Questions)
         questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
@@ -1040,8 +1045,8 @@ class Kea(Base):
             if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
-            
-            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 1, True)
+            sleep(1)
+            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
             
             if timePickerHighlighted == False:
                 writeToLog("INFO", "Time picker input field couldn't be highlighted during the first try")
@@ -1049,8 +1054,9 @@ class Kea(Base):
                 if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                     writeToLog("INFO", "FAILED to click on the kea timeline field")
                     return False
+                sleep(1)
                 
-                timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 1, True)
+                timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
                 if timePickerHighlighted == False:
                     writeToLog("INFO", "FAILED to highlight the time picker input field during the second time")
                     return False
