@@ -59,6 +59,7 @@ class Kea(Base):
     EDITOR_NO_MORE_MEDIA_FOUND_MSG                                          = ('xpath', '//div[@id="quizMyMedia_scroller_alert" and text()="There are no more media items."]')
     EDITOR_TIMELINE                                                         = ('xpath', '//div[@class="kea-timeline-playhead" and @style="transform: translateX(PIXELpx);"]')
     EDITOR_TIME_PICKER                                                      = ('xpath', "//input[@class='ui-inputtext ui-corner-all ui-state-default ui-widget ui-state-filled']")
+    EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER                                = ('xpath', "//p-inputmask[contains(@class,'ng-touched ng-dirty ui-inputwrapper-focus')]")
     EDITOR_REALTIME_MARKER                                                  = ('xpath', "//span[@class='realtime-marker__head-box-time']")
     EDITOR_REALTIME_MARKER_CONTAINER                                        = ('xpath', "//div[contains(@class,'realtime-marker realtime-marker--sticky realtime-marker--no-box')]")
     EDITOR_TIMELINE_OPTION_RESET                                            = ('xpath', "//button[@aria-label='Reset']")
@@ -1036,10 +1037,24 @@ class Kea(Base):
             sleep(3)
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
             # click on the editor in order to higlight the timeline field and select all the text
-            if self.click(self.EDITOR_TIME_PICKER, 30, True) == False:
+            if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             
+            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 1, True)
+            
+            if timePickerHighlighted == False:
+                writeToLog("INFO", "Time picker input field couldn't be highlighted during the first try")
+                
+                if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the kea timeline field")
+                    return False
+                
+                timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 1, True)
+                if timePickerHighlighted == False:
+                    writeToLog("INFO", "FAILED to highlight the time picker input field during the second time")
+                    return False
+    
             timestamp = questionDetails[0]
             
             # replace the text present in the timestamp field with the new one
@@ -1048,7 +1063,7 @@ class Kea(Base):
 #                 return False
 
             # replace the text present in the timestamp field with the new one
-            if self.send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
+            if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
                 writeToLog("INFO", "FAILED to select the timeline field text")
                 return False
             
