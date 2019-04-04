@@ -2812,12 +2812,19 @@ class Player(Base):
                         # Create a list with the inconsitencies between the expected and presented hotspots
                         inconsitencyList = []
                         
-                        for x in range(len(currentExpectedList)):
-                            if currentExpectedList[x] != currentPresentedList[x]:
-                                inconsitencyList.append("FAILED, Expected " + str("\n".join(currentExpectedList[x])) + " \n Presented " + str("\n".join(currentPresentedList[x])) + " \n")
-                        
-                        inconsitencies = "\n".join(inconsitencyList)
-                        
+                        try:
+                            for x in range(len(currentExpectedList)):
+                                if currentExpectedList[x] != currentPresentedList[x]:
+                                    inconsitencyList.append("FAILED, Expected " + str(currentExpectedList[x]) + " \n Presented " + str(currentPresentedList[x]) + " \n")
+                            
+                            if len(inconsitencyList) > 1:
+                                inconsitencies = "\n".join(inconsitencyList)
+                            else:
+                                inconsitencies = inconsitencyList[0]
+                            
+                        except Exception:
+                            writeToLog("INFO", "FAILED to take the inconsistency list")
+                            
                         writeToLog("INFO", "FAILED, the following inconsistencies were noticed " + str(inconsitencies))
                         return  False
                     else:

@@ -112,6 +112,7 @@ class Kea(Base):
     KEA_TIMELINE_CONTROLS_ZOOM_OUT_BUTTON                                   = ('xpath', "//button[contains(@class,'zoom_button') and @aria-label='Zoom out']")
     KEA_TIMELINE_CONTROLS_ZOOM_IN_BUTTON                                    = ('xpath', "//button[contains(@class,'zoom_button') and @aria-label='Zoom in']")
     KEA_TIMELINE_CONTROLS_ZOOM_IN_TOOLTIP                                   = ('xpath', "//div[@class='ui-tooltip-text ui-shadow ui-corner-all' and text()='Zoom in']")
+    KEA_TIMELINE_CONTROLS_PLAY_BUTTON                                       = ('xpath', "//div[contains(@class,'ui-tooltip-text ui-shadow ui-corner-all')]")
     KEA_CONFIRMATION_POP_UP_CONTINUE                                        = ('xpath', "//button[contains(@class,'button') and text()='Continue']")
     KEA_CONFIRMATION_POP_UP_TITLE                                           = ('xpath', "//div[@class='kErrorMessageTitle']")
     KEA_CONFIRMATION_POP_UP_CONTAINER                                       = ('xpath', "//div[@class='kErrorMessage']")
@@ -3195,10 +3196,11 @@ class Kea(Base):
                 return False
             
             # Set the start time and end time for the hotspot
-            if hotspotDetails[2] != None or hotspotDetails[3] != None:
-                if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
-                    writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
-                    return False
+            if len(hotspotDetails) >= 3:
+                if hotspotDetails[2] != None or hotspotDetails[3] != None:
+                    if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                        writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
+                        return False
         
         hotspotNameList = []
         for hotspotNumber in hotspotsDict:
@@ -3366,7 +3368,7 @@ class Kea(Base):
             
             # Start from the center of the element and move the element by negative x value in order to proper place the hotspot to the center
             elif location == enums.keaLocation.CENTER:
-                action.move_to_element(hotspotScreen).pause(2).move_by_offset(-x, 0).pause(2).click().perform()
+                action.move_to_element(hotspotScreen).pause(2).move_by_offset(-x, y).pause(2).click().perform()
         except Exception:
             writeToLog("INFO", "FAILED to set the KEA Location at " + location.value)
             return False
@@ -3728,6 +3730,23 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to find the Hotspot screen")
             return False
         
+        # Take the width of hotspot container in order to proper align it to the center location
+        if location == enums.keaLocation.CENTER:
+            # In order to proper align the hotspot to the center we need to take container's width, if no container is presented we will divide by the default value 
+            containerSize = self.wait_element(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 1, True)
+            
+            if containerSize != False:
+                containerSize = containerSize.size['width']
+                
+            elif type(containerSize) is not int:
+                writeToLog("INFO", "No hotspots information that contains container size were given")
+                # Use the default value
+                containerSize = 128
+                
+            else:
+                writeToLog("INFO", "FAILED to take the width size for the " + location.value + " location")
+                return False
+        
         # Set the off sets for the desired KEA Location
         if location == enums.keaLocation.TOP_LEFT:
             x = hotspotScreen.size['width']/500
@@ -3745,25 +3764,23 @@ class Kea(Base):
             x = hotspotScreen.size['width']/1.20
             y = hotspotScreen.size['height'] - hotspotScreen.size['height']/6.5
             
-        elif location == enums.keaLocation.CENTER:
-            # In order to proper align the hotspot to the center we need to take container's width, if no container is presented we will divide by the default value 
-            containerSize = self.wait_element(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 1, True)
-            
-            if containerSize != False:
-                containerSize = containerSize.size['width']
-                
-            elif type(containerSize) is not int:
-                writeToLog("INFO", "No hotspots information that contains container size were given")
-                # Use the default value
-                containerSize = 128
-                
-            else:
-                writeToLog("INFO", "FAILED to take the width size for the " + location.value + " location")
-                return False
-            
+        elif location == enums.keaLocation.CENTER:            
             # width size of the hotspot button, divided by two in order to align it to the center properly
             x = containerSize/2
             y = 0
+            
+        elif location == enums.keaLocation.PROTECTED_ZONE_CENTER:               
+            # width size of the hotspot button, divided by two in order to align it to the center properly
+            x = hotspotScreen.size['width']/2
+            y = hotspotScreen.size['height']/1.08
+            
+        elif location == enums.keaLocation.PROTECTED_ZONE_LEFT:
+            x = hotspotScreen.size['width']/500
+            y = hotspotScreen.size['height']/1.08
+            
+        elif location == enums.keaLocation.PROTECTED_ZONE_RIGHT:
+            x = hotspotScreen.size['width']/1.08
+            y = hotspotScreen.size['height']/1.08
         
         else:
             writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA Location")
@@ -3776,75 +3793,190 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # WIP
-    def hotspotToolTipVerification(self, location):
+    # This function verifies that:
+    # 1. a proper tool tip is displayed while being in any player location, including protected zone
+    # 2. the tool tip disappears after exiting the player screen
+    # 3. the tool tip is properly displayed, based on the desired location
+    def hotspotToolTipVerification(self, location, hostpot=False):
         self.switchToKeaIframe()
         
         # Take the Hotspot Player Screen element details
         hotspotScreen = self.wait_element(self.KEA_PLAYER_CONTAINER, 30, True)
         
-        # Verify that we are able to take the X, Y coordinates for the desired location
-        if type(self.hotspotLocationCoordinates(location)) is not list:
-            writeToLog("INFO", "FAILED to take the coordinates for location " + location.value)
-            return False
-        
-        # Take the X, Y coordinates for the desired location
-        x, y = self.hotspotLocationCoordinates(location)
-        
         action = ActionChains(self.driver)
-        # Move the quiz number to a new timeline location
-        try:
-            # Start the location from the Top Left corner and move it to the desired place
-            if location != enums.keaLocation.CENTER:
-                action.move_to_element_with_offset(hotspotScreen, 0, 0).pause(2).move_by_offset(x, y).pause(2).perform()
+        
+        if hostpot == True:
+            presentedHotspots = self.wait_elements(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 10)
+            
+            if len(presentedHotspots) < 1:
+                writeToLog("INFO", "FAILED, no hotspots were available within the player")
+                return False
+            
+            # Verify that the Add New Hotspot tool tip is not presented for any presented hotspot
+            for x in range(0, len(presentedHotspots)):
+                try:
+                    presentedHotspots[x]
+                    action.move_to_element(presentedHotspots[x]).pause(2).perform()
+                    
+                    # Verify if the Add New Hotspot tool tip is found
+                    addHotspotToolTip = self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True)
+                    
+                    if addHotspotToolTip != False:
+                        writeToLog("INFO", "FAILED, the Add New Hotspot tool tip was displayed while hovering over the " + presentedHotspots[x].text + " hotspot")
+                        return False
                 
-                if self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True) == False:
+                except Exception:
+                    writeToLog("INFO", "FAILED, to hover over the " + presentedHotspots[x].text + " hotspot")
+                    return False
+                
+            writeToLog("INFO", "AS EXPECTED, no Add New Hotspot tool tip has been presented while hovering over existing hotspots")
+            return True
+        
+        else:
+            # Verify that we are able to take the X, Y coordinates for the desired location
+            if type(self.hotspotLocationCoordinates(location)) is not list:
+                writeToLog("INFO", "FAILED to take the coordinates for location " + location.value)
+                return False
+            
+            # Take the X, Y coordinates for the desired location
+            x, y = self.hotspotLocationCoordinates(location)
+            
+            # Move the quiz number to a new timeline location
+            try:
+                
+                # Start the location from the Top Left corner and move it to the desired place
+                if location != enums.keaLocation.CENTER:
+                    action.move_to_element_with_offset(hotspotScreen, 0, 0).pause(2).move_by_offset(x, y).pause(2).perform()
+                    
+                    if self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True) == False:
+                        writeToLog("INFO", "FAILED to display the hotspot tool tip while being at the location: "  + location.value)
+                        return False
+                
+                # Start from the center of the element and move the element by negative x value in order to proper place the hotspot to the center
+                elif location == enums.keaLocation.CENTER:
+                    action.move_to_element(hotspotScreen).pause(2).move_by_offset(-x, 0).pause(2).perform()
+                    
+                # Take the Add Hotspot details
+                addHotspotToolTip = self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True)
+                
+                # Verify that the Add Hotspot tool tip was presented
+                if addHotspotToolTip == False:
                     writeToLog("INFO", "FAILED to display the hotspot tool tip while being at the location: "  + location.value)
                     return False
-            
-            # Start from the center of the element and move the element by negative x value in order to proper place the hotspot to the center
-            elif location == enums.keaLocation.CENTER:
-                action.move_to_element(hotspotScreen).pause(2).move_by_offset(-x, 0).pause(2).perform()
                 
-            # Take the Add Hotspot details
-            addHotspotToolTip = self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True)
-            
-            # Verify that the Add Hotspot tool tip was presented
-            if addHotspotToolTip == False:
-                writeToLog("INFO", "FAILED to display the hotspot tool tip while being at the location: "  + location.value)
+                if location.value.count('Protected') == 0:
+                    # Verify the Add Hotspot tool tip text
+                    if addHotspotToolTip.text.strip() != 'Add hotspot here':
+                        writeToLog("INFO", "FAILED, an invalid tool tip text was presented: " + addHotspotToolTip.text.strip() + " while being in the hotspot zone")
+                        return False
+                else:
+                    if addHotspotToolTip.text.strip() != "Can't add hotspot on the protected zone":
+                        writeToLog("INFO", "FAILED, an invalid tool tip text was presented: " + addHotspotToolTip.text.strip() + " while being in protected zone")
+                        return False                
+                         
+                if location == enums.keaLocation.TOP_LEFT:
+                    hotspotToolTipLocation = {'x': 503, 'y': 75}
+                    
+                elif location == enums.keaLocation.TOP_RIGHT:
+                    hotspotToolTipLocation = {'x': 916, 'y': 75}
+                    
+                elif location == enums.keaLocation.CENTER:
+                    hotspotToolTipLocation = {'x': 782, 'y': 268}
+                    
+                elif location == enums.keaLocation.BOTTOM_LEFT:
+                    hotspotToolTipLocation = {'x': 503, 'y': 402}
+                    
+                elif location == enums.keaLocation.BOTTOM_RIGHT:
+                    hotspotToolTipLocation = {'x': 916, 'y': 402}
+                    
+                elif location == enums.keaLocation.PROTECTED_ZONE_CENTER:
+                    hotspotToolTipLocation = {'x': 846, 'y': 433}
+                    
+                elif location == enums.keaLocation.PROTECTED_ZONE_LEFT:
+                    hotspotToolTipLocation = {'x': 503, 'y': 433}
+                    
+                elif location == enums.keaLocation.PROTECTED_ZONE_RIGHT:
+                    hotspotToolTipLocation = {'x': 849, 'y': 433}
+    
+                # Verify the Add Hotspot tool tip location
+                if addHotspotToolTip.location != hotspotToolTipLocation:
+                    writeToLog("INFO", "FAILED, the tool tip for " + location.value + " was displayed at X:" + str(addHotspotToolTip.location['x']) + " and Y:" + addHotspotToolTip.location['y'] + " coordinates" )
+                    return False
+                
+                playButton = self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 1, True)
+                
+                if playButton == False:
+                    writeToLog("INFO", "FAILED to take the play button in order to move from player section")
+                    return False
+                
+                ActionChains(self.driver).move_to_element(playButton).pause(2).perform()
+                
+                addHotspotToolTipUpdated = self.wait_element(self.KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP, 1, True)
+                
+                if addHotspotToolTipUpdated != False:
+                    writeToLog("INFO", "FAILED, the tool tip is still displayed after exiting the player area")
+                    return False            
+                
+            except Exception:
+                writeToLog("INFO", "FAILED to hover over the KEA location:" + location.value)
                 return False
-            
-            # Verify the Add Hotspot tool tip text
-            if addHotspotToolTip.text.strip() != 'Add hotspot here':
-                writeToLog("INFO", "FAILED, an invalid tool tip text was presented: " + addHotspotToolTip.text.strip())
-                return False
-                            
-            elif location == enums.keaLocation.TOP_LEFT:
-                hotspotToolTipLocation = {'x': 782, 'y': 268}
-                
-            elif location == enums.keaLocation.TOP_RIGHT:
-                hotspotToolTipLocation = {'x': 782, 'y': 268}
-                
-            elif location == enums.keaLocation.CENTER:
-                hotspotToolTipLocation = {'x': 782, 'y': 268}
-                
-            elif location == enums.keaLocation.BOTTOM_LEFT:
-                hotspotToolTipLocation = {'x': 782, 'y': 268}
-                
-            elif location == enums.keaLocation.BOTTOM_RIGHT:
-                hotspotToolTipLocation = {'x': 782, 'y': 268}
+        
+        writeToLog("INFO", "KEA Location has been successfully verified at " + location.value)
+        return True
+    
 
-            
-            # Verify the Add Hotspot tool tip location
-#             if addHotspotToolTip.location != hotspotToolTipLocation:
-#                 writeToLog("INFO", "FAILED, the tool tip for " + location.value + " was displayed at X:" + str(addHotspotToolTip.location['x']) + " and Y:" + addHotspotToolTip.location['y'] + " coordinates" )
-#                 return False
-                
-            ActionChains(self.driver).release().perform()
-            
-        except Exception:
-            writeToLog("INFO", "FAILED to set the KEA Location at " + location.value)
+    # @Author: Horia Cus
+    # This function will move the desired hotspot to the new hotspot location
+    # hotspotName = contains the string of the Hotspot Title
+    # hotspotLocation = contains the enum of the desired new location for the hotspot ( e.g enums.keaLocation.CENTER ) 
+    # If the desired new hotspotLocation is already took by other hotspot, the function will return False
+    def changeHotspotLocation(self, hotspotName, hotspotLocation):
+        self.switchToKeaIframe()
+        
+        # Take the list of the presented hotspots
+        presentedHotspots = self.wait_elements(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 10)
+        
+        # Verify that at least one hotspots has been found in the player screen
+        if presentedHotspots == False:
+            writeToLog("INFO", "FAILED, no hotspots were found within the player screen")
             return False
         
-        writeToLog("INFO", "KEA Location has been successfully set at " + location.value)
+        # Take the hotspot index for our hotspotName
+        for x in range(0, len(presentedHotspots)):
+            if presentedHotspots[x].text == hotspotName:
+                hotspotIndex = x
+                break
+            
+            if x + 1 == len(presentedHotspots):
+                writeToLog("INFO", "FAILED to find the " + hotspotName + " inside the presented hotspots")
+                return False
+        
+        # Create a list with the new details for a new hotspot
+        hotspotLocationDetailsList = [hotspotLocation.value, hotspotLocation]
+        
+        hotspotDict = {'1': hotspotLocationDetailsList}
+        
+        # Create a new hotspot that is created at the desired new location
+        if self.hotspotCreation(hotspotDict) == False:
+            writeToLog("INFO", "FAILED to create a new hotspot in order to take the coordinates for the desired location" + hotspotLocation.value)
+            return False
+
+        # Take the list with the updated presented hotspots
+        hotspotLocationElement = self.wait_elements(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER, 10)
+        
+        action = ActionChains(self.driver)
+        
+        # Move the hotspotName to the desired new location
+        try:
+            action.drag_and_drop(hotspotLocationElement[hotspotIndex], hotspotLocationElement[-1]).pause(2).perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to move the " + hotspotName + " to the " + hotspotLocation.value + " location")
+            return False
+        
+        # Delete the hotspot that was created in order to move the hotspotName to the new location
+        if self.hotspotActions(hotspotLocation.value, enums.keaHotspotActions.DELETE) == False:
+            writeToLog("INFO", "FAILED to delete the new hotspot that was created in order to take the coordinates" + hotspotLocation.value)
+            return False
+               
+        writeToLog("INFO", "The hotspot: " + hotspotName + " has been successfully moved to the new location: " + hotspotLocation.value)
         return True
