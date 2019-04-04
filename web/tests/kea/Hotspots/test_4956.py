@@ -85,7 +85,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going to verify the timeline section for " + self.entryName +" entry, after creating multiple hotspots")
-            if self.common.kea.hotspotTimelineVerification(self.hotspotsDict, 4) == False:
+            if self.common.kea.hotspotTimelineVerification(self.hotspotsDict, 5) == False:
                 writeToLog("INFO","Step 4: FAILED to verify the timeline section for " + self.entryName +" entry, after creating multiple hotspots")
                 return
                             

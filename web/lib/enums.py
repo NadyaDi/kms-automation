@@ -676,11 +676,14 @@ class keaLocation(Enum):
     def __str__(self):
         return str(self.value)
     
-    TOP_RIGHT      = 'Top Right'
-    TOP_LEFT       = 'Top Left'
-    BOTTOM_RIGHT   = 'Bottom Right'
-    BOTTOM_LEFT    = 'Bottom Left'
-    CENTER         = 'Center'
+    TOP_RIGHT                = 'Top Right'
+    TOP_LEFT                 = 'Top Left'
+    BOTTOM_RIGHT             = 'Bottom Right'
+    BOTTOM_LEFT              = 'Bottom Left'
+    CENTER                   = 'Center'
+    PROTECTED_ZONE_CENTER    = 'Protected Zone Center'
+    PROTECTED_ZONE_RIGHT     = 'Protected Zone Right'
+    PROTECTED_ZONE_LEFT      = 'Protected Zone Left'
 
 
 class keaQuizScoreType(Enum):
