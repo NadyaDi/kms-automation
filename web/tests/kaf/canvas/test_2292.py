@@ -344,7 +344,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
             if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME.lower().split('@')[0] in self.common.canvas.getCanvasLoginUserName().split(' ')[0]) == False:
-                sleep(.split(' ')[0])
+                sleep()
                 self.common.canvas.logOutOfCanvas()
                 self.common.canvas.loginToCanvas(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
             self.common.canvas.switchToCanvasIframe()
