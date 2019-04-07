@@ -1,4 +1,4 @@
-case,test_name,partner,base_url,gonen.radai_username,gonen.radai_password,login_username,login_password
+case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_0002,Set service url,qa-moodle34-php7,dev.kaltura.com/videos,Tzachi.guetta@kaltura.com,Kaltura1!,gonen.radai,123456
 test_681,Playlists - Add several entries to new and existing playlists,qa-moodle34-php7,dev.kaltura.com/videos,Tzachi.guetta@kaltura.com,Kaltura1!,gonen.radai,123456
 test_4542,Playlists - Create Empty Playlist,qa-moodle34-php7,dev.kaltura.com/videos,Tzachi.guetta@kaltura.com,Kaltura1!,gonen.radai,123456
