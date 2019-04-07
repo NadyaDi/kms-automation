@@ -62,6 +62,7 @@ class  Recscheduling(Base):
     SCHEDULE_RECURRENCE_SAVE_BUTTON                                         = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
     SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE                                 = ('xpath', "//a[contains(text(), 'EVENT_TITLE')]")
     SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
+    SCHEDULE_DELETE_EVENT_BUTTON                                            = ('xpath', "//i[@class='icon-trash icon-white']")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -502,7 +503,9 @@ class  Recscheduling(Base):
         
         return True
     
+    
     # @Author: Michal Zomper
+    # startDate = this parameter format need to be : "%B %d, %Y - %A". example- April 07, 2019 - Sunday
     def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, startTime, endTime, resources=''):
         if self.setScheduleInMySchedulePage(startDate) == False:
             writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
@@ -587,5 +590,38 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to select the day")
             return False        
         
+        return True
+    
+    
+    # @Author: Michal Zomper
+    def deteteSingleEvent(self, eventTitle, startDate):
+        if self.setScheduleInMySchedulePage(startDate) == False:
+            writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
+            return False  
+        
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventTitle))
+        if self.click(tmpEventTiltle) == False:
+            writeToLog("INFO","FAILED to find and click on event '" + eventTitle + "' in my schedule page")
+            return False 
+        
+        if self.click(self.SCHEDULE_DELETE_EVENT_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on delete event button")
+            return False
+        
+        # Click on confirm delete
+        if self.click(self.clsCommon.myMedia.MY_MEDIA_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on confirm delete button")
+            return False 
+            
+        # verify event deleted
+        if self.setScheduleInMySchedulePage(startDate) == False:
+            writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
+            return False  
+        
+        if self.wait_element(tmpEventTiltle, timeout=6) == True:
+            writeToLog("INFO","FAILED event '" + eventTitle + "' was find although it was deleted")
+            return False 
+        
+        writeToLog("INFO","Success, Event was deleted successfully")
         return True
         
