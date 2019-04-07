@@ -36,6 +36,7 @@ from kafJive import Jive
 from kafSakai import Sakai
 from recscheduling import Recscheduling
 from kafBBUltra import BlackBoardUltra
+from quizAnalytics import QuizAnalytics
 
 
     #============================================================================================================
@@ -69,6 +70,7 @@ class Common():
         self.globalSearch       = GlobalSearch(self, driver)
         self.webcast            = Webcast(self, driver)
         self.recscheduling      = Recscheduling(self, driver)
+        self.quizAnalytics      = QuizAnalytics(self, driver)
         ### KAF ###
         self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
