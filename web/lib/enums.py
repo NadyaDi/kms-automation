@@ -725,3 +725,10 @@ class keaTab(Enum):
     VIDEO_EDITOR         = "Video Editor"
     HOTSPOTS             = "Hotspots"
 
+
+class quizAnalytics(Enum):
+    def __str__(self):
+        return str(self.value) 
+    
+    QUIZ_QUESTIONS       = 'Quiz Question'    
+    QUIZ_USERS           = 'Quiz Users'

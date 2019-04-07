@@ -1129,10 +1129,30 @@ class EntryPage(Base):
     
     
     # @Author: Inbar Willman
-    # To Do
-    def navigateToQuizAnalytics(self, entryName='', forceNavigate=False):
+    # Navigate to Quiz quizAnalytics page - Quiz users tab or Quiz questions tab
+    def navigateToQuizAnalyticsPage(self, entryName='', forceNavigate=False, analyticsTab=enums.quizAnalytics.QUIZ_QUESTIONS):
         if forceNavigate == True:
             if self.navigateToEntryPageFromMyMedia(entryName) == False:
                 writeToLog("INFO","FAILED to navigate to " + entryName + " page")
-                return False                
-        return True    
+                return False  
+            
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+            writeToLog("INFO","FAILED to click on action dropdown list")
+            return False        
+              
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION) == False:
+            writeToLog("INFO","FAILED to on quizAnalytics option")
+            return False 
+                    
+        if analyticsTab == enums.quizAnalytics.QUIZ_QUESTIONS:
+            if self.click(self.clsCommon.quizAnalytics.QUIZ_ANALYTICS_QUIZ_QUESTIONS_TAB) == False:
+                writeToLog("INFO","FAILED to click on " + enums.quizAnalytics.QUIZ_QUESTIONS.value)
+                return False 
+            
+        elif analyticsTab == enums.quizAnalytics.QUIZ_USERS:
+            if self.click(self.clsCommon.quizAnalytics.QUIZ_ANALYTICS_QUIZ_USERS_TAB) == False:
+                writeToLog("INFO","FAILED to click on " + enums.quizAnalytics.QUIZ_USERS.value)
+                return False  
+            
+        writeToLog("INFO","Succeed to navigate to " + analyticsTab.value)           
+        return True                                             
