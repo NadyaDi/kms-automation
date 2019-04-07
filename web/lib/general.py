@@ -15,9 +15,13 @@ class General(Base):
     KMS_LOADER                                          = ('id', 'loader')#loaderWrap
     ADD_NEW_DROP_DOWN_BUTTON                            = ('xpath', "//button[contains(@id, 'addNewDropDown')]")
     USER_MENU_TOGGLE_BUTTON                             = ('id', 'userMenuToggleBtn')
-    USER_MENU_MY_MEDIA_BUTTON                           = ('xpath', "//a[@href='/my-media' and @role='menuitem']")
-    USER_MENU_MY_CHANNELS_BUTTON                        = ('xpath', "//a[@href='/my-channels' and @role='menuitem']")
-    USER_MENU_MY_PLAYLISTS_BUTTON                       = ('xpath', "//a[@href='/my-playlists' and @role='menuitem']")
+    USER_MENU_MY_MEDIA_BUTTON                           = ('xpath', "//a[contains(@href,'/my-media') and @role='menuitem']")
+    USER_MENU_MY_CHANNELS_BUTTON                        = ('xpath', "//a[contains(@href,'/my-channels') and @role='menuitem']")
+    USER_MENU_MY_PLAYLISTS_BUTTON                       = ('xpath', "//a[contains(@href,'/my-playlists') and @role='menuitem']")
+#     USER_MENU_MY_MEDIA_BUTTON                           = ('xpath', "//a[@href='/my-media' and @role='menuitem']")
+#     USER_MENU_MY_CHANNELS_BUTTON                        = ('xpath', "//a[@href='/my-channels' and @role='menuitem']")
+#     USER_MENU_MY_CHANNELS_BUTTON                        = ('xpath', "//a[contains(@href,'/my-channels') and @role='menuitem']")
+#     USER_MENU_MY_PLAYLISTS_BUTTON                       = ('xpath', "//a[@href='/my-playlists' and @role='menuitem']")
     USER_MENU_MY_HISTORY_BUTTON                         = ('xpath', "//a[@href='/history' and @role='menuitem']")
 
     
