@@ -42,8 +42,9 @@ class Test:
     tags = "Tags,"
     startDate = None
     endDate = None
-    startTime = None
+    startEventTime = None
     endTime = None
+    resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -66,36 +67,39 @@ class Test:
             # we have 2 startDate that hold the same day for the event. one in format to create the event and the second one is in format so we can compare it to the date in the calendar
             self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
             self.startDateToVerifyEventIncalender = datetime.datetime.now().strftime("%B %d, %Y - %A")
-            self.endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
+            self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
 
-            startTime = time.time() + (60*60)
-            startTime = time.strftime("%I:%M%p",time.localtime(startTime))
+            self.startEventTime = time.time() + (60*60)
+            self.startEventTime = time.strftime("%I:%M%p",time.localtime(self.startEventTime))
              
-            endTime = time.time() + 2*(60*60)
-            endTime = time.strftime("%I:%M%p",time.localtime(endTime))
+            self.endTime = time.time() + 2*(60*60)
+            self.endTime = time.strftime("%I:%M%p",time.localtime(self.endTime))
 
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            self.common.recscheduling.setScheduleInMySchedulePage(self.startDateToVerifyEventIncalender)
-                
-#            self.common.base.click(self.common.recscheduling.SCHEDULE_ADD_RECURRENCE_BUTTON) 
-
-            
-#           self.common.recscheduling.setEventRecurrence(recurrenceInterval, dailyOption, dailyDays, weeklyWeeks, weeklyDaysNames, monthlyOption, monthlyDayNumber,  monthlyMonthNumber, monthlyWeekdaysIndex , monthlyDayName, optionTwoMonthlyMonthNumber, reccurenceStartDate, reccurenceEndDate, reccurenceStartTime, reccurenceEndTime)
-#            self.common.recscheduling.setEventRecurrence(recurrenceInterval=enums.scheduleRecurrenceInterval.MONTHS, monthlyOption=enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY, monthlyWeekdaysIndex=enums.scheduleRecurrenceMonthlyIndex.third, monthlyDayName=enums.scheduleRecurrenceDayOfTheWeek.SATURDAY, optionTwoMonthlyMonthNumber="5", endDateOption=enums.scheduleRecurrenceEndDateOption.END_BY, reccurenceStartTime=startTime, reccurenceEndTime=endTime ,reccurenceStartDate=self.startDate, reccurenceEndDate=self.endDate)
-            
-#             
-#             self.common.recscheduling.createRescheduleEventWithoutRecurrence(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, False, 'copeDetailsName', 'copeDetailsDescriptio', 'copeDetailsTags,', [enums.RecschedulingResourceOptions.MAIN_AUDITORIUM,enums.RecschedulingResourceOptions.AUTOMATION_ROOM] ,eventOrganizer='python_automation') 
-#             
-#           self.common.recscheduling.createRescheduleEvent(self.eventTitle, self.startDate, self.endDate, startTime,endTime, self.description, self.tags, True, resources=enums.RecschedulingResourceOptions.AUTOMATION_ROOM, isRecurrence=True, exitEvent=False, recurrenceInterval=enums.scheduleRecurrenceInterval.MONTHS, monthlyOption=enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY, monthlyWeekdaysIndex=enums.scheduleRecurrenceMonthlyIndex.third, monthlyDayName=enums.scheduleRecurrenceDayOfTheWeek.SATURDAY, optionTwoMonthlyMonthNumber="5", endDateOption=enums.scheduleRecurrenceEndDateOption.END_BY, reccurenceStartTime=startTime, reccurenceEndTime=endTime ,reccurenceStartDate=self.startDate, reccurenceEndDate=self.endDate)
-            self.common.recscheduling.verifyScheduleEventInMySchedulePage("automation", self.startDateForCreateEvent, self.startDateToVerifyEventIncalender, self.endDate, startTime, endTime, resources=[enums.RecschedulingResourceOptions.AUTOMATION_ROOM, enums.RecschedulingResourceOptions.MAIN_AUDITORIUM])
-            
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
                 return
-                 
             
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
+            
+            writeToLog("INFO","Step 3: Going to create new single event")
+            if self.common.recscheduling.createRescheduleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, True, resources=self.resource, exitEvent=True) == False:
+                writeToLog("INFO","Step 3: FAILED to create new single event")
+                return
                  
+            writeToLog("INFO","Step 4: Going to verify event display in my schedule page")
+            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.eventTitle, self.startDateToVerifyEventIncalender, self.endDate, self.startEventTime, self.endTime, self.resource) == False:
+                writeToLog("INFO","Step 4: FAILED to create new single verify event display in my schedule page")
+                return
+            
+            writeToLog("INFO","Step 5: Going to delete event")
+            if self.common.recscheduling.deteteSingleEvent(self.eventTitle, self.startDateToVerifyEventIncalender) == False:
+                writeToLog("INFO","Step54: FAILED to delete event from my schedule page")
+                return
             ##################################################################
             self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Rescheduling - Create new single event' was done successfully")
@@ -108,7 +112,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
-
+            self.common.recscheduling.deteteSingleEvent(self.eventTitle, self.startDateToVerifyEventIncalender)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
