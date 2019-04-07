@@ -1043,16 +1043,20 @@ class Kea(Base):
             sleep(1.5)
             # Specifying the time stamp, where the Quiz Question should be placed within the entry
             # click on the editor in order to higlight the timeline field and select all the text
+            
+            # Because D2L application doesn't properly display the entire Quiz screen we need to scroll down in order to select the time stamp field
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
                 self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-                
+            
+            # Select the time stamp input field
             if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
                 return False
             sleep(1)
             
             timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
-             
+            
+            # Verify that the input time field is highlighted
             if timePickerHighlighted == False:
                 writeToLog("INFO", "Time picker input field couldn't be highlighted during the first try")
                  
@@ -1065,7 +1069,8 @@ class Kea(Base):
                 if timePickerHighlighted == False:
                     writeToLog("INFO", "FAILED to highlight the time picker input field during the second time")
                     return False
-    
+                
+            # Take the time stamp details
             timestamp = questionDetails[0]
 
             # replace the text present in the timestamp field with the new one
@@ -1073,14 +1078,17 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED to select the timeline field text")
                 return False
             
+            # Because the time input field is not updated properly if a quiz was created previously, we need to insert the time for the second time
             if int(questionNumber) >= 2:
                 if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
                     writeToLog("INFO", "FAILED to select the timeline field text")
                     return False
             
+            # Move the real time maker to the desired time stamp
             sleep(1.5)
             self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
             
+            # Scroll back up if using D2L application
             if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
                 self.clsCommon.sendKeysToBodyElement(Keys.ARROW_UP, 4)
                 sleep(1.5)
