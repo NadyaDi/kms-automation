@@ -45,8 +45,8 @@ class Test:
     # This Dictionary is used in order to create and verify the hotspots
     hotspotsDict  = {'1':hotspotOne}
     
-    locationListWithoutHotspots  = [enums.keaLocation.TOP_LEFT, enums.keaLocation.TOP_RIGHT, enums.keaLocation.BOTTOM_LEFT, enums.keaLocation.BOTTOM_RIGHT, enums.keaLocation.CENTER, enums.keaLocation.PROTECTED_ZONE_LEFT, enums.keaLocation.PROTECTED_ZONE_CENTER, enums.keaLocation.PROTECTED_ZONE_RIGHT]
-    locationListWithHotspots     = [enums.keaLocation.TOP_LEFT, enums.keaLocation.TOP_RIGHT, enums.keaLocation.BOTTOM_LEFT, enums.keaLocation.BOTTOM_RIGHT, enums.keaLocation.PROTECTED_ZONE_LEFT, enums.keaLocation.PROTECTED_ZONE_CENTER, enums.keaLocation.PROTECTED_ZONE_RIGHT]
+    locationListWithoutHotspots  = [enums.keaLocation.TOP_LEFT, enums.keaLocation.TOP_RIGHT, enums.keaLocation.BOTTOM_LEFT, enums.keaLocation.BOTTOM_RIGHT, enums.keaLocation.CENTER, enums.keaLocation.PROTECTED_ZONE_LEFT, enums.keaLocation.PROTECTED_ZONE_CENTER]
+    locationListWithHotspots     = [enums.keaLocation.TOP_LEFT, enums.keaLocation.TOP_RIGHT, enums.keaLocation.BOTTOM_LEFT, enums.keaLocation.BOTTOM_RIGHT, enums.keaLocation.PROTECTED_ZONE_LEFT, enums.keaLocation.PROTECTED_ZONE_CENTER]
 
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)

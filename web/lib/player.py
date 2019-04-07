@@ -2639,16 +2639,16 @@ class Player(Base):
                             hotspotLocation             = presentedHotspots[x].location
                             # Verify the location for normal hotspots
                             if hotspotTitle.count('Duplicated') == 0:
-                                if hotspotLocation == {'x': 786, 'y': 1}:
+                                if hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
                                 elif hotspotLocation == {'x': 6, 'y': 1}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
-                                elif hotspotLocation == {'x': 394, 'y': 270}:
+                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
-                                elif hotspotLocation == {'x': 786, 'y': 419}:
+                                elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
                                     hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
                                     
                                 elif hotspotLocation == {'x': 6, 'y': 419}:
@@ -2659,16 +2659,16 @@ class Player(Base):
                             
                             # Verify the location for duplicated hotspots
                             elif hotspotTitle.count('Duplicated') == 1:
-                                if hotspotLocation == {'x': 786, 'y': 24}:
+                                if hotspotLocation == {'x': 786, 'y': 24} or hotspotLocation == {'x': 785, 'y': 25}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
                                 elif hotspotLocation == {'x': 6, 'y': 24}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
-                                elif hotspotLocation == {'x': 394, 'y': 270}:
+                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
-                                elif hotspotLocation == {'x': 786, 'y': 419}:
+                                elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
                                     hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
                                     
                                 elif hotspotLocation == {'x': 6, 'y': 419}:
