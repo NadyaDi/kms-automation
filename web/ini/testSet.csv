@@ -414,11 +414,15 @@ test_5052,1,0,0,0,Entitlements - Restricted Category
 test_5053,1,0,0,0,Entitlements - Open Category using Global Page
 test_5054,1,0,0,0,Entitlements - Private Category using Global Page
 test_5055,1,0,0,0,Entitlements - Restricted Category using Global Page
-test_4956,1,0,0,0,Hotspots: Verify that hotspots can be created for normal entries
-test_5095,1,0,0,0,Hotspots: Delete Hotspots
-test_5103,1,0,0,0,Hotspots: Duplicate Hotspots
-test_5104,1,0,0,0,Hotspots: Edited Hotspots
-test_5107,1,0,0,0,Hotspots: Hover player and safe zone to select hotspot position
+test_4956,1,0,0,0,Hotspots - Verify that hotspots can be created for normal entries
+test_5095,1,0,0,0,Hotspots - Delete Hotspots
+test_5103,1,0,0,0,Hotspots - Duplicate Hotspots
+test_5104,1,0,0,0,Hotspots - Edited Hotspots
+test_5107,1,0,0,0,Hotspots - Hover player and safe zone to select hotspot position
+test_5110,1,0,0,0,Hotspots - Add / Select & Drag hotspots on player
+test_5112,1,0,0,0,Hotspots - Add Hotspot from HS list
+test_5114,1,0,0,0,Hotspots - Enable and Disable Hotspots Module
+test_5115,1,0,0,0,Hotspots - Create Hotspots while playing the video
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
 test_3275,0,1,0,0,SlideDeckUpload add-remove chapters
