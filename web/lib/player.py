@@ -2462,6 +2462,12 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
+        # Verify if the user got stucked inside a Question Screen
+        if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 2, True) != False:
+            if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to proceed to the Almost Done Screen")
+                return False
+        
         # We verify that the Almost Completed screen is presented
         almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
         if self.wait_element(almostDoneScreen, timeOut) == False:

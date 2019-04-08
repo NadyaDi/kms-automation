@@ -1315,13 +1315,12 @@ class Kea(Base):
         actionSetQuizLocation = ActionChains(self.driver)
         # Set the time line location using action chain
         try:
-            actionSetQuizLocation.move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+1.15, -10).pause(1).click().perform()
+            actionSetQuizLocation.move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+2.5, -10).pause(1).click().perform()
         except Exception:
             writeToLog("INFO", "FAILED to set the start time to " + str(timeLocation))
             return False
         
-        sleep(1)
-        timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5]
         
         # Verify that the Time Marker matches with our desired time location
         if timeLineSectionMarker != timeLocation:
@@ -1354,16 +1353,16 @@ class Kea(Base):
             if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timeLocation) == False:
                 writeToLog("INFO", "FAILED to select the timeline field text")
                 return False
-            sleep(1)
+            sleep(2)
             # Put the desired time location inside the Editor Time input field
             if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timeLocation) == False:
                 writeToLog("INFO", "FAILED to select the timeline field text")
                 return False
 
             # Move the real time maker to the desired time stamp
-            sleep(1.5)
+            sleep(2)
             self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
-            sleep(1.5)
+            sleep(2)
             
             timeLineSectionMarkerUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
             
@@ -3179,6 +3178,10 @@ class Kea(Base):
             # Take the details for the current hotspot
             hotspotDetails = hotspotsDict[hotspotNumber]
             
+            if creationType == enums.keaHotspotCreationType.VIDEO_PLAYING:
+                if self.playEntryAndReturnAtTime(hotspotDetails[2]) == False:
+                    return False
+            
             # Verify if the font color should be changed
             if len(hotspotDetails) > 1 and hotspotDetails[1] != '':
                 if self.hotspotLocation(hotspotDetails[1]) == False:
@@ -3190,6 +3193,12 @@ class Kea(Base):
                 if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 1, True) == False:
                     writeToLog("INFO", "FAILED to click on the Add new Button")
                     return False
+                
+                # Verify that the video playing process stopped after clicking on the Add New Hotspot
+                if creationType == enums.keaHotspotCreationType.VIDEO_PLAYING:
+                    if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "FAILED, the Video Playing process didn't stopped after clicking on ADD New Hotspot")
+                        return False
             
             if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
                 writeToLog("INFO", "FAILED to activate the Advanced Settings for Hotspots")
@@ -3301,9 +3310,6 @@ class Kea(Base):
                         if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
                             writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
                             return False
-                        
-                        elif creationType == enums.keaTimeSelectionType.VIDEO_PLAYING:
-                            return True
         
         hotspotNameList = []
         for hotspotNumber in hotspotsDict:
@@ -3442,7 +3448,7 @@ class Kea(Base):
                    
         writeToLog("INFO", "Hotspot: " + hotspotName + " has been successfully set to " + str(startTime) + " start time and " + str(endTime) + " end time")
         return True
-    
+   
     
     # @Author: Horia Cus
     # This function will click on the desired location from the player screen
@@ -3670,7 +3676,7 @@ class Kea(Base):
                     return False
         
         elif keaTab == enums.keaTab.VIDEO_EDITOR:
-            if self.wait_element(self.KEA_VIDEO_EDITOR_TAB, 1, True) != False:
+            if self.wait_element(self.KEA_VIDEO_EDITOR_TAB_ACTIVE, 1, True) != False:
                 writeToLog("INFO", "KEA Video Editor tab is already active")
             else:
                 if self.click(self.KEA_VIDEO_EDITOR_TAB, 1, True) == False:
@@ -3706,7 +3712,8 @@ class Kea(Base):
         else:
             writeToLog("INFO", "FAILED, please make sure that you've used a supported KEA section")
             return False
-         
+        
+        sleep(1.5)
         writeToLog("INFO", "The " + keaTab.value + " has been successfully opened")
         return True
     
@@ -3802,13 +3809,28 @@ class Kea(Base):
                 
                 # Verify that the width of the hotspot container matches with the expected duration
                 if presentedHotspotTime != expectedHotspotTime:
-                    writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
-                    return False
+                    # Allow a two second inconsistency
+                    for x in range(0,2):
+                        if presentedHotspotTime + x == expectedHotspotTime:
+                            break
+                        
+                        if x == 2:
+                            writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
+                            return False
                 
                 # Verify that the presented hotspot is presented at the expected X location
                 if presentedHotspotXValue != expectedHotspotXValue:
-                    writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
-                    return False
+                    # Allow a five px inconsistency
+                    for x in range(0,7):
+                        if presentedHotspotXValue == expectedHotspotXValue + x:
+                            break
+                        
+                        if x >= 5:
+                            if presentedHotspotXValue + 1 != expectedHotspotXValue:
+                                writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
+                                return False
+                            else:
+                                break
                 
                 # Verify that the current iterated hotspot is displayed on a higher Y value than the previous hotspot
                 if presentedHotspotYValue <= previousYValue:
@@ -4217,61 +4239,62 @@ class Kea(Base):
     
 
     # @Author: Horia Cus
-    # This function will move the start time of the entry to second one and initiate the playing process until reaching the first second of the entry
+    # This function will stop the playing process from KEA player and resume it from beginning, and start the playing process again from second zero
     def startFromBeginningPlayingProcess(self,):
         self.switchToKeaIframe()
-        # Verify that we are in the KEA editor
-        if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 15, True) == False:
-            writeToLog("INFO", "FAILED to find the KEA player play button")
-            return False
         
-        # Take the entry time
-        entryTotalTime = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(" ", "")[1:]
+        # Verify that the video playing process is stopped
+        if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 0.3, True) == False:
+            if self.wait_element(self.KEA_PLAYER_CONTROLS_PAUSE_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to find both play and pause buttons")
+                return False
+            else:
+                if self.click(self.KEA_PLAYER_CONTROLS_PAUSE_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to pause the video")
+                    return False
+                else:
+                    if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "FAILED to find the play button after pausing the video")
+                        return False
         
-        # Because the video resumes back to zero before the last second to be displayed, we have to issue this variable
-        if entryTotalTime[3:] == '00':
-            # with changes to the mm
-            entryTotalTimeVerify = str(int(entryTotalTime[:2])-1) + ':59'
-        else:
-            # with changes to ss
-            entryTotalTimeVerify = entryTotalTime[:3] + str(int(entryTotalTime[3:])-1)
+        # Take the time were the video is paused at
+        realTimeMarkerCurrentTime = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text
+        realTimeMarkerTimeUpdated = None
         
-        # Time presented inside the timeline cursor
-        realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        if realTimeMarkerCurrentTime != '00:00.00':
+            while realTimeMarkerTimeUpdated != '00:00.00':
+                self.clsCommon.sendKeysToBodyElement(Keys.ARROW_LEFT)
+                realTimeMarkerTimeUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text
         
-        # Verify if we are at the beginning of the entry
-        if self.resumeFromBeginningKEA(forceResume=False) == False:
-            writeToLog("INFO", "FAILED to start the entry from the beginning")
-            return False
-        
+        sleep(3)
         # Trigger the playing process
-        if self.click(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 2, True) == False:
-            writeToLog("INFO", "FAILED to click on the KEA play button")
+        if self.click(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to trigger the playing process from second zero of the entry")
             return False
-        sleep(1)
+        sleep(0.1)
         
         # Wait until the loading spinner is no longer present
         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_QUIZ_PLAYER, 30) == False:
             writeToLog("INFO", "FAILED to load the KEA entry video playing process")
             return False
         
-        # Set the real time to second one
-        x = 1
-        realtTimeMakerElement = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True)
-        
-        # Wait until the timeline cursor reached the first second
-        startTimeLine = '00:00'
-        while startTimeLine == realTimeMarker:
-            startTimeLine = realtTimeMakerElement.text[:5]
-            
-        
         return True
     
 
     # @Author: Horia Cus
-    # This function will play the entry and pause until reaching the desired time
-    def playEntryAndPauseAtTime(self, playUntilReachingTime):
+    # This function will play the entry and return once reaching the timeToReturn
+    # timeToReturn must contain the following format 'mm:ss' ( e.g '01:59')
+    def playEntryAndReturnAtTime(self, timeToReturn):
         self.switchToKeaIframe()
         
+        if self.startFromBeginningPlayingProcess() == False:
+            writeToLog("INFO", "FAILED to initiate the playing process from second zero")
+            return False
         
+        currentPlayTime = None
+        
+        while timeToReturn != currentPlayTime:
+            currentPlayTime = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        
+        writeToLog("INFO", "The video was returned at time " + timeToReturn)
         return True
