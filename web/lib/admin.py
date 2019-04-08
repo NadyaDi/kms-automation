@@ -1192,3 +1192,63 @@ class Admin(Base):
             
         writeToLog("INFO","Success, Allow Anonymous was set to: " + str(selection) + "'")
         return True
+    
+
+    # @Author: Horia Cus
+    # This function can enable or disable the Hotspots Module
+    # if isEnabled = True, Hotspots Module will be enabled
+    # if isEnabled = False, Hotspots Module will be disabled
+    def allowHotspots(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Hotspots module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/hotspots') == False:
+            writeToLog("INFO","FAILED to load Authentication Page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable hotspots module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set Hotspots Module to : " + str(selection) + " state")
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes the changes in admin page")
+            return False
+            
+        writeToLog("INFO","Hotspots Module has been set successfully to: " + str(selection) + "' state")
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function can enable or disable the Editor Module
+    # if isEnabled = True, Hotspots Module will be enabled
+    # if isEnabled = False, Hotspots Module will be disabled
+    def allowEditor(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to Editor module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/editor') == False:
+            writeToLog("INFO","FAILED to load Authentication Page in admin")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable Editor module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_ENABLED, selection) == False:
+            writeToLog("INFO","FAILED to set Editor Module to : " + str(selection) + " state")
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes the changes in admin page")
+            return False
+            
+        writeToLog("INFO","Editor Module has been set successfully to: " + str(selection) + "' state")
+        return True

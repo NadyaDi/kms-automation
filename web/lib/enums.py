@@ -732,3 +732,11 @@ class quizAnalytics(Enum):
     
     QUIZ_QUESTIONS       = 'Quiz Question'    
     QUIZ_USERS           = 'Quiz Users'
+    
+    
+class keaHotspotCreationType(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    VIDEO_PAUSED             = 'Video Paused'
+    VIDEO_PLAYING            = 'Video Playing'
