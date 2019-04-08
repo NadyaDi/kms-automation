@@ -9,6 +9,80 @@ from general import General
 
 
 
+# copyDetailsEventToRecording - do we need to copy the metadata to the recording, if no (need new names) we need to initialize the parameters :copeDetailsName, copeDetailsDescriptio, copeDetailsTags
+# resources - this parameter need to be send as an enum- RecschedulingResourceOptions
+# recurrenceInterval - this parameter need to be send as an enum- scheduleRecurrenceInterval
+# isRecurrence - if this parameter is True you need to initialize the needed parameters below
+# dailyOption - this parameter need to be send as an enum- scheduleRecurrenceDailyOption
+# dailyDays - if in daily 'every X days' option was chosen this parameter will go the number of days
+# weeklyWeeks - if weekly was chosen this parameter will go the number of weeks
+# weeklyDaysNames - if weekly was chosen this parameter will have the day or days that the event need to recurrence, this parameter need to be send as an enum- scheduleRecurrenceDayOfTheWeek, take the day that have SHORT' in it like SUNDAY_SHORT
+# monthlyOption - this parameter need to be send as an enum- scheduleRecurrenceMonthlyOption
+# monthlyDayNumber - this parameter is for the number of day in monthly first option
+# monthlyMonthNumber - this parameter is for the number of month in monthly first option
+# monthlyWeekdaysIndex - this parameter is for the day index ,the first parameter of monthly second option, this parameter need to be send as an enum- scheduleRecurrenceMonthlyIndex
+# monthlyDayName - this parameter is for the day name that in the second monthly option ,this parameter need to be send as an enum- scheduleRecurrenceDayOfTheWeek, take the day without  the 'SHORT' in it like SUNDAY
+# optionTwoMonthlyMonthNumber - this parameter is for the number of month in monthly second option
+# endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
+# numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
+class SechdeuleEvent():
+    title = None
+    startDate = None
+    endDate = None
+    startTime = None
+    endTime = None
+    description = None
+    tags = None
+    copyDetailsEventToRecording = True
+    copeDetailsName=''
+    copeDetailsDescriptio=''
+    copeDetailsTags=''
+    resources=''
+    eventOrganizer=''
+    isRecurrence=False
+    exitEvent= True
+    recurrenceInterval=''
+    dailyOption=''
+    dailyDays=''
+    weeklyDays=''
+    weeklyDaysNames=''
+    monthlyOption=''
+    monthlyDayNumber=''
+    monthlyMonthNumber=''
+    monthlyWeekdaysIndex=''
+    monthlyDayName=''
+    optionTwoMonthlyMonthNumber=''
+    endDateOption = ''
+    numberOfRecurrence=''
+    verifyDateFormat=''
+    
+    # Constructor
+    def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
+        self.title = title
+        self.startDate = startDate
+        self.endDate = endDate
+        self.startTime = startTime
+        self.endTime = endTime
+        self.description = description
+        self.tags = tags
+        self.convertDatetimeToVerifyDate()
+    
+    def convertDatetimeToVerifyDate(self):
+        dateTimeObj = datetime.datetime.strptime(self.startDate, "%d/%m/%Y")
+        tmpStrDate=''
+        # Get Month nmae
+        tmpStrDate = dateTimeObj.strftime("%B")
+        #Append day
+        day =  dateTimeObj.strftime("%d")
+        # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3'
+        day = int(day)
+        day = str(day)     
+        tmpStrDate = tmpStrDate + " " + day
+        tmpStrDate = tmpStrDate + ", " + dateTimeObj.strftime("%Y")
+        tmpStrDate = tmpStrDate + " - " + dateTimeObj.strftime("%A")
+        self.verifyDateFormat = tmpStrDate
+        
+        
 class  Recscheduling(Base):
     driver = None
     clsCommon = None
@@ -62,6 +136,7 @@ class  Recscheduling(Base):
     SCHEDULE_RECURRENCE_SAVE_BUTTON                                         = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'Save')]")
     SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE                                 = ('xpath', "//a[contains(text(), 'EVENT_TITLE')]")
     SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
+    SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE                              = ('xpath', "//th[contains(text(),'DATE')]") # the DATE need to be in format ("%B %d, %Y - %A") -us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday, 
     SCHEDULE_DELETE_EVENT_BUTTON                                            = ('xpath', "//i[@class='icon-trash icon-white']")
     #=============================================================================================================
     
@@ -69,7 +144,7 @@ class  Recscheduling(Base):
     def navigateToMySchedule(self, forceNavigate=False):
         # Check if we are already in my media page
         if forceNavigate == False:
-            if self.wait_element(self.SCHEDULE_PAGE_TITLE, 5) == True:
+            if self.wait_element(self.SCHEDULE_PAGE_TITLE, 5) != False:
                 writeToLog("INFO","Already in My Schedule")
                 return True
 
@@ -92,122 +167,23 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function create new reschedule event 
-    def createRescheduleEvent(self, title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName='', copeDetailsDescriptio='', copeDetailsTags='', resources='', eventOrganizer='', isRecurrence=False, exitEvent=False, recurrenceInterval='', dailyOption='', dailyDays='', weeklyDays='', weeklyDaysNames='', monthlyOption='', monthlyDayNumber='',  monthlyMonthNumber='', monthlyWeekdaysIndex='' , monthlyDayName='', optionTwoMonthlyMonthNumber='', endDateOption='', reccurenceStartTime='', reccurenceStartDate='', reccurenceEndTime='', reccurenceEndDate='', numberOfRecurrence=''):
-        if self.createRescheduleEventWithoutRecurrence(title, startDate, endDate, startTime, endTime, description, tags, CopyDetailsEventToRecording, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, resources, eventOrganizer, exitEvent) == False:
+    def createRescheduleEvent(self, eventInstance):
+        if self.createRescheduleEventWithoutRecurrence(eventInstance) == False:
             writeToLog("INFO","FAILED to create schedule event")
             return False
         sleep(2)
         
-        if isRecurrence == True:
+        if eventInstance.isRecurrence == True:
             if self.click(self.SCHEDULE_ADD_RECURRENCE_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on add recurrence button")
                 return False
             sleep(1)
-            if self.setEventRecurrence(recurrenceInterval, dailyOption, dailyDays, weeklyDays, weeklyDaysNames, monthlyOption, monthlyDayNumber,  monthlyMonthNumber, monthlyWeekdaysIndex , monthlyDayName, optionTwoMonthlyMonthNumber, endDateOption, reccurenceStartTime, reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence) == False:
+            if self.setEventRecurrence(eventInstance) == False:
                 writeToLog("INFO","FAILED to set event recurrence")
                 return False
         
-        sleep(5)
-        if self.click(self.SCHEDULE_SAVE_AND_EXIT_EVENT) == False:
-            writeToLog("INFO","FAILED click on save and exit event button")
-            return False
-            self.clsCommon.general.waitForLoaderToDisappear()
-        
-        if self.wait_element(self.SCHEDULE_PAGE_TITLE, 15) == False:
-            writeToLog("INFO","FAILED to verify 'My Schedule page' display after clicking on save and exit event button")
-            return False
-        
-        writeToLog("INFO","Success, Event was created successfully") 
-        return True 
-    
-    
-    # @Author: Michal Zomper 
-    # The function create new reschedule event without recurrence
-    def createRescheduleEventWithoutRecurrence(self, title, startDate, endDate, startTime, endTime, description, tags, copyDetails, copeDetailsName, copeDetailsDescriptio, copeDetailsTags, resources='', eventOrganizer='', exitEvent=False): 
-        if self.navigateToCreateEventPage() == False:
-            writeToLog("INFO","FAILED to enter create event page")
-            return False
-        sleep(2)
-        
-        if self.send_keys(self.SCHEDULE_EVENT_TITLE, title) == False:
-            writeToLog("INFO","FAILED to insert event title")
-            return False
-            
-        if eventOrganizer != '':
-            self.send_keys(self.SCHEDULE_EVENT_ORGANIZER, Keys.CONTROL + 'a')
-            if self.send_keys(self.SCHEDULE_EVENT_ORGANIZER, eventOrganizer) == False:
-                writeToLog("INFO","FAILED to change event organizer name")
-                return False
-        
-        if self.clsCommon.editEntryPage.setScheduleStartDate(startDate) == False:
-            writeToLog("INFO","FAILED to set event start date")
-            return False
-        sleep(2) 
-        
-        if len(startTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDUL_EVENT_START_TIME, startTime) == False:
-                writeToLog("INFO","FAILED to set event start time")
-                return False
-            sleep(2) 
-        # else = use the default value
-        
-        if self.clsCommon.editEntryPage.setScheduleEndDate(endDate) == False:
-            writeToLog("INFO","FAILED to set event end date")
-            return False
-        sleep(2)  
-        # else = use the default value
-        
-        if len(endTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDUL_EVENT_END_TIME, endTime) == False:
-                writeToLog("INFO","FAILED to set event end time")
-                return False
-            sleep(2)
-        
-        if resources != '':
-            if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
-                writeToLog("INFO","FAILED to click and open resource option")
-                return False
-            
-            if type(resources) is list: 
-                for resource in resources:
-                    tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
-                    if self.click(tmpResource) == False:
-                        writeToLog("INFO","FAILED to select event resource")
-                        return False
-            else:
-                tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resources.value))
-                if self.click(tmpResource) == False:
-                    writeToLog("INFO","FAILED to select event resource")
-                    return False
-                
-            # click on the create event title to close the resource list
-            self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
-            
-        # Click in Description text box
-        if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
-            writeToLog("INFO","FAILED to click in description textbox")
-            return False
-        
-        # Enter text Description
-        if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, description) == False:
-            writeToLog("INFO","FAILED to type in Description")
-            return False
-        
-        if self.fillFileScheduleTags(tags) == False:
-            writeToLog("INFO","FAILED to set event tags")
-            return False
-        
-        # copyDetails == False mean that we need to insert new metadata 
-        if copyDetails == False:
-            if self.click(self.SCHEDULE_COPE_DETAILS_BUTTON) == False:
-                writeToLog("INFO","FAILED to uncheck 'Copy details from event to recording' button")
-                return False
-            
-            if self.changeEventDetailsinRecording(copeDetailsName, copeDetailsDescriptio, copeDetailsTags) == False:
-                writeToLog("INFO","FAILED to set new metadata in 'Copy details from event to recording' section")
-                return False
-            
-        if exitEvent==False:
+        sleep(3)
+        if eventInstance.exitEvent==False:
             if self.click(self.SCHEDULE_SAVE_EVENT) == False:
                 writeToLog("INFO","FAILED click on save event button")
                 return False
@@ -226,6 +202,96 @@ class  Recscheduling(Base):
             
             if self.wait_element(self.SCHEDULE_PAGE_TITLE, 15) == False:
                 writeToLog("INFO","FAILED to verify 'My Schedule page' display after clicking on save and exit event button")
+                return False
+        
+        writeToLog("INFO","Success, Event was created successfully") 
+        return True 
+    
+    
+    # @Author: Michal Zomper 
+    # The function create new reschedule event without recurrence
+    def createRescheduleEventWithoutRecurrence(self, eventInstance): 
+        if self.navigateToCreateEventPage() == False:
+            writeToLog("INFO","FAILED to enter create event page")
+            return False
+        sleep(2)
+        
+        if self.send_keys(self.SCHEDULE_EVENT_TITLE, eventInstance.title) == False:
+            writeToLog("INFO","FAILED to insert event title")
+            return False
+            
+        if eventInstance.eventOrganizer != '':
+            self.send_keys(self.SCHEDULE_EVENT_ORGANIZER, Keys.CONTROL + 'a')
+            if self.send_keys(self.SCHEDULE_EVENT_ORGANIZER, eventInstance.eventOrganizer) == False:
+                writeToLog("INFO","FAILED to change event organizer name")
+                return False
+        
+        if self.clsCommon.editEntryPage.setScheduleStartDate(eventInstance.startDate) == False:
+            writeToLog("INFO","FAILED to set event start date")
+            return False
+        sleep(2) 
+        
+        if len(eventInstance.startTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDUL_EVENT_START_TIME, eventInstance.startTime) == False:
+                writeToLog("INFO","FAILED to set event start time")
+                return False
+            sleep(2) 
+        # else = use the default value
+        
+        if self.clsCommon.editEntryPage.setScheduleEndDate(eventInstance.endDate) == False:
+            writeToLog("INFO","FAILED to set event end date")
+            return False
+        sleep(2)  
+        # else = use the default value
+        
+        if len(eventInstance.endTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDUL_EVENT_END_TIME, eventInstance.endTime) == False:
+                writeToLog("INFO","FAILED to set event end time")
+                return False
+            sleep(2)
+        
+        if eventInstance.resources != '':
+            if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
+                writeToLog("INFO","FAILED to click and open resource option")
+                return False
+            
+            if type(eventInstance.resources) is list: 
+                for resource in eventInstance.resources:
+                    tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
+                    if self.click(tmpResource) == False:
+                        writeToLog("INFO","FAILED to select event resource")
+                        return False
+            else:
+                tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', eventInstance.resources.value))
+                if self.click(tmpResource) == False:
+                    writeToLog("INFO","FAILED to select event resource")
+                    return False
+                
+            # click on the create event title to close the resource list
+            self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
+            
+        # Click in Description text box
+        if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
+            writeToLog("INFO","FAILED to click in description textbox")
+            return False
+        
+        # Enter text Description
+        if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, eventInstance.description) == False:
+            writeToLog("INFO","FAILED to type in Description")
+            return False
+        
+        if self.fillFileScheduleTags(eventInstance.tags) == False:
+            writeToLog("INFO","FAILED to set event tags")
+            return False
+        
+        # copyDetailsEventToRecording == False mean that we need to insert new metadata 
+        if eventInstance.copyDetailsEventToRecording == False:
+            if self.click(self.SCHEDULE_COPE_DETAILS_BUTTON) == False:
+                writeToLog("INFO","FAILED to uncheck 'Copy details from event to recording' button")
+                return False
+            
+            if self.changeEventDetailsinRecording(eventInstance) == False:
+                writeToLog("INFO","FAILED to set new metadata in 'Copy details from event to recording' section")
                 return False
             
         return True
@@ -276,25 +342,25 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function insert new metadata in to the section 'Copy details from event to recording' 
-    def changeEventDetailsinRecording(self, copeDetailsName='', copeDetailsDescriptio='', copeDetailsTags=''):
-        if copeDetailsName != '':
-            if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_NAME, copeDetailsName) == False:
+    def changeEventDetailsinRecording(self, eventInstance):
+        if eventInstance.copeDetailsName != '':
+            if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_NAME, eventInstance.copeDetailsName) == False:
                 writeToLog("INFO","FAILED to insert new name in 'Copy details from event to recording'")
                 return False   
         
-        if copeDetailsDescriptio != '':
+        if eventInstance.copeDetailsDescriptio != '':
             # Click in Description text box
             if self.click(self.SCHEDULE_COPE_DETAILS_DESCRIPTION) == False:
                 writeToLog("INFO","FAILED to click in description textbox")
                 return False
              
             # Enter text Description
-            if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_DESCRIPTION, copeDetailsDescriptio) == False:
+            if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_DESCRIPTION, eventInstance.copeDetailsDescriptio) == False:
                 writeToLog("INFO","FAILED to insert new description in 'Copy details from event to recording'")
                 return False
 
-        if  copeDetailsTags != '':
-            if self.clsCommon.upload.fillFileUploadEntryTags(copeDetailsTags) == False:
+        if  eventInstance.copeDetailsTags != '':
+            if self.clsCommon.upload.fillFileUploadEntryTags(eventInstance.copeDetailsTags) == False:
                 writeToLog("INFO","FAILED to insert new tags in 'Copy details from event to recording'")
                 return False
             
@@ -313,87 +379,81 @@ class  Recscheduling(Base):
     # monthlyWeekdaysIndex - this parameter is for the day index ,the first parameter of monthly second option, this parameter need to be send as an enum- scheduleRecurrenceMonthlyIndex
     # monthlyDayName - this parameter is for the day name that in the second monthly option ,this parameter need to be send as an enum- scheduleRecurrenceDayOfTheWeek, take the day without  the 'SHORT' in it like SUNDAY
     # optionTwoMonthlyMonthNumber - this parameter is for the number of month in monthly second option
-    def setEventRecurrence(self, recurrenceInterval, dailyOption='', dailyDays='', weeklyWeeks='', weeklyDaysNames='', monthlyOption='', monthlyDayNumber='',  monthlyMonthNumber='', monthlyWeekdaysIndex='' , monthlyDayName='', optionTwoMonthlyMonthNumber='',  endDateOption='', reccurenceStartTime='', reccurenceStartDate='', reccurenceEndTime='', reccurenceEndDate='', numberOfRecurrence=''):
+    def setEventRecurrence(self,eventInstance):
         # Choose the needed interval
-        tmpRecurrenceInterval = (self.SCHEDULE_RECURRENCE_INTERVAL[0], self.SCHEDULE_RECURRENCE_INTERVAL[1].replace('RECURRENCE_INTERVAL', recurrenceInterval.value))
+        tmpRecurrenceInterval = (self.SCHEDULE_RECURRENCE_INTERVAL[0], self.SCHEDULE_RECURRENCE_INTERVAL[1].replace('RECURRENCE_INTERVAL', eventInstance.recurrenceInterval.value))
         if self.click(tmpRecurrenceInterval) == False:
-            writeToLog("INFO","FAILED to select recurrence interval: " + recurrenceInterval.value)
+            writeToLog("INFO","FAILED to select recurrence interval: " + eventInstance.recurrenceInterval.value)
             return False
         
-        elif recurrenceInterval == enums.scheduleRecurrenceInterval.DAYS:
-            if dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS:
+        if self.setEventRecurrence.eventInstancerecurrenceInterval == enums.scheduleRecurrenceInterval.DAYS:
+            if eventInstance.dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS:
                 if self.click(self.SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on 'every X days' radio button")
                     return False
                 
-                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS, dailyDays) == False:
+                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS, eventInstance.dailyDays) == False:
                     writeToLog("INFO","FAILED to add number of days to the 'every X days' option")
                     return False
             
-            elif dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_WEEKDAY:
+            elif eventInstance.dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_WEEKDAY:
                 if self.click(self.SCHEDULE_RECURRENCE_DAILY_WEEKDAY_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to add number of weeks to the weekly option")
                     return False
                 
-        elif recurrenceInterval == enums.scheduleRecurrenceInterval.WEEKS: 
-            if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_WEEKLY_EVERY_X_WEEKS, weeklyWeeks) == False:
+        elif eventInstance.recurrenceInterval == enums.scheduleRecurrenceInterval.WEEKS: 
+            if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_WEEKLY_EVERY_X_WEEKS, eventInstance.weeklyWeeks) == False:
                 writeToLog("INFO","FAILED to add number of days to the 'every X days' option")
                 return False
             
-            if type(weeklyDaysNames) is list: 
-                for dayInTheWeek in weeklyDaysNames:
+            if type(eventInstance.weeklyDaysNames) is list: 
+                for dayInTheWeek in eventInstance.weeklyDaysNames:
                     tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK', dayInTheWeek.value))
                     if self.click(tmpDay) == False:
                         writeToLog("INFO","FAILED to select day '" + dayInTheWeek.value + "' in weekly option")
                         return False
                         
             else:   
-                tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK', weeklyDaysNames.value))
+                tmpDay = (self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[0], self.SCHEDULE_RECURRENCE_WEEKLY_DAY_OF_THE_WEEK[1].replace('DAY_OF_THE_WEEK',eventInstance.weeklyDaysNames.value))
                 if self.click(tmpDay) == False:
-                    writeToLog("INFO","FAILED to select day '" + weeklyDaysNames.value + "' in weekly option")
+                    writeToLog("INFO","FAILED to select day '" + eventInstance.weeklyDaysNames.value + "' in weekly option")
                     return False  
                 
-        elif recurrenceInterval == enums.scheduleRecurrenceInterval.MONTHS:  
-            if monthlyOption == enums.scheduleRecurrenceMonthlyOption.DAY_X_OF_EVERY_Y_MONTHS:
+        elif eventInstance.recurrenceInterval == enums.scheduleRecurrenceInterval.MONTHS:  
+            if eventInstance.monthlyOption == enums.scheduleRecurrenceMonthlyOption.DAY_X_OF_EVERY_Y_MONTHS:
                 if self.click(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_X_OF_EVERY_Y_MONTHS_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on 'day X of every Y months' radio button")
                     return False
                 
-                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_DAY_OPTION_DAY_NUMBER, monthlyDayNumber) == False:
+                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_DAY_OPTION_DAY_NUMBER, eventInstance.monthlyDayNumber) == False:
                     writeToLog("INFO","FAILED to add number of days to the 'day X of every Y months' option")
                     return False
                     
-                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_DAY_OPTION_MONTH_NUMBER, monthlyMonthNumber) == False:
+                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_DAY_OPTION_MONTH_NUMBER, eventInstance.monthlyMonthNumber) == False:
                     writeToLog("INFO","FAILED to add number of month to the 'day X of every Y months' option")
                     return False
             
             
-            elif monthlyOption == enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY:
+            elif eventInstance.monthlyOption == enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY:
                 if self.click(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on 'by weekday' radio button")
                     return False
                 
-                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_WEEK_IN_THE_MONTH , monthlyWeekdaysIndex.value) == False:
+                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_WEEK_IN_THE_MONTH , eventInstance.monthlyWeekdaysIndex.value) == False:
                     writeToLog("INFO","FAILED to choose index or the day index for monthly second option")
                     return False
                     
-                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH, monthlyDayName.value) == False:
+                if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH, eventInstance.monthlyDayName.value) == False:
                     writeToLog("INFO","FAILED to select day for monthly second option")
                     return False
     
-                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER  , optionTwoMonthlyMonthNumber) == False:
+                if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER, eventInstance.optionTwoMonthlyMonthNumber) == False:
                     writeToLog("INFO","FAILED to add number of month for monthly second option")
                     return False
         
-        if self.setRecurrenceRange(endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence) == False:
+        if self.setRecurrenceRange(eventInstance.endDateOption, eventInstance.reccurenceStartTime, eventInstance.reccurenceStartDate, eventInstance.reccurenceEndTime, eventInstance.reccurenceEndDate, eventInstance.numberOfRecurrence) == False:
             writeToLog("INFO","FAILED to set event recurrence range")
             return False
-        
-        if self.click(self.SCHEDULE_RECURRENCE_SAVE_BUTTON) == False:
-            writeToLog("INFO","FAILED to click on recurrence save button")
-            return False
-        self.clsCommon.general.waitForLoaderToDisappear()
-
         
         writeToLog("INFO","Success, Event recurrence was set")   
         return True
@@ -402,36 +462,36 @@ class  Recscheduling(Base):
     # @Author: Michal Zomper 
     # endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
     # numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
-    def setRecurrenceRange(self, endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence =''): 
-        if self.setRecurrenceStartDate(reccurenceStartDate) == False:
+    def setRecurrenceRange(self, eventInstance): #endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence =''): 
+        if self.setRecurrenceStartDate(eventInstance.startDate) == False:
             writeToLog("INFO","FAILED to set event start date")
             return False
         sleep(2) 
         
-        tmpEndDate = (self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[0], self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[1].replace('END_DTAR_OPTION', endDateOption.value))
+        tmpEndDate = (self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[0], self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[1].replace('END_DTAR_OPTION', eventInstance.endDateOption.value))
         if self.click(tmpEndDate) == False:
             writeToLog("INFO","FAILED to choose end date option")
             return False
         
-        if endDateOption == enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES:
-            if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_END_DATE_AFTER_X_OCCURRENCES  , numberOfRecurrence) == False:
+        if eventInstance.endDateOption == enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES:
+            if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_END_DATE_AFTER_X_OCCURRENCES  , eventInstance.numberOfRecurrence) == False:
                 writeToLog("INFO","FAILED insert number of occurrences to end date")
                 return False
             
-        elif endDateOption == enums.scheduleRecurrenceEndDateOption.END_BY:
-            if self.setRecurrenceEndDate(reccurenceEndDate) == False:
+        elif eventInstance.endDateOption == enums.scheduleRecurrenceEndDateOption.END_BY:
+            if self.setRecurrenceEndDate(eventInstance.endTime) == False:
                 writeToLog("INFO","FAILED to set event end date")
                 return False
         sleep(2)  
         
-        if len(reccurenceStartTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_START_TIME, reccurenceStartTime) == False:
+        if len(eventInstance.statTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_START_TIME, eventInstance.sartTime) == False:
                 writeToLog("INFO","FAILED to set event start time")
                 return False
             sleep(2) 
         
-        if len(reccurenceEndTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_END_TIME, reccurenceEndTime) == False:
+        if len(eventInstance.endTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_END_TIME, eventInstance.endTime) == False:
                 writeToLog("INFO","FAILED to set event end time")
                 return False
             sleep(2)
@@ -505,13 +565,13 @@ class  Recscheduling(Base):
     
     
     # @Author: Michal Zomper
-    # startDate = this parameter format need to be : "%B %d, %Y - %A". example- April 07, 2019 - Sunday
-    def verifyScheduleEventInMySchedulePage(self, eventTitle, startDate, endDate, startTime, endTime, resources=''):
-        if self.setScheduleInMySchedulePage(startDate) == False:
-            writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
+    # verifyDateFormat = this parameter format need to be : "%B %d, %Y - %A". example- April 07, 2019 - Sunday
+    def verifyScheduleEventInMySchedulePage(self, eventInstance):
+        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
+            writeToLog("INFO","FAILED to move to start time '" + eventInstance.eventInstance + "' in my schedule page")
             return False  
         
-        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventTitle))
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
         try:
             event = self.wait_element(tmpEventTiltle)
             if event == False:
@@ -527,19 +587,19 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to find event element text")
             return False
         
-        if startTime.lower()+"-"+endTime.lower() in eventMetadata == False:
+        if eventInstance.startTime.lower()+"-"+eventInstance.endTime.lower() in eventMetadata == False:
             writeToLog("INFO","FAILED to find event time")
             return False
         
-        if resources != '':
-            if type(resources) is list:
-                for resource in resources:
+        if eventInstance.resources != '':
+            if type(eventInstance.resources) is list:
+                for resource in eventInstance.resources:
                     if resource.value in eventMetadata == False:
                         writeToLog("INFO","FAILED to find event resource: " + resource)
                         return False
             else:
-                if resources.value in eventMetadata == False:
-                        writeToLog("INFO","FAILED to find event resource: " + resources)
+                if eventInstance.resources.value in eventMetadata == False:
+                        writeToLog("INFO","FAILED to find event resource: " + eventInstance.resources)
                         return False
         
         writeToLog("INFO","Success, Event date and time display correctly in my schedule page")
@@ -548,6 +608,7 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper
     # the function choose the needed date form calendar in my schedule page
+    # the dateStr need to be in format ("%B %d, %Y - %A")- us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday,
     def setScheduleInMySchedulePage(self, dateStr):
         if self.click(self.SCHEDULE_JUMP_TO_BUTTON) == False:
             writeToLog("INFO","FAILED to click on 'jump to' button")
@@ -590,36 +651,51 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to select the day")
             return False        
         
+        # Verify correct day display in my schedule
+        tmpDate = (self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[0], self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[1].replace('DATE', dateStr))
+        if self.wait_element(tmpDate) == False:
+            writeToLog("INFO","FAILED, the date '" + dateStr + "' is not display in the page")
+            return False      
+            
         return True
     
     
     # @Author: Michal Zomper
-    def deteteSingleEvent(self, eventTitle, startDate):
-        if self.setScheduleInMySchedulePage(startDate) == False:
-            writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
-            return False  
-        
-        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventTitle))
-        if self.click(tmpEventTiltle) == False:
-            writeToLog("INFO","FAILED to find and click on event '" + eventTitle + "' in my schedule page")
+    def deteteSingleEvent(self, eventInstance):
+        if self.navigateToMySchedule() == False:
+            writeToLog("INFO","FAILED navigate to my schedule page")
             return False 
+        
+        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
+            writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
+            return False  
+        sleep(2)
+        
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
+        if self.click(tmpEventTiltle) == False:
+            writeToLog("INFO","FAILED to find and click on event '" + eventInstance.title + "' in my schedule page")
+            return False 
+        sleep(2)
         
         if self.click(self.SCHEDULE_DELETE_EVENT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on delete event button")
             return False
+        sleep(1)
         
         # Click on confirm delete
         if self.click(self.clsCommon.myMedia.MY_MEDIA_CONFIRM_ENTRY_DELETE, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm delete button")
-            return False 
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear() 
+        sleep(2)
             
         # verify event deleted
-        if self.setScheduleInMySchedulePage(startDate) == False:
-            writeToLog("INFO","FAILED to move to start time '" + startDate + "' in my schedule page")
+        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
+            writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
             return False  
         
         if self.wait_element(tmpEventTiltle, timeout=6) == True:
-            writeToLog("INFO","FAILED event '" + eventTitle + "' was find although it was deleted")
+            writeToLog("INFO","FAILED event '" + eventInstance.verifyDateFormat.title + "' was find although it was deleted")
             return False 
         
         writeToLog("INFO","Success, Event was deleted successfully")

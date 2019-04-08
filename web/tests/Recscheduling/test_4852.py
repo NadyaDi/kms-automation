@@ -8,7 +8,7 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import enums
-
+from recscheduling import SechdeuleEvent
 
 class Test:
     
@@ -66,7 +66,6 @@ class Test:
             
             # we have 2 startDate that hold the same day for the event. one in format to create the event and the second one is in format so we can compare it to the date in the calendar
             self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
-            self.startDateToVerifyEventIncalender = datetime.datetime.now().strftime("%B %d, %Y - %A")
             self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
 
             self.startEventTime = time.time() + (60*60)
@@ -74,7 +73,9 @@ class Test:
              
             self.endTime = time.time() + 2*(60*60)
             self.endTime = time.strftime("%I:%M%p",time.localtime(self.endTime))
-
+            self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
+            self.event.resources = self.resource
+            
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
@@ -87,17 +88,19 @@ class Test:
                 return
             
             writeToLog("INFO","Step 3: Going to create new single event")
-            if self.common.recscheduling.createRescheduleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, True, resources=self.resource, exitEvent=True) == False:
+            if self.common.recscheduling.createRescheduleEvent(self.event) == False:
                 writeToLog("INFO","Step 3: FAILED to create new single event")
                 return
-                 
+            
+            sleep(3)     
             writeToLog("INFO","Step 4: Going to verify event display in my schedule page")
-            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.eventTitle, self.startDateToVerifyEventIncalender, self.endDate, self.startEventTime, self.endTime, self.resource) == False:
+            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
                 writeToLog("INFO","Step 4: FAILED to create new single verify event display in my schedule page")
                 return
             
+            sleep(3)
             writeToLog("INFO","Step 5: Going to delete event")
-            if self.common.recscheduling.deteteSingleEvent(self.eventTitle, self.startDateToVerifyEventIncalender) == False:
+            if self.common.recscheduling.deteteSingleEvent(self.event) == False:
                 writeToLog("INFO","Step54: FAILED to delete event from my schedule page")
                 return
             ##################################################################
@@ -112,7 +115,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
-            self.common.recscheduling.deteteSingleEvent(self.eventTitle, self.startDateToVerifyEventIncalender)
+            self.common.recscheduling.deteteSingleEvent(self.event)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
