@@ -14,13 +14,13 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Hotspots: Hover player and safe zone to select hotspot position 
+    # Test Name : Hotspots - Add Hotspot from HS list
     # Test description:
-    # Verify that the Add New Hotspot tool tip is properly displayed while verifying it in five different places of the player
-    # Verify that the Protected Zone tool tip is properly displayed while verifying it in three different places of the player
-    # Verify that the Add New Hotspot tool tip is not presented on existing hotspots locations
+    # Verify that proper information are displayed in the HS List when no Hotsptos are displayed
+    # Verify that the HS List is populated with the new hotspots created
+    # Verify that the HS List is properly updated after removing available Hotspots from the list
     #================================================================================================================================
-    testNum = "5107"
+    testNum = "5112"
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
@@ -29,7 +29,7 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "For tool tips while being in different locations of the player, including protected zone and hotspots"
+    typeTest            = "For Hotspots List while having an empty list of hotspots and then a populated list of hotspots"
     description         = "Description"
     tags                = "Tags,"
     entryName           = None
@@ -40,14 +40,14 @@ class Test:
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
     # Each list contains the details that are used in the hotspot creation and verification
-    hotspotOne    = ['Hotspot Centered', enums.keaLocation.CENTER]
+    hotspotOne            = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotTwo            = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 5, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
     
     # This Dictionary is used in order to create and verify the hotspots
-    hotspotsDict  = {'1':hotspotOne}
-    
-    locationListWithoutHotspots  = [enums.keaLocation.TOP_LEFT, enums.keaLocation.TOP_RIGHT, enums.keaLocation.BOTTOM_LEFT, enums.keaLocation.BOTTOM_RIGHT, enums.keaLocation.CENTER, enums.keaLocation.PROTECTED_ZONE_LEFT, enums.keaLocation.PROTECTED_ZONE_CENTER]
-    locationListWithHotspots     = [enums.keaLocation.TOP_LEFT, enums.keaLocation.TOP_RIGHT, enums.keaLocation.BOTTOM_LEFT, enums.keaLocation.BOTTOM_RIGHT, enums.keaLocation.PROTECTED_ZONE_LEFT, enums.keaLocation.PROTECTED_ZONE_CENTER]
-
+    hotspotOneDict               = {'1':hotspotOne}
+    hotspotTwoDict               = {'1':hotspotTwo}
+    hotspotOneTwoDict            = {'1':hotspotOne, '2':hotspotTwo}
+         
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -64,44 +64,51 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Hotspots - Player and Safe Zone Verification", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Hotspots - HS List", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
- 
+             
             writeToLog("INFO","Step 2: Going to navigate to the KEA Hotspots tab for " + self.entryName + " entry")              
             if self.common.kea.launchKEATab(self.entryName, enums.keaTab.HOTSPOTS, navigateToEntry=True, timeOut=40) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to the KEA Hotspots tab for " + self.entryName + " entry")
                 return
-             
-            x = 3
-            for location in self.locationListWithoutHotspots:
-                writeToLog("INFO","Step " + str(x)+ " : Going to verify the hotspot tool tip at the following location: " + location.value + " before creating a hotspot")
-                if self.common.kea.hotspotToolTipVerification(location) == False:
-                    writeToLog("INFO","Step " + str(x) + ": FAILED  to verify the hotspot tool tip at the following location: " + location.value + " before creating a hotspot")
-                    return
-                 
-                x += 1
-                 
-            writeToLog("INFO","Step " + str(x)+ " : Going to create hotspots for the " + self.entryName)
-            if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=False) == False:
-                writeToLog("INFO","Step " + str(x)+ " : FAILED to create hotspots for the " + self.entryName)
-                return
-            else:
-                x += 1
- 
-            for location in self.locationListWithoutHotspots:
-                writeToLog("INFO","Step " + str(x)+ " : Going to verify the hotspot tool tip at the following location: " + location.value + " after creating a hotspot")
-                if self.common.kea.hotspotToolTipVerification(location) == False:
-                    writeToLog("INFO","Step " + str(x) + ": FAILED  to verify the hotspot tool tip at the following location: " + location.value + " after creating a hotspot")
-                    return
-                x += 1
 
-            writeToLog("INFO","Step " + str(x)+ " : Going to verify that the Add New Hotspot tool tip is not presented at the location where the hotspot has been created")
-            if self.common.kea.hotspotToolTipVerification('', True) == False:
-                writeToLog("INFO","Step " + str(x) + ": FAILED to verify that the Add New Hotspot tool tip is not presented at the location where the hotspot has been created")
+            writeToLog("INFO","Step 3: Going to verify the Hotspot List while having no Hotspots Available")
+            if self.common.kea.hotspotListVerification('', 0) == False:
+                writeToLog("INFO","Step 3: FAILED to verify the Hotspot List while having no Hotspots Available")
+                return 
+            
+            writeToLog("INFO","Step 4: Going to add a new hotspot for the " + self.entryName + " entry")
+            if self.common.kea.hotspotCreation(self.hotspotOneDict, False) == False:
+                writeToLog("INFO","Step 4: FAILED to add a new hotspot for the " + self.entryName + " entry")
+                return
+            
+            writeToLog("INFO","Step 5: Going to verify the Hotspot List while having one Hotspot Available")
+            if self.common.kea.hotspotListVerification(self.hotspotOneDict, None) == False:
+                writeToLog("INFO","Step 5: FAILED to verify the Hotspot List while having one Hotspot Available")
+                return
+            
+            writeToLog("INFO","Step 6: Going to add the second hotspot for the " + self.entryName + " entry")
+            if self.common.kea.hotspotCreation(self.hotspotTwoDict, False) == False:
+                writeToLog("INFO","Step 6: FAILED to add second hotspot for the " + self.entryName + " entry")
+                return
+            
+            writeToLog("INFO","Step 7: Going to verify the Hotspot List while having two Hotspots Available")
+            if self.common.kea.hotspotListVerification(self.hotspotOneTwoDict, None) == False:
+                writeToLog("INFO","Step 7: FAILED to verify the Hotspot List while having two Hotspots Available")
+                return
+            
+            writeToLog("INFO","Step 8: Going to remove one hotspot from the " + self.entryName + " entry")
+            if self.common.kea.hotspotActions(self.hotspotOne[0], enums.keaHotspotActions.DELETE) == False:
+                writeToLog("INFO","Step 8: FAILED to remove one hotspot from the " + self.entryName + " entry")
+                return
+            
+            writeToLog("INFO","Step 9: Going to verify the Hotspot List after removing one Hotspot from the list")
+            if self.common.kea.hotspotListVerification(self.hotspotTwoDict, None) == False:
+                writeToLog("INFO","Step 9: FAILED to verify the Hotspot List after removing one Hotspot from the list")
                 return
             ##################################################################
             self.status = "Pass"

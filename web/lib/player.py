@@ -2790,6 +2790,10 @@ class Player(Base):
             # Take the details for the iterated hotspot from the given dictionary
             currentExpectedList = hotspotsDict[hotspotNumber]
             
+            if len(presentedHotspotsDetailsList) < len(hotspotsDict):
+                writeToLog("INFO", "FAILED, a number of minimum " + str(len(hotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found")
+                return False
+            
             # Verify the expected hotspots with presented hotspots
             for x in range(0, len(presentedHotspotsDetailsList)):
                 currentPresentedList = presentedHotspotsDetailsList[x]

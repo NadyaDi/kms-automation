@@ -124,6 +124,7 @@ class Kea(Base):
     KEA_HOTSPOTS_DONE_BUTTON_ADVANCED_SETTINGS                              = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Done"]')
     KEA_HOTSPOTS_DONE_BUTTON_NORMAL                                         = ('xpath', '//button[contains(@class,"btn btn-save pull-right")]')
     KEA_HOTSPOTS_SAVE_BUTTON                                                = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Save"]')
+    KEA_HOTSPOTS_CANCEL_BUTTON                                              = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Cancel"]')
     KEA_HOTSPOTS_ADVANCED_SETTINGS                                          = ('xpath', '//button[@class="form-button" and text()="Advanced Settings"]')
     KEA_HOTSPOTS_FORM_TEXT_INPUT_FIELD                                      = ('xpath', '//input[@id="inputText"]')
     KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD                                      = ('xpath', '//input[@id="inputUrl"]')
@@ -133,8 +134,12 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_COLOR_VALUE                                           = ('xpath', '//input[@class="sp-input"]')
     KEA_HOTSPOTS_FORM_TEXT_SIZE                                             = ('xpath', '//input[@id="textSize"]')
     KEA_HOTSPOTS_FORM_ROUNDNESS                                             = ('xpath', '//input[@id="roundness"]')
+    KEA_HOTSPOTS_LIST_HEADER                                                = ('xpath', "//div[@class='panel__header']")
+    KEA_HOTSPOTS_LIST_CONTENT                                               = ('xpath', "//div[@class='panel__content']")
+    KEA_HOTSPOTS_LIST_PANEL_HOTSPOT                                         = ('xpath', "//kea-hotspots-list-item[contains(@class,'ng-star-inserted')]")
     KEA_HOTSPOTS_PLAYER_BUTTON                                              = ('xpath', "//div[@class='hotspot__button']")
     KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER                                   = ('xpath', "//div[contains(@class,'hotspot__container ui-draggable ui-draggable-handle')]")
+    KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER_SELECTED                          = ('xpath', "//div[contains(@class,'selected ui-resizable')]")
     KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP                                 = ('xpath', "//span[@class='message__text']")
     KEA_HOTSPOTS_PANEL_ITEM_TITLE                                           = ('xpath', "//div[contains(@class,'panel-item__title')]")
     KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU                                  = ('xpath', "//i[@class='kicon-more']")
@@ -772,15 +777,6 @@ class Kea(Base):
         return False
 
 
-    # @Author: Tzachi guetta  & Horia Cus
-    # the following function will create a Quiz (within the given dictQuestions)
-    # Please follow the individual list structure for each Quiz Question type
-    # questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text', 'Why Text']
-    # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
-    # questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point', 'Hint Text', 'Why Text']
-    # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
-    # questionOpen         = ['0:25', enums.QuizQuestionType.OPEN_QUESTION, 'Question title for Open-Q'] 
-    # If you want to change the answer order you can use this function: changeAnswerOrder
 #     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=15):
 #         sleep(25)
 #         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
@@ -1006,21 +1002,31 @@ class Kea(Base):
 #         self.clickDone()
 #         return True
 
+
+    # @Author: Tzachi guetta  & Horia Cus
+    # the following function will create a Quiz (within the given dictQuestions)
+    # Please follow the individual list structure for each Quiz Question type
+    # questionMultiple     = ['00:10', enums.QuizQuestionType.Multiple, 'Question Title for Multiple Choice', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4', 'Hint Text', 'Why Text']
+    # questionTrueAndFalse = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text', 'Hint Text', 'Why Text']
+    # questionReflection   = ['00:20', enums.QuizQuestionType.REFLECTION, 'Question Title for Reflection Point', 'Hint Text', 'Why Text']
+    # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
+    # questionOpen         = ['0:25', enums.QuizQuestionType.OPEN_QUESTION, 'Question title for Open-Q'] 
+    # If you want to change the answer order you can use this function: changeAnswerOrder
     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=20):
         sleep(25)
-
+  
         # Need this step in order to workaround an issue that may fail a test case after uploading an entry
         if self.wait_element(self.clsCommon.upload.UPLOAD_PAGE_TITLE, 0.5, True) != False:
             sleep(2) 
             if self.clsCommon.navigateTo(enums.Location.HOME) == False:
                 writeToLog("INFO", "FAILED to navigate to home page")
                 return False
-        
+          
         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
             writeToLog("INFO", "FAILED to navigate to " + entryName)
             return False
         sleep(timeout)
-        
+          
         if self.wait_while_not_visible(self.KEA_MEDIA_IS_BEING_PROCESSED, 120) == False:
             writeToLog("INFO", "FAILED to process the " + entryName + " during the launch")
             return False
@@ -1028,10 +1034,10 @@ class Kea(Base):
         if self.wait_while_not_visible(self.KEA_QUIZ_LOADING_CONTAINER, 120) == False:
             writeToLog("INFO", "FAILED to load the quiz screen")
             return False
-        
+         
         # We create the locator for the KEA Quiz Question title field area (used only in the "Reflection Point" and "True and False" and "Open-Q" Quiz Questions)
         questionField = (self.KEA_OPTION_TEXTAREA_FIELD[0], self.KEA_OPTION_TEXTAREA_FIELD[1].replace('FIELD_NAME', 'questionTxt')) 
-                   
+                    
         for questionNumber in dictQuestions:
             questionDetails = dictQuestions[questionNumber]
             
@@ -1040,59 +1046,11 @@ class Kea(Base):
                 writeToLog("INFO","FAILED to wait until spinner isn't visible")
                 return False 
             
-            sleep(1.5)
-            # Specifying the time stamp, where the Quiz Question should be placed within the entry
-            # click on the editor in order to higlight the timeline field and select all the text
+            # Set the time position of the current quiz inside the timeline section
+            if self.setRealTimeMarkerToTime(questionDetails[0]) == False:
+                writeToLog("INFO", "FAILED to set the question " + questionDetails[2] + " at time location: " + questionDetails[0] )  
+                return False                 
             
-            # Because D2L application doesn't properly display the entire Quiz screen we need to scroll down in order to select the time stamp field
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-            
-            # Select the time stamp input field
-            if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
-                writeToLog("INFO", "FAILED to click on the kea timeline field")
-                return False
-            sleep(1)
-            
-            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
-            
-            # Verify that the input time field is highlighted
-            if timePickerHighlighted == False:
-                writeToLog("INFO", "Time picker input field couldn't be highlighted during the first try")
-                 
-                if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
-                    writeToLog("INFO", "FAILED to click on the kea timeline field")
-                    return False
-                sleep(1)
-                 
-                timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
-                if timePickerHighlighted == False:
-                    writeToLog("INFO", "FAILED to highlight the time picker input field during the second time")
-                    return False
-                
-            # Take the time stamp details
-            timestamp = questionDetails[0]
-
-            # replace the text present in the timestamp field with the new one
-            if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
-                writeToLog("INFO", "FAILED to select the timeline field text")
-                return False
-            
-            # Because the time input field is not updated properly if a quiz was created previously, we need to insert the time for the second time
-            if int(questionNumber) >= 2:
-                if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timestamp) == False:
-                    writeToLog("INFO", "FAILED to select the timeline field text")
-                    return False
-            
-            # Move the real time maker to the desired time stamp
-            sleep(1.5)
-            self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
-            
-            # Scroll back up if using D2L application
-            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
-                self.clsCommon.sendKeysToBodyElement(Keys.ARROW_UP, 4)
-                sleep(1.5)
-        
             # Creating the variable for the Quiz Question Type
             qestionType = questionDetails[1]
             if qestionType == enums.QuizQuestionType.Multiple:   
@@ -1324,6 +1282,100 @@ class Kea(Base):
         # Save the KEA Quiz entry and navigate to the entry page
         self.switchToKeaIframe() 
         self.clickDone()
+        return True
+    
+    
+
+    # @Author: Horia Cus
+    # This function will move the real time marker to the desired time location
+    # The real time marker location will be moved by clicking directly on the time line section
+    # If the real time marker couldn't be set properly by clicking on the time line section, the Editor Time option will be used
+    # timeLocation must be string using mm:ss format ( e.g str(10:00) )
+    def setRealTimeMarkerToTime(self, timeLocation):
+        self.switchToKeaIframe()
+        
+        # Take the details from the kea time line section
+        keaTimelineSection  = self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 10, True)
+
+        # Verify that the time line section is available       
+        if keaTimelineSection == False:
+            writeToLog("INFO", "FAILED to take the KEA timeline section element")
+            return False
+        
+        # Take the length needed in order to set by the correct pixels the time location, based on the length of the timeline section, entry time and time location
+        entryTotalTime               = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(' ', '')[1:]
+        m, s                         = entryTotalTime.split(':')
+        entryTotalTimeSeconds        = int(m) * 60 + int(s)
+        m, s                         = timeLocation.split(':')
+        quizTimeLocationInSeconds    = float(m) * 60 + float(s)
+        keaTimelineSectionWidth      = keaTimelineSection.size['width']
+        widthSizeForOneSecond        = keaTimelineSectionWidth/entryTotalTimeSeconds
+        widthSizeInOrderToReachDesiredStartTime = widthSizeForOneSecond * quizTimeLocationInSeconds
+
+        actionSetQuizLocation = ActionChains(self.driver)
+        # Set the time line location using action chain
+        try:
+            actionSetQuizLocation.move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+1.15, -10).pause(1).click().perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to set the start time to " + str(timeLocation))
+            return False
+        
+        sleep(1)
+        timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        
+        # Verify that the Time Marker matches with our desired time location
+        if timeLineSectionMarker != timeLocation:
+            # As a redundancy, if we are unable to set the desired time location by Action Chain, we are going to use Editor Time Picker
+            writeToLog("INFO", "Couldn't set the " + timeLocation + " using action chains, but " + timeLineSectionMarker + " time location has been set")
+            
+            # Select the time stamp input field
+            if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the kea timeline field")
+                return False
+            sleep(1)
+
+            timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
+
+            # Verify that the input time field is highlighted
+            if timePickerHighlighted == False:
+                writeToLog("INFO", "Time picker input field couldn't be highlighted during the first try")
+
+                if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the kea timeline field")
+                    return False
+                sleep(1)
+
+                timePickerHighlighted = self.wait_element(self.EDITOR_TIME_PICKER_HIGHLIGHTED_CONTAINER, 3, True)
+                if timePickerHighlighted == False:
+                    writeToLog("INFO", "FAILED to highlight the time picker input field during the second time")
+                    return False
+
+            # Clear first the current Editor Time Location
+            if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timeLocation) == False:
+                writeToLog("INFO", "FAILED to select the timeline field text")
+                return False
+            sleep(1)
+            # Put the desired time location inside the Editor Time input field
+            if self.clear_and_send_keys(self.EDITOR_TIME_PICKER, timeLocation) == False:
+                writeToLog("INFO", "FAILED to select the timeline field text")
+                return False
+
+            # Move the real time maker to the desired time stamp
+            sleep(1.5)
+            self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
+            sleep(1.5)
+            
+            timeLineSectionMarkerUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+            
+            # Verify that the Time Marker matches with our desired time location
+            if timeLineSectionMarkerUpdated != timeLocation:
+                writeToLog("INFO", "FAILED to set the real time marker to the " + timeLocation + " time location using Editor Time Picker")
+                return False
+            else:
+                writeToLog("INFO", "PASSED, the real time marker has been successfully set to the " + timeLocation + " time location using, Editor Time Picker")
+                return True
+            
+        writeToLog("INFO", "PASSED, the real time marker has been successfully set to the " + timeLocation + " time location, using Action Chain")
         return True
     
     
@@ -3101,7 +3153,8 @@ class Kea(Base):
     # hotspotFive     = ['Hotspot Title Five', enums.keaLocation.BOTTOM_LEFT, 25, 30, '', enums.textStyle.BOLD, '', '', 18, 16]
     # hotspotsDict    = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree, '4':hotspotFour, '5':hotspotFive}
     # hotspotsDict must contain the following structure  = {'1':hotspotOne,'2':hotspotTwo}
-    def hotspotCreation(self, hotspotsDict, openHotspotsTab=False):
+    # creationType = the type of the method that will be used in order to select the start time / end time of the hotspot ( end time is supported only for Cue Point method)
+    def hotspotCreation(self, hotspotsDict, openHotspotsTab=False, creationType=enums.keaHotspotCreationType.VIDEO_PAUSED):
         self.switchToKeaIframe()  
         # Navigate to the Hotspot tab if needed
         if openHotspotsTab == True:
@@ -3244,9 +3297,13 @@ class Kea(Base):
             # Set the start time and end time for the hotspot
             if len(hotspotDetails) >= 3:
                 if hotspotDetails[2] != None or hotspotDetails[3] != None:
-                    if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
-                        writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
-                        return False
+                    if creationType == enums.keaHotspotCreationType.VIDEO_PAUSED:
+                        if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                            writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
+                            return False
+                        
+                        elif creationType == enums.keaTimeSelectionType.VIDEO_PLAYING:
+                            return True
         
         hotspotNameList = []
         for hotspotNumber in hotspotsDict:
@@ -3404,6 +3461,12 @@ class Kea(Base):
         
         # Take the X, Y coordinates for the desired location
         x, y = self.hotspotLocationCoordinates(location)
+        
+        # Verify if a hotspot is already selected, if so, the hotpost will be unselected
+        if self.wait_element(self.KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER_SELECTED, 1, True) != False:
+            if self.clickElement(hotspotScreen) == False:
+                writeToLog("INFO", "FAILED to click on the hotspot player screen in order to un select the hotspot container")
+                return False
         
         action = ActionChains(self.driver)
         # Move the quiz number to a new timeline location
@@ -4042,4 +4105,173 @@ class Kea(Base):
             return False
                
         writeToLog("INFO", "The hotspot: " + hotspotName + " has been successfully moved to the new location: " + hotspotNewLocation.value)
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function verifies the Hotspot present on the Panel from the left side of the player while being in the Hotspots tab
+    # Verifies that the expected hotspots are displayed with the desired configurations
+    def hotspotListVerification(self, hotspotDict, expectedHotspotNumber=None):
+        self.switchToKeaIframe()
+        
+        # Take the expectedHostpotNumber based on the lenght of the hotspotDict if no force number was given
+        if expectedHotspotNumber == None:
+            expectedHotspotNumber = str(len(hotspotDict))
+        else:
+            expectedHotspotNumber = str(expectedHotspotNumber)
+
+        # Take the details from the HS List Header
+        hotspotListHeader   = self.wait_element(self.KEA_HOTSPOTS_LIST_HEADER, 10, True)
+        
+        # Take the details of the HS List counter
+        hotspotListCounter  =  self.get_child_element_by_type(hotspotListHeader, 'tag_name', 'span').text.split()
+        
+        if hotspotListHeader == False:
+            writeToLog("INFO", "FAILED to take the HS List header details")
+            return False
+        
+        # Take the details of the available HS from the list
+        hotspotListContent = self.wait_element(self.KEA_HOTSPOTS_LIST_CONTENT, 1, True)
+        
+        if hotspotListContent == False:
+            writeToLog("INFO", "FAILED to take the HS List content details")
+            return False
+        
+        if len(hotspotListCounter) != 2:
+            writeToLog("INFO", "FAILED, more than the expected information for HS counter were given")
+            return False
+        
+        # Verify that the presented hotspots from the HS Panel list matches with the expected number
+        else:
+            if hotspotListCounter[0] != expectedHotspotNumber:
+                writeToLog("INFO", "FAILED,a total of " + hotspotListCounter + " HS were displayed in the HS list but " + expectedHotspotNumber + " were expected")
+                return False
+            
+            if hotspotListCounter[1] != 'Hotspots':
+                writeToLog("INFO", "FAILED, the 'Hotspots' text placeholder was not displayed, instead " + hotspotListCounter[1] + " text was present")
+                return False
+        
+        # Verify that a proper placeholder text is presented if no hotspots are available
+        if expectedHotspotNumber == str(0):
+            if hotspotListContent.text != 'No hotspots for this video':
+                writeToLog("INFO", "FAILED, we expected Zero Hotspots but the HS list is populated")
+                return False
+        else:
+            hotspotListPanels = self.wait_elements(self.KEA_HOTSPOTS_LIST_PANEL_HOTSPOT, 1)
+            
+            # Verify that the number of expected hotspots matches with the number of HS List Panel presented
+            if type(hotspotListPanels) != list:
+                writeToLog("INFO", "FAILED, Hotspot List Panels elements couldn't be provided")
+                return False
+            else:
+                if str(len(hotspotListPanels)) != expectedHotspotNumber:
+                    writeToLog("INFO", "FAILED, a number of " + expectedHotspotNumber + " were expected but, " + str(len(hotspotListPanels)) + " HS were presented")
+                    return False
+                
+                else:
+                    # Verify the hotspot expected details while being in the Advanced Settings
+                    if hotspotDict != '':
+                        for x in range(0, len(hotspotDict)):
+                            expectedHotspotDetails     = hotspotDict[str(x+1)]
+                            expectedHotspotDetailTitle = expectedHotspotDetails[0]
+                            
+                            presentedHotspotsTitle  = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 1)
+                            hotspotNameIndex = 0
+                            
+                            # Verify and take the expected hotspot index number
+                            for x in range(0, len(presentedHotspotsTitle)):
+                                if presentedHotspotsTitle[x].text == expectedHotspotDetailTitle:
+                                    hotspotNameIndex = x
+                                    break
+                                
+                                if x + 1 == len(presentedHotspotsTitle):
+                                    writeToLog("INFO", "FAILED to find the " + expectedHotspotDetailTitle + " hotspot inside the HS list panel")
+                                    return False
+                            
+                            # Highlight the presented Hostpot from the HS Panel List
+                            if self.clickElement(presentedHotspotsTitle[hotspotNameIndex]) == False:
+                                writeToLog("INFO", "FAILED to highligth the " + expectedHotspotDetailTitle + " hotspot")
+                                return False
+                            
+                            if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
+                                writeToLog("INFO", "FAILED to click on the Advanced Settings for " + expectedHotspotDetailTitle + " Hotspot")
+                                return False
+                            
+                            sleep(1)
+                            # TO BE DEVELOPED
+                            # title verification
+                            # link verification
+                            # style verification
+                            # need pyperclip issue solved in order to proceed with the implementation
+                            
+                            if self.click(self.KEA_HOTSPOTS_CANCEL_BUTTON, 1, True) == False:
+                                writeToLog("INFO", "FAILED to dismiss the Advanced Settings Option of the " + expectedHotspotDetailTitle + " Hotspot")
+                                return False
+                            
+                            if self.wait_element(self.KEA_HOTSPOTS_LIST_CONTENT, 10, True) == False:
+                                writeToLog("INFO", "FAILED to display back the Hotspot List after clicking on the Cancel button from the Advanced Settings")
+                                return False
+                
+        writeToLog("INFO", "Proper information has been presented inside the HS list")
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will move the start time of the entry to second one and initiate the playing process until reaching the first second of the entry
+    def startFromBeginningPlayingProcess(self,):
+        self.switchToKeaIframe()
+        # Verify that we are in the KEA editor
+        if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 15, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA player play button")
+            return False
+        
+        # Take the entry time
+        entryTotalTime = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(" ", "")[1:]
+        
+        # Because the video resumes back to zero before the last second to be displayed, we have to issue this variable
+        if entryTotalTime[3:] == '00':
+            # with changes to the mm
+            entryTotalTimeVerify = str(int(entryTotalTime[:2])-1) + ':59'
+        else:
+            # with changes to ss
+            entryTotalTimeVerify = entryTotalTime[:3] + str(int(entryTotalTime[3:])-1)
+        
+        # Time presented inside the timeline cursor
+        realTimeMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
+        
+        # Verify if we are at the beginning of the entry
+        if self.resumeFromBeginningKEA(forceResume=False) == False:
+            writeToLog("INFO", "FAILED to start the entry from the beginning")
+            return False
+        
+        # Trigger the playing process
+        if self.click(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 2, True) == False:
+            writeToLog("INFO", "FAILED to click on the KEA play button")
+            return False
+        sleep(1)
+        
+        # Wait until the loading spinner is no longer present
+        if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_QUIZ_PLAYER, 30) == False:
+            writeToLog("INFO", "FAILED to load the KEA entry video playing process")
+            return False
+        
+        # Set the real time to second one
+        x = 1
+        realtTimeMakerElement = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True)
+        
+        # Wait until the timeline cursor reached the first second
+        startTimeLine = '00:00'
+        while startTimeLine == realTimeMarker:
+            startTimeLine = realtTimeMakerElement.text[:5]
+            
+        
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will play the entry and pause until reaching the desired time
+    def playEntryAndPauseAtTime(self, playUntilReachingTime):
+        self.switchToKeaIframe()
+        
+        
         return True
