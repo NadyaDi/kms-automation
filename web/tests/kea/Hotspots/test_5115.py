@@ -16,6 +16,9 @@ class Test:
     #  @Author: Horia Cus
     # Test Name : Hotspots - Create Hotspots while playing the video
     # Test description:
+    # Enter in Hotspots tab, play the video and place a Hotspot while the video is still playing
+    # Switch Between the KEA tabs, and resume back to the Hotspots
+    # Verify that a new Hotspot is created at second zero after switching back to the Hotspots tab
     #================================================================================================================================
     testNum = "5115"
 
@@ -26,7 +29,7 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "For Hotspot Creation while the video was playing"
+    typeTest            = "For Hotspot created while the video was playing and after switching between the KEA sections"
     description         = "Description"
     tags                = "Tags,"
     entryName           = None
@@ -38,10 +41,14 @@ class Test:
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
     # Each list contains the details that are used in the hotspot creation and verification
-    hotspotOne            = ['Hotspot Title One', '', 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotOne             = ['Hotspot Title One', '', '00:15', '', 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotOneVerification = ['Hotspot Title One', '', 15, 30, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotTwo             = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 0, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
     
     # This Dictionary is used in order to create and verify the hotspots
     hotspotOneDict               = {'1':hotspotOne}
+    hotspotTwoDict               = {'1':hotspotTwo}
+    hotspotVerificationDict      = {'1':hotspotTwo, '2':hotspotOneVerification}
          
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -59,26 +66,41 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Hotspots - Creation while Playing the video", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Hotspots - Creation Types", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
-              
+                
             writeToLog("INFO","Step 2: Going to navigate to the KEA Hotspots tab for " + self.entryName + " entry")              
             if self.common.kea.launchKEATab(self.entryName, enums.keaTab.HOTSPOTS, navigateToEntry=True, timeOut=40) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to the KEA Hotspots tab for " + self.entryName + " entry")
                 return
-            
-            writeToLog("INFO","Step 3: Going to create hotspots for the " + self.entryName)
-            if self.common.kea.hotspotCreation(self.hotspotOneDict, False, enums.keaTimeSelectionType.VIDEO_PLAYING) == False:
-                writeToLog("INFO","Step 3: FAILED to create hotspots for the " + self.entryName)
+                 
+            writeToLog("INFO","Step 3: Going to create a new hotspot while using Hotspot Creation Type " + enums.keaHotspotCreationType.VIDEO_PLAYING.value + " for the " + self.entryName)
+            if self.common.kea.hotspotCreation(self.hotspotOneDict, False, enums.keaHotspotCreationType.VIDEO_PLAYING) == False:
+                writeToLog("INFO","Step 3: FAILED to create a new hotspot while using Hotspot Creation Type " + enums.keaHotspotCreationType.VIDEO_PLAYING.value + " for the " + self.entryName)
                 return
-            
+             
             writeToLog("INFO","Step 4: Going to navigate to the KEA Editor tab of " + self.entryName + " entry")              
             if self.common.kea.launchKEATab(self.entryName, enums.keaTab.VIDEO_EDITOR, navigateToEntry=False, timeOut=0) == False:
                 writeToLog("INFO","Step 4: FAILED to navigate to the KEA Editor tab of " + self.entryName + " entry")
+                return
+             
+            writeToLog("INFO","Step 5: Going to navigate back to the KEA Hotspots tab of " + self.entryName + " entry")              
+            if self.common.kea.launchKEATab(self.entryName, enums.keaTab.HOTSPOTS, navigateToEntry=False, timeOut=0) == False:
+                writeToLog("INFO","Step 5: FAILED to navigate back to the KEA Hotspots tab of " + self.entryName + " entry")
+                return
+             
+            writeToLog("INFO","Step 6: Going to create a new hotspot while using Hotspot Creation Type " + enums.keaHotspotCreationType.VIDEO_PAUSED.value + " for the " + self.entryName)
+            if self.common.kea.hotspotCreation(self.hotspotTwoDict, False) == False:
+                writeToLog("INFO","Step 6: FAILED to create a new hotspot while using Hotspot Creation Type " + enums.keaHotspotCreationType.VIDEO_PAUSED.value + " for the " + self.entryName)
+                return
+             
+            writeToLog("INFO","Step 7: Going to verify the timeline section for " + self.entryName +" entry, after creating Hotspots While Video was Playing and Stopped")
+            if self.common.kea.hotspotTimelineVerification(self.hotspotVerificationDict) == False:
+                writeToLog("INFO","Step 7: FAILED to verify the timeline section for " + self.entryName +" entry, after creating Hotspots While Video was Playing and Stopped")
                 return
             ##################################################################
             self.status = "Pass"
