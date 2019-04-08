@@ -133,6 +133,8 @@ class Player(Base):
     PLAYER_SUBMITTED_SCREEN_CURRENT_ATTEMPT_NUMBER              = ('xpath', '//span[@class="retake-summary-text" and text()="This is attempt CURRENT_ATTEMPTS of TOTAL_ATTEMPTS"]')
     PLAYER_SUBMITTED_SCREEN_TOTAL_SCORE                         = ('xpath', '//span[@class="retake-summary-score-text" and text()=", your score is TOTAL_SCORE based on SCORE_TYPE"]')
     PLAYER_SUBMITTES_SCREEN_TAKE_THE_QUIZ_AGAIN_BTN             = ('xpath', '//div[@title="Take the Quiz again"]')
+    PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_OPEN_Q_ID              = ('xpath', "//li[@class='q-box open-question' and @id='NUMBER']")
+    PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_CONTAINER                = ('xpath', "//div[@class='ivqContainer open-question answered']")
     #=====================================================================================================================
     #                                                           Methods:
     #
@@ -2364,7 +2366,7 @@ class Player(Base):
                 quizQuestionNumber = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_RECTANGLE_ID[1].replace('NUMBER', str(quizNumberID)))
                 
                 # We verify that in the dictionary we have a why
-                if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUE_FALSE in questionDetails and len(questionDetails) >= 6:
+                if enums.QuizQuestionType.Multiple in questionDetails and len(questionDetails) >= 9 or enums.QuizQuestionType.TRUE_FALSE in questionDetails and len(questionDetails) >= 6 or enums.QuizQuestionType.OPEN_QUESTION in questionDetails and len(questionDetails) >= 5:
                     # We verify if the Quiz Question number is on the second submitted screen page, and navigate to it
                     if quizNumberID >= 13:
                         if self.wait_visible(self.PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW, 1, True) != False:
@@ -2446,7 +2448,8 @@ class Player(Base):
                 elif expectedDetails.count(True) == 1:
                     quizQuestionNumberTrue = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_TRUE_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_ANSWER_TRUE_ID[1].replace('NUMBER', str(quizNumberID)))
                     quizQuestionNumberReflection = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_REFLECTION_ID[1].replace('NUMBER', str(quizNumberID)))
-                    if self.wait_element(quizQuestionNumberTrue, 1, True) == False  and self.wait_element(quizQuestionNumberReflection, 1, True) == False:
+                    quizQuestionNumberOpenQ = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_OPEN_Q_ID[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_INCLUDE_OPEN_Q_ID[1].replace('NUMBER', str(quizNumberID)))
+                    if self.wait_element(quizQuestionNumberTrue, 1, True) == False  and self.wait_element(quizQuestionNumberReflection, 1, True) == False and self.wait_element(quizQuestionNumberOpenQ, 1, True) == False:
                         writeToLog("INFO", "FAILED, the question " + questionDetails[0] + " is not displayed as true, when it should")
                         return False
                     
@@ -2529,7 +2532,22 @@ class Player(Base):
             # We verify that the proper Quiz Question screen is displayed
             if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_REFLECTION_POINT_CONTAINER, 5, True) == False:
                 writeToLog("INFO", "FAILED to load the " + questionDetails[2] + " Quiz Question screen")
-                return False       
+                return False  
+            
+        # We verify the active question based on the question type          
+        elif questionType == enums.QuizQuestionType.OPEN_QUESTION:
+            listInterval = questionDetails[3:4]
+            hintTriggerNumber = 4
+            try:
+                hintText = questionDetails[4]
+            except Exception:
+                writeToLog("INFO", "AS Expected, no hint was provided for the " + questionDetails[2] + " Quiz Question")
+                pass
+            
+            # We verify that the proper Quiz Question screen is displayed
+            if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_OPEN_Q_CONTAINER, 5, True) == False:
+                writeToLog("INFO", "FAILED to load the " + questionDetails[2] + " Quiz Question screen")
+                return False                 
             
         # We take the active time from the scrubber
         presentedTime = self.get_element(self.PLAYER_CURRENT_TIME_LABEL).text
@@ -2930,7 +2948,7 @@ class Player(Base):
                     writeToLog("INFO", "FAILED to display correct welcome screen")
                     return False 
             
-            self.clsCommon.base.refresh()                      
+#            self.clsCommon.base.refresh()                      
             i = i + 1
 
         return True    
