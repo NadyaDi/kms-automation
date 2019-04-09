@@ -2793,7 +2793,8 @@ class Player(Base):
                             presentedHotspotsDetailsList.append(presentedHotspotDetails)
                             presentedHotspotsNameList.append(hotspotTitle)
                             hotspots = "\n".join(presentedHotspotsNameList)
-                            writeToLog("INFO", "The following hotspot: " + hotspotTitle + ", has been successfully added inside the presented hotspot list")
+                            hotspotDetailsString = "".join(str(presentedHotspotDetails))
+                            writeToLog("INFO", "The following hotspot: " + hotspotTitle + ", has been successfully added inside the presented hotspot list with the following details:\n" + hotspotDetailsString)
                             
                             # Check if we reached the end of the player
                             if self.wait_element(self.PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER, 0.1, True) != False:
@@ -2862,7 +2863,10 @@ class Player(Base):
                         except Exception:
                             writeToLog("INFO", "FAILED to take the inconsistency list")
                             
-                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed " + str(inconsitencies))
+                        presentedHotspotDetailsString = "".join(str(currentPresentedList))
+                        expectedHotspotDetailsString  = "".join(str(currentExpectedList))
+                        writeToLog("INFO", "LIST for presented hotspot: " + presentedHotspotDetailsString + "\n LIST For expected hotspot: "  + expectedHotspotDetailsString)
+                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed for " + currentPresentedList[0] +" hotspot " + str(inconsitencies))
                         return  False
                     else:
                         writeToLog("INFO", "The hotspot:" + currentExpectedList[0] + " has been successfully presented")
