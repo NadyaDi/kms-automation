@@ -40,7 +40,7 @@ class Test:
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
     # Each list contains the details that are used in the hotspot creation and verification
-    hotspotTopCenter            = ['Initial Top Center', enums.keaLocation.CENTER, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotTopCenter            = ['Initial Top Center', enums.keaLocation.CENTER, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
     hotspotTopRight             = ['Initial Top Right', enums.keaLocation.TOP_RIGHT, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12]
     hotspotBottomRight          = ['Initial Bottom Right', enums.keaLocation.BOTTOM_RIGHT, 0, 15, '', enums.textStyle.THIN, '', '', 12, 16]
     hotspotBottomLeft           = ['Initial Bottom Left', enums.keaLocation.BOTTOM_LEFT, 0, 20, '', enums.textStyle.BOLD, '', '', 18, 16]
@@ -54,7 +54,7 @@ class Test:
     hotspotNewOrderDict         = {'1':hotspotMovedToTopLeft, '2':hotspotMovedToTopCenter, '3':hotspotMovedToTopRight, '4':hotspotMovedToBottomRight}  
     
     # These lists and dictionary are used in order to verify the hotspots in the entry page with the new locations and configurations
-    hotspotTopCenter            = ['Initial Top Center', enums.keaLocation.TOP_LEFT, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotTopCenter            = ['Initial Top Center', enums.keaLocation.TOP_LEFT, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
     hotspotTopRight             = ['Initial Top Right', enums.keaLocation.CENTER, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12]
     hotspotBottomRight          = ['Initial Bottom Right', enums.keaLocation.TOP_RIGHT, 0, 15, '', enums.textStyle.THIN, '', '', 12, 16]
     hotspotBottomLeft           = ['Initial Bottom Left', enums.keaLocation.BOTTOM_RIGHT, 0, 20, '', enums.textStyle.BOLD, '', '', 18, 16]

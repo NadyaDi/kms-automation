@@ -35,14 +35,13 @@ class Test:
     entryName           = None
     entryDescription    = "description"
     entryTags           = "tag1,"
-    instanceURL         = None
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
     # Each list contains the details that are used in the hotspot creation and verification
-    hotspotOne             = ['Hotspot Title One', '', '00:15', '', 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
-    hotspotOneVerification = ['Hotspot Title One', '', 15, 30, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', '', '']
+    hotspotOne             = ['Hotspot Title One', '', '00:15', '', 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
+    hotspotOneVerification = ['Hotspot Title One', '', 15, 30, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
     hotspotTwo             = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 0, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
     
     # This Dictionary is used in order to create and verify the hotspots
