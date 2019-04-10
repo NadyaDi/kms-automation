@@ -269,7 +269,7 @@ class Moodle(Base):
                     writeToLog("INFO","FAILED to click on embed activity title")
                     return False  
                                                       
-        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+#        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
         self.clsCommon.player.switchToPlayerIframe()
         self.wait_element(self.clsCommon.player.PLAYER_CONTROLER_BAR, timeout=30)
         self.clsCommon.base.switch_to_default_content()

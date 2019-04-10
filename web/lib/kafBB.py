@@ -859,13 +859,13 @@ class BlackBoard(Base):
             writeToLog("INFO","FAILED to get id attribute from embed container")
             return False 
             
-        m = re.search('(_\d\d\d\d_)', parentId)
+        m = re.search('(_\d\d\d\d_\d)', parentId)
         if m:
             foundId = m.group(1)
         else:
             writeToLog("INFO","FAILED to get id from string: '" + str(parentId) + "'")
             return False             
-                
+               
         iframeElment = self.wait_element(('xpath', "//iframe[contains(@src, 'content_id=" + foundId + "')]"))
         if iframeElment == False:
             writeToLog("INFO","FAILED to get player iframe")
@@ -883,7 +883,7 @@ class BlackBoard(Base):
         if self.click(self.EMBED_ENTRY_PLAY_ICON, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on play icon")
             return False 
-         
+          
         sleep(18)
         if delay != '':
             try:   
@@ -891,7 +891,7 @@ class BlackBoard(Base):
             except Exception:
                 writeToLog("INFO","FAILED to switch to '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay' iframe")
                 return False                      
-            
+             
             try: 
                 self.driver.switch_to.frame(self.wait_element(self.clsCommon.player.PLAYER_IFRAME, 60))
                 localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
