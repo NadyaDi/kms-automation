@@ -48,8 +48,8 @@ class Test:
     answerquestionNumber3Attempt1 = 'Answer for Open-Q first attempt'
     
     # Attempts #2 answers
-    questionNumber1Attempt2 =  "question #2 Title"
-    answerquestionNumber1Attempt2 = "question #2 option #2"
+    questionNumber1Attempt2 =  "question #1 Title"
+    answerquestionNumber1Attempt2 = "question #1 option #2"
     
     questionNumber2Attempt2 = "Question Title for True and False"
     answerquestionNumber2Attempt2 = "False text"
@@ -58,8 +58,8 @@ class Test:
     answerquestionNumber3Attempt2 = 'Answer for Open-Q second attempt'
     
     # Attempts #3 answers
-    questionNumber1Attempt3 = "question #3 Title"
-    answerquestionNumber1Attempt3 = "question #3 option #1"
+    questionNumber1Attempt3 = "question #1 Title"
+    answerquestionNumber1Attempt3 = "question #1 option #1"
     
     questionNumber2Attempt3 = "Question Title for True and False"
     answerquestionNumber2Attempt3 = "False text"
@@ -69,7 +69,7 @@ class Test:
 
     quizQuestionDictAttempt1 = {questionNumber1Attempt1:answerquestionNumber1Attempt1, questionNumber2Attempt1:answerquestionNumber2Attempt1, questionNumber3Attempt1:answerquestionNumber3Attempt1}
     quizQuestionDictAttempt2 = {questionNumber1Attempt2:answerquestionNumber1Attempt2, questionNumber2Attempt2:answerquestionNumber2Attempt2, questionNumber3Attempt2:answerquestionNumber3Attempt2}
-    quizQuestionDictAttempt3 = {questionNumber1Attempt2:answerquestionNumber1Attempt3, questionNumber2Attempt3:answerquestionNumber2Attempt3, questionNumber3Attempt3:answerquestionNumber3Attempt3}
+    quizQuestionDictAttempt3 = {questionNumber1Attempt3:answerquestionNumber1Attempt3, questionNumber2Attempt3:answerquestionNumber2Attempt3, questionNumber3Attempt3:answerquestionNumber3Attempt3}
     
     quizQuestionsDictAllAttempts = [quizQuestionDictAttempt1, quizQuestionDictAttempt2, quizQuestionDictAttempt3]
     
@@ -102,8 +102,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Retake 3 Attempts latest score", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Retake 3 Attempts latest score - Quiz", self.testNum)      
+            self.entryName = clsTestService.addGuidToString("Retake 3 Attempts All types of questions", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Retake 3 Attempts types of questions - Quiz", self.testNum)      
 
             self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LATEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}
@@ -120,35 +120,35 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                 
+                  
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                    
+                                     
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                    
+                                     
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                   
+                                                                    
             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-                 
+                  
             writeToLog("INFO","Step 5: Going to navigate to KEA Quiz tab for " + self.quizEntryName)  
             if self.common.kea.initiateQuizFlow(self.quizEntryName, True, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to navigate to KEA Quiz tab for " + self.quizEntryName)  
                 return 
-                 
+                  
             i = 6
-                 
+                  
             for option in self.keaAllScoreOptionsList:
                 optionNumber = 0
                 while len(option) != optionNumber:
@@ -160,14 +160,15 @@ class Test:
                     else:
                         i = i + 1                     
                         optionNumber = optionNumber + 1
-                
+                 
             self.common.base.switch_to_default_content()
-
+           
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to " + self.quizEntryName + " page")  
             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to " + self.quizEntryName + " page")
                 return
+            i = i +1
             
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz " + self.quizEntryName)  
             if self.common.player.verifyQuizAttempts(self.quizQuestionsDictAllAttempts, expectedQuizScore=self.quizSpecificAttemptScore, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=self.quizGeneralAttemptsScore, scoreType=enums.playerQuizScoreType.LATEST) == False:

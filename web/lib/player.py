@@ -2328,7 +2328,7 @@ class Player(Base):
         quizScore = self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_SCORE, 1)
         if showScore == True:
             if quizScore.text != expectedQuizScore:
-                writeToLog("INFO", "FAILED, " + quizScore + " quiz score was displayed, instead of the expected: " + expectedQuizScore + " quiz score")
+                writeToLog("INFO", "FAILED, " + quizScore.text + " quiz score was displayed, instead of the expected: " + expectedQuizScore + " quiz score")
                 return False
         else:
             if quizScore == True:
@@ -2947,8 +2947,7 @@ class Player(Base):
                 if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed, 0) == False:
                     writeToLog("INFO", "FAILED to display correct welcome screen")
                     return False 
-            
-#            self.clsCommon.base.refresh()                      
+                                   
             i = i + 1
 
         return True    
