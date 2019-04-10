@@ -138,6 +138,7 @@ class  Recscheduling(Base):
     SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
     SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE                              = ('xpath', "//th[contains(text(),'DATE')]") # the DATE need to be in format ("%B %d, %Y - %A") -us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday, 
     SCHEDULE_DELETE_EVENT_BUTTON                                            = ('xpath', "//i[@class='icon-trash icon-white']")
+    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                        = ('xpath', "//h1[@class='inline' and contains(text(),'Edit Event')]")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -610,6 +611,12 @@ class  Recscheduling(Base):
     # the function choose the needed date form calendar in my schedule page
     # the dateStr need to be in format ("%B %d, %Y - %A")- us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday,
     def setScheduleInMySchedulePage(self, dateStr):
+        # verify that the need date isn't already display
+        tmpNeededDate = (self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[0], self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[1].replace('DATE', dateStr))
+        if self.wait_element(tmpNeededDate, timeout=5, multipleElements=True) != False:
+            writeToLog("INFO","Success, date '" + dateStr + "' display")
+            return True
+        
         if self.click(self.SCHEDULE_JUMP_TO_BUTTON) == False:
             writeToLog("INFO","FAILED to click on 'jump to' button")
             return False
@@ -652,11 +659,11 @@ class  Recscheduling(Base):
             return False        
         
         # Verify correct day display in my schedule
-        tmpDate = (self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[0], self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[1].replace('DATE', dateStr))
-        if self.wait_element(tmpDate) == False:
+        if self.wait_element(tmpNeededDate, timeout=5, multipleElements=True) == False:
             writeToLog("INFO","FAILED, the date '" + dateStr + "' is not display in the page")
             return False      
-            
+        
+        writeToLog("INFO","Success, date '" + dateStr + "' display") 
         return True
     
     
@@ -666,16 +673,18 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED navigate to my schedule page")
             return False 
         
+        sleep(2)
         if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
             writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
             return False  
-        sleep(2)
+        sleep(5)
         
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
-        if self.click(tmpEventTiltle) == False:
+        if self.click(tmpEventTiltle, multipleElements=True) == False:
             writeToLog("INFO","FAILED to find and click on event '" + eventInstance.title + "' in my schedule page")
             return False 
-        sleep(2)
+        self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE, timeout=30)
+
         
         if self.click(self.SCHEDULE_DELETE_EVENT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on delete event button")
@@ -694,7 +703,7 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
             return False  
         
-        if self.wait_element(tmpEventTiltle, timeout=6) == True:
+        if self.wait_element(tmpEventTiltle, timeout=5, multipleElements=True) == True:
             writeToLog("INFO","FAILED event '" + eventInstance.verifyDateFormat.title + "' was find although it was deleted")
             return False 
         
