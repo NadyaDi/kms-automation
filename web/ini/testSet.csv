@@ -29,15 +29,18 @@ test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
 test_4859,1,0,0,0,Blackboard Ultra- Edit metadata
 test_4863,1,0,0,0,Blackboard Ultra- Add captions
+test_4864,1,0,0,0,Blackboard Ultra- Add captions
 test_4865,1,0,0,0,Blackboard Ultra- Delete through my media
 test_4866,1,0,0,0,Blackboard Ultra- Delete through edit entry page
 test_4867,1,0,0,0,Blackboard Ultra- Publish after upload
 test_4868,1,0,0,0,Blackboard Ultra- Publish from my media
 test_4869,1,0,0,0,Blackboard Ultra- Publish from entry page
+test_4870,1,0,0,0,Blackboard Ultra- Preview all kinds of media from My Media and Gallery 
 test_4871,1,0,0,0,Blackboard Ultra- View Collapsed Expanded Modes
 test_4872,1,0,0,0,Blackboard Ultra- Upload media from desktop
 test_4875,1,0,0,0,Blackboard Ultra- Search by Name / Description / Tags
 test_4876,1,0,0,0,Blackboard Ultra- Sort Media
+test_4875,1,0,0,0,Blackboard Ultra- Filter media view different media types / Description / Tags
 test_4883,1,0,0,0,Blackboard Ultra- Upload media from media gallery page
 test_628,1,0,0,0,Moodle - Assignment Submission Functionalities
 test_637,1,0,0,0,Global Search for Channel
