@@ -137,10 +137,16 @@ class BlackBoardUltra(Base):
         sleep(2)   
         
         if galleryName == "New1":
+            if self.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","Success Already in my Gallery page")
+                return False  
+            sleep(5)   
+                     
             if self.click(self.COURSES_TAB_MENU)== False:
                 writeToLog("INFO","Success Already in my Gallery page")
                 return False
-            
+            sleep(5) 
+             
             if self.click(self.COURSES_LIST_PAGE)== False:
                 writeToLog("INFO","Success Already in my Gallery page")
                 return False
