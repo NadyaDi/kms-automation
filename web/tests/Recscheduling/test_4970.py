@@ -14,22 +14,25 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Rescheduling - Create new single event
+    # Test Name : Rescheduling - Edit Single event
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
     #    3. Fill in all fields (description ,tags ) and select a resource
     #    4. Select start and end time
     #    5. Click save and exit
-    #    6.  Go to my schedule page and verify that the event display in the correct date and time
-    #    7. Enter the event > click delete
-    #    8. Click yes on pop up message
+    #    6. Go to my schedule page and verify that the event display in the correct date and time
+    #    7. From my schedule page enter the event and edit the following fields: 
+    #        uncheck the copy details from event to recording and edit the details : name, description, tags ,resource, Event organizer, add Collaborators, time , date, and publish the event
+    #    10. Go to my schedule page and verify that the event details was changed.
+    #    11. Delete event
+    #    12. Click yes on pop up message
     #
-    #    1-6. The event is created successfully and appears on the agenda view
-    #    7-8. Event will be deleted
+    #    1-10. The event is created successfully and appears on the agenda view
+    #    11-12. Event will be deleted
 
     #================================================================================================================================
-    testNum = "4852"
+    testNum = "4970"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -45,7 +48,7 @@ class Test:
     endDate = None
     startEventTime = None
     endTime = None
-    resource = enums.RecschedulingResourceOptions.FALL_CONFERENCE_ROOM
+    resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -63,10 +66,10 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.eventTitle = clsTestService.addGuidToString("Edit single event", self.testNum)
+            self.eventTitle = clsTestService.addGuidToString("Create new single event", self.testNum)
             
-            self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
-            self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
+            self.startDateForCreateEvent = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
+            self.endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
 
             self.startEventTime = time.time() + (60*60)
             self.startEventTime = time.strftime("%I:%M%p",time.localtime(self.startEventTime))
@@ -98,13 +101,6 @@ class Test:
                 writeToLog("INFO","Step 4: FAILED to create new single verify event display in my schedule page")
                 return
             
-            
-            
-            
-            
-            
-            
-            
             sleep(3)
             writeToLog("INFO","Step 5: Going to delete event")
             if self.common.recscheduling.deteteSingleEvent(self.event) == False:
@@ -112,7 +108,7 @@ class Test:
                 return
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Rescheduling - Create new single event' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Rescheduling - Edit Single event' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
