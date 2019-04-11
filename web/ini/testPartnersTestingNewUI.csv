@@ -726,3 +726,4 @@ test_4739,eSearch - Filter by media type with search - add to channel SR tab,244
 test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4852,Recscheduling - Create new single event,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
+test_4970,Recscheduling - Edit Single event,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
