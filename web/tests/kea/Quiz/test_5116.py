@@ -53,6 +53,12 @@ class Test:
     # Score for each attempt - individual for each attempts
     quizScore = '67'
     
+    firstQuestionAnswers = [questionNumber1Attempt1, '', 'QA Automation', 1, 0]
+    secondQuestionAnswers = [questionNumber2Attempt1, '', 'QA Automation', 0, 1]
+    thirdQuestionAnswers = [questionNumber3Attempt1, answerquestionNumber3Attempt1, 'QA Automation', 1, 0]
+    # List with all answers
+    answersDict = {'1':firstQuestionAnswers,'2':secondQuestionAnswers, '3': thirdQuestionAnswers}
+
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -72,37 +78,43 @@ class Test:
             self.quizEntryName = clsTestService.addGuidToString("Quiz Analytics - Verify answers - Quiz", self.testNum)      
 
             ######################### TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload entry")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to upload entry")
-                return
-                 
-            self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                    
-            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to navigate entry page")
-                return
-                                    
-            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-                return
-                                                                   
-            writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
-            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
-                return
+#             writeToLog("INFO","Step 1: Going to upload entry")    
+#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 1: FAILED to upload entry")
+#                 return
+#                  
+#             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
+#                                     
+#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
+#                 return
+#                                     
+#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+#                 return
+#                                                                    
+#             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
+#             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+#                 return
+#             
+#             writeToLog("INFO","Step 5 : Going to answer quiz open question")  
+#             if self.common.player.answerQuiz(self.quizQuestionDictAttempt1, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='50') == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step 5 : FAILED to answer quiz open question")  
+#                 return    
             
-            writeToLog("INFO","Step 5 : Going to answer quiz open question")  
-            if self.common.player.answerQuiz(self.quizQuestionDictAttempt1, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='100') == False:
+            writeToLog("INFO","Step 6 : Going to verify quiz answers in quiz analytics")  
+            if self.common.player.verifyQuizAnswersInAnalytics(self.answersDict) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5 : FAILED to answer quiz open question")  
-                return                 
+                writeToLog("INFO","Step 6 : FAILED to verify quiz answers in quiz analytics")  
+                return                              
 
             ##################################################################
             self.status = "Pass"
