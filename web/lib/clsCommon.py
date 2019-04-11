@@ -130,7 +130,13 @@ class Common():
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd19":
             autoitDr = self.autoit.autoitDriver19  
         elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd20":
-            autoitDr = self.autoit.autoitDriver20 
+            autoitDr = self.autoit.autoitDriver20
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd21":
+            autoitDr = self.autoit.autoitDriver21 
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd22":
+            autoitDr = self.autoit.autoitDriver22
+        elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd23":
+            autoitDr = self.autoit.autoitDriver23             
                 
                         
         if (localSettings.LOCAL_RUNNING_BROWSER == clsTestService.PC_BROWSER_IE):
