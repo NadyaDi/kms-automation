@@ -14,7 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Rescheduling - Create new single event
+    # Test Name : Recscheduling - Create new single event
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
@@ -63,7 +63,7 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.eventTitle = clsTestService.addGuidToString("Edit single event", self.testNum)
+            self.eventTitle = clsTestService.addGuidToString("Create new single event", self.testNum)
             
             self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
             self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
