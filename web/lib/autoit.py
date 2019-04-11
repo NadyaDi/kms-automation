@@ -51,7 +51,12 @@ class Autoit():
                     self.autoitDriver19 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST19 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
                 elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd20":
                     self.autoitDriver20 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST20 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
-                                                                                
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd21":
+                    self.autoitDriver21 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST21 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd22":
+                    self.autoitDriver22 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST22 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})
+                elif localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL == "qaKmsFrontEnd23":
+                    self.autoitDriver23 = webdriver.Remote( command_executor='http://' + localSettings.LOCAL_SETTINGS_AUTOIT_SERVICE_HOST23 + '/wd/hub', desired_capabilities={'browserName':'AutoIt'})                                                                                                                        
                 else:
                     writeToLog("INFO","FAIELD to connect to Autoit service on remote host: " + localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL)
         except Exception as exp:
