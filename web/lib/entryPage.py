@@ -38,6 +38,9 @@ class EntryPage(Base):
     ENTRY_PAGE_LOADING                                     = ('xpath', '//div[@class="message" and text()="Loading..."]')
     ENTRY_PAGE_EMBED_TEXT_AREA                             = ('id', 'embedTextArea')
     ENTRY_PAGE_COMMENT_TEXT_AREA                           = ('xpath', '//textarea[@id="commentsbox"]')
+    ENTRY_PAGE_COMMENT_TIME_CHECKBOX                       = ('xpath', "//label[contains(@class,'control-label inline')]")
+    ENTRY_PAGE_COMMENT_TIME_STAMP                          = ('xpath', '//a[@href="#" and @data-seconds="TIME_INTEGER"]')
+    ENTRY_PAGE_COMMENT_TEXT_SECTION                        = ('xpath', '//div[@class="commentText"]')
     ENTRY_PAGE_COMMENT_ADD_BUTTON                          = ('xpath', '//input[@id="add-comment"]')
     ENTRY_PAGE_COMMENTS_PANEL                              = ('xpath', "//div[@id='commentsWrapper']")
     ENTRY_PAGE_DETAILS_BUTTON                              = ('xpath', "//a[@id='tab-Details' and contains(@class, 'btn responsiveSizePhone tabs-container__button tab-Details')]")
@@ -401,47 +404,14 @@ class EntryPage(Base):
     
     # Author: Michal Zomper 
     def addComment(self, comment):
-        sleep(2)
-        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-        
-        # Wait for comments module to load - wait for 'Add' button
-        if self.wait_visible(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 30, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to load Comments module")
-            return False  
-          
-        sleep(1)
-        if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
-            writeToLog("INFO","FAILED to click in the comment text box area")
+        if self.insertCommentToTextField(comment) == False:
+            writeToLog("INFO", "FAILED to add the following comment " + str(comment) + " to the text field")
             return False
 
-        if self.send_keys(self.ENTRY_PAGE_COMMENT_TEXT_AREA, comment + Keys.SPACE, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to add comment")
-            return False
-        sleep(2)
-
-        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
-            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
-            sleep(2)
-            self.switch_to_default_content()
-            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
-            self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
-            self.clsCommon.sharePoint.switchToSharepointIframe() 
-            
-        if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to click on add comment button")
-            return False
-          
-        self.clsCommon.general.waitForLoaderToDisappear()
-        self.clsCommon.sendKeysToBodyElement(Keys.END)
-        sleep(2)
-        
-        # verify comment was added
-        tmp_comments = self.get_element_text(self.ENTRY_PAGE_COMMENTS_PANEL)
-        if comment in tmp_comments == False:
-            writeToLog("INFO","FAILED to find added comment")
+        if self.clickAddComment(comment) == False:
+            writeToLog("INFO", "FAILED to add the following comment " + str(comment) + " to the entry list")
             return False
            
-        writeToLog("INFO","Success, comment: '" + comment +"'  was added to entry")       
         return True
     
     
@@ -1155,4 +1125,102 @@ class EntryPage(Base):
                 return False  
             
         writeToLog("INFO","Succeed to navigate to " + analyticsTab.value)           
-        return True                                             
+        return True
+    
+    
+    # Author: Michal Zomper 
+    def clickAddComment(self, comment):
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,5)
+            sleep(2)
+            self.switch_to_default_content()
+            self.click(self.clsCommon.sharePoint.SP_PAGE_TITLE_IN_SP_IFRAME)
+            self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+            self.clsCommon.sharePoint.switchToSharepointIframe() 
+            
+        if self.click(self.ENTRY_PAGE_COMMENT_ADD_BUTTON, 15, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on add comment button")
+            return False
+          
+        self.clsCommon.general.waitForLoaderToDisappear()
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        sleep(2)
+        
+        # verify comment was added
+        tmp_comments = self.get_element_text(self.ENTRY_PAGE_COMMENTS_PANEL)
+        if comment in tmp_comments == False:
+            writeToLog("INFO","FAILED to find added comment")
+            return False
+           
+        writeToLog("INFO","Success, comment: '" + comment +"'  was added to entry")  
+        return True
+    
+    
+    # Author: Michal Zomper
+    def insertCommentToTextField(self, comment):
+        sleep(2)
+        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+        
+        # Wait for comments module to load - wait for 'Add' button
+        if self.wait_visible(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 30, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to load Comments module")
+            return False  
+          
+        sleep(1)
+        if self.click(self.ENTRY_PAGE_COMMENT_TEXT_AREA, 5) == False:
+            writeToLog("INFO","FAILED to click in the comment text box area")
+            return False
+
+        if self.send_keys(self.ENTRY_PAGE_COMMENT_TEXT_AREA, comment + Keys.SPACE, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to add the: " + comment + " comment inside the text area")
+            return False
+        sleep(2)
+        
+        writeToLog("INFO", "The " + comment + " comment has been properly add to the text area")
+        return True
+    
+    
+    # Author: Horia Cus
+    # This function will place a comment at any desired timeLocation available on the entry
+    # timeStamp must contain the following format m:ss, mm:ss ( e.g 0:15)
+    def addCommentWithTimeStamp(self, comment, timeStamp, embed=False):
+        # Make sure that we reach the top of the entry in order to proper resume the entry from beginning if needed
+        for x in range(0, 60):
+            self.clsCommon.sendKeysToBodyElement(Keys.ARROW_UP)
+            
+        self.clsCommon.player.switchToPlayerIframe(embed)
+        if self.wait_element(self.clsCommon.player.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 35, True).text != '0:00':
+            if self.clsCommon.player.resumeFromBeginningEntry(False) == False:
+                writeToLog("INFO","FAILED to resume from the beginning the entry")
+                return False
+        
+        # Run and pause the player at the timeStamp
+        if self.clsCommon.player.clickPlayAndPause(timeStamp) == False:
+            writeToLog("INFO","FAILED to stop player at time: " + str(timeStamp))
+            return False
+        
+        self.switch_to_default_content()
+        if self.insertCommentToTextField(comment) == False:
+            writeToLog("INFO", "FAILED to add the following comment " + str(comment) + " to the text field")
+            return False
+        
+        commentTimeLocation = self.wait_element(self.ENTRY_PAGE_COMMENT_TIME_CHECKBOX, 1)
+        
+        if commentTimeLocation == False:
+            writeToLog("INFO", "FAILED to find the element for 'Add comment at time'")
+            return False
+
+        if commentTimeLocation.text.count(timeStamp) != 1:
+            writeToLog("INFO", "FAILED to find the time stamp " + timeStamp + " inside the ;Add Comment at time' field")
+            return False
+            
+        if self.clickElement(commentTimeLocation)== False:
+            writeToLog("INFO", "FAILED to fill the Add Comment at time location checkbox")
+            return False
+
+        if self.clickAddComment(comment) == False:
+            writeToLog("INFO", "FAILED to add the following comment " + str(comment) + " to the entry list")
+            return False
+                
+        writeToLog("INFO", "The commnet: " + comment + " has been successfully added at time location: " + timeStamp)
+        return True                
