@@ -256,6 +256,11 @@ test_5110,Hotspots - Add / Select & Drag hotspots on player,6269,qakmstest.dev.k
 test_5112,Hotspots - Add Hotspot from HS list,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5114,Hotspots - Enable and Disable Hotspots Module,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5115,Hotspots - Create Hotspots while playing the video,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5118,Hotspots - Cancel hotspot creation and saving,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5119,Hotspots - Delete Hotspots using multiple type of actions,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5120,Hotspots - General layout UI (with existing Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5121,Hotspots - General layout UI (without Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5122,Editor - Create comments and sub comments with time stamp and then Trimming the Entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456

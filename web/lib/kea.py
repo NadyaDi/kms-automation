@@ -1056,10 +1056,20 @@ class Kea(Base):
                 writeToLog("INFO","FAILED to wait until spinner isn't visible")
                 return False 
             
+            # Because D2L application doesn't properly display the entire Quiz screen we need to scroll down in order to select the time stamp field
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN)
+                sleep(2)
+                
             # Set the time position of the current quiz inside the timeline section
             if self.setRealTimeMarkerToTime(questionDetails[0]) == False:
                 writeToLog("INFO", "FAILED to set the question " + questionDetails[2] + " at time location: " + questionDetails[0] )  
-                return False                 
+                return False
+            
+            # Scroll back up if using D2L application
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.D2L:
+                self.clsCommon.sendKeysToBodyElement(Keys.ARROW_UP, 4)
+                sleep(2)        
             
             # Creating the variable for the Quiz Question Type
             qestionType = questionDetails[1]
