@@ -283,6 +283,11 @@ test_5110,Hotspots - Add / Select & Drag hotspots on player,2501881,mediaspace.k
 test_5112,Hotspots - Add Hotspot from HS list,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5114,Hotspots - Enable and Disable Hotspots Module,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5115,Hotspots - Create Hotspots while playing the video,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5118,Hotspots - Cancel hotspot creation and saving,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5119,Hotspots - Delete Hotspots using multiple type of actions,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5120,Hotspots - General layout UI (with existing Hotspots),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5121,Hotspots - General layout UI (without Hotspots),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5122,Editor - Create comments and sub comments with time stamp and then Trimming the Entry,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4999,Entitlements - Private Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5009,Entitlements - Open Channel using Channels Page - Open Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
