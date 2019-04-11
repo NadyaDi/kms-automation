@@ -21,13 +21,13 @@ class SharePoint(Base):
     LOGIN_NO_BUTTON                                 = ('xpath', "//input[@id='idBtn_Back']")
     LOGIN_USE_ANOTHER_ACCOUNT_BUTTON                = ('xpath', "//div[@id='otherTileText']")
     USER_MENU_TOGGLE_BTN                            = ('id', 'DeltaPlaceHolderPageTitleInTitleArea')
-    USER_LOGOUT_BTN                                 = ('xpath', "//span[contains(@id,'_ariaId_') and contains(text(), 'Sign out')]")
+    USER_LOGOUT_BTN                                 = ('xpath', "//a[contains(@id,'SignoutLink') and contains(text(), 'Sign out')]")
     SP_MEDIA_SPACE_IFRAME                           = ('xpath', "//iframe[contains(@src,'kalturasp2013.sharepoint.com')]")
     SP_PAGE_TITLE_IN_SP_IFRAME                      = ('xpath', "//div[contains(@class,'pageTitle_')]")
-    SP_MY_MEDIA_BUTTON_IN_NAV_MENU                  = ('xpath', "//div[contains(@class,'ms-Nav-linkText linkText') and contains(text(), 'My Media')]")
-    SP_NEW1_MEDIA_GALLERY_BUTTON_IN_NAV_MENU        = ('xpath', "//div[contains(@class,'ms-Nav-linkText linkText') and contains(text(), 'New1')]")
-    SP_USER_ACCOUNT_BUTTON                          = ('xpath', "//button[@id='O365_MeFlexPane_ButtonID']")
-    SP_USER_NAME                                    = ('xpath', "//span[@class='o365cs-mfp-userEmail o365cs-segoeRegular o365cs-display-Block o365cs-me-bidi ms-fcl-ns']")
+    SP_MY_MEDIA_BUTTON_IN_NAV_MENU                  = ('xpath', "//a[contains(@href, '/My Media.aspx') and @title='My Media']")
+    SP_NEW1_MEDIA_GALLERY_BUTTON_IN_NAV_MENU        = ('xpath', "//a[contains(@href, '/Media Gallery.aspx') and @title='New1']")
+    SP_USER_ACCOUNT_BUTTON                          = ('xpath', "//button[@id='O365_MainLink_Me']")
+    SP_USER_NAME                                    = ('xpath', "//span[@class='otFsDF8X99BQFKkxYU2A7 o365sx-neutral-dark-font']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:

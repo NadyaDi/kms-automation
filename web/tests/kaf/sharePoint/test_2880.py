@@ -77,10 +77,10 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload 3 entries")
                 return
-                       
+                        
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 2: Going navigate to My Media NOT using a url navigation")   
-            if self.common.base.click(self.common.sharePoint.SP_MY_MEDIA_BUTTON_IN_NAV_MENU, timeout=20) == False:
+            if self.common.base.click(self.common.sharePoint.SP_MY_MEDIA_BUTTON_IN_NAV_MENU, timeout=20, multipleElements=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to click on 'My Media' button in navigation menu")
                 return    
@@ -154,7 +154,7 @@ class Test:
             
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 12: Going navigate to Media Gallery NOT using a url navigation")  
-            if self.common.base.click(self.common.sharePoint.SP_NEW1_MEDIA_GALLERY_BUTTON_IN_NAV_MENU, timeout=20) == False:
+            if self.common.base.click(self.common.sharePoint.SP_NEW1_MEDIA_GALLERY_BUTTON_IN_NAV_MENU, timeout=20, multipleElements=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12: FAILED to click on 'New1' button in the navigation menu")
                 return   
