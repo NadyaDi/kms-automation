@@ -14,7 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Rescheduling - Edit Single event
+    # Test Name : Recscheduling - Edit Single event
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
@@ -50,6 +50,10 @@ class Test:
     endTime = None
     resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
     
+    editDescription = "Edit Description"
+    editTags = "Edit Tags,"
+    EditResource = [enums.RecschedulingResourceOptions.QA_APP_ROOM, enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE] 
+    
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -66,20 +70,33 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.eventTitle = clsTestService.addGuidToString("Create new single event", self.testNum)
+            self.eventTitle = clsTestService.addGuidToString("Create single event", self.testNum)
+            self.editEventTitle = clsTestService.addGuidToString("Edit single event", self.testNum)
             
-            self.startDateForCreateEvent = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
-            self.endDate = (datetime.datetime.now() + timedelta(days=1)).strftime("%d/%m/%Y")
+            self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
+            self.editStartDate = (datetime.datetime.now() + timedelta(days=2)).strftime("%d/%m/%Y")
+            self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
+            self.editEndDate = (datetime.datetime.now() + timedelta(days=2)).strftime("%d/%m/%Y")
 
             self.startEventTime = time.time() + (60*60)
             self.startEventTime = time.strftime("%I:%M%p",time.localtime(self.startEventTime))
-             
+
+            self.editStartEventTime = time.time() + 3*(60*60)
+            self.editStartEventTime = time.strftime("%I:%M%p",time.localtime(self.editStartEventTime))
+            
             self.endTime = time.time() + 2*(60*60)
             self.endTime = time.strftime("%I:%M%p",time.localtime(self.endTime))
+            
+            self.editEndTime = time.time() + 4*(60*60)
+            self.editEndTime = time.strftime("%I:%M%p",time.localtime(self.editEndTime))
+            
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
             self.event.resources = self.resource
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            self.event.title = "7897"
+            self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event)
+            
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
             if self.common.admin.enableRecscheduling(True) == False:
                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")

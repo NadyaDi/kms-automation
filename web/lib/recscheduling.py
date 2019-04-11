@@ -291,7 +291,7 @@ class  Recscheduling(Base):
                 writeToLog("INFO","FAILED to uncheck 'Copy details from event to recording' button")
                 return False
             
-            if self.changeEventDetailsinRecording(eventInstance) == False:
+            if self.changeEventDetailsInEventCopyDetails(eventInstance) == False:
                 writeToLog("INFO","FAILED to set new metadata in 'Copy details from event to recording' section")
                 return False
             
@@ -343,7 +343,7 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper 
     # The function insert new metadata in to the section 'Copy details from event to recording' 
-    def changeEventDetailsinRecording(self, eventInstance):
+    def changeEventDetailsInEventCopyDetails(self, eventInstance):
         if eventInstance.copeDetailsName != '':
             if self.clear_and_send_keys(self.SCHEDULE_COPE_DETAILS_NAME, eventInstance.copeDetailsName) == False:
                 writeToLog("INFO","FAILED to insert new name in 'Copy details from event to recording'")
@@ -669,22 +669,9 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper
     def deteteSingleEvent(self, eventInstance):
-        if self.navigateToMySchedule() == False:
-            writeToLog("INFO","FAILED navigate to my schedule page")
-            return False 
-        
-        sleep(2)
-        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
-            writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
+        if self.navigateToEventPage(eventInstance) == False:
+            writeToLog("INFO","FAILED navigate to edit event page")
             return False  
-        sleep(5)
-        
-        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
-        if self.click(tmpEventTiltle, multipleElements=True) == False:
-            writeToLog("INFO","FAILED to find and click on event '" + eventInstance.title + "' in my schedule page")
-            return False 
-        self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE, timeout=30)
-
         
         if self.click(self.SCHEDULE_DELETE_EVENT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on delete event button")
@@ -701,8 +688,9 @@ class  Recscheduling(Base):
         # verify event deleted
         if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
             writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
-            return False  
-        
+            return False 
+         
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
         if self.wait_element(tmpEventTiltle, timeout=5, multipleElements=True) == True:
             writeToLog("INFO","FAILED event '" + eventInstance.verifyDateFormat.title + "' was find although it was deleted")
             return False 
@@ -710,3 +698,40 @@ class  Recscheduling(Base):
         writeToLog("INFO","Success, Event was deleted successfully")
         return True
         
+    
+    # @Author: Michal Zomper 
+    def navigateToEventPage(self, eventInstance):
+        if self.navigateToMySchedule() == False:
+            writeToLog("INFO","FAILED navigate to my schedule page")
+            return False 
+        
+        sleep(2)
+        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
+            writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
+            return False  
+        sleep(5)
+        
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
+        if self.click(tmpEventTiltle, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to find and click on event '" + eventInstance.title + "' in my schedule page")
+            return False 
+        
+        if self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE, timeout=30) == False:
+            writeToLog("INFO","FAILED to verify that edit event '" + eventInstance.title + "' page display")
+            return False 
+    
+        return True
+    
+    
+    # @Author: Michal Zomper  
+    def VerifyEventDeatailsInEventPage(self, eventInstance):
+#         if self.navigateToEventPage(eventInstance) == False:
+#             writeToLog("INFO","FAILED navigate to edit event page")
+#             return False  
+        try:
+            if (self.get_element(self.SCHEDULE_EVENT_TITLE).get_attribute("value") == eventInstance.title) == False:
+                writeToLog("INFO","FAILED navigate to edit event page")
+                return False
+        except:
+            pass
+        writeToLog("INFO","Success, Event was deleted successfully")
