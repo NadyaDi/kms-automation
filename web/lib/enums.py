@@ -712,9 +712,10 @@ class keaHotspotActions(Enum):
     def __str__(self):
         return str(self.value)    
     
-    DUPLICATE    = "Duplicate"
-    EDIT         = "Edit"
-    DELETE       = "Delete"
+    DUPLICATE           = "Duplicate"
+    EDIT                = "Edit"
+    DELETE              = "Delete"
+    CANCEL_DELETE       = "Cancel Delete"
     
 
 class keaTab(Enum):
@@ -740,3 +741,13 @@ class keaHotspotCreationType(Enum):
     
     VIDEO_PAUSED             = 'Video Paused'
     VIDEO_PLAYING            = 'Video Playing'
+    
+    
+class keaHotspotCreationInterrupt(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    CANCEL_OUTSIDE           = 'Canceling by clicking Outside'
+    CANCEL_BUTTON            = 'Canceling by using the Cancel Button'
+    TAB_SWITCHING            = 'Tab Switching'
+    EXIT_KEA                 = 'Exit Kea'

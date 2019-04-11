@@ -26,7 +26,7 @@ class Player(Base):
     PLAYER_EMBED_IFRAME_2                                       = ('id', 'kaltura_player')
     PLAYER_SCREEN                                               = ('id', 'kplayer')
     PLAYER_SCREEN_LOADING_SPINNER                               = ('xpath', "//div[@id='loadingSpinner_kplayer']")
-    PLAYER_CONTROLS_CONTAINER_REAL_TIME                         = ('xpath', "//div[contains(@class,'currentTimeLabel display-high')]")
+    PLAYER_CONTROLS_CONTAINER_REAL_TIME                         = ('xpath', "//div[contains(@class,'currentTimeLabel display-high')]") 
     PLAYER_QUIZ_ANSWER_NO_3                                     = ('xpath', "//p[@id='answer-2-text']")
     PLAYER_TIMMER_BUTTON_CONTROLS_CONTAINER                     = ('xpath', "//span[contains(@class,'playHead PIE btn')]")
     PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER                       = ('xpath', "//button[@data-plugin-name='playPauseBtn' and contains(@class,'icon-play')]")
@@ -2802,7 +2802,7 @@ class Player(Base):
                                 break
                             
                             # Continue the playing process in order to take the details for the next available new hotspots
-                            if self.resumeFromBeginningEntry() == False:
+                            if self.setPlayerAtSecondZero() == False:
                                 return False
                             
                             break
@@ -2892,8 +2892,8 @@ class Player(Base):
     
 
     # @Author: Horia Cus
-    # This function will resume a played entry back to second and and start the playing process
-    def resumeFromBeginningEntry(self,):
+    # This function will resume a played entry back second zero and and start the playing process
+    def setPlayerAtSecondZeroetPlayerAtSecondZero(self, startPlayBack=True):
         # Stop the entry to the current location
         if self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 0.2, True) == False:       
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
@@ -2915,14 +2915,15 @@ class Player(Base):
         except MoveTargetOutOfBoundsException:
             pass
         
-        # Resume the playing process
-        if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
-            writeToLog("INFO", "FAILED to click on the play button")
-            return False
-        
-        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 35) == False:
-            writeToLog("INFO", "FAILED to load the video after it was resumed from the beginning")
-            return False
+        if startPlayBack == True:
+            # Resume the playing process
+            if self.click(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the play button")
+                return False
+            
+            if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 35) == False:
+                writeToLog("INFO", "FAILED to load the video after it was resumed from the beginning")
+                return False
         
         return True
     
@@ -2961,4 +2962,59 @@ class Player(Base):
 #            self.clsCommon.base.refresh()                      
             i = i + 1
 
-        return True    
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will play the entry using the time cue point from the comment section
+    # Verification works only for entries of maximum 55 seconds
+    # timeSecondLocation = must contain an integer with the second from where you want to start the video (e.g 10 )
+    def clickAndVerifyCommentTimeStamp(self, timeStampInSeconds):
+        self.switch_to_default_content()
+        
+        # Take the comment elements
+        presentedComments = self.wait_elements(self.clsCommon.entryPage.ENTRY_PAGE_COMMENT_TEXT_SECTION, 30)
+        
+        # Verify that at least one comment is presented
+        if len(presentedComments) == 0:
+            writeToLog("INFO", "FAILED to find any comments available for the entry")
+            return False
+        
+        # Create the locator for our time location
+        timeCommentCuePointLocator = (self.clsCommon.entryPage.ENTRY_PAGE_COMMENT_TIME_STAMP[0], self.clsCommon.entryPage.ENTRY_PAGE_COMMENT_TIME_STAMP[1].replace('TIME_INTEGER', str(timeStampInSeconds)))
+        
+        # Take the element for our time location
+        commentTimeLocationElement = self.wait_element(timeCommentCuePointLocator, 1, True)
+        
+        # Verify that the element for our time location was found
+        if commentTimeLocationElement == False:
+            writeToLog("INFO", "FAILED to find any comment that has a time cue point at the second " + str(timeStampInSeconds))
+            return False
+        else:
+            # Click on the comment time cue point
+            if self.clickElement(commentTimeLocationElement) == False:
+                writeToLog("INFO", "FAILED to click on the comment cue point from second " + str(timeStampInSeconds))
+                return False
+            sleep(0.2)
+            
+            # Wait until the video starts to plays
+            if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
+                writeToLog("INFO", "FAILED to load the video")
+                return False
+            self.switchToPlayerIframe()
+            sleep(2)
+            # Take the current time of the entry
+            try:
+                currentRealTime = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 1, True).text
+            except Exception:
+                writeToLog("INFO", "FAILED to take the entry current time")
+                return False
+            
+            # Verify that the comment cue point launched the entry at the right time
+            if int(currentRealTime[2:]) < timeStampInSeconds:
+                writeToLog("INFO", "FAILED, the video was moved at " + currentRealTime + " time instead at expected second: " + str(timeStampInSeconds))
+                return False
+            
+        self.switch_to_default_content()
+        writeToLog("INFO", "The entry was played successfully at second " + str(timeStampInSeconds) + " while using comment cue point")
+        return True

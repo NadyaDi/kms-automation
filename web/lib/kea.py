@@ -1,4 +1,5 @@
 import subprocess
+from selenium.common.exceptions import StaleElementReferenceException
 try:
     import win32com.client
 except:
@@ -39,6 +40,11 @@ class Kea(Base):
     KEA_VIDEO_EDITOR_TAB                                                    = ('xpath', "//a[@class='nav-button' and @aria-label='Video Editor']") 
     KEA_VIDEO_EDITOR_TAB_ACTIVE                                             = ('xpath', "//a[@class='nav-button active' and @aria-label='Video Editor']")
     KEA_LAUNCH                                                              = ('xpath', "//i[@class='icon-editor']")
+    KEA_EXIT_BUTTON                                                         = ('xpath', "//button[@class='nav-button' and @aria-label='Exit']")
+    KEA_MAIN_CONTAINER                                                      = ('xpath', "//div[@class='kea-main-container']")
+    KEA_MAIN_CONFIRMATION_POP_UP                                            = ('xpath', "//div[contains(@class,'ui-widget-content ui-corner-all ui-shadow')]")
+    KEA_MAIN_CONFIRMATION_POP_UP_SURE_BUTTON                                = ('xpath', "//span[@class='ui-button-text ui-clickable' and contains(text(),'m sure')]")
+    KEA_MAIN_CONFIRMATION_POP_UP_CANCEL_BUTTON                              = ('xpath', "//button[contains(@class,'link--cancel') and contains(text(),'Cancel')]")
     KEA_APP_DISPLAY                                                         = ('id', 'kea-anchor')
     KEA_IFRAME                                                              = ('xpath', '//iframe[@class="span12 hostedEnabled kea-frame kea-iframe-js"]')
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
@@ -118,6 +124,8 @@ class Kea(Base):
     KEA_CONFIRMATION_POP_UP_CONTINUE                                        = ('xpath', "//button[contains(@class,'button') and text()='Continue']")
     KEA_CONFIRMATION_POP_UP_TITLE                                           = ('xpath', "//div[@class='kErrorMessageTitle']")
     KEA_CONFIRMATION_POP_UP_CONTAINER                                       = ('xpath', "//div[@class='kErrorMessage']")
+    KEA_CONFIRMATION_POP_UP_CANCEL_BUTTON                                   = ('xpath', "//button[contains(@class,'button--cancel') and text()='Cancel']")
+    KEA_CONFIRMATION_POP_UP_OK_BUTTON                                       = ('xpath', "//button[contains(@class,'button--ok') and text()='OK']")
     KEA_HOTSPOTS_TAB                                                        = ('xpath', "//a[@class='nav-button' and @aria-label='Hotspots']") 
     KEA_HOTSPOTS_TAB_ACTIVE                                                 = ('xpath', "//a[@class='nav-button active' and @aria-label='Hotspots']") 
     KEA_HOTSPOTS_ADD_NEW_BUTTON                                             = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Add Hotspot"]')
@@ -126,6 +134,8 @@ class Kea(Base):
     KEA_HOTSPOTS_SAVE_BUTTON                                                = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Save"]')
     KEA_HOTSPOTS_CANCEL_BUTTON                                              = ('xpath', '//span[@class="ui-button-text ui-clickable" and text()="Cancel"]')
     KEA_HOTSPOTS_ADVANCED_SETTINGS                                          = ('xpath', '//button[@class="form-button" and text()="Advanced Settings"]')
+    KEA_HOTSPOTS_TOOL_TIP_CREATION_CANCEL_BUTTON                            = ('xpath', '//button[contains(@class,"form-button") and text()="Cancel"]')
+    KEA_HOTSPOTS_TOOL_TIP_CREATION_CONTAINER                                = ('xpath', '//div[@class="form-horizontal"]')
     KEA_HOTSPOTS_FORM_TEXT_INPUT_FIELD                                      = ('xpath', '//input[@id="inputText"]')
     KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD                                      = ('xpath', '//input[@id="inputUrl"]')
     KEA_HOTSPOTS_FORM_TEXT_STYLE                                            = ('xpath', '//label[contains(@class,"ui-dropdown-label ui-inputtext")]')
@@ -1014,14 +1024,14 @@ class Kea(Base):
     # If you want to change the answer order you can use this function: changeAnswerOrder
     def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=20):
         sleep(25)
-  
+   
         # Need this step in order to workaround an issue that may fail a test case after uploading an entry
         if self.wait_element(self.clsCommon.upload.UPLOAD_PAGE_TITLE, 0.5, True) != False:
             sleep(2) 
             if self.clsCommon.navigateTo(enums.Location.HOME) == False:
                 writeToLog("INFO", "FAILED to navigate to home page")
                 return False
-          
+           
         if self.searchAndSelectEntryInMediaSelection(entryName) == False:
             writeToLog("INFO", "FAILED to navigate to " + entryName)
             return False
@@ -1324,9 +1334,33 @@ class Kea(Base):
         
         # Verify that the Time Marker matches with our desired time location
         if timeLineSectionMarker != timeLocation:
-            # As a redundancy, if we are unable to set the desired time location by Action Chain, we are going to use Editor Time Picker
-            writeToLog("INFO", "Couldn't set the " + timeLocation + " using action chains, but " + timeLineSectionMarker + " time location has been set")
+            timeLineSectionMarkerUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[4:]
             
+            # Verify if there's a gap of one second between the action
+            if int(timeLineSectionMarkerUpdated[0]) + 1 == int(timeLocation[-1]):
+                # If the ml seconds are higher than 49 we need a less difference in px
+                if int(timeLineSectionMarkerUpdated[2:]) >= 49:
+                    differencePx = 7
+                # If the ml seconds are less than 49 we need a higher difference in px
+                else:
+                    differencePx = 22
+                    
+                actionSetQuizLocationSecond = ActionChains(self.driver)
+                
+                try:
+                    actionSetQuizLocationSecond.move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+2.5+differencePx, -10).pause(1).click().perform()
+                except Exception:
+                    writeToLog("INFO", "FAILED to set the start time to " + str(timeLocation))
+                    return False
+                
+            else:
+                writeToLog("INFO", "Couldn't set the " + timeLocation + " using action chains, but " + timeLineSectionMarker + " time location has been set")
+                
+        timeLineSectionMarkerUpdated = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5]
+                    
+        # Verify that the Time Marker matches with our desired time location after the second try of using Action Chain
+        if timeLineSectionMarkerUpdated != timeLocation:
+            # As a redundancy, if we are unable to set the desired time location by Action Chain, we are going to use Editor Time Picker           
             # Select the time stamp input field
             if self.click(self.EDITOR_TIME_PICKER, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the kea timeline field")
@@ -3526,7 +3560,7 @@ class Kea(Base):
         self.switchToKeaIframe()
         
         # Take a list with all the available hotspots from the sidebar
-        hotspotsPanelTitle = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 30)
+        hotspotsPanelTitle = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 5)
         
         if hotspotsPanelTitle == False:
             writeToLog("INFO", "FAILED to find any available hotspots in the side bar panel")
@@ -3614,7 +3648,12 @@ class Kea(Base):
         elif hotspotAction == enums.keaHotspotActions.DELETE:
             # Trigger the delete process for the hotspotName
             if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DELETE, 1, True) == False:
-                writeToLog("INFO", "FAILED to click on the Delete button for the hotspot: " + hotspotName)
+                writeToLog("INFO", "FAILED to click on the Delete Action Button for the hotspot: " + hotspotName)
+                return False
+            
+            # Verify that the Delete Confirmation Pop up is triggered
+            if self.wait_element(self.KEA_CONFIRMATION_POP_UP_CONTAINER, 3, True) == False:
+                writeToLog("INFO", "FAILED to trigger the Delete Confirmation Pop up")
                 return False
             
             # Confirm the delete process
@@ -3631,6 +3670,41 @@ class Kea(Base):
             if self.saveHotspotChanges(settingsChanges=False) == False:
                 writeToLog("INFO", "FAILED to save the changes after deleting the " + hotspotName + " hotspot")
                 return False
+            
+            try:
+                # Verify that the element is no longer present
+                presentedHotspotsTitle[hotspotNameIndex].text
+                writeToLog("INFO", "FAILED, the hotspot " + hotspotName + " element is still present, although it should have been deleted")
+                return False
+            # If an exception its thrown, means that the element is no longer present, which is what we want, since the hotspot has been deleted
+            except StaleElementReferenceException:
+                writeToLog("INFO", "The hotspot " + hotspotName + " has been successfully deleted")
+                return True
+            
+        elif hotspotAction == enums.keaHotspotActions.CANCEL_DELETE:
+            # Trigger the delete process for the hotspotName
+            if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DELETE, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Delete Action Button for the hotspot: " + hotspotName)
+                return False
+            
+            # Verify that the Delete Confirmation Pop up is triggered
+            if self.wait_element(self.KEA_CONFIRMATION_POP_UP_CONTAINER, 3, True) == False:
+                writeToLog("INFO", "FAILED to trigger the Delete Confirmation Pop up")
+                return False
+            
+            # Click on the Cancel button
+            if self.click(self.KEA_CONFIRMATION_POP_UP_CANCEL_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to cancel the Hotspot Deletion process by clicking on the Cancel Button")
+                return False
+            sleep(1)
+
+            try:
+                # Verify that the element is still present
+                presentedHotspotsTitle[hotspotNameIndex].text
+            # If an exception its thrown, means that the element is no longer present, which is what we want, since the hotspot has been deleted
+            except StaleElementReferenceException:
+                writeToLog("INFO", "The hotspot " + hotspotName + " has been deleted, although it shouldn't")
+                return False
         
         # Verify that a valid action has been used during the function call
         else:
@@ -3646,7 +3720,9 @@ class Kea(Base):
     # This function will open the specified keaTab while being in the KEA Editor
     # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
     # keaTab must contain enum ( e.g enums.keaTab.QUIZ)
-    def launchKEATab(self, entryName, keaTab, navigateToEntry=False, timeOut=1):
+    # expectedConfirmation = True, it will pass the confirmation pop up during the transition, if no confirmation pop up is presented, it will return False
+        # If you have changes that were not saved, you should expect a confirmation pop up during the transition to another KEA Tab 
+    def launchKEATab(self, entryName, keaTab, navigateToEntry=False, timeOut=1, expectedConfirmation=False):
         self.switch_to_default_content()
         if navigateToEntry == True:
             sleep(timeOut)
@@ -3666,12 +3742,21 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to click on the KEA Quiz tab")
                     return False
                 
+                if expectedConfirmation == True:
+                    if self.wait_element(self.KEA_CONFIRMATION_POP_UP_CONTAINER, 3, True) == False:
+                        writeToLog("INFO", "FAILED, no confirmation pop up has been displayed")
+                        return False
+                    
+                    if self.click(self.KEA_CONFIRMATION_POP_UP_OK_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the OK confirmation pop up")
+                        return False                    
+                
                 sleep(0.5)
                 if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
                     writeToLog("INFO", "FAILED to wait until the KEA Quiz tab has been successfully loaded")
                     return False
                 
-                if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 1, True) == False:
+                if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 5, True) == False:
                     writeToLog("INFO", "FAILED, the KEA Quiz tab is not displayed as being enabled")
                     return False
         
@@ -3683,12 +3768,21 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to click on the KEA Video Editor tab")
                     return False
                 
+                if expectedConfirmation == True:
+                    if self.wait_element(self.KEA_CONFIRMATION_POP_UP_CONTAINER, 3, True) == False:
+                        writeToLog("INFO", "FAILED, no confirmation pop up has been displayed")
+                        return False
+                    
+                    if self.click(self.KEA_CONFIRMATION_POP_UP_OK_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the OK confirmation pop up")
+                        return False   
+                
                 sleep(0.5)
                 if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
                     writeToLog("INFO", "FAILED to wait until the KEA Video Editor tab has been successfully loaded")
                     return False
                 
-                if self.wait_element(self.KEA_VIDEO_EDITOR_TAB_ACTIVE, 1, True) == False:
+                if self.wait_element(self.KEA_VIDEO_EDITOR_TAB_ACTIVE, 5, True) == False:
                     writeToLog("INFO", "FAILED, the KEA Video Editor tab is not displayed as being enabled")
                     return False
                 
@@ -3700,12 +3794,21 @@ class Kea(Base):
                     writeToLog("INFO", "FAILED to click on the KEA Hotspots tab")
                     return False
                 
+                if expectedConfirmation == True:
+                    if self.wait_element(self.KEA_CONFIRMATION_POP_UP_CONTAINER, 3, True) == False:
+                        writeToLog("INFO", "FAILED, no confirmation pop up has been displayed")
+                        return False
+                    
+                    if self.click(self.KEA_CONFIRMATION_POP_UP_OK_BUTTON, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the OK confirmation pop up")
+                        return False   
+                                    
                 sleep(0.5)
                 if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 60) == False:
                     writeToLog("INFO", "FAILED to wait until the KEA Hotspots tab has been successfully loaded")
                     return False
                 
-                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
+                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 5, True) == False:
                     writeToLog("INFO", "FAILED, the KEA Hotspots tab is not displayed as being enabled")
                     return False
                 
@@ -4287,14 +4390,139 @@ class Kea(Base):
     def playEntryAndReturnAtTime(self, timeToReturn):
         self.switchToKeaIframe()
         
+        # Trigger the playing process from second one
         if self.startFromBeginningPlayingProcess() == False:
             writeToLog("INFO", "FAILED to initiate the playing process from second zero")
             return False
         
         currentPlayTime = None
         
+        # Return when the time reaches the timeToReturn value
         while timeToReturn != currentPlayTime:
             currentPlayTime = self.wait_element(self.EDITOR_REALTIME_MARKER, 1, True).text[:5]
         
         writeToLog("INFO", "The video was returned at time " + timeToReturn)
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function can perform four type of hotspot creation interrupts:
+    # By clicking on the Cancel Button when the Hotspot Creation Tool Tip is active
+    # By clicking on the Player Screen when the Hotspot Creation Tool Tip is active
+    # By performing a switch between the tabs after placing a blank hotspot in the Hotspot Panel
+    # By exiting the KEA Editor when the Hotspot Creation Tool Tip is active
+    # hotspotInterruptType must be enum ( e.g  enums.keaHotspotCreationInterrupt.CANCEL_BUTTON)
+    # hotspotLocation must contain enum ( e.g enums.keaLocation.CENTER ) 
+    def hotspotCreationInterrupts(self, hotspotInterruptType, hotspotLocation, entryName):
+        self.switchToKeaIframe()
+        
+        # Place a new Add Hotspot on the player
+        if self.hotspotLocation(hotspotLocation) == False:
+            writeToLog("INFO", "FAILED to set the Hotspot Location at " + hotspotLocation)
+            return False
+        
+        # Verify the Hotspot Creation Interrupts while using the Cancel Button
+        if hotspotInterruptType == enums.keaHotspotCreationInterrupt.CANCEL_BUTTON:
+            if self.click(self.KEA_HOTSPOTS_TOOL_TIP_CREATION_CANCEL_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the Cancel Button from the Creation Tool Tip")
+                return False
+
+        # Verify the Hotspot Creation Interrupts while clicking on the player
+        elif hotspotInterruptType == enums.keaHotspotCreationInterrupt.CANCEL_OUTSIDE:
+            if self.click(self.KEA_PLAYER_CONTAINER, 1, True) == False:
+                writeToLog("INFO", "FAILED to click on the player container in order to dismiss the Creation Tool Tip")
+                return False
+
+        # Verify the Hotspot Creation Interrupts while switching between KEA Tabs
+        elif hotspotInterruptType == enums.keaHotspotCreationInterrupt.TAB_SWITCHING:
+            # Place the Blank Hotspot inside the panel, without saving it
+            if self.click(self.KEA_HOTSPOTS_DONE_BUTTON_NORMAL, 1, True) == False:
+                    writeToLog("INFO", "FAILED to save the KEA hotspots setting changes")
+                    return False
+            
+            # Verify that the confirmation pop up during the transition is present when the hotspots are not saved
+            if self.launchKEATab(entryName, enums.keaTab.VIDEO_EDITOR, False, 0, True) == False:
+                writeToLog("INFO", "FAILED to switch to a second tab while having Hotspot Creation Tool Tip active")
+                return False
+            
+            # Resume back to the Hotspots Tab
+            if self.launchKEATab(entryName, enums.keaTab.HOTSPOTS, False, 0, False) == False:
+                writeToLog("INFO", "FAILED to switch back to the Hotspot Tab")
+                return False
+            
+            # Verify that there's no Blank Hotspot to be deleted
+            if self.hotspotActions('<Blank>', enums.keaHotspotActions.DELETE) != False:
+                writeToLog("INFO", "FAILED the Blank hotspot could be deleted from the Hotspot Panel, when it shouldn't have been presented in the first place")
+                return False            
+
+        # Verify the Hotspot Creation Interrupts while Exiting the KEA Editor
+        elif hotspotInterruptType == enums.keaHotspotCreationInterrupt.EXIT_KEA:
+            if self.exitKeaEditor() == False:
+                writeToLog("INFO", "FAILED to exit the KEA Editor for " + entryName + " entry")
+                return False
+            
+            if self.launchKEATab(entryName, enums.keaTab.HOTSPOTS, True, 0, False) == False:
+                writeToLog("INFO", "FAILED to re-launch the KEA Hotspots tab for " + entryName + " entry")
+                return False  
+                               
+        else:
+            writeToLog("INFO", "FAILED, please make sure that you've selected a supported hotspot creation interrupt option")
+            return False
+        
+        # Verify that the Add New Hotspot Creation Tool Tip is no longer present
+        if self.wait_element(self.KEA_HOTSPOTS_TOOL_TIP_CREATION_CONTAINER, 1, True) != False:
+            writeToLog("INFO", "FAILED, the Hotspot Tool Tip Creation is still displayed after perform the: " + hotspotInterruptType.value + " interrupt")
+        
+        writeToLog("INFO", "The hotspot interrupt: " + hotspotInterruptType.value + " has been performed successfully on " + entryName + " entry")
+        return True 
+    
+    
+    # @Author: Horia Cus
+    # This function verifies the negative and positive flow while exiting the KEA Editor page
+    def exitKeaEditor(self,):
+        self.switchToKeaIframe()
+        
+        # Verify that the KEA Editor container is present
+        if self.wait_element(self.KEA_MAIN_CONTAINER, 20, True) == False:
+            writeToLog("INFO", "FAILED to find the KEA Editor page")
+            return False
+        
+        # Trigger the Exit Confirmation Pop Up
+        if self.click(self.KEA_EXIT_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to click on the Exit Button from the navigation bar")
+            return False
+        
+        # Verify that the Exit Confirmation Pop Up is presented
+        if self.wait_element(self.KEA_MAIN_CONFIRMATION_POP_UP, 5, True) == False:
+            writeToLog("INFO", "FAILED to display the Confirmation Dialog for exiting the KEA Editor")
+            return False
+        
+        # Verify the negative flow
+        if self.click(self.KEA_MAIN_CONFIRMATION_POP_UP_CANCEL_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to cancel the Exit Kea Editor process")
+            return False
+        
+        # Verify that the KEA Exit pop up is no longer present
+        if self.wait_while_not_visible(self.KEA_MAIN_CONFIRMATION_POP_UP, 15) == False:
+            writeToLog("INFO", "FAILED to dismiss the KEA Exit confirmation pop up after clicking on the Cancel Button")
+            return False
+        
+        # Trigger the Exit Confirmation Pop Up
+        if self.click(self.KEA_EXIT_BUTTON, 1, True) == False:
+            writeToLog("INFO", "FAILED to click on the Exit Button from the navigation bar")
+            return False
+        
+        # Confirm the Exit Confirmation Pop uo
+        if self.click(self.KEA_MAIN_CONFIRMATION_POP_UP_SURE_BUTTON, 3, True) == False:
+            writeToLog("INFO", "FAILED to click on the Exit Confirmation Button")
+            return False
+        
+        # Verify that the KEA Editor container is no longer present
+        if self.wait_while_not_visible(self.KEA_MAIN_CONTAINER, 45) == False:
+            writeToLog("INFO", "FAILED, the KEA Page is still displayed")
+            return False  
+        
+        # Switch to default content, due to the fact that we are no longer in the KEA Editor page
+        self.switch_to_default_content()
+        writeToLog("INFO", "KEA Editor has been successfully exited")
         return True
