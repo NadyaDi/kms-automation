@@ -883,25 +883,26 @@ class BlackBoard(Base):
         if self.click(self.EMBED_ENTRY_PLAY_ICON, 30, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on play icon")
             return False 
-          
-        sleep(18)
+        
+        sleep(18)  
         if delay != '':
             try:   
                 self.driver.switch_to.frame(self.driver.find_element_by_xpath("//iframe[starts-with(@src, '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay') and contains(@src, 'content_id=" + foundId + "')]"))
             except Exception:
                 writeToLog("INFO","FAILED to switch to '/webapps/osv-kaltura-BBLEARN/LtiMashupPlay' iframe")
                 return False                      
-             
+              
             try: 
                 self.driver.switch_to.frame(self.wait_element(self.clsCommon.player.PLAYER_IFRAME, 60))
                 localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.PLAYER
             except Exception:
                 writeToLog("INFO","FAILED to switch to PLAYER_IFRAME iframe")
                 return False    
-                            
-            if self.clsCommon.player.clickPlayPauseAndVerify(delay) == False:
+            
+            sleep(15)                 
+            if self.clsCommon.player.clickPlayPauseAndVerify(delay, clickPlayFromBarline=False) == False:
                 writeToLog("INFO","FAILED to play and verify video")
-                return False                
+                return False    
         
         elif imageThumbnail !='':
             sleep(5)
