@@ -295,7 +295,8 @@ test_5010,Entitlements - Restricted Channel using Channels Page,2501881,mediaspa
 test_5011,Entitlements - Shared Repository Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5012,Entitlements - Public Channel using Channels Page and Anonymous Users ON,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5013,Entitlements - Public Channel using Channels Page and Anonymous Users OFF,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5116,Quiz - Analytics - Verify quiz answers,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5116,Quiz - Analytics - Verify quiz answers - One user,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5022,Entitlements - Entry Private with Initial Owner changed to Co Publisher,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5024,Entitlements - Private Channel using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5025,Entitlements - Open Channel using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!

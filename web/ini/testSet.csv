@@ -387,7 +387,8 @@ test_5106,1,0,0,0,Quiz - Retake quiz - Disable show score
 test_5108,1,0,0,0,Quiz - Open-Q - Create quiz with open-Q and hint and why
 test_5111,1,0,0,0,Quiz - Open-Q - Add feedback
 test_5113,1,0,0,0,Quiz - Open-Q - Add feedback as co-editor
-test_5116,1,0,0,0,Quiz - Analytics - Verify quiz answers
+test_5116,1,0,0,0,Quiz - Analytics - Verify quiz answers - One user
+test_5117,1,0,0,0,Quiz - Analytics - Verify quiz answers - Multiple users
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality
