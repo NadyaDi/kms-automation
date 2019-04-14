@@ -116,7 +116,9 @@ class Base:
         elif method == 'name':
             return self.driver.find_element_by_name(value)
         elif method == 'tag_name':
-            return self.driver.find_element_by_tag_name(value)        
+            return self.driver.find_element_by_tag_name(value)
+        elif method == 'css':
+            return self.driver.find_element_by_css_selector(value)           
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')
@@ -138,7 +140,9 @@ class Base:
         elif method == 'name':
             return parent.find_element_by_name(value)
         elif method == 'tag_name':
-            return self.driver.find_element_by_tag_name(value)        
+            return self.driver.find_element_by_tag_name(value) 
+        elif method == 'css':
+            return self.driver.find_element_by_css_selector(value)          
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')
@@ -160,7 +164,9 @@ class Base:
         elif method == 'name':
             return parent.find_elements_by_name(value)
         elif method == 'tag_name':
-            return self.driver.find_elements_by_tag_name(value)        
+            return self.driver.find_elements_by_tag_name(value)   
+        elif method == 'css':
+            return self.driver.find_elements_by_css_selector(value)      
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Invalid locator method: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')             
@@ -204,7 +210,9 @@ class Base:
         elif method == 'name':
             return self.driver.find_elements_by_name(value)
         elif method == 'tag_name':
-            return self.driver.find_elements_by_tag_name(value)        
+            return self.driver.find_elements_by_tag_name(value) 
+        elif method == 'css':
+            return self.driver.find_elements_by_css_selector(value)          
         else:
             writeToLog("DEBUG",'Function: ' + sys._getframe().f_code.co_name + ': Element not found by: "' + method + '" = "' + value + '"')
             raise Exception('Invalid locator method.')

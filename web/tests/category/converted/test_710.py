@@ -30,7 +30,7 @@ class Test:
     entryName = None
     entryDescription = "Description"
     entryTags = "Tags,"
-    categoryName = 'Automation Category'
+    categoryName = None
     userContributerName = "private"
     userContributerPass = "123456"
     LoginPageUrl = "https://2373952.qakmstest.dev.kaltura.com/user/login"
@@ -52,35 +52,54 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("ClickEditFromCategory", self.testNum)
+            self.categoryName = clsTestService.addGuidToString('Automation Category', self.testNum)
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            writeToLog("INFO","Step 1: Going to upload entry")
+            writeToLog("INFO","Step 1: Going to create open category") 
+            self.common.apiClientSession.startCurrentApiClientSession()
+            parentId = self.common.apiClientSession.getParentId('galleries') 
+            if self.common.apiClientSession.createCategory(parentId, localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, self.categoryName, self.entryDescription) == False:
+                writeToLog("INFO","Step 1: FAILED to create open category")
+                return
+             
+            writeToLog("INFO","Step 2: Going to clear cache")            
+            if self.common.admin.clearCache() == False:
+                writeToLog("INFO","Step 2: FAILED to clear cache")
+                return
+            
+            writeToLog("INFO","Step 3: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                writeToLog("INFO","Step 3: FAILED navigate to home page")
+                return
+            
+            
+            writeToLog("INFO","Step 4: Going to upload entry")
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags) == None:
-                writeToLog("INFO","Step 1: FAILED failed to upload entry")
+                writeToLog("INFO","Step 4: FAILED failed to upload entry")
                 return
                       
-            writeToLog("INFO","Step 2: Going to publish entry to category")            
+            writeToLog("INFO","Step 5: Going to publish entry to category")            
             if self.common.myMedia.publishSingleEntry(self.entryName, [self.categoryName], [], publishFrom = enums.Location.UPLOAD_PAGE, disclaimer=False) == False:
-                writeToLog("INFO","Step 2: FAILED to publish entry to category")
+                writeToLog("INFO","Step 5: FAILED to publish entry to category")
                 return            
                                         
-            writeToLog("INFO","Step 3: Going to navigate to category page")            
+            writeToLog("INFO","Step 6: Going to navigate to category page")            
             if self.common.category.navigateToCategory(self.categoryName) == False:
-                writeToLog("INFO","Step 3: FAILED to navigate to category page")
+                writeToLog("INFO","Step 6: FAILED to navigate to category page")
                 return             
                  
-            writeToLog("INFO","Step 4: Going to refresh category")            
+            writeToLog("INFO","Step 7: Going to refresh category")            
             if self.common.category.refreshNowCategory(60) == False:
-                writeToLog("INFO","Step 4: FAILED to navigate to category page")
+                writeToLog("INFO","Step 7: FAILED to navigate to category page")
                 return   
             
             # Additional sleep - do not delete
             sleep(5)
             self.common.base.refresh()
                              
-            writeToLog("INFO","Step 5: Going to navigate to entry's edit page")            
+            writeToLog("INFO","Step 8: Going to navigate to entry's edit page")            
             if self.common.category.navigateToEditEntryPageFromCategoryWhenNoSearchIsMade(self.entryName) == False:
-                writeToLog("INFO","Step 5: FAILED to click entry Edit button, Entry name: '" + self.entryName + "'")
+                writeToLog("INFO","Step 8: FAILED to click entry Edit button, Entry name: '" + self.entryName + "'")
                 return                                          
             ##################################################################
             self.status = "Pass"
@@ -95,6 +114,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")                     
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
+            self.common.apiClientSession.deleteCategory(self.categoryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
