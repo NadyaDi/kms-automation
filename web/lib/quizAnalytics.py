@@ -32,8 +32,10 @@ class QuizAnalytics(Base):
     QUIZ_ANALYTICS_FEEDBACK_DATE                     = ('xpath', '//span[@class="feedback-title__date" and text()="FEEDBACK_DATE"]')
     QUIZ_ANALYTICS_FEEDBACK_TEXT                     = ('xpath', '//div[contains(@class,"feedback-text feedback-text")]')
     QUIZ_ANALYTICS_PAGE_TITLE                        = ('xpath', '//h1[text()="Analytics for media "]')
-    QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS    = ('xpath', '//div[@class="drill-down-summary-text" and contains(text(),"  Answered RIGHT_NUM right and WRONG_NUM wrong")]')
-    QUIZ_ANALYTICS_USER_OPEN_Q_ANSWER                = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row right"]/descendant::span[@class="USER_ANSWER"]')
+    QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS    = ('xpath', '//div[@class="drill-down-summary-text" and contains(text(),"Answered RIGHT_NUM right and WRONG_NUM wrong")]')
+    QUIZ_ANALYTICS_USER_RIGHT_ANSWER                 = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row right"]/descendant::span[@class="quiz-user-answer-text" and contains(text(),"USER_ANSWER")]')
+    QUIZ_ANALYTICS_USER_WRONG_ANSWER                 = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row wrong"]/descendant::span[@class="quiz-user-answer-text" and contains(text(),"USER_ANSWER")]')
+    QUIZ_ANALYTICS_USER_VIEWED_ANSWER                = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row right"]/descendant::span[@class="quiz-viewed " and contains(text(),"Viewed")]')
     #=============================================================================================================
     # @Author: Inbar Willman
     # Add feedback to open-Q
@@ -224,9 +226,9 @@ class QuizAnalytics(Base):
         tmpQuestionTitleCollapsed = (self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_COLLAPSED[0], self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_COLLAPSED[1].replace('QUESTION_TITLE', questionTitle))
 
         # Check is question section open state, if so, click on question title:
-        if self.wait_element(tmpQuestionTitleOpened, 5) == False:
+        if self.wait_element(tmpQuestionTitleOpened, 3) == False:
             # If question is in closed state
-            if self.wait_element(tmpQuestionTitleClosed, 5) != False:
+            if self.wait_element(tmpQuestionTitleClosed, 3) != False:
                 if self.click(tmpQuestionTitleClosed) == False:
                     writeToLog("INFO","FAILED to click on " + questionTitle + " question")
                     return False  
@@ -237,7 +239,7 @@ class QuizAnalytics(Base):
                     return False  
         
         sleep(5)
-        writeToLog("INFO","Success: Open-Q title " + questionTitle + "was clicked")       
+        writeToLog("INFO","Success: Open-Q title " + questionTitle + " was clicked")       
         return True      
     
     
@@ -297,39 +299,129 @@ class QuizAnalytics(Base):
         return True 
     
     
+#     # @Author: Inbar Willman
+#     # Verify that correct open-Q answer is displayed in quiz analytics -> Quiz questions tab
+#     # Verify that correct number of wrong and correct answers is displayed
+#     # answersDict - Dictionary that contains List with all answers data
+#     def verifyQuizAnswersInAnalytics(self, answersDict, entryName='', forceNavigate=False): 
+#         # If we aren't in analytics page
+#         if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
+#             if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate) == False:
+#                 writeToLog("INFO","FAILED to navigate to quiz analytics - quiz question page")
+#                 return False 
+#             
+#         for i in range(0,len(answersDict)):
+#             tmpAnswersList     = answersDict[str(i+1)]
+#             tmpQuestionTitle   = tmpAnswersList[0]   
+#             tmpAnswer          = tmpAnswersList[1]  
+#             tmpUserID          = tmpAnswersList[2]   
+#             tmpRightAnswers    = tmpAnswersList[3]   
+#             tmpWrongAnswers    = tmpAnswersList[4] 
+#             tmpIsRightAnswer   = tmpAnswersList[5] 
+#             
+#             if self.clickOnOpenQuestionTitle(tmpQuestionTitle) == False:
+#                 writeToLog("INFO","FAILED to click on open-Q title")
+#                 return False  
+# 
+#             # Verify that correct answer is displayed
+#             # If answer is correct
+#             if tmpIsRightAnswer == True:
+#                 # If it's reflection question
+#                 if tmpAnswer == 'Viewed':
+#                     tmpReflectionAnswer = (self.QUIZ_ANALYTICS_USER_VIEWED_ANSWER[0], self.QUIZ_ANALYTICS_USER_VIEWED_ANSWER[1].replace('USER_ID', tmpUserID))
+#                     if self.wait_element(tmpReflectionAnswer) == False:
+#                         writeToLog("INFO","FAILED to displayed correct viewed text")
+#                         return False                        
+#                 else:    
+#                     tmpRightUserAnswer = (self.QUIZ_ANALYTICS_USER_RIGHT_ANSWER[0], self.QUIZ_ANALYTICS_USER_RIGHT_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
+#                     if self.wait_element(tmpRightUserAnswer) == False:
+#                         writeToLog("INFO","FAILED to displayed correct right user's answer")
+#                         return False
+#             else:
+#                 tmpWrongUserAnswer = (self.QUIZ_ANALYTICS_USER_WRONG_ANSWER[0], self.QUIZ_ANALYTICS_USER_WRONG_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
+#                 if self.wait_element(tmpWrongUserAnswer) == False:
+#                     writeToLog("INFO","FAILED to displayed correct wrong user's answer")
+#                     return False                
+#             
+#             # Verify that correct number of right and wrong answers is displayed
+#             tmpAnswersNum = (self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[0], self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[1].replace('RIGHT_NUM', tmpRightAnswers).replace('WRONG_NUM', tmpWrongAnswers))       
+#             if self.wait_element(tmpAnswersNum) == False:
+#                 writeToLog("INFO","FAILED to displayed correct number of wrong and right answers")
+#                 return False 
+#             
+#             # Close question section
+#             tmpQuestionTitleOpened = (self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[0], self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[1].replace('QUESTION_TITLE', tmpQuestionTitle))
+#             if self.click(tmpQuestionTitleOpened) == False:
+#                 writeToLog("INFO","FAILED to close open-Q section")
+#                 return False   
+#                            
+#         writeToLog("INFO","SUCCESS: answered are verified")            
+#         return True       
+
     # @Author: Inbar Willman
     # Verify that correct open-Q answer is displayed in quiz analytics -> Quiz questions tab
     # Verify that correct number of wrong and correct answers is displayed
     # answersDict - Dictionary that contains List with all answers data
-    def verifyQuizAnswersInAnalytics(self, answersDict, entryName='', forceNavigate=False): 
+    def verifyQuizAnswersInAnalytics(self, answersList, entryName='', forceNavigate=False): 
         # If we aren't in analytics page
         if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
             if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate) == False:
                 writeToLog("INFO","FAILED to navigate to quiz analytics - quiz question page")
                 return False 
             
-        for i in range(0,len(answersDict)):
-            tmpAnswersList     = answersDict[str(i+1)]
-            tmpQuestionTitle   = tmpAnswersList[0]   
-            tmpAnswer          = tmpAnswersList[1]  
-            tmpUserID          = tmpAnswersList[2]   
-            tmpRightAnswers    = tmpAnswersList[3]   
-            tmpWrongAnswers    = tmpAnswersList[4] 
+        for i in range(0,len(answersList)):
+            # Get dictionary with all question users answers
+            tmpAnswersDict     = answersList[i]
+            
+            # Get question title
+            tmpAnswersList     = tmpAnswersDict['1']
+            tmpQuestionTitle   = tmpAnswersList[0] 
             
             if self.clickOnOpenQuestionTitle(tmpQuestionTitle) == False:
                 writeToLog("INFO","FAILED to click on open-Q title")
-                return False  
+                return False
+                
+            # Run over all the users answers
+            for i in range(0,len(tmpAnswersDict)):
+                tmpAnswersList     = tmpAnswersDict[str(i+1)]
+                tmpQuestionTitle   = tmpAnswersList[0]   
+                tmpAnswer          = tmpAnswersList[1]  
+                tmpUserID          = tmpAnswersList[2]   
+                tmpRightAnswers    = tmpAnswersList[3]   
+                tmpWrongAnswers    = tmpAnswersList[4] 
+                tmpIsRightAnswer   = tmpAnswersList[5] 
+
+                # Verify that correct answer is displayed
+                # If answer is correct
+                if tmpIsRightAnswer == True:
+                    # If it's reflection question
+                    if tmpAnswer == 'Viewed':
+                        tmpReflectionAnswer = (self.QUIZ_ANALYTICS_USER_VIEWED_ANSWER[0], self.QUIZ_ANALYTICS_USER_VIEWED_ANSWER[1].replace('USER_ID', tmpUserID))
+                        if self.wait_element(tmpReflectionAnswer) == False:
+                            writeToLog("INFO","FAILED to displayed correct viewed text")
+                            return False                        
+                    else:    
+                        tmpRightUserAnswer = (self.QUIZ_ANALYTICS_USER_RIGHT_ANSWER[0], self.QUIZ_ANALYTICS_USER_RIGHT_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
+                        if self.wait_element(tmpRightUserAnswer) == False:
+                            writeToLog("INFO","FAILED to displayed correct right user's answer")
+                            return False
+                else:
+                    tmpWrongUserAnswer = (self.QUIZ_ANALYTICS_USER_WRONG_ANSWER[0], self.QUIZ_ANALYTICS_USER_WRONG_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
+                    if self.wait_element(tmpWrongUserAnswer) == False:
+                        writeToLog("INFO","FAILED to displayed correct wrong user's answer")
+                        return False                
             
-            # If question is open question we want to verify the answer
-            if tmpAnswer != '':
-                # Verify that correct open-Q answer is displayed
-                tmpAnswersNum = (self.QUIZ_ANALYTICS_USER_OPEN_Q_ANSWER[0], self.QUIZ_ANALYTICS_USER_OPEN_Q_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
-                if tmpAnswersNum == False:
-                    writeToLog("INFO","FAILED to displayed correct open-Q answer")
-                    return False
+                # Verify that correct number of right and wrong answers is displayed
+                tmpAnswersNum = (self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[0], self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[1].replace('RIGHT_NUM', tmpRightAnswers).replace('WRONG_NUM', tmpWrongAnswers))       
+                if self.wait_element(tmpAnswersNum) == False:
+                    writeToLog("INFO","FAILED to displayed correct number of wrong and right answers")
+                    return False 
             
-            # Verify that correct number of right and wrong answers is displayed
-            tmpAnswersNum = (self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[0], self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[1].replace('RIGHT_NUM', tmpRightAnswers).replace('WRONG_NUM', tmpWrongAnswers))       
-            
+            # Close question section
+            tmpQuestionTitleOpened = (self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[0], self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[1].replace('QUESTION_TITLE', tmpQuestionTitle))
+            if self.click(tmpQuestionTitleOpened) == False:
+                writeToLog("INFO","FAILED to close open-Q section")
+                return False   
+                           
         writeToLog("INFO","SUCCESS: answered are verified")            
-        return True         
+        return True           
