@@ -404,7 +404,8 @@ test_5106,Quiz - Retake quiz - Disable show score,2501881,qakmstest.dev.kaltura.
 test_5108,Quiz - Open-Q - Create quiz with open-Q and hint and why,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5111,Quiz - Open-Q - Add feedback,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5113,Quiz - Open-Q Add feedback as co-editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5116,Quiz - Analytics - Verify quiz answers,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5116,Quiz - Analytics - Verify quiz answers- One user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
