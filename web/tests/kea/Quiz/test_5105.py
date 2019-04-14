@@ -103,7 +103,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             self.entryName = clsTestService.addGuidToString("Retake 3 Attempts All types of questions", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Retake 3 Attempts types of questions - Quiz", self.testNum)      
+            self.quizEntryName = clsTestService.addGuidToString("Retake 3 Attempts All types of questions - Quiz", self.testNum)      
 
             self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LATEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}

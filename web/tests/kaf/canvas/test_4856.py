@@ -140,7 +140,8 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8 : FAILED to create embed assignment")  
                 return  
-              
+             
+            sleep(10) 
             writeToLog("INFO","Step 9 : Going to logout as main user")  
             if self.common.canvas.logOutOfCanvas() == False:
                 self.status = "Fail"
