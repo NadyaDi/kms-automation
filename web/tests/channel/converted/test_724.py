@@ -249,10 +249,12 @@ class Test:
             sleep(2)
             self.common.login.logOutOfKMS()
             self.common.login.loginToKMS(self.userName1, self.userPass1)                   
-            for i in range(1,5):
-                self.common.channel.deleteChannel(eval('self.channelName'+str(i)))
-     
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3])   
+            self.common.apiClientSession.startCurrentApiClientSession()
+            self.common.apiClientSession.deleteCategory(self.channelName1)
+            self.common.apiClientSession.deleteCategory(self.channelName2)
+            self.common.apiClientSession.deleteCategory(self.channelName3)
+            self.common.apiClientSession.deleteCategory(self.channelName4)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

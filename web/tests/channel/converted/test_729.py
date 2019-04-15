@@ -156,14 +156,10 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
             sleep(2) 
-            self.common.login.logOutOfKMS()
-            self.common.loginAsUser() 
-            self.common.channel.deleteChannel(self.channelName1)
-            sleep(3)
-            self.common.login.logOutOfKMS()
-            self.common.login.loginToKMS(self.userName1, self.userPass1)                   
-            self.common.channel.deleteChannel(self.channelName2)
-            self.common.channel.deleteChannel(self.channelName3)
+            self.common.apiClientSession.startCurrentApiClientSession()
+            self.common.apiClientSession.deleteCategory(self.channelName1)
+            self.common.apiClientSession.deleteCategory(self.channelName2)
+            self.common.apiClientSession.deleteCategory(self.channelName3)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

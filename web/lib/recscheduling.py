@@ -55,6 +55,7 @@ class SechdeuleEvent():
     endDateOption = ''
     numberOfRecurrence=''
     verifyDateFormat=''
+    fieldsToUpdate=[]
     
     # Constructor
     def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
@@ -798,7 +799,6 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to enter create event page")
             return False
         sleep(2)
-        
         
         if self.send_keys(self.SCHEDULE_EVENT_TITLE, eventInstance.title) == False:
             writeToLog("INFO","FAILED to insert event title")
