@@ -751,3 +751,11 @@ class keaHotspotCreationInterrupt(Enum):
     CANCEL_BUTTON            = 'Canceling by using the Cancel Button'
     TAB_SWITCHING            = 'Tab Switching'
     EXIT_KEA                 = 'Exit Kea'
+    
+    
+class keaHotspotCreationScreen(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    ADVANCED_SETTINGS        = 'Advanced Settings'
+    ADD_HOTSPOT_TOOL_TIP     = 'Add Hotspot Tool Tip'

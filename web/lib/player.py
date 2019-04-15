@@ -2893,7 +2893,7 @@ class Player(Base):
 
     # @Author: Horia Cus
     # This function will resume a played entry back second zero and and start the playing process
-    def setPlayerAtSecondZeroetPlayerAtSecondZero(self, startPlayBack=True):
+    def setPlayerAtSecondZero(self, startPlayBack=True):
         # Stop the entry to the current location
         if self.wait_element(self.PLAYER_PLAY_BUTTON_CONTROLS_CONTAINER, 0.2, True) == False:       
             if self.click(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1, True) == False:
