@@ -60,8 +60,8 @@ class Test:
 #             self.entryName             = clsTestService.addGuidToString("Hotspots - HS List General UI", self.testNum)
             
             hotspotSpecialCharacters                 = ['#!@$%^%&%^*&(_+\];dsaHa123', enums.keaLocation.BOTTOM_LEFT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
-            hotspotLongTitle                         = ['Hotspot Long Title, How Long you may Ask, well I don t really know, who knows?', enums.keaLocation.CENTER, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
-            hotspotLongURL                           = ['Hotspot Long URL', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/we-need-a-long-url-for-our-automation-project/it-s-this-long-enough-question-mark', enums.textStyle.BOLD, '', '', 18, 12]
+            hotspotLongTitle                         = ['Hotspot Long Title, How Long you may Ask, well I don t really know, who knows?', enums.keaLocation.CENTER, 10, 15, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
+            hotspotLongURL                           = ['Hotspot Long URL', enums.keaLocation.TOP_RIGHT, 15, 20, 'https://autoone.kaltura.com/we-need-a-long-url-for-our-automation-project/it-s-this-long-enough-question-mark', enums.textStyle.BOLD, '', '', 18, 12]
             
             hotspotSpecialDict                       = {'1':hotspotSpecialCharacters, '2':hotspotLongTitle, '3':hotspotLongURL}
             ##################### TEST STEPS - MAIN FLOW #####################

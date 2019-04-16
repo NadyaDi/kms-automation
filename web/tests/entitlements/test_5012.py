@@ -187,8 +187,8 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.login.logOutOfKMS()
             self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass
