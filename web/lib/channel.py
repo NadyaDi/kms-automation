@@ -27,7 +27,8 @@ class Channel(Base):
     CHANNEL_DETAILS_PRIVACY_RESTRICTED                  = ('xpath', "//strong[contains(text(),'Restricted')]")
     CHANNEL_DETAILS_PRIVACY_PRIVATE                     = ('xpath', "//strong[contains(text(),'Private')]")
     CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY           = ('xpath', "//strong[contains(text(),'Shared Repository')]")
-    CHANNEL_DETAILS_PRIVACY_PUBLIC                      = ('xpath', "//strong[contains(text(),'Public')]")
+    CHANNEL_DETAILS_PRIVACY_PUBLIC_RESTRICTED           = ('xpath', "//strong[contains(text(),'Public, Restricted')]")
+    CHANNEL_DETAILS_PRIVACY_PUBLIC_OPENED               = ('xpath', "//strong[contains(text(),'Public, Open')]")
     CHANNEL_DETAILS_OPTION_MODARATE                     = ('id', 'Category-options-moderation')
     CHANNEL_DETAILS_OPTION_COMMENT                      = ('id', 'Category-options-enableComments')
     CHANNEL_DETAILS_OPTION_SUBSCRIPTION                 = ('id', 'Category-options-enableChannelSubscription')
@@ -403,30 +404,36 @@ class Channel(Base):
     def selectChannelPrivacy(self, privacy):
         if privacy == enums.ChannelPrivacyType.OPEN:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_OPEN) == False:
-                writeToLog("INFO","FAILED to click on open option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
         elif privacy == enums.ChannelPrivacyType.RESTRICTED:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_RESTRICTED) == False:
-                writeToLog("INFO","FAILED to click on restricted option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
         elif privacy == enums.ChannelPrivacyType.PRIVATE:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_PRIVATE) == False:
-                writeToLog("INFO","FAILED to click on private option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
         elif privacy == enums.ChannelPrivacyType.SHAREDREPOSITORY:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY) == False:
-                writeToLog("INFO","FAILED to click on shared-repository option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
-        elif privacy == enums.ChannelPrivacyType.PUBLIC:
-            if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC) == False:
-                writeToLog("INFO","FAILED to click on public option")
-                return False  
+        elif privacy == enums.ChannelPrivacyType.PUBLIC_RESTRICTED:
+            if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC_RESTRICTED) == False:
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
+                return False
+            
+        elif privacy == enums.ChannelPrivacyType.PUBLIC_OPENED:
+            if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC_OPENED) == False:
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
+                return False          
+    
         else:
-            writeToLog("DEBUG","FAILED to choose Channel privacy")
+            writeToLog("DEBUG","FAILED to choose " + privacy.value + " channel privacy type, unsupported privacy type")
             return False
         
         return True
@@ -1613,12 +1620,12 @@ class Channel(Base):
             return False  
         
         # Wait until page contains add member button
-        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
+        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON, 90) == False:
             writeToLog("INFO","Failed to display add member tab content")
             return False           
         
         # Click on add member button
-        if self.click(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
+        if self.click(self.CHANNEL_ADD_MEMBER_BUTTON, 5) == False:
             writeToLog("INFO","Failed to click on add members button")
             return False   
         

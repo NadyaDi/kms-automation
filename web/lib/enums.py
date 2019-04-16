@@ -25,7 +25,8 @@ class ChannelPrivacyType(Enum):
     RESTRICTED          = "restricted"
     PRIVATE             = "private"
     SHAREDREPOSITORY    = "sharedrepository"
-    PUBLIC              = "public"
+    PUBLIC_RESTRICTED   = "Public Restricted"
+    PUBLIC_OPENED       = "Public Opened"
     UNLISTED            = "Unlisted"
     
 class PlayerObjects(Enum):
