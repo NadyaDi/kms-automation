@@ -509,10 +509,11 @@ class  GlobalSearch(Base):
                     return False
                 
                 sleep(0.2)
-                if self.wait_while_not_visible(self.GLOBAL_SEARCH_LOADING_DETAILS, 15) == False:
+                if self.wait_while_not_visible(self.GLOBAL_SEARCH_LOADING_DETAILS, 25) == False:
                     writeToLog("INFO", "FAILED to load the entry details, after clicking on the show more button")
                     return False
             
+            sleep(1)
             # Verify that the tag was found inside the lists
             tagLocator = (self.GLOBAL_SEARCH_TAG_RESULT[0], self.GLOBAL_SEARCH_TAG_RESULT[1].replace('TAG_NAME', tag))
             if self.wait_element(tagLocator, 1, True) == False:
