@@ -27,7 +27,8 @@ class Channel(Base):
     CHANNEL_DETAILS_PRIVACY_RESTRICTED                  = ('xpath', "//strong[contains(text(),'Restricted')]")
     CHANNEL_DETAILS_PRIVACY_PRIVATE                     = ('xpath', "//strong[contains(text(),'Private')]")
     CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY           = ('xpath', "//strong[contains(text(),'Shared Repository')]")
-    CHANNEL_DETAILS_PRIVACY_PUBLIC                      = ('xpath', "//strong[contains(text(),'Public')]")
+    CHANNEL_DETAILS_PRIVACY_PUBLIC_RESTRICTED           = ('xpath', "//strong[contains(text(),'Public, Restricted')]")
+    CHANNEL_DETAILS_PRIVACY_PUBLIC_OPENED               = ('xpath', "//strong[contains(text(),'Public, Open')]")
     CHANNEL_DETAILS_OPTION_MODARATE                     = ('id', 'Category-options-moderation')
     CHANNEL_DETAILS_OPTION_COMMENT                      = ('id', 'Category-options-enableComments')
     CHANNEL_DETAILS_OPTION_SUBSCRIPTION                 = ('id', 'Category-options-enableChannelSubscription')
@@ -204,6 +205,7 @@ class Channel(Base):
             
             sleep(1)
             self.clsCommon.general.waitForLoaderToDisappear()
+            sleep(2)
             
             if localSettings.LOCAL_SETTINGS_IS_NEW_UI == True:
                 tmp_entry_name = (self.MY_CHANNELS_HOVER[0], self.MY_CHANNELS_HOVER[1].replace('CHANNEL_NAME', channelName))
@@ -219,7 +221,7 @@ class Channel(Base):
             if self.clickDeleteChannel() == False:
                 writeToLog("INFO","FAILED to click on Delete channel button (at Edit channel page)")
                 return False
-            sleep(2)
+            sleep(3)
             
             if self.click(self.EDIT_CHANNEL_DELETE_CONFIRM) == False:
                 writeToLog("INFO","FAILED to click on Delete confirmation button")
@@ -237,7 +239,7 @@ class Channel(Base):
         except NoSuchElementException:
             return False
         
-        sleep(2)
+        sleep(3)
         return True
 
  
@@ -402,30 +404,36 @@ class Channel(Base):
     def selectChannelPrivacy(self, privacy):
         if privacy == enums.ChannelPrivacyType.OPEN:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_OPEN) == False:
-                writeToLog("INFO","FAILED to click on open option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
         elif privacy == enums.ChannelPrivacyType.RESTRICTED:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_RESTRICTED) == False:
-                writeToLog("INFO","FAILED to click on restricted option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
         elif privacy == enums.ChannelPrivacyType.PRIVATE:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_PRIVATE) == False:
-                writeToLog("INFO","FAILED to click on private option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
         elif privacy == enums.ChannelPrivacyType.SHAREDREPOSITORY:
             if self.click(self.CHANNEL_DETAILS_PRIVACY_SHARED_REPOSITORY) == False:
-                writeToLog("INFO","FAILED to click on shared-repository option")
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
                 return False
             
-        elif privacy == enums.ChannelPrivacyType.PUBLIC:
-            if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC) == False:
-                writeToLog("INFO","FAILED to click on public option")
-                return False  
+        elif privacy == enums.ChannelPrivacyType.PUBLIC_RESTRICTED:
+            if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC_RESTRICTED) == False:
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
+                return False
+            
+        elif privacy == enums.ChannelPrivacyType.PUBLIC_OPENED:
+            if self.click(self.CHANNEL_DETAILS_PRIVACY_PUBLIC_OPENED) == False:
+                writeToLog("INFO","FAILED to click on the " + privacy.value + " channel privacy type")
+                return False          
+    
         else:
-            writeToLog("DEBUG","FAILED to choose Channel privacy")
+            writeToLog("DEBUG","FAILED to choose " + privacy.value + " channel privacy type, unsupported privacy type")
             return False
         
         return True
@@ -1612,12 +1620,12 @@ class Channel(Base):
             return False  
         
         # Wait until page contains add member button
-        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
+        if self.wait_visible(self.CHANNEL_ADD_MEMBER_BUTTON, 90) == False:
             writeToLog("INFO","Failed to display add member tab content")
             return False           
         
         # Click on add member button
-        if self.click(self.CHANNEL_ADD_MEMBER_BUTTON) == False:
+        if self.click(self.CHANNEL_ADD_MEMBER_BUTTON, 5) == False:
             writeToLog("INFO","Failed to click on add members button")
             return False   
         
@@ -1629,7 +1637,7 @@ class Channel(Base):
             writeToLog("INFO","Failed to insert username")
             return False
         
-        sleep(3)
+        sleep(6)
         tmpConfirmationLocator = (self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[0], self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[1].replace('USERNAME', username))
         if self.click(tmpConfirmationLocator) == False:
             writeToLog("INFO","FAILED to click on group search confirmation")
@@ -1646,10 +1654,10 @@ class Channel(Base):
             return False  
         
         # Wait until add member modal isn't displayed
-        if self.wait_while_not_visible(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=80) == False:
+        if self.wait_while_not_visible(self.CHANNEL_ADD_MEMBER_MODAL_USERNAME_FIELD, timeout=90) == False:
             writeToLog("INFO","Failed to display add member modal")
             return False    
-        
+        sleep(2)
         #Verify new member is added to member table
         tmp_member_row = (self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[0], self.CHANNEL_MEMBERS_TAB_NEW_MEMBER_ROW[1].replace('MEMBER', username))
         if self.wait_visible(tmp_member_row) == False:

@@ -158,7 +158,7 @@ class Upload(Base):
                 
     # @Authors: Oleg Sigalov &  Tzachi Guetta
     # IMPORTENT!! This method return None (not False) if failed and an entry ID if passed
-    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=4, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False, isTagsNeeded=True):
+    def uploadEntry(self, filePath, name, description, tags, timeout=60, disclaimer=False, retries=5, uploadFrom=enums.Location.UPLOAD_PAGE, verifyModerationWarning=False, isTagsNeeded=True):
         for i in range(retries):
             try:
                 if i > 0:

@@ -231,6 +231,8 @@ test_4913,Editor: Clip Quiz entry (with Slides and Captions),6269,qakmstest.dev.
 test_4937,Editor: Reset timeline functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4938,Editor: Redo timeline functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4939,Editor: Undo timeline functionality,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_4955,Editor: Trim Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5122,Editor - Create comments and sub comments with time stamp and then Trimming the Entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4948,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4949,Quiz - Welcome screen behavior when autoplay true,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
@@ -246,7 +248,6 @@ test_5106,Quiz - Retake quiz - Disable show score,6269,qakmstest.dev.kaltura.com
 test_5108,Quiz - Open-Q - Create quiz with open-Q and hint and why,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5113,Quiz - Open-Q Add feedback as co-editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5116,Quiz - Analytics - Verify quiz answers,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_4955,Editor: Trim Quiz entry (with Slides and Captions),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5095,Hotspots - Delete Hotspots,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5103,Hotspots - Duplicate Hotspots,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
@@ -260,7 +261,8 @@ test_5118,Hotspots - Cancel hotspot creation and saving,6269,qakmstest.dev.kaltu
 test_5119,Hotspots - Delete Hotspots using multiple type of actions,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5120,Hotspots - General layout UI (with existing Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5121,Hotspots - General layout UI (without Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_5122,Editor - Create comments and sub comments with time stamp and then Trimming the Entry,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5121,Hotspots - General layout UI (without Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5124,Hotspots - Hotspots list - General UI,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
@@ -268,15 +270,15 @@ test_4999,Entitlements - Private Channel using Channels Page,6269,qakmstest.dev.
 test_5009,Entitlements - Open Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5010,Entitlements - Restricted Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5011,Entitlements - Shared Repository Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_5012,Entitlements - Public Channel using Channels Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_5013,Entitlements - Public Channel using Channels Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5012,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5013,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5022,Entitlements - Entry Private with Initial Owner changed to Co Publisher,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5024,Entitlements - Private Channel using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5025,Entitlements - Open Channel using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5026,Entitlements - Restricted Channel using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5027,Entitlements - Shared Repository Channel using Global Search,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_5028,Entitlements - Public Channel using Global Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_5036,Entitlements - Public Channel using Global Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5028,Entitlements - Public Restricted Channel using Global Page and Anonymous Users ON,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5036,Entitlements - Public Restricted Channel using Global Page and Anonymous Users OFF,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5045,Entitlements - Entry Private with Initial Owner changed to Co Viewer,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5046,Entitlements - Entry Private with Co Viewer,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5049,Entitlements - Open Category,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
@@ -285,3 +287,5 @@ test_5052,Entitlements - Restricted Category,6269,qakmstest.dev.kaltura.com,adi.
 test_5053,Entitlements - Open Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5054,Entitlements - Private Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5055,Entitlements - Restricted Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5125,Entitlements - Public Channel Open using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5127,Entitlements - Public Open Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456

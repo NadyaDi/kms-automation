@@ -55,6 +55,7 @@ class SechdeuleEvent():
     endDateOption = ''
     numberOfRecurrence=''
     verifyDateFormat=''
+    fieldsToUpdate=[]
     
     # Constructor
     def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
@@ -100,8 +101,8 @@ class  Recscheduling(Base):
     SCHEDULE_CREATE_EVENT_PAGE_TITLE                                        = ('xpath', "//h1[@class='inline' and contains(text(),'Create Event')]")
     SCHEDULE_EVENT_TITLE                                                    = ('xpath', "//input[@id='CreateEvent-eventTitle']")
     SCHEDULE_EVENT_ORGANIZER                                                = ('xpath', "//input[@id='CreateEvent-eventOrganizer']")
-    SCHEDUL_EVENT_START_TIME                                                = ('xpath', "//input[@id='rsStartTime-rsStartTime_time']")
-    SCHEDUL_EVENT_END_TIME                                                  = ('xpath', "//input[@id='rsEndTime-rsEndTime_time']")
+    SCHEDULE_EVENT_START_TIME                                               = ('xpath', "//input[@id='rsStartTime-rsStartTime_time']")
+    SCHEDULE_EVENT_END_TIME                                                 = ('xpath', "//input[@id='rsEndTime-rsEndTime_time']")
     SCHEDULE_EVENT_DESCRIPTION                                              = ('xpath', "//textarea[@id='CreateEvent-eventDescription']")
     SCHEDULE_EVENT_INPUT_TAGS                                               = ('xpath', "//input[contains(@id,'s2id_autogen') and contains(@class, '-input')]")
     SCHEDULE_EVENT_TAGS                                                     = ('xpath', "//div[@id='s2id_CreateEvent-tags']")
@@ -138,7 +139,10 @@ class  Recscheduling(Base):
     SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
     SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE                              = ('xpath', "//th[contains(text(),'DATE')]") # the DATE need to be in format ("%B %d, %Y - %A") -us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday, 
     SCHEDULE_DELETE_EVENT_BUTTON                                            = ('xpath', "//i[@class='icon-trash icon-white']")
-    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                        = ('xpath', "//h1[@class='inline' and contains(text(),'Edit Event')]")
+    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                          = ('xpath', "//h1[@class='inline' and contains(text(),'Edit Event')]")
+    SCHEDULE_EDIT_EVENT_PAGE_START_DATE                                     = ('css', "input#rsStartTime-rsStartTime_date")
+    SCHEDULE_EDIT_EVENT_PAGE_END_DATE                                       = ('css', "input#rsEndTime-rsEndTime_date")
+    SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES                             = ('css', "div.sol-current-selection")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -233,7 +237,7 @@ class  Recscheduling(Base):
         sleep(2) 
         
         if len(eventInstance.startTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDUL_EVENT_START_TIME, eventInstance.startTime) == False:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_EVENT_START_TIME, eventInstance.startTime) == False:
                 writeToLog("INFO","FAILED to set event start time")
                 return False
             sleep(2) 
@@ -246,7 +250,7 @@ class  Recscheduling(Base):
         # else = use the default value
         
         if len(eventInstance.endTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDUL_EVENT_END_TIME, eventInstance.endTime) == False:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_EVENT_END_TIME, eventInstance.endTime) == False:
                 writeToLog("INFO","FAILED to set event end time")
                 return False
             sleep(2)
@@ -725,13 +729,153 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper  
     def VerifyEventDeatailsInEventPage(self, eventInstance):
-#         if self.navigateToEventPage(eventInstance) == False:
-#             writeToLog("INFO","FAILED navigate to edit event page")
-#             return False  
-        try:
-            if (self.get_element(self.SCHEDULE_EVENT_TITLE).get_attribute("value") == eventInstance.title) == False:
-                writeToLog("INFO","FAILED navigate to edit event page")
+        if self.navigateToEventPage(eventInstance) == False:
+            writeToLog("INFO","FAILED navigate to edit event page")
+            return False  
+         
+        if (self.wait_element(self.SCHEDULE_EVENT_TITLE).get_attribute("value") == eventInstance.title) == False:
+            writeToLog("INFO","FAILED to verify event title")
+            return False
+         
+        if (self.wait_element(self.SCHEDULE_EVENT_ORGANIZER).get_attribute("value") == eventInstance.eventOrganizer) == False:
+            writeToLog("INFO","FAILED to verify event organizer")
+            return False
+        
+        if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_START_DATE).get_attribute("value") == eventInstance.startDate) == False:
+            writeToLog("INFO","FAILED to verify event start date")
+            return False
+        
+        if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_END_DATE).get_attribute("value") == eventInstance.endDate) == False:
+            writeToLog("INFO","FAILED to verify event end date")
+            return False
+        
+        if (self.wait_element(self.SCHEDULE_EVENT_START_TIME).get_attribute("value") == eventInstance.statTime) == False:
+            writeToLog("INFO","FAILED to verify event start time")
+            return False
+        
+        if (self.wait_element(self.SCHEDULE_EVENT_END_TIME).get_attribute("value") == eventInstance.endTime) == False:
+            writeToLog("INFO","FAILED to verify event end time")
+            return False
+        
+        if type(eventInstance.resources) is list:
+            tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).get_attribute("value")
+            for resource in eventInstance.resources:
+                if (resource in tmpResources) == False:
+                    writeToLog("INFO","FAILED to verify event resource '" + resource + "'")
+                    return False
+        else:
+            if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).get_attribute("value") == eventInstance.resources) == False:
+                writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources + "'")
                 return False
-        except:
-            pass
-        writeToLog("INFO","Success, Event was deleted successfully")
+        
+        if (self.wait_element(self.SCHEDULE_EVENT_DESCRIPTION).text == eventInstance.description) == False:
+            writeToLog("INFO","FAILED to verify event description")
+            return False
+                    
+        if (self.wait_element(self.SCHEDULE_EVENT_TAGS).text == eventInstance.description) == False:
+            writeToLog("INFO","FAILED to verify event description")
+            return False
+        
+        if type(eventInstance.tags) is list:
+            tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text
+            for tag in eventInstance.tags:
+                if (tag in tmpTags) == False:
+                    writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
+                    return False
+        else:
+            if (self.wait_element(self.SCHEDULE_EVENT_TAGS).text == eventInstance.tags) == False:
+                writeToLog("INFO","FAILED to verify event tag '" + eventInstance.tags + "'")
+                return False
+
+        writeToLog("INFO","Success, Event metadata were verify successfully")
+        
+        
+        
+        
+    # @Author: Michal Zomper 
+    # The function edit reschedule event without recurrence
+    def EditRescheduleEventWithoutRecurrence(self, eventInstance): 
+        if self.navigateToCreateEventPage() == False:
+            writeToLog("INFO","FAILED to enter create event page")
+            return False
+        sleep(2)
+        
+        if self.send_keys(self.SCHEDULE_EVENT_TITLE, eventInstance.title) == False:
+            writeToLog("INFO","FAILED to insert event title")
+            return False
+            
+        if eventInstance.eventOrganizer != '':
+            self.send_keys(self.SCHEDULE_EVENT_ORGANIZER, Keys.CONTROL + 'a')
+            if self.send_keys(self.SCHEDULE_EVENT_ORGANIZER, eventInstance.eventOrganizer) == False:
+                writeToLog("INFO","FAILED to change event organizer name")
+                return False
+        
+        if self.clsCommon.editEntryPage.setScheduleStartDate(eventInstance.startDate) == False:
+            writeToLog("INFO","FAILED to set event start date")
+            return False
+        sleep(2) 
+        
+        if len(eventInstance.startTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_EVENT_START_TIME, eventInstance.startTime) == False:
+                writeToLog("INFO","FAILED to set event start time")
+                return False
+            sleep(2) 
+        # else = use the default value
+        
+        if self.clsCommon.editEntryPage.setScheduleEndDate(eventInstance.endDate) == False:
+            writeToLog("INFO","FAILED to set event end date")
+            return False
+        sleep(2)  
+        # else = use the default value
+        
+        if len(eventInstance.endTime) != 0:
+            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_EVENT_END_TIME, eventInstance.endTime) == False:
+                writeToLog("INFO","FAILED to set event end time")
+                return False
+            sleep(2)
+        
+        if eventInstance.resources != '':
+            if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
+                writeToLog("INFO","FAILED to click and open resource option")
+                return False
+            
+            if type(eventInstance.resources) is list: 
+                for resource in eventInstance.resources:
+                    tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
+                    if self.click(tmpResource) == False:
+                        writeToLog("INFO","FAILED to select event resource")
+                        return False
+            else:
+                tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', eventInstance.resources.value))
+                if self.click(tmpResource) == False:
+                    writeToLog("INFO","FAILED to select event resource")
+                    return False
+                
+            # click on the create event title to close the resource list
+            self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
+            
+        # Click in Description text box
+        if self.click(self.SCHEDULE_EVENT_DESCRIPTION) == False:
+            writeToLog("INFO","FAILED to click in description textbox")
+            return False
+        
+        # Enter text Description
+        if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, eventInstance.description) == False:
+            writeToLog("INFO","FAILED to type in Description")
+            return False
+        
+        if self.fillFileScheduleTags(eventInstance.tags) == False:
+            writeToLog("INFO","FAILED to set event tags")
+            return False
+        
+        # copyDetailsEventToRecording == False mean that we need to insert new metadata 
+        if eventInstance.copyDetailsEventToRecording == False:
+            if self.click(self.SCHEDULE_COPE_DETAILS_BUTTON) == False:
+                writeToLog("INFO","FAILED to uncheck 'Copy details from event to recording' button")
+                return False
+            
+            if self.changeEventDetailsInEventCopyDetails(eventInstance) == False:
+                writeToLog("INFO","FAILED to set new metadata in 'Copy details from event to recording' section")
+                return False
+            
+        return True

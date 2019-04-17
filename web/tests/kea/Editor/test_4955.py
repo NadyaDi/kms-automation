@@ -28,12 +28,14 @@ class Test:
     common = None
     # Test variables
 
-    testType = "Quiz entry that was Trimmed while having Slides and Captions"
-    description = "Description"
-    tags = "Tags,"
-    entryName = None
-    entryDescription = "description"
-    entryTags = "tag1,"
+    testType                = "Quiz entry that was Trimmed while having Slides and Captions"
+    description             = "Description"
+    tags                    = "Tags,"
+    entryName               = None
+    quizEntryName           = None
+    quizEntryNameClipped    = None
+    entryDescription        = "description"
+    entryTags               = "tag1,"
 
     captionLanguage = 'Afar'
     captionLabel = 'abc'
@@ -42,7 +44,7 @@ class Test:
     # Variables used in order to create a video entry with Slides and Captions
     filePathCaption = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\captions\Trim-Caption.srt'
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\PDFtimelineQRCode.pdf'
+    slideDeckFilePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\ppt\10SlidestimelineQRCode.pptx'
     slidesQrCodeAndTimeList = None
     deleteSlidesList = None
 
@@ -113,7 +115,7 @@ class Test:
                 return
  
             writeToLog("INFO","Step 4: Going to upload a slide deck for the " + self.quizEntryName + " entry")
-            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList) == False:
+            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList, False) == False:
                 writeToLog("INFO","Step 4: FAILED to upload a slide deck for the " + self.quizEntryName + " entry")
                 return
  
@@ -139,6 +141,7 @@ class Test:
                 return
 
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 9: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, before trim")
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
@@ -146,7 +149,7 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, before trim")
                 return
 
-            self.isExistQR = ["3", "7", "8", "13", "17", "22", "28"];
+            self.isExistQR = ["1", "3", "5", "6", "9"];
             self.isAbsentQR = ["33", "55", "100", "99"];
             writeToLog("INFO","Step 10: Going to verify that the presented Slides matches with the Expected slides, before trim")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
@@ -154,6 +157,7 @@ class Test:
                 return
 
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 11: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before trim")
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)
@@ -185,6 +189,7 @@ class Test:
                 return
  
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 15: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, after trim")
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
@@ -192,14 +197,15 @@ class Test:
                 writeToLog("INFO","Step 15: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, after trim")
                 return
 
-            self.isExistQR = ["3", "7", "23", "28"];
-            self.isAbsentQR = ["18", "14", "15", "17"];
+            self.isExistQR = ["1", "2", "8", "9"];
+            self.isAbsentQR = ["6", "7", "16", "12"];
             writeToLog("INFO","Step 16: Going to verify that the presented Slides matches with the Expected slides, after trim")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
                 writeToLog("INFO","Step 16: FAILED to verify that the presented Slides matches with the Expected slides, after trim")
                 return
 
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 17: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, after trim")
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)

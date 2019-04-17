@@ -118,9 +118,11 @@ class Test:
         try:
             self.common.handleTestFail(self.status)            
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
+            sleep(3)
             self.common.myMedia.deleteEntriesFromMyMedia(self.entriesList)
-            self.common.channel.deleteChannel(self.channelName1)
-            self.common.channel.deleteChannel(self.channelName2)
+            self.common.apiClientSession.startCurrentApiClientSession()
+            self.common.apiClientSession.deleteCategory(self.channelName1)
+            self.common.apiClientSession.deleteCategory(self.channelName2)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            

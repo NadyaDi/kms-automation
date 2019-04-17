@@ -1,126 +1,126 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
 test_0002,Set service url,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
-test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2104,Moodle - Delete through my media,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2105,Moodle - Delete through edit entry page,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2106,Moodle - Publish after upload,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2114,Moodle -My Media - Search by Name / Description / Tags,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2107,Moodle - Publish from my media (single and multiple),,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2108,Moodle - Publish From Entry Page,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2111,Moodle - Upload media from desktop,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2127,Moodle - Embed media in site blogs from my media,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2110,Moodle - View Collapsed Expanded Modes,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2116,Moodle - My Media - Sort Media,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2118,Moodle - My Media - Filter by media Type,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2117,Moodle - My Media - Filter Media View Different Statuses,,,pythonautomation2@gmail.com,Kaltura1!,student,Kaltura1!
-test_2119,Moodle - Edit Entry Metadata,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2120,Moodle - Edit Entry page - Disable comments,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2121,Moodle - Edit Entry page - Close discussion,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2123,Moodle - Entry page - Add captions And Search - remove caption,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2124,Moodle - Edit entry page - thumbnail tab,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2128,Moodle - Embed video resource from SR,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_954,Moodle - Publish from my media to shared repository,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2397,Moodle - Embed media in site blogs from media gallery,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2398,Moodle - upload and Embed media in kaltura video resource,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2125,Moodle - Trim video,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2126,Moodle - Create clip,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2122,Moodle - Change Cliping permissions,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_826,Moodle - Gradebook,,,pythonautomation2@gmail.com,Kaltura1!,automoodle,Kaltura1!
-test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2279,Canvas - My Media -Delete through my media,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2280,Canvas - Delete through edit entry page,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2281,Canvas - Publish after upload,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2282,Canvas - Publish from my media (single and multiple),,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2283,Canvas - Publish From Entry Page,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2285,Canvas - View Collapsed Expanded Modes,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2286,Canvas - Upload media from desktop,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2291,Canvas - My Media - Sort Media,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation2@gmail.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
-test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2295,Canvas - Embed on BSE from shared repository,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2297,Canvas - Embed on BSE from media gallery,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2309,Canvas - Embed on BSE from my media,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2310,Canvas - Embed on BSE from upload,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2303,Canvas - Edit Entry page - Close discussion,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2298,Canvas - Edit Entry Metadata,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2305,Canvas - Entry page - Add captions And Search - remove caption,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2308,Canvas - Remove Media From Media Gallery,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2336,Canvas - Gallery Moderation,,,pythonautomation2@gmail.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
-test_2294,Canvas - Publish from my media to shared repository,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2296,Canvas - Publish to course galleries from  shared repository,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_4856,Canvas - Gradebook,,,pythonautomation2@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2533,D2L - Edit Entry Metadata,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2535,D2L - Edit Entry page - Close discussion,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2537,D2L - Entry page - Add captions And Search - remove caption,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2538,D2L - Edit entry page - Thumbnail tab,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2541,D2L - Delete through my media,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2542,D2L - Delete through edit entry page,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2544,D2L - View Collapsed Expanded Modes,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2545,D2L - Upload media from desktop,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2549,D2L - My Media - Search by Name / Description / Tags,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2550,D2L - My Media - Sort Media,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2551,D2L - My Media - Filter Media View Different Statuses,,,pythonautomation2@gmail.com,Kaltura1!,student,Kaltura1!
-test_2552,D2L - My Media - Filter by media Type,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2556,D2L - Edit Media Gallery Metadata,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2557,D2L - Remove Media From Media Gallery,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2558,D2L - Upload Media From Media Gallery Page,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2559,D2L - Gallery Moderation,,,pythonautomation2@gmail.com,Kaltura1!,student,Kaltura1!
-test_2903,D2L - Publish after upload,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2904,D2L - Publish from my media (single and multiple),,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2905,D2L - Publish From Entry Page,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2908,D2L - Discussions BSE From My Media,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2907,D2L - Discussions BSE From Media Gallery,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2906,D2L - Discussions Upload And Embed From BSE Page,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_4957,D2L - Gradebook,,,pythonautomation2@gmail.com,Kaltura1!,autod2l,Kaltura1!
-test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2485,Jive - Edit Entry Metadata,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2487,Jive - Edit Entry page - Close discussion,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2489,Jive - Entry page - Add captions And Search - remove caption,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2490,Jive - Edit entry page - Thumbnail tab,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2493,Jive - My Media -Delete through my media,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2494,Jive - Delete through edit entry page,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2499,Jive - View Collapsed Expanded Modes,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2500,Jive - Upload media from desktop,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2503,Jive - My Media - Search by Name / Description / Tags,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2505,Jive - My Media - Sort Media,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2506,Jive - My Media - Filter Media View Different Statuses,,,pythonautomation2@gmail.com,Kaltura1!,hrmanager,hrmanager
-test_2507,Jive - My Media - Filter by media Type,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2525,Jive - Gallery Moderation,,,pythonautomation2@gmail.com,Kaltura1!,hrmanager,hrmanager
-test_2512,Jive - Embed media in document,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2509,Jive - Embed media in discussion,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2511,Jive - Discussions Upload And Embed From BSE Page,,,pythonautomation2@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2940,Sakai - Preview all kinds of media from My Media and Gallery,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2910,Sakai - View Collapsed Expanded Modes,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2911,Sakai - Upload media from desktop,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2914,Sakai - My Media - Search by Name / Description / Tags,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2915,Sakai - My Media - Sort Media,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2916,Sakai - My Media - Filter Media View Different Statuses,,,pythonautomation2@gmail.com,Kaltura1!,autostudent,Kaltura1!
-test_2917,Sakai - My Media - Filter by media Type,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2919,Sakai - Remove Media From Media Gallery,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2920,Sakai - Upload Media From Media Gallery Page,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2921,Sakai - Gallery Moderation,,,pythonautomation2@gmail.com,Kaltura1!,autostudent,Kaltura1!
-test_2923,Sakai - Publish after upload,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2924,Sakai - Publish from my media (single and multiple),,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2925,Sakai - Publish From Entry Page,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2930,Sakai - Edit Entry Metadata,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2931,Sakai - Edit Entry page - Disable comments,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2932,Sakai - Edit Entry page - Close discussion,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2934,Sakai - Entry page - Add captions And Search - remove caption,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2935,Sakai - Edit entry page - Thumbnail tab,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2938,Sakai - My Media -Delete through my media,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_2939,Sakai  -Delete through entry page,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_3044,Sakai  - Announcment BSE From My Media,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
-test_3045,Sakai  - Announcment Upload And Embed From BSE Page Sakai,,,pythonautomation2@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2104,Moodle - Delete through my media,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2105,Moodle - Delete through edit entry page,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2106,Moodle - Publish after upload,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2114,Moodle -My Media - Search by Name / Description / Tags,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2107,Moodle - Publish from my media (single and multiple),,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2108,Moodle - Publish From Entry Page,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2111,Moodle - Upload media from desktop,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2127,Moodle - Embed media in site blogs from my media,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2110,Moodle - View Collapsed Expanded Modes,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2116,Moodle - My Media - Sort Media,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2118,Moodle - My Media - Filter by media Type,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2117,Moodle - My Media - Filter Media View Different Statuses,,,pythonautomation3@gmail.com,Kaltura1!,student,Kaltura1!
+test_2119,Moodle - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2120,Moodle - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2121,Moodle - Edit Entry page - Close discussion,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2123,Moodle - Entry page - Add captions And Search - remove caption,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2124,Moodle - Edit entry page - thumbnail tab,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2128,Moodle - Embed video resource from SR,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_954,Moodle - Publish from my media to shared repository,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2397,Moodle - Embed media in site blogs from media gallery,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2398,Moodle - upload and Embed media in kaltura video resource,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_628,Moodle - Assignment Submission Functionalities,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2125,Moodle - Trim video,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2126,Moodle - Create clip,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2122,Moodle - Change Cliping permissions,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_826,Moodle - Gradebook,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
+test_2284,Canvas - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2276,Canvas - Edit entry page - thumbnail tab,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2279,Canvas - My Media -Delete through my media,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2280,Canvas - Delete through edit entry page,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2281,Canvas - Publish after upload,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2282,Canvas - Publish from my media (single and multiple),,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2283,Canvas - Publish From Entry Page,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2285,Canvas - View Collapsed Expanded Modes,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2286,Canvas - Upload media from desktop,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2291,Canvas - My Media - Sort Media,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation3@gmail.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
+test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2295,Canvas - Embed on BSE from shared repository,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2297,Canvas - Embed on BSE from media gallery,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2309,Canvas - Embed on BSE from my media,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2310,Canvas - Embed on BSE from upload,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2303,Canvas - Edit Entry page - Close discussion,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2298,Canvas - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2305,Canvas - Entry page - Add captions And Search - remove caption,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2308,Canvas - Remove Media From Media Gallery,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2336,Canvas - Gallery Moderation,,,pythonautomation3@gmail.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
+test_2294,Canvas - Publish from my media to shared repository,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2296,Canvas - Publish to course galleries from  shared repository,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_4856,Canvas - Gradebook,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2533,D2L - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2535,D2L - Edit Entry page - Close discussion,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2537,D2L - Entry page - Add captions And Search - remove caption,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2538,D2L - Edit entry page - Thumbnail tab,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2541,D2L - Delete through my media,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2542,D2L - Delete through edit entry page,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2544,D2L - View Collapsed Expanded Modes,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2545,D2L - Upload media from desktop,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2549,D2L - My Media - Search by Name / Description / Tags,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2550,D2L - My Media - Sort Media,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2551,D2L - My Media - Filter Media View Different Statuses,,,pythonautomation3@gmail.com,Kaltura1!,student,Kaltura1!
+test_2552,D2L - My Media - Filter by media Type,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2556,D2L - Edit Media Gallery Metadata,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2557,D2L - Remove Media From Media Gallery,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2558,D2L - Upload Media From Media Gallery Page,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2559,D2L - Gallery Moderation,,,pythonautomation3@gmail.com,Kaltura1!,student,Kaltura1!
+test_2903,D2L - Publish after upload,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2904,D2L - Publish from my media (single and multiple),,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2905,D2L - Publish From Entry Page,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2908,D2L - Discussions BSE From My Media,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2907,D2L - Discussions BSE From Media Gallery,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2906,D2L - Discussions Upload And Embed From BSE Page,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_4957,D2L - Gradebook,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
+test_2498,Jive - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2485,Jive - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2486,Jive - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2487,Jive - Edit Entry page - Close discussion,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2489,Jive - Entry page - Add captions And Search - remove caption,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2490,Jive - Edit entry page - Thumbnail tab,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2493,Jive - My Media -Delete through my media,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2494,Jive - Delete through edit entry page,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2499,Jive - View Collapsed Expanded Modes,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2500,Jive - Upload media from desktop,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2503,Jive - My Media - Search by Name / Description / Tags,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2505,Jive - My Media - Sort Media,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2506,Jive - My Media - Filter Media View Different Statuses,,,pythonautomation3@gmail.com,Kaltura1!,hrmanager,hrmanager
+test_2507,Jive - My Media - Filter by media Type,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2525,Jive - Gallery Moderation,,,pythonautomation3@gmail.com,Kaltura1!,hrmanager,hrmanager
+test_2512,Jive - Embed media in document,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2509,Jive - Embed media in discussion,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2511,Jive - Discussions Upload And Embed From BSE Page,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2940,Sakai - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2910,Sakai - View Collapsed Expanded Modes,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2911,Sakai - Upload media from desktop,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2914,Sakai - My Media - Search by Name / Description / Tags,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2915,Sakai - My Media - Sort Media,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2916,Sakai - My Media - Filter Media View Different Statuses,,,pythonautomation3@gmail.com,Kaltura1!,autostudent,Kaltura1!
+test_2917,Sakai - My Media - Filter by media Type,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2919,Sakai - Remove Media From Media Gallery,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2920,Sakai - Upload Media From Media Gallery Page,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2921,Sakai - Gallery Moderation,,,pythonautomation3@gmail.com,Kaltura1!,autostudent,Kaltura1!
+test_2923,Sakai - Publish after upload,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2924,Sakai - Publish from my media (single and multiple),,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2925,Sakai - Publish From Entry Page,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2930,Sakai - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2931,Sakai - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2932,Sakai - Edit Entry page - Close discussion,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2934,Sakai - Entry page - Add captions And Search - remove caption,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2935,Sakai - Edit entry page - Thumbnail tab,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2938,Sakai - My Media -Delete through my media,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_2939,Sakai  -Delete through entry page,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_3044,Sakai  - Announcment BSE From My Media,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
+test_3045,Sakai  - Announcment Upload And Embed From BSE Page Sakai,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
 test_4872,Blackboard Ultra- Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4876,Blackboard Ultra- Sort Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4859,Blackboard Ultra- Edit metadata,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
@@ -142,61 +142,61 @@ test_681,Playlists - Add several entries to new and existing playlists,2362001-1
 test_4542,Playlists - Create Empty Playlist,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_742,Channel moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_713,Category moderation,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,pythonautomation1@mailinator.com,Kaltura1!
-test_706,Publish to channel multiple,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3277,Add collaborator co edit - details tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3278,Add collaborator co edit - options tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3279,Add collaborator co edit - thumbnail tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3280,Add collaborator co edit - cpation tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3281,Add collaborator co publish,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3282,Add collaborator co edit,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3273,Slide Deck Upload,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3274,Slide Deck Upload - delete slides,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_706,Publish to channel multiple,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3277,Add collaborator co edit - details tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3278,Add collaborator co edit - options tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3279,Add collaborator co edit - thumbnail tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3280,Add collaborator co edit - cpation tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3281,Add collaborator co publish,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3282,Add collaborator co edit,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3273,Slide Deck Upload,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3274,Slide Deck Upload - delete slides,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3275,Slide Deck Upload - add / remove chapters,2307831,qakmstest.dev.kaltura.com,automation.newui2@mailinator.com,Kaltura1!,apps.qa.automation2@mailinator.com,Kaltura1!
-test_3276,Slide Deck Upload - change slide location,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3283,Slide Deck Upload- A-sync upload,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_3284,Slide Deck Upload- search slides,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1027,Edit entry - thumbnail tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_653,Free trial,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1573,Home Page Playlist,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_643,Home Page Carousel,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_709,Category - Entries details,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_734,Channel - Entries details,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_731,Channel page Information,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3276,Slide Deck Upload - change slide location,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3283,Slide Deck Upload- A-sync upload,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_3284,Slide Deck Upload- search slides,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1027,Edit entry - thumbnail tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_653,Free trial,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1573,Home Page Playlist,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_643,Home Page Carousel,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_709,Category - Entries details,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_734,Channel - Entries details,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_731,Channel page Information,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_732,Channel page - Add New Media to channel,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_672,My media - Navigate to entry page,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_665,My media - Search in my media,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_728,My Channels - Search as member,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_727,My Channels - Search as manager,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_729,My Channels - Search as subscriber,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_726,My Channels - Filter view,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_724,My Channels - Sort Channels,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_668,My Media - Sort media,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_667,My Media - Filter by media Type,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_666,My Media - Filter by status,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_670,My Media - Expand media details,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_669,My Media - View: Collapsed,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_747,Channel page - Shared Repository,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_722,Categories - Browse channels,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_741,Channel page - Enable subscription in channel,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_711,Categories - Edit metadata,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_638,Global Search for Media,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_2510,Global Search for Category,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_637,Global Search for Channel,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_639,Global Search for Captions in Video,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1026,Publish from upload page,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_716,Categories Type,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_651,Navigate to entry page from upload page,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1395,Channel Type (Open / Restricted / Private),2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_735,Channel page - Search in channel,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_730,My Channels - Create Channel,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_738,Channel page - Edit metadata,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_714,Categories - Enable Disable comments in category,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_712,Categories - Members tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_721,Categories - Import Mermbers,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_719,Categories - Enable / Disable Inherit permissions,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_1025,Categories - Sort media on category page,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_641,Navigation,2504461-1,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_644,Upload media from desktop and verify player,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_672,My media - Navigate to entry page,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_665,My media - Search in my media,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_728,My Channels - Search as member,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_727,My Channels - Search as manager,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_729,My Channels - Search as subscriber,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_726,My Channels - Filter view,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_724,My Channels - Sort Channels,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_668,My Media - Sort media,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_667,My Media - Filter by media Type,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_666,My Media - Filter by status,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_670,My Media - Expand media details,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_669,My Media - View: Collapsed,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_747,Channel page - Shared Repository,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_722,Categories - Browse channels,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_741,Channel page - Enable subscription in channel,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_711,Categories - Edit metadata,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_638,Global Search for Media,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_2510,Global Search for Category,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_637,Global Search for Channel,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_639,Global Search for Captions in Video,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1026,Publish from upload page,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_716,Categories Type,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_651,Navigate to entry page from upload page,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1395,Channel Type (Open / Restricted / Private),2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_735,Channel page - Search in channel,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_730,My Channels - Create Channel,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_738,Channel page - Edit metadata,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_714,Categories - Enable Disable comments in category,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_712,Categories - Members tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_721,Categories - Import Mermbers,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_719,Categories - Enable / Disable Inherit permissions,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1025,Categories - Sort media on category page,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_641,Navigation,2534391-1,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_644,Upload media from desktop and verify player,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1556,Disclaimer - Before publish (agreeRequired = Yes),2501881-1,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1558,Disclaimer - Before publish (agreeRequired = No),2501881-1,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_876,Scheduling media - add media to channel via upload page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -215,7 +215,7 @@ test_767,Create Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinat
 test_768,Filter in Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_769,Embed Channel Playlist,2378481,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
 test_1592,Custom data,2378481-2,qakmstest.dev.kaltura.com,Free@mailinator.com,Kaltura1!,autoded,123456
-test_1557,Import Channel,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_1557,Import Channel,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_2565,Watch History - Add entry (Private) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2566,Watch History - Add entry (Published to channel- public) to watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2567,Watch History - delete entry (Published to channel) from watch list history,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -293,7 +293,7 @@ test_699,Entry page - Disable comments,2373952,qakmstest.dev.kaltura.com,inbar.w
 test_698,Entry page - Close discussion,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_695,Entry page - Add captions,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_697,Entry page - Add comment,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_739,Channel - Members tab,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_739,Channel - Members tab,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_703,Entry page - Replace video,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_692,Entry page - Side My Media,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_702,Entry page - Attachments,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -389,6 +389,8 @@ test_4913,Editor: Clip Quiz entry (with Slides and Captions),2501881,qakmstest.d
 test_4937,Editor: Reset timeline functionality,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4938,Editor: Redo timeline functionality,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4939,Editor: Undo timeline functionality,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5122,Editor - Create comments and sub comments with time stamp and then Trimming the Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4948,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4949,Quiz - Welcome screen behavior when autoplay true,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -406,7 +408,6 @@ test_5111,Quiz - Open-Q - Add feedback,2501881,qakmstest.dev.kaltura.com,automat
 test_5113,Quiz - Open-Q Add feedback as co-editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5116,Quiz - Analytics - Verify quiz answers- One user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5103,Hotspots - Duplicate Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -420,7 +421,7 @@ test_5118,Hotspots - Cancel hotspot creation and saving,2501881,qakmstest.dev.ka
 test_5119,Hotspots - Delete Hotspots using multiple type of actions,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5120,Hotspots - General layout UI (with existing Hotspots),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5121,Hotspots - General layout UI (without Hotspots),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5122,Editor - Create comments and sub comments with time stamp and then Trimming the Entry,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5124,Hotspots - Hotspots list - General UI,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -429,15 +430,15 @@ test_4999,Entitlements - Private Channel using Channels Page,2501881,qakmstest.d
 test_5009,Entitlements - Open Channel using Channels Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5010,Entitlements - Restricted Channel using Channels Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5011,Entitlements - Shared Repository Channel using Channels Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5012,Entitlements - Public Channel using Channels Page and Anonymous Users ON,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5013,Entitlements - Public Channel using Channels Page and Anonymous Users OFF,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5012,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users ON,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5013,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users OFF,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5022,Entitlements - Entry Private with Initial Owner changed to Co Publisher,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5024,Entitlements - Private Channel using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5025,Entitlements - Open Channel using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5026,Entitlements - Restricted Channel using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5027,Entitlements - Shared Repository Channel using Global Search,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5028,Entitlements - Public Channel using Global Page and Anonymous Users ON,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5036,Entitlements - Public Channel using Global Page and Anonymous Users OFF,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5028,Entitlements - Public Restricted Channel using Global Page and Anonymous Users ON,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5036,Entitlements - Public Restricted Channel using Global Page and Anonymous Users OFF,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5045,Entitlements - Entry Private with Initial Owner changed to Co Viewer,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5046,Entitlements - Entry Private with Co Viewer,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5049,Entitlements - Open Category,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -446,6 +447,8 @@ test_5052,Entitlements - Restricted Category,2501881,qakmstest.dev.kaltura.com,a
 test_5053,Entitlements - Open Category using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5054,Entitlements - Private Category using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5055,Entitlements - Restricted Category using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5125,Entitlements - Public Open Channel using Global Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5127,Entitlements - Public Open Channel using Channels Page,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_2,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_3,Setup test for eSearch,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
@@ -726,5 +729,5 @@ test_4738,eSearch - Filter by media type no search - add to channel SR tab,24438
 test_4739,eSearch - Filter by media type with search - add to channel SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4852,Recscheduling - Create new single event,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
-test_4970,Recscheduling - Edit Single event,2504461,qakmstest.dev.kaltura.com,pythonautomation2@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
+test_4852,Recscheduling - Create new single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
+test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!

@@ -14,9 +14,9 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Entitlements - Public Channel using Channels Page and Anonymous Users ON
+    # Test Name : Entitlements - Public Restricted Channel using Channels Page and Anonymous Users ON
     # Test description:
-    # 1. Create a Public Channel
+    # 1. Create a Public Restricted Channel
     # 2. Publish an entry inside the Public Channel
     # 3. Add a member and a contributor to the Public channel
     # 4. Verify that the Channel owner has full control over the Public channel
@@ -33,7 +33,7 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "Entitlements of a Public Channel with Owner, Anonymous, Members and Contributor users"
+    typeTest            = "Entitlements of a Public Restricted Channel with Owner, Anonymous, Members and Contributor users"
     instanceURL         = None
     
     normalUser          = "python_normal"
@@ -69,14 +69,14 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Entitlements - Public Channel Anonymous ON", self.testNum)
-            self.channelName           = clsTestService.addGuidToString("Public Channel Anonymous ON", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Entitlements - Public Restricted Channel Anonymous ON", self.testNum)
+            self.channelName           = clsTestService.addGuidToString("Public Restricted Channel Anonymous ON", self.testNum)
             self.instanceUrl = self.common.base.driver.current_url
             self.common.admin.allowAnonymous(True)
             self.common.base.navigate(self.instanceUrl)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to create " + self.channelName + " channel as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
-            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PUBLIC, True, True, True) == False:
+            if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PUBLIC_RESTRICTED, True, True, True) == False:
                 writeToLog("INFO","Step 1: FAILED to create " + self.channelName + " channel as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
                 return
               
@@ -187,8 +187,8 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.login.logOutOfKMS()
             self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
-            self.common.myMedia.deleteEntriesFromMyMedia(self.entryName)
             self.common.channel.deleteChannel(self.channelName)
+            self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass
