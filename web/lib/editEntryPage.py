@@ -754,12 +754,18 @@ class EditEntryPage(Base):
             writeToLog("INFO","Success presentation was upload and added to time line successfully")
         else:
             sleep(15)
+            # Wait until the ptt will upload   
+            if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 420) == False:
+                writeToLog("INFO","FAILED, upload deck processing isn't done after 7 minutes")
+                return False
+            sleep(3)
+            
             if self.click(self.EDIT_ENTRY_BACK_TO_TIMELINE, 30) == False:
                 writeToLog("INFO","FAILED to click on 'back to timeline' button")
                 return False
         
         if self.wait_element(self.EDIT_ENTRY_SLIDE_CUE_POINT, 240, True) == False:
-            writeToLog("INFO", "FAILED to display at least one Slide Cue Point on the timeline section")
+            writeToLog("INFO", "FAILED to display at least one Slide Cue Point on the timeline section after four minutes")
             return False
         sleep(5)
              
