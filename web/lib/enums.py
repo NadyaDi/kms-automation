@@ -751,3 +751,11 @@ class keaHotspotCreationInterrupt(Enum):
     CANCEL_BUTTON            = 'Canceling by using the Cancel Button'
     TAB_SWITCHING            = 'Tab Switching'
     EXIT_KEA                 = 'Exit Kea'
+    
+    
+class quizAnlyticsDeleteOption(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    REMOVE_LAST_ATTEMPT      = 'Remove last attempt'  
+    CLEAR_ALL_ATTEMPTS       = "Clear all attempts"   

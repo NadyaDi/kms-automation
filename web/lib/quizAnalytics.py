@@ -17,7 +17,7 @@ class QuizAnalytics(Base):
     #Analytics locators:
     #=============================================================================================================
     QUIZ_ANALYTICS_QUIZ_QUESTIONS_TAB                = ('xpath', '//a[@class="userreportsQuizQuestions-tab "]')
-    QUIZ_ANALYTICS_QUIZ_USERS_TAB                    = ('xpath', '//a[@class="userreportsQuizUsers-tab"]')        
+    QUIZ_ANALYTICS_QUIZ_USERS_TAB                    = ('xpath', '//a[@class="userreportsQuizUsers-tab "]')        
     QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_CLOSED        = ('xpath', '//a[@class="quizMainObject" and contains(text(),"QUESTION_TITLE")]')
     QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED        = ('xpath', '//a[@class="quizMainObject opened" and contains(text(),"QUESTION_TITLE")]')
     QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_COLLAPSED     = ('xpath', '//a[@class="quizMainObject collapsed" and contains(text(),"QUESTION_TITLE")]')
@@ -36,6 +36,16 @@ class QuizAnalytics(Base):
     QUIZ_ANALYTICS_USER_RIGHT_ANSWER                 = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row right"]/descendant::span[@class="quiz-user-answer-text" and contains(text(),"USER_ANSWER")]')
     QUIZ_ANALYTICS_USER_WRONG_ANSWER                 = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row wrong"]/descendant::span[@class="quiz-user-answer-text" and contains(text(),"USER_ANSWER")]')
     QUIZ_ANALYTICS_USER_VIEWED_ANSWER                = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row right"]/descendant::span[@class="quiz-viewed " and contains(text(),"Viewed")]')
+    QUIZ_ANALYTICS_REMOVE_ATTEMPTS_ICON              = ('xpath', '//a[@class="removeAttempts" and contains(@href,"user_entry_id=USER_ID")]') 
+    QUIZ_ANALYTICS_REMOVE_ATTEMPT_BTN                = ('xpath', '//a[@class="btn btn-danger" and text()="REMOVE_OPTION"]')
+#     QUIZ_ANALYTICS_USER_NAME_COLLAPSED               = ('xapth', '//a[@class="quizMainObject collapsed" and contains(text(),"USER_NAME")]/ancestor::tr[@id="quizUsersTable__row_python_automation"]')
+#     QUIZ_ANALYTICS_USER_NAME_OPENED                  = ('xapth', '//a[@class="quizMainObject opened" and contains(text(),"USER_NAME")]/ancestor::tr[@id="quizUsersTable__row_python_automation"]')
+#     QUIZ_ANALYTICS_USER_NAME_CLOSED                  = ('xapth', '//a[@class="quizMainObject" and contains(text(),"USER_NAME")]/ancestor::tr[@id="quizUsersTable__row_python_automation"]')
+    QUIZ_ANALYTICS_USER_ROW                          = ('xpath', '//tr[@id="quizUsersTable__row_USER_NAME"]')
+    QUIZ_ANALYTICS_USER_ID                           = ('xpath', '//tr[@id="quizUsersTable__row_USER_NAME"]/descendant::a[contains(@class,"quizMainObject")]')
+    QUIZ_ANALYTICS_SCORE_TYPE                        = ('xpath', '//td[@class="span2" and text()="Final Score (SCORE_TYPE)"]')
+#    QUIZ_ANALYTICS_USER_NAME                         = ('xpath', '//a[contains(@class,"quizMainObject")]')
+    QUIZ_ANALYTICS_ATTEMPT_WAS_REMOVED_MSG           = ('xpath', '//i[text()="Attempt was removed"]')
     #=============================================================================================================
     # @Author: Inbar Willman
     # Add feedback to open-Q
@@ -299,65 +309,6 @@ class QuizAnalytics(Base):
         return True 
     
     
-#     # @Author: Inbar Willman
-#     # Verify that correct open-Q answer is displayed in quiz analytics -> Quiz questions tab
-#     # Verify that correct number of wrong and correct answers is displayed
-#     # answersDict - Dictionary that contains List with all answers data
-#     def verifyQuizAnswersInAnalytics(self, answersDict, entryName='', forceNavigate=False): 
-#         # If we aren't in analytics page
-#         if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
-#             if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate) == False:
-#                 writeToLog("INFO","FAILED to navigate to quiz analytics - quiz question page")
-#                 return False 
-#             
-#         for i in range(0,len(answersDict)):
-#             tmpAnswersList     = answersDict[str(i+1)]
-#             tmpQuestionTitle   = tmpAnswersList[0]   
-#             tmpAnswer          = tmpAnswersList[1]  
-#             tmpUserID          = tmpAnswersList[2]   
-#             tmpRightAnswers    = tmpAnswersList[3]   
-#             tmpWrongAnswers    = tmpAnswersList[4] 
-#             tmpIsRightAnswer   = tmpAnswersList[5] 
-#             
-#             if self.clickOnOpenQuestionTitle(tmpQuestionTitle) == False:
-#                 writeToLog("INFO","FAILED to click on open-Q title")
-#                 return False  
-# 
-#             # Verify that correct answer is displayed
-#             # If answer is correct
-#             if tmpIsRightAnswer == True:
-#                 # If it's reflection question
-#                 if tmpAnswer == 'Viewed':
-#                     tmpReflectionAnswer = (self.QUIZ_ANALYTICS_USER_VIEWED_ANSWER[0], self.QUIZ_ANALYTICS_USER_VIEWED_ANSWER[1].replace('USER_ID', tmpUserID))
-#                     if self.wait_element(tmpReflectionAnswer) == False:
-#                         writeToLog("INFO","FAILED to displayed correct viewed text")
-#                         return False                        
-#                 else:    
-#                     tmpRightUserAnswer = (self.QUIZ_ANALYTICS_USER_RIGHT_ANSWER[0], self.QUIZ_ANALYTICS_USER_RIGHT_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
-#                     if self.wait_element(tmpRightUserAnswer) == False:
-#                         writeToLog("INFO","FAILED to displayed correct right user's answer")
-#                         return False
-#             else:
-#                 tmpWrongUserAnswer = (self.QUIZ_ANALYTICS_USER_WRONG_ANSWER[0], self.QUIZ_ANALYTICS_USER_WRONG_ANSWER[1].replace('USER_ID', tmpUserID).replace('USER_ANSWER', tmpAnswer))
-#                 if self.wait_element(tmpWrongUserAnswer) == False:
-#                     writeToLog("INFO","FAILED to displayed correct wrong user's answer")
-#                     return False                
-#             
-#             # Verify that correct number of right and wrong answers is displayed
-#             tmpAnswersNum = (self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[0], self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[1].replace('RIGHT_NUM', tmpRightAnswers).replace('WRONG_NUM', tmpWrongAnswers))       
-#             if self.wait_element(tmpAnswersNum) == False:
-#                 writeToLog("INFO","FAILED to displayed correct number of wrong and right answers")
-#                 return False 
-#             
-#             # Close question section
-#             tmpQuestionTitleOpened = (self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[0], self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[1].replace('QUESTION_TITLE', tmpQuestionTitle))
-#             if self.click(tmpQuestionTitleOpened) == False:
-#                 writeToLog("INFO","FAILED to close open-Q section")
-#                 return False   
-#                            
-#         writeToLog("INFO","SUCCESS: answered are verified")            
-#         return True       
-
     # @Author: Inbar Willman
     # Verify that correct open-Q answer is displayed in quiz analytics -> Quiz questions tab
     # Verify that correct number of wrong and correct answers is displayed
@@ -424,4 +375,103 @@ class QuizAnalytics(Base):
                 return False   
                            
         writeToLog("INFO","SUCCESS: answered are verified")            
-        return True           
+        return True      
+    
+    
+    # @Author: Inbar Willman
+    # Delete user attempt (last attempt/ all attempts) from quiz users tab in quiz analytics page
+    # userLoginName = user username when making login
+    # removeOption = enums.quizAnlyticsDeleteOption
+    # entryName - Is given if forcing navigating to quiz analytics page
+    def deleteUserAttempts(self, userLoginName, removeOption, entryName='',forceNavigate=False):
+        # If we aren't in analytics page - quiz users tab
+        if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
+            if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate, enums.quizAnalytics.QUIZ_USERS) == False:
+                writeToLog("INFO","FAILED to navigate to quiz analytics - quiz users page")
+                return False 
+            
+        userId = self.getUserId(userLoginName) 
+        if userId == False:
+            writeToLog("INFO","FAILED to get userId")         
+            return False 
+        
+        tmpDeleteIcon = (self.QUIZ_ANALYTICS_REMOVE_ATTEMPTS_ICON[0], self.QUIZ_ANALYTICS_REMOVE_ATTEMPTS_ICON[1].replace('USER_ID', userId))     
+         
+        if self.click(tmpDeleteIcon) == False:
+            writeToLog("INFO","FAILED to click on delete icon for " + userLoginName)
+            return False 
+  
+        tmpRemoveAttemptBtn = (self.QUIZ_ANALYTICS_REMOVE_ATTEMPT_BTN[0], self.QUIZ_ANALYTICS_REMOVE_ATTEMPT_BTN[1].replace('REMOVE_OPTION', removeOption.value))   
+        if self.click(tmpRemoveAttemptBtn) == False:
+            writeToLog("INFO","FAILED to click on delete " + removeOption.value + " option")
+            return False 
+        
+        writeToLog("INFO","Success: attempt/s was removed")
+        return True                    
+              
+    
+    # @Author: Inbar Willman
+    # This function return the user row in users table
+    # return false if can't find userId
+    def getUserId(self, userLoginName): 
+        userId = -1
+        tmpUserId = (self.QUIZ_ANALYTICS_USER_ID[0], self.QUIZ_ANALYTICS_USER_ID[1].replace('USER_NAME', userLoginName))    
+        tmpUserIdElement = self.wait_element(tmpUserId)
+        
+        if tmpUserIdElement == False:
+            writeToLog("INFO","FAILED to find user name element")
+            return False                        
+        
+        userId = tmpUserIdElement.get_attribute("id").split("_")[1]
+        if userId == -1:
+            writeToLog("INFO","FAILED to find user id")
+            return False  
+                     
+        return userId
+    
+    
+    # @Author: Inbar Willman
+    # Verify that correct number of attempts, score and score type are displayed
+    # userLoginName = user username when making login
+    # numberOfAttempts = string from the next format 'x/y' (1/2, 1/1)
+    # score = string from the next format 100%, 90%
+    # scoreType= enums.playerQuizScoreType
+    # entryName - Is given if forcing navigating to quiz analytics page
+    def verifyUserAttemptsAndScore(self, userLoginName, userName, numberOfAttempts, score, scoreType, entryName='', forceNavigate=False):
+        # If we aren't in analytics page - quiz users tab
+        if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
+            if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate, enums.quizAnalytics.QUIZ_USERS) == False:
+                writeToLog("INFO","FAILED to navigate to quiz analytics - quiz users page")
+                return False
+    
+        tmpUserRow = (self.QUIZ_ANALYTICS_USER_ROW[0], self.QUIZ_ANALYTICS_USER_ROW[1].replace('USER_NAME', userLoginName))
+        tmpUserRowElement = self.wait_element(tmpUserRow)
+        if tmpUserRowElement == False:
+                writeToLog("INFO","FAILED to find user row element")
+                return False
+                        
+        tmpUserRowText = tmpUserRowElement.text
+        tmpGivenUserRowText = userName + "\n" + numberOfAttempts + " " + score
+        
+        if tmpGivenUserRowText != tmpUserRowText:
+            writeToLog("INFO","FAILED to display correct user data")
+            return False 
+            
+        tmpScoreType = (self.QUIZ_ANALYTICS_SCORE_TYPE[0], self.QUIZ_ANALYTICS_SCORE_TYPE[1].replace('SCORE_TYPE', scoreType.value))
+        if self.wait_element(tmpScoreType) == False:
+            writeToLog("INFO","FAILED to display correct score type")
+            return False             
+    
+        writeToLog("INFO","Success: attempts and score are verified")
+        return True
+    
+    
+    # @Author: Inbar Willman
+    # Verify message after removing all attempts or last attempts in case we have just one attempt
+    def verifyRemovedAttemptMessage(self):
+        if self.wait_element(self.QUIZ_ANALYTICS_ATTEMPT_WAS_REMOVED_MSG) == False:
+            writeToLog("INFO","FAILED to displayed 'Attempt Was removed' message")
+            return False  
+        
+        writeToLog("INFO","Success:'Attempt Was removed' message is displayed")
+        return True 
