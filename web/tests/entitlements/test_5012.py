@@ -71,7 +71,7 @@ class Test:
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Public Restricted Channel Anonymous ON", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Public Restricted Channel Anonymous ON", self.testNum)
-            self.instanceUrl = self.common.base.driver.current_url
+            self.instanceUrl           = self.common.base.driver.current_url
             self.common.admin.allowAnonymous(True)
             self.common.base.navigate(self.instanceUrl)
             ##################### TEST STEPS - MAIN FLOW #####################

@@ -196,11 +196,12 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
+            self.common.admin.allowAnonymous(True)
+            self.common.base.navigate(self.instanceUrl)
             self.common.login.logOutOfKMS()
             self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
             self.common.channel.deleteChannel(self.channelName)
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.admin.allowAnonymous(True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass

@@ -2814,10 +2814,9 @@ class Kea(Base):
                 # Create the element for the current Question Cue Point
                 questionCuePoint = presentedUpdatedCuePointsInTimeline[x]
                 
-                action = ActionChains(self.driver)
                 # Hover over the current Question Cue Point
                 try:
-                    action.move_to_element(questionCuePoint).perform()
+                    ActionChains(self.driver).move_to_element(questionCuePoint).pause(2).perform()
                 except Exception:
                     writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point")
                     return False
