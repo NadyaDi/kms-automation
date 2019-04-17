@@ -52,7 +52,8 @@ class Test:
     
     editDescription = "Edit Description"
     editTags = "Edit Tags,"
-    EditResource = [enums.RecschedulingResourceOptions.QA_APP_ROOM, enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE] 
+    editResources = [enums.RecschedulingResourceOptions.QA_APP_ROOM, enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE]
+    editOrganizer = 'Automation_User_1' 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -93,35 +94,52 @@ class Test:
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
             self.event.resources = self.resource
             
+            self.event.fieldsToUpdate = ["title", "Organizer", "description", "tags", "resources"]
+            
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            self.event.title = "7897"
-            self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event)
-            
-            writeToLog("INFO","Step 1: Going to set rescheduling in admin")
-            if self.common.admin.enableRecscheduling(True) == False:
-                writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
-                return
-            
-            writeToLog("INFO","Step 2: Going navigate to home page")            
-            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                writeToLog("INFO","Step 2: FAILED navigate to home page")
-                return
+#             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
+#             if self.common.admin.enableRecscheduling(True) == False:
+#                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
+#                 return
+#             
+#             writeToLog("INFO","Step 2: Going navigate to home page")            
+#             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+#                 writeToLog("INFO","Step 2: FAILED navigate to home page")
+#                 return
             
             writeToLog("INFO","Step 3: Going to create new single event")
             if self.common.recscheduling.createRescheduleEvent(self.event) == False:
                 writeToLog("INFO","Step 3: FAILED to create new single event")
                 return
             
+            writeToLog("INFO","Step 4: Going navigate to event page")
+            if self.common.recscheduling.navigateToEventPage(self.event) == False:
+                writeToLog("INFO","Step 4: FAILED navigate to event")
+                return 
+            sleep(2)
+            
+            self.event.title = self.editEventTitle
+            self.event.description = self.editDescription
+            self.event.tags = self.editTags
+            self.event.eventOrganizer = self.editOrganizer
+            self.event.resources = self.editResources
+            
             sleep(3)     
-            writeToLog("INFO","Step 4: Going to verify event display in my schedule page")
-            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
-                writeToLog("INFO","Step 4: FAILED to create new single verify event display in my schedule page")
+            writeToLog("INFO","Step 5: Going to verify event display in my schedule page")
+            if self.common.recscheduling.editRescheduleEvent(self.event) == False:
+                writeToLog("INFO","Step 5: FAILED to update event metadata")
                 return
             
             sleep(3)
-            writeToLog("INFO","Step 5: Going to delete event")
+            writeToLog("INFO","Step 6: Going to verify event metadata")
+            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
+                writeToLog("INFO","Step 6: FAILED to verify event metadata")
+                return
+            
+            sleep(3)
+            writeToLog("INFO","Step 7: Going to delete event")
             if self.common.recscheduling.deteteSingleEvent(self.event) == False:
-                writeToLog("INFO","Step 5: FAILED to delete event from my schedule page")
+                writeToLog("INFO","Step 7: FAILED to delete event from my schedule page")
                 return
             ##################################################################
             self.status = "Pass"
@@ -135,7 +153,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
-            self.common.recscheduling.deteteSingleEvent(self.event)
+            if self.common.recscheduling.deteteSingleEvent(self.event) == False:
+                self.event.title = self.eventTitle
+                self.common.recscheduling.deteteSingleEvent(self.event)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
