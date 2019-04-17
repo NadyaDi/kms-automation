@@ -141,6 +141,7 @@ class Test:
                 return
 
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 9: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, before trim")
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
@@ -156,6 +157,7 @@ class Test:
                 return
 
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 11: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before trim")
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)
@@ -187,6 +189,7 @@ class Test:
                 return
  
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 15: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, after trim")
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
@@ -202,6 +205,7 @@ class Test:
                 return
 
             self.common.base.refresh()
+            sleep(8)
 
             writeToLog("INFO","Step 17: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, after trim")
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)

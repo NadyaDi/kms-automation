@@ -76,6 +76,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CHOOSE_FILE_TO_UPLOAD_BUTTON_IN_TIMELINE         = ('xpath', "//label[@class='btn btn-link fileinput-button']")
     EDIT_ENTRY_CUEPOINT_ON_TIMELINE                             = ('xpath', "//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle']")
     EDIT_ENTRY_UPLOAD_DECK_PROCES                               = ('id', 'inProgressMessage')
+    EDIT_ENTRY_SLIDE_CUE_POINT                                  = ('xpath', '//i[@class="icon-file"]')
     EDIT_ENTRY_DELETE_SLIDE_BUTTON_FORM_TIME_LINE               = ('xpath', "//a[@class='btn btn-link remove' and @role ='button']")
     EDIT_ENTRY_SLIDE_IN_TIMELINE                                = ('xpath',"//div[@class='k-cuepoint slide ui-draggable ui-draggable-handle' and @data-time='SLIDE_TIME']")
     EDIT_ENTRY_VIEW_IN_PLAYER_BUTTON                            = ('xpath',"//a[@id='refresh' and @class='btn btn-block']")
@@ -752,10 +753,15 @@ class EditEntryPage(Base):
              
             writeToLog("INFO","Success presentation was upload and added to time line successfully")
         else:
-            sleep(5)
+            sleep(15)
             if self.click(self.EDIT_ENTRY_BACK_TO_TIMELINE, 30) == False:
                 writeToLog("INFO","FAILED to click on 'back to timeline' button")
-                return False   
+                return False
+        
+        if self.wait_element(self.EDIT_ENTRY_SLIDE_CUE_POINT, 240, True) == False:
+            writeToLog("INFO", "FAILED to display at least one Slide Cue Point on the timeline section")
+            return False
+        sleep(5)
              
         return True
       
