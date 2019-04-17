@@ -408,6 +408,8 @@ test_5111,Quiz - Open-Q - Add feedback,2501881,qakmstest.dev.kaltura.com,automat
 test_5113,Quiz - Open-Q Add feedback as co-editor,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5116,Quiz - Analytics - Verify quiz answers- One user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5123,Quiz - Analytics - Allow specific user retake when retake option is disabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5128,Quiz - Analytics - Remove last attempt,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5103,Hotspots - Duplicate Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
