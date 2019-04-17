@@ -108,6 +108,7 @@ class Test:
                 return
  
             self.common.base.refresh()
+            sleep(8)
  
             writeToLog("INFO","Step 3: Going to navigate to edit entry page for " + self.quizEntryName + " entry")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.quizEntryName) == False:
@@ -115,7 +116,7 @@ class Test:
                 return
  
             writeToLog("INFO","Step 4: Going to upload a slide deck for the " + self.quizEntryName + " entry")
-            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList, False) == False:
+            if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList, False, False) == False:
                 writeToLog("INFO","Step 4: FAILED to upload a slide deck for the " + self.quizEntryName + " entry")
                 return
  
@@ -137,8 +138,14 @@ class Test:
 
             writeToLog("INFO","Step 8: Going to compare the presented Quiz Questions with the Expected Quiz Questions, before trim")
             if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeTrimming) == False:
-                writeToLog("INFO","Step 8: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before trim")
-                return
+                writeToLog("INFO","Step 8.1: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before trimming during the first try") 
+                # Try to catch all the Question Details for the second time due to errors with the entries with slides
+                self.common.base.refresh()
+                sleep(8)
+                self.quizQuestionsBeforeTrimming = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 5)
+                if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeTrimming) == False:
+                    writeToLog("INFO","Step 8.2: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before trimming during the second try") 
+                    return  
 
             self.common.base.refresh()
             sleep(8)

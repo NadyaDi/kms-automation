@@ -704,7 +704,7 @@ class EditEntryPage(Base):
     
     # Author: Michal Zomper
     # NOT finish
-    def uploadSlidesDeck(self, filePath, mySlidesList, waitToFinish=True):
+    def uploadSlidesDeck(self, filePath, mySlidesList, waitToFinish=True, verifySlides=True):
         sleep(2)
         if self.clickOnEditTab(enums.EditEntryPageTabName.TIMELINE) == False:
             writeToLog("INFO","FAILED to click on the time-line tab")
@@ -740,34 +740,31 @@ class EditEntryPage(Base):
                 return False
             sleep(2)
             
-            # verify that slide display in timeline
-            if self.verifySlidesInTimeLine(mySlidesList) == False:
-                writeToLog("INFO","FAILED, Not all slides display in time line")
+            if self.wait_element(self.EDIT_ENTRY_SLIDE_CUE_POINT, 240, True) == False:
+                writeToLog("INFO", "FAILED to display at least one Slide Cue Point on the timeline section after four minutes")
                 return False
-            sleep(1)
-            # Verify cuepoint were added on the player
-            if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
-            #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
-                writeToLog("INFO","FAILED, Not all cuepoints were verify")
-                return False
+            sleep(5)
+            
+            if verifySlides == True:            
+                # verify that slide display in timeline
+                if self.verifySlidesInTimeLine(mySlidesList) == False:
+                    writeToLog("INFO","FAILED, Not all slides display in time line")
+                    return False
+                sleep(1)
+                # Verify cuepoint were added on the player
+                if self.clsCommon.player.verifySlidesInPlayerSideBar(mySlidesList) == False:
+                #if len(self.get_elements(self.EDIT_ENTRY_CUEPOINT_ON_TIMELINE)) != totalSlideNum:
+                    writeToLog("INFO","FAILED, Not all cuepoints were verify")
+                    return False
              
             writeToLog("INFO","Success presentation was upload and added to time line successfully")
         else:
-            sleep(15)
+            sleep(7)
             # Wait until the ptt will upload   
-            if self.wait_while_not_visible(self.EDIT_ENTRY_UPLOAD_DECK_PROCES, 420) == False:
-                writeToLog("INFO","FAILED, upload deck processing isn't done after 7 minutes")
-                return False
-            sleep(3)
-            
             if self.click(self.EDIT_ENTRY_BACK_TO_TIMELINE, 30) == False:
                 writeToLog("INFO","FAILED to click on 'back to timeline' button")
                 return False
-        
-        if self.wait_element(self.EDIT_ENTRY_SLIDE_CUE_POINT, 240, True) == False:
-            writeToLog("INFO", "FAILED to display at least one Slide Cue Point on the timeline section after four minutes")
-            return False
-        sleep(5)
+            sleep(3)
              
         return True
       
