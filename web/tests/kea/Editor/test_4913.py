@@ -102,47 +102,48 @@ class Test:
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
-               
+                
             writeToLog("INFO","Step 2: Going to create a Quiz for " + self.entryName + " entry")
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=30) == False:
                 writeToLog("INFO","Step 2: FAILED to create a Quiz for " + self.entryName + " entry")
                 return  
-               
+                
             self.common.base.refresh()          
-                    
+                     
             writeToLog("INFO","Step 3: Going to navigate to edit entry page for " + self.quizEntryName + " entry")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.quizEntryName) == False:
                 writeToLog("INFO","Step 3: FAILED to navigate to edit entry page for " + self.quizEntryName + " entry")
                 return
-                 
+                  
             writeToLog("INFO","Step 4: Going to upload a slide deck for the " + self.quizEntryName + " entry")
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList, False) == False:
                 writeToLog("INFO","Step 4: FAILED to upload a slide deck for the " + self.quizEntryName + " entry")
                 return
-                  
+                   
             writeToLog("INFO","Step 5: Going to navigate to the Captions Edit Tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
                 writeToLog("INFO","Step 5: FAILED to navigate to the Captions Edit Tab")
                 return            
-                  
+                   
             writeToLog("INFO","Step 6: Going to add caption for the " + self.quizEntryName + " entry")
             if self.common.editEntryPage.addCaptions(self.filePathCaption, self.captionLanguage, self.captionLabel) == False:
                 writeToLog("INFO","Step 6: FAILED to add caption for the " + self.quizEntryName + " entry")
                 return
-               
+                
             writeToLog("INFO","Step 7: Going to collect all the available Questions from the " + self.quizEntryName + " entry, before clipping")  
             self.quizQuestionsBeforeClipping = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 5)
             if self.quizQuestionsBeforeClipping == False:
                 writeToLog("INFO","Step 7: FAILED to collect all the available Questions from the " + self.quizEntryName + " entry, before clipping") 
                 return
-   
+    
             writeToLog("INFO","Step 8: Going to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping")  
             if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeClipping) == False:
                 writeToLog("INFO","Step 8: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping") 
                 return  
-   
+    
             self.common.base.refresh()
-               
+            sleep(8)
+                
             writeToLog("INFO","Step 9: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, before clipping")  
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
             if  self.QRlist == False:
@@ -157,6 +158,7 @@ class Test:
                 return
                
             self.common.base.refresh()
+            sleep(8)
      
             writeToLog("INFO","Step 11: Going to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before clipping")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryName, quizEntry=True)
@@ -188,6 +190,7 @@ class Test:
                 return 
             
             self.common.base.refresh()
+            sleep(8)
              
             writeToLog("INFO","Step 16: Going to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")   
             self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryNameClipped, quizEntry=True)
@@ -203,7 +206,7 @@ class Test:
                 return
             
             self.common.base.refresh()
-            
+            sleep(8)
             writeToLog("INFO","Step 18: Going to collect all the presented captions from the " + self.quizEntryNameClipped + " entrie's player, after clipping")  
             self.captionList = self.common.player.collectCaptionsFromPlayer(self.quizEntryNameClipped, quizEntry=True)
             if self.captionList == False:
