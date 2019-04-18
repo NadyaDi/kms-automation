@@ -104,7 +104,7 @@ class clsPractiTest:
         #FOR DEBUG, DON'T REMOVE
         # PractiTest filter ID:
         # qaKmsFrontEnd = 442156
-        filterId =  442156#os.getenv('PRACTITEST_FILTER_ID',"")
+        filterId = os.getenv('PRACTITEST_FILTER_ID',"")
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
         
         prSessionInfo = {
