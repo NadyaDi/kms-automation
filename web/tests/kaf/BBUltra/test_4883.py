@@ -74,7 +74,7 @@ class Test:
                 return 
              
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Sakai - Add new media to media gallery' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'BLACKBOARD_ULTRA - Add new media to media gallery' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
