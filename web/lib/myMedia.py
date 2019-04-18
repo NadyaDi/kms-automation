@@ -1012,9 +1012,13 @@ class MyMedia(Base):
             if self.clickActionsAndPublishFromMyMedia() == False:
                 writeToLog("INFO","FAILED to click on Action button, Entry: '" + entryName + "' something went wrong")
                 return False
-            sleep(5)
+            sleep(7)
 
             if privacy == enums.ChannelPrivacyType.UNLISTED:
+                    if self.wait_visible(self.self.click(self.MY_MEDIA_PUBLISH_UNLISTED), 60, True) == False:
+                        writeToLog("INFO", "FAILED to display the Media Publish Unlisted button")
+                        return False
+                    
                     if self.click(self.MY_MEDIA_PUBLISH_UNLISTED) == False:
                         writeToLog("INFO","FAILED to click on Unlisted button")
                         return False
@@ -1036,13 +1040,17 @@ class MyMedia(Base):
                         writeToLog("INFO","FAILED to Publish Entry: '" + entryName + "' something went wrong")
                         return False
 
-            elif privacy == enums.ChannelPrivacyType.PRIVATE:
+            elif privacy == enums.ChannelPrivacyType.PRIVATE:                
+                    if self.wait_visible(self.self.click(self.MY_MEDIA_PUBLISH_PRIVATE), 60, True) == False:
+                        writeToLog("INFO", "FAILED to display the Media Publish Private button")
+                        return False
+                    
                     if self.click(self.MY_MEDIA_PUBLISH_PRIVATE) == False:
-                        writeToLog("INFO","FAILED to click on Unlisted button")
+                        writeToLog("INFO","FAILED to click on Private button")
                         return False
 
                     if self.click(self.MY_MEDIA_PUBLISH_SAVE_BUTTON) == False:
-                        writeToLog("INFO","FAILED to click on Unlisted button")
+                        writeToLog("INFO","FAILED to click on Private button")
                         return False
 
                     if alreadyPublished == True:

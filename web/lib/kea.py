@@ -313,6 +313,10 @@ class Kea(Base):
     # @Author: Inbar Willman  
     def keaQuizClickButton(self, buttonName): 
         tmpButton = (self.KEA_QUIZ_BUTTON[0], self.KEA_QUIZ_BUTTON[1].replace('BUTTON_NAME', buttonName.value))
+        if self.wait_visible(tmpButton, 60, True) == False:
+            writeToLog("INFO", "FAILED to display " + buttonName.value + " button")
+            return False
+        
         if self.click(tmpButton) == False:
             writeToLog("INFO","FAILED to click on " + buttonName.value + " button")
             return False
