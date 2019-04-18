@@ -293,30 +293,32 @@ test_5119,Hotspots - Delete Hotspots using multiple type of actions,2501881,medi
 test_5120,Hotspots - General layout UI (with existing Hotspots),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5121,Hotspots - General layout UI (without Hotspots),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5124,Hotspots - Hotspots list - General UI,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_4999,Entitlements - Private Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5009,Entitlements - Open Channel using Channels Page - Open Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5010,Entitlements - Restricted Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5011,Entitlements - Shared Repository Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5012,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users ON,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5013,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users OFF,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5022,Entitlements - Entry Private with Initial Owner changed to Co Publisher,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5024,Entitlements - Private Channel using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5025,Entitlements - Open Channel using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5026,Entitlements - Restricted Channel using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5027,Entitlements - Shared Repository Channel using Global Search,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5028,Entitlements - Public Restricted Channel using Global Page and Anonymous Users ON,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5036,Entitlements - Public Restricted Channel using Global Page and Anonymous Users OFF,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5045,Entitlements - Entry Private with Initial Owner changed to Co Viewer,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5046,Entitlements - Entry Private with Co Viewer,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5049,Entitlements - Open Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5051,Entitlements - Private Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5052,Entitlements - Restricted Category,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5053,Entitlements - Open Category using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5054,Entitlements - Private Category using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5055,Entitlements - Restricted Category using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5125,Entitlements - Public Open Channel using Global Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5127,Entitlements - Public Open Channel using Channels Page,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_4999,Entitlements - Private Channel using Channels Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5009,Entitlements - Open Channel using Channels Page - Open Channel using Channels Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5010,Entitlements - Restricted Channel using Channels Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5011,Entitlements - Shared Repository Channel using Channels Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5012,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users ON,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5013,Entitlements - Public Restricted Channel using Channels Page and Anonymous Users OFF,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5022,Entitlements - Entry Private with Initial Owner changed to Co Publisher,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5024,Entitlements - Private Channel using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5025,Entitlements - Open Channel using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5026,Entitlements - Restricted Channel using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5027,Entitlements - Shared Repository Channel using Global Search,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5028,Entitlements - Public Restricted Channel using Global Page and Anonymous Users ON,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5036,Entitlements - Public Restricted Channel using Global Page and Anonymous Users OFF,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5045,Entitlements - Entry Private with Initial Owner changed to Co Viewer,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5046,Entitlements - Entry Private with Co Viewer,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5049,Entitlements - Open Category,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5051,Entitlements - Private Category,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5052,Entitlements - Restricted Category,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5053,Entitlements - Open Category using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5054,Entitlements - Private Category using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5055,Entitlements - Restricted Category using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5125,Entitlements - Public Open Channel using Global Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5127,Entitlements - Public Open Channel using Channels Page,2501881-3,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1027,Edit entry - thumbnail tab,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_653,Free trial,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_1573,Home Page Playlist,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
