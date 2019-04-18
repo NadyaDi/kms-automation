@@ -68,8 +68,11 @@ class Login(Base):
     def logOutOfKMS(self, allowAnonymous=True):
         # Click on the user menu button
         if self.click(self.USER_MENU_TOGGLE_BTN) == False:
-            writeToLog("INFO","FAILED to click on user menu button")
-            return False
+            writeToLog("INFO","FAILED to click on user menu during the first try")
+            sleep(15)
+            if self.click(self.USER_MENU_TOGGLE_BTN) == False:
+                writeToLog("INFO","FAILED to click on user menu during the second try")
+                return False
         
         sleep(2)
         # Click on logout button

@@ -1637,7 +1637,7 @@ class Channel(Base):
             writeToLog("INFO","Failed to insert username")
             return False
         
-        sleep(6)
+        sleep(12)
         tmpConfirmationLocator = (self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[0], self.CHANNEL_ADD_MEMBER_GROUP_CONFIRMATION[1].replace('USERNAME', username))
         if self.click(tmpConfirmationLocator) == False:
             writeToLog("INFO","FAILED to click on group search confirmation")

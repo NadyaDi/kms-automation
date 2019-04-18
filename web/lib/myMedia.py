@@ -1015,7 +1015,7 @@ class MyMedia(Base):
             sleep(7)
 
             if privacy == enums.ChannelPrivacyType.UNLISTED:
-                    if self.wait_visible(self.self.click(self.MY_MEDIA_PUBLISH_UNLISTED), 60, True) == False:
+                    if self.wait_visible(self.MY_MEDIA_PUBLISH_UNLISTED, 60, True) == False:
                         writeToLog("INFO", "FAILED to display the Media Publish Unlisted button")
                         return False
                     
@@ -1041,7 +1041,7 @@ class MyMedia(Base):
                         return False
 
             elif privacy == enums.ChannelPrivacyType.PRIVATE:                
-                    if self.wait_visible(self.self.click(self.MY_MEDIA_PUBLISH_PRIVATE), 60, True) == False:
+                    if self.wait_visible(self.MY_MEDIA_PUBLISH_PRIVATE, 60, True) == False:
                         writeToLog("INFO", "FAILED to display the Media Publish Private button")
                         return False
                     
