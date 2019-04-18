@@ -293,7 +293,8 @@ class D2L(Base):
             if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Discussions' button")
                 return False  
-            
+        
+        sleep(10)    
         # Focus on the frame title
         frameMenuBtnEl = self.wait_element((self.D2L_EMBED_DISCUSSION_FRAME_TITLE[0], self.D2L_EMBED_DISCUSSION_FRAME_TITLE[1].replace('GUID', localSettings.LOCAL_SETTINGS_GUID)))
         if frameMenuBtnEl == False:
