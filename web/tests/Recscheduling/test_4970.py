@@ -97,6 +97,7 @@ class Test:
             self.event.fieldsToUpdate = ["title", "Organizer", "description", "tags", "resources"]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            
 #             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
 #             if self.common.admin.enableRecscheduling(True) == False:
 #                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
@@ -121,7 +122,7 @@ class Test:
             self.event.title = self.editEventTitle
             self.event.description = self.editDescription
             self.event.tags = self.editTags
-            self.event.eventOrganizer = self.editOrganizer
+            self.event.organizer = self.editOrganizer
             self.event.resources = self.editResources
             
             sleep(3)     
