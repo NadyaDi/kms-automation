@@ -405,7 +405,7 @@ class Kea(Base):
             writeToLog("INFO","FAILED, unknown doneoption: '" + doneOption + "'")
             return False 
          
-        sleep (3)   
+        sleep (8)   
         return True
     
     # @Author: Inbar Willman
