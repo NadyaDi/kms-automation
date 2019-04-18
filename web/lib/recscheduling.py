@@ -139,10 +139,13 @@ class  Recscheduling(Base):
     SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
     SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE                              = ('xpath', "//th[contains(text(),'DATE')]") # the DATE need to be in format ("%B %d, %Y - %A") -us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday, 
     SCHEDULE_DELETE_EVENT_BUTTON                                            = ('xpath', "//i[@class='icon-trash icon-white']")
-    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                          = ('xpath', "//h1[@class='inline' and contains(text(),'Edit Event')]")
+    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                          = ('css', "div#titleBar")
     SCHEDULE_EDIT_EVENT_PAGE_START_DATE                                     = ('css', "input#rsStartTime-rsStartTime_date")
     SCHEDULE_EDIT_EVENT_PAGE_END_DATE                                       = ('css', "input#rsEndTime-rsEndTime_date")
     SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES                             = ('css', "div.sol-current-selection")
+    SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES                               = ('css', "span.sol-quick-delete")
+    SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS                                   = ('css', "li.select2-search-choice")
+    SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS                                    = ('css', "a.select2-search-choice-close")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -281,18 +284,31 @@ class  Recscheduling(Base):
     # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
     #        for example 'tags1,tags2,'
     def fillFileScheduleTags(self, tags):
+        # remove any tags if their are any
+        if (self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS)) != False:
+            # we are reducing 1 from the len since it's always add an empty tag
+            if (len(self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS)) -1) > 0:
+                tmpTags = self.get_elements(self.SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS)
+                tagsCount = len(tmpTags)
+                for tag in tmpTags:
+                    if tagsCount > 1:
+                        if tag.size['width'] != 0.0:
+                            if self.clickElement(tag) == False:
+                                writeToLog("INFO","FAILED to remove tag")
+                                return False
+                    tagsCount = tagsCount-1
+                
         try:
             tagsElement = self.get_element(self.SCHEDULE_EVENT_TAGS)
-                
+                 
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get Tags filed element")
             return False
-                
+                 
         if self.clickElement(tagsElement) == False:
             writeToLog("INFO","FAILED to click on Tags filed")
             return False            
         sleep(1)
-
         if self.send_keys(self.SCHEDULE_EVENT_INPUT_TAGS, tags) == True:
             sleep(2)
             return True
@@ -779,7 +795,30 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to update event metadata")
             return False
             
+        sleep(3)
+        if eventInstance.exitEvent==False:
+            if self.click(self.SCHEDULE_SAVE_EVENT) == False:
+                writeToLog("INFO","FAILED click on save event button")
+                return False
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if self.wait_element(self.SCHEDULE_CREATE_EVENT_SUCCESS_MESSAGE) == False:
+                writeToLog("INFO","FAILED find event created success message")
+                return False
+            
+            sleep(5)
+        else:
+            if self.click(self.SCHEDULE_SAVE_AND_EXIT_EVENT) == False:
+                writeToLog("INFO","FAILED click on save and exit event button")
+                return False
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if self.wait_element(self.SCHEDULE_PAGE_TITLE, 15) == False:
+                writeToLog("INFO","FAILED to verify 'My Schedule page' display after clicking on save and exit event button")
+                return False
         
+        writeToLog("INFO","Success, Edit event was created successfully") 
+        return True 
         
     # @Author: Michal Zomper 
     # The function edit reschedule event without recurrence
@@ -862,6 +901,14 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper
     def updateEventResources(self, resources):
+        # remove any resources if their are any
+        if self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text != '':
+            tmpResoures = self.get_elements(self.SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES)
+            for resource in tmpResoures:
+                if self.clickElement(resource) == False:
+                    writeToLog("INFO","FAILED to remove resource")
+                    return False
+                    
         if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
             writeToLog("INFO","FAILED to click and open resource option")
             return False
@@ -877,9 +924,10 @@ class  Recscheduling(Base):
             if self.click(tmpResource) == False:
                 writeToLog("INFO","FAILED to select event resource")
                 return False
-            
-        # click on the create event title to close the resource list
-        self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
+        
+        sleep(2)   
+        # click on event title to close the resource list
+        self.click(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE)
         return True
     
     
@@ -894,4 +942,7 @@ class  Recscheduling(Base):
         if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, description) == False:
             writeToLog("INFO","FAILED to type in Description")
             return False
+        
+        #click to exit description textbox
+        self.click(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE, timeout=5)
         return True
