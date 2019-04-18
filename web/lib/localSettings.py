@@ -88,7 +88,7 @@ else:
     LOCAL_SETTINGS_TEMP_DOWNLOADS               = None # Will updated in clsTestService, basicSetUp method
 
 LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD = None # Will updated in clsTestService, basicSetUp method
-LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH      = '/home/local/KALTURA/oleg.sigalov/build/workspace/qaKmsFrontEnd/web/media'
+LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH      = '/home/kaltura.gen/build/workspace/qaKmsFrontEnd/web/media'
 if isAutomationEnv() == True:
     LOCAL_SETTINGS_MEDIA_PATH               = 'C:\\selenium\\kms-automation\\web\\media'
 
