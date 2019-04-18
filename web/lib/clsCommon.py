@@ -279,6 +279,9 @@ class Common():
     def handleTestFail(self, status, leavePageExpected=False):
         self.switch_to_default_iframe_generic()
         if status == "Fail":
+            # Get the page source
+            self.base.craetePageSourceLogFile()
+            # Take last screenshot
             self.base.takeScreeshotGeneric('LAST_SCRENNSHOT')
             if leavePageExpected==True:
                 # Try to navigate to any place to show leave page if it was not visible
