@@ -103,8 +103,8 @@ class clsPractiTest:
     def getPractiTestAutomationSession(self):
         #FOR DEBUG, DON'T REMOVE
         # PractiTest filter ID:
-        # qaKmsFrontEnd = 326139
-        filterId = os.getenv('PRACTITEST_FILTER_ID',"")
+        # qaKmsFrontEnd = 442156
+        filterId =  442156#os.getenv('PRACTITEST_FILTER_ID',"")
         practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
         
         prSessionInfo = {
@@ -412,11 +412,11 @@ class clsPractiTest:
     def createAutomationTestSetFile(self, hostname, environment, platform, testIDsDict):
         platformList = ["pc_firefox","pc_chrome","pc_internet explorer","android_chrome"]
         testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
+        file = open(testSetFile, "w")
         automationTestSetFileHeader = "hostname,environment,case"
         for plat in platformList:
             automationTestSetFileHeader = automationTestSetFileHeader + "," + plat
         automationTestSetFileHeader = automationTestSetFileHeader + ",instanceID\n"
-        file = open(testSetFile, "w")
         file.write (automationTestSetFileHeader)
         for testID in testIDsDict:
             sTestID = str(testID)
