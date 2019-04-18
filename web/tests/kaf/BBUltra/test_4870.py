@@ -164,7 +164,7 @@ class Test:
                 return   
              
             writeToLog("INFO","Step 15: Going navigate to audio entry: '" + self.audioEntryName + "' from gallery page")    
-            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName) == False:
+            if self.common.kafGeneric.navigateToEntryPageFromGalleryPage(self.audioEntryName, self.galleryName, forceNavigate=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15: FAILED navigate to entry: " + self.audioEntryName + " from gallery page")
                 return 

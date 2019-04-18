@@ -314,7 +314,10 @@ class KafGeneric(Base):
     # Author: Michal Zomper
     #UploadEntry parameter need to have : UploadEntry(self.filePath, self.entryName1, self.description, self.tags, timeout=60, retries=3)
     def addNewContentToGalleryWithoutNavigate(self, galleryName, uploadEntry, isGalleryModerate=''):
-        if self.click(self.KAF_GALLERY_ADD_MEDIA_BUTTON) == False:
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe() 
+                      
+        if self.click(self.KAF_GALLERY_ADD_MEDIA_BUTTON, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click add to Gallery button")
             return False     
         sleep(4)

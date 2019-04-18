@@ -144,6 +144,8 @@ class MyMedia(Base):
             # Check which search bar do we have: old or new (elastic)
             if self.clsCommon.isElasticSearchOnPage():
                 if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST != enums.Application.MEDIA_SPACE:
+                    if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+                        self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
                     return self.get_element(self.MY_MEDIA_ELASTIC_SEARCH_BAR)
                 else:
                     return self.get_elements(self.MY_MEDIA_ELASTIC_SEARCH_BAR)[1]
