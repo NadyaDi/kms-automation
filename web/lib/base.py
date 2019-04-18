@@ -941,3 +941,23 @@ class Base:
 
     def refresh(self):
         self.driver.refresh()  
+        
+        
+    def craetePageSourceLogFile(self):
+        runningTestNum = os.getenv('RUNNING_TEST_ID',"")
+        if (runningTestNum != ""):
+            pngPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',runningTestNum, 'page_source.log'))
+        try:
+            pageSourceStr = self.driver.find_element_by_xpath("/html/body").get_attribute('innerHTML')
+            file = open(pngPath, 'w')
+            file.write(pageSourceStr)
+            file.close()  
+            return True
+        except:
+            file.close() 
+            writeToLog("INFO","FAILED to get page source")
+            return False
+        
+                
+        
+        
