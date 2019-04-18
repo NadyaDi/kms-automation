@@ -136,6 +136,7 @@ test_4869,Blackboard Ultra- Ultra Publish from entry page,,,oleg.sigalov@kaltura
 test_4875,Blackboard Ultra- Search by Name / Description / Tags,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4878,Blackboard Ultra- Filter media view different media types,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4883,Blackboard Ultra- Upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4884,Blackboard Ultra- Remove media from media gallery,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_679,Playlists- Add Video Audio Image Remove Entry from one of playlist during to add same Entry to new,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_678,Playlists - Add entry from Entry Page to several playlists together,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_681,Playlists - Add several entries to new and existing playlists,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
@@ -409,7 +410,9 @@ test_5113,Quiz - Open-Q Add feedback as co-editor,2501881,qakmstest.dev.kaltura.
 test_5116,Quiz - Analytics - Verify quiz answers- One user,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5123,Quiz - Analytics - Allow specific user retake when retake option is disabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5128,Quiz - Analytics - Remove last attempt,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5128,Quiz - Analytics - Remove last attempt - Latest score,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5129,Quiz - Analytics - Remove last attempt - First score,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5130,Quiz - Analytics - Remove last attempt - Lowest score,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5103,Hotspots - Duplicate Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -730,5 +733,5 @@ test_4738,eSearch - Filter by media type no search - add to channel SR tab,24438
 test_4739,eSearch - Filter by media type with search - add to channel SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4740,eSearch - Filter by media type no search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4852,Recscheduling - Create new single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
-test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
+test_4852,Recscheduling - Create new single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
