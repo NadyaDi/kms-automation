@@ -38,14 +38,11 @@ class QuizAnalytics(Base):
     QUIZ_ANALYTICS_USER_VIEWED_ANSWER                = ('xpath', '//span[@class="quiz-answerer-user-id" and contains(text(),"USER_ID")]/ancestor::div[@class="drill-down-data-row right"]/descendant::span[@class="quiz-viewed " and contains(text(),"Viewed")]')
     QUIZ_ANALYTICS_REMOVE_ATTEMPTS_ICON              = ('xpath', '//a[@class="removeAttempts" and contains(@href,"user_entry_id=USER_ID")]') 
     QUIZ_ANALYTICS_REMOVE_ATTEMPT_BTN                = ('xpath', '//a[@class="btn btn-danger" and text()="REMOVE_OPTION"]')
-#     QUIZ_ANALYTICS_USER_NAME_COLLAPSED               = ('xapth', '//a[@class="quizMainObject collapsed" and contains(text(),"USER_NAME")]/ancestor::tr[@id="quizUsersTable__row_python_automation"]')
-#     QUIZ_ANALYTICS_USER_NAME_OPENED                  = ('xapth', '//a[@class="quizMainObject opened" and contains(text(),"USER_NAME")]/ancestor::tr[@id="quizUsersTable__row_python_automation"]')
-#     QUIZ_ANALYTICS_USER_NAME_CLOSED                  = ('xapth', '//a[@class="quizMainObject" and contains(text(),"USER_NAME")]/ancestor::tr[@id="quizUsersTable__row_python_automation"]')
     QUIZ_ANALYTICS_USER_ROW                          = ('xpath', '//tr[@id="quizUsersTable__row_USER_NAME"]')
     QUIZ_ANALYTICS_USER_ID                           = ('xpath', '//tr[@id="quizUsersTable__row_USER_NAME"]/descendant::a[contains(@class,"quizMainObject")]')
     QUIZ_ANALYTICS_SCORE_TYPE                        = ('xpath', '//td[@class="span2" and text()="Final Score (SCORE_TYPE)"]')
-#    QUIZ_ANALYTICS_USER_NAME                         = ('xpath', '//a[contains(@class,"quizMainObject")]')
     QUIZ_ANALYTICS_ATTEMPT_WAS_REMOVED_MSG           = ('xpath', '//i[text()="Attempt was removed"]')
+    QUIZ_ANALYTICS_FEEDBACk_DATE                     = ('xpath', '//span[@class="feedback-title__date" and text()="FEEDBACK_DATE"]')
     #=============================================================================================================
     # @Author: Inbar Willman
     # Add feedback to open-Q
@@ -96,10 +93,10 @@ class QuizAnalytics(Base):
                 return False
         
             # Verify that correct feedback date is display for the feedback
-#             tmpOwner = (self.ENTRY_PAGE_ANALYTICS_FEEDBACK_DATE[0], self.ENTRY_PAGE_ANALYTICS_FEEDBACK_DATE[1].replace('FEEDBACK_DATE', tmpFeedbackDate))  
-#             if self.wait_element(tmpOwner) == False:
-#                 writeToLog("INFO","FAILED to display feedback date correctly")
-#                 return False  
+            tmpFeedback = (self.QUIZ_ANALYTICS_FEEDBACk_DATE[0], self.QUIZ_ANALYTICS_FEEDBACk_DATE[1].replace('FEEDBACK_DATE', tmpFeedbackDate))  
+            if self.wait_element(tmpOwner) == False:
+                writeToLog("INFO","FAILED to display feedback date correctly")
+                return False  
     
             # Going to close open-Q section
             tmpQuestionTitleOpened = (self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[0], self.QUIZ_ANALYTICS_QUIZ_QUESTION_TITLE_OPENED[1].replace('QUESTION_TITLE', tmpQuestionTitle))
@@ -406,6 +403,8 @@ class QuizAnalytics(Base):
             writeToLog("INFO","FAILED to click on delete " + removeOption.value + " option")
             return False 
         
+        self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(5)
         writeToLog("INFO","Success: attempt/s was removed")
         return True                    
               
