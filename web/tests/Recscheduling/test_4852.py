@@ -69,10 +69,10 @@ class Test:
             self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
 
             self.startEventTime = time.time() + (60*60)
-            self.startEventTime = time.strftime("%I:%M%p",time.localtime(self.startEventTime))
+            self.startEventTime = time.strftime("%I:%M %p",time.localtime(self.startEventTime))
              
             self.endTime = time.time() + 2*(60*60)
-            self.endTime = time.strftime("%I:%M%p",time.localtime(self.endTime))
+            self.endTime = time.strftime("%I:%M %p",time.localtime(self.endTime))
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
             self.event.resources = self.resource
             
