@@ -62,8 +62,8 @@ class SechdeuleEvent():
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
-        self.startTime = startTime
-        self.endTime = endTime
+        self.startTime = self.remove0FromTime(startTime)
+        self.endTime = self.remove0FromTime(endTime)
         self.description = description
         self.tags = tags
         self.convertDatetimeToVerifyDate()
@@ -83,6 +83,13 @@ class SechdeuleEvent():
         tmpStrDate = tmpStrDate + " - " + dateTimeObj.strftime("%A")
         self.verifyDateFormat = tmpStrDate
         
+    # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3
+    def remove0FromTime(self, eventTime):
+        tmpTime = eventTime.split(":")
+        tmpHour = int(tmpTime[0])
+        tmpHour = str(tmpHour)
+        return tmpHour + ":" + tmpTime[1]
+    
         
 class  Recscheduling(Base):
     driver = None
@@ -285,17 +292,21 @@ class  Recscheduling(Base):
     #        for example 'tags1,tags2,'
     def fillFileScheduleTags(self, tags):
         # remove any tags if their are any
-        if (self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS)) != False:
+        if (self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS, timeout=5)) != False:
             # we are reducing 1 from the len since it's always add an empty tag
             if (len(self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS)) -1) > 0:
                 tmpTags = self.get_elements(self.SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS)
                 tagsCount = len(tmpTags)
                 for tag in tmpTags:
                     if tagsCount > 1:
-                        if tag.size['width'] != 0.0:
-                            if self.clickElement(tag) == False:
-                                writeToLog("INFO","FAILED to remove tag")
-                                return False
+                        try:
+                            if tag.size['width'] != 0.0:
+                                if self.clickElement(tag) == False:
+                                    writeToLog("INFO","FAILED to remove tag")
+                                    return False
+                        except:
+                            # element: tag.size['width'] == 0.0- doesn't really exist 
+                            pass
                     tagsCount = tagsCount-1
                 
         try:
@@ -585,8 +596,8 @@ class  Recscheduling(Base):
         except:
             writeToLog("INFO","FAILED to find event element text")
             return False
-        
-        if eventInstance.startTime.lower()+"-"+eventInstance.endTime.lower() in eventMetadata == False:
+       
+        if eventInstance.startTime.replace(" ", "").lower() + "-" + eventInstance.endTime.replace(" ", "").lower() in eventMetadata == False:
             writeToLog("INFO","FAILED to find event time")
             return False
         
@@ -740,15 +751,16 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to verify event organizer")
             return False
         
-        if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_START_DATE).get_attribute("value") == eventInstance.startDate) == False:
+        
+        if (self.changeDateOrder(self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_START_DATE).get_attribute("value")) == eventInstance.startDate) == False:
             writeToLog("INFO","FAILED to verify event start date")
             return False
         
-        if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_END_DATE).get_attribute("value") == eventInstance.endDate) == False:
+        if (self.changeDateOrder(self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_END_DATE).get_attribute("value")) == eventInstance.endDate) == False:
             writeToLog("INFO","FAILED to verify event end date")
             return False
         
-        if (self.wait_element(self.SCHEDULE_EVENT_START_TIME).get_attribute("value") == eventInstance.statTime) == False:
+        if (self.wait_element(self.SCHEDULE_EVENT_START_TIME).get_attribute("value") == eventInstance.startTime) == False:
             writeToLog("INFO","FAILED to verify event start time")
             return False
         
@@ -757,36 +769,29 @@ class  Recscheduling(Base):
             return False
         
         if type(eventInstance.resources) is list:
-            tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).get_attribute("value")
+            tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text
             for resource in eventInstance.resources:
-                if (resource in tmpResources) == False:
-                    writeToLog("INFO","FAILED to verify event resource '" + resource + "'")
+                if (resource.value in tmpResources) == False:
+                    writeToLog("INFO","FAILED to verify event resource '" + resource.value + "'")
                     return False
         else:
-            if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).get_attribute("value") == eventInstance.resources) == False:
-                writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources + "'")
+            if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text == eventInstance.resources.value) == False:
+                writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources.value + "'")
                 return False
         
         if (self.wait_element(self.SCHEDULE_EVENT_DESCRIPTION).text == eventInstance.description) == False:
             writeToLog("INFO","FAILED to verify event description")
             return False
-                    
-        if (self.wait_element(self.SCHEDULE_EVENT_TAGS).text == eventInstance.description) == False:
-            writeToLog("INFO","FAILED to verify event description")
-            return False
-        
-        if type(eventInstance.tags) is list:
-            tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text
-            for tag in eventInstance.tags:
-                if (tag in tmpTags) == False:
-                    writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
-                    return False
-        else:
-            if (self.wait_element(self.SCHEDULE_EVENT_TAGS).text == eventInstance.tags) == False:
-                writeToLog("INFO","FAILED to verify event tag '" + eventInstance.tags + "'")
+                            
+        tagsList = eventInstance.tags.split(",")
+        tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text.replace("\n", " ")
+        for tag in tagsList:
+            if (tag in tmpTags) == False:
+                writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
                 return False
-
+        
         writeToLog("INFO","Success, Event metadata were verify successfully")
+        return True
         
     
     # @Author: Michal Zomper 
@@ -946,3 +951,13 @@ class  Recscheduling(Base):
         #click to exit description textbox
         self.click(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE, timeout=5)
         return True
+    
+    
+    # @Author: Michal Zomper
+    # This function change to date order from ("%d/%m/%Y") to ("%m/%d/%Y")
+    def changeDateOrder(self, date):
+        tmpDate = date.split("/")
+        newDate = tmpDate[1] + "/" + tmpDate[0] + "/" + tmpDate[2]
+        return newDate
+   
+        

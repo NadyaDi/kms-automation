@@ -43,7 +43,7 @@ class Test:
     # Test variables
     eventTitle = None
     description = "Description"
-    tags = "Tags,"
+    tags = "Tags, schedule,"
     startDate = None
     endDate = None
     startEventTime = None
@@ -51,7 +51,7 @@ class Test:
     resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
     
     editDescription = "Edit Description"
-    editTags = "Edit Tags,"
+    editTags = "Edit Tags, schedule,"
     editResources = [enums.RecschedulingResourceOptions.QA_APP_ROOM, enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE]
     editOrganizer = 'Automation_User_1' 
     
@@ -80,16 +80,25 @@ class Test:
             self.editEndDate = (datetime.datetime.now() + timedelta(days=2)).strftime("%d/%m/%Y")
 
             self.startEventTime = time.time() + (60*60)
-            self.startEventTime = time.strftime("%I:%M%p",time.localtime(self.startEventTime))
+            self.startEventTime = time.strftime("%I:%M %p",time.localtime(self.startEventTime))
 
+            
             self.editStartEventTime = time.time() + 3*(60*60)
-            self.editStartEventTime = time.strftime("%I:%M%p",time.localtime(self.editStartEventTime))
+            self.editStartEventTime = time.strftime("%I:%M %p",time.localtime(self.editStartEventTime))
             
             self.endTime = time.time() + 2*(60*60)
-            self.endTime = time.strftime("%I:%M%p",time.localtime(self.endTime))
+            self.endTime = time.strftime("%I:%M %p",time.localtime(self.endTime))
+            tmpTime = self.endTime.split(":")
+            tmpHour = int(tmpTime[0])
+            tmpHour = str(tmpHour)
+            self.endTime = tmpHour + ":" + tmpTime[1]
             
             self.editEndTime = time.time() + 4*(60*60)
-            self.editEndTime = time.strftime("%I:%M%p",time.localtime(self.editEndTime))
+            self.editEndTime = time.strftime("%I:%M %p",time.localtime(self.editEndTime))
+            tmpTime = self.editEndTime.split(":")
+            tmpHour = int(tmpTime[0])
+            tmpHour = str(tmpHour)
+            self.editEndTime = tmpHour + ":" + tmpTime[1]
             
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
             self.event.resources = self.resource
@@ -102,7 +111,7 @@ class Test:
 #             if self.common.admin.enableRecscheduling(True) == False:
 #                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
 #                 return
-#             
+#              
 #             writeToLog("INFO","Step 2: Going navigate to home page")            
 #             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
 #                 writeToLog("INFO","Step 2: FAILED navigate to home page")
@@ -133,7 +142,7 @@ class Test:
             
             sleep(3)
             writeToLog("INFO","Step 6: Going to verify event metadata")
-            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
+            if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
                 writeToLog("INFO","Step 6: FAILED to verify event metadata")
                 return
             
