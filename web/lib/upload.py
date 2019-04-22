@@ -571,12 +571,20 @@ class Upload(Base):
     def addNewVideoQuiz(self):
         for x in range(0, 3):
             # Click Add New
-            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, 7, True) == False:
+            if self.click(General.ADD_NEW_DROP_DOWN_BUTTON, 15, True) == False:
                 writeToLog("INFO","FAILED to click on 'Add New' button, during the " + str(x) + " try, in order to trigger the dropdown menu and select 'Video Quiz'")
             else:
                 break
-            
-            if x == 2:
+
+            # Work around if the Add New button cannot be triggered on the current screen
+            if x == 1:
+                if self.clsCommon.navigateTo(enums.Location.HOME) == False:
+                    writeToLog("INFO", "FAILED to navigate to the home menu in order to trigger the Add new button")
+                    return False
+                sleep(5)
+
+            # Return false if we were unable to trigger the Add New button within the three tries
+            elif x == 2:
                 writeToLog("INFO", "FAILED to activate the 'Add New' drop down menu in order to select 'Video Quiz'")
                 return False
             
