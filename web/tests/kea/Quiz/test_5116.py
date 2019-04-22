@@ -56,10 +56,10 @@ class Test:
     # Score for each attempt - individual for each attempts
     quizScore = '67'
     
-    firstQuestionAnswers = [questionNumber1Attempt1, answerquestionNumber1Attempt1, 'QA Automation', '1', '0', True]
-    secondQuestionAnswers = [questionNumber2Attempt1, answerquestionNumber2Attempt1, 'QA Automation', '0', '1', False]
-    thirdQuestionAnswers = [questionNumber3Attempt1, answerquestionNumber3Attempt1, 'QA Automation', '1', '0', True]
-    FourthQuestionAnswers = [questionNumber4Attempt1, answerquestionNumber4Attempt1, 'QA Automation', '1', '0', True]
+    firstQuestionAnswers = [questionNumber1Attempt1, answerquestionNumber1Attempt1, 'QA ADMIN', '1', '0', True]
+    secondQuestionAnswers = [questionNumber2Attempt1, answerquestionNumber2Attempt1, 'QA ADMIN', '0', '1', False]
+    thirdQuestionAnswers = [questionNumber3Attempt1, answerquestionNumber3Attempt1, 'QA ADMIN', '1', '0', True]
+    FourthQuestionAnswers = [questionNumber4Attempt1, answerquestionNumber4Attempt1, 'QA ADMIN', '1', '0', True]
 #     # List with all answers
 #     answersDict = {'1':firstQuestionAnswers,'2':secondQuestionAnswers, '3': thirdQuestionAnswers, '4':FourthQuestionAnswers}
     firstQuestionUsersAnswers = {'1': firstQuestionAnswers}

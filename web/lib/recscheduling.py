@@ -54,16 +54,19 @@ class SechdeuleEvent():
     optionTwoMonthlyMonthNumber=''
     endDateOption = ''
     numberOfRecurrence=''
+    publishTo = ''
+    categories = ''
+    channels = ''
     verifyDateFormat = ''
-    fieldsToUpdate=["title"]
+    fieldsToUpdate = ''
     
     # Constructor
     def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
-        self.startTime = startTime
-        self.endTime = endTime
+        self.startTime = self.remove0FromTime(startTime)
+        self.endTime = self.remove0FromTime(endTime)
         self.description = description
         self.tags = tags
         self.convertDatetimeToVerifyDate()
@@ -83,6 +86,13 @@ class SechdeuleEvent():
         tmpStrDate = tmpStrDate + " - " + dateTimeObj.strftime("%A")
         self.verifyDateFormat = tmpStrDate
         
+    # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3
+    def remove0FromTime(self, eventTime):
+        tmpTime = eventTime.split(":")
+        tmpHour = int(tmpTime[0])
+        tmpHour = str(tmpHour)
+        return tmpHour + ":" + tmpTime[1]
+    
         
 class  Recscheduling(Base):
     driver = None
@@ -139,10 +149,13 @@ class  Recscheduling(Base):
     SCHEDULE_JUMP_TO_BUTTON                                                 = ('xpath', "//a[@id='jumpto']")
     SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE                              = ('xpath', "//th[contains(text(),'DATE')]") # the DATE need to be in format ("%B %d, %Y - %A") -us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday, 
     SCHEDULE_DELETE_EVENT_BUTTON                                            = ('xpath', "//i[@class='icon-trash icon-white']")
-    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                          = ('xpath', "//h1[@class='inline' and contains(text(),'Edit Event')]")
+    SCHEDULE_EDIT_EVENT_PAGE_TITLE                                          = ('css', "div#titleBar")
     SCHEDULE_EDIT_EVENT_PAGE_START_DATE                                     = ('css', "input#rsStartTime-rsStartTime_date")
     SCHEDULE_EDIT_EVENT_PAGE_END_DATE                                       = ('css', "input#rsEndTime-rsEndTime_date")
     SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES                             = ('css', "div.sol-current-selection")
+    SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES                               = ('css', "span.sol-quick-delete")
+    SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS                                   = ('css', "li.select2-search-choice")
+    SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS                                    = ('css', "a.select2-search-choice-close")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -281,18 +294,35 @@ class  Recscheduling(Base):
     # tags - should provided with ',' as a delimiter and comma (',') again in the end of the string
     #        for example 'tags1,tags2,'
     def fillFileScheduleTags(self, tags):
+        # remove any tags if their are any
+        if (self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS, timeout=5)) != False:
+            # we are reducing 1 from the len since it's always add an empty tag
+            if (len(self.wait_elements(self.SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS)) -1) > 0:
+                tmpTags = self.get_elements(self.SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS)
+                tagsCount = len(tmpTags)
+                for tag in tmpTags:
+                    if tagsCount > 1:
+                        try:
+                            if tag.size['width'] != 0.0:
+                                if self.clickElement(tag) == False:
+                                    writeToLog("INFO","FAILED to remove tag")
+                                    return False
+                        except:
+                            # element: tag.size['width'] == 0.0- doesn't really exist 
+                            pass
+                    tagsCount = tagsCount-1
+                
         try:
             tagsElement = self.get_element(self.SCHEDULE_EVENT_TAGS)
-                
+                 
         except NoSuchElementException:
             writeToLog("INFO","FAILED to get Tags filed element")
             return False
-                
+                 
         if self.clickElement(tagsElement) == False:
             writeToLog("INFO","FAILED to click on Tags filed")
             return False            
         sleep(1)
-
         if self.send_keys(self.SCHEDULE_EVENT_INPUT_TAGS, tags) == True:
             sleep(2)
             return True
@@ -569,8 +599,8 @@ class  Recscheduling(Base):
         except:
             writeToLog("INFO","FAILED to find event element text")
             return False
-        
-        if eventInstance.startTime.lower()+"-"+eventInstance.endTime.lower() in eventMetadata == False:
+       
+        if eventInstance.startTime.replace(" ", "").lower() + "-" + eventInstance.endTime.replace(" ", "").lower() in eventMetadata == False:
             writeToLog("INFO","FAILED to find event time")
             return False
         
@@ -724,15 +754,16 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to verify event organizer")
             return False
         
-        if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_START_DATE).get_attribute("value") == eventInstance.startDate) == False:
+        
+        if (self.changeDateOrder(self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_START_DATE).get_attribute("value")) == eventInstance.startDate) == False:
             writeToLog("INFO","FAILED to verify event start date")
             return False
         
-        if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_END_DATE).get_attribute("value") == eventInstance.endDate) == False:
+        if (self.changeDateOrder(self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_END_DATE).get_attribute("value")) == eventInstance.endDate) == False:
             writeToLog("INFO","FAILED to verify event end date")
             return False
         
-        if (self.wait_element(self.SCHEDULE_EVENT_START_TIME).get_attribute("value") == eventInstance.statTime) == False:
+        if (self.wait_element(self.SCHEDULE_EVENT_START_TIME).get_attribute("value") == eventInstance.startTime) == False:
             writeToLog("INFO","FAILED to verify event start time")
             return False
         
@@ -741,36 +772,29 @@ class  Recscheduling(Base):
             return False
         
         if type(eventInstance.resources) is list:
-            tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).get_attribute("value")
+            tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text
             for resource in eventInstance.resources:
-                if (resource in tmpResources) == False:
-                    writeToLog("INFO","FAILED to verify event resource '" + resource + "'")
+                if (resource.value in tmpResources) == False:
+                    writeToLog("INFO","FAILED to verify event resource '" + resource.value + "'")
                     return False
         else:
-            if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).get_attribute("value") == eventInstance.resources) == False:
-                writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources + "'")
+            if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text == eventInstance.resources.value) == False:
+                writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources.value + "'")
                 return False
         
         if (self.wait_element(self.SCHEDULE_EVENT_DESCRIPTION).text == eventInstance.description) == False:
             writeToLog("INFO","FAILED to verify event description")
             return False
-                    
-        if (self.wait_element(self.SCHEDULE_EVENT_TAGS).text == eventInstance.description) == False:
-            writeToLog("INFO","FAILED to verify event description")
-            return False
-        
-        if type(eventInstance.tags) is list:
-            tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text
-            for tag in eventInstance.tags:
-                if (tag in tmpTags) == False:
-                    writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
-                    return False
-        else:
-            if (self.wait_element(self.SCHEDULE_EVENT_TAGS).text == eventInstance.tags) == False:
-                writeToLog("INFO","FAILED to verify event tag '" + eventInstance.tags + "'")
+                            
+        tagsList = eventInstance.tags.split(",")
+        tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text.replace("\n", " ")
+        for tag in tagsList:
+            if (tag in tmpTags) == False:
+                writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
                 return False
-
+        
         writeToLog("INFO","Success, Event metadata were verify successfully")
+        return True
         
     
     # @Author: Michal Zomper 
@@ -779,7 +803,30 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to update event metadata")
             return False
             
+        sleep(3)
+        if eventInstance.exitEvent==False:
+            if self.click(self.SCHEDULE_SAVE_EVENT) == False:
+                writeToLog("INFO","FAILED click on save event button")
+                return False
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if self.wait_element(self.SCHEDULE_CREATE_EVENT_SUCCESS_MESSAGE) == False:
+                writeToLog("INFO","FAILED find event created success message")
+                return False
+            
+            sleep(5)
+        else:
+            if self.click(self.SCHEDULE_SAVE_AND_EXIT_EVENT) == False:
+                writeToLog("INFO","FAILED click on save and exit event button")
+                return False
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            if self.wait_element(self.SCHEDULE_PAGE_TITLE, 15) == False:
+                writeToLog("INFO","FAILED to verify 'My Schedule page' display after clicking on save and exit event button")
+                return False
         
+        writeToLog("INFO","Success, Edit event was created successfully") 
+        return True 
         
     # @Author: Michal Zomper 
     # The function edit reschedule event without recurrence
@@ -862,6 +909,14 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper
     def updateEventResources(self, resources):
+        # remove any resources if their are any
+        if self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text != '':
+            tmpResoures = self.get_elements(self.SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES)
+            for resource in tmpResoures:
+                if self.clickElement(resource) == False:
+                    writeToLog("INFO","FAILED to remove resource")
+                    return False
+                    
         if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
             writeToLog("INFO","FAILED to click and open resource option")
             return False
@@ -877,9 +932,10 @@ class  Recscheduling(Base):
             if self.click(tmpResource) == False:
                 writeToLog("INFO","FAILED to select event resource")
                 return False
-            
-        # click on the create event title to close the resource list
-        self.click(self.SCHEDULE_CREATE_EVENT_PAGE_TITLE)
+        
+        sleep(2)   
+        # click on event title to close the resource list
+        self.click(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE)
         return True
     
     
@@ -894,4 +950,109 @@ class  Recscheduling(Base):
         if self.clear_and_send_keys(self.SCHEDULE_EVENT_DESCRIPTION, description) == False:
             writeToLog("INFO","FAILED to type in Description")
             return False
+        
+        #click to exit description textbox
+        self.click(self.SCHEDULE_EDIT_EVENT_PAGE_TITLE, timeout=5)
+        return True
+    
+    
+    # @Author: Michal Zomper
+    # This function change to date order from ("%d/%m/%Y") to ("%m/%d/%Y")
+    def changeDateOrder(self, date):
+        tmpDate = date.split("/")
+        newDate = tmpDate[1] + "/" + tmpDate[0] + "/" + tmpDate[2]
+        return newDate
+   
+   
+    # @Author: Michal Zomper
+    # The function publish event to channel / category
+    # publishTo - in this parameter will have to were publish to: channel / category
+    # categories / channels - in those parameters will have the names of channels/categories name
+    def publishEvent(self, publishTo, categories='', channels=''):
+        # Check if 'Copy details from event' check box is checked and if it's check unchecked it 
+        # default is that 'Copy details from event' is checked and to open its need to be unchecked
+        if self.is_element_checked(self.SCHEDULE_COPE_DETAILS_BUTTON) == True:
+            if self.check_element(self.SCHEDULE_COPE_DETAILS_BUTTON, 'True') == False:
+                writeToLog("INFO","FAILED to unchecked 'Copy details from event' button")
+                return False
+        
+        if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45).get_attribute("disabled") == 'true':
+            writeToLog("INFO","FAILED to click on publish button - button is disabled")
+            return False
+
+        if self.click(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
+            writeToLog("INFO","FAILED to click on publish button")
+            return False
+        
+        if type(publishTo) is list:
+            for category in publishTo:
+                if category.lower() == 'cateogry':
+                    # Click on Publish in Category
+                    if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
+                        writeToLog("INFO","FAILED to click on Publish in Category")
+                        return False
+                
+                    if self.chooseCategoryToPublishTo(categories) == False:
+                        writeToLog("INFO","FAILED to choose categories")
+                        return False
+                    
+                elif category.lower() == 'channel':
+                    # Click on Publish in Channel
+                    if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
+                        writeToLog("INFO","FAILED to click on Publish in channel")
+                        return False
+                    
+                if self.chooseCategoryToPublishTo(channels) == False:
+                    writeToLog("INFO","FAILED to choose channels")
+                    return False
+        else:     
+            if publishTo.lower() == 'category':  
+                # Click on Publish in Category
+                if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
+                    writeToLog("INFO","FAILED to click on Publish in Category")
+                    return False
+            
+                if self.chooseCategoryToPublishTo(categories) == False:
+                    writeToLog("INFO","FAILED to choose categories")
+                    return False
+                
+            elif publishTo.lower() == 'channel':
+                # Click on Publish in Channel
+                if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
+                    writeToLog("INFO","FAILED to click on Publish in channel")
+                    return False
+                
+                if self.chooseCategoryToPublishTo(channels) == False:
+                    writeToLog("INFO","FAILED to choose channels")
+                    return False
+        sleep(1)
+
+        if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return None
+        self.clsCommon.general.waitForLoaderToDisappear()
+
+        sleep(3)
+        writeToLog("INFO","Success, publish event was successful")
+        return True
+        
+    
+    # @Author: Michal Zomper
+    # This function only choose the channel/ category that need to publish to    
+    def chooseCategoryToPublishTo(self, categories):
+        if type(categories) is list:
+            # choose all the  channels to publish to
+            for category in categories:
+                tmpCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+
+                if self.click(tmpCategoryName, 20, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to select published channel '" + category + "'")
+                    return False
+                
+        elif categories != '':
+            tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', categories))
+
+            if self.click(tmpChannelName, 20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to select published channel '" + tmpCategoryName + "'")
+                return False
         return True

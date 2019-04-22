@@ -167,6 +167,8 @@ test_2898,Sharepoint - Delete through my media,,,pythonautomation3@gmail.com,Kal
 test_2899,Sharepoint - Delete through edit entry page,,,pythonautomation3@gmail.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2901,Sharepoint - Upload media from media gallery page,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2902,Sharepoint - Remove media from media gallery,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_4860,Blackboard Ultra- Disable comments,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4861,Blackboard Ultra- Close discussion,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4872,Blackboard Ultra- Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4876,Blackboard Ultra- Sort Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4859,Blackboard Ultra- Edit metadata,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
@@ -182,6 +184,7 @@ test_4869,Blackboard Ultra- Ultra Publish from entry page,,,oleg.sigalov@kaltura
 test_4875,Blackboard Ultra- Search by Name / Description / Tags,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4878,Blackboard Ultra- Filter media view different media types,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4883,Blackboard Ultra- Upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4884,Blackboard Ultra- Remove media from media gallery,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_706,Publish to channel multiple,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3277,Add collaborator co edit - details tab,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_3278,Add collaborator co edit - options tab,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -274,10 +277,15 @@ test_5122,Editor - Create comments and sub comments with time stamp and then Tri
 test_4948,Quiz - Secure Embed OFF - Answer Quiz with Anonymous and then with KMS user,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4949,Quiz - Welcome screen behavior when autoplay true,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4954,Quiz - Player preview Sanity Check for an existing Quiz Entry,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5116,Quiz - Analytics - Verify quiz answers - One user,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5123,Quiz - Analytics - Allow specific user retake when retake option is disabled,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5128,Quiz - Analytics - Remove last attempt,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5116,Quiz - Analytics - Verify quiz answers - One user,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5117,Quiz - Analytics - Verify quiz answers - Multiple users,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5123,Quiz - Analytics - Allow specific user retake when retake option is disabled,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5128,Quiz - Analytics - Remove last attempt - Latest score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5129,Quiz - Analytics - Remove last attempt - First score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5130,Quiz - Analytics - Remove last attempt - Lowest score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5131,Quiz - Analytics - Remove last attempt - Highest score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5132,Quiz - Analytics - Remove last attempt - Average score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5133,Quiz - Analytics - Clear all attempts when no attempts still left,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
@@ -718,8 +726,8 @@ test_31,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kalt
 test_32,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_33,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_34,Setup test for eSearch,2443872,mediaspace.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_4852,Recscheduling - Create new single event,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
-test_4970,Recscheduling - Edit Single event,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,Automation_User_1,Kaltura1!
+test_4852,Recscheduling - Create new single event,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_4970,Recscheduling - Edit Single event,2534391,mediaspace.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4983,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4984,Entitlements - Entry Private with Co Editor and Demoted Co Editor,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!

@@ -55,11 +55,11 @@ class Test:
     adminFeedbackQuesion1 = 'Feedback for first open-Q' 
     adminFeedbackQuesion2 = 'Feedback for second open-Q'    
     coEditorFeedbackQuesion1 = 'Not good enough'  
-    feedbackDate = ''
+    feedbackDate = datetime.datetime.now().strftime("%m/%d/%Y")
     
     # List of the open questions new added feedback
-    openQuestionFeedbackToAdd1 = [questionName1, adminFeedbackQuesion1, 'QA Automation', feedbackDate] 
-    openQuestionFeedbackToAdd2 = [questionName2, adminFeedbackQuesion2, 'QA Automation', feedbackDate]
+    openQuestionFeedbackToAdd1 = [questionName1, adminFeedbackQuesion1, 'QA ADMIN', feedbackDate] 
+    openQuestionFeedbackToAdd2 = [questionName2, adminFeedbackQuesion2, 'QA ADMIN', feedbackDate]
     
     # This dictionary contains all the questions that need to be added
     addedFeedbackList = {'1':openQuestionFeedbackToAdd1, '2':openQuestionFeedbackToAdd2}

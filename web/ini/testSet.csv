@@ -28,6 +28,8 @@ test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publi
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
 test_4859,1,0,0,0,Blackboard Ultra- Edit metadata
+test_4860,0,1,0,0,Blackboard Ultra- Disable comments
+test_4861,0,1,0,0,Blackboard Ultra- Close discussion
 test_4863,1,0,0,0,Blackboard Ultra- Add captions
 test_4864,1,0,0,0,Blackboard Ultra- Add captions
 test_4865,1,0,0,0,Blackboard Ultra- Delete through my media
@@ -42,6 +44,7 @@ test_4875,1,0,0,0,Blackboard Ultra- Search by Name / Description / Tags
 test_4876,1,0,0,0,Blackboard Ultra- Sort Media
 test_4875,1,0,0,0,Blackboard Ultra- Filter media view different media types / Description / Tags
 test_4883,1,0,0,0,Blackboard Ultra- Upload media from media gallery page
+test_4884,1,0,0,0,Blackboard Ultra- Remove media from media gallery
 test_628,1,0,0,0,Moodle - Assignment Submission Functionalities
 test_637,1,0,0,0,Global Search for Channel
 test_638,1,0,0,0,Global Search for Media
@@ -390,7 +393,11 @@ test_5113,1,0,0,0,Quiz - Open-Q - Add feedback as co-editor
 test_5116,1,0,0,0,Quiz - Analytics - Verify quiz answers - One user
 test_5117,1,0,0,0,Quiz - Analytics - Verify quiz answers - Multiple users
 test_5123,1,0,0,0,Quiz - Analytics - Allow specific user retake when retake option is disabled
-test_5128,1,0,0,0,Quiz - Analytics - Remove last attempt
+test_5128,1,0,0,0,Quiz - Analytics - Remove last attempt - Latest score
+test_5129,1,0,0,0,Quiz - Analytics - Remove last attempt - First score
+test_5130,1,0,0,0,Quiz - Analytics - Remove last attempt - Lowest score
+test_5132,1,0,0,0,Quiz - Analytics - Remove last attempt - Average score
+test_5133,1,0,0,0,Quiz - Analytics - Clear all attempts when no attempts still lefte
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality

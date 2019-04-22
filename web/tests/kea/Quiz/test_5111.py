@@ -8,6 +8,7 @@ import localSettings
 from utilityTestFunc import *
 import enums
 from selenium.webdriver.common.keys import Keys
+from time import strftime
 
 class Test:
     
@@ -51,8 +52,8 @@ class Test:
 
     feedbackText = 'Good answer'   
     newFeedbackText = 'Not good enough'  
-    feedbackOwner = 'QA Automation'
-    feedbackDate = ''
+    feedbackOwner = 'QA ADMIN'
+    feedbackDate =  datetime.datetime.now().strftime("%m/%d/%Y")
     
     openQuestionFeedbackToAdd = [questionName1, feedbackText, feedbackOwner, feedbackDate] 
     
@@ -91,33 +92,33 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                 
+                  
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                    
+                                     
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                    
+                                     
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                   
+                                                                    
             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.questionDict, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-               
+                
             writeToLog("INFO","Step 5 : Going to answer quiz open question")  
             if self.common.player.answerQuiz(self.quizQuestionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='100') == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5 : FAILED to answer quiz open question")  
                 return  
-             
+              
             self.common.base.switch_to_default_content()
              
             writeToLog("INFO","Step 6 : Going to add feedback to the quiz open-Q")  
