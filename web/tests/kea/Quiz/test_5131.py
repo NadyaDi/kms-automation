@@ -13,13 +13,13 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Remove Last attempts - Lowest score type
+    # Test Name : Quiz - Analytics - Remove Last attempts - Highest score type
     # Test description:
     # Go to editor page and create quiz with option to retake quiz - 3 attempts and all type of questions
     # Go to quiz page with different user and answer quiz -> Login with quiz owner -> Delete last attempt -> Go to quiz page as the user that answer the quiz and verify that he is able to answer the quiz again
-    # and that number of attempts os updated and correct
+    # and that number of attempts is updated and correct
     #================================================================================================================================
-    testNum = "5130"
+    testNum = "5131"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -42,7 +42,7 @@ class Test:
     answerquestionNumber1Attempt1 = "question #1 option #1"
     
     questionNumber2Attempt1 = "question #2 Title"
-    answerquestionNumber2Attempt1 = "question #2 option #1"
+    answerquestionNumber2Attempt1 = "question #2 option #2"
     
     questionNumber3Attempt1 = "question #3 Title"
     answerquestionNumber3Attempt1 = "question #3 option #2"
@@ -53,20 +53,20 @@ class Test:
     answerquestionNumber1Attempt2 = "question #1 option #1"
     
     questionNumber2Attempt2 = "question #2 Title"
-    answerquestionNumber2Attempt2 = "question #2 option #2"
+    answerquestionNumber2Attempt2 = "question #2 option #1"
     
     questionNumber3Attempt2 = "question #3 Title"
     answerquestionNumber3Attempt2 = "question #3 option #2"
     
     # Attempts #3 answers
     questionNumber1Attempt3 = "question #1 Title"
-    answerquestionNumber1Attempt3 = "question #1 option #1"
+    answerquestionNumber1Attempt3 = "question #1 option #2"
     
     questionNumber2Attempt3 = "question #2 Title"
-    answerquestionNumber2Attempt3 = "question #2 option #1"
+    answerquestionNumber2Attempt3 = "question #2 option #2"
     
     questionNumber3Attempt3 = "question #3 Title"
-    answerquestionNumber3Attempt3 = "question #3 option #1"    
+    answerquestionNumber3Attempt3 = "question #3 option #2"    
 
     quizQuestionDictAttempt1 = {questionNumber1Attempt1:answerquestionNumber1Attempt1, questionNumber2Attempt1:answerquestionNumber2Attempt1, questionNumber3Attempt1:answerquestionNumber3Attempt1}
     quizQuestionDictAttempt2 = {questionNumber1Attempt2:answerquestionNumber1Attempt2, questionNumber2Attempt2:answerquestionNumber2Attempt2, questionNumber3Attempt2:answerquestionNumber3Attempt2}
@@ -76,16 +76,16 @@ class Test:
     QuizQuestionDictAfterRemovingLastAttempt = [quizQuestionDictAttempt3]
     
     # Score for each attempt - individual for each attempts
-    specificScoreAttempt1 = '67'
-    specificScoreAttempt2 = '33'
-    specificScoreAttempt3 = '100'
+    specificScoreAttempt1 = '33'
+    specificScoreAttempt2 = '67'
+    specificScoreAttempt3 = '0'
     
     quizSpecificAttemptScore = [specificScoreAttempt1, specificScoreAttempt2]
     
     # Score for each attempt - general for all attempts
-    generalScoreAttempt1 = '67'
-    generalScoreAttempt2 = '33'
-    generalScoreAttempt3 = '67'
+    generalScoreAttempt1 = '33'
+    generalScoreAttempt2 = '67'
+    generalScoreAttempt3 = '33'
     
     quizGeneral2FirstAttemptsScore = [generalScoreAttempt1, generalScoreAttempt2]
     
@@ -104,10 +104,10 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz - Remove last attempt - Lowest score", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz - Remove last attempt - Lowest score - Quiz", self.testNum)      
+            self.entryName = clsTestService.addGuidToString("Quiz - Remove last attempt - Highest score", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz - Remove last attempt - Highest score - Quiz", self.testNum)      
  
-            self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LOWEST.value}
+            self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.HIGHEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}
             self.keaAllowMultipleScore           = {enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:True}
              
@@ -124,13 +124,13 @@ class Test:
             self.userName = 'QA Member 1'
              
             self.numberOfAttemptsBeforeDeletion = '2/3'
-            self.scoreBeforeDeletion = '33%'   
+            self.scoreBeforeDeletion = '67%'   
              
             self.numberOfAttemptsAfterDeletion = '1/3'
-            self.scoreAfterDeletion = '67%'   
+            self.scoreAfterDeletion = '33%'   
             
             self.numberOfAttemptsAfterRetaking = '2/3'
-            self.scoreAfterRetaking = '67%'  
+            self.scoreAfterRetaking = '33%'  
             
             self.currentAttempt = 2    
             ######################### TEST STEPS - MAIN FLOW #######################
@@ -217,7 +217,7 @@ class Test:
             i = i + 1   
                  
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz " + self.quizEntryName)  
-            if self.common.player.verifyQuizAttempts(self.quizQuestionsDict2FirstAttempts, expectedQuizScore=self.quizSpecificAttemptScore, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=self.quizGeneral2FirstAttemptsScore, scoreType=enums.playerQuizScoreType.LOWEST) == False:
+            if self.common.player.verifyQuizAttempts(self.quizQuestionsDict2FirstAttempts, expectedQuizScore=self.quizSpecificAttemptScore, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=self.quizGeneral2FirstAttemptsScore, scoreType=enums.playerQuizScoreType.HIGHEST) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to answer quiz " + self.quizEntryName)
                 return    
@@ -240,7 +240,7 @@ class Test:
                
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to verify quiz attempts and score before removing last attempt")  
-            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername, self.userName, self.numberOfAttemptsBeforeDeletion, self.scoreBeforeDeletion, enums.playerQuizScoreType.LOWEST, self.quizEntryName, True) == False:
+            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername, self.userName, self.numberOfAttemptsBeforeDeletion, self.scoreBeforeDeletion, enums.playerQuizScoreType.HIGHEST, self.quizEntryName, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score before removing last attempt")  
                 return                                                                    
@@ -254,7 +254,7 @@ class Test:
               
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to verify quiz attempts and score after removing last attempt")  
-            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername , self.userName + "   Last Attempt removed", self.numberOfAttemptsAfterDeletion, self.scoreAfterDeletion, enums.playerQuizScoreType.LOWEST) == False:
+            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername , self.userName + "   Last Attempt removed", self.numberOfAttemptsAfterDeletion, self.scoreAfterDeletion, enums.playerQuizScoreType.HIGHEST) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score after removing last attempt")  
                 return  
@@ -281,7 +281,7 @@ class Test:
              
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz " + self.quizEntryName)  
-            if self.common.player.verifyQuizAttemptsAfterRemovingLastAttempt(self.QuizQuestionDictAfterRemovingLastAttempt, expectedQuizScore=[self.specificScoreAttempt3],currentAttempt=self.currentAttempt, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=[self.generalScoreAttempt3], scoreType=enums.playerQuizScoreType.LOWEST) == False:
+            if self.common.player.verifyQuizAttemptsAfterRemovingLastAttempt(self.QuizQuestionDictAfterRemovingLastAttempt, expectedQuizScore=[self.specificScoreAttempt3],currentAttempt=self.currentAttempt, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=[self.generalScoreAttempt3], scoreType=enums.playerQuizScoreType.HIGHEST) == False:
                 
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to answer quiz " + self.quizEntryName)
