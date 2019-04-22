@@ -170,8 +170,12 @@ class MyMedia(Base):
 
             # Click on User Menu Toggle Button
             if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on User Menu Toggle Button")
-                return False
+                writeToLog("INFO","FAILED to click on User Menu Toggle Button while trying to navigate to My Media during the first try")
+                self.switch_to_default_content()
+                sleep(5)
+                if self.click(self.clsCommon.general.USER_MENU_TOGGLE_BUTTON, 20) == False:
+                    writeToLog("INFO","FAILED to click on User Menu Toggle Button while trying to navigate to My Media after two tries")
+                    return False
 
             # Click on My Media
             if self.click(self.clsCommon.general.USER_MENU_MY_MEDIA_BUTTON) == False:

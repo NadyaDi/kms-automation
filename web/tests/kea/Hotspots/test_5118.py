@@ -37,6 +37,7 @@ class Test:
     entryName           = None
     entryDescription    = "description"
     entryTags           = "tag1,"
+    instanceURL         = None
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
@@ -67,6 +68,11 @@ class Test:
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Hotspots - Interrupt Types", self.testNum)
+            self.instanceURL           = self.common.base.driver.current_url
+            self.common.admin.allowHotspots(True)
+            self.common.base.navigate(self.instanceURL)
+            self.common.admin.allowEditor(True)
+            self.common.base.navigate(self.instanceURL)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:

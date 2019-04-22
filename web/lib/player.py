@@ -2613,6 +2613,7 @@ class Player(Base):
     # @Author: Horia Cus
     # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
     # location=enums.Location.ENTRY_PAGE
+    # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
     # To be Developed: Cue Point Verification interval
     def hotspotVerification(self, hotspotsDict, location=enums.Location.ENTRY_PAGE, embed=False):        
         if self.verifyAndClickOnPlay(location, 30, embed) == False:
@@ -2625,7 +2626,7 @@ class Player(Base):
         # Run the player until we took all the available hotspots
         while self.wait_element(self.PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER, 0.1, True) == False:
             # Take the current hotspots elements
-            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 60)
+            presentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 30)
             
             # Verify that at least one hotspot has been found
             if presentedHotspots != False:
@@ -2635,7 +2636,7 @@ class Player(Base):
                         # Verify that the hotspot found its new
                         if len(presentedHotspotsDetailsList) == 0 or any(presentedHotspots[x].text in sl for sl in presentedHotspotsDetailsList) == False:
                             # Take the hotspot details
-                            hotspotStartTime            = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 1, True).text
+                            hotspotStartTime            = self.returnEntryCurrentTimeInSeconds()
                             
                             hotspotTitle                = presentedHotspots[x].text             
                             hotspotStyleProperties      = presentedHotspots[x].get_attribute('style').split()
@@ -2663,22 +2664,22 @@ class Player(Base):
                             hotspotLocation             = presentedHotspots[x].location
                             # Verify the location for normal hotspots
                             if hotspotTitle.count('Duplicated') == 0:
-                                if hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2}:
+                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
-                                elif hotspotLocation == {'x': 6, 'y': 1}:
+                                elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
                                 elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
-                                elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
+                                elif hotspotLocation == {'x': 787, 'y': 419} or hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
                                     hotspotLocation = enums.keaLocation.BOTTOM_RIGHT
                                     
-                                elif hotspotLocation == {'x': 6, 'y': 419}:
+                                elif hotspotLocation == {'x': 6, 'y': 419} or hotspotLocation == {'x': 7, 'y': 419}:
                                     hotspotLocation = enums.keaLocation.BOTTOM_LEFT
                                 else:
-                                    writeToLog("INFO", "FAILED, couldn't find a match with the kea location while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
+                                    writeToLog("INFO", "FAILED, couldn't find a match with the kea location for " + hotspotTitle + "  while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
                                     return False
                             
                             # Verify the location for duplicated hotspots
@@ -2698,7 +2699,7 @@ class Player(Base):
                                 elif hotspotLocation == {'x': 6, 'y': 419}:
                                     hotspotLocation = enums.keaLocation.BOTTOM_LEFT
                                 else:
-                                    writeToLog("INFO", "FAILED, couldn't find a match with the kea location while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
+                                    writeToLog("INFO", "FAILED, couldn't find a match with the kea location for " + hotspotTitle + "  while using the following coordinates, X:" + str(hotspotLocation['x']) + " and Y:" + str(hotspotLocation['y']))
                                     return False
                                 
                                 try:
@@ -2717,9 +2718,14 @@ class Player(Base):
                             if self.clickElement(presentedHotspots[x]) == False:
                                 writeToLog("INFO", "FAILED to click on the hotspot: " + hotspotTitle)
                                 return False
+                            else:
+                                sleep(0.1)
+                                if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
+                                    writeToLog("INFO", "FAILED to load the player screen after clicking on the hotspot" + hotspotTitle)
+                                    return False
                             
-                            handles = self.driver.window_handles
-                            
+                            handles               = self.driver.window_handles
+                            hotspotTimeAfterClick = None
                             # Verify if the presented hotspot has a link attached
                             if len(handles) != 1:
                                 # Take the hotspot link
@@ -2734,7 +2740,16 @@ class Player(Base):
                                     writeToLog("INFO", "FAILED to take the presented link for " + hotspotTitle)
                                     return False
                             else:
-                                hotspotLink = ''
+                                # Take the entry current time after clicking on the hotspot, in order to verify if we have a time stamp link
+                                hotspotTimeAfterClick        = self.returnEntryCurrentTimeInSeconds()
+                                                    
+                                # Verify if the hotspot link had a Time Stamp link
+                                if hotspotStartTime != hotspotTimeAfterClick:
+                                    hotspotLink = hotspotTimeAfterClick
+                                    
+                                # Return an empty string if no Web Page or Time Stamp was provided
+                                else:
+                                    hotspotLink = ''
                             
                             if hotspotTitle.count('Duplicated') == 1:
                                 try:
@@ -2749,6 +2764,13 @@ class Player(Base):
                             # Verify for how much time the hotspot is presented
                             isStillPresented = True
                             while self.wait_element(self.PLAYER_REPLAY_BUTTON_CONTROLS_CONTAINER, 0.1, True) == False and isStillPresented == True:
+                                # Verify if we had a hotspot that linked to a negative value of its time of display
+                                if hotspotTimeAfterClick != None and hotspotTimeAfterClick < hotspotStartTime:
+                                    startTimeResumed = 0
+                                    # Wait until the hotspot that linked backwards is re displayed
+                                    while startTimeResumed <= hotspotStartTime:
+                                        startTimeResumed = self.returnEntryCurrentTimeInSeconds()
+                                        
                                 currentPresentedHotspots = self.wait_elements(self.PLAYER_HOTSPOT_PRESENTED, 0.1)
                                 
                                 # Verify if there are any hotspot available during the current time
@@ -2760,7 +2782,7 @@ class Player(Base):
                                     for x in range(0, len(currentPresentedHotspots)):
                                         # Verify that the hotspot that was found is still present on the screen
                                         if currentPresentedHotspots[x]._id == presentedHotspots[presentedNumber]._id:
-                                            hotspotEndTime = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 0.1, True).text
+                                            hotspotEndTime = self.returnEntryCurrentTimeInSeconds()
                                             break
                                         
                                         # Verify that the hotspot that was found is no longer present
@@ -2770,26 +2792,9 @@ class Player(Base):
                                                 break
                                 except TypeError:
                                     continue
-                            
-                            # Take the time value from the end and start positions
-                            hotspotStartTimeSeconds = int(hotspotStartTime.split(':')[1])
-                            hotspotStartTimeMinute  = int(hotspotStartTime.split(':')[0])
-                            hotspotEndTimeSeconds   = int(hotspotEndTime.split(':')[1])
-                            hotspotEndTimeMinute    = int(hotspotEndTime.split(':')[0])
-                            
-                            # Increase the value by one if necessary because there may be a gap of one second
-                            if hotspotStartTimeSeconds % 10 == 4 or hotspotStartTimeSeconds % 10 == 9:
-                                hotspotStartTimeSeconds += 1
-                                
-                            if hotspotEndTimeSeconds % 10 == 4 or hotspotEndTimeSeconds % 10 == 9:
-                                hotspotEndTimeSeconds += 1
-                            
-                            # Get the timeframe where the start and end position were set
-                            hotspotSetSecondToStart = hotspotStartTimeMinute * 60 + hotspotStartTimeSeconds
-                            hotspotSetSecondToEnd   = hotspotEndTimeMinute * 60 + hotspotEndTimeSeconds
 
                             # Create a list that contains all the details necessary for the hotspot verification
-                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotSetSecondToStart, hotspotSetSecondToEnd, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius)]
+                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius)]
                             presentedHotspotsDetailsList.append(presentedHotspotDetails)
                             presentedHotspotsNameList.append(hotspotTitle)
                             hotspots = "\n".join(presentedHotspotsNameList)
@@ -3017,3 +3022,37 @@ class Player(Base):
         self.switch_to_default_content()
         writeToLog("INFO", "The entry was played successfully at second " + str(timeStampInSeconds) + " while using comment cue point")
         return True
+    
+    
+    # @Author: Horia Cus
+    # This function will convert the mm:ss format and return it an integer that contains the entry time in seconds
+    def returnEntryCurrentTimeInSeconds(self,):
+        self.switchToPlayerIframe()
+    
+        # Take the entry total time details
+        try:
+            # Take the mm:ss string
+            entryTotalTimeInMMSSFormat = self.wait_element(self.PLAYER_CONTROLS_CONTAINER_REAL_TIME, 0.1, True).text
+            
+            # Split the time in seconds and minutes
+            entryInSeconds    = int(entryTotalTimeInMMSSFormat.split(':')[1])
+            entryInMinutes    = int(entryTotalTimeInMMSSFormat.split(':')[0])
+        except Exception:
+            writeToLog("INFO", "FAILED to take the entry time")
+            return False
+        
+        # Increase the value by one if necessary because there may be a gap of one second
+        if entryInSeconds % 10 == 4:
+            entryInSeconds += 1
+            
+        elif entryInSeconds == 59:
+            entryInSeconds = 0
+            entryInMinutes += 1
+        
+        elif entryInSeconds % 10 ==9:
+            entryInSeconds += 1
+        
+        # Transform the MM:SS format into seconds
+        entryTimeInSeconds = entryInMinutes * 60 + entryInSeconds
+        
+        return entryTimeInSeconds

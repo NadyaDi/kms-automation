@@ -95,7 +95,7 @@ class Test:
             i = 4
             for x in range(0,len(self.hotspotNewOrderDict)):
                 writeToLog("INFO","Step " + str(i) + ": Going to change the hotspot location of " + self.hotspotNewOrderDict[str(x+1)][0] + " to " + self.hotspotNewOrderDict[str(x+1)][1].value)
-                if self.common.kea.changeHotspotLocation(self.hotspotNewOrderDict[str(x+1)][0], self.hotspotNewOrderDict[str(x+1)][1]) == False:
+                if self.common.kea.changeHotspotLocationPlayer(self.hotspotNewOrderDict[str(x+1)][0], self.hotspotNewOrderDict[str(x+1)][1]) == False:
                     writeToLog("INFO","Step " + str(i) + ": FAILED to change the hotspot location of " + self.hotspotNewOrderDict[str(x+1)][0] + " to " + self.hotspotNewOrderDict[str(x+1)][1].value)
                     return
                 i += 1
