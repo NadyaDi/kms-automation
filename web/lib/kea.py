@@ -150,12 +150,17 @@ class Kea(Base):
     KEA_HOTSPOTS_TOOL_TIP_CREATION_CONTAINER                                = ('xpath', '//div[@class="form-horizontal"]')
     KEA_HOTSPOTS_FORM_TEXT_INPUT_FIELD                                      = ('xpath', '//input[@id="inputText"]')
     KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD                                      = ('xpath', '//input[@id="inputUrl"]')
+    KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD_TIME                                 = ('xpath', '//input[@id="jumpTo"]')
+    KEA_HOTSPOTS_FORM_LINK_TYPE_URL                                         = ('xpath', "//label[contains(@class,'click-type__label') and text()='URL']")
+    KEA_HOTSPOTS_FORM_LINK_TYPE_TIME                                        = ('xpath', "//label[contains(@class,'click-type__label') and text()='Time in this video']")
     KEA_HOTSPOTS_FORM_TEXT_STYLE                                            = ('xpath', '//label[contains(@class,"ui-dropdown-label ui-inputtext")]')
     KEA_HOTSPOTS_FORM_TEXT_STYLE_VALUE                                      = ('xpath', '//span[contains(@class,"ng-star-inserted") and text()="TEXT_STYLE"]')
     KEA_HOTSPOTS_FORM_COLOR                                                 = ('xpath', '//div[@class="sp-preview-inner"]')
     KEA_HOTSPOTS_FORM_COLOR_VALUE                                           = ('xpath', '//input[@class="sp-input"]')
     KEA_HOTSPOTS_FORM_TEXT_SIZE                                             = ('xpath', '//input[@id="textSize"]')
     KEA_HOTSPOTS_FORM_ROUNDNESS                                             = ('xpath', '//input[@id="roundness"]')
+    KEA_HOTSPOTS_FORM_LOCATION_X                                            = ('xpath', '//input[@id="position-x"]')
+    KEA_HOTSPOTS_FORM_LOCATION_Y                                            = ('xpath', '//input[@id="position-y"]')
     KEA_HOTSPOTS_LIST_HEADER                                                = ('xpath', "//div[@class='panel__header']")
     KEA_HOTSPOTS_LIST_CONTENT                                               = ('xpath', "//div[@class='panel__content']")
     KEA_HOTSPOTS_LIST_PANEL_HOTSPOT                                         = ('xpath', "//kea-hotspots-list-item[contains(@class,'ng-star-inserted')]")
@@ -164,6 +169,7 @@ class Kea(Base):
     KEA_HOTSPOTS_PLAYER_HOTSPOT_CONTAINER_SELECTED                          = ('xpath', "//div[contains(@class,'selected ui-resizable')]")
     KEA_HOTSPOTS_PLAYER_ADD_HOTSPOT_TOOLTIP                                 = ('xpath', "//span[@class='message__text']")
     KEA_HOTSPOTS_PANEL_ITEM_TITLE                                           = ('xpath', "//div[contains(@class,'panel-item__title')]")
+    KEA_HOTSPOTS_PANEL_ITEM_LINK                                            = ('xpath', "//div[contains(@class,'panel-item__link')]")
     KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU                                  = ('xpath', "//i[@class='kicon-more']")
     KEA_HOTSPOTS_PANEL_ACTION_MENU_CONTAINER                                = ('xpath', "//div[contains(@class,'hotspot-action ui-menu ui-widget')]")
     KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE                                = ('xpath', "//span[@class='ui-menuitem-text' and text()='Duplicate']")
@@ -502,7 +508,7 @@ class Kea(Base):
                 writeToLog("INFO","FAILED to click on Actions button (at entry page)")
                 return False
             
-            sleep(2)
+            sleep(3.5)
             
             if isCreateClippingPermissionIsOn == True:
                 if self.click(self.clsCommon.entryPage.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_CREATE_CLIP_BUTTON) == False:
@@ -3203,6 +3209,7 @@ class Kea(Base):
     # @Author: Horia Cus
     # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
     # A hotspot list may contain only the hotspot title
+    # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
     # If you want to specify only the Title, Location, and Text Size you can put '' string at the options that you don't want to be changed
     # hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '#fafafa', '#fefefe', '', '']
     # hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 5, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
@@ -3271,9 +3278,33 @@ class Kea(Base):
             # Verify if a link should be inserted
             if len(hotspotDetails) > 4:
                 if hotspotDetails[4] != '':
-                    if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[4], True) == False:
-                        writeToLog("INFO", "FAILED to insert " + hotspotDetails[4] + " link inside the Link Field")
-                        return False        
+                    # Verify if the link is to a web page
+                    if type(hotspotDetails[4]) is str:
+                        if self.click(self.KEA_HOTSPOTS_FORM_LINK_TYPE_URL, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the URL label")
+                            return False
+                        
+                        if self.click_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD, hotspotDetails[4], True) == False:
+                            writeToLog("INFO", "FAILED to insert " + hotspotDetails[4] + " link inside the Link Field")
+                            return False
+                        
+                    # Verify if the link needs to be set to a time location of the entry
+                    elif type(hotspotDetails[4]) is int:
+                        if self.click(self.KEA_HOTSPOTS_FORM_LINK_TYPE_TIME, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the Time label")
+                            return False
+                        
+                        # time string has format mm:ss
+                        timeString = str(datetime.timedelta(seconds=hotspotDetails[4]))[2:]
+                        
+                        if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_LINK_INPUT_FIELD_TIME, timeString, True) == False:
+                            writeToLog("INFO", "FAILED to insert the " + timeString + " time inside the Link Input time field of the hotspot")
+                            return False
+                        sleep(0.3)
+                        
+                    else:
+                        writeToLog("INFO", "FAILED, invalid format used while trying to specify a LINK for the hotspot")
+                        return False
             
             # Verify if the font style should be changed
             if len(hotspotDetails) > 5:
@@ -3368,6 +3399,10 @@ class Kea(Base):
                     if creationType == enums.keaHotspotCreationType.VIDEO_PAUSED:
                         if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
                             writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
+                            return False
+                        
+                        if self.setRealTimeMarkerToTime('00:00') == False:
+                            writeToLog("INFO", "FAILED to set the real time marker back to the initial position after creating " + hotspotDetails[0] + " hotspot")
                             return False
         
         hotspotNameList = []
@@ -3592,49 +3627,30 @@ class Kea(Base):
     def hotspotActions(self, hotspotName, hotspotAction, editHotspotDict=''):
         self.switchToKeaIframe()
         
-        # Take a list with all the available hotspots from the sidebar
-        hotspotsPanelTitle = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 5)
+        hotspotIndexLocation = self.returnHotspotIndexFromList(hotspotName)
         
-        if hotspotsPanelTitle == False:
-            writeToLog("INFO", "FAILED to find any available hotspots in the side bar panel")
+        if type(hotspotIndexLocation) is not int:
+            writeToLog("INFO", "FAILED to take the hospot: " + hotspotName + " index location")
             return False
         
-        # Take the location for the hotspotName from the presentedHotspots
-        hotspotLocation = None
-        for x in range(0, len(hotspotsPanelTitle)):
-            if hotspotsPanelTitle[x].text == hotspotName:
-                hotspotLocation = x
-                break
-            
-            if x + 1 == len(hotspotsPanelTitle):
-                writeToLog("INFO", "FAILED to find the " + hotspotName + " inside the sidebar panel")
-                return False
-        
-        # Create the element for hamburger menu
+        # Create the elements for hamburger menu
         hotspotsActionMenu = self.wait_elements(self.KEA_HOTSPOTS_PANEL_MORE_HAMBURGER_MENU, 1)
         
+        # Verify that we were able to find the hamburger menu buttons
         if hotspotsActionMenu == False:
             writeToLog("INFO", "FAILED to find the action menu for the presented hotspots")
             return False
         
-        # Trigger the action menu for the desired hotspotName
+        # Create the elements for the Hotspot Title
         presentedHotspotsTitle  = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 1)
-        hotspotNameIndex = 0
         
-        for x in range(0, len(presentedHotspotsTitle)):
-            if presentedHotspotsTitle[x].text == hotspotName:
-                hotspotNameIndex = x
-                break
-            
-            if x + 1 == len(presentedHotspotsTitle):
-                writeToLog("INFO", "FAILED to find the " + hotspotName + " hotspot inside the panel")
-                return False
-        
-        if self.clickElement(presentedHotspotsTitle[hotspotNameIndex]) == False:
+        # Highlight the hotspotName field by clicking on its container
+        if self.clickElement(presentedHotspotsTitle[hotspotIndexLocation]) == False:
             writeToLog("INFO", "FAILED to highligth the " + hotspotName + " hotspot")
             return False
         
-        if self.clickElement(hotspotsActionMenu[hotspotLocation]) == False:
+        # Trigger the Action Drop Down Menu
+        if self.clickElement(hotspotsActionMenu[hotspotIndexLocation]) == False:
             writeToLog("INFO", "FAILED to trigger the action menu for hotspot: " + hotspotName + " at the second try")
             return False
             
@@ -3706,7 +3722,7 @@ class Kea(Base):
             
             try:
                 # Verify that the element is no longer present
-                presentedHotspotsTitle[hotspotNameIndex].text
+                presentedHotspotsTitle[hotspotIndexLocation].text
                 writeToLog("INFO", "FAILED, the hotspot " + hotspotName + " element is still present, although it should have been deleted")
                 return False
             # If an exception its thrown, means that the element is no longer present, which is what we want, since the hotspot has been deleted
@@ -3733,7 +3749,7 @@ class Kea(Base):
 
             try:
                 # Verify that the element is still present
-                presentedHotspotsTitle[hotspotNameIndex].text
+                presentedHotspotsTitle[hotspotIndexLocation].text
             # If an exception its thrown, means that the element is no longer present, which is what we want, since the hotspot has been deleted
             except StaleElementReferenceException:
                 writeToLog("INFO", "The hotspot " + hotspotName + " has been deleted, although it shouldn't")
@@ -4210,11 +4226,11 @@ class Kea(Base):
     
 
     # @Author: Horia Cus
-    # This function will move the desired hotspot to the new hotspot location
+    # This function will move the desired hotspot using drag and drop to the new hotspot location
     # hotspotName = contains the string of the Hotspot Title
     # hotspotNewLocation = contains the enum of the desired new location for the hotspot ( e.g enums.keaLocation.CENTER ) 
     # If the desired new hotspotLocation is already took by other hotspot, the function will return False
-    def changeHotspotLocation(self, hotspotName, hotspotNewLocation):
+    def changeHotspotLocationPlayer(self, hotspotName, hotspotNewLocation):
         self.switchToKeaIframe()
         
         # Take the list of the presented hotspots
@@ -4235,7 +4251,7 @@ class Kea(Base):
                 writeToLog("INFO", "FAILED to find the " + hotspotName + " inside the presented hotspots")
                 return False
         
-        # Create a list with the new details for a new hotspot
+        # Create a list and dictionary that will be used in order to create a new hotspot with our desired location
         hotspotLocationDetailsList = [hotspotNewLocation.value, hotspotNewLocation]
         
         hotspotDict = {'1': hotspotLocationDetailsList}
@@ -4264,6 +4280,72 @@ class Kea(Base):
                
         writeToLog("INFO", "The hotspot: " + hotspotName + " has been successfully moved to the new location: " + hotspotNewLocation.value)
         return True
+    
+
+    # @Author: Horia Cus
+    # This function will move the desired hotspot to the new hotspot location
+    # hotspotName = contains the string of the Hotspot Title
+    # hotspotNewLocation = contains the enum of the desired new location for the hotspot ( e.g enums.keaLocation.CENTER ) 
+    # If the desired new hotspotLocation is already took by other hotspot, the function will return False
+    def changeHotspotLocationSettings(self, hotspotName, hotspotNewLocation):
+        self.switchToKeaIframe()
+        
+        if self.openHotspotAdvancedSettings(hotspotName) == False:
+            writeToLog("INFO", "FAILED to enter in Hotspot Advanced Screen for: " + hotspotName + " hotspot")
+            return False
+        
+        # Take the X,Y coordinates specific for the hotspotNewLocation
+        hotspotNewLocationCoordinates = self.hotspotLocationCoordinates(hotspotNewLocation)
+        
+        # Verify that the X,Y coordinates were properly provided
+        if type(hotspotNewLocationCoordinates) is not list:
+            writeToLog("INFO", "FAILED to take the coordinates for the hotspot location: " + hotspotNewLocation.value)
+            return False
+        
+        # Create the variables for the x,y locations
+        x,y = hotspotNewLocationCoordinates
+        
+        # Add the X location to the Location X input field
+        if self.click(self.KEA_HOTSPOTS_FORM_LOCATION_X, 1, True) == False:
+            writeToLog("INFO", "FAILED to highlight the X input field location")
+            return False
+        
+        # Select the text present inside the X input field
+        if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+            writeToLog("INFO", "FAILED to select the text from the X input field location")
+            return False
+        
+        # Add the new X value to the X input field
+        try:
+            ActionChains(self.driver).send_keys(str(int(x))).perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to add X coordinate: " + str(int(x)) + " inside the Form list of the hotspot: " + hotspotName)
+            return False
+        
+        # Add the Y location to the Location X input field
+        if self.click(self.KEA_HOTSPOTS_FORM_LOCATION_Y, 1, True) == False:
+            writeToLog("INFO", "FAILED to highlight the X input field location")
+            return False
+        
+        # Select the text present inside the Y input field
+        if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+            writeToLog("INFO", "FAILED to select the text from the X input field location")
+            return False
+        
+        # Add the new X value to the X input field
+        try:
+            ActionChains(self.driver).send_keys(str(int(y))).perform()
+        except Exception:
+            writeToLog("INFO", "FAILED to add Y coordinate: " + str(int(y)) + " inside the Form list of the hotspot: " + hotspotName)
+            return False
+        
+        # Save the coordinates changes
+        if self.saveHotspotChanges(settingsChanges=True) == False:
+            writeToLog("INFO", "FAILED to save the changes for " + hotspotName + " Edited hotspot")
+            return False
+        
+        writeToLog("INFO", "Coordinates for the " + hotspotName + " hotspot were set to X: " + str(int(x)) + " and Y:" + str(int(y)) + " specific for the location " + hotspotNewLocation.value)
+        return True 
     
     
     # @Author: Horia Cus
@@ -4334,6 +4416,7 @@ class Kea(Base):
                             expectedHotspotDetailTitle = expectedHotspotDetails[0]
                             
                             presentedHotspotsTitle  = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 1)
+                            presentedHotspotsLink   = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_LINK, 1)
                             hotspotNameIndex = 0
                             
                             # Verify and take the expected hotspot index number
@@ -4346,6 +4429,26 @@ class Kea(Base):
                                     writeToLog("INFO", "FAILED to find the " + expectedHotspotDetailTitle + " hotspot inside the HS list panel")
                                     return False
                             
+                            if expectedHotspotDetails[4] != '':
+                                if type(expectedHotspotDetails[4]) is str:
+                                    if presentedHotspotsLink[hotspotNameIndex].text != expectedHotspotDetails[4]:
+                                        writeToLog("INFO", "FAILED, we expected that " + expectedHotspotDetails[4] + " link to be displayed, instead " + presentedHotspotsLink[hotspotNameIndex].text + " was presented")
+                                        return False
+                                elif type(expectedHotspotDetails[4]) is int:
+                                    # time string has format mm:ss
+                                    expectedTimeString = str(datetime.timedelta(seconds=expectedHotspotDetails[4]))[2:]
+                                    
+                                    if presentedHotspotsLink[hotspotNameIndex].text != 'Jump to time: ' + expectedTimeString:
+                                        writeToLog("INFO", "FAILED, " + presentedHotspotsLink[hotspotNameIndex].text  + " time was set in the HS list, however, we expected " + expectedTimeString)
+                                        return False
+                                else:
+                                    writeToLog("INFO", "FAILED, invalid format for the hotspot link verification in HS list")
+                                    return False
+                            else:
+                                if presentedHotspotsLink[hotspotNameIndex].text != '':
+                                    writeToLog("INFO", "FAILED, we expected to have no Link, however, " + presentedHotspotsLink[hotspotNameIndex].text + " link was displayed")
+                                    return False
+                                
                             # Highlight the presented Hostpot from the HS Panel List
                             if self.clickElement(presentedHotspotsTitle[hotspotNameIndex]) == False:
                                 writeToLog("INFO", "FAILED to highligth the " + expectedHotspotDetailTitle + " hotspot")
@@ -4907,4 +5010,62 @@ class Kea(Base):
             return False        
         
         writeToLog("INFO", "The invalid url has been successfully verified while being in " + hotspotCreationScreen.value + " Screen")
+        return True
+    
+
+    # @Author: Horia Cus
+    # This function will return the index number for the desired hotspotName from the HS List ( Side Bar )
+    def returnHotspotIndexFromList(self, hotspotName):
+        self.switchToKeaIframe()
+        
+        # Take a list with all the available hotspots from the HS List ( Side Bar )
+        hotspotsPanelTitle = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 5)
+        
+        # Verify that we were able to find hotspots inside the HS List
+        if hotspotsPanelTitle == False:
+            writeToLog("INFO", "FAILED to find any available hotspots in the side bar panel")
+            return False
+        
+        # Take the hotspot index specific for the HS List ( Side Bar )
+        hotspotIndexLocation = None
+        for x in range(0, len(hotspotsPanelTitle)):
+            # Verify if the current iterrated hotspot matches with our desired one
+            if hotspotsPanelTitle[x].text == hotspotName:
+                hotspotIndexLocation = x
+                break
+            
+            # Verify that we were able to find our hotspot within the available number of tries
+            if x + 1 == len(hotspotsPanelTitle):
+                writeToLog("INFO", "FAILED to find the " + hotspotName + " inside the sidebar panel")
+                return False
+        
+        writeToLog("INFO", "Hotspot Index Location for " + hotspotName + " hotspot is at: " + str(hotspotIndexLocation))  
+        return hotspotIndexLocation
+    
+
+    # @Author: Horia Cus
+    # This function will open the Advanced Settings Screen for the desired hotspotName
+    def openHotspotAdvancedSettings(self, hotspotName):
+        self.switchToKeaIframe()
+        
+        hotspotIndexLocation = self.returnHotspotIndexFromList(hotspotName)
+        
+        if type(hotspotIndexLocation) is not int:
+            writeToLog("INFO", "FAILED to take the hospot: " + hotspotName + " index location")
+            return False
+
+        # Create the elements for the Hotspot Title
+        presentedHotspotsTitle  = self.wait_elements(self.KEA_HOTSPOTS_PANEL_ITEM_TITLE, 1)
+        
+        # Highlight the hotspotName field by clicking on its container
+        if self.clickElement(presentedHotspotsTitle[hotspotIndexLocation]) == False:
+            writeToLog("INFO", "FAILED to highligth the " + hotspotName + " hotspot from the Hotspot List Screen")
+            return False
+        
+        # Trigger the Advanced Settings Screen
+        if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
+            writeToLog("INFO", "FAILED to click on the Advanced Settings button for " + hotspotName + " hotspot")
+            return False
+        
+        writeToLog("INFO", "Hotspot Advanced Setting Screen has been successfully opened for: " + hotspotName)
         return True

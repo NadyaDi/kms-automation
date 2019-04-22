@@ -768,4 +768,12 @@ class keaHotspotCreationScreen(Enum):
     
     ADVANCED_SETTINGS        = 'Advanced Settings'
     ADD_HOTSPOT_TOOL_TIP     = 'Add Hotspot Tool Tip'
-
+    
+    
+class keaHotspotContainerSize(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SMALL                 = 'SMALL'
+    MEDIUM                = 'MEDIUM'
+    LARGE                 = 'LARGE'
