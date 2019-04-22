@@ -28,6 +28,8 @@ test_1648,1,0,0,0,KAF BB - Upload new media to Faculty Repository and then publi
 test_2087,1,0,0,0,KAF BB - My Media - Embed Media As Standalone From Wysiwyg
 test_2088,1,0,0,0,KAF BB - Upload From Embed As Standalone
 test_4859,1,0,0,0,Blackboard Ultra- Edit metadata
+test_4860,0,1,0,0,Blackboard Ultra- Disable comments
+test_4861,0,1,0,0,Blackboard Ultra- Close discussion
 test_4863,1,0,0,0,Blackboard Ultra- Add captions
 test_4864,1,0,0,0,Blackboard Ultra- Add captions
 test_4865,1,0,0,0,Blackboard Ultra- Delete through my media
@@ -394,6 +396,8 @@ test_5123,1,0,0,0,Quiz - Analytics - Allow specific user retake when retake opti
 test_5128,1,0,0,0,Quiz - Analytics - Remove last attempt - Latest score
 test_5129,1,0,0,0,Quiz - Analytics - Remove last attempt - First score
 test_5130,1,0,0,0,Quiz - Analytics - Remove last attempt - Lowest score
+test_5132,1,0,0,0,Quiz - Analytics - Remove last attempt - Average score
+test_5133,1,0,0,0,Quiz - Analytics - Clear all attempts when no attempts still lefte
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality

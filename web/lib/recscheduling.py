@@ -54,8 +54,11 @@ class SechdeuleEvent():
     optionTwoMonthlyMonthNumber=''
     endDateOption = ''
     numberOfRecurrence=''
+    publishTo = ''
+    categories = ''
+    channels = ''
     verifyDateFormat = ''
-    fieldsToUpdate=["title"]
+    fieldsToUpdate = ''
     
     # Constructor
     def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
@@ -960,4 +963,96 @@ class  Recscheduling(Base):
         newDate = tmpDate[1] + "/" + tmpDate[0] + "/" + tmpDate[2]
         return newDate
    
+   
+    # @Author: Michal Zomper
+    # The function publish event to channel / category
+    # publishTo - in this parameter will have to were publish to: channel / category
+    # categories / channels - in those parameters will have the names of channels/categories name
+    def publishEvent(self, publishTo, categories='', channels=''):
+        # Check if 'Copy details from event' check box is checked and if it's check unchecked it 
+        # default is that 'Copy details from event' is checked and to open its need to be unchecked
+        if self.is_element_checked(self.SCHEDULE_COPE_DETAILS_BUTTON) == True:
+            if self.check_element(self.SCHEDULE_COPE_DETAILS_BUTTON, 'True') == False:
+                writeToLog("INFO","FAILED to unchecked 'Copy details from event' button")
+                return False
         
+        if self.wait_visible(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45).get_attribute("disabled") == 'true':
+            writeToLog("INFO","FAILED to click on publish button - button is disabled")
+            return False
+
+        if self.click(self.clsCommon.myMedia.MY_MEDIA_PUBLISHED_RADIO_BUTTON, 45) == False:
+            writeToLog("INFO","FAILED to click on publish button")
+            return False
+        
+        if type(publishTo) is list:
+            for category in publishTo:
+                if category.lower() == 'cateogry':
+                    # Click on Publish in Category
+                    if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
+                        writeToLog("INFO","FAILED to click on Publish in Category")
+                        return False
+                
+                    if self.chooseCategoryToPublishTo(categories) == False:
+                        writeToLog("INFO","FAILED to choose categories")
+                        return False
+                    
+                elif category.lower() == 'channel':
+                    # Click on Publish in Channel
+                    if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
+                        writeToLog("INFO","FAILED to click on Publish in channel")
+                        return False
+                    
+                if self.chooseCategoryToPublishTo(channels) == False:
+                    writeToLog("INFO","FAILED to choose channels")
+                    return False
+        else:     
+            if publishTo.lower() == 'category':  
+                # Click on Publish in Category
+                if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
+                    writeToLog("INFO","FAILED to click on Publish in Category")
+                    return False
+            
+                if self.chooseCategoryToPublishTo(categories) == False:
+                    writeToLog("INFO","FAILED to choose categories")
+                    return False
+                
+            elif publishTo.lower() == 'channel':
+                # Click on Publish in Channel
+                if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
+                    writeToLog("INFO","FAILED to click on Publish in channel")
+                    return False
+                
+                if self.chooseCategoryToPublishTo(channels) == False:
+                    writeToLog("INFO","FAILED to choose channels")
+                    return False
+        sleep(1)
+
+        if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return None
+        self.clsCommon.general.waitForLoaderToDisappear()
+
+        sleep(3)
+        writeToLog("INFO","Success, publish event was successful")
+        return True
+        
+    
+    # @Author: Michal Zomper
+    # This function only choose the channel/ category that need to publish to    
+    def chooseCategoryToPublishTo(self, categories):
+        if type(categories) is list:
+            # choose all the  channels to publish to
+            for category in categories:
+                tmpCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+
+                if self.click(tmpCategoryName, 20, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to select published channel '" + category + "'")
+                    return False
+                
+        elif categories != '':
+            tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', categories))
+
+            if self.click(tmpChannelName, 20, multipleElements=True) == False:
+                writeToLog("INFO","FAILED to select published channel '" + tmpCategoryName + "'")
+                return False
+        return True

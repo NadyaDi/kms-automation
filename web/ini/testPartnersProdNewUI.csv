@@ -167,6 +167,8 @@ test_2898,Sharepoint - Delete through my media,,,pythonautomation3@gmail.com,Kal
 test_2899,Sharepoint - Delete through edit entry page,,,pythonautomation3@gmail.com,Kaltura1!,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2901,Sharepoint - Upload media from media gallery page,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
 test_2902,Sharepoint - Remove media from media gallery,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura3!,
+test_4860,Blackboard Ultra- Disable comments,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4861,Blackboard Ultra- Close discussion,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4872,Blackboard Ultra- Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4876,Blackboard Ultra- Sort Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4859,Blackboard Ultra- Edit metadata,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
@@ -282,6 +284,8 @@ test_5128,Quiz - Analytics - Remove last attempt - Latest score,2501881,mediaspa
 test_5129,Quiz - Analytics - Remove last attempt - First score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5130,Quiz - Analytics - Remove last attempt - Lowest score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5131,Quiz - Analytics - Remove last attempt - Highest score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5132,Quiz - Analytics - Remove last attempt - Average score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5133,Quiz - Analytics - Clear all attempts when no attempts still left,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
