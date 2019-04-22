@@ -280,7 +280,8 @@ class Common():
         self.switch_to_default_iframe_generic()
         if status == "Fail":
             # Get the page source
-            self.base.craetePageSourceLogFile()
+            #TODO 
+            #self.base.craetePageSourceLogFile()
             # Take last screenshot
             self.base.takeScreeshotGeneric('LAST_SCRENNSHOT')
             if leavePageExpected==True:
