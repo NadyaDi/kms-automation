@@ -42,8 +42,8 @@ class D2L(Base):
     D2L_EMBED_IFRAME                                    = ('xpath', '//iframe[@id="remoteIframe"]')  
     D2L_FORUM_DESCRIPTION_IFRAME                        = ('xpath', '//iframe[contains(@id, "forumDescription")]')  
     D2L_FORUM_DESCRIPTION_ENTRY_IFRAME                  = ('xpath', '//iframe[contains(@title, "ENTRY_NAME")]')   
-    D2L_EMBED_DISCUSSION_MENU                           = ('xpath', '//button[@title="Actions for DISCUSSION_NAME"]')    
-    D2L_EMBED_DISCUSSION_DELETE_OPTION                  = ('xpath', "//span[contains(text(), 'Delete')]")
+    D2L_EMBED_DISCUSSION_MENU                           = ('xpath', '//d2l-button-icon[@text="Actions for DISCUSSION_NAME"]')
+    D2L_EMBED_DISCUSSION_DELETE_OPTION                  = ('xpath', '//d2l-menu-item[@text="Delete"]')
     D2L_DELETE_DISCUSSION_CONFIRMATION_BTN              = ('xpath', '//button[@class="d2l-button" and text()="Yes"]')
     D2L_DELETE_CONFIRMATION_MSG                         = ('xpath', '//div[contains(@data-message-text,"has been deleted")]')
     D2L_QA_PROD_BSE_OPTION                              = ('xpath', '//span[@class="d2l-textblock" and text()="QA PROD BSE"]')
@@ -294,15 +294,9 @@ class D2L(Base):
                 writeToLog("INFO","FAILED to click on 'Discussions' button")
                 return False  
         
-        sleep(10)    
-        # Focus on the frame title
-        frameMenuBtnEl = self.wait_element((self.D2L_EMBED_DISCUSSION_FRAME_TITLE[0], self.D2L_EMBED_DISCUSSION_FRAME_TITLE[1].replace('GUID', localSettings.LOCAL_SETTINGS_GUID)))
-        if frameMenuBtnEl == False:
-            writeToLog("INFO","FAILED to get frame menu button")
-            return False
-        
-        frameMenuBtnEl.send_keys('')           
-        self.clsCommon.sendKeysToBodyElement(Keys.ARROW_DOWN,8)            
+        sleep(5)
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        sleep(1)
                
         # Switch to embed iframe                                         
         tmp_entry_iframe = (self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[0], self.D2L_FORUM_DESCRIPTION_ENTRY_IFRAME[1].replace('ENTRY_NAME', entryName))
@@ -342,9 +336,13 @@ class D2L(Base):
             if self.click(self.D2L_DISCUSSIONS_LINK_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'Discussions' button")
                 return False 
-
+        
+        sleep(5)
+        self.clsCommon.sendKeysToBodyElement(Keys.END)
+        sleep(1)      
+              
         tmp_discussion_menu = (self.D2L_EMBED_DISCUSSION_MENU[0], self.D2L_EMBED_DISCUSSION_MENU[1].replace('DISCUSSION_NAME', discussionName))
-        if self.click(tmp_discussion_menu) == False:
+        if self.click(tmp_discussion_menu, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on embed discussion menu")
             return False    
         
@@ -354,11 +352,12 @@ class D2L(Base):
             writeToLog("INFO","FAILED to click on delete option")
             return False
         
+        sleep(2)  
+        
         if self.click(self.D2L_DELETE_DISCUSSION_CONFIRMATION_BTN) == False:
             writeToLog("INFO","FAILED to click 'Yes' on delete confirmation popup")
             return False  
         
-#        tmp_delete_message = (self.D2L_DELETE_CONFIRMATION_MSG[0], self.D2L_DELETE_CONFIRMATION_MSG[1].replace('DISCUSSION_NAME', discussionName))   
         if self.wait_element(self.D2L_DELETE_CONFIRMATION_MSG) == False:
             writeToLog("INFO","FAILED to displayed delete confirmation message")
             return False   
