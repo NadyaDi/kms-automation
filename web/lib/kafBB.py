@@ -899,7 +899,7 @@ class BlackBoard(Base):
                 writeToLog("INFO","FAILED to switch to PLAYER_IFRAME iframe")
                 return False    
             
-            sleep(15)                 
+            sleep(20)                 
             if self.clsCommon.player.clickPlayPauseAndVerify(delay, clickPlayFromBarline=False) == False:
                 writeToLog("INFO","FAILED to play and verify video")
                 return False    
