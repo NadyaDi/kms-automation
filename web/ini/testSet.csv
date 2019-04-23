@@ -397,7 +397,8 @@ test_5128,1,0,0,0,Quiz - Analytics - Remove last attempt - Latest score
 test_5129,1,0,0,0,Quiz - Analytics - Remove last attempt - First score
 test_5130,1,0,0,0,Quiz - Analytics - Remove last attempt - Lowest score
 test_5132,1,0,0,0,Quiz - Analytics - Remove last attempt - Average score
-test_5133,1,0,0,0,Quiz - Analytics - Clear all attempts when no attempts still lefte
+test_5133,1,0,0,0,Quiz - Analytics - Clear all attempts when no attempts still left
+test_5134,1,0,0,0,Quiz - Analytics - Clear all attempts when attempts still left
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality
