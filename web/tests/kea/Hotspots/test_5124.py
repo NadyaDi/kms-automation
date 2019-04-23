@@ -34,7 +34,7 @@ class Test:
     typeTest            = "While using a High Number of Hotsptos and Hotspots with special configurations"
     description         = "Description"
     tags                = "Tags,"
-    entryName           = 'FE0A3ED3-5124-Hotspots - HS List General UI'
+    entryName           = None
     entryDescription    = "description"
     entryTags           = "tag1,"
 
@@ -57,7 +57,7 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-#             self.entryName             = clsTestService.addGuidToString("Hotspots - HS List General UI", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Hotspots - HS List General UI", self.testNum)
             
             hotspotSpecialCharacters                 = ['#!@$%^%&%^*&(_+\];dsaHa123', enums.keaLocation.BOTTOM_LEFT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
             hotspotLongTitle                         = ['Hotspot Long Title, How Long you may Ask, well I don t really know, who knows?', enums.keaLocation.CENTER, 10, 15, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
@@ -85,38 +85,38 @@ class Test:
             if self.common.kea.verifyHotspotsCreationWithInvalidURL(enums.keaHotspotCreationScreen.ADVANCED_SETTINGS, 'invalidurlformat') == False:
                 writeToLog("INFO","Step 4: FAILED to verify the Invalid URL functionality in " + enums.keaHotspotCreationScreen.ADVANCED_SETTINGS.value + " screen")
                 return
-  
+   
             writeToLog("INFO","Step 5: Going to verify the Invalid URL functionality in " + enums.keaHotspotCreationScreen.ADD_HOTSPOT_TOOL_TIP.value + " screen")
             if self.common.kea.verifyHotspotsCreationWithInvalidURL(enums.keaHotspotCreationScreen.ADD_HOTSPOT_TOOL_TIP, 'invalidurlformat') == False:
                 writeToLog("INFO","Step 5: FAILED to verify the Invalid URL functionality in " + enums.keaHotspotCreationScreen.ADD_HOTSPOT_TOOL_TIP.value + " screen")
                 return
-  
+   
             writeToLog("INFO","Step 6: Going to create special hotspots inside the " + self.entryName + " entry")
             if self.common.kea.hotspotCreation(hotspotSpecialDict, False, enums.keaHotspotCreationType.VIDEO_PAUSED) == False:
                 writeToLog("INFO","Step 6: FAILED to create special hotspots inside the " + self.entryName + " entry")
                 return
-              
+               
             writeToLog("INFO","Step 7: Going to verify the timeline section for " + self.entryName +" entry, while having special hotspot configurations")
             if self.common.kea.hotspotTimelineVerification(hotspotSpecialDict, 3) == False:
                 writeToLog("INFO","Step 7: FAILED to verify the timeline section for " + self.entryName +" entry, while having special hotspot configurations")
                 return
-             
+              
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step 8: Going to navigate to the entry page for " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 8: FAILED to navigate to the entry page for " + self.entryName)
                 return
-                  
+                   
             writeToLog("INFO","Step 9: Going to verify the hotspots from the " + self.entryName + " entry, while having special hotspot configurations")
             if self.common.player.hotspotVerification(hotspotSpecialDict, enums.Location.ENTRY_PAGE, embed=False) == False:
                 writeToLog("INFO","Step 9: FAILED to verify the hotspots from the " + self.entryName + " entry, while having special hotspot configurations")
                 return
-               
+                
             writeToLog("INFO","Step 10: Going to navigate back to KEA " + enums.keaTab.HOTSPOTS.value  + " Section for the " + self.entryName + " entry")
             if self.common.kea.launchKEATab(self.entryName, enums.keaTab.HOTSPOTS, True, 0) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate back to KEA " + enums.keaTab.HOTSPOTS.value  + " Section for the " + self.entryName + " entry")
                 return
-            
+             
             i = 11
             for x in range(0, len(hotspotSpecialDict)):
                 hotspotCurrentName = hotspotSpecialDict[str(x+1)][0]
@@ -126,7 +126,7 @@ class Test:
                     return
                 else:
                     i += 1
-                    
+       
             writeToLog("INFO","Step " + str(i) + ": Going to create a list of 15 random generated hotspots inside the " + self.entryName + " entry")
             if self.common.kea.hotspotCreation(generatedHotspotDictionary, False, enums.keaHotspotCreationType.VIDEO_PAUSED) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to create a list of 15 random generated hotspots inside the " + self.entryName + " entry")

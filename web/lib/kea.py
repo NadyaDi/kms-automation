@@ -1356,11 +1356,18 @@ class Kea(Base):
 
         actionSetQuizLocation = ActionChains(self.driver)
         # Set the time line location using action chain
+        # Time marker is moved based on the clicked spot from the timeline section element
         try:
             actionSetQuizLocation.move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+2.5, -10).pause(1).click().perform()
         except Exception:
-            writeToLog("INFO", "FAILED to set the start time to " + str(timeLocation))
-            return False
+            writeToLog("INFO", "FAILED to click on the timeline section during the first time in order to set the desired time marker location")
+            timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True)
+            try:
+                ActionChains(self.driver).move_to_element(timeLineSectionMarker).send_keys(Keys.PAGE_DOWN).perform()
+                ActionChains(self.driver).move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+2.5, -10).pause(1).click().perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to set the start time to during the first try " + str(timeLocation))
+                return False
         
         timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5]
         
@@ -1382,7 +1389,7 @@ class Kea(Base):
                 try:
                     actionSetQuizLocationSecond.move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+2.5+differencePx, -10).pause(1).click().perform()
                 except Exception:
-                    writeToLog("INFO", "FAILED to set the start time to " + str(timeLocation))
+                    writeToLog("INFO", "FAILED to set the start time to during the second try " + str(timeLocation))
                     return False
                 
             else:
@@ -2193,8 +2200,21 @@ class Kea(Base):
             try:
                 actions["action{0}".format(x)].move_to_element(currentQuestion).pause(2).perform()
             except Exception:
-                writeToLog("INFO", "FAILED to hover over the quiz number " + str(x+1))
-                return False
+                writeToLog("INFO", "FAILED to hover over the quiz number " + str(x+1) + " during the first try")
+                # Add redundancy step if unable to select the element during the first try
+                if self.clickElement(currentQuestion, True) == False:
+                    writeToLog("INFO", "FAILED to click on the quiz number "  + str(x+1) + " in order to hover on it during the second try")
+                    return False
+                
+                if self.setRealTimeMarkerToTime('00:00') == False:
+                    writeToLog("INFO", "FAILED to resume the real time marker to second zero in order to hover on the quiz cue point during the second try")
+                    return False
+                
+                try:
+                    ActionChains(self.driver).move_to_element(currentQuestion).pause(2).perform()
+                except Exception:
+                    writeToLog("INFO", "FAILED to hover over the quiz number " + str(x+1) + " after two tries")
+                    return False
             
             # We take the quiz title and time stamp for the current quiz number
             currentQuestionDetails = questionDict[str(x+1)]
