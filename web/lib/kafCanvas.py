@@ -21,8 +21,8 @@ class Canvas(Base):
     LOGIN_SUBMIT_BTN                                    = ('xpath', "//button[@class='Button Button--login']")
     USER_NAVIGATION_MENU_BAR                            = ('xpath', "//div[@class='ic-app-header__main-navigation']")
     USER_ACCOUNT_BUTTON_IN_NAV_BAR                      = ('xpath', "//a[@id='global_nav_profile_link']")
-    #USER_LOGOUT_BTN                                     = ('xpath', "//button[@type='submit']")
-    USER_LOGOUT_BTN                                     = ('xpath', "//span[@class='Button__dUxGkD-content' and contains(text(), 'Logout')]")
+    USER_LOGOUT_BTN                                     = ('css', "button[type='submit']")
+    #USER_LOGOUT_BTN                                     = ('xpath', "//span[@class='Button__dUxGkD-content' and contains(text(), 'Logout')]")
     CANVAS_MEDIA_SPACE_IFRAME                           = ('xpath', "//iframe[@id='tool_content']")
     CANVAS_MY_MEDIA_BUTTON_IN_NAV_BAR                   = ('xpath', "//a[contains(@class, 'ontext_external_tool') and @title='My Media']")
     CANVAS_MEDIA_GALLERY_BUTTON_IN_NAV_BAR              = ('xpath', "//a[contains(@class, 'ontext_external_tool') and @title='Media Gallery']")
@@ -127,7 +127,6 @@ class Canvas(Base):
             writeToLog("INFO","FAILED to click on account button in main nav bar ")
             return False
         
-        sleep(10)
         if self.click(self.USER_LOGOUT_BTN, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False

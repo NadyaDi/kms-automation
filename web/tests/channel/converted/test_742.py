@@ -170,9 +170,8 @@ class Test:
             self.common.login.logOutOfKMS()
             self.common.loginAsUser()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4, self.entryName5])
-            self.common.login.logOutOfKMS()
-            self.common.login.loginToKMS(self.newUserId, self.newUserPass) 
-            self.common.channel.deleteChannel(self.channelName)
+            self.common.apiClientSession.startCurrentApiClientSession()
+            self.common.apiClientSession.deleteCategory(self.channelName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass
