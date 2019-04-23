@@ -25,6 +25,11 @@ from general import General
 # optionTwoMonthlyMonthNumber - this parameter is for the number of month in monthly second option
 # endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
 # numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
+# publishTo - this parameter is so we can know where to publish the event to category or channel. if we need to publish both category/channel the parameter need to be a list: ["category", "channel"]
+# categoryList - this parameter will have the name of the category to publish to , if we have more then 1 category need to be in a list ([]) format
+# channelList = this parameter will have the name of the channel to publish to , if we have more then 1 channel need to be in a list ([]) format
+# verifyDateFormat - this parameter is created in the Constructor. it will build a date format to us in my schedule page
+# fieldsToUpdate - this parameter will have the fields name that need to be update in edit tests, need to be in a list ([]) format
 class SechdeuleEvent():
     title = None
     startDate = None
@@ -55,8 +60,8 @@ class SechdeuleEvent():
     endDateOption = ''
     numberOfRecurrence=''
     publishTo = ''
-    categories = ''
-    channels = ''
+    categoryList = ''
+    channelList = ''
     verifyDateFormat = ''
     fieldsToUpdate = ''
     
@@ -968,7 +973,11 @@ class  Recscheduling(Base):
     # The function publish event to channel / category
     # publishTo - in this parameter will have to were publish to: channel / category
     # categories / channels - in those parameters will have the names of channels/categories name
-    def publishEvent(self, publishTo, categories='', channels=''):
+    def publishEvent(self, eventInstance):
+        if self.navigateToEventPage(eventInstance) == False:
+                writeToLog("INFO","FAILED navigate to event page")
+                return False
+            
         # Check if 'Copy details from event' check box is checked and if it's check unchecked it 
         # default is that 'Copy details from event' is checked and to open its need to be unchecked
         if self.is_element_checked(self.SCHEDULE_COPE_DETAILS_BUTTON) == True:
@@ -984,15 +993,15 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to click on publish button")
             return False
         
-        if type(publishTo) is list:
-            for category in publishTo:
-                if category.lower() == 'cateogry':
+        if type(eventInstance.publishTo) is list:
+            for category in eventInstance.publishTo:
+                if category.lower() == 'category':
                     # Click on Publish in Category
                     if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
                         writeToLog("INFO","FAILED to click on Publish in Category")
                         return False
                 
-                    if self.chooseCategoryToPublishTo(categories) == False:
+                    if self.chooseCategoryToPublishTo(eventInstance.categoriesList) == False:
                         writeToLog("INFO","FAILED to choose categories")
                         return False
                     
@@ -1002,32 +1011,32 @@ class  Recscheduling(Base):
                         writeToLog("INFO","FAILED to click on Publish in channel")
                         return False
                     
-                if self.chooseCategoryToPublishTo(channels) == False:
-                    writeToLog("INFO","FAILED to choose channels")
-                    return False
+                    if self.chooseCategoryToPublishTo(eventInstance.channelList) == False:
+                        writeToLog("INFO","FAILED to choose channels")
+                        return False
         else:     
-            if publishTo.lower() == 'category':  
+            if eventInstance.publishTo.lower() == 'category':  
                 # Click on Publish in Category
                 if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CATEGORY_OPTION, 30) == False:
                     writeToLog("INFO","FAILED to click on Publish in Category")
                     return False
             
-                if self.chooseCategoryToPublishTo(categories) == False:
+                if self.chooseCategoryToPublishTo(eventInstance.categoriesList) == False:
                     writeToLog("INFO","FAILED to choose categories")
                     return False
                 
-            elif publishTo.lower() == 'channel':
+            elif eventInstance.publishTo.lower() == 'channel':
                 # Click on Publish in Channel
                 if self.click(self.clsCommon.myMedia.MY_MEIDA_PUBLISH_TO_CHANNEL_OPTION, 30) == False:
                     writeToLog("INFO","FAILED to click on Publish in channel")
                     return False
                 
-                if self.chooseCategoryToPublishTo(channels) == False:
+                if self.chooseCategoryToPublishTo(eventInstance.channelList) == False:
                     writeToLog("INFO","FAILED to choose channels")
                     return False
         sleep(1)
 
-        if self.click(self.clsCommon.upload.UPLOAD_ENTRY_SAVE_BUTTON, multipleElements=True) == False:
+        if self.click(self.SCHEDULE_SAVE_EVENT, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on 'Save' button")
             return None
         self.clsCommon.general.waitForLoaderToDisappear()
@@ -1043,14 +1052,14 @@ class  Recscheduling(Base):
         if type(categories) is list:
             # choose all the  channels to publish to
             for category in categories:
-                tmpCategoryName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
+                tmpCategoryName = (self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', category))
 
                 if self.click(tmpCategoryName, 20, multipleElements=True) == False:
                     writeToLog("INFO","FAILED to select published channel '" + category + "'")
                     return False
                 
         elif categories != '':
-            tmpChannelName = (self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', categories))
+            tmpChannelName = (self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[0], self.clsCommon.myMedia.MY_MEDIA_CHOSEN_CATEGORY_TO_PUBLISH[1].replace('PUBLISHED_CATEGORY', categories))
 
             if self.click(tmpChannelName, 20, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to select published channel '" + tmpCategoryName + "'")

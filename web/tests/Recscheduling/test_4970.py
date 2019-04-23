@@ -49,8 +49,9 @@ class Test:
     startEventTime = None
     endTime = None
     resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
-    publishTo = 'Category'
-    categoryList = ["Apps Automation Category"]
+    publishTo = ['Channel', 'category']
+    channles = ["test22", "test23"]
+    category = "Apps Automation Category"
     
     editDescription = "Edit Description"
     editTags = "Edit Tags, schedule,"
@@ -105,11 +106,12 @@ class Test:
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
             self.event.resources = self.resource
             self.event.publishTo = self.publishTo
-            self.categoryList = self.categoryList
+            self.event.categoryList = self.category
+            self.event.channelList = self.channles
             self.event.fieldsToUpdate = ["title", "Organizer", "description", "tags", "resources"]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            self.common.recscheduling.publishEvent(self.event.publishTo, self.event.categories)
+            self.common.editEntryPage.addCollaborator(self.entryName, 'Automation_User_1' , True, False)
 #             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
 #             if self.common.admin.enableRecscheduling(True) == False:
 #                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
@@ -150,7 +152,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 6: Going to verify event metadata")
-            if self.common.recscheduling.publishEvent(self.event.publishTo, self.event.categories, "") == False:
+            if self.common.recscheduling.publishEvent(self.event) == False:
                 writeToLog("INFO","Step 6: FAILED to verify event metadata")
                 return
             
