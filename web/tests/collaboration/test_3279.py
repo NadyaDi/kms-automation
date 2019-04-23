@@ -39,7 +39,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10secQrMidLeftSmall.mp4'
     timeToStop = "0:05"
     qrCodeRedult = "5"
-    PlayFromBarline = False
+    PlayFromBarline = True
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
