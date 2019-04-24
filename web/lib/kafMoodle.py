@@ -598,8 +598,10 @@ class Moodle(Base):
         tmpGradeParent = (self.MOODLE_ACTIVITY_TITLE_FOR_STUDENT_GRADES_PAGE[0], self.MOODLE_ACTIVITY_TITLE_FOR_STUDENT_GRADES_PAGE[1].replace('ACTIVITY_NAME', videoQuizName))
         tmpGradeParentElement = self.wait_element(tmpGradeParent)
         if tmpGradeParentElement == False:
-            writeToLog("INFO","FAILED to find quiz in grades page")
-            return False              
+            self.refresh()
+            if tmpGradeParentElement == False:
+                writeToLog("INFO","FAILED to find quiz in grades page")
+                return False              
          
         tmpGradeParentId = tmpGradeParentElement.get_attribute("id")  
         tmpGrade = (self.MOODLE_ACTIVITY_GRADE_FOR_STUDENT[0], self.MOODLE_ACTIVITY_GRADE_FOR_STUDENT[1].replace('ID_NUMBER', tmpGradeParentId).replace('GRADE', grade))
