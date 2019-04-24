@@ -187,13 +187,14 @@ class EditEntryPage(Base):
 
 
     # Author: Michal Zomper   
-    def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher, isCoViewer=False):
-        #Click on collaboration tab
-        if self.clickOnEditTab(enums.EditEntryPageTabName.COLLABORATION) == False:
-            writeToLog("INFO","FAILED to click on collaboration tab")
-            return False    
-        
-        sleep(1)
+    def addCollaborator(self, entryName, userId, isCoEditor, isCoPublisher, isCoViewer=False , location=enums.Location.EDIT_ENTRY_PAGE):
+        if location == enums.Location.EDIT_ENTRY_PAGE:
+            #Click on collaboration tab
+            if self.clickOnEditTab(enums.EditEntryPageTabName.COLLABORATION) == False:
+                writeToLog("INFO","FAILED to click on collaboration tab")
+                return False    
+            sleep(1)
+            
         #click on add collaborator
         if self.click(self.EDIT_ENTRY_ADD_COLLABORATOR_BUTTON, 30) == False:
             writeToLog("INFO","FAILED to click on add collaborator button")
@@ -245,7 +246,24 @@ class EditEntryPage(Base):
             writeToLog("INFO","FAILED to find added user in collaboration permissions table")
             return False      
         
-        # set the permissions locator 
+        tmp_permissions = self.setCollaboratorPermissionsLocator(isCoEditor, isCoPublisher, isCoViewer)
+        if tmp_permissions == False:
+            writeToLog("INFO", "FAILED to set  permissions locator")
+            return False
+        
+        # Check that the user permissions correctly were added to collaboration permissions table
+        try:
+            self.get_child_element(parentEl, tmp_permissions)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to find added user permissions in collaboration permissions table")
+            return False
+        sleep(2)
+        writeToLog("INFO","Success, user was added successfully as collaborator")
+        return True 
+    
+    
+    # The function set the permissions locator in order to check that the collaborator display with the needed permissions  
+    def setCollaboratorPermissionsLocator(self, isCoEditor, isCoPublisher, isCoViewer):
         if isCoEditor == True and isCoPublisher == True and isCoViewer == False:
             tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Editor, Co-Publisher"))
         elif isCoEditor == True and isCoPublisher == False and isCoViewer == False:
@@ -262,18 +280,9 @@ class EditEntryPage(Base):
             tmp_permissions = (self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[0], self.EDIT_ENTRY_CHOSEN_USER_PERMISSION_IN_COLLABORATOR_TABLE[1].replace('USER_PERMISSION', "Co-Viewer"))
         else:
             writeToLog("INFO", "FAILED, please make sure that you've used a correct configuration" + str(isCoEditor) + " co-editor " + str(isCoPublisher) + " co publisher " + str(isCoViewer) + " co viewer")
-            return False
+            return False  
         
-        # Check that the user permissions correctly were added to collaboration permissions table
-        try:
-            self.get_child_element(parentEl, tmp_permissions)
-        except NoSuchElementException:
-            writeToLog("INFO","FAILED to find added user permissions in collaboration permissions table")
-            return False
-        sleep(2)
-        writeToLog("INFO","Success user was added successfully as collaborator to entry:'" + entryName + "'")
-        return True 
-    
+        return  tmp_permissions
             
     # Author: Michal Zomper                
     def changeEntryMetadata (self, entryName, newEntryName, newDescription, NewTags): 

@@ -81,6 +81,7 @@ class Location(Enum):
     UPLOAD_PAGE_EMBED           = 'Upload page embed'
     GALLERY_PAGE                = 'Gallery Page'
     KEA_PAGE                    = "KEA PAGE"
+    SCHEDULE_EVENT_PAGE         = "SCHEDULE EVENT PAGE"
 
 
 class EditEntryPageTabName(Enum):
