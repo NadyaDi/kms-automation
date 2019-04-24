@@ -13,13 +13,13 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Clear all attempts when more than one user answer the quiz
+    # Test Name : Quiz - Analytics - Remove last attempt when more than one user answer the quiz
     # Test description:
     # Go to editor page and create quiz with option to retake quiz - 3 attempts and all type of questions
     # Go to quiz page with different users and answer quiz -> Login with quiz owner -> Quiz analytics page -> Clear all attempts for specific user -> 
-    # Verify that user row was deleted and other users row are still displayed 
+    # Verify that user last attempt was removed  and other users row are still displayed
     #================================================================================================================================
-    testNum = "5135"
+    testNum = "5136"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -110,11 +110,15 @@ class Test:
     numberOfAttemptsUser3 = '3/3'
     scoreUser3 = '100%'   
     
+    numberOfAttemptsUser3AfterRemovingLastAttempt = '2/3'
+    scoreUser3AfterRemovingLastAttempt = '33%'
+    
     user1DataInAnalytics = [userId1, userNameUser1, numberOfAttemptsUser1, scoreUser1]
     user2DataInAnalytics = [userId2, userNameUser2, numberOfAttemptsUser2, scoreUser2]
     user3DataInAnalytics = [userId3, userNameUser3, numberOfAttemptsUser3, scoreUser3]
+    user3DataInAnalyticsAfterDeletion = [userId3, userNameUser3 + "   Last Attempt removed", numberOfAttemptsUser3AfterRemovingLastAttempt, scoreUser3AfterRemovingLastAttempt]
     allUsersDataInAnalytics = {'1':user1DataInAnalytics, '2':user2DataInAnalytics, '3':user3DataInAnalytics}
-    usersDataInAnalyticsAfterDeletion = {'1':user2DataInAnalytics, '2':user3DataInAnalytics}
+    usersDataInAnalyticsAfterDeletion = {'1':user1DataInAnalytics, '2':user2DataInAnalytics, '3':user3DataInAnalyticsAfterDeletion}
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -130,8 +134,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz - Clear all attempts - more than one user in analytics", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz - Clear all attempts - more than one user in analytics - Quiz", self.testNum)      
+            self.entryName = clsTestService.addGuidToString("Quiz - Remove last attempt - more than one user in analytics", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz - Remove last attempt - more than one user in analytics - Quiz", self.testNum)      
             self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LATEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}
             self.keaAllowMultipleScore           = {enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:True}            
@@ -306,38 +310,22 @@ class Test:
                 return                                                                    
                
             i = i + 1       
-            writeToLog("INFO","Step " + str(i) + ": Going to clear all quiz attempts") 
-            if self.common.quizAnalytics.deleteUserAttempts(self.userId1, enums.quizAnlyticsDeleteOption.CLEAR_ALL_ATTEMPTS) == False:
+            writeToLog("INFO","Step " + str(i) + ": Going to remove last attempt for " + self.userNameUser3) 
+            if self.common.quizAnalytics.deleteUserAttempts(self.userId3, enums.quizAnlyticsDeleteOption.REMOVE_LAST_ATTEMPT) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED: to clear all quiz attempts")
-                return  
-              
-            i = i + 1    
-            writeToLog("INFO","Step " + str(i) + ": Going to verify message after removing all attempt for " + self.userNameUser1)  
-            if self.common.quizAnalytics.verifyRemovedAttemptMessage() == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify message after removing all attempt for " + self.userNameUser1)  
-                return  
+                writeToLog("INFO","Step " + str(i) + ": FAILED: to clear all quiz attempts" + self.userNameUser3)
+                return   
             
             i = i + 1    
-            writeToLog("INFO","Step " + str(i) + ": Going to verify that quiz attempts and score aren't displayed anymore for " + self.userNameUser1)  
-            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.userId1, self.userNameUser1, self.numberOfAttemptsUser1, self.scoreUser1, enums.playerQuizScoreType.LATEST) == True:
-                self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score aren't displayed anymore for " + self.userNameUser1)  
-                return 
-            writeToLog("INFO","Step " + str(i) + ": Failed as expected")   
-            
-            
-            i = i + 1    
-            writeToLog("INFO","Step " + str(i) + ": Going to verify quiz attempts and score for other users are still displayed")  
+            writeToLog("INFO","Step " + str(i) + ": Going to verify quiz attempts and score for other users after removing last attempt for " + self.userNameUser3)  
             if self.common.quizAnalytics.verifyAllUsersAttemptsAndScore(self.usersDataInAnalyticsAfterDeletion, enums.playerQuizScoreType.LATEST) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score for other users are still displayed")  
-                return                                  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score for other users after removing last attempt for " + self.userNameUser3)  
+                return             
 
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Clear all attempts when when more than one user answer the quiz was done successfully")
+            writeToLog("INFO","TEST PASSED: Remove last attempt when when no attempts still left was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

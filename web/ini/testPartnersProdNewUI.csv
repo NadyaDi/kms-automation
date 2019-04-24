@@ -287,6 +287,9 @@ test_5131,Quiz - Analytics - Remove last attempt - Highest score,2501881,mediasp
 test_5132,Quiz - Analytics - Remove last attempt - Average score,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5133,Quiz - Analytics - Clear all attempts when no attempts still left,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5134,Quiz - Analytics - Clear all attempts when attempts still left,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5135,Quiz - Analytics - Clear all attempts when more than one user answer the quiz,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5136,Quiz - Analytics - Remove last attempts when more than one user answer the quiz,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5137,Quiz - Analytics - Verify user answers in quiz users tab,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4955,Editor: Trim Quiz entry (with Slides and Captions),2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,mediaspace.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
