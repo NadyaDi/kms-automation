@@ -30,6 +30,10 @@ from general import General
 # channelList = this parameter will have the name of the channel to publish to , if we have more then 1 channel need to be in a list ([]) format
 # verifyDateFormat - this parameter is created in the Constructor. it will build a date format to us in my schedule page
 # fieldsToUpdate - this parameter will have the fields name that need to be update in edit tests, need to be in a list ([]) format
+# collaboratorUser - this parameter will have the the user id for collaborator 
+# coEditor  - this parameter is to know if collaborator user need to be co editor. this is a boolean parameter so needed to be only True/False 
+# coPublisher - this parameter is to know if collaborator user need to be co publisher. this is a boolean parameter so needed to be only True/False 
+# coViewer - this parameter is to know if collaborator user need to be co publisher. this is a boolean parameter so needed to be only True/False, Default for this is false
 class SechdeuleEvent():
     title = None
     startDate = None
@@ -64,6 +68,11 @@ class SechdeuleEvent():
     channelList = ''
     verifyDateFormat = ''
     fieldsToUpdate = ''
+    collaboratorUser = ''
+    coEditor = ''
+    coPublisher = ''
+    coViewer = False
+    
     
     # Constructor
     def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
@@ -161,6 +170,7 @@ class  Recscheduling(Base):
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES                               = ('css', "span.sol-quick-delete")
     SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS                                   = ('css', "li.select2-search-choice")
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS                                    = ('css', "a.select2-search-choice-close")
+
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -776,27 +786,85 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to verify event end time")
             return False
         
-        if type(eventInstance.resources) is list:
-            tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text
-            for resource in eventInstance.resources:
-                if (resource.value in tmpResources) == False:
-                    writeToLog("INFO","FAILED to verify event resource '" + resource.value + "'")
+        if eventInstance.resources != "":
+            if type(eventInstance.resources) is list:
+                tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text
+                for resource in eventInstance.resources:
+                    if (resource.value in tmpResources) == False:
+                        writeToLog("INFO","FAILED to verify event resource '" + resource.value + "'")
+                        return False
+            else:
+                if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text == eventInstance.resources.value) == False:
+                    writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources.value + "'")
                     return False
-        else:
-            if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text == eventInstance.resources.value) == False:
-                writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources.value + "'")
-                return False
-        
+            
         if (self.wait_element(self.SCHEDULE_EVENT_DESCRIPTION).text == eventInstance.description) == False:
             writeToLog("INFO","FAILED to verify event description")
             return False
-                            
-        tagsList = eventInstance.tags.split(",")
-        tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text.replace("\n", " ")
-        for tag in tagsList:
-            if (tag in tmpTags) == False:
-                writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
+        
+        if eventInstance.tags != "":                 
+            tagsList = eventInstance.tags.split(",")
+            tmpTags = self.wait_element(self.SCHEDULE_EVENT_TAGS).text.replace("\n", " ")
+            for tag in tagsList:
+                if (tag in tmpTags) == False:
+                    writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
+                    return False
+        
+        if eventInstance.collaboratorUser != False:
+            # Check that the user was added to collaboration permissions table
+            tmpUserName = (self.clsCommon.editEntryPage.EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE[0], self.clsCommon.editEntryPage.EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE[1].replace('USER_NAME', eventInstance.collaboratorUser))
+            parentEl = self.get_element(tmpUserName)
+            if parentEl == None:
+                writeToLog("INFO","FAILED to find added user in collaboration permissions table")
+                return False      
+            
+            tmp_permissions = self.clsCommon.editEntryPage.setCollaboratorPermissionsLocator(eventInstance.coEditor, eventInstance.coPublisher, eventInstance.coViewer)
+            if tmp_permissions == False:
+                writeToLog("INFO", "FAILED to set  permissions locator")
                 return False
+            
+            # Check that the user permissions correctly were added to collaboration permissions table
+            try:
+                self.get_child_element(parentEl, tmp_permissions)
+            except NoSuchElementException:
+                writeToLog("INFO","FAILED to find added user permissions in collaboration permissions table")
+                return False
+        
+        # verify publish section if exist
+        if eventInstance.publishTo !='':
+            try:
+                tmpPublish = self.get_element(self.clsCommon.myMedia.PUBLISH_IN_SECTION_AFTER_PUBLISH).text
+            except:
+                writeToLog("INFO","FAILED to find publish section in event page")
+                return False
+            
+            if ("Published in" in tmpPublish) == False:
+                writeToLog("INFO","FAILED to find 'publish in' title in event page")
+                return False
+            
+            # verify all category/channel name that the event published to display
+            if eventInstance.categoryList != '':
+                if type(eventInstance.categoryList) is list:
+                    for category in eventInstance.categoryList:
+                        if (category in tmpPublish) == False:
+                            writeToLog("INFO","FAILED to find category '" + category + "' name in event page")
+                            return False
+                else:
+                    if (eventInstance.categoryList in tmpPublish) == False:
+                        writeToLog("INFO","FAILED to find category '" + eventInstance.categoryList + "' name in event page")
+                        return False
+            
+            if eventInstance.channelList != '':
+                if type(eventInstance.channelList) is list:
+                    for channel in eventInstance.channelList:
+                        if (channel in tmpPublish) == False:
+                            writeToLog("INFO","FAILED to find channel '" + channel + "' name in event page")
+                            return False
+                else:
+                    if (eventInstance.channelList in tmpPublish) == False:
+                        writeToLog("INFO","FAILED to find channel '" + eventInstance.channelList + "' name in event page")
+                        return False
+            
         
         writeToLog("INFO","Success, Event metadata were verify successfully")
         return True
@@ -1001,7 +1069,7 @@ class  Recscheduling(Base):
                         writeToLog("INFO","FAILED to click on Publish in Category")
                         return False
                 
-                    if self.chooseCategoryToPublishTo(eventInstance.categoriesList) == False:
+                    if self.chooseCategoryToPublishTo(eventInstance.categoryList) == False:
                         writeToLog("INFO","FAILED to choose categories")
                         return False
                     
@@ -1021,7 +1089,7 @@ class  Recscheduling(Base):
                     writeToLog("INFO","FAILED to click on Publish in Category")
                     return False
             
-                if self.chooseCategoryToPublishTo(eventInstance.categoriesList) == False:
+                if self.chooseCategoryToPublishTo(eventInstance.categoryList) == False:
                     writeToLog("INFO","FAILED to choose categories")
                     return False
                 
@@ -1038,7 +1106,7 @@ class  Recscheduling(Base):
 
         if self.click(self.SCHEDULE_SAVE_EVENT, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on 'Save' button")
-            return None
+            return False
         self.clsCommon.general.waitForLoaderToDisappear()
 
         sleep(3)
@@ -1064,4 +1132,31 @@ class  Recscheduling(Base):
             if self.click(tmpChannelName, 20, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to select published channel '" + tmpCategoryName + "'")
                 return False
+        return True
+    
+    
+    # @Author: Michal Zomper
+    # The function adding collaborator to event
+    def addCollaboratorToScheduleEvent(self, eventInstance, location=enums.Location.SCHEDULE_EVENT_PAGE):
+        if self.navigateToEventPage(eventInstance) == False:
+                writeToLog("INFO","FAILED navigate to event page")
+                return False
+            
+        # Check if 'Copy details from event' check box is checked and if it's check unchecked it 
+        # default is that 'Copy details from event' is checked and to open its need to be unchecked
+        if self.is_element_checked(self.SCHEDULE_COPE_DETAILS_BUTTON) == True:
+            if self.check_element(self.SCHEDULE_COPE_DETAILS_BUTTON, 'True') == False:
+                writeToLog("INFO","FAILED to unchecked 'Copy details from event' button")
+                return False
+            
+        if self.clsCommon.editEntryPage.addCollaborator("", eventInstance.collaboratorUser , eventInstance.coEditor, eventInstance.coPublisher, eventInstance.coViewer, location) == False:
+            writeToLog("INFO","FAILED adding collaborator to event")
+            return False
+        
+        if self.click(self.SCHEDULE_SAVE_EVENT, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on 'Save' button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+
+        writeToLog("INFO","Success, collaborator was added successfully to event")
         return True

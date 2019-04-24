@@ -49,14 +49,14 @@ class Test:
     startEventTime = None
     endTime = None
     resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
-    publishTo = ['Channel', 'category']
-    channles = ["test22", "test23"]
+    publishTo = 'category'
     category = "Apps Automation Category"
     
     editDescription = "Edit Description"
     editTags = "Edit Tags, schedule,"
     editResources = [enums.RecschedulingResourceOptions.QA_APP_ROOM, enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE]
     editOrganizer = 'Automation_User_1' 
+    userId = 'AutomationUser8'
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -107,11 +107,13 @@ class Test:
             self.event.resources = self.resource
             self.event.publishTo = self.publishTo
             self.event.categoryList = self.category
-            self.event.channelList = self.channles
             self.event.fieldsToUpdate = ["title", "Organizer", "description", "tags", "resources"]
+            self.event.collaboratorUser = self.userId
+            self.event.coEditor = True
+            self.event.coPublisher = False
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            self.common.editEntryPage.addCollaborator(self.entryName, 'Automation_User_1' , True, False)
+            
 #             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
 #             if self.common.admin.enableRecscheduling(True) == False:
 #                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
@@ -146,20 +148,25 @@ class Test:
                 return
             
             sleep(3)
-            writeToLog("INFO","Step 6: Going to verify event metadata")
-            if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
-                writeToLog("INFO","Step 6: FAILED to verify event metadata")
-                return
-            
-            writeToLog("INFO","Step 6: Going to verify event metadata")
+            writeToLog("INFO","Step 6: Going to publish event")
             if self.common.recscheduling.publishEvent(self.event) == False:
-                writeToLog("INFO","Step 6: FAILED to verify event metadata")
+                writeToLog("INFO","Step 6: FAILED to publish event")
                 return
             
+            writeToLog("INFO","Step 7: Going to add collaborator to event")
+            if self.common.recscheduling.addCollaboratorToScheduleEvent(self.event, location=enums.Location.SCHEDULE_EVENT_PAGE) == False:
+                writeToLog("INFO","Step 7: FAILED adding collaborator to event")
+                return
             sleep(3)
-            writeToLog("INFO","Step 7: Going to delete event")
+            
+            writeToLog("INFO","Step 8: Going to verify event metadata")
+            if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
+                writeToLog("INFO","Step 8: FAILED to verify event metadata")
+                return
+            
+            writeToLog("INFO","Step 9: Going to delete event")
             if self.common.recscheduling.deteteSingleEvent(self.event) == False:
-                writeToLog("INFO","Step 7: FAILED to delete event from my schedule page")
+                writeToLog("INFO","Step 9: FAILED to delete event from my schedule page")
                 return
             ##################################################################
             self.status = "Pass"
