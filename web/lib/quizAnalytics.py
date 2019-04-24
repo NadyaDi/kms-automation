@@ -496,7 +496,7 @@ class QuizAnalytics(Base):
             userNumberOfAttempts    = userDataList[2]
             userScore               = userDataList[3]
     
-            if self.verifyUserAttemptsAndScore(userLoginName, userName, userNumberOfAttempts, userScore, scoreType, entryName='', False) == False:
+            if self.verifyUserAttemptsAndScore(userLoginName, userName, userNumberOfAttempts, userScore, scoreType, '', False) == False:
                 writeToLog("INFO","FAILED to verify attempts and score for all users")
                 return False                    
     
