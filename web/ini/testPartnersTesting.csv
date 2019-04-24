@@ -263,7 +263,7 @@ test_5120,Hotspots - General layout UI (with existing Hotspots),6269,qakmstest.d
 test_5121,Hotspots - General layout UI (without Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5121,Hotspots - General layout UI (without Hotspots),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5124,Hotspots - Hotspots list - General UI,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
-test_5141,Hotspots - Hotspot with all the Link types ( Web Pages, Time Locations),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5141,Hotspots - Hotspot with all the Link types ( Web Pages Time Locations),6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5151,Hotspots - Change Hotspot Location using Advanced Settings,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5152,Hotspots - Change Hotspot Size using Advanced Settings,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456

@@ -446,7 +446,7 @@ test_5119,1,0,0,0,Hotspots - Delete Hotspots using multiple type of actions
 test_5120,1,0,0,0,Hotspots - General layout UI (with existing Hotspots)
 test_5121,1,0,0,0,Hotspots - General layout UI (without Hotspots)
 test_5124,1,0,0,0,Hotspots - Hotspots list - General UI
-test_5141,1,0,0,0,Hotspots - Hotspot with all the Link types ( Web Pages, Time Locations)
+test_5141,1,0,0,0,Hotspots - Hotspot with all the Link types ( Web Pages Time Locations)
 test_5151,1,0,0,0,Hotspots - Change Hotspot Location using Advanced Settings
 test_5152,1,0,0,0,Hotspots - Change Hotspot Size using Advanced Settings
 test_5122,1,0,0,0,Editor - Create comments and sub comments with time stamp and then Trimming the Entry

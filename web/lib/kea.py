@@ -1370,6 +1370,9 @@ class Kea(Base):
                 if self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5] != timeLocation:
                     writeToLog("INFO", "FAILED to set the start time to during the second try " + str(timeLocation) + " using action chain")
                     # we continue to try to change the real marker time using input field ( not action chains )
+                else:
+                    writeToLog("INFO", "PASSED, the real time marker has been successfully set to the " + timeLocation + " time location, using Action Chain")
+                    return True
         
         timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5]
         
@@ -3453,6 +3456,7 @@ class Kea(Base):
         else:
             hotspots = hotspotNameList[0]
         
+        sleep(2)
         writeToLog("INFO","The following hotspots were verified: " + hotspots + "")
         return True
     
@@ -3981,19 +3985,22 @@ class Kea(Base):
         i = 1
         # Iterate through each presented hotspot
         for x in range(0, len(presentedHotspots)):
-            # Take the hotspot details from the dictionary
-            expectedHotspot          = hotspotsDict[str(i)]
-            
-            # Take the presented hotspot details
-            presentedHotspot         = presentedHotspots[x]
-            presentedHotspotTitle    = presentedHotspot.text
-            presentedHotspotWidth    = presentedHotspot.size['width']
-            presentedHotspotXValue   = presentedHotspot.location['x']
-            presentedHotspotYValue   = presentedHotspot.location['y']
-            presentedHotspotTime     = int(presentedHotspotWidth/widthSizeForOneSecond)
-            
-            expectedHotspotTime      = expectedHotspot[3] - expectedHotspot[2]
-            expectedHotspotXValue    = int(zeroSecondXValue + widthSizeForOneSecond * expectedHotspot[2])
+            try:
+                # Take the hotspot details from the dictionary
+                expectedHotspot          = hotspotsDict[str(i)]
+                
+                # Take the presented hotspot details
+                presentedHotspot         = presentedHotspots[x]
+                presentedHotspotTitle    = presentedHotspot.text
+                presentedHotspotWidth    = presentedHotspot.size['width']
+                presentedHotspotXValue   = presentedHotspot.location['x']
+                presentedHotspotYValue   = presentedHotspot.location['y']
+                presentedHotspotTime     = int(presentedHotspotWidth/widthSizeForOneSecond)
+                
+                expectedHotspotTime      = expectedHotspot[3] - expectedHotspot[2]
+                expectedHotspotXValue    = int(zeroSecondXValue + widthSizeForOneSecond * expectedHotspot[2])
+            except Exception:
+                writeToLog("INFO", "FAILED to take the Expected and Presented hotspot details")
             
             # Verify that the expected hotspot matches with the presented hotspot for the current location
             if presentedHotspotTitle == expectedHotspot[0]:                
