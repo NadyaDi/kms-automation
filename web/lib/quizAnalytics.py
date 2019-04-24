@@ -474,3 +474,31 @@ class QuizAnalytics(Base):
         
         writeToLog("INFO","Success:'Attempt Was removed' message is displayed")
         return True 
+    
+    
+    # @Author: Inbar Willman
+    # Verify that correct number of attempts, score and score type are displayed for all users
+    # allUsersDataDict = Dictionary that contains list with all user data (userId, username, number of attempts and score)
+    # score = string from the next format 100%, 90%
+    # scoreType= enums.playerQuizScoreType
+    # entryName - Is given if forcing navigating to quiz analytics page
+    def verifyAllUsersAttemptsAndScore(self, allUsersDataDict, scoreType, entryName='', forceNavigate=False):
+        # If we aren't in analytics page - quiz users tab
+        if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
+            if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate, enums.quizAnalytics.QUIZ_USERS) == False:
+                writeToLog("INFO","FAILED to navigate to quiz analytics - quiz users page")
+                return False       
+            
+        for i in range(0, len(allUsersDataDict)):
+            userDataList            = allUsersDataDict[str(i+1)]
+            userLoginName           = userDataList[0]
+            userName                = userDataList[1]
+            userNumberOfAttempts    = userDataList[2]
+            userScore               = userDataList[3]
+    
+            if self.verifyUserAttemptsAndScore(userLoginName, userName, userNumberOfAttempts, userScore, scoreType, entryName='', False) == False:
+                writeToLog("INFO","FAILED to verify attempts and score for all users")
+                return False                    
+    
+        writeToLog("INFO","Success: attempts and score are verified for all users")
+        return True    
