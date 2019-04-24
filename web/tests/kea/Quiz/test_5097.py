@@ -18,7 +18,7 @@ class Test:
     # Go to editor page and create quiz with open-Q only
     # Go to quiz page and verify that question is displayed properly and that user is able to answer it
     #================================================================================================================================
-    testNum = "5907"
+    testNum = "5097"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
