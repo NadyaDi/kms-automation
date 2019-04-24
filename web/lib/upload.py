@@ -165,6 +165,8 @@ class Upload(Base):
                     # Added this step in order to proper re launch the upload page
                     self.clsCommon.navigateTo(enums.Location.HOME)
                     writeToLog("INFO","FAILED to upload after " + str(i) + " retries of " + str(retries) + ". Going to upload again...")
+                    # Add a five second sleep in order to not force the instance
+                    sleep(5)
                 # Convert path for Windows
                 filePath = filePath.replace("/", "\\")
                 filePath = filePath.replace("\\\\", "\\")

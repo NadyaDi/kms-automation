@@ -433,7 +433,7 @@ test_5119,Hotspots - Delete Hotspots using multiple type of actions,2501881,qakm
 test_5120,Hotspots - General layout UI (with existing Hotspots),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5121,Hotspots - General layout UI (without Hotspots),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5124,Hotspots - Hotspots list - General UI,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
-test_5141,Hotspots - Hotspot with all the Link types ( Web Pages, Time Locations),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5141,Hotspots - Hotspot with all the Link types ( Web Pages Time Locations),2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5151,Hotspots - Change Hotspot Location using Advanced Settings,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5152,Hotspots - Change Hotspot Size using Advanced Settings,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4981,Entitlements - Entry Private with Initial Owner and Changed Owner,2501881-2,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
