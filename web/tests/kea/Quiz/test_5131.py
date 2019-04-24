@@ -304,7 +304,7 @@ class Test:
 
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to verify quiz attempts and score after retaking quiz")  
-            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername, self.userName, self.numberOfAttemptsAfterRetaking, self.scoreAfterRetaking, enums.playerQuizScoreType.LOWEST, self.quizEntryName, True) == False:
+            if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername, self.userName, self.numberOfAttemptsAfterRetaking, self.scoreAfterRetaking, enums.playerQuizScoreType.HIGHEST, self.quizEntryName, True) == False:
                 
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score after retaking quiz")  
