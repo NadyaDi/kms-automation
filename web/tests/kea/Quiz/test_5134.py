@@ -53,7 +53,7 @@ class Test:
     answerquestionNumber1Attempt2 = "question #1 option #1"
     
     questionNumber2Attempt2 = "question #2 Title"
-    answerquestionNumber2Attempt2 = "question #2 option #2"
+    answerquestionNumber2Attempt2 = "question #2 option #1"
     
     questionNumber3Attempt2 = "question #3 Title"
     answerquestionNumber3Attempt2 = "question #3 option #2"
@@ -70,7 +70,7 @@ class Test:
 
     quizQuestionDictAttempt1BeforeClearingAttempts = {questionNumber1Attempt1:answerquestionNumber1Attempt1, questionNumber2Attempt1:answerquestionNumber2Attempt1, questionNumber3Attempt1:answerquestionNumber3Attempt1}
     quizQuestionDictAttempt2BeforeClearingAttempts = {questionNumber1Attempt2:answerquestionNumber1Attempt2, questionNumber2Attempt2:answerquestionNumber2Attempt2, questionNumber3Attempt2:answerquestionNumber3Attempt2}
-    quizQuestionDictAttempt1AfterClearingAttempts = {questionNumber1Attempt2:answerquestionNumber1Attempt3, questionNumber2Attempt3:answerquestionNumber2Attempt3, questionNumber3Attempt3:answerquestionNumber3Attempt3}
+    quizQuestionDictAttempt1AfterClearingAttempts = {questionNumber1Attempt3:answerquestionNumber1Attempt3, questionNumber2Attempt3:answerquestionNumber2Attempt3, questionNumber3Attempt3:answerquestionNumber3Attempt3}
     
     quizQuestionsDictAttemptsBeforeClearingAttempts = [quizQuestionDictAttempt1BeforeClearingAttempts, quizQuestionDictAttempt2BeforeClearingAttempts]
     quizQuestionsDictAttemptsAfterClearingAllAttempts = [quizQuestionDictAttempt1AfterClearingAttempts]
@@ -111,8 +111,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz - Clear all attempts when no attempts still left", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz - Clear all attempts when no attempts still left - Quiz", self.testNum)      
+            self.entryName = clsTestService.addGuidToString("Quiz - Clear all attempts when attempts still left", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz - Clear all attempts when attempts still left - Quiz", self.testNum)      
  
             self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LATEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}
@@ -130,7 +130,7 @@ class Test:
             self.userPass = '123456'
             self.userName = 'QA Member 1'
              
-            self.numberOfAttemptsBeforeDeletion = '3/3'
+            self.numberOfAttemptsBeforeDeletion = '2/3'
             self.scoreBeforeDeletion = '67%'   
             
             self.numberOfAttemptsAfterRetaking = '1/3'
@@ -142,45 +142,45 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                      
+                       
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                         
+                                          
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                         
-            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
+                                          
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                        
-            writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
+                                                                         
+            writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+                writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-                
+                 
             self.common.base.switch_to_default_content()
-                    
-            writeToLog("INFO","Step 6: Going to get entry page URL")
+                     
+            writeToLog("INFO","Step 5: Going to get entry page URL")
             self.entryPageURL = self.common.base.driver.current_url
-                    
-            writeToLog("INFO","Step 7: Going to publish entry to unlisted")
+                     
+            writeToLog("INFO","Step 6: Going to publish entry to unlisted")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.quizEntryName, enums.ChannelPrivacyType.UNLISTED, publishFrom=enums.Location.MY_MEDIA) == False:
-                writeToLog("INFO","Step 7: FAILED failed to publish entry to unlisted")
+                writeToLog("INFO","Step 6: FAILED failed to publish entry to unlisted")
                 return 
-                      
-            writeToLog("INFO","Step 8: Going to navigate to KEA Quiz tab for " + self.quizEntryName)  
+                       
+            writeToLog("INFO","Step 7: Going to navigate to KEA Quiz tab for " + self.quizEntryName)  
             if self.common.kea.initiateQuizFlow(self.quizEntryName, True, 1) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to navigate to KEA Quiz tab for " + self.quizEntryName)  
+                writeToLog("INFO","Step 7: FAILED to navigate to KEA Quiz tab for " + self.quizEntryName)  
                 return 
-                      
-            i = 9
-                      
+                       
+            i = 8
+                       
             for option in self.keaAllScoreOptionsList:
                 optionNumber = 0
                 while len(option) != optionNumber:
@@ -192,75 +192,75 @@ class Test:
                     else:
                         i = i + 1                     
                         optionNumber = optionNumber + 1
-                
+                 
             i = i + 1    
             self.common.base.switch_to_default_content()
-           
+ 
             writeToLog("INFO","Step " + str(i) + ": Going to logout as quiz owner")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as quiz owner")  
                 return 
-                
+                 
             i = i + 1 
-                       
+                        
             writeToLog("INFO","Step " + str(i) + ": Going to login as " + self.userName)  
             if self.common.login.loginToKMS(self.loginUsername, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as " + self.userName)  
                 return 
-                      
+                       
             i = i + 1  
-                      
+                       
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to entry page link")
                 return             
-                 
+                  
             i = i + 1         
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz " + self.quizEntryName)  
-            if self.common.player.verifyQuizAttempts(self.quizQuestionsDictAllAttempts, expectedQuizScore=self.quizSpecificAttemptScoreBeforeClearingAttempts, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=self.quizGeneralAttemptsScoreBeforeClearingAttempts, scoreType=enums.playerQuizScoreType.LATEST) == False:
+            if self.common.player.verifyQuizAttempts(self.quizQuestionsDictAttemptsBeforeClearingAttempts, expectedQuizScore=self.quizSpecificAttemptScoreBeforeClearingAttempts, totalGivenAttempts=self.totalGivenAttempts, expectedAttemptGeneralScore=self.quizGeneralAttemptsScoreBeforeClearingAttempts, scoreType=enums.playerQuizScoreType.LATEST) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to answer quiz " + self.quizEntryName)
                 return    
-                
+                 
             i = i + 1    
             self.common.base.switch_to_default_content()
-            
+             
             writeToLog("INFO","Step " + str(i) + ": Going to logout as " + self.userName)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as " + self.userName)  
                 return  
-               
+                
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to login as quiz owner")  
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as quiz owner")  
                 return 
-               
+            
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to verify quiz attempts and score before clearing all attempts")  
             if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername, self.userName, self.numberOfAttemptsBeforeDeletion, self.scoreBeforeDeletion, enums.playerQuizScoreType.LATEST, self.quizEntryName, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify quiz attempts and score before clearing all attempts")  
                 return                                                                    
-               
+                
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to clear all quiz attempts") 
             if self.common.quizAnalytics.deleteUserAttempts(self.loginUsername, enums.quizAnlyticsDeleteOption.CLEAR_ALL_ATTEMPTS) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to clear all quiz attempts")
                 return  
-              
+               
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to verify message after removing all attempt")  
             if self.common.quizAnalytics.verifyRemovedAttemptMessage() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify message after removing all attempt")  
                 return  
-            
+             
             i = i + 1    
             writeToLog("INFO","Step " + str(i) + ": Going to verify that quiz attempts and score aren't displayed anymore")  
             if self.common.quizAnalytics.verifyUserAttemptsAndScore(self.loginUsername, self.userName, self.numberOfAttemptsBeforeDeletion, self.scoreBeforeDeletion, enums.playerQuizScoreType.LATEST, self.quizEntryName, True) == True:
