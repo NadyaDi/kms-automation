@@ -112,7 +112,7 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to download the PDF file, while using an Anonymous User")
                 return
-             
+            
             writeToLog("INFO","Step 8: Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
             if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD, url=self.instanceUrl + 'user/login') == False:
                 writeToLog("INFO", "Step 8:FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
@@ -127,6 +127,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
+            self.common.base.switch_to_default_content()
+            self.common.base.navigate(self.instanceUrl)
             if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD) != False:
                 self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
             self.common.deleteFile(self.embedLinkFilePath)
