@@ -1363,11 +1363,13 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to click on the timeline section during the first time in order to set the desired time marker location")
             timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True)
             try:
-                ActionChains(self.driver).move_to_element(timeLineSectionMarker).send_keys(Keys.PAGE_DOWN).perform()
+                ActionChains(self.driver).move_to_element(timeLineSectionMarker).send_keys(Keys.PAGE_DOWN).pause(5).perform()
                 ActionChains(self.driver).move_to_element_with_offset(keaTimelineSection, widthSizeInOrderToReachDesiredStartTime+2.5, -10).pause(1).click().perform()
             except Exception:
-                writeToLog("INFO", "FAILED to set the start time to during the first try " + str(timeLocation))
-                return False
+                # Verify if the real time marker already matches with our time location
+                if self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5] != timeLocation:
+                    writeToLog("INFO", "FAILED to set the start time to during the second try " + str(timeLocation) + " using action chain")
+                    # we continue to try to change the real marker time using input field ( not action chains )
         
         timeLineSectionMarker = self.wait_element(self.EDITOR_REALTIME_MARKER, 3, True).text[:5]
         
@@ -2225,8 +2227,16 @@ class Kea(Base):
                 questionTitlePresented      = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 2, True).text
                 questionTimestampPresented  = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP, 2, True).text
             except Exception:
-                writeToLog("INFO", "FAILED to find the question details while hovering over the question: " + currentQuestionDetails[2])
-                return False
+                writeToLog("INFO", "FAILED to find the question details while hovering over the question: " + currentQuestionDetails[2] + " during the first time")
+                try:
+                    ActionChains(self.driver).move_to_element(currentQuestion).pause(2).perform()
+                    questionNumberPresented     = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER, 2, True).text
+                    questionTitlePresented      = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 2, True).text
+                    questionTimestampPresented  = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP, 2, True).text
+                except Exception:
+                    writeToLog("INFO", "FAILED to find the question details while hovering over the question: " + currentQuestionDetails[2] + " after two tries")
+                    return False
+                
             
             # We verify that the quiz number, matches with the desired order from the questionDict
             # First we verify the question number and then we verify the 'Question' text that its presented
@@ -2848,7 +2858,7 @@ class Kea(Base):
                 try:
                     ActionChains(self.driver).move_to_element(questionCuePoint).pause(2).perform()
                 except Exception:
-                    writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point")
+                    writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point during the first try")
                     return False
                 
                 # Take the presented title from the hovered Cue Point
@@ -2856,8 +2866,17 @@ class Kea(Base):
                 
                 # Verify that the Question Title is presented while hovering over the Cue Point
                 if questionTitlePresented == False:
-                    writeToLog("INFO", "FAILED to take the question title from the question cue point number " + str(x+1))
-                    return False
+                    # Add a redundancy step for action chain
+                    try:
+                        ActionChains(self.driver).move_to_element(questionCuePoint).pause(2).perform()
+                    except Exception:
+                        writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point during the second try")
+                        return False
+                    
+                    questionTitlePresented = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 5, True)
+                    if questionTitlePresented == False:
+                        writeToLog("INFO", "FAILED to take the question title from the question cue point number " + str(x+1))
+                        return False
                 else:
                     # Take the Question Title presented on the hovered Cue Point
                     questionTitlePresented = questionTitlePresented.text
@@ -3898,7 +3917,7 @@ class Kea(Base):
     # Verify the place order based on creation
     # For hotspotDict structure please check hotspotCreation function
     # expectedHotspotNumber = 5, will also verify that exactly five hotspots are presented
-    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None):
+    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None): # TBD - HS List and Timeline List consistnet verification
         self.switchToKeaIframe()
         # Verify that we are in the Hotspot Section
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
@@ -4017,8 +4036,9 @@ class Kea(Base):
                 writeToLog("INFO", "The following hotspot has been successfully presented in the timeline section " + expectedHotspot[0])
                 
             else:
-                writeToLog("INFO", "The, " + presentedHotspotTitle + " hotspot was displayed at place " + str(x+1) + " while we wait for " + expectedHotspot[0])
+                writeToLog("INFO", "The, " + presentedHotspotTitle + " hotspot was displayed at place " + str(x+1) + " while we expected for " + expectedHotspot[0])
                 i -= 1
+                
         if len(hotspotNameList) > 1:   
             hotspots = "\n".join(hotspotNameList)
         else:
@@ -4297,7 +4317,8 @@ class Kea(Base):
         if self.hotspotActions(hotspotNewLocation.value, enums.keaHotspotActions.DELETE) == False:
             writeToLog("INFO", "FAILED to delete the new hotspot that was created in order to take the coordinates" + hotspotNewLocation.value)
             return False
-               
+        
+        sleep(5)
         writeToLog("INFO", "The hotspot: " + hotspotName + " has been successfully moved to the new location: " + hotspotNewLocation.value)
         return True
     

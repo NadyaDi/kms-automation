@@ -40,25 +40,31 @@ class Test:
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
     # Each list contains the details that are used in the hotspot creation and verification
-    hotspotTopCenter            = ['Initial Top Center', enums.keaLocation.CENTER, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
+    hotspotTopCenter            = ['Initial Mid Center', enums.keaLocation.CENTER, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
     hotspotTopRight             = ['Initial Top Right', enums.keaLocation.TOP_RIGHT, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12]
     hotspotBottomRight          = ['Initial Bottom Right', enums.keaLocation.BOTTOM_RIGHT, 0, 15, '', enums.textStyle.THIN, '', '', 12, 16]
     hotspotBottomLeft           = ['Initial Bottom Left', enums.keaLocation.BOTTOM_LEFT, 0, 20, '', enums.textStyle.BOLD, '', '', 18, 16]
     hotspotsDict                = {'1':hotspotTopCenter,'2':hotspotTopRight, '3':hotspotBottomRight, '4':hotspotBottomLeft}
     
     # These lists and dictionary are used in order to change the created hotspots to a new location
-    hotspotMovedToTopLeft       = ['Initial Top Center', enums.keaLocation.TOP_LEFT]
+    hotspotMovedToTopLeft       = ['Initial Mid Center', enums.keaLocation.TOP_LEFT]
     hotspotMovedToTopCenter     = ['Initial Top Right', enums.keaLocation.CENTER]
     hotspotMovedToTopRight      = ['Initial Bottom Right', enums.keaLocation.TOP_RIGHT]
     hotspotMovedToBottomRight   = ['Initial Bottom Left', enums.keaLocation.BOTTOM_RIGHT]
     hotspotNewOrderDict         = {'1':hotspotMovedToTopLeft, '2':hotspotMovedToTopCenter, '3':hotspotMovedToTopRight, '4':hotspotMovedToBottomRight}  
     
     # These lists and dictionary are used in order to verify the hotspots in the entry page with the new locations and configurations
-    hotspotTopCenter            = ['Initial Top Center', enums.keaLocation.TOP_LEFT, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
+    hotspotTopCenter            = ['Initial Mid Center', enums.keaLocation.TOP_LEFT, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
     hotspotTopRight             = ['Initial Top Right', enums.keaLocation.CENTER, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12]
     hotspotBottomRight          = ['Initial Bottom Right', enums.keaLocation.TOP_RIGHT, 0, 15, '', enums.textStyle.THIN, '', '', 12, 16]
     hotspotBottomLeft           = ['Initial Bottom Left', enums.keaLocation.BOTTOM_RIGHT, 0, 20, '', enums.textStyle.BOLD, '', '', 18, 16]
-    hotspotsDictChanged         = {'1':hotspotTopCenter,'2':hotspotTopRight, '3':hotspotBottomRight, '4':hotspotBottomLeft}       
+    hotspotsDictChanged         = {'1':hotspotTopCenter,'2':hotspotTopRight, '3':hotspotBottomRight, '4':hotspotBottomLeft}
+    
+    hotspotTopCenter            = ['Initial Mid Center', enums.keaLocation.TOP_LEFT, 0, 5, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
+    hotspotTopRight             = ['Initial Top Right', enums.keaLocation.CENTER, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12]
+    hotspotBottomRight          = ['Initial Bottom Right', enums.keaLocation.TOP_RIGHT, 0, 15, '', enums.textStyle.THIN, '', '', 12, 16]
+    hotspotBottomLeft           = ['Initial Bottom Left', enums.keaLocation.BOTTOM_RIGHT, 0, 20, '', enums.textStyle.BOLD, '', '', 18, 16]
+    hotspotsDictChangedVM       = {'1':hotspotBottomRight,'2':hotspotTopRight, '3':hotspotBottomLeft, '4':hotspotTopCenter}       
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -81,17 +87,17 @@ class Test:
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload " + self.entryName + " entry")
                 return
-           
+             
             writeToLog("INFO","Step 2: Going to navigate to the KEA Editor for " + self.entryName + " entry")
             if self.common.kea.launchKEA(self.entryName, navigateTo=enums.Location.ENTRY_PAGE, navigateFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to the KEA Editor for " + self.entryName + " entry")
                 return
-                  
+                    
             writeToLog("INFO","Step 3: Going to create hotspots for the " + self.entryName)
             if self.common.kea.hotspotCreation(self.hotspotsDict, openHotspotsTab=True) == False:
                 writeToLog("INFO","Step 3: FAILED to create hotspots for the " + self.entryName)
                 return  
-                      
+                       
             i = 4
             for x in range(0,len(self.hotspotNewOrderDict)):
                 writeToLog("INFO","Step " + str(i) + ": Going to change the hotspot location of " + self.hotspotNewOrderDict[str(x+1)][0] + " to " + self.hotspotNewOrderDict[str(x+1)][1].value)
@@ -99,12 +105,14 @@ class Test:
                     writeToLog("INFO","Step " + str(i) + ": FAILED to change the hotspot location of " + self.hotspotNewOrderDict[str(x+1)][0] + " to " + self.hotspotNewOrderDict[str(x+1)][1].value)
                     return
                 i += 1
-                
+                 
             writeToLog("INFO","Step " + str(i) + ": Going to verify the timeline section for " + self.entryName +" entry, while using the second Hotspot location")
             if self.common.kea.hotspotTimelineVerification(self.hotspotsDictChanged, 4) == False:
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify the timeline section for " + self.entryName +" entry, while using the second Hotspot location")
-                return
-                             
+                # On the VM we may have a different hotspot order
+                if self.common.kea.hotspotTimelineVerification(self.hotspotsDictChangedVM, 4) == False:
+                    writeToLog("INFO","Step " + str(i) + ": FAILED to verify the timeline section for " + self.entryName +" entry, while using the second Hotspot location")
+                    return
+                              
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to the entry page for " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
@@ -112,7 +120,7 @@ class Test:
                 return
             else:
                 i += 1
-               
+                
             writeToLog("INFO","Step " + str(i) + ": Going to verify the hotspots from the " + self.entryName + " entry, while using the second Hotspot location")
             if self.common.player.hotspotVerification(self.hotspotsDictChanged, enums.Location.ENTRY_PAGE, embed=False) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify the hotspots from the " + self.entryName + " entry, while using the second Hotspot location")

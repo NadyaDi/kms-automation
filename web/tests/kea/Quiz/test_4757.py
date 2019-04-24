@@ -85,6 +85,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
+            self.common.base.switch_to_default_content()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:

@@ -2731,7 +2731,7 @@ class Player(Base):
                                 # Take the hotspot link
                                 try:
                                     self.driver.switch_to.window(handles[1])
-                                    sleep(2)
+                                    sleep(5)
                                     hotspotLink = self.clsCommon.base.driver.current_url
                                     self.driver.close()
                                     self.driver.switch_to.window(handles[0])
