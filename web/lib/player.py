@@ -2745,7 +2745,11 @@ class Player(Base):
                                                     
                                 # Verify if the hotspot link had a Time Stamp link
                                 if hotspotStartTime != hotspotTimeAfterClick:
-                                    hotspotLink = hotspotTimeAfterClick
+                                    timeLengthBetweenHotspotPresentedAndTimeLink = hotspotTimeAfterClick - hotspotStartTime
+                                    # if there's only one second difference, no hotspot time link will be added
+                                    if timeLengthBetweenHotspotPresentedAndTimeLink != 1:
+                                        hotspotLink = hotspotTimeAfterClick
+                                    
                                     
                                 # Return an empty string if no Web Page or Time Stamp was provided
                                 else:
