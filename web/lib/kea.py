@@ -4493,9 +4493,13 @@ class Kea(Base):
                                     writeToLog("INFO", "FAILED, invalid format for the hotspot link verification in HS list")
                                     return False
                             else:
-                                if presentedHotspotsLink[hotspotNameIndex].text != '':
-                                    writeToLog("INFO", "FAILED, we expected to have no Link, however, " + presentedHotspotsLink[hotspotNameIndex].text + " link was displayed")
-                                    return False
+                                try:
+                                    presentedHotspotsLink[hotspotNameIndex]
+                                    if presentedHotspotsLink[hotspotNameIndex].text != '':
+                                        writeToLog("INFO", "FAILED, we expected to have no Link, however, " + presentedHotspotsLink[hotspotNameIndex].text + " link was displayed")
+                                        return False
+                                except TypeError:
+                                    writeToLog("INFO", "As expected, no hotspot link has been provided for " + presentedHotspotsTitle[hotspotNameIndex].text ) 
                                 
                             # Highlight the presented Hostpot from the HS Panel List
                             if self.clickElement(presentedHotspotsTitle[hotspotNameIndex]) == False:
