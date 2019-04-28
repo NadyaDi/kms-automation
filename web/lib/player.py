@@ -2946,10 +2946,10 @@ class Player(Base):
             currentNumberOfAttemptsSubmittedScreen = i + 1 
             # If we have expected quiz score and we ant to verify quiz score
             if len(expectedQuizScore) > 0:
-                expectedQuizScore = expectedQuizScore[i]    
-                expectedAttemptGeneralScore = expectedAttemptGeneralScore[i]          
+                tmpExpectedQuizScore = expectedQuizScore[i]    
+                tmpExpectedAttemptGeneralScore = expectedAttemptGeneralScore[i]          
             
-            if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore, embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedAttemptGeneralScore, scoreType, showScore) == False:
+            if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, tmpExpectedQuizScore, embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, tmpExpectedAttemptGeneralScore, scoreType, showScore) == False:
                 writeToLog("INFO", "FAILED to answer quiz")
                 return False 
             
