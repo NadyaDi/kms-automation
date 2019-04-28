@@ -49,9 +49,9 @@ class Test:
     userPass = '123456'  
     
     # Questions title
-    questionNumber1 = "question #1 Title"
-    questionNumber2 = "question #2 Title"
-    questionNumber3 = "question #3 Title"
+    quizQuestionNumber1 = "question #1 Title"
+    quizQuestionNumber2 = "question #2 Title"
+    quizQuestionNumber3 = "question #3 Title"
      
     # User 1 attempt 1
     answerquestionNumber1Attempt1User1 = "question #1 option #1"
@@ -84,12 +84,12 @@ class Test:
     answerquestionNumber3Attempt3User3 = "question #3 option #1"
     
     # User 1 answers for 2 attempts
-    quizAnswersDictAttempt1User1 = {questionNumber1:answerquestionNumber1Attempt1User1, questionNumber2:answerquestionNumber2Attempt1User1, questionNumber3:answerquestionNumber3Attempt1User1}
-    quizAnswersDictAttempt2User1 = {questionNumber1:answerquestionNumber1Attempt2User1, questionNumber2:answerquestionNumber2Attempt2User1, questionNumber3:answerquestionNumber3Attempt2User1}
+    quizAnswersDictAttempt1User1 = {quizQuestionNumber1:answerquestionNumber1Attempt1User1, quizQuestionNumber2:answerquestionNumber2Attempt1User1, quizQuestionNumber3:answerquestionNumber3Attempt1User1}
+    quizAnswersDictAttempt2User1 = {quizQuestionNumber1:answerquestionNumber1Attempt2User1, quizQuestionNumber2:answerquestionNumber2Attempt2User1, quizQuestionNumber3:answerquestionNumber3Attempt2User1}
     quizAnswersDictAllAttemptsUser1 = [quizAnswersDictAttempt1User1, quizAnswersDictAttempt2User1]
     
     # User 2 answers for 1 attempt
-    quizAnswersDictAttempt1User2 = {questionNumber1:answerquestionNumber1Attempt1User2, questionNumber2:answerquestionNumber2Attempt1User2, questionNumber3:answerquestionNumber3Attempt1User2}
+    quizAnswersDictAttempt1User2 = {quizQuestionNumber1:answerquestionNumber1Attempt1User2, quizQuestionNumber2:answerquestionNumber2Attempt1User2, questionNumber3:answerquestionNumber3Attempt1User2}
     quizAnswersDictAllAttemptsUser2 = [quizAnswersDictAttempt1User2]
     
     # User 3 answers for 3 attempts
@@ -97,6 +97,13 @@ class Test:
     quizAnswersDictAttempt2User3 = {questionNumber1:answerquestionNumber1Attempt2User3, questionNumber2:answerquestionNumber2Attempt2User3, questionNumber3:answerquestionNumber3Attempt2User3}
     quizAnswersDictAttempt3User3 = {questionNumber1:answerquestionNumber1Attempt3User3, questionNumber2:answerquestionNumber2Attempt3User3, questionNumber3:answerquestionNumber3Attempt3User3}
     quizAnswersDictAllAttemptsUser3 = [quizAnswersDictAttempt1User3, quizAnswersDictAttempt2User3, quizAnswersDictAttempt3User3] 
+    
+    # List with question title and user answer
+    firstQuestionList = [questionNumber1,answerquestionNumber1Attempt1User1, True]
+    secondQuestionList = [questionNumber2, answerquestionNumber2Attempt1User1, False]
+    thirdQuestionList = [questionNumber3, answerquestionNumber3Attempt1User1, True]
+    
+    questionAndAnswerDict = {'1':firstQuestionList, '2':secondQuestionList, '3':thirdQuestionList}
     
     # User 1 score and number of attempts in quiz users tab
     numberOfAttemptsUser1 = '2/3'
