@@ -561,7 +561,7 @@ class Moodle(Base):
             if self.click(self.MOODLE_SUBMIT_ASSIGNMENT_SUBMISSION_NO_BTN) == False:
                 writeToLog("INFO","FAILED to click on 'No' button")
                 return False  
-            
+        self.clsCommon.general.waitForLoaderToDisappear()    
         return True       
     
     
