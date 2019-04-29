@@ -8,7 +8,14 @@ from selenium.webdriver.common.keys import Keys
 from general import General
 
 
-
+# title - Event Title. this parameter is mandatory! 
+# startDate - Event start date. this parameter is mandatory! 
+# endDate - Event end date. this parameter is mandatory! 
+# startTime - Event start time. this parameter is mandatory! 
+# endTime - Event end time. this parameter is mandatory!
+# description - Event description. this parameter is mandatory! 
+# tags - Event tags. this parameter is mandatory! 
+# expectedEvent - this parameter will show if the event need to be display in the calender or not(True/False), we will need this when we have recurrence. this parameter is mandatory!  
 # copyDetailsEventToRecording - do we need to copy the metadata to the recording, if no (need new names) we need to initialize the parameters :copeDetailsName, copeDetailsDescriptio, copeDetailsTags
 # resources - this parameter need to be send as an enum- RecschedulingResourceOptions
 # recurrenceInterval - this parameter need to be send as an enum- scheduleRecurrenceInterval
@@ -24,7 +31,7 @@ from general import General
 # monthlyDayName - this parameter is for the day name that in the second monthly option ,this parameter need to be send as an enum- scheduleRecurrenceDayOfTheWeek, take the day without  the 'SHORT' in it like SUNDAY
 # optionTwoMonthlyMonthNumber - this parameter is for the number of month in monthly second option
 # endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
-# numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
+# numberOfRecurrence - this parameter is for end date option 'end after X occurrences' in recurrence
 # publishTo - this parameter is so we can know where to publish the event to category or channel. if we need to publish both category/channel the parameter need to be a list: ["category", "channel"]
 # categoryList - this parameter will have the name of the category to publish to , if we have more then 1 category need to be in a list ([]) format
 # channelList = this parameter will have the name of the channel to publish to , if we have more then 1 channel need to be in a list ([]) format
@@ -42,6 +49,7 @@ class SechdeuleEvent():
     endTime = None
     description = None
     tags = None
+    expectedEvent = ''
     copyDetailsEventToRecording = True
     copeDetailsName=''
     copeDetailsDescriptio=''
@@ -75,14 +83,15 @@ class SechdeuleEvent():
     
     
     # Constructor
-    def __init__(self, title, startDate, endDate, startTime, endTime, description, tags):
+    def __init__(self, title, startDate, endDate, startTime, endTime, description, tags, expectedEvent):
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
-        self.startTime = self.remove0FromTime(startTime)
-        self.endTime = self.remove0FromTime(endTime)
+        self.startTime = self.removeZeroFromTime(startTime)
+        self.endTime = self.removeZeroFromTime(endTime)
         self.description = description
         self.tags = tags
+        self.expectedEvent = expectedEvent
         self.convertDatetimeToVerifyDate()
     
     def convertDatetimeToVerifyDate(self):
@@ -101,13 +110,13 @@ class SechdeuleEvent():
         self.verifyDateFormat = tmpStrDate
         
     # Convert to int and back to string, to remove 0 before a digit. For example from '03' to '3
-    def remove0FromTime(self, eventTime):
+    def removeZeroFromTime(self, eventTime):
         tmpTime = eventTime.split(":")
         tmpHour = int(tmpTime[0])
         tmpHour = str(tmpHour)
         return tmpHour + ":" + tmpTime[1]
     
-        
+    
 class  Recscheduling(Base):
     driver = None
     clsCommon = None
@@ -413,12 +422,14 @@ class  Recscheduling(Base):
         if self.click(tmpRecurrenceInterval) == False:
             writeToLog("INFO","FAILED to select recurrence interval: " + eventInstance.recurrenceInterval.value)
             return False
+        sleep(1)
         
-        if self.setEventRecurrence.eventInstancerecurrenceInterval == enums.scheduleRecurrenceInterval.DAYS:
+        if eventInstance.recurrenceInterval == enums.scheduleRecurrenceInterval.DAYS:
             if eventInstance.dailyOption == enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS:
                 if self.click(self.SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on 'every X days' radio button")
                     return False
+                sleep(1)
                 
                 if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_DAILY_EVERY_X_DAYS, eventInstance.dailyDays) == False:
                     writeToLog("INFO","FAILED to add number of days to the 'every X days' option")
@@ -433,6 +444,7 @@ class  Recscheduling(Base):
             if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_WEEKLY_EVERY_X_WEEKS, eventInstance.weeklyWeeks) == False:
                 writeToLog("INFO","FAILED to add number of days to the 'every X days' option")
                 return False
+            sleep(1)
             
             if type(eventInstance.weeklyDaysNames) is list: 
                 for dayInTheWeek in eventInstance.weeklyDaysNames:
@@ -452,37 +464,47 @@ class  Recscheduling(Base):
                 if self.click(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_X_OF_EVERY_Y_MONTHS_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on 'day X of every Y months' radio button")
                     return False
+                sleep(1)
                 
                 if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_DAY_OPTION_DAY_NUMBER, eventInstance.monthlyDayNumber) == False:
                     writeToLog("INFO","FAILED to add number of days to the 'day X of every Y months' option")
                     return False
+                sleep(1)
                     
                 if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_DAY_OPTION_MONTH_NUMBER, eventInstance.monthlyMonthNumber) == False:
                     writeToLog("INFO","FAILED to add number of month to the 'day X of every Y months' option")
                     return False
             
-            
             elif eventInstance.monthlyOption == enums.scheduleRecurrenceMonthlyOption.BY_WEEKDAY:
                 if self.click(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_RADIO_BUTTON) == False:
                     writeToLog("INFO","FAILED to click on 'by weekday' radio button")
                     return False
+                sleep(1)
                 
                 if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_WEEK_IN_THE_MONTH , eventInstance.monthlyWeekdaysIndex.value) == False:
                     writeToLog("INFO","FAILED to choose index or the day index for monthly second option")
                     return False
-                    
+                sleep(1)
+                   
                 if self.select_from_combo_by_text(self.SCHEDULE_RECURRENCE_MONTHLY_DAY_IN_THE_MONTH, eventInstance.monthlyDayName.value) == False:
                     writeToLog("INFO","FAILED to select day for monthly second option")
                     return False
-    
+                sleep(1)
+                
                 if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_MONTHLY_BY_WEEKDAY_OPTION_MONTH_NUMBER, eventInstance.optionTwoMonthlyMonthNumber) == False:
                     writeToLog("INFO","FAILED to add number of month for monthly second option")
                     return False
         
-        if self.setRecurrenceRange(eventInstance.endDateOption, eventInstance.reccurenceStartTime, eventInstance.reccurenceStartDate, eventInstance.reccurenceEndTime, eventInstance.reccurenceEndDate, eventInstance.numberOfRecurrence) == False:
-            writeToLog("INFO","FAILED to set event recurrence range")
+        # Checking in we need to change end date option from deafult
+        if eventInstance.endDateOption != enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES:
+            if self.setRecurrenceRange(eventInstance) == False:
+                writeToLog("INFO","FAILED to set event recurrence range")
+                return False
+
+        if self.click(self.SCHEDULE_RECURRENCE_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on save recurrence button")
             return False
-        
+        self.clsCommon.general.waitForLoaderToDisappear()   
         writeToLog("INFO","Success, Event recurrence was set")   
         return True
     
@@ -600,21 +622,25 @@ class  Recscheduling(Base):
             return False  
         
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
-        try:
-            event = self.wait_element(tmpEventTiltle)
-            if event == False:
+        event = self.wait_element(tmpEventTiltle)
+        if event == False:
+            if eventInstance.expectedEvent == True:
                 writeToLog("INFO","FAILED to find event title")
                 return False
+            elif eventInstance.expectedEvent == False: 
+                writeToLog("INFO","Success, Event isn't display in my schedule page as expected")
+                return True
+        else:
+            if eventInstance.expectedEvent == False:
+                writeToLog("INFO","FAILED, event display although it shouldn't need to be displayed in this date: " + eventInstance.startDate)
+                return False                  
+            else:  
+                eventParentEl = event.find_element_by_xpath("../..")
+                eventMetadata = eventParentEl.text
+                if eventMetadata == None:
+                    writeToLog("INFO","FAILED to find event element text")
+                    return False
         
-            eventParentEl = event.find_element_by_xpath("../..")
-            eventMetadata = eventParentEl.text
-            if eventMetadata == None:
-                writeToLog("INFO","FAILED to find event element text")
-                return False
-        except:
-            writeToLog("INFO","FAILED to find event element text")
-            return False
-       
         if eventInstance.startTime.replace(" ", "").lower() + "-" + eventInstance.endTime.replace(" ", "").lower() in eventMetadata == False:
             writeToLog("INFO","FAILED to find event time")
             return False

@@ -88,13 +88,14 @@ class Test:
             
             self.editStartEventTime = time.time() + 3*(60*60)
             self.editStartEventTime = time.strftime("%I:%M %p",time.localtime(self.editStartEventTime))
+            tmpTime = self.editStartEventTime.split(":")
+            tmpHour = int(tmpTime[0])
+            tmpHour = str(tmpHour)
+            self.editStartEventTime = tmpHour + ":" + tmpTime[1]
             
             self.endTime = time.time() + 2*(60*60)
             self.endTime = time.strftime("%I:%M %p",time.localtime(self.endTime))
-            tmpTime = self.endTime.split(":")
-            tmpHour = int(tmpTime[0])
-            tmpHour = str(tmpHour)
-            self.endTime = tmpHour + ":" + tmpTime[1]
+
             
             self.editEndTime = time.time() + 4*(60*60)
             self.editEndTime = time.strftime("%I:%M %p",time.localtime(self.editEndTime))
@@ -103,26 +104,26 @@ class Test:
             tmpHour = str(tmpHour)
             self.editEndTime = tmpHour + ":" + tmpTime[1]
             
-            self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags)
+            self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, "True")
             self.event.resources = self.resource
             self.event.publishTo = self.publishTo
             self.event.categoryList = self.category
-            self.event.fieldsToUpdate = ["title", "Organizer", "description", "tags", "resources"]
+            self.event.fieldsToUpdate = ["title", "Organizer","startDate", "endDate", "startTime", "endTime", "description", "tags", "resources"]
             self.event.collaboratorUser = self.userId
             self.event.coEditor = True
             self.event.coPublisher = False
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
-#             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
-#             if self.common.admin.enableRecscheduling(True) == False:
-#                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
-#                 return
-#              
-#             writeToLog("INFO","Step 2: Going navigate to home page")            
-#             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-#                 writeToLog("INFO","Step 2: FAILED navigate to home page")
-#                 return
+
+            writeToLog("INFO","Step 1: Going to set rescheduling in admin")
+            if self.common.admin.enableRecscheduling(True) == False:
+                writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
+                return
+              
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
             
             writeToLog("INFO","Step 3: Going to create new single event")
             if self.common.recscheduling.createRescheduleEvent(self.event) == False:
@@ -136,6 +137,11 @@ class Test:
             sleep(2)
             
             self.event.title = self.editEventTitle
+            self.event.startDate = self.editStartDate
+            self.event.convertDatetimeToVerifyDate()
+            self.event.endDate = self.editEndDate
+            self.event.startTime = self.editStartEventTime
+            self.event.endTime = self.editEndTime
             self.event.description = self.editDescription
             self.event.tags = self.editTags
             self.event.organizer = self.editOrganizer
@@ -144,7 +150,7 @@ class Test:
             sleep(3)     
             writeToLog("INFO","Step 5: Going to verify event display in my schedule page")
             if self.common.recscheduling.editRescheduleEvent(self.event) == False:
-                writeToLog("INFO","Step 5: FAILED to update event metadata")
+                writeToLog("INFO","Step 5: FAILED to edit event metadata")
                 return
             
             sleep(3)
@@ -161,7 +167,7 @@ class Test:
             
             writeToLog("INFO","Step 8: Going to verify event metadata")
             if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
-                writeToLog("INFO","Step 8: FAILED to verify event metadata")
+                writeToLog("INFO","Step 8: FAILED to verify event metadata in event page")
                 return
             
             writeToLog("INFO","Step 9: Going to delete event")
