@@ -2951,8 +2951,11 @@ class Player(Base):
             # If we have expected quiz score and we ant to verify quiz score
             if len(expectedQuizScore) > 0:
                 tmpExpectedQuizScore = expectedQuizScore[i]    
-                tmpExpectedAttemptGeneralScore = expectedAttemptGeneralScore[i]          
-            
+                tmpExpectedAttemptGeneralScore = expectedAttemptGeneralScore[i]        
+            else:
+                tmpExpectedQuizScore =  expectedQuizScore    
+                tmpExpectedAttemptGeneralScore = expectedAttemptGeneralScore
+                
             if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, tmpExpectedQuizScore, embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, tmpExpectedAttemptGeneralScore, scoreType, showScore) == False:
                 writeToLog("INFO", "FAILED to answer quiz")
                 return False 

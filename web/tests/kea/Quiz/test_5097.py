@@ -106,7 +106,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.newEntryName])
+            self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryName + " - Quiz"])
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
