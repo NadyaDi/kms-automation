@@ -778,3 +778,11 @@ class keaHotspotContainerSize(Enum):
     SMALL                 = 'SMALL'
     MEDIUM                = 'MEDIUM'
     LARGE                 = 'LARGE'
+
+
+class quizAnswerRightOrWrong(Enum):
+    def __str__(self):
+        return str(self.value)  
+    
+    RIGHT                 = 'right'
+    WRONG                 = 'wrong'  
