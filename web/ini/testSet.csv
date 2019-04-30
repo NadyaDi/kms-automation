@@ -402,6 +402,8 @@ test_5134,1,0,0,0,Quiz - Analytics - Clear all attempts when attempts still left
 test_5135,1,0,0,0,Quiz - Analytics - Clear all attempts when more than one user answer the quiz
 test_5136,1,0,0,0,Quiz - Analytics - Remove last attempts when more than one user answer the quiz
 test_5137,1,0,0,0,Quiz - Analytics - Verify user answers in quiz users tab
+test_5154,1,0,0,0,Quiz - Analytics - Verify quiz questions after removing last attempt
+test_5155,1,0,0,0,Quiz - Analytics - Verify quiz answers after removing last attempt
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality
