@@ -220,6 +220,7 @@ class  Recscheduling(Base):
                 writeToLog("INFO","FAILED to click on add recurrence button")
                 return False
             sleep(1)
+            
             if self.setEventRecurrence(eventInstance) == False:
                 writeToLog("INFO","FAILED to set event recurrence")
                 return False
@@ -419,6 +420,7 @@ class  Recscheduling(Base):
     def setEventRecurrence(self,eventInstance):
         # Choose the needed interval
         tmpRecurrenceInterval = (self.SCHEDULE_RECURRENCE_INTERVAL[0], self.SCHEDULE_RECURRENCE_INTERVAL[1].replace('RECURRENCE_INTERVAL', eventInstance.recurrenceInterval.value))
+        sleep(1)
         if self.click(tmpRecurrenceInterval) == False:
             writeToLog("INFO","FAILED to select recurrence interval: " + eventInstance.recurrenceInterval.value)
             return False
@@ -495,11 +497,10 @@ class  Recscheduling(Base):
                     writeToLog("INFO","FAILED to add number of month for monthly second option")
                     return False
         
-        # Checking in we need to change end date option from deafult
-        if eventInstance.endDateOption != enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES:
-            if self.setRecurrenceRange(eventInstance) == False:
-                writeToLog("INFO","FAILED to set event recurrence range")
-                return False
+       
+        if self.setRecurrenceRange(eventInstance) == False:
+            writeToLog("INFO","FAILED to set event recurrence range")
+            return False
 
         if self.click(self.SCHEDULE_RECURRENCE_SAVE_BUTTON) == False:
             writeToLog("INFO","FAILED to click on save recurrence button")
@@ -512,16 +513,12 @@ class  Recscheduling(Base):
     # @Author: Michal Zomper 
     # endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
     # numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
-    def setRecurrenceRange(self, eventInstance): #endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence =''): 
-        if self.setRecurrenceStartDate(eventInstance.startDate) == False:
-            writeToLog("INFO","FAILED to set event start date")
-            return False
-        sleep(2) 
-        
-        tmpEndDate = (self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[0], self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[1].replace('END_DTAR_OPTION', eventInstance.endDateOption.value))
-        if self.click(tmpEndDate) == False:
-            writeToLog("INFO","FAILED to choose end date option")
-            return False
+    def setRecurrenceRange(self, eventInstance): #endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence =''):
+        if (self.changeDateOrder(self.wait_element(self.SCHEDULE_RECURRENCE_START_DATE_CALENDAR).get_attribute("value")) == eventInstance.startDate) == False:
+            if self.setRecurrenceStartDate(eventInstance.startDate) == False:
+                writeToLog("INFO","FAILED to set event start date")
+                return False
+            sleep(2) 
         
         if eventInstance.endDateOption == enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES:
             if self.clear_and_send_keys(self.SCHEDULE_RECURRENCE_END_DATE_AFTER_X_OCCURRENCES  , eventInstance.numberOfRecurrence) == False:
@@ -529,25 +526,34 @@ class  Recscheduling(Base):
                 return False
             
         elif eventInstance.endDateOption == enums.scheduleRecurrenceEndDateOption.END_BY:
-            if self.setRecurrenceEndDate(eventInstance.endTime) == False:
-                writeToLog("INFO","FAILED to set event end date")
+            tmpEndDate = (self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[0], self.SCHEDULE_RECURRENCE_END_DATE_REDIO_BUTTON[1].replace('END_DTAR_OPTION', eventInstance.endDateOption.value))
+            if self.click(tmpEndDate) == False:
+                writeToLog("INFO","FAILED to choose end date option")
                 return False
-        sleep(2)  
+            
+            if (self.changeDateOrder(self.wait_element(self.SCHEDULE_RECURRENCE_END_DATE_CALENDAR).get_attribute("value")) == eventInstance.endDate) == False:
+                if self.setRecurrenceEndDate(eventInstance.endDate) == False:
+                    writeToLog("INFO","FAILED to set event end date")
+                    return False
+            sleep(2)  
         
-        if len(eventInstance.statTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_START_TIME, eventInstance.sartTime) == False:
-                writeToLog("INFO","FAILED to set event start time")
-                return False
-            sleep(2) 
+        if len(eventInstance.startTime) != 0:
+            if (self.wait_element(self.SCHEDULE_RECURRENCE_START_TIME).get_attribute("value") == eventInstance.startTime) == False:
+                if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_START_TIME, eventInstance.startTime) == False:
+                    writeToLog("INFO","FAILED to set event start time")
+                    return False
+                sleep(2) 
         
         if len(eventInstance.endTime) != 0:
-            if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_END_TIME, eventInstance.endTime) == False:
-                writeToLog("INFO","FAILED to set event end time")
-                return False
-            sleep(2)
+            if (self.wait_element(self.SCHEDULE_RECURRENCE_END_TIME).get_attribute("value") == eventInstance.endTime) == False:
+                if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_END_TIME, eventInstance.endTime) == False:
+                    writeToLog("INFO","FAILED to set event end time")
+                    return False
+                sleep(2)
         
         return True
-        
+
+
     # @Author: Michal Zomper 
     # Format desteStr - '24/01/2018'
     # startOrEnd - String 'start' or 'end'
@@ -618,7 +624,7 @@ class  Recscheduling(Base):
     # verifyDateFormat = this parameter format need to be : "%B %d, %Y - %A". example- April 07, 2019 - Sunday
     def verifyScheduleEventInMySchedulePage(self, eventInstance):
         if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
-            writeToLog("INFO","FAILED to move to start time '" + eventInstance.eventInstance + "' in my schedule page")
+            writeToLog("INFO","FAILED to move to start time '" + eventInstance.startDate + "' in my schedule page")
             return False  
         
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
@@ -627,13 +633,18 @@ class  Recscheduling(Base):
             if eventInstance.expectedEvent == True:
                 writeToLog("INFO","FAILED to find event title")
                 return False
+            
             elif eventInstance.expectedEvent == False: 
                 writeToLog("INFO","Success, Event isn't display in my schedule page as expected")
                 return True
         else:
             if eventInstance.expectedEvent == False:
-                writeToLog("INFO","FAILED, event display although it shouldn't need to be displayed in this date: " + eventInstance.startDate)
-                return False                  
+                if event.size['width']!=0 or event.size['height']!=0:
+                    writeToLog("INFO","FAILED, event display although it shouldn't need to be displayed in this date: " + eventInstance.startDate)
+                    return False 
+                else:
+                    writeToLog("INFO","Success, Event isn't display in my schedule page as expected") 
+                    return True           
             else:  
                 eventParentEl = event.find_element_by_xpath("../..")
                 eventMetadata = eventParentEl.text

@@ -50,6 +50,8 @@ class Test:
     endTime = None
     munberOfRecurrenceDays = 10
     resource = enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE
+    resourceEveryXDays = 2 
+    
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -84,8 +86,9 @@ class Test:
             self.event.isRecurrence = True
             self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
             self.event.dailyOption =  enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS
-            self.event.dailyDays = self.munberOfRecurrenceDays
-            self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_AFTER_X_OCCURRENCES
+            self.event.dailyDays = self.resourceEveryXDays
+            self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
+            
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
 #             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
@@ -104,7 +107,8 @@ class Test:
                 return
             sleep(3)
             
-            for day in range(0,self.munberOfRecurrenceDays):
+            tmpStartDate = self.event.startDate
+            for day in range(0,self.munberOfRecurrenceDays+1):
                 self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
                 self.event.convertDatetimeToVerifyDate()
                 self.event.expectedEvent = not(self.event.expectedEvent)
@@ -118,11 +122,19 @@ class Test:
                         writeToLog("INFO","Step "+ str(day+1) + ": FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
                         return
             
-            
+            writeToLog("INFO","Step "+ str(day+2) + ": Going to verify that event isn't display in after event date end date")
+            self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=self.munberOfRecurrenceDays+2)).strftime("%d/%m/%Y")
+            self.event.convertDatetimeToVerifyDate()
+            self.event.expectedEvent = "False"
+            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
+                    writeToLog("INFO","Step "+ str(day+2) + ": FAILED, event display in my schedule page for date: " + self.event.startDate + "  although the event end date had passed")
+                    return
+
             sleep(3)
-            writeToLog("INFO","Step "+ str(day+1) + ": Going to delete event")
+            self.event.startDate = tmpStartDate
+            writeToLog("INFO","Step "+ str(day+3) + ": Going to delete event")
             if self.common.recscheduling.deteteSingleEvent(self.event) == False:
-                writeToLog("INFO","Step "+ str(day+1) + ":: FAILED to delete event from my schedule page")
+                writeToLog("INFO","Step "+ str(day+3) + ":: FAILED to delete event from my schedule page")
                 return
             ##################################################################
             self.status = "Pass"
