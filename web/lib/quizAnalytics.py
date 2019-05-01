@@ -532,21 +532,25 @@ class QuizAnalytics(Base):
             
             # Get all row elements that are right/wrong
             tmpAnswerRow = (self.QUIZ_ANALYTICS_USERS_TAB_ANSWER_ROW[0], self.QUIZ_ANALYTICS_USERS_TAB_ANSWER_ROW[1].replace('WRONG_OR_RIGHT', rightOrWrongAnswer))
-            tmpAnswerRowElement = self.wait_elements(tmpAnswerRow)
-            
-            # Get row element text according to question number
-            tmpAnswerRowElementText = tmpAnswerRowElement[i].text
+            tmpAnswerRowElements = self.wait_elements(tmpAnswerRow)
             
             # If it's not a reflection question
             if "Reflection" not in questionTitle:
                 givenRowText = questionTitle + " - " + "Answered \"" + questionAnswer + "\""
             else:
                 givenRowText = questionTitle + " - " + questionAnswer
-                
-            if tmpAnswerRowElementText != givenRowText:
+            
+            isMatchFound = False
+            
+            for index in range(0, len(tmpAnswerRowElements)):
+                if givenRowText == tmpAnswerRowElements[index].text:
+                    isMatchFound = True
+                    break
+            
+            if isMatchFound == False:
                 writeToLog("INFO","FAILED to display correct question and answer for question number " + str(i+1))
-                return False                 
-
+                return False 
+  
         # Verify that correct number of right and wrong answers is displayed
         tmpAnswersNum = (self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[0], self.QUIZ_ANALYTICS_NUM_OF_RIGHT_AND_WRONG_ANSWERS[1].replace('RIGHT_NUM', numberOfRightAnswers).replace('WRONG_NUM', numberOfWrongAnswers))       
         if self.wait_element(tmpAnswersNum) == False:

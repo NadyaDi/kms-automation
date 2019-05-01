@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Verify quiz answers - Multiple usera
+    # Test Name : Quiz - Analytics - Verify quiz questions - Multiple users
     # Test description:
     # Go to editor page and create quiz with option all type of questions -> Login with different users and answer the quiz -> login as quiz owner
     # Go to quiz analytics -> Quiz Questions -> Verify that correct user answer with correct number of right and wrong answer is displayed

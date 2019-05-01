@@ -13,12 +13,12 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Verify quiz answers after removing last attempt 
+    # Test Name : Quiz - Analytics - Verify quiz questions after removing last attempt 
     # Test description:
     # Go to editor page and create quiz with option to retake quiz - 3 attempts and all type of questions
-    # Go to quiz page with different user and answer quiz -> Login with quiz owner -> Quiz analytics page -> remove last attempt for specific user-> Verify that correct answers of the previous attempt are displayed -> 
+    # Go to quiz page with different user and answer quiz -> Login with quiz owner -> Quiz analytics page -> remove last attempt for specific user-> Go to quiz question tab-> Verify that correct answers of the previous attempt are displayed -> 
     #================================================================================================================================
-    testNum = "5155"
+    testNum = "5154"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -67,19 +67,31 @@ class Test:
     
     questionAnswersAllAttempts = [questionAnswersDictAttempt1, questionAnswersDictAttempt2]
 
-    # Answer and questions for first attempt in quiz users tab
-    firstQuestionFirstAttempt = [quizQuestionNumber1, answerQuestionNumber1Attempt1, enums.quizAnswerRightOrWrong.RIGHT]
-    secondQuestionFirstAttempt = [quizQuestionNumber2, answerQuestionNumber2Attempt1, enums.quizAnswerRightOrWrong.RIGHT]
-    thirdQuestionFirstAttempt = [quizQuestionNumber3, answerQuestionNumber3Attempt1, enums.quizAnswerRightOrWrong.RIGHT]
-    fourthQuestionFirstAttempt = [quizQuestionNumber4, answerQuestionNumber4, enums.quizAnswerRightOrWrong.RIGHT]
-    quetionsAndAnswersDictFirstAttempt = {'1':firstQuestionFirstAttempt, '2':secondQuestionFirstAttempt, '3':thirdQuestionFirstAttempt, '4':fourthQuestionFirstAttempt}   
+    # Users answers - First attempt
+    firstQuestionAnswersAttempt1 = [quizQuestionNumber1, answerQuestionNumber1Attempt1, 'QA Member 1', '1', '0', True]
+    secondQuestionAnswersAttempt1 = [quizQuestionNumber2, answerQuestionNumber2Attempt1, 'QA Member 1', '1', '0', True]
+    thirdQuestionAnswersAttempt1 = [quizQuestionNumber3, answerQuestionNumber3Attempt1, 'QA Member 1', '1', '0', True]
+    FourthQuestionAnswersAttempt1 = [quizQuestionNumber4, answerQuestionNumber4, 'QA Member 1', '1', '0', True]
+
+    firstQuestionUsersAnswersAttempt1 = {'1': firstQuestionAnswersAttempt1}
+    secondQuestionAnswersAttempt1 = {'1': secondQuestionAnswersAttempt1}
+    thirdQuestionAnswersAttempt1 = {'1': thirdQuestionAnswersAttempt1}
+    FourthQuestionAnswersAttempt1 = {'1': FourthQuestionAnswersAttempt1}
     
-    # Answer and questions for second attempt in quiz users tab
-    firstQuestionSecondAttempt = [quizQuestionNumber1, answerQuestionNumber1Attempt2, enums.quizAnswerRightOrWrong.WRONG]
-    secondQuestionSecondAttempt = [quizQuestionNumber2, answerQuestionNumber2Attempt2, enums.quizAnswerRightOrWrong.WRONG]
-    thirdQuestionSecondAttempt = [quizQuestionNumber3, answerQuestionNumber3Attempt2, enums.quizAnswerRightOrWrong.RIGHT]
-    fourthQuestionSecondAttempt = [quizQuestionNumber4, answerQuestionNumber4, enums.quizAnswerRightOrWrong.RIGHT]
-    quetionsAndAnswersDictSecondAttempt = {'1':firstQuestionSecondAttempt, '2':secondQuestionSecondAttempt, '3':thirdQuestionSecondAttempt, '4':fourthQuestionSecondAttempt}     
+    answerListAttempt1 = [firstQuestionUsersAnswersAttempt1, secondQuestionAnswersAttempt1, thirdQuestionAnswersAttempt1, FourthQuestionAnswersAttempt1]
+    
+    # Users answers - Second attempt
+    firstQuestionAnswersAttempt2 = [quizQuestionNumber1, answerQuestionNumber1Attempt2, 'QA Member 1', '0', '1', False]
+    secondQuestionAnswersAttempt2 = [quizQuestionNumber2, answerQuestionNumber2Attempt2, 'QA Member 1', '0', '1', False]
+    thirdQuestionAnswersAttempt2 = [quizQuestionNumber3, answerQuestionNumber3Attempt2, 'QA Member 1', '1', '0', True]
+    FourthQuestionAnswersAttempt2 = [quizQuestionNumber4, answerQuestionNumber4, 'QA Member 1', '1', '0', True]
+
+    firstQuestionUsersAnswersAttempt2 = {'1': firstQuestionAnswersAttempt2}
+    secondQuestionAnswersAttempt2 = {'1': secondQuestionAnswersAttempt2}
+    thirdQuestionAnswersAttempt2 = {'1': thirdQuestionAnswersAttempt2}
+    FourthQuestionAnswersAttempt2 = {'1': FourthQuestionAnswersAttempt2}
+    
+    answerListAttempt2 = [firstQuestionUsersAnswersAttempt2, secondQuestionAnswersAttempt2, thirdQuestionAnswersAttempt2, FourthQuestionAnswersAttempt2]    
 
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -96,8 +108,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz - Verify user answer in Quiz Users after removing last attempt", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz - Verify user answer in Quiz Users after removing last attempt - Quiz", self.testNum)      
+            self.entryName = clsTestService.addGuidToString("Quiz - Verify quiz questions after removing last attempt", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz - Verify quiz questions after removing last attempt - Quiz", self.testNum)      
             self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LATEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}
             self.keaAllowMultipleScore           = {enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:True}            
@@ -111,45 +123,45 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                           
+                          
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                              
+                                             
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                              
+                                             
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                             
+                                                                            
             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-                     
+                    
             self.common.base.switch_to_default_content()
-                         
+                        
             writeToLog("INFO","Step 5: Going to get entry page URL")
             self.entryPageURL = self.common.base.driver.current_url
-                         
+                        
             writeToLog("INFO","Step 6: Going to publish entry to unlisted")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.quizEntryName, enums.ChannelPrivacyType.UNLISTED, publishFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 6: FAILED failed to publish entry to unlisted")
                 return 
-                           
+                          
             writeToLog("INFO","Step 7: Going to navigate to KEA Quiz tab for " + self.quizEntryName)  
             if self.common.kea.initiateQuizFlow(self.quizEntryName, True, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to navigate to KEA Quiz tab for " + self.quizEntryName)  
                 return 
-                           
+                          
             i = 8
-                           
+                          
             for option in self.keaAllScoreOptionsList:
                 optionNumber = 0
                 while len(option) != optionNumber:
@@ -161,75 +173,88 @@ class Test:
                     else:
                         i = i + 1                     
                         optionNumber = optionNumber + 1
-                         
+                        
             self.common.base.switch_to_default_content()
-             
-            i = i + 1   
+            
             writeToLog("INFO","Step " + str(i) + ": Going to logout as quiz owner")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as quiz owner")  
                 return 
-                    
+                  
             i = i + 1           
             writeToLog("INFO","Step " + str(i) + ": Going to login as " + self.userNameUser)  
             if self.common.login.loginToKMS(self.userId, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as " + self.userNameUser)  
                 return 
-                           
+                         
             i = i + 1            
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to entry page link")
                 return             
-                      
+                    
             i = i + 1         
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz " + self.quizEntryName)  
             if self.common.player.verifyQuizAttempts(self.questionAnswersAllAttempts, totalGivenAttempts=3, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to answer quiz " + self.quizEntryName)
                 return    
-                     
+                   
             i = i + 1    
             self.common.base.switch_to_default_content()
-                 
+               
             writeToLog("INFO","Step " + str(i) + ": Going to logout as " + self.userNameUser)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as " + self.userNameUser)  
                 return  
-               
+             
             i = i + 1 
             writeToLog("INFO","Step " + str(i) + ": Going to login as quiz owner")  
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as quiz owner")  
                 return 
-            
+
             i = i + 1  
-            writeToLog("INFO","Step " + str(i) + ": Going to verify user answers in quiz users tab before removing last attempt")  
-            if self.common.quizAnalytics.verifyQuizAnswersInQuizUsersAnalytics(self.quetionsAndAnswersDictSecondAttempt, self.userId, numberOfRightAnswers='2', numberOfWrongAnswers='2', entryName=self.quizEntryName, forceNavigate=True) == False:
+            writeToLog("INFO","Step " + str(i) + ": Going to verify quiz questions in quiz analytics before removing last attempt")    
+            if self.common.quizAnalytics.verifyQuizAnswersInAnalytics(self.answerListAttempt2, self.quizEntryName, True) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify user answers in quiz users tab before removing last attempt")  
-                return    
-             
+                writeToLog("INFO","Step " + str(i) + " : FAILED to verify quiz questions in quiz analytics before removing last attempt")  
+                return  
+            
+            i = i + 1
+            writeToLog("INFO","Step " + str(i) + ": Going to click on quiz users tab")    
+            if self.common.base.click(self.common.quizAnalytics.QUIZ_ANALYTICS_QUIZ_USERS_TAB) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + " : FAILED to click on quiz users tab")  
+                return                 
+            
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to remove user last attempt")  
             if self.common.quizAnalytics.deleteUserAttempts(self.userId, enums.quizAnlyticsDeleteOption.REMOVE_LAST_ATTEMPT) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to remove user last attempt")  
                 return  
-
-            i = i + 1  
-            writeToLog("INFO","Step " + str(i) + ": Going to verify user answers in quiz users tab after removing last attempt")  
-            if self.common.quizAnalytics.verifyQuizAnswersInQuizUsersAnalytics(self.quetionsAndAnswersDictFirstAttempt, self.userId, numberOfRightAnswers='4', numberOfWrongAnswers='0', entryName=self.quizEntryName, forceNavigate=True) == False:
+            
+            i = i + 1
+            writeToLog("INFO","Step " + str(i) + ": Going to click on quiz questions tab")    
+            if self.common.base.click(self.common.quizAnalytics.QUIZ_ANALYTICS_QUIZ_QUESTIONS_TAB) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to verify user answers in quiz users tab after removing last attempt")  
-                return                                                     
+                writeToLog("INFO","Step " + str(i) + " : FAILED to click on quiz questions tab")  
+                return             
+            
+            i = i + 1  
+            writeToLog("INFO","Step " + str(i) + ": Going to verify quiz questions in quiz analytics after removing last attempt")    
+            if self.common.quizAnalytics.verifyQuizAnswersInAnalytics(self.answerListAttempt1) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + " : FAILED to verify quiz questions in quiz analytics after removing last attempt")  
+                return                                               
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Verify user answers in quiz user tab after removing last attempt was done successfully")
+            writeToLog("INFO","TEST PASSED: Verify user questions in quiz questions tab after removing last attempt was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
