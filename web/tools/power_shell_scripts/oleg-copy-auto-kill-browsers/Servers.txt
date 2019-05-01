@@ -18,3 +18,6 @@ il-kmsnode17.kaltura.com
 il-kmsnode18.kaltura.com
 il-kmsnode19.kaltura.com
 il-kmsnode20.kaltura.com
+il-kmsnode21.kaltura.com
+il-kmsnode22.kaltura.com
+il-kmsnode23.kaltura.com
