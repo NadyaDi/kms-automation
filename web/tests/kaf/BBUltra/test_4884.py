@@ -72,7 +72,7 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED navigate to gallery page")
                 return 
             
-            self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
+            self.common.blackBoardUltra.switchToBlackboardUltraIframe()
             writeToLog("INFO","Step 4: Going to remove entry from gallery")                                     
             if self.common.channel.removeEntry(self.entryName) == False:    
                 self.status = "Fail"

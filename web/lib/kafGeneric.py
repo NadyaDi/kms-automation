@@ -360,6 +360,9 @@ class KafGeneric(Base):
                 writeToLog("INFO","FAILED navigate to  gallery: " +  galleryName)
                 return False
             
+            if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+                self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
+                       
             if self.click(self.clsCommon.channel.CHANNEL_MODERATION_TAB, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on gallery moderation tab")
                 return False        

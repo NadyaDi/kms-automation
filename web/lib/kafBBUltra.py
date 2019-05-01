@@ -28,6 +28,7 @@ class BlackBoardUltra(Base):
     BB_ULTRA_PRIVECY_TURMS_BUTTON                       = ('xpath', "//button[@id='agree_button']")    
     BB_ULTRA_MY_MEDIA_BUTTON_IN_TOOLS_MENU              = ('xpath', "//span[@class='tool-title' and @title='Automation my media']")
     BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE             = ('xpath', "//span[text()='New1']/ancestor::a[@class='content-title']")
+    BB_ULTRA_ADD_CONTENT_BUTTON                         = ('xpath', "//div[@class='add-element no-select js-add-content-button course-outline-add-button']")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -54,7 +55,7 @@ class BlackBoardUltra(Base):
             if self.swith_to_iframe(self.BB_ULTRA_MEDIA_SPACE_IFRAME) == False:
                 writeToLog("INFO","FAILED to switch to iframe")
                 return False
-             
+        
         localSettings.TEST_CURRENT_IFRAME_ENUM = enums.IframeName.KAF_BLACKBOARD_ULTRA
         return True
     
@@ -63,9 +64,9 @@ class BlackBoardUltra(Base):
         try:
             writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
             # Navigate to login page
-            if self.click(self.BB_ULTRA_PRIVECY_TURMS_BUTTON) == False:
-                writeToLog("INFO","FAILED to click on agree terms button")
-                return False                
+#             if self.click(self.BB_ULTRA_PRIVECY_TURMS_BUTTON) == False:
+#                 writeToLog("INFO","FAILED to click on agree terms button")
+#                 return False
             # Enter test partner username
             self.send_keys(self.LOGIN_USERNAME_FIELD, username)
             # Enter test partner password
@@ -92,7 +93,12 @@ class BlackBoardUltra(Base):
             raise Exception(inst)
              
           
-    def logOutOfBlackBoardUltra(self):
+    def logOutOfBlackBoardUltra(self, forceNavigate=True):
+        if forceNavigate == True:
+            if self.navigate(localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL) == False:
+                writeToLog("INFO","FAILED to get to main page")
+                return False  
+        
         # Click on the user menu button
         if self.click(self.USER_LOGOUT_BTN) == False:
             writeToLog("INFO","FAILED to click on logout button")
@@ -158,6 +164,20 @@ class BlackBoardUltra(Base):
             return False
          
         return True
+    
+    
+    # Author: Oded Berihon    
+    def createContentMarket(self):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_CONTENT_PAGE) == False:
+            writeToLog("INFO","FAILED navigate to assignment page")
+            return False 
+        
+        if self.click(self.BB_ULTRA_ADD_CONTENT_BUTTON) == False:
+            writeToLog("INFO","fail to click on add button")
+            return False            
+                   
+         
+        return True    
         
     
 #     def getBlackboardUltraLoginUserName(self):
