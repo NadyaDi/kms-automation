@@ -1111,7 +1111,7 @@ class EntryPage(Base):
             return False        
               
         if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION) == False:
-            writeToLog("INFO","FAILED to on quizAnalytics option")
+            writeToLog("INFO","FAILED to click on quizAnalytics option")
             return False 
                     
         if analyticsTab == enums.quizAnalytics.QUIZ_QUESTIONS:

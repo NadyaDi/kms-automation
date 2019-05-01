@@ -13,7 +13,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Verify quiz answers - One user
+    # Test Name : Quiz - Analytics - Verify quiz questions - One user
     # Test description:
     # Go to editor page and create quiz with option all type of questions
     # Go to quiz page and answer all questions -> Go to quiz analytics -> Quiz Questions -> Verify that correct open-Q is displayed and correct number of 
