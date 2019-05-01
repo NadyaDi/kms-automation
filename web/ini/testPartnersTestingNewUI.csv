@@ -425,6 +425,8 @@ test_5137,Quiz - Analytics - Verify user answers in quiz users tab,2501881,qakms
 test_5154,Quiz - Analytics - Verify quiz questions after removing last attempt,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5155,Quiz - Analytics - Verify quiz answers after removing last attempt,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5153,Quiz - Analytics - Verify quiz questions after clearing all attempts ,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5157,Quiz - Analytics - Verify quiz answers after clearing all attempts,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5095,Hotspots - Delete Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5103,Hotspots - Duplicate Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5104,Hotspots - Edited Hotspots,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
