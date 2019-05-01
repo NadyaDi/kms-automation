@@ -21,7 +21,8 @@ LOCAL_QR_DECODER_PATH                       = "C:\\Program Files (x86)\\Kaltura\
 
 LOCAL_SETTINGS_IMPLICITLY_WAIT              = 30
 LOCAL_SETTINGS_WEBDRIVER_START_FF_RETRIES   = 5
-LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY        = "il-AutoKmsHub-qa.dev.kaltura.com"
+#LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY        = "il-AutoKmsHub-qa.dev.kaltura.com"
+LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY        = "localhost"
 LOCAL_SETTINGS_SELENIUM_HUB_URL             = "http://" + LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":4444/wd/hub" #hub address
 LOCAL_SETTINGS_BROWSER_PROXY                = LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":9090" #proxy server address and port.    
 LOCAL_SETTINGS_BROWSER_PROXY_MOBILES        = LOCAL_SETTINGS_INHOUSE_HUB_AND_PROXY + ":9091" #proxy server address and port.
