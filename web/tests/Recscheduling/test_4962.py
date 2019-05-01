@@ -91,6 +91,7 @@ class Test:
             
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            
 #             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
 #             if self.common.admin.enableRecscheduling(True) == False:
 #                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
@@ -108,33 +109,33 @@ class Test:
             sleep(3)
             
             tmpStartDate = self.event.startDate
+            writeToLog("INFO","Step 4: Going to verify event display in my schedule page")
             for day in range(0,self.munberOfRecurrenceDays+1):
                 self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
                 self.event.convertDatetimeToVerifyDate()
                 self.event.expectedEvent = not(self.event.expectedEvent)
-                  
-                writeToLog("INFO","Step "+ str(day+1) + ": Going to verify event display in my schedule page")
+                
                 if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
                     if self.event.expectedEvent == True:
-                        writeToLog("INFO","Step "+ str(day+1) + ": FAILED to verify event in my schedule page for date: " + self.event.startDate)
+                        writeToLog("INFO","Step 4: FAILED to verify event in my schedule page for date: " + self.event.startDate)
                         return
                     elif self.event.expectedEvent == False:
-                        writeToLog("INFO","Step "+ str(day+1) + ": FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
+                        writeToLog("INFO","Step 4: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
                         return
             
-            writeToLog("INFO","Step "+ str(day+2) + ": Going to verify that event isn't display in after event date end date")
+            writeToLog("INFO","Step 5: Going to verify that event isn't display in after event date end date")
             self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=self.munberOfRecurrenceDays+2)).strftime("%d/%m/%Y")
             self.event.convertDatetimeToVerifyDate()
-            self.event.expectedEvent = "False"
+            self.event.expectedEvent = False
             if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
-                    writeToLog("INFO","Step "+ str(day+2) + ": FAILED, event display in my schedule page for date: " + self.event.startDate + "  although the event end date had passed")
+                    writeToLog("INFO","Step 5: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although the event end date had passed")
                     return
 
             sleep(3)
             self.event.startDate = tmpStartDate
-            writeToLog("INFO","Step "+ str(day+3) + ": Going to delete event")
-            if self.common.recscheduling.deteteSingleEvent(self.event) == False:
-                writeToLog("INFO","Step "+ str(day+3) + ":: FAILED to delete event from my schedule page")
+            writeToLog("INFO","Step 6: Going to delete event series")
+            if self.common.recscheduling.deteteEventSeries(self.event) == False:
+                writeToLog("INFO","Step 6:: FAILED to delete event from my schedule page")
                 return
             ##################################################################
             self.status = "Pass"
@@ -148,7 +149,8 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
-            self.common.recscheduling.deteteSingleEvent(self.event)
+#             self.event.startDate = tmpStartDate
+            self.common.recscheduling.deteteEventSeries(self.event)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

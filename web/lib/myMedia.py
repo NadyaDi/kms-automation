@@ -72,7 +72,7 @@ class MyMedia(Base):
     MY_MEDIA_ENTRY_THUMBNAIL_ELASTIC_SEARCH                     = ("xpath", "//img[@class='entryThumbnail__img']")
     MY_MEDIA_REMOVE_SEARCH_ICON_OLD_UI                          = ('xpath', "//i[@class='icon-remove']")
     MY_MEDIA_REMOVE_SEARCH_ICON_NEW_UI                          = ('xpath', "//a[@class='clear searchForm_icon']")
-    MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath',"//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
+    MY_MEDIA_NO_ENTRIES_FOUND                                   = ('xpath', "//div[@class='alert alert-info no-results' and contains(text(), 'No Entries Found')]")
     MY_MEDIA_TABLE                                              = ('xpath', "//table[@class='table table-condensed table-hover bulkCheckbox mymediaTable mediaTable full']")
     MY_MEDIA_IMAGE_ICON                                         = ('xpath', "//i[@class='icon-picture icon-white']")
     MY_MEDIA_IMAGE_ICON_AFTER_SEARCH                            = ('xpath', "//i[@class='entryThumbnail__icon v2ui-photo2-icon']")
