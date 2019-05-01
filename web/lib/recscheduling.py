@@ -179,7 +179,8 @@ class  Recscheduling(Base):
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES                               = ('css', "span.sol-quick-delete")
     SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS                                   = ('css', "li.select2-search-choice")
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS                                    = ('css', "a.select2-search-choice-close")
-
+    SCHEDULE_EDIT_EVENT_PAGE_GO_TO_SERIES_BUTTON                            = ('css', "a#gotoSeries")
+    SCHEDULE_VIEW_EVENT_SERIES_MESSAGE                                      = ('xpath', "//p[contains(text(),'You are viewing an event series')]")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -643,7 +644,7 @@ class  Recscheduling(Base):
                     writeToLog("INFO","FAILED, event display although it shouldn't need to be displayed in this date: " + eventInstance.startDate)
                     return False 
                 else:
-                    writeToLog("INFO","Success, Event isn't display in my schedule page as expected") 
+                    writeToLog("INFO","Success, As expected event isn't display in my schedule page ") 
                     return True           
             else:  
                 eventParentEl = event.find_element_by_xpath("../..")
@@ -667,7 +668,7 @@ class  Recscheduling(Base):
                         writeToLog("INFO","FAILED to find event resource: " + eventInstance.resources)
                         return False
         
-        writeToLog("INFO","Success, Event date and time display correctly in my schedule page")
+        writeToLog("INFO","Success, Event name/date/time/resource display correctly in my schedule page")
         return True
     
     
@@ -727,6 +728,7 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED, the date '" + dateStr + "' is not display in the page")
             return False      
         
+        sleep(1)
         writeToLog("INFO","Success, date '" + dateStr + "' display") 
         return True
     
@@ -737,6 +739,17 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED navigate to edit event page")
             return False  
         
+        if self.deleteEvent(eventInstance) == False:
+            writeToLog("INFO","FAILED to delete event")
+            return False 
+        
+        writeToLog("INFO","Success, Event was deleted successfully")
+        return True
+        
+    
+    # @Author: Michal Zomper
+    # The function only delete the event meaning only click on the delete button 
+    def deleteEvent(self, eventInstance):
         if self.click(self.SCHEDULE_DELETE_EVENT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on delete event button")
             return False
@@ -759,9 +772,32 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED event '" + eventInstance.verifyDateFormat.title + "' was find although it was deleted")
             return False 
         
-        writeToLog("INFO","Success, Event was deleted successfully")
         return True
+
+
+    # @Author: Michal Zomper
+    # The function delete all the events in the series
+    def deteteEventSeries(self, eventInstance):
+        if self.navigateToEventPage(eventInstance) == False:
+            writeToLog("INFO","FAILED navigate to edit event page")
+            return False  
         
+        if self.click(self.SCHEDULE_EDIT_EVENT_PAGE_GO_TO_SERIES_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on 'go to series button' in event page")
+            return False 
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        if self.wait_element(self.SCHEDULE_VIEW_EVENT_SERIES_MESSAGE) == False:
+            writeToLog("INFO","FAILED to verify that event series view display")
+            return False 
+        
+        if self.deleteEvent(eventInstance) == False:
+            writeToLog("INFO","FAILED to delete event")
+            return False 
+        
+        writeToLog("INFO","Success, Event serirwas deleted successfully")
+        return True
+
     
     # @Author: Michal Zomper 
     def navigateToEventPage(self, eventInstance):
