@@ -62,6 +62,30 @@ class Admin(Base):
     ADMIN_SELECT_USER_FROM_LIST                     = ('xpath', "//strong[contains(text(), 'USER_NAME')]")
     ADMIN_USER_IN_ALLOWEDUSER                       = ('xpath', "//input[@value='USER_NAME']")
     ADMIN_CLICK_ON_SUBMIT                           = ('xpath', "//span[@class='ui-button-text' and contains(text(),'Submit')]")
+    MANAGE_CONFIGURATION_HEADER                     = ('xpath', '//div[@id="header" and @h1="Configuration Management"]')
+    MANAGE_USERS_HEADER                             = ('xpath', '//div[@id="header"]') 
+    MANAGE_GROUPS_HEADER                            = ('xpath', '//h1[text()="Groups Management"]') 
+    KNOWLEDGE_BASE                                  = ('xpath', '//div[@id="header" and @h1="Knowledge base"]')   
+    ADD_NEW_USER                                    = ('xpath', '//button[@id="add-new"]')
+    USER_ID                                         = ('xpath', '//input[@id="user-username"]')
+    FIRST_NAME                                      = ('xpath', '//input[@id="user-firstname"]')
+    LAST_NAME                                       = ('xpath', '//input[@id="user-lastname"]')
+    PASSWORD                                        = ('xpath', '//input[@id="user-password"]')
+    CONFIRM_PASSWORD                                = ('xpath', '//input[@id="user-password2"]')
+    MANAGE_CONFIGURATION_TAB                        = ('xpath', '//a[@href="/admin/config"]')
+    MANAGE_USERS_TAB                                = ('xpath', '//a[@href="/admin/user-list"]')
+    ADD_USER_ROLE                                   = ('xpath', '//select[@id="user-role"]')
+    SELECT_VIEWER_ROLE                              = ('xpath', '//select[@value="viewerRole"]')
+    SELECT_PRIVATE_ROLE                             = ('xpath', '//select[@value="privateOnlyRole"]')
+    SVAE_USER                                       = ('xpath', '//span[@class="ui-button-text" and contains(text(),"Save")]')
+    CONFIRM_USER_ADDED                              = ('xpath', '//p[@class="flash-message" and contains(text(),"was added successfully")]')
+    MANAGE_GROUPS_TAB                               = ('xpath', '//a[@href="/groups/manage"]')
+    ADD_NEW_GROUP                                   = ('xpath', '//button[@class="btn btn-primary"]')
+    GROUP_NAME                                      = ('xpath', '//input[@name="group[name]"]')
+    GROUP_ID                                        = ('xpath', '//input[@name="group[id]" and @value= "GROUP_ID"]')
+    ADD_USERS_FRAME                                 = ('xpath', '//input[@id="react-select-2-input"]')
+    ADD_GROUP                                       = ('xpath', '//button[@class="btn btn-primary "]')
+    CONFIRM_GROUP_ADDED                             = ('xpath', '//div[@class="message alert alert-success" and contains(text(),"You successfully added the group")]')    
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -76,7 +100,7 @@ class Admin(Base):
 
               
     # @Author: Oleg Sigalov           
-    def loginToAdminPage(self, username='default', password='default', forceNavigate=False):
+    def loginToAdminPage(self, username='default', password='default', forceNavigate=False, tab=''):
         if username == 'default':
             username = localSettings.LOCAL_SETTINGS_ADMIN_USERNAME
         if password == 'default':
@@ -110,6 +134,39 @@ class Admin(Base):
         
         # Wait page load
         self.wait_for_page_readyState()
+        
+        if tab !="":
+            if tab == enums.AdminTabs.MANAGE_CONFIGURATION:
+                if self.click() == False:
+                    writeToLog("INFO","FAILED to click on Manage Configuration")
+                    return False
+                 
+                if self.wait_visible(self.MANAGE_CONFIGURATION_HEADER, timeout=10) == False:
+                        writeToLog("INFO","FAILED to view header")
+                        return False
+             
+            elif tab == enums.AdminTabs.MANAGE_USERS:
+                if self.click(self.MANAGE_USERS_TAB) == False:
+                    writeToLog("INFO","FAILED to click on Manage Users")
+                    return False
+                 
+                if self.wait_visible(self.MANAGE_USERS_HEADER, timeout=10) == False:
+                        writeToLog("INFO","FAILED to view header")
+                        return False
+                     
+            elif tab == enums.AdminTabs.MANAGE_GROUPS:
+                if self.click(self.MANAGE_GROUPS_TAB) == False:
+                    writeToLog("INFO","FAILED to click on Manage Groups")
+                    return False
+                 
+                if self.wait_visible(self.MANAGE_GROUPS_HEADER, timeout=10) == False:
+                        writeToLog("INFO","FAILED to view header")
+                        return False              
+                     
+            else:
+                writeToLog("INFO","Tab Not Exist")
+                return False
+            
         return True
     
     
@@ -1252,3 +1309,132 @@ class Admin(Base):
             
         writeToLog("INFO","Editor Module has been set successfully to: " + str(selection) + "' state")
         return True
+    
+    
+#     # @Auther: Ori Flchtman
+#     # Test Name- Create New Users
+    def addUsers(self, username, firstname, lastname, password, role=''):
+        # Login to Admin
+        if self.navigateToAdminPage() == False:
+            writeToLog("INFO","FAILED to Navigate to admin page")
+            return False 
+        
+        if self.loginToAdminPage(tab=enums.AdminTabs.MANAGE_USERS) == False:
+            writeToLog("INFO","FAILED to open to manage users")
+            return False 
+         
+        # Add Users
+        if self.click(self.ADD_NEW_USER) == False:
+            writeToLog("INFO","FAILED to click on Add New User")
+            return False
+        sleep(1)
+         
+        if self.send_keys(self.USER_ID, username) == False:
+            writeToLog("INFO","FAILED to enter username")
+            return False 
+         
+        if self.send_keys(self.FIRST_NAME, firstname) == False:
+            writeToLog("INFO","FAILED to enter username")
+            return False 
+         
+        if self.send_keys(self.LAST_NAME, lastname) == False:
+            writeToLog("INFO","FAILED to enter username")
+            return False 
+         
+        if self.send_keys(self.PASSWORD, password) == False:
+            writeToLog("INFO","FAILED to enter password")
+            return False      
+         
+        if self.send_keys(self.CONFIRM_PASSWORD, password) == False:
+            writeToLog("INFO","FAILED to confirm password")
+            return False
+           
+#         #Select Role:
+        if self.click(self.ADD_USER_ROLE) == False:
+            writeToLog("INFO","FAILED to open user role drop down")
+            return False
+        
+        if role !="":
+            if role == enums.UserRoles.VIEWER_ROLE:
+                if self.select_from_combo_by_text(self.ADD_USER_ROLE, "viewerRole") == False:
+                    writeToLog("INFO","FAILED to select viewer role")
+                    return False
+             
+            elif role == enums.UserRoles.PRIVATE_ONLY_ROLE:
+                if self.select_from_combo_by_text(self.ADD_USER_ROLE, "privateOnlyRole") == False:
+                    writeToLog("INFO","FAILED to select private role")
+                    return False
+                     
+            elif role == enums.UserRoles.ADMIN_ROLE:
+                if self.select_from_combo_by_text(self.ADD_USER_ROLE, "adminRole") == False:
+                    writeToLog("INFO","FAILED to select admin role")
+                    return False    
+                
+            elif role == enums.UserRoles.UNMODERATED_ADMIN_ROLE:
+                if self.select_from_combo_by_text(self.ADD_USER_ROLE, "unmoderatedAdminRole") == False:
+                    writeToLog("INFO","FAILED to select unmod role")
+                    return False                        
+                     
+            else:
+                writeToLog("INFO","Role not selected")
+                return False       
+        
+        if self.click(self.SVAE_USER) ==False:
+            writeToLog("INFO","FAILED to save new user")
+            return False
+        
+        if self.wait_visible(self.CONFIRM_USER_ADDED) == False:
+            writeToLog("INFO","FAILED to view header")
+            return False 
+                          
+        return True                             
+    
+#     # @Auther: Ori Flchtman
+#     # Test Name- Create New Groups
+    def addGroups(self, groupname, groupid, username, tab=''):
+        # Login to Manage Groups
+        if tab !="":
+            if tab == enums.AdminTabs.MANAGE_GROUPS:
+                if self.click(self.MANAGE_GROUPS_TAB) == False:
+                    writeToLog("INFO","FAILED to open to manage groups")
+                    return False
+                 
+                if self.wait_visible(self.MANAGE_GROUPS_HEADER, timeout=10) == False:
+                    writeToLog("INFO","FAILED to view header")
+                    return False 
+         
+        if self.click(self.ADD_NEW_GROUP) == False:
+            writeToLog("INFO","FAILED to click on Add New Group")
+            return False
+        sleep(1)
+         
+        if self.send_keys(self.GROUP_NAME, groupname) == False:
+            writeToLog("INFO","FAILED to enter groupname")
+            return False 
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.ENTER) 
+        
+        tmpGroupId = (self.GROUP_ID[0], self.GROUP_ID[1].replace('GROUP_ID', groupid))         
+        if self.wait_visible(tmpGroupId) == False:
+            writeToLog("INFO","FAILED to view group id")
+            return False 
+         
+        if self.send_keys(self.ADD_USERS_FRAME, username) == False:
+            writeToLog("INFO","FAILED to enter username")
+            return False 
+        
+        sleep(5)
+        
+        self.clsCommon.sendKeysToBodyElement(Keys.ENTER)
+ 
+        if self.click(self.ADD_GROUP) == False:
+            writeToLog("INFO","FAILED to save new group")
+            return False
+        
+        sleep(10)
+        
+        if self.wait_visible(self.CONFIRM_GROUP_ADDED) == False:
+            writeToLog("INFO","FAILED to view header")
+            return False 
+                          
+        return True        
