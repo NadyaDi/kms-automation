@@ -39,6 +39,7 @@ from kafBBUltra import BlackBoardUltra
 from quizAnalytics import QuizAnalytics
 
 
+
     #============================================================================================================
     # The class contains functions that relates to common actions
     #============================================================================================================
@@ -372,3 +373,19 @@ class Common():
         elif os.path.getsize(filePath) <= 1:
             writeToLog("INFO", "The " + filePath + " file location is empty")
             return False
+        
+        
+    # @Author: Inbar Willman
+    # Compare between two csv files
+    def compareBetweenTwoCsvFiles(self, file1, file2):
+        with open(file1, 'r') as t1, open(file2, 'r') as t2:
+            fileOne = t1.readlines()
+            fileTwo = t2.readlines()
+ 
+        for line in fileTwo:
+            if line not in fileOne:
+                writeToLog("INFO", "FAILED: Files aren't matching")
+                return False                    
+            
+        writeToLog("INFO", "Success: files are matching")
+        return True        

@@ -84,7 +84,7 @@ def testWebDriverLocalOrRemote (hostBrowser,myProxy=None):
         fp.set_preference('browser.helperApps.alwaysAsk.force', False)
         fp.set_preference('pdfjs.disabled', True)
         fp.set_preference('plugin.scan.plid.all;true', False)
-        fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'application/x-download,application/pdf,video/mpeg,video/avi,video/MP2T,video/3gpp,' +
+        fp.set_preference('browser.helperApps.neverAsk.saveToDisk', 'text/csv,application/x-download,application/pdf,video/mpeg,video/avi,video/MP2T,video/3gpp,' +
                             'video/quicktime,video/x-msvideo,video/x-flv,video/mp4,application/x-mpegURL,video/x-ms-wmv,' +
                             'video/x-ms-asf,image/bmp,image/x-png,image/gif,audio/wav,image/png,image/jpg,audio/x-ms-wma,application/vnd.ms-asf')
         fp.update_preferences()

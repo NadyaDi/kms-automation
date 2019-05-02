@@ -13,12 +13,12 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Export quiz questions - Allow multiple attempts is disabled
+    # Test Name : Quiz - Analytics - Export quiz answers - Allow multiple attempts is disabled
     # Test description:
     # Go to editor page and create quiz with all type of questions with no option to retake -> Login with 3 different users and answer the quiz - > Login as admin
-    # Go to analytics page -> quiz question tab -> click on export to csv -> Verify that correct questions are displayed
+    # Go to analytics page -> quiz users tab -> click on export to csv -> Verify that correct users data is displayed
     #================================================================================================================================
-    testNum = "5138"
+    testNum = "5159"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -30,10 +30,9 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-
-    filePathQuizQuestions = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\templates\quiz_questions_5138.csv'
-    filePathExoprtedQuizQuestions = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + r'\quiz_questions.csv'
-#     filePathExoprtedQuizQuestions = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'
+    filePathQuizUsers = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\templates\quiz_users_5159.csv'
+    filePathExoprtedQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + r'\quiz_users.csv'
+#    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'
     
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text']
@@ -221,7 +220,7 @@ class Test:
                 return   
              
             writeToLog("INFO","Step 21 : Going to export question csv file")  
-            if self.common.quizAnalytics.exportCsvFileQuizAnalyticsPage(enums.quizAnalytics.QUIZ_QUESTIONS, self.quizEntryName, True)  == False:
+            if self.common.quizAnalytics.exportCsvFileQuizAnalyticsPage(enums.quizAnalytics.QUIZ_USERS, self.quizEntryName, True)  == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 21 : FAILED to export question csv file")  
                 return
@@ -229,14 +228,14 @@ class Test:
             sleep(10)
             
             writeToLog("INFO","Step 22 : Going to verify that quiz questions csv files is download correctly")  
-            if self.common.compareBetweenTwoCsvFiles(self.filePathExoprtedQuizQuestions, self.filePathQuizQuestions)  == False:
+            if self.common.compareBetweenTwoCsvFiles(self.filePathExoprtedQuizUsers, self.filePathQuizUsers)  == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 22 : FAILED to verify that quiz questions csv files is download correctly")  
                 return                                                         
 
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Verify quiz questions csv file was done successfully")
+            writeToLog("INFO","TEST PASSED: Verify quiz answers csv file was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
