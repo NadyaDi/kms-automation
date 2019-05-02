@@ -1,4 +1,5 @@
 case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
+test_5158,Groups- Create Group,2362001-6,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_0002,Set service url,2362001-1,qakmstest.dev.kaltura.com,orifl@mailinator.com,Kaltura1!,Admin,123456
 test_2109,Moodle - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!
 test_2104,Moodle - Delete through my media,,,pythonautomation3@gmail.com,Kaltura1!,automoodle,Kaltura1!

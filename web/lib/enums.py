@@ -786,3 +786,25 @@ class quizAnswerRightOrWrong(Enum):
     
     RIGHT                 = 'right'
     WRONG                 = 'wrong'  
+    
+
+class AdminTabs(Enum):
+    def __str__(self):
+        return str(self.value)   
+    
+    MANAGE_CONFIGURATION    = 'Manage Configuration'    
+    MANAGE_USERS            = 'Manage Users'   
+    MANAGE_GROUPS           = 'Manage Groups' 
+    KNOWLEDGE_BASE          = 'Knowledge Base'
+    CLEAR_THE_CACHE         = 'Clear The Cache'
+    GO_TO                   = 'Go To'
+    
+    
+class UserRoles(Enum):
+    def __str__(self):
+        return str(self.value)   
+    
+    VIEWER_ROLE             = 'Viewer Role'    
+    PRIVATE_ONLY_ROLE       = 'Private Only Role'   
+    ADMIN_ROLE              = 'Admin Role' 
+    UNMODERATED_ADMIN_ROLE  = 'Unmoderated Admin Role'    
