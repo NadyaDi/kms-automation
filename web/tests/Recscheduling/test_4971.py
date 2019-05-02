@@ -14,21 +14,21 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Recscheduling - Edit Single event
+    # Test Name : Recscheduling -  Edit an event series 
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
     #    3. Fill in all fields (description ,tags ) and select a resource
     #    4. Select start and end time
     #    5. Click save and exit
-    #    6. Go to my schedule page and verify that the event display in the correct date and time
+    #    6. Go to my schedule page and verify that all events display with the correct date and time
     #    7. From my schedule page enter the event and edit the following fields: 
     #        uncheck the copy details from event to recording and edit the details : name, description, tags ,resource, Event organizer, add Collaborators, time , date, and publish the event
-    #    10. Go to my schedule page and verify that the event details was changed.
+    #    10. Go to my schedule page and verify that all the events details was changed.
     #
     #    1-10. The event is created successfully and appears on the agenda view
     #================================================================================================================================
-    testNum = "4970"
+    testNum = "4971"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -50,9 +50,13 @@ class Test:
     
     editDescription = "Edit Description"
     editTags = "Edit Tags, schedule,"
-    editResources = [enums.RecschedulingResourceOptions.QA_APP_ROOM, enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE]
+    editResources = [enums.RecschedulingResourceOptions.FALL_CONFERENCE_ROOM]
     editOrganizer = 'Automation_User_1' 
     userId = 'AutomationUser8'
+    numberOfRecurrenceDays = 6
+    resourceEveryXDays = 2 
+    editNumberOfRecurrenceDays = 13
+    editResourceEveryXDays = 4 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -70,19 +74,20 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.eventTitle = clsTestService.addGuidToString("Create single event", self.testNum)
-            self.editEventTitle = clsTestService.addGuidToString("Edit single event", self.testNum)
+            self.eventTitle = clsTestService.addGuidToString("Create event series", self.testNum)
+            self.editEventTitle = clsTestService.addGuidToString("Edit event series", self.testNum)
             
             self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
             self.editStartDate = (datetime.datetime.now() + timedelta(days=2)).strftime("%d/%m/%Y")
-            self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
-            self.editEndDate = (datetime.datetime.now() + timedelta(days=2)).strftime("%d/%m/%Y")
+            
+            self.endDate = (datetime.datetime.now() + timedelta(days=self.numberOfRecurrenceDays)).strftime("%d/%m/%Y")
+            self.editEndDate = (datetime.datetime.now() + timedelta(days=(self.editNumberOfRecurrenceDays+2))).strftime("%d/%m/%Y")
 
-            self.startEventTime = time.time() + (60*60)
+            self.startEventTime = time.time() + 1.5*(60*60)
             self.startEventTime = time.strftime("%I:%M %p",time.localtime(self.startEventTime))
 
             
-            self.editStartEventTime = time.time() + 3*(60*60)
+            self.editStartEventTime = time.time() + 0.5*(60*60)
             self.editStartEventTime = time.strftime("%I:%M %p",time.localtime(self.editStartEventTime))
             tmpTime = self.editStartEventTime.split(":")
             tmpHour = int(tmpTime[0])
@@ -93,7 +98,7 @@ class Test:
             self.endTime = time.strftime("%I:%M %p",time.localtime(self.endTime))
 
             
-            self.editEndTime = time.time() + 4*(60*60)
+            self.editEndTime = time.time() + (60*60)
             self.editEndTime = time.strftime("%I:%M %p",time.localtime(self.editEndTime))
             tmpTime = self.editEndTime.split(":")
             tmpHour = int(tmpTime[0])
@@ -101,6 +106,7 @@ class Test:
             self.editEndTime = tmpHour + ":" + tmpTime[1]
             
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, "True")
+            
             self.event.resources = self.resource
             self.event.publishTo = self.publishTo
             self.event.categoryList = self.category
@@ -108,6 +114,12 @@ class Test:
             self.event.collaboratorUser = self.userId
             self.event.coEditor = True
             self.event.coPublisher = False
+            self.event.expectedEvent = False
+            self.event.isRecurrence = True
+            self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
+            self.event.dailyOption =  enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS
+            self.event.dailyDays = self.resourceEveryXDays
+            self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
 
@@ -127,7 +139,7 @@ class Test:
                 return
             
             writeToLog("INFO","Step 4: Going navigate to event page")
-            if self.common.recscheduling.navigateToEventPage(self.event) == False:
+            if self.common.recscheduling.navigateToEventPage(self.event, viewEventSeries=True) == False:
                 writeToLog("INFO","Step 4: FAILED navigate to event")
                 return 
             sleep(2)
@@ -142,6 +154,7 @@ class Test:
             self.event.tags = self.editTags
             self.event.organizer = self.editOrganizer
             self.event.resources = self.editResources
+            self.event.dailyDays = self.editNumberOfRecurrenceDays
             
             sleep(3)     
             writeToLog("INFO","Step 5: Going to verify event display in my schedule page")
@@ -161,14 +174,31 @@ class Test:
                 return
             sleep(3)
             
-            writeToLog("INFO","Step 8: Going to verify event metadata")
-            if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
-                writeToLog("INFO","Step 8: FAILED to verify event metadata in event page")
-                return
+            
+            self.tmpStartDate = self.event.startDate
+            self.tmpStartDateFormat = self.event.verifyDateFormat
+            writeToLog("INFO","Step 8: Going to verify all events series were updated")
+            for day in range(0,self.editNumberOfRecurrenceDays+1):
+                self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
+                self.event.convertDatetimeToVerifyDate()
+                self.event.expectedEvent = not(self.event.expectedEvent)
+                
+                if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
+                    if self.event.expectedEvent == True:
+                        writeToLog("INFO","Step 8: FAILED to verify event in my schedule page for date: " + self.event.startDate)
+                        return
+                    elif self.event.expectedEvent == False:
+                        writeToLog("INFO","Step 8: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
+                        return
+                    
+                if self.event.expectedEvent == True:
+                    if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
+                        writeToLog("INFO","Step 8: FAILED to verify event metadata in event page")
+                        return
             
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Rescheduling - Edit Single event' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Rescheduling - Edit an event series' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

@@ -14,23 +14,14 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Recscheduling - Create new recurring event - Daily - Every X days
+    # Test Name : Recscheduling - Delete Event Series
     # Test description:
-    #    1. Login with Rescheduling admin user
-    #    2. Click on my schedule > create event
-    #    3. Fill in all fields (description ,tags ) and select a resource
-    #    4. Select start and end time
-    #    5. Click on the recurrence button
-    #        4.1. Select daily > Every X days 
-    #        * this is what we are testing : Every 2 days for 10 days
-    #    6. Click save and exit
-    #    7. Go to my schedule page and verify that the event display in the correct date and time
-    #        7.1 Check that all the event recurrence display in the correct date
-    #
-    #    1-7. All the event recurrence are created successfully and appears on the agenda view
+    #    1. Create event series
+    #    2. enter on of the event >  go to the series page > click on delete series
+    #    3. Go to my schedule and verify that all the event series was delete
 
     #================================================================================================================================
-    testNum = "4962"
+    testNum = "5162"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -46,7 +37,7 @@ class Test:
     endDate = None
     startEventTime = None
     endTime = None
-    numberOfRecurrenceDays = 10
+    munberOfRecurrenceDays = 8
     resource = enums.RecschedulingResourceOptions.MAIN_STUDENT_LOUNGE
     resourceEveryXDays = 2 
     
@@ -71,17 +62,15 @@ class Test:
             
             self.startTimeInDatetimeFormat = datetime.datetime.now()
             self.startDateForCreateEvent = self.startTimeInDatetimeFormat.strftime("%d/%m/%Y")
-            
-            self.endDate = (datetime.datetime.now() + timedelta(days=self.numberOfRecurrenceDays)).strftime("%d/%m/%Y")
+            self.endDate = (datetime.datetime.now() + timedelta(days=self.munberOfRecurrenceDays)).strftime("%d/%m/%Y")
 
-            self.startEventTime = time.time() + (60*60)
+            self.startEventTime = time.time() + 0.5*(60*60)
             self.startEventTime = time.strftime("%I:%M %p",time.localtime(self.startEventTime))
              
-            self.endTime = time.time() + 3.5*(60*60)
+            self.endTime = time.time() + (60*60)
             self.endTime = time.strftime("%I:%M %p",time.localtime(self.endTime))
             
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags,"False")
-            
             self.event.expectedEvent = False
             self.event.resources = self.resource
             self.event.isRecurrence = True
@@ -93,15 +82,15 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-            writeToLog("INFO","Step 1: Going to set rescheduling in admin")
-            if self.common.admin.enableRecscheduling(True) == False:
-                writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
-                return
-               
-            writeToLog("INFO","Step 2: Going navigate to home page")            
-            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-                writeToLog("INFO","Step 2: FAILED navigate to home page")
-                return
+#             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
+#             if self.common.admin.enableRecscheduling(True) == False:
+#                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
+#                 return
+#               
+#             writeToLog("INFO","Step 2: Going navigate to home page")            
+#             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+#                 writeToLog("INFO","Step 2: FAILED navigate to home page")
+#                 return
              
             writeToLog("INFO","Step 3: Going to create new single event")
             if self.common.recscheduling.createRescheduleEvent(self.event) == False:
@@ -112,7 +101,7 @@ class Test:
             self.tmpStartDate = self.event.startDate
             self.tmpStartDateFormat = self.event.verifyDateFormat
             writeToLog("INFO","Step 4: Going to verify event display in my schedule page")
-            for day in range(0,self.numberOfRecurrenceDays+1):
+            for day in range(0,self.munberOfRecurrenceDays+1):
                 self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
                 self.event.convertDatetimeToVerifyDate()
                 self.event.expectedEvent = not(self.event.expectedEvent)
@@ -125,17 +114,26 @@ class Test:
                         writeToLog("INFO","Step 4: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
                         return
             
-            writeToLog("INFO","Step 5: Going to verify that event isn't display in after event date end date")
-            self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=self.numberOfRecurrenceDays+2)).strftime("%d/%m/%Y")
-            self.event.convertDatetimeToVerifyDate()
-            self.event.expectedEvent = False
-            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
-                    writeToLog("INFO","Step 5: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although the event end date had passed")
+            writeToLog("INFO","Step 5: Going to delete event series")
+            if self.common.recscheduling.deteteEventSeries(self.event) == False:
+                writeToLog("INFO","Step 5: FAILEDto delete event series")
+                return
+                
+            writeToLog("INFO","Step 6: Going to verify that all event series occurrence were deleted")
+            self.event.startDate = self.tmpStartDate
+            self.event.verifyDateFormat = self.tmpStartDateFormat
+            for day in range(0,self.munberOfRecurrenceDays+1):
+                self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
+                self.event.convertDatetimeToVerifyDate()
+                self.event.expectedEvent = False
+                
+                if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
+                    writeToLog("INFO","Step 6: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it was deleted")
                     return
 
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Rescheduling - Create new recurring event - Daily - Every X days' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Rescheduling -  Delete Event Series' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
