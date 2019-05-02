@@ -179,7 +179,7 @@ class  Recscheduling(Base):
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_RESOURCES                               = ('css', "span.sol-quick-delete")
     SCHEDULE_EDIT_EVENT_PAGE_CURRENT_TAGS                                   = ('css', "li.select2-search-choice")
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS                                    = ('css', "a.select2-search-choice-close")
-    SCHEDULE_EDIT_EVENT_PAGE_GO_TO_SERIES_BUTTON                            = ('css', "a#gotoSeries")
+    SCHEDULE_EVENT_PAGE_GO_TO_SERIES_BUTTON                                 = ('css', "a#gotoSeries")
     SCHEDULE_VIEW_EVENT_SERIES_MESSAGE                                      = ('xpath', "//p[contains(text(),'You are viewing an event series')]")
     #=============================================================================================================
     
@@ -629,29 +629,25 @@ class  Recscheduling(Base):
             return False  
         
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
-        event = self.wait_element(tmpEventTiltle)
+        event = self.wait_element(tmpEventTiltle, multipleElements=True)
         if event == False:
             if eventInstance.expectedEvent == True:
                 writeToLog("INFO","FAILED to find event title")
                 return False
             
             elif eventInstance.expectedEvent == False: 
-                writeToLog("INFO","Success, Event isn't display in my schedule page as expected")
+                writeToLog("INFO","Success, As expected event isn't display in my schedule page")
                 return True
         else:
             if eventInstance.expectedEvent == False:
-                if event.size['width']!=0 or event.size['height']!=0:
-                    writeToLog("INFO","FAILED, event display although it shouldn't need to be displayed in this date: " + eventInstance.startDate)
-                    return False 
-                else:
-                    writeToLog("INFO","Success, As expected event isn't display in my schedule page ") 
-                    return True           
-            else:  
-                eventParentEl = event.find_element_by_xpath("../..")
-                eventMetadata = eventParentEl.text
-                if eventMetadata == None:
-                    writeToLog("INFO","FAILED to find event element text")
-                    return False
+                writeToLog("INFO","FAILED, event display although it shouldn't need to be displayed in this date: " + eventInstance.startDate)
+                return False           
+             
+        eventParentEl = event.find_element_by_xpath("../..")
+        eventMetadata = eventParentEl.text
+        if eventMetadata == None:
+            writeToLog("INFO","FAILED to find event element text")
+            return False
         
         if eventInstance.startTime.replace(" ", "").lower() + "-" + eventInstance.endTime.replace(" ", "").lower() in eventMetadata == False:
             writeToLog("INFO","FAILED to find event time")
@@ -738,9 +734,20 @@ class  Recscheduling(Base):
         if self.navigateToEventPage(eventInstance) == False:
             writeToLog("INFO","FAILED navigate to edit event page")
             return False  
+        sleep(1)
         
-        if self.deleteEvent(eventInstance) == False:
+        if self.deleteEvent() == False:
             writeToLog("INFO","FAILED to delete event")
+            return False 
+        
+        # verify event deleted
+        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
+            writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
+            return False 
+         
+        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
+        if self.wait_element(tmpEventTiltle, timeout=5, multipleElements=True) == True:
+            writeToLog("INFO","FAILED event '" + eventInstance.verifyDateFormat.title + "' was find although it was deleted")
             return False 
         
         writeToLog("INFO","Success, Event was deleted successfully")
@@ -749,7 +756,7 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper
     # The function only delete the event meaning only click on the delete button 
-    def deleteEvent(self, eventInstance):
+    def deleteEvent(self):
         if self.click(self.SCHEDULE_DELETE_EVENT_BUTTON) == False:
             writeToLog("INFO","FAILED to click on delete event button")
             return False
@@ -761,17 +768,11 @@ class  Recscheduling(Base):
             return False
         self.clsCommon.general.waitForLoaderToDisappear() 
         sleep(2)
-            
-        # verify event deleted
-        if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
-            writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
-            return False 
-         
-        tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
-        if self.wait_element(tmpEventTiltle, timeout=5, multipleElements=True) == True:
-            writeToLog("INFO","FAILED event '" + eventInstance.verifyDateFormat.title + "' was find although it was deleted")
-            return False 
         
+        if self.wait_element(self.SCHEDULE_PAGE_TITLE, timeout=5, multipleElements=True) == True:
+            writeToLog("INFO","FAILED to verify my schedule page display")
+            return False 
+           
         return True
 
 
@@ -781,26 +782,30 @@ class  Recscheduling(Base):
         if self.navigateToEventPage(eventInstance) == False:
             writeToLog("INFO","FAILED navigate to edit event page")
             return False  
+        sleep(1)
         
-        if self.click(self.SCHEDULE_EDIT_EVENT_PAGE_GO_TO_SERIES_BUTTON) == False:
+        if self.click(self.SCHEDULE_EVENT_PAGE_GO_TO_SERIES_BUTTON) == False:
             writeToLog("INFO","FAILED to click on 'go to series button' in event page")
             return False 
         self.clsCommon.general.waitForLoaderToDisappear()
+        sleep(1)
         
         if self.wait_element(self.SCHEDULE_VIEW_EVENT_SERIES_MESSAGE) == False:
             writeToLog("INFO","FAILED to verify that event series view display")
             return False 
         
-        if self.deleteEvent(eventInstance) == False:
+        if self.deleteEvent() == False:
             writeToLog("INFO","FAILED to delete event")
             return False 
         
-        writeToLog("INFO","Success, Event serirwas deleted successfully")
+        writeToLog("INFO","Success, Event series was deleted successfully")
         return True
 
     
     # @Author: Michal Zomper 
-    def navigateToEventPage(self, eventInstance):
+    # The function navigate to event page
+    # viewEventSeries - if we wont to edit a parameter in event series this parameter need to be True in order to go  viewing an event series. 
+    def navigateToEventPage(self, eventInstance, viewEventSeries=False):
         tmpTiltle = (self.SCHEDULE_EVENT_TITLE[0], self.SCHEDULE_EVENT_TITLE[1].replace('EVENT_TITLE', eventInstance.title))
         if self.wait_element(tmpTiltle, timeout=5) != False:
             writeToLog("INFO","Already in event page")
@@ -821,6 +826,13 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to find and click on event '" + eventInstance.title + "' in my schedule page")
             return False 
         
+        if viewEventSeries == True:
+            if self.click(self.SCHEDULE_EVENT_PAGE_GO_TO_SERIES_BUTTON) == False:
+                writeToLog("INFO","FAILED to click on 'go to series button' in event page")
+                return False 
+            self.clsCommon.general.waitForLoaderToDisappear()
+            sleep(1)
+                
         if self.wait_element(tmpTiltle, timeout=30) == False:
             writeToLog("INFO","FAILED to verify that edit event '" + eventInstance.title + "' page display")
             return False 
