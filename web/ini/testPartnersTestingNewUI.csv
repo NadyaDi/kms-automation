@@ -758,3 +758,5 @@ test_4741,eSearch - Filter by media type with search - add to category SR tab,24
 test_4852,Recscheduling - Create new single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4962,Recscheduling - Create new recurring event - Daily - Every X days,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_4971,Recscheduling - Edit an event series,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_5162,Recscheduling - Delete Event Series,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
