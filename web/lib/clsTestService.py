@@ -214,6 +214,8 @@ def basicSetUp(test,driverFix,estimatedDuration=600):
         except:
             writeToLog("INFO","FAILED to create folder: " + localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD)
     
+    # Set Selenium HUB (Grid) URL
+    localSettings.LOCAL_SETTINGS_SELENIUM_HUB_URL = getSeleniumHubURL(localSettings.LOCAL_SETTINGS_SELENIUM_GRID_POOL)
     test.driver = testWebDriverLocalOrRemote(driverFix)        
         
     if ("version" in test.driver.capabilities):
@@ -333,3 +335,38 @@ def addGuidToString(value, testID="", delimiter="-"):
         return localSettings.LOCAL_SETTINGS_GUID + delimiter + value
     else:
         return localSettings.LOCAL_SETTINGS_GUID + delimiter + testID + delimiter + value     
+
+
+# Will return a Selenium HUB (Grid) URL according the mapping allocation per Windows Node
+def getSeleniumHubURL(applicationName):
+    switcher = {
+        # il-KmsHub1-qa.dev.kaltura.com
+        "qaKmsFrontEnd": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd2": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd3": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd4": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd5": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd6": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd7": "il-KmsHub1-qa.dev.kaltura.com",
+        "qaKmsFrontEnd8": "il-KmsHub1-qa.dev.kaltura.com",
+        # il-KmsHub2-qa.dev.kaltura.com
+        "qaKmsFrontEnd9": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd10": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd11": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd12": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd13": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd14": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd15": "il-KmsHub2-qa.dev.kaltura.com",
+        "qaKmsFrontEnd16": "il-KmsHub2-qa.dev.kaltura.com",
+        # il-KmsHub3-qa.dev.kaltura.com
+        "qaKmsFrontEnd17": "il-KmsHub3-qa.dev.kaltura.com",
+        "qaKmsFrontEnd18": "il-KmsHub3-qa.dev.kaltura.com",
+        "qaKmsFrontEnd19": "il-KmsHub3-qa.dev.kaltura.com",
+        "qaKmsFrontEnd20": "il-KmsHub3-qa.dev.kaltura.com",
+        "qaKmsFrontEnd21": "il-KmsHub3-qa.dev.kaltura.com",
+        "qaKmsFrontEnd22": "il-KmsHub3-qa.dev.kaltura.com",
+        "qaKmsFrontEnd23": "il-KmsHub3-qa.dev.kaltura.com"
+    }
+    return("http://" + switcher.get(applicationName, "Invalid Application Name of the windows node") + ":4444/wd/hub")    
+    
+    
