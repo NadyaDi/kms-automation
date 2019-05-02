@@ -70,6 +70,7 @@ class Test:
               
             
             ##################################################################
+            self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Add User' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
