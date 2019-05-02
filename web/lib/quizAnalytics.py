@@ -43,6 +43,7 @@ class QuizAnalytics(Base):
     QUIZ_ANALYTICS_SCORE_TYPE                        = ('xpath', '//td[@class="span2" and text()="Final Score (SCORE_TYPE)"]')
     QUIZ_ANALYTICS_ATTEMPT_WAS_REMOVED_MSG           = ('xpath', '//i[text()="Attempt was removed"]')
     QUIZ_ANALYTICS_USERS_TAB_ANSWER_ROW              = ('xpath', '//div[@class="drill-down-data-row WRONG_OR_RIGHT"]')
+    QUIZ_ANALYTICS_DOWNLOAD_CSV_BTN                  = ('xpath', '//i[@class="icon-download-alt"]')
     #=============================================================================================================
     # @Author: Inbar Willman
     # Add feedback to open-Q
@@ -564,3 +565,21 @@ class QuizAnalytics(Base):
                            
         writeToLog("INFO","SUCCESS: answered are verified in quiz users tab")            
         return True      
+    
+    
+    # @Author: Inbar Willman
+    # Download analytics csv files 
+    # Csv file can be download from quiz users tab or quiz questions tab
+    # QuizAnalyticsTab = enums.quizAnalytics.QUIZ_USERS/enums.quizAnalytics.QUIZ_QUESTIONS
+    def exportCsvFileQuizAnalyticsPage(self,QuizAnalyticsTab='', entryName='',forceNavigate ='' ):
+        if self.wait_element(self.QUIZ_ANALYTICS_PAGE_TITLE, 3) == False:
+            if self.clsCommon.entryPage.navigateToQuizAnalyticsPage(entryName, forceNavigate, QuizAnalyticsTab) == False:
+                writeToLog("INFO","FAILED to navigate to quiz analytics - " + QuizAnalyticsTab.value + " tab")
+                return False         
+         
+        if self.click(self.QUIZ_ANALYTICS_DOWNLOAD_CSV_BTN) == False:
+            writeToLog("INFO","FAILED to click on 'Export to CSV' button")
+            return False    
+        
+        writeToLog("INFO","SUCCESS: CSV was export")            
+        return True                        
