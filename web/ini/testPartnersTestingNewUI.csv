@@ -426,6 +426,9 @@ test_5136,Quiz - Analytics - Remove last attempts when more than one user answer
 test_5137,Quiz - Analytics - Verify user answers in quiz users tab,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5154,Quiz - Analytics - Verify quiz questions after removing last attempt,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5155,Quiz - Analytics - Verify quiz answers after removing last attempt,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5138,Quiz - Analytics - Export quiz questions - Allow multiple attempts is disabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5159,Quiz - Analytics - Export quiz answers - Allow multiple attempts is disabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
+test_5160,Quiz - Analytics - Export quiz answers - Allow multiple attempts is enabled,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_4956,Hotspots - Verify that hotspots can be created for normal entries,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5153,Quiz - Analytics - Verify quiz questions after clearing all attempts ,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
 test_5157,Quiz - Analytics - Verify quiz answers after clearing all attempts,2501881,qakmstest.dev.kaltura.com,automation.kms@gmail.com,Kaltura1!,python_automation,Kaltura1!
