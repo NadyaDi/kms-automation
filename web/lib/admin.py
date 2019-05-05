@@ -54,6 +54,7 @@ class Admin(Base):
     ADMIN_SECURE_EMBED                              = ('id', 'secureEmbed')
     ADMIN_AUTO_PLAY_ON_LOAD                         = ('id', 'autoPlayOnLoad')
     ADMIN_ALLOW_ANONYMOUS                           = ('id', 'allowAnonymous')
+    ADMIN_SUPPORT_PUBLIC_OPEN_CHANNEL               = ('id', 'supportPublicOpenChannel')
     ADMIN_ASSIGNMENT_SUBMISSION                     = ('xpath', '//select[@id="enableAssignmentSubmission"]')
     ADMIN_GALLERY_PAGE_SIZE                         = ('xpath', "//input[@id='pageSize']")
     ADMIN_ADD_ALLOWEDUSERS                          = ('xpath', "//a[@class='add' and contains(text(),'+ Add \"allowedUsers\"')]")
@@ -1437,4 +1438,34 @@ class Admin(Base):
             writeToLog("INFO","FAILED to view header")
             return False 
                           
-        return True        
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function can enable or disable the Public Open Channel option
+    # if isEnabled = True, Public Open Channel will be enabled
+    # if isEnabled = False, Public Open Channel will be disabled
+    def enablePublicOpenChannel(self, isEnabled):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to channels module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/channels') == False:
+            writeToLog("INFO","FAILED to load the channels tab in admin area")
+            return False
+        sleep(1) 
+        
+        #Enable/Disable Editor module
+        selection = self.convertBooleanToYesNo(isEnabled)
+        if self.select_from_combo_by_text(self.ADMIN_SUPPORT_PUBLIC_OPEN_CHANNEL, selection) == False:
+            writeToLog("INFO","FAILED to set Public Open Channel to : " + str(selection) + " state")
+            return False
+         
+        if self.adminSave() == False:
+            writeToLog("INFO","FAILED to save changes the Public Open Channel changes in admin page")
+            return False
+            
+        writeToLog("INFO","Public Open Channel has been set successfully to: " + str(selection) + "' state")
+        return True 

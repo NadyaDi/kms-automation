@@ -45,11 +45,9 @@ class Test:
     tags                = "Tags,"
     entryName           = None
     entryDescription    = "Public Entry Description"
-    entryTags           = "public,"
     
     channelName         = None
     channelDescription  = "Public Channel Description"
-    channelTags         = "public,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -71,6 +69,8 @@ class Test:
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Public Restricted Channel Anonymous ON", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Public Restricted Channel Anonymous ON", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("entry,", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("channel,", self.testNum)
             self.instanceUrl           = self.common.base.driver.current_url
             self.common.admin.allowAnonymous(True)
             self.common.base.navigate(self.instanceUrl)

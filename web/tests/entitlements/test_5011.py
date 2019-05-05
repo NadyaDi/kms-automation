@@ -45,11 +45,9 @@ class Test:
     tags                = "Tags,"
     entryName           = None
     entryDescription    = "Shared Entry Description"
-    entryTags           = "shared,"
     
     channelName         = None
     channelDescription  = "Shared Repository Channel Description"
-    channelTags         = "shared,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -71,6 +69,8 @@ class Test:
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Shared Repository Channel", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Shared Repository Channel", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("entry,", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("channel,", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to create " + self.channelName + " channel as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.SHAREDREPOSITORY, True, True, True) == False:

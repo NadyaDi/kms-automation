@@ -70,6 +70,11 @@ class Test:
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Public Opened Channel in Global", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Public Opened Channel in Global", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("pocentry,", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("pocchannel,", self.testNum)
+            self.instanceURL           = self.common.base.driver.current_url
+            self.common.admin.enablePublicOpenChannel(True)
+            self.common.base.navigate(self.instanceURL)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to create " + self.channelName + " channel as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PUBLIC_OPENED, True, True, True) == False:

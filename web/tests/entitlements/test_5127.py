@@ -42,11 +42,9 @@ class Test:
     tags                = "Tags,"
     entryName           =  None
     entryDescription    = "Public Opened Entry Description"
-    entryTags           = "publicopenedchannel,"
     
     channelName         = None
     channelDescription  = "Public Opened Channel Description"
-    channelTags         = "publicopenedchannel,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -67,7 +65,12 @@ class Test:
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Public Opened in Channels", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("pocentry,", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Public Opened Channel in Channels", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("pocchannel,", self.testNum)
+            self.instanceURL           = self.common.base.driver.current_url
+            self.common.admin.enablePublicOpenChannel(True)
+            self.common.base.navigate(self.instanceURL)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to create " + self.channelName + " channel as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.PUBLIC_OPENED, True, True, True) == False:
