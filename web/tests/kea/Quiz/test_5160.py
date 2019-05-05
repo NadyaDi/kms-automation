@@ -29,13 +29,6 @@ class Test:
     # Test variables
     description = "Description" 
     tags = "Tags,"
-    filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-
-    filePathQuizQuestions = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH +'/templates/quiz_questions_5160.csv'
-    filePathExoprtedQuizQuestions = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions" + ".csv")
-    
-#    Next line is for local running 
-#    filePathExoprtedQuizQuestions = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'
     
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text']
@@ -129,6 +122,13 @@ class Test:
             self.keaAllScoreOptionsList          = [self.keaScoreOptions]                  
             self.totalGivenAttempts              = 3             
             self.entryPageURL                    = None
+            
+            self.filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
+            self.filePathQuizQuestions = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH +'/templates/quiz_questions_5160.csv'
+            self.filePathExoprtedQuizQuestions = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions.csv")
+    
+            #    Next line is for local running 
+            #    filePathExoprtedQuizQuestions = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'            
 
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")    
