@@ -46,11 +46,9 @@ class Test:
     tags                = "Tags,"
     entryName           = None
     entryDescription    = "Restricted Entry Description"
-    entryTags           = "restricted,"
     
     channelName         = None
     channelDescription  = "Restricted Channel Description"
-    channelTags         = "restricted,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -72,6 +70,8 @@ class Test:
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Restricted Channel", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Restricted Channel", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("entry,", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("channel,", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to create " + self.channelName + " channel as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.channel.createChannel(self.channelName, self.channelDescription, self.channelTags, enums.ChannelPrivacyType.RESTRICTED, True, True, True) == False:

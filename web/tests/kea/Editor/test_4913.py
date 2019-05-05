@@ -135,18 +135,22 @@ class Test:
             if self.quizQuestionsBeforeClipping == False:
                 writeToLog("INFO","Step 7: FAILED to collect all the available Questions from the " + self.quizEntryName + " entry, before clipping") 
                 return
-    
-            writeToLog("INFO","Step 8: Going to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping")  
-            if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeClipping) == False:
-                writeToLog("INFO","Step 8.1: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping during the first try") 
-                # Try to catch all the Question Details for the second time due to errors with the entries with slides
-                self.common.base.refresh()
-                sleep(8)
-                self.quizQuestionsBeforeClipping = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 5)
+            
+            # Due to a KMS Issue we try to take the question details for multiple times
+            for x in range(0,4):
+                writeToLog("INFO","Step 8."+str(x)+": Going to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping")  
                 if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeClipping) == False:
-                    writeToLog("INFO","Step 8.2: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping during the second try") 
-                    return  
-    
+                    writeToLog("INFO","Step 8."+str(x)+": FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping") 
+                    # Try to catch all the Question Details for the second time due to errors with the entries with slides
+                    if x == 3:
+                        return
+                    else:
+                        self.common.base.refresh()
+                        sleep(8)
+                        self.quizQuestionsBeforeClipping = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 5)
+                else:
+                    break
+        
             self.common.base.refresh()
             sleep(8)
                 

@@ -30,7 +30,6 @@ class Test:
     
     # Test variables
     typeTest             = "Private Category with KMS User, Anonymous User, Contributor Member and Category Member"
-    categoryName         = "Private Category"
     anonymousUser        = "Anonymous User"
     categoryMember       = "python_member"
     contributorMember    = "python_contributor"
@@ -41,7 +40,6 @@ class Test:
     tags                = "Tags,"
     entryName           = None
     entryDescription    = "description"
-    entryTags           = "privateauto,"
 
     # Variables used in order to create a video entry with Slides and Captions
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -61,7 +59,9 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
+            self.categoryName          = clsTestService.addGuidToString("Private Category", self.testNum)
             self.entryName             = clsTestService.addGuidToString("Entitlements - Private Category Entry Global Search", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("pentry,", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:

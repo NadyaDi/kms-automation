@@ -64,7 +64,6 @@ class Test:
     hotspotTopRight             = ['Initial Top Right', enums.keaLocation.CENTER, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12]
     hotspotBottomRight          = ['Initial Bottom Right', enums.keaLocation.TOP_RIGHT, 0, 15, '', enums.textStyle.THIN, '', '', 12, 16]
     hotspotBottomLeft           = ['Initial Bottom Left', enums.keaLocation.BOTTOM_RIGHT, 0, 20, '', enums.textStyle.BOLD, '', '', 18, 16]
-    hotspotsDictChangedVM       = {'1':hotspotBottomRight,'2':hotspotTopRight, '3':hotspotBottomLeft, '4':hotspotTopCenter}       
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
     def driverFix(self,request):
@@ -108,10 +107,8 @@ class Test:
                  
             writeToLog("INFO","Step " + str(i) + ": Going to verify the timeline section for " + self.entryName +" entry, while using the second Hotspot location")
             if self.common.kea.hotspotTimelineVerification(self.hotspotsDictChanged, 4) == False:
-                # On the VM we may have a different hotspot order
-                if self.common.kea.hotspotTimelineVerification(self.hotspotsDictChangedVM, 4) == False:
-                    writeToLog("INFO","Step " + str(i) + ": FAILED to verify the timeline section for " + self.entryName +" entry, while using the second Hotspot location")
-                    return
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify the timeline section for " + self.entryName +" entry, while using the second Hotspot location")
+                return
                               
             self.common.base.switch_to_default_content()
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to the entry page for " + self.entryName)

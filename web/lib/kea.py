@@ -2232,7 +2232,28 @@ class Kea(Base):
             except Exception:
                 writeToLog("INFO", "FAILED to find the question details while hovering over the question: " + currentQuestionDetails[2] + " during the first time")
                 try:
-                    ActionChains(self.driver).move_to_element(currentQuestion).pause(2).perform()
+                    # Take the entry name in order to switch between the KEA Tabs
+                    try:
+                        entryName = self.wait_element(self.KEA_ENTRY_NAME, 60, multipleElements=True).text
+                    except Exception:
+                        writeToLog("INFO", "FAILED to take the Entry Name while trying to verify the timeline section")
+                        return False
+                    
+                    # Switch between the kea tabs in order to refresh the elements
+                    if self.launchKEATab(entryName, enums.keaTab.VIDEO_EDITOR, False, 1) == False:
+                        writeToLog("INFO", "FAILED to navigate to the Video Editor in order to try to perform a switch between the tabs and take the Cue Point details")
+                        return False
+                    sleep(3)
+                    
+                    if self.launchKEATab(entryName, enums.keaTab.QUIZ, False, 1) == False:
+                        writeToLog("INFO", "FAILED to navigate to the Video Editor in order to try to perform a switch between the tabs and take the Cue Point details")
+                        return False
+                    sleep(7)
+                    # Take the questions from the timeline after switching between KEA Tabs
+                    presentedQuestionsInTimelineSecondTry = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+                    currentQuestionSecondTry              = presentedQuestionsInTimelineSecondTry[x]
+                    
+                    ActionChains(self.driver).move_to_element(currentQuestionSecondTry).pause(2).perform()
                     questionNumberPresented     = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_NUMBER, 2, True).text
                     questionTitlePresented      = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 2, True).text
                     questionTimestampPresented  = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_QUESTION_TIMESTAMP, 2, True).text
@@ -2869,20 +2890,27 @@ class Kea(Base):
                 
                 # Verify that the Question Title is presented while hovering over the Cue Point
                 if questionTitlePresented == False:
-                    # Add a redundancy step for action chain
-                    try:
-                        ActionChains(self.driver).move_to_element(questionCuePoint).pause(2).perform()
-                    except Exception:
-                        writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point during the second try")
-                        return False
-                    
-                    questionTitlePresented = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 5, True)
-                    if questionTitlePresented == False:
-                        writeToLog("INFO", "FAILED to take the question title from the question cue point number " + str(x+1))
-                        return False
+                    for x in range(0,5):
+                        # Add a redundancy step for action chain
+                        try:
+                            ActionChains(self.driver).move_to_element(questionCuePoint).pause(2).perform()
+                        except Exception:
+                            writeToLog("INFO", "FAILED to hover over the quiz " + str(x+1) + " question number Cue Point during the second try")
+                            return False
+                        
+                        questionTitlePresented = self.wait_element(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE_TITLE, 5, True)
+                        if questionTitlePresented == False:
+                            writeToLog("INFO", "FAILED to take the question title from the question cue point number " + str(x+1))
+                            return False
+                        else:
+                            break
                 else:
-                    # Take the Question Title presented on the hovered Cue Point
-                    questionTitlePresented = questionTitlePresented.text
+                    try:
+                        # Take the Question Title presented on the hovered Cue Point
+                        questionTitlePresented = questionTitlePresented.text
+                    except Exception:
+                        writeToLog("INFO", "FAILED to take the Question Title from the cue point number " + str(x+1) + " while using the element")
+                        return False
                     
                 # Verify if the Question Title Presented matches with Question Title from given List
                 if questionTitlePresented == questionToBeDeleted:
@@ -3921,7 +3949,7 @@ class Kea(Base):
     # Verify the place order based on creation
     # For hotspotDict structure please check hotspotCreation function
     # expectedHotspotNumber = 5, will also verify that exactly five hotspots are presented
-    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None): # TBD - HS List and Timeline List consistnet verification
+    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None): # TBD - HS List and Timeline List consistent verification
         self.switchToKeaIframe()
         # Verify that we are in the Hotspot Section
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
@@ -3989,9 +4017,24 @@ class Kea(Base):
                 # Take the hotspot details from the dictionary
                 expectedHotspot          = hotspotsDict[str(i)]
                 
+                # Iterate through the presented hotspots until the expected one is found
+                for k in range(0,len(presentedHotspots)):
+                    try:
+                        presentedHotspot         = presentedHotspots[k]
+                        presentedHotspotTitle    = presentedHotspot.text
+                    except Exception:
+                        writeToLog("INFO", "FAILED to take the presented hotspot at the " + str(x) + " try")
+                        return False
+                    
+                    if presentedHotspotTitle == expectedHotspot[0]:
+                        writeToLog("INFO", "The hotspot " + presentedHotspotTitle + " was found at place " + str(x))
+                        break
+                    else:
+                        if k + 1 == len(presentedHotspots):
+                            writeToLog("INFO", "FAILED to find the expected hotspot: " + expectedHotspot[0])
+                            return False 
+                        
                 # Take the presented hotspot details
-                presentedHotspot         = presentedHotspots[x]
-                presentedHotspotTitle    = presentedHotspot.text
                 presentedHotspotWidth    = presentedHotspot.size['width']
                 presentedHotspotXValue   = presentedHotspot.location['x']
                 presentedHotspotYValue   = presentedHotspot.location['y']
@@ -4000,51 +4043,44 @@ class Kea(Base):
                 expectedHotspotTime      = expectedHotspot[3] - expectedHotspot[2]
                 expectedHotspotXValue    = int(zeroSecondXValue + widthSizeForOneSecond * expectedHotspot[2])
             except Exception:
-                writeToLog("INFO", "FAILED to take the Expected and Presented hotspot details")
+                writeToLog("INFO", "FAILED to take the Expected and Presented hotspot details")           
+                
+            # Verify that the width of the hotspot container matches with the expected duration
+            if presentedHotspotTime != expectedHotspotTime:
+                # Allow a two second inconsistency
+                for x in range(0,2):
+                    if presentedHotspotTime + x == expectedHotspotTime:
+                        break
+                    
+                    if x == 2:
+                        writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
+                        return False
             
-            # Verify that the expected hotspot matches with the presented hotspot for the current location
-            if presentedHotspotTitle == expectedHotspot[0]:                
-                
-                # Verify that the width of the hotspot container matches with the expected duration
-                if presentedHotspotTime != expectedHotspotTime:
-                    # Allow a two second inconsistency
-                    for x in range(0,2):
-                        if presentedHotspotTime + x == expectedHotspotTime:
-                            break
-                        
-                        if x == 2:
-                            writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
+            # Verify that the presented hotspot is presented at the expected X location
+            if presentedHotspotXValue != expectedHotspotXValue:
+                # Allow a five px inconsistency
+                for x in range(0,7):
+                    if presentedHotspotXValue == expectedHotspotXValue + x:
+                        break
+                    
+                    if x >= 5:
+                        if presentedHotspotXValue + 1 != expectedHotspotXValue:
+                            writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
                             return False
-                
-                # Verify that the presented hotspot is presented at the expected X location
-                if presentedHotspotXValue != expectedHotspotXValue:
-                    # Allow a five px inconsistency
-                    for x in range(0,7):
-                        if presentedHotspotXValue == expectedHotspotXValue + x:
+                        else:
                             break
-                        
-                        if x >= 5:
-                            if presentedHotspotXValue + 1 != expectedHotspotXValue:
-                                writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
-                                return False
-                            else:
-                                break
-                
-                # Verify that the current iterated hotspot is displayed on a higher Y value than the previous hotspot
-                if presentedHotspotYValue <= previousYValue:
-                    writeToLog("INFO", "FAILED, the Y Location of " + presentedHotspotTitle + " was " + str(presentedHotspotYValue) + " while from the previous hotspot was " + str(previousYValue))
-                    return False
-                else:
-                    previousYValue = presentedHotspotYValue
-                
-                i += 1
-                expectedHotspotVerified += 1
-                hotspotNameList.append(expectedHotspot[0])
-                writeToLog("INFO", "The following hotspot has been successfully presented in the timeline section " + expectedHotspot[0])
-                
+            
+            # Verify that the current iterated hotspot is displayed on a higher Y value than the previous hotspot
+            if presentedHotspotYValue <= previousYValue:
+                writeToLog("INFO", "FAILED, the Y Location of " + presentedHotspotTitle + " was " + str(presentedHotspotYValue) + " while from the previous hotspot was " + str(previousYValue))
+                return False
             else:
-                writeToLog("INFO", "The, " + presentedHotspotTitle + " hotspot was displayed at place " + str(x+1) + " while we expected for " + expectedHotspot[0])
-                i -= 1
+                previousYValue = presentedHotspotYValue
+            
+            i += 1
+            expectedHotspotVerified += 1
+            hotspotNameList.append(expectedHotspot[0])
+            writeToLog("INFO", "The following hotspot has been successfully presented in the timeline section " + expectedHotspot[0])
                 
         if len(hotspotNameList) > 1:   
             hotspots = "\n".join(hotspotNameList)
