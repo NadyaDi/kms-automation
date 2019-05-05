@@ -411,6 +411,9 @@ test_5153,1,0,0,0,Quiz - Analytics - Verify quiz questions after clearing all at
 test_5157,1,0,0,0,Quiz - Analytics - Verify quiz answers after clearing all attempts
 test_5159,1,0,0,0,Quiz - Analytics - Export quiz answers - Allow multiple attempts is disabled
 test_5160,1,0,0,0,Quiz - Analytics - Export quiz answers - Allow multiple attempts is enabled
+test_5161,1,0,0,0,Quiz - Analytics - Export quiz answers - Allow multiple attempts is enabled
+test_5163,1,0,0,0,Quiz - Analytics - Export quiz questions - after clearing all attempts
+test_5164,1,0,0,0,Quiz - Analytics - Export quiz answers - after clearing all attempts
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
 test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality
