@@ -29,12 +29,6 @@ class Test:
     # Test variables
     description = "Description" 
     tags = "Tags,"
-    filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    filePathQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_users_5159.csv'
-    
-
-#    Next line is for local running 
-#    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'
     
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text']
@@ -97,7 +91,14 @@ class Test:
             self.quizEntryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz questions - Quiz", self.testNum)      
             self.entryPageURL = None
             
+            self.filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
+            
+            self.filePathQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_users_5159.csv'
             self.filePathExoprtedQuizUsers =  os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_users.csv")
+            
+            #    Next line is for local running 
+            #    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'            
+
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")    
             if self.common.upload.uploadEntry(self.filePathEntry, self.entryName, self.description, self.tags) == False:

@@ -29,20 +29,7 @@ class Test:
     # Test variables
     description = "Description" 
     tags = "Tags,"
-    filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-
-    filePathQuizQuestionsAfterClearingAttempts = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_questions_after_clearing_attempt_5163.csv'
-    filePathExoprtedQuizQuestionsAfterClearingAttempts = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions" + ".csv")
-
-#    Next line is for local running     
-#    filePathExoprtedQuizQuestionsAfterClearingAttempts = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'
-    
-    filePathQuizQuestionsAfterRetakingQuiz = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_questions_after_retaking_quiz_5163.csv'
-    filePathExoprtedQuizQuestionsAfterRetakingQuiz = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions(1)" + ".csv")
-    
-#    Next line is for local running     
-#    filePathExoprtedQuizQuestionsAfterRetakingQuiz = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions(1).csv'
-    
+   
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text']
     questionNumber3 = ['00:20', enums.QuizQuestionType.OPEN_QUESTION, 'Question Title for Open-Q'] 
@@ -105,6 +92,19 @@ class Test:
             self.keaAllScoreOptionsList          = [self.keaScoreOptions]                  
             self.totalGivenAttempts              = 3             
             self.entryPageURL                    = None
+            
+            self.filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
+            self.filePathQuizQuestionsAfterClearingAttempts = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_questions_after_clearing_attempt_5163.csv'
+            self.filePathExoprtedQuizQuestionsAfterClearingAttempts = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions" + ".csv")
+
+            #    Next line is for local running     
+            #    filePathExoprtedQuizQuestionsAfterClearingAttempts = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'
+    
+            self.filePathQuizQuestionsAfterRetakingQuiz = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_questions_after_retaking_quiz_5163.csv'
+            self.filePathExoprtedQuizQuestionsAfterRetakingQuiz = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions(1)" + ".csv")
+    
+            #    Next line is for local running     
+            #    filePathExoprtedQuizQuestionsAfterRetakingQuiz = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions(1).csv'            
 
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")    
