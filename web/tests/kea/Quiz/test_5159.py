@@ -31,7 +31,7 @@ class Test:
     tags = "Tags,"
     filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     filePathQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_users_5159.csv'
-    filePathExoprtedQuizUsers =  os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_users" + ".csv")
+    
 
 #    Next line is for local running 
 #    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'
@@ -96,7 +96,8 @@ class Test:
             self.entryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz questions", self.testNum)
             self.quizEntryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz questions - Quiz", self.testNum)      
             self.entryPageURL = None
-
+            
+            self.filePathExoprtedQuizUsers =  os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_users.csv")
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")    
             if self.common.upload.uploadEntry(self.filePathEntry, self.entryName, self.description, self.tags) == False:
