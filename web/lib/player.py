@@ -3078,7 +3078,8 @@ class Player(Base):
     # expectedAttemptGeneralScore = List of string: each string represent the total score after each attempts based on the score type
     # scoreType = enum.playerQuizScoreType: Represent the score type (Latest, Highest, Average, Lowest, First)
     def verifyQuizAttemptsAfterRemovingLastAttempt(self, AllAttempsList, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore=[], embed=False, verifySubmittedScreenDict='', expectedQuestionsStateDict='', currentAttempt='',totalGivenAttempts='', expectedAttemptGeneralScore=[], scoreType='', showScore=True):
-        if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed, currentAttempt) == False:
+        tmpCurrentAttempt = totalGivenAttempts - (currentAttempt - 1)
+        if self.initiateQuizPlayback(location, timeOut, skipWelcomeScreen, embed, tmpCurrentAttempt) == False:
             writeToLog("INFO", "FAILED to verify welcome message")
             return False
         
@@ -3087,9 +3088,18 @@ class Player(Base):
             return False  
         
         for i in range(0,len(AllAttempsList)):
-            expectedNumberOfAttemptsWelcomeSreen = currentAttempt - i
-            currentNumberOfAttemptsSubmittedScreen = currentAttempt + i               
+            currentAttempt = currentAttempt + i
+
+            currentNumberOfAttemptsSubmittedScreen = currentAttempt
             
+            if currentAttempt == 1:
+                expectedNumberOfAttemptsWelcomeSreen = totalGivenAttempts   
+                 
+            elif currentAttempt == totalGivenAttempts:
+                expectedNumberOfAttemptsWelcomeSreen = 1
+            else:                
+                expectedNumberOfAttemptsWelcomeSreen = totalGivenAttempts - (currentAttempt - 1)
+                             
             if self.answerQuiz(AllAttempsList[i], skipWelcomeScreen, submitQuiz, location, timeOut, expectedQuizScore[i], embed, verifySubmittedScreenDict, expectedQuestionsStateDict, expectedNumberOfAttemptsWelcomeSreen, currentNumberOfAttemptsSubmittedScreen, totalGivenAttempts, expectedAttemptGeneralScore[i], scoreType, showScore) == False:
                 writeToLog("INFO", "FAILED to answer quiz")
                 return False 
