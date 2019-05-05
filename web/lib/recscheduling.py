@@ -36,7 +36,8 @@ from general import General
 # categoryList - this parameter will have the name of the category to publish to , if we have more then 1 category need to be in a list ([]) format
 # channelList = this parameter will have the name of the channel to publish to , if we have more then 1 channel need to be in a list ([]) format
 # verifyDateFormat - this parameter is created in the Constructor. it will build a date format to us in my schedule page
-# fieldsToUpdate - this parameter will have the fields name that need to be update in edit tests, need to be in a list ([]) format
+# fieldsToUpdate - this parameter will have the fields name that need to be update in edit tests, need to be in a list ([]) format. if the event is recurrence than all the recurrence parameters that need to be update will be in 'eventRecurrencefieldsToUpdate' list and need to be excluded from this parameter  
+# eventRecurrencefieldsToUpdate - if the event is recurrence all the recurrence parameters (start date, end date , start time, end time) need to be here. all the other parameters that need to be edit will be in 'fieldsToUpdate' list.  need to be in a list ([])
 # collaboratorUser - this parameter will have the the user id for collaborator 
 # coEditor  - this parameter is to know if collaborator user need to be co editor. this is a boolean parameter so needed to be only True/False 
 # coPublisher - this parameter is to know if collaborator user need to be co publisher. this is a boolean parameter so needed to be only True/False 
@@ -76,6 +77,7 @@ class SechdeuleEvent():
     channelList = ''
     verifyDateFormat = ''
     fieldsToUpdate = ''
+    eventRecurrencefieldsToUpdate = ''
     collaboratorUser = ''
     coEditor = ''
     coPublisher = ''
@@ -181,6 +183,7 @@ class  Recscheduling(Base):
     SCHEDULE_EDIT_EVENT_PAGE_DELETE_TAGS                                    = ('css', "a.select2-search-choice-close")
     SCHEDULE_EVENT_PAGE_GO_TO_SERIES_BUTTON                                 = ('css', "a#gotoSeries")
     SCHEDULE_VIEW_EVENT_SERIES_MESSAGE                                      = ('xpath', "//p[contains(text(),'You are viewing an event series')]")
+    SCHEDULE_EDIT_EVENT_PAGE_RECURRENCE_BUTTON                              = ('css', "button#CreateEvent-recurrenceMain")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -671,7 +674,11 @@ class  Recscheduling(Base):
     # @Author: Michal Zomper
     # the function choose the needed date form calendar in my schedule page
     # the dateStr need to be in format ("%B %d, %Y - %A")- us the parameter verifyDateFormat in event class, for exm: April 08, 2019 - Monday,
-    def setScheduleInMySchedulePage(self, dateStr):
+    def setScheduleInMySchedulePage(self, dateStr, forceNavigate=False):
+        if self.navigateToMySchedule() == False:
+            writeToLog("INFO","FAILED navigate to my schedule page")
+            return False
+            
         # verify that the need date isn't already display
         tmpNeededDate = (self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[0], self.SCHEDULE_EVENT_DATE_IN_THE_TOP_OF_THE_PAGE[1].replace('DATE', dateStr))
         if self.wait_element(tmpNeededDate, timeout=5, multipleElements=True) != False:
@@ -853,8 +860,7 @@ class  Recscheduling(Base):
         if (self.wait_element(self.SCHEDULE_EVENT_ORGANIZER).get_attribute("value") == eventInstance.organizer) == False:
             writeToLog("INFO","FAILED to verify event organizer")
             return False
-        
-        
+            
         if (self.changeDateOrder(self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_START_DATE).get_attribute("value")) == eventInstance.startDate) == False:
             writeToLog("INFO","FAILED to verify event start date")
             return False
@@ -870,7 +876,7 @@ class  Recscheduling(Base):
         if (self.wait_element(self.SCHEDULE_EVENT_END_TIME).get_attribute("value") == eventInstance.endTime) == False:
             writeToLog("INFO","FAILED to verify event end time")
             return False
-        
+            
         if eventInstance.resources != "":
             if type(eventInstance.resources) is list:
                 tmpResources = self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text
@@ -961,6 +967,11 @@ class  Recscheduling(Base):
             writeToLog("INFO","FAILED to update event metadata")
             return False
             
+        if eventInstance.isRecurrence == True:
+            if self.editRecurrecntEvent(eventInstance) == False:
+                writeToLog("INFO","FAILED to update recurrence metadata")
+                return False
+                
         sleep(3)
         if eventInstance.exitEvent==False:
             if self.click(self.SCHEDULE_SAVE_EVENT) == False:
@@ -1048,6 +1059,45 @@ class  Recscheduling(Base):
             
         return True
     
+    
+    def editRecurrecntEvent(self,eventInstance):
+        if self.click(self.SCHEDULE_EDIT_EVENT_PAGE_RECURRENCE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on recurrence button")
+            return False
+        sleep(2)
+        
+        for update in eventInstance.eventRecurrencefieldsToUpdate:
+            if update.lower() == "startdate":
+                if self.setRecurrenceStartDate(eventInstance.startDate) == False:
+                    writeToLog("INFO","FAILED to set event start date")
+                    return False
+                sleep(2) 
+         
+            elif update.lower() == "starttime":
+                if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_START_TIME, eventInstance.startTime) == False:
+                    writeToLog("INFO","FAILED to set event start time")
+                    return False
+                sleep(2) 
+            
+            elif update.lower() == "enddate":
+                if self.setRecurrenceEndDate(eventInstance.endDate) == False:
+                    writeToLog("INFO","FAILED to set event end date")
+                    return False
+                sleep(2)  
+            
+            elif update.lower() == "endtime":
+                if self.clsCommon.editEntryPage.setScheduleTime(self.SCHEDULE_RECURRENCE_END_TIME, eventInstance.endTime) == False:
+                    writeToLog("INFO","FAILED to set event end time")
+                    return False
+                    sleep(2)
+            
+        if self.click(self.SCHEDULE_RECURRENCE_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on recurrence save button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        return True
+    
     # @Author: Michal Zomper 
     def updateEventTitle(self, title):
         if self.clear_and_send_keys(self.SCHEDULE_EVENT_TITLE, title) == False:
@@ -1126,8 +1176,9 @@ class  Recscheduling(Base):
     # The function publish event to channel / category
     # publishTo - in this parameter will have to were publish to: channel / category
     # categories / channels - in those parameters will have the names of channels/categories name
-    def publishEvent(self, eventInstance):
-        if self.navigateToEventPage(eventInstance) == False:
+    # viewEventSeries - if we wont to edit a parameter in event series this parameter need to be True in order to go  viewing an event series. 
+    def publishEvent(self, eventInstance, viewEventSeries=False):
+        if self.navigateToEventPage(eventInstance, viewEventSeries) == False:
                 writeToLog("INFO","FAILED navigate to event page")
                 return False
             
@@ -1222,8 +1273,9 @@ class  Recscheduling(Base):
     
     # @Author: Michal Zomper
     # The function adding collaborator to event
-    def addCollaboratorToScheduleEvent(self, eventInstance, location=enums.Location.SCHEDULE_EVENT_PAGE):
-        if self.navigateToEventPage(eventInstance) == False:
+    # viewEventSeries - if we wont to edit a parameter in event series this parameter need to be True in order to go  viewing an event series. 
+    def addCollaboratorToScheduleEvent(self, eventInstance, location=enums.Location.SCHEDULE_EVENT_PAGE, viewEventSeries=False):
+        if self.navigateToEventPage(eventInstance, viewEventSeries) == False:
                 writeToLog("INFO","FAILED navigate to event page")
                 return False
             

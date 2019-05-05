@@ -69,8 +69,8 @@ class Test:
             self.common = Common(self.driver)
             self.eventTitle = clsTestService.addGuidToString("Create recurring event-Daily-Every X days", self.testNum)
             
-            self.startTimeInDatetimeFormat = datetime.datetime.now()
-            self.startDateForCreateEvent = self.startTimeInDatetimeFormat.strftime("%d/%m/%Y")
+            self.startDateInDatetimeFormat = datetime.datetime.now()
+            self.startDateForCreateEvent = self.startDateInDatetimeFormat.strftime("%d/%m/%Y")
             
             self.endDate = (datetime.datetime.now() + timedelta(days=self.numberOfRecurrenceDays)).strftime("%d/%m/%Y")
 

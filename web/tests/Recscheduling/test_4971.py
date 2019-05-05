@@ -77,8 +77,11 @@ class Test:
             self.eventTitle = clsTestService.addGuidToString("Create event series", self.testNum)
             self.editEventTitle = clsTestService.addGuidToString("Edit event series", self.testNum)
             
-            self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
-            self.editStartDate = (datetime.datetime.now() + timedelta(days=2)).strftime("%d/%m/%Y")
+            
+            self.startDateInDatetimeFormat = (datetime.datetime.now())
+            self.startDateForCreateEvent = self.startDateInDatetimeFormat.strftime("%d/%m/%Y")
+            self.editStartDateInDatetimeFormat = (datetime.datetime.now() + timedelta(days=2))
+            self.editStartDate = self.editStartDateInDatetimeFormat.strftime("%d/%m/%Y")
             
             self.endDate = (datetime.datetime.now() + timedelta(days=self.numberOfRecurrenceDays)).strftime("%d/%m/%Y")
             self.editEndDate = (datetime.datetime.now() + timedelta(days=(self.editNumberOfRecurrenceDays+2))).strftime("%d/%m/%Y")
@@ -110,7 +113,8 @@ class Test:
             self.event.resources = self.resource
             self.event.publishTo = self.publishTo
             self.event.categoryList = self.category
-            self.event.fieldsToUpdate = ["title", "Organizer","startDate", "endDate", "startTime", "endTime", "description", "tags", "resources"]
+            self.event.fieldsToUpdate = ["title", "Organizer", "tags", "description", "resources"]
+            self.event.eventRecurrencefieldsToUpdate = ["startDate", "endDate","startTime", "endTime"]
             self.event.collaboratorUser = self.userId
             self.event.coEditor = True
             self.event.coPublisher = False
@@ -164,22 +168,21 @@ class Test:
             
             sleep(3)
             writeToLog("INFO","Step 6: Going to publish event")
-            if self.common.recscheduling.publishEvent(self.event) == False:
+            if self.common.recscheduling.publishEvent(self.event, viewEventSeries=True) == False:
                 writeToLog("INFO","Step 6: FAILED to publish event")
                 return
             
             writeToLog("INFO","Step 7: Going to add collaborator to event")
-            if self.common.recscheduling.addCollaboratorToScheduleEvent(self.event, location=enums.Location.SCHEDULE_EVENT_PAGE) == False:
+            if self.common.recscheduling.addCollaboratorToScheduleEvent(self.event, location=enums.Location.SCHEDULE_EVENT_PAGE, viewEventSeries=True) == False:
                 writeToLog("INFO","Step 7: FAILED adding collaborator to event")
                 return
             sleep(3)
-            
-            
+                
             self.tmpStartDate = self.event.startDate
             self.tmpStartDateFormat = self.event.verifyDateFormat
             writeToLog("INFO","Step 8: Going to verify all events series were updated")
             for day in range(0,self.editNumberOfRecurrenceDays+1):
-                self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
+                self.event.startDate = (self.editStartDateInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
                 self.event.convertDatetimeToVerifyDate()
                 self.event.expectedEvent = not(self.event.expectedEvent)
                 
@@ -195,7 +198,8 @@ class Test:
                     if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
                         writeToLog("INFO","Step 8: FAILED to verify event metadata in event page")
                         return
-            
+                
+                
             ##################################################################
             self.status = "Pass"
             writeToLog("INFO","TEST PASSED: 'Rescheduling - Edit an event series' was done successfully")
