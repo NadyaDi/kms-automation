@@ -32,13 +32,13 @@ class Test:
     filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
 
     filePathQuizQuestionsAfterClearingAttempts = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_questions_after_clearing_attempt_5163.csv'
-    filePathExoprtedQuizQuestionsAfterClearingAttempts = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + '/quiz_questions.csv'
-    
+    filePathExoprtedQuizQuestionsAfterClearingAttempts = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions" + ".csv")
+
 #    Next line is for local running     
 #    filePathExoprtedQuizQuestionsAfterClearingAttempts = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'
     
     filePathQuizQuestionsAfterRetakingQuiz = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_questions_after_retaking_quiz_5163.csv'
-    filePathExoprtedQuizQuestionsAfterRetakingQuiz = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + '/quiz_questions(1).csv'
+    filePathExoprtedQuizQuestionsAfterRetakingQuiz = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions(1)" + ".csv")
     
 #    Next line is for local running     
 #    filePathExoprtedQuizQuestionsAfterRetakingQuiz = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions(1).csv'

@@ -31,8 +31,8 @@ class Test:
     tags = "Tags,"
     filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     filePathQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_users_5159.csv'
-    filePathExoprtedQuizUsers = localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS + '/quiz_users.csv'
-    
+    filePathExoprtedQuizUsers =  os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_users" + ".csv")
+
 #    Next line is for local running 
 #    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'
     
