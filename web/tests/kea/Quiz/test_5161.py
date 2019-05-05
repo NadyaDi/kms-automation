@@ -13,12 +13,12 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Inbar Willman
-    # Test Name : Quiz - Analytics - Export quiz questions - Allow multiple attempts is enabled
+    # Test Name : Quiz - Analytics - Export quiz answers - Allow multiple attempts is enabled
     # Test description:
-    # Go to editor page and create quiz with all type of questions with option to retake -> Login with 3 different users and answer the quiz - > Login as admin
-    # Go to analytics page -> quiz question tab -> click on export to csv -> Verify that correct questions are displayed
+    # Go to editor page and create quiz with all type of questions with no option to retake -> Login with 3 different users and answer the quiz - > Login as admin
+    # Go to analytics page -> quiz users tab -> click on export to csv -> Verify that correct users data is displayed
     #================================================================================================================================
-    testNum = "5160"
+    testNum = "5161"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -30,12 +30,11 @@ class Test:
     description = "Description" 
     tags = "Tags,"
     filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-
-    filePathQuizQuestions = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\templates\quiz_questions_5160.csv'
-    filePathExoprtedQuizQuestions = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/quiz_questions.csv'
+    filePathQuizUsers = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\templates\quiz_users_5161.csv'
+    filePathExoprtedQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/quiz_users.csv'
     
-#    Next line is for local running 
-#    filePathExoprtedQuizQuestions = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'
+#    Next line is for local running     
+#    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'
     
     questionNumber1 = ['00:10', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:15', enums.QuizQuestionType.TRUE_FALSE, 'Question Title for True and False', 'True text', 'False text']
@@ -82,12 +81,12 @@ class Test:
     
     # User 3 attempt 2
     answerquestionNumber1Attempt2User3 = "question #1 option #2"
-    answerquestionNumber2Attempt2User3 = "True text"
+    answerquestionNumber2Attempt2User3 = "False text"
     answerquestionNumber3Attempt2User3 = "Open-Q answer QA_Member_3 attempt 2"
     
     # User 3 attempt 3
     answerquestionNumber1Attempt3User3 = "question #1 option #1"
-    answerquestionNumber2Attempt3User3 = "False text"
+    answerquestionNumber2Attempt3User3 = "True text"
     answerquestionNumber3Attempt3User3 = "Open-Q answer QA_Member_3 attempt 3"
     
     # User 1 answers for 2 attempts
@@ -120,8 +119,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz questions - Allow multiple attempts is enabled", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz questions - Allow multiple attempts is enabled - Quiz", self.testNum)      
+            self.entryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz answers - Allow multiple attempts is enabled", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz - Analytics - Export quiz answers - Allow multiple attempts is enabled - Quiz", self.testNum)      
             self.keaScoreType                    = {enums.KEAQuizOptions.QUIZ_SCORE_TYPE:enums.keaQuizScoreType.LATEST.value}
             self.keaNumberOfAllowedAttempts      = {enums.KEAQuizOptions.SET_NUMBER_OF_ATTEMPTS:3}
             self.keaAllowMultipleScore           = {enums.KEAQuizOptions.ALLOW_MULTUPLE_ATTEMPTS:True}            
@@ -136,45 +135,45 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                         
+                          
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                            
+                                             
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                            
+                                             
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                           
+                                                                            
             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-                   
+                    
             self.common.base.switch_to_default_content()
-                       
+                        
             writeToLog("INFO","Step 5: Going to get entry page URL")
             self.entryPageURL = self.common.base.driver.current_url
-                       
+                        
             writeToLog("INFO","Step 6: Going to publish entry to unlisted")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.quizEntryName, enums.ChannelPrivacyType.UNLISTED, publishFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 6: FAILED failed to publish entry to unlisted")
                 return 
-                         
+                          
             writeToLog("INFO","Step 7: Going to navigate to KEA Quiz tab for " + self.quizEntryName)  
             if self.common.kea.initiateQuizFlow(self.quizEntryName, True, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to navigate to KEA Quiz tab for " + self.quizEntryName)  
                 return 
-                         
+                          
             i = 8
-                         
+                          
             for option in self.keaAllScoreOptionsList:
                 optionNumber = 0
                 while len(option) != optionNumber:
@@ -186,9 +185,9 @@ class Test:
                     else:
                         i = i + 1                     
                         optionNumber = optionNumber + 1
-                       
+                        
             self.common.base.switch_to_default_content()
-              
+               
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to logout as quiz owner")  
             if self.common.login.logOutOfKMS() == False:
@@ -202,80 +201,80 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as " + self.userNameUser1)  
                 return       
-             
+              
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to entry page link")
                 return             
-             
+              
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz as " + self.userNameUser1)  
             if self.common.player.verifyQuizAttempts(self.quizAnswersDictAllAttemptsUser1, totalGivenAttempts=self.totalGivenAttempts, scoreType=enums.playerQuizScoreType.LATEST, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to answer quiz as " + self.userNameUser1)  
                 return    
-                    
+                     
             self.common.base.switch_to_default_content()
-             
+              
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to logout as " + self.userNameUser1)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as " + self.userNameUser1)  
                 return  
-             
+              
             i = i + 1   
             writeToLog("INFO","Step " + str(i) + ": Going to login as " + self.userNameUser2)  
             if self.common.login.loginToKMS(self.userId2, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as " + self.userNameUser2)  
                 return       
-             
+              
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to entry page link")
                 return             
-             
+              
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz as " + self.userNameUser2)  
             if self.common.player.verifyQuizAttempts(self.quizAnswersDictAllAttemptsUser2, totalGivenAttempts=self.totalGivenAttempts, scoreType=enums.playerQuizScoreType.LATEST, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to answer quiz as " + self.userNameUser2)  
                 return    
-                    
+                     
             self.common.base.switch_to_default_content()
-             
+              
             i = i + 1   
             writeToLog("INFO","Step " + str(i) + ": Going to logout as " + self.userNameUser2)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as " + self.userNameUser2)  
                 return              
-             
+              
             i = i + 1   
             writeToLog("INFO","Step " + str(i) + ": Going to login as " + self.userNameUser3)  
             if self.common.login.loginToKMS(self.userId3, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as " + self.userNameUser3)  
                 return       
-             
+              
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to entry page link")
                 return             
-             
+              
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz as " + self.userNameUser3)  
             if self.common.player.verifyQuizAttempts(self.quizAnswersDictAllAttemptsUser3, totalGivenAttempts=self.totalGivenAttempts, scoreType=enums.playerQuizScoreType.LATEST, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to answer quiz as " + self.userNameUser3)  
                 return    
-                    
+                     
             self.common.base.switch_to_default_content()
-             
+              
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to logout as " + self.userNameUser3)  
             if self.common.login.logOutOfKMS() == False:
@@ -284,52 +283,52 @@ class Test:
                 return  
              
             i = i + 1       
-            writeToLog("INFO","Step " + str(i) + " : Going to login as quiz owner")  
+            writeToLog("INFO","Step " + str(i) + ": Going to login as quiz owner")  
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + " : FAILED to login as quiz owner")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to login as quiz owner")  
                 return 
-             
+            
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to remove last attempt for " + self.userNameUser3) 
             if self.common.quizAnalytics.deleteUserAttempts(self.userId3, enums.quizAnlyticsDeleteOption.REMOVE_LAST_ATTEMPT, self.quizEntryName, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to remove last attempt for " + self.userNameUser3)
-                return 
-            
+                return  
+             
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to clear cache") 
             if self.common.admin.clearCache() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED: to clear cache")
                 return  
-            
+             
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to KMS site")  
             if self.common.login.navigateToLoginPage() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KMS site")  
-                return                                                   
-            
+                return                           
+             
             i = i + 1  
-            writeToLog("INFO","Step " + str(i) + " : Going to export question csv file")  
-            if self.common.quizAnalytics.exportCsvFileQuizAnalyticsPage(enums.quizAnalytics.QUIZ_QUESTIONS, self.quizEntryName, True)  == False:
+            writeToLog("INFO","Step " + str(i) + ": Going to export users csv file")  
+            if self.common.quizAnalytics.exportCsvFileQuizAnalyticsPage(enums.quizAnalytics.QUIZ_USERS, self.quizEntryName, True)  == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + " : FAILED to export question csv file")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to export users csv file")  
                 return
-            
+             
             sleep(10)
             
             i = i + 1 
-            writeToLog("INFO","Step " + str(i) + " : Going to verify that quiz questions csv files is download correctly")  
-            if self.common.compareBetweenTwoCsvFiles(self.filePathExoprtedQuizQuestions, self.filePathQuizQuestions)  == False:
+            writeToLog("INFO","Step " + str(i) + ": Going to verify that quiz questions csv files is download correctly")  
+            if self.common.compareBetweenTwoCsvFiles(self.filePathExoprtedQuizUsers, self.filePathQuizUsers)  == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + " : FAILED to verify that quiz questions csv files is download correctly")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to verify that quiz questions csv files is download correctly")  
                 return                                                         
 
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Delete user attempts was done successfully")
+            writeToLog("INFO","TEST PASSED: Verify quiz answers csv file was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

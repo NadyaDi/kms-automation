@@ -239,16 +239,30 @@ class Test:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to remove user last attempt")  
                 return  
             
-            i = i + 1
-            writeToLog("INFO","Step " + str(i) + ": Going to click on quiz questions tab")    
-            if self.common.base.click(self.common.quizAnalytics.QUIZ_ANALYTICS_QUIZ_QUESTIONS_TAB) == False:
+            i = i + 1       
+            writeToLog("INFO","Step " + str(i) + ": Going to clear cache") 
+            if self.common.admin.clearCache() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + " : FAILED to click on quiz questions tab")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED: to clear cache")
+                return  
+             
+            i = i + 1  
+            writeToLog("INFO","Step " + str(i) + ": Going to navigate to KMS site")  
+            if self.common.login.navigateToLoginPage() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KMS site")  
                 return             
+            
+#             i = i + 1
+#             writeToLog("INFO","Step " + str(i) + ": Going to click on quiz questions tab")    
+#             if self.common.base.click(self.common.quizAnalytics.QUIZ_ANALYTICS_QUIZ_QUESTIONS_TAB) == False:
+#                 self.status = "Fail"
+#                 writeToLog("INFO","Step " + str(i) + " : FAILED to click on quiz questions tab")  
+#                 return             
             
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to verify quiz questions in quiz analytics after removing last attempt")    
-            if self.common.quizAnalytics.verifyQuizAnswersInAnalytics(self.answerListAttempt1) == False:
+            if self.common.quizAnalytics.verifyQuizAnswersInAnalytics(self.answerListAttempt1, self.quizEntryName, True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + " : FAILED to verify quiz questions in quiz analytics after removing last attempt")  
                 return                                               

@@ -269,12 +269,12 @@ class Test:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to clear cache")  
                 return 
             
-            i = i + 1  
-            writeToLog("INFO","Step " + str(i) + ": Going to navigate to KMS site")  
-            if self.common.login.navigateToLoginPage() == False:
+            i = i + 1 
+            writeToLog("INFO","Step " + str(i) + ": Going to login as quiz owner")  
+            if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KMS site")  
-                return             
+                writeToLog("INFO","Step " + str(i) + ": FAILED to login as quiz owner")  
+                return            
              
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to verify user answers in quiz users tab after his second attempt")  
@@ -326,11 +326,11 @@ class Test:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to clear cache")  
                 return 
             
-            i = i + 1  
-            writeToLog("INFO","Step " + str(i) + ": Going to navigate to KMS site")  
-            if self.common.login.navigateToLoginPage() == False:
+            i = i + 1 
+            writeToLog("INFO","Step " + str(i) + ": Going to login as quiz owner")  
+            if self.common.loginAsUser() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KMS site")  
+                writeToLog("INFO","Step " + str(i) + ": FAILED to login as quiz owner")  
                 return    
             
             i = i + 1  
