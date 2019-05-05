@@ -335,7 +335,7 @@ class Test:
             
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to verify user answers in quiz users tab after his third attempt")  
-            if self.common.quizAnalytics.verifyQuizAnswersInQuizUsersAnalytics(self.quetionsAndAnswersDictThirdAttemptAttempt, self.userId, numberOfRightAnswers='3', numberOfWrongAnswers='1', entryName=self.quizEntryName, forceNavigate=True) == False:
+            if self.common.quizAnalytics.verifyQuizAnswersInQuizUsersAnalytics(self.quetionsAndAnswersDictThirdAttempt, self.userId, numberOfRightAnswers='3', numberOfWrongAnswers='1', entryName=self.quizEntryName, forceNavigate=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify user answers in quiz users tab after his third attempt")  
                 return                               
