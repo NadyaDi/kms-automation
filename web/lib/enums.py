@@ -775,6 +775,7 @@ class keaHotspotContainerSize(Enum):
     def __str__(self):
         return str(self.value)
     
+    DEFAULT               = 'DEFAULT'
     SMALL                 = 'SMALL'
     MEDIUM                = 'MEDIUM'
     LARGE                 = 'LARGE'

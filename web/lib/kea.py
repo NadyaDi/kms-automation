@@ -161,6 +161,8 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_ROUNDNESS                                             = ('xpath', '//input[@id="roundness"]')
     KEA_HOTSPOTS_FORM_LOCATION_X                                            = ('xpath', '//input[@id="position-x"]')
     KEA_HOTSPOTS_FORM_LOCATION_Y                                            = ('xpath', '//input[@id="position-y"]')
+    KEA_HOTSPOTS_FORM_SIZE_WIDTH                                            = ('xpath', '//input[@id="size-width"]')
+    KEA_HOTSPOTS_FORM_SIZE_HEIGHT                                           = ('xpath', '//input[@id="size-height"]')
     KEA_HOTSPOTS_LIST_HEADER                                                = ('xpath', "//div[@class='panel__header']")
     KEA_HOTSPOTS_LIST_CONTENT                                               = ('xpath', "//div[@class='panel__content']")
     KEA_HOTSPOTS_LIST_PANEL_HOTSPOT                                         = ('xpath', "//kea-hotspots-list-item[contains(@class,'ng-star-inserted')]")
@@ -3277,11 +3279,11 @@ class Kea(Base):
     
     
     # @Author: Horia Cus
-    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
+    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size, container size]
     # A hotspot list may contain only the hotspot title
     # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
     # If you want to specify only the Title, Location, and Text Size you can put '' string at the options that you don't want to be changed
-    # hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '#fafafa', '#fefefe', '', '']
+    # hotspotOne      = ['Hotspot Title One', enums.keaLocation.TOP_RIGHT, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '#fafafa', '#fefefe', '', '', enums.keaHotspotContainerSize.SMALL]
     # hotspotTwo      = ['Hotspot Title Two', enums.keaLocation.TOP_LEFT, 5, 15, '', enums.textStyle.NORMAL, '', '', 12, 12]
     # hotspotThree    = ['Hotspot Title Three', enums.keaLocation.CENTER, 15, 20, 'https://autothree.kaltura.com/', enums.textStyle.THIN, '', '', 12, 12]
     # hotspotFour     = ['Hotspot Title Four', enums.keaLocation.BOTTOM_RIGHT, 20, 25, '', enums.textStyle.THIN, '', '', 12, 16]
@@ -3293,20 +3295,9 @@ class Kea(Base):
         self.switchToKeaIframe()  
         # Navigate to the Hotspot tab if needed
         if openHotspotsTab == True:
-            if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) == False:
-                if self.click(self.KEA_HOTSPOTS_TAB, 35, True) == False:
-                    writeToLog("INFO","FAILED to select the Hotspots Tab")
-                    return False
-                
-                if self.wait_while_not_visible(self.KEA_LOADING_SPINNER_CONTAINER, 45) == False:
-                    writeToLog("INFO", "FAILED to load the Hotspot tab")
-                    return False
-                
-                if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 2, True) == False:
-                    writeToLog("INFO", "FAILED, Hotspots tab is not displayed as being active")
-                    return False
-            else:
-                writeToLog("INFO", "Hotspots tab is already active")
+            if self.launchKEATab('', enums.keaTab.HOTSPOTS) == False:
+                writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab")
+                return False
         
         # Create all the desired Hotspots
         for hotspotNumber in hotspotsDict:
@@ -3350,6 +3341,7 @@ class Kea(Base):
                 if hotspotDetails[4] != '':
                     # Verify if the link is to a web page
                     if type(hotspotDetails[4]) is str:
+                        sleep(0.2)
                         if self.click(self.KEA_HOTSPOTS_FORM_LINK_TYPE_URL, 1, True) == False:
                             writeToLog("INFO", "FAILED to click on the URL label")
                             return False
@@ -3457,7 +3449,61 @@ class Kea(Base):
                     if self.clear_and_send_keys(self.KEA_HOTSPOTS_FORM_ROUNDNESS, str(hotspotDetails[9]), True) == False:
                         writeToLog("INFO", "FAILED to change the font size to " + str(hotspotDetails[9]) + " for " + hotspotDetails[0] + " hotspot")
                         return False
-
+                    
+            # Verify if the Hotspot Container size should be changed
+            if len(hotspotDetails) > 10:
+                if hotspotDetails[10] != '':
+                    # Create the container size specific for each class
+                    if hotspotDetails[10] == enums.keaHotspotContainerSize.DEFAULT:
+                        width   = 128
+                        height  = 32
+                        
+                    elif hotspotDetails[10] == enums.keaHotspotContainerSize.SMALL:
+                        width   = 64
+                        height  = 32
+                    
+                    elif hotspotDetails[10] == enums.keaHotspotContainerSize.MEDIUM:
+                        width   = 256
+                        height  = 64
+                        
+                    elif hotspotDetails[10] == enums.keaHotspotContainerSize.LARGE:
+                        width   = 364
+                        height  = 128
+                    
+                    else:
+                        writeToLog("INFO", "FAILED, the desired container size doesn't exists " + hotspotDetails[10])
+                        return False
+                    
+                    # Highlight the width input field
+                    if self.click(self.KEA_HOTSPOTS_FORM_SIZE_WIDTH, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the width input field from the Advanced Settings")
+                        return False
+                    
+                    # Select the current width text from the input field
+                    if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                        writeToLog("INFO", "FAILED to select the current width from the Advanced Settings Input Field")
+                        return False
+                    
+                    # Replace the current width with the desired one
+                    if self.send_keys(self.KEA_HOTSPOTS_FORM_SIZE_WIDTH, str(width), True) == False:
+                        writeToLog("INFO", "FAILED to insert the desired width size")
+                        return False
+                    
+                    # Highlight the input field
+                    if self.click(self.KEA_HOTSPOTS_FORM_SIZE_HEIGHT, 1, False) == False:
+                        writeToLog("INFO", "FAILED to click on the height input field from the Advanced Settings")
+                        return False
+                    
+                    # Select the current height text from the input field
+                    if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                        writeToLog("INFO", "FAILED to select the current width from the Advanced Settings Input Field")
+                        return False
+                    
+                    # Replace the current height with the desired one
+                    if self.send_keys(self.KEA_HOTSPOTS_FORM_SIZE_HEIGHT, str(height), True) == False:
+                        writeToLog("INFO", "FAILED to insert the desired height size")
+                        return False
+                    
             # Save the current hotspot
             if self.saveHotspotChanges(settingsChanges=True) == False:
                 writeToLog("INFO", "FAILED to save the KEA hotspots for " + hotspotDetails[0])
@@ -3471,6 +3517,7 @@ class Kea(Base):
                             writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
                             return False
                         
+                        # Move back the real time marker to the initial position
                         if self.setRealTimeMarkerToTime('00:00') == False:
                             writeToLog("INFO", "FAILED to set the real time marker back to the initial position after creating " + hotspotDetails[0] + " hotspot")
                             return False
@@ -3838,7 +3885,7 @@ class Kea(Base):
     # @Author: Horia Cus
     # This function can launch the KEA Editor for the desired entry name
     # This function will open the specified keaTab while being in the KEA Editor
-    # entryName must be inserted in order to verify that the KEA page has been successfully opened and loaded
+    # entryName must be inserted ( if navigateToEntry = True) in order to verify that the KEA page has been successfully opened and loaded
     # keaTab must contain enum ( e.g enums.keaTab.QUIZ)
     # expectedConfirmation = True, it will pass the confirmation pop up during the transition, if no confirmation pop up is presented, it will return False
         # If you have changes that were not saved, you should expect a confirmation pop up during the transition to another KEA Tab 
@@ -3850,10 +3897,11 @@ class Kea(Base):
                 writeToLog("INFO","Failed to launch KEA for: " + entryName)
                 return False
         
-        if self.verifyKeaEntryName(entryName, 60) == False:
-            writeToLog("INFO", "FAILED to load the page until the " + entryName + " was present")
-            return False
-        
+            if self.verifyKeaEntryName(entryName, 60) == False:
+                writeToLog("INFO", "FAILED to load the page until the " + entryName + " was present")
+                return False
+            
+        self.switchToKeaIframe()
         if keaTab == enums.keaTab.QUIZ:
             if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 1, True) != False:
                 writeToLog("INFO", "KEA Quiz tab is already active")
@@ -3949,7 +3997,7 @@ class Kea(Base):
     # Verify the place order based on creation
     # For hotspotDict structure please check hotspotCreation function
     # expectedHotspotNumber = 5, will also verify that exactly five hotspots are presented
-    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None): # TBD - HS List and Timeline List consistent verification
+    def hotspotTimelineVerification(self, hotspotsDict, expectedHotspotNumber=None):
         self.switchToKeaIframe()
         # Verify that we are in the Hotspot Section
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
@@ -3984,8 +4032,29 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to delete the blank hotspot")
             return False
         
-        # Take the list with all the presented hotspots that will be iterated
+        # Take the list with all the presented hotspots from the Timeline section
         presentedHotspots           = self.wait_elements(self.KEA_TIMELINE_SECTION_HOTSPOT_CONTAINER, 15)
+        # Take the list with all the presented hotspots from the HS List
+        presetendHotspotsList       = self.wait_elements(self.KEA_HOTSPOTS_LIST_PANEL_HOTSPOT, 15)
+        
+        # Verify that the same number of hotspots are displayed in both Timeline section and HS list
+        if len(presentedHotspots) != len(presetendHotspotsList):
+            writeToLog("INFO", "FAILED, a number of " + len(presentedHotspots) + " hotspots were displayed in the timeline and "  + len(presetendHotspotsList) + " in the HS List")
+            return False
+        
+        # Verify that the Hotspot order list is the same in both Timeline and HS list sections
+        for x in range(0,len(presentedHotspots)):
+            try:
+                presentedHotspotsTitleTimeline   = presentedHotspots[x].text
+                presentedHotspotsTitleList       = presetendHotspotsList[x].text
+            except Exception:
+                writeToLog("INFO", "FAILED to take the presented hotspot title from timeline and HS list sections")
+                return False
+            
+            if presentedHotspotsTitleList.count(presentedHotspotsTitleTimeline) != 1:
+                writeToLog("INFO", "FAILED to find the " + presentedHotspotsTitleTimeline + " title inside the HS list")
+                return False
+
         # Take entrie's length time
         entryTotalTime              = self.wait_element(self.EDITOR_TOTAL_TIME, 1, True).text.replace(' ', '')[1:]
         m, s                        = entryTotalTime.split(':')
@@ -4014,17 +4083,16 @@ class Kea(Base):
         # Iterate through each presented hotspot
         for x in range(0, len(presentedHotspots)):
             try:
-                # Take the hotspot details from the dictionary
-                expectedHotspot          = hotspotsDict[str(i)]
-                
+                try:
+                    presentedHotspot         = presentedHotspots[x]
+                    presentedHotspotTitle    = presentedHotspot.text
+                except Exception:
+                    writeToLog("INFO", "FAILED to take the presented hotspot at the " + str(x) + " try")
+                    return False
+                    
                 # Iterate through the presented hotspots until the expected one is found
                 for k in range(0,len(presentedHotspots)):
-                    try:
-                        presentedHotspot         = presentedHotspots[k]
-                        presentedHotspotTitle    = presentedHotspot.text
-                    except Exception:
-                        writeToLog("INFO", "FAILED to take the presented hotspot at the " + str(x) + " try")
-                        return False
+                    expectedHotspot          = hotspotsDict[str(k+1)]
                     
                     if presentedHotspotTitle == expectedHotspot[0]:
                         writeToLog("INFO", "The hotspot " + presentedHotspotTitle + " was found at place " + str(x))

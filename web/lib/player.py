@@ -2635,7 +2635,7 @@ class Player(Base):
                     try:
                         # Verify that the hotspot found its new
                         if len(presentedHotspotsDetailsList) == 0 or any(presentedHotspots[x].text in sl for sl in presentedHotspotsDetailsList) == False:
-                            # Take the hotspot details
+                            # Take the presented hotspot details for the current iterated hotspot
                             hotspotStartTime            = self.returnEntryCurrentTimeInSeconds()
                             
                             hotspotTitle                = presentedHotspots[x].text             
@@ -2643,6 +2643,7 @@ class Player(Base):
                             
                             hotspotStyleFontWeight      = hotspotStyleProperties[hotspotStyleProperties.index('font-weight:')+1].replace(';','')
                             
+                            # Verify the hotspot font size
                             if hotspotStyleFontWeight == 'bold':
                                 hotspotStyleFontWeight = enums.textStyle.BOLD
                                 
@@ -2656,6 +2657,18 @@ class Player(Base):
                                 writeToLog("INFO", "FAILED, unknown presented font weight " + hotspotStyleFontWeight)
                                 return False
                             
+                            # Verify the hotspot container size
+                            hotspotWidth                = int(presentedHotspots[x].size['width'])
+                            hotspotHeight               = int(presentedHotspots[x].size['height'])
+                            if hotspotWidth == 89 and hotspotHeight == 44:
+                                hotspotContainerSize    = enums.keaHotspotContainerSize.SMALL
+                            elif hotspotWidth == 356 and hotspotHeight == 89:
+                                hotspotContainerSize    = enums.keaHotspotContainerSize.MEDIUM
+                            elif hotspotWidth == 506 and hotspotHeight == 178:
+                                hotspotContainerSize    = enums.keaHotspotContainerSize.LARGE
+                            else:
+                                hotspotContainerSize    = enums.keaHotspotContainerSize.DEFAULT
+
                             hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
                             hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
                             hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
@@ -2724,6 +2737,7 @@ class Player(Base):
                                     writeToLog("INFO", "FAILED to load the player screen after clicking on the hotspot" + hotspotTitle)
                                     return False
                             
+                            # Take the opened browser tabs
                             handles               = self.driver.window_handles
                             hotspotTimeAfterClick = None
                             # Verify if the presented hotspot has a link attached
@@ -2798,7 +2812,7 @@ class Player(Base):
                                     continue
 
                             # Create a list that contains all the details necessary for the hotspot verification
-                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius)]
+                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius), hotspotContainerSize]
                             presentedHotspotsDetailsList.append(presentedHotspotDetails)
                             presentedHotspotsNameList.append(hotspotTitle)
                             hotspots = "\n".join(presentedHotspotsNameList)
@@ -2853,6 +2867,13 @@ class Player(Base):
                     if currentExpectedList[9] == '':
                         currentExpectedList.insert(9, 3)
                         currentExpectedList.pop(10)
+                        
+                    try:
+                        if currentExpectedList[10] == '':
+                            currentExpectedList.insert(10, enums.keaHotspotContainerSize.DEFAULT)
+                            currentExpectedList.pop(11)    
+                    except IndexError:
+                        currentExpectedList.insert(11, enums.keaHotspotContainerSize.DEFAULT)
                     
                     # Verify that the expected hotspot details, matches with the presented hotspot details
                     if currentExpectedList != currentPresentedList:
