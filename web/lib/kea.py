@@ -4863,7 +4863,7 @@ class Kea(Base):
             return False
         
         # Verify that the timeline section is presented
-        if self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 15, True) == False:
+        if self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 30, True) == False:
             writeToLog("INFO", "FAILED, the timeline section for " + keaTab.value + " is not presented")
             return False
         

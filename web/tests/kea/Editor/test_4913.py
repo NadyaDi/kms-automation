@@ -51,7 +51,7 @@ class Test:
     # List and dictionary used in order to create and verify a Quiz
     questionNumber1 = ['00:05', enums.QuizQuestionType.Multiple, 'question #1 Title', 'question #1 option #1', 'question #1 option #2', 'question #1 option #3', 'question #1 option #4'] 
     questionNumber2 = ['00:10', enums.QuizQuestionType.Multiple, 'question #2 Title', 'question #2 option #1', 'question #2 option #2', 'question #2 option #3', 'question #2 option #4'] 
-    questionNumber3 = ['00:15', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4'] 
+    questionNumber3 = ['00:17', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4'] 
     questionNumber4 = ['00:20', enums.QuizQuestionType.Multiple, 'question #4 Title', 'question #4 option #1', 'question #4 option #2', 'question #4 option #3', 'question #4 option #4'] 
     questionNumber5 = ['00:25', enums.QuizQuestionType.Multiple, 'question #5 Title', 'question #5 option #1', 'question #5 option #2', 'question #5 option #3', 'question #5 option #4']   
     dictQuestions = {'1':questionNumber1,'2':questionNumber2,'3':questionNumber3,'4':questionNumber4,'5':questionNumber5} 
@@ -61,7 +61,7 @@ class Test:
     questionClip5 = ['00:15', enums.QuizQuestionType.Multiple, 'question #5 Title', 'question #5 option #1', 'question #5 option #2', 'question #5 option #3', 'question #5 option #4']   
     dictQuestionsClippedExist = {'1':questionClip1,'2':questionClip2,'3':questionClip5}
     
-    questionClip3 = ['00:15', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4'] 
+    questionClip3 = ['00:17', enums.QuizQuestionType.Multiple, 'question #3 Title', 'question #3 option #1', 'question #3 option #2', 'question #3 option #3', 'question #3 option #4'] 
     questionClip4 = ['00:20', enums.QuizQuestionType.Multiple, 'question #4 Title', 'question #4 option #1', 'question #4 option #2', 'question #4 option #3', 'question #4 option #4'] 
     dictQuestionsClippedAbsent = {'4':questionClip3,'5':questionClip4}  
     
@@ -108,7 +108,8 @@ class Test:
                 writeToLog("INFO","Step 2: FAILED to create a Quiz for " + self.entryName + " entry")
                 return  
                 
-            self.common.base.refresh()          
+            self.common.base.refresh()
+            sleep(8)     
                      
             writeToLog("INFO","Step 3: Going to navigate to edit entry page for " + self.quizEntryName + " entry")
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.quizEntryName) == False:
@@ -119,7 +120,7 @@ class Test:
             if self.common.editEntryPage.uploadSlidesDeck(self.slideDeckFilePath, self.slidesQrCodeAndTimeList, False, False) == False:
                 writeToLog("INFO","Step 4: FAILED to upload a slide deck for the " + self.quizEntryName + " entry")
                 return
-                   
+            sleep(60)
             writeToLog("INFO","Step 5: Going to navigate to the Captions Edit Tab")
             if self.common.editEntryPage.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
                 writeToLog("INFO","Step 5: FAILED to navigate to the Captions Edit Tab")
@@ -136,31 +137,21 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to collect all the available Questions from the " + self.quizEntryName + " entry, before clipping") 
                 return
             
-            # Due to a KMS Issue we try to take the question details for multiple times
-            for x in range(0,4):
-                writeToLog("INFO","Step 8."+str(x)+": Going to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping")  
-                if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeClipping) == False:
-                    writeToLog("INFO","Step 8."+str(x)+": FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping") 
-                    # Try to catch all the Question Details for the second time due to errors with the entries with slides
-                    if x == 3:
-                        return
-                    else:
-                        self.common.base.refresh()
-                        sleep(8)
-                        self.quizQuestionsBeforeClipping = self.common.player.collectQuizQuestionsFromPlayer(self.quizEntryName, 5)
-                else:
-                    break
+            writeToLog("INFO","Step 8: Going to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping")  
+            if self.common.player.compareQuizQuestionDict(self.dictQuestions, self.quizQuestionsBeforeClipping) == False:
+                writeToLog("INFO","Step 8: FAILED to compare the presented Quiz Questions with the Expected Quiz Questions, before clipping") 
+                return
         
             self.common.base.refresh()
             sleep(8)
                 
             writeToLog("INFO","Step 9: Going to collect " + self.quizEntryName + " entrie's QR codes from Slider, before clipping")  
-            self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True)
+            self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryName, quizEntry=True, resumeFromBeginning=True)
             if  self.QRlist == False:
                 writeToLog("INFO","Step 9: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, before clipping")  
                 return
                            
-            self.isExistQR = ["1", "3", "5", "6", "9"];
+            self.isExistQR = ["1", "4", "5", "8"];
             self.isAbsentQR = ["33", "55", "100", "99"];
             writeToLog("INFO","Step 10: Going to verify that the presented Slides matches with the Expected slides, before clipping")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
@@ -176,7 +167,7 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before clipping")
                 return
                  
-            self.isExist = ["Caption3search", "Caption7search", "Caption12search", "Caption13search"];
+            self.isExist = ["Caption2search", "Caption7search", "Caption12search", "Caption13search"];
             self.isAbsent = ["Caption100search", "Caption32search"];
             writeToLog("INFO","Step 12: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before clipping")  
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
@@ -203,7 +194,7 @@ class Test:
             sleep(8)
              
             writeToLog("INFO","Step 16: Going to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")   
-            self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryNameClipped, quizEntry=True)
+            self.QRlist = self.common.player.collectQrOfSlidesFromPlayer(self.quizEntryNameClipped, quizEntry=True, resumeFromBeginning=True)
             if  self.QRlist == False:
                 writeToLog("INFO","Step 16: FAILED to collect " + self.quizEntryNameClipped + " entrie's QR codes from Slider, after clipping")
                 return
@@ -223,7 +214,7 @@ class Test:
                 writeToLog("INFO","Step 18: FAILED to collect all the presented captions from the " + self.quizEntryNameClipped + " entrie's player, after clipping") 
                 return
              
-            self.isExist = ["Caption1search", "Caption7search", "Caption23search", "Caption28search"];
+            self.isExist = ["Caption1search", "Caption7search", "Caption23search", "Caption29search"];
             self.isAbsent = ["Caption18search", "Caption14search", "Caption15search", "Caption17search"];
             writeToLog("INFO","Step 19: Going to verify that the presented captions for " + self.quizEntryNameClipped + " entry displays the expected ones, after clipping") 
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
