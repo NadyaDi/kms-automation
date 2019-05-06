@@ -1805,13 +1805,20 @@ class Player(Base):
 
     # @Author: Horia Cus
     # expectedNumberOfAttempts = int, How many attempts user has. Empty when user isn't able to retake the quiz again
-    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts=''):
+    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts='', location, embed):
         #we verify if the "Continue" button specific for the Quiz "Welcome Screen" is present or not     
         if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
             writeToLog("INFO", "Continue button has been found in welcome screen")
         else:
-            writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
-            return False
+            # Add a redundancy step for the play button
+            if self.verifyAndClickOnPlay(location, embed=embed) != True:
+                return False
+            else:
+                if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
+                    writeToLog("INFO", "Continue button has been found in welcome screen")
+                else:  
+                    writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
+                    return False
         
         # If expected number of attempts != '', we expect to see total attempt message with the number of the available attempts
         if expectedNumberOfAttempts != '':
@@ -1923,7 +1930,7 @@ class Player(Base):
         #we dismiss the "Quiz Welcome Screen" if its enabled 
         sleep(1)
         if skipWelcomeScreen == True:
-            if self.continueFromQuizWelcomeScreen(expectedNumberOfAttempts) == False:
+            if self.continueFromQuizWelcomeScreen(expectedNumberOfAttempts, location, embed) == False:
                 return False
             
         if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
