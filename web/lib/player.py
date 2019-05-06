@@ -2660,7 +2660,7 @@ class Player(Base):
                             # Verify the hotspot container size
                             hotspotWidth                = int(presentedHotspots[x].size['width'])
                             hotspotHeight               = int(presentedHotspots[x].size['height'])
-                            if hotspotWidth >= 79 and hotspotWidth <= 89 and hotspotHeight >= 34 and hotspotHeight <= 50:
+                            if hotspotWidth >= 79 and hotspotWidth <= 95 and hotspotHeight >= 34 and hotspotHeight <= 50:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.SMALL
                             elif hotspotWidth >= 336 and hotspotWidth <= 386 and hotspotHeight >= 79 and hotspotHeight <= 95:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.MEDIUM
@@ -2668,7 +2668,9 @@ class Player(Base):
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.LARGE
                             else:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.DEFAULT
-
+                            
+                            writeToLog("INFO", "The size of: " + hotspotTitle + " is: width: " + str(hotspotWidth) + " height: " + str(hotspotHeight) + " resulting in: " + hotspotContainerSize.value)
+                            
                             hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
                             hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
                             hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
