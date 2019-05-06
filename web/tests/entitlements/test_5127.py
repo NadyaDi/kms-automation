@@ -67,7 +67,7 @@ class Test:
             self.entryName             = clsTestService.addGuidToString("Entitlements - Public Opened in Channels", self.testNum)
             self.entryTags             = clsTestService.addGuidToString("pocentry,", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Public Opened Channel in Channels", self.testNum)
-            self.channelTags           = clsTestService.addGuidToString("pocchannel,", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("channel,", self.testNum)
             self.instanceURL           = self.common.base.driver.current_url
             self.common.admin.enablePublicOpenChannel(True)
             self.common.base.navigate(self.instanceURL)

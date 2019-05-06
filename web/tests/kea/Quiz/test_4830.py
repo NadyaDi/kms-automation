@@ -89,7 +89,7 @@ class Test:
             writeToLog("INFO","Step 4: Going to verify that the answer order for " + self.entryNameQuiz + " can be changed by drag and drop")  
             if self.common.kea.changeQuestionOrderInTimeline(self.changeTimelineOrderDict) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to verify that the answer order for " + self.entryNameQuiz + " can be changed by drag and drop")  
+                writeToLog("INFO","Step 4: FAILED to verify that the answer order for " + self.entryNameQuiz + " can be changed by drag and drop")  
                 return
             
             writeToLog("INFO","Step 5: Going to verify the new timeline for quiz questions from " + self.entryNameQuiz + " entry")   
