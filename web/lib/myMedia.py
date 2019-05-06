@@ -138,7 +138,6 @@ class MyMedia(Base):
     FILTER_SORT_TYPE_DISABLED                                   = ('xpath', '//a[@aria-checked="false" and @aria-label="DROPDOWNLIST_ITEM undefined"]')
     FILTER_SORT_TYPE_REMOVE_BUTTON                              = ('xpath', "//a[@class='cursor-pointer bubble__a' and @aria-label='DROPDOWNLIST_ITEM']")
     FILTER_CUSTOM_DURATION_SIDEBAR                              = ('xpath', "//div[@class='input-range__track input-range__track--active' and contains(@style,'left:')]")
-    PUBLISH_IN_SECTION_AFTER_PUBLISH                            = ('css', "div.pblBadge")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
