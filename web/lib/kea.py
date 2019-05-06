@@ -58,7 +58,7 @@ class Kea(Base):
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
     KEA_LOADING_CONTAINER                                                   = ('xpath', "//div[contains(@class,'loading__container')]") 
-    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and contains(text(),'media is processing']") 
+    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and contains(text(),'media is processing')]") 
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
     KEA_QUIZ_ANSWER_GENERAL                                                 = ('xpath', "//textarea[contains(@id,'answer-text')]") 

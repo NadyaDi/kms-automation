@@ -895,14 +895,14 @@ class Player(Base):
                         if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
                             writeToLog("INFO", "FAILED to click on the skip for now button in order to resume the entry from the beginning")
                             return False
-                        
-                    # We verify that the Almost Completed screen is presented
-                    almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
-                    if self.wait_element(almostDoneScreen, 5) != False:
-                        if self.click(self.PLAYER_QUIZ_ALMOST_DONE_SCREEN_OK_GOTIT_BUTTON, 1, True) == False:
-                            writeToLog("INFO", "FAILED to close the Almost Done screen")
-                            return False
-                        sleep(2.5)
+                    else:
+                        # We verify that the Almost Completed screen is presented
+                        almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
+                        if self.wait_element(almostDoneScreen, 2.5) != False:
+                            if self.click(self.PLAYER_QUIZ_ALMOST_DONE_SCREEN_OK_GOTIT_BUTTON, 1, True) == False:
+                                writeToLog("INFO", "FAILED to close the Almost Done screen")
+                                return False
+                            sleep(2.5)
                 
                 if self.setPlayerAtSecondZero(True) == False:
                     writeToLog("INFO", "FAILED to resume the entry at the second zero")
