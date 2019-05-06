@@ -85,126 +85,119 @@ class Test:
             self.uploadEntrieList = [self.entryToUpload] 
             self.ponitesPossible = '100'
             self.expectedGrade = '66.67'
-            self.kalturaVideoQuizName = clsTestService.addGuidToString("gradebook", self.testNum) 
+            self.kalturaVideoQuizName = clsTestService.addGuidToString("Quiz_Gradebook-Quiz (00:30)", self.testNum) 
             
             self.galleryName = "New1"
             
-            self.studentUsername = 'studentautomation@mailinator.com'
-            self.studentPassword = 'Kaltura1!'
+            self.studentUsername = 'kstudent'
+            self.studentPassword = '123456'
             
             ######################### TEST STEPS - MAIN FLOW #######################
-            
-                                                
-            if self.common.blackBoardUltra.createContentMarket() == False:    
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to remove entry '" + self.entryName + "' from gallery: " + self.galleryName)
-                return  
                       
-#             writeToLog("INFO","Step 1: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 1: FAILED to upload entry")
-#                 return
-#                                 
-#             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
-#                 return
-#                                 
-#             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
-#                 return
-#                               
-#             writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
-#             if self.common.kafGeneric.navigateToMyMediaKAF() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
-#                 return            
-#                                 
-#             writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
-#             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
-#                 return 
-#                 
-#             writeToLog("INFO","Step 6 : Going to navigate to quiz entry page")  
-#             if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 6 : FAILED to navigate to quiz entry page")  
-#                 return
-#                  
-#             writeToLog("INFO","Step 7 : Going to edit quiz name")  
-#             if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 7 : FAILED to edit quiz name")  
-#                 return 
-#                  
-#             writeToLog("INFO","Step 8 : Going to create embed assignment")  
-#             if self.common.canvas.createEmbedAssignment(self.kalturaVideoQuizName, self.newEntryName, self.ponitesPossible) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 8 : FAILED to create embed assignment")  
-#                 return  
-#              
-#             sleep(10) 
-#             writeToLog("INFO","Step 9 : Going to logout as main user")  
-#             if self.common.canvas.logOutOfCanvas() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 9 : FAILED to logout as main user")  
-#                 return
-#               
-#             writeToLog("INFO","Step 10 : Going to login as student")  
-#             if self.common.canvas.loginToCanvas(self.studentUsername, self.studentPassword) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 10 : FAILED to login as student")  
-#                 return  
-#               
-#             writeToLog("INFO","Step 11: Going to navigate to assignment page")  
-#             if self.common.canvas.navigateToAssignmentPage(self.kalturaVideoQuizName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 11: FAILED to navigate to assignment page")
-#                 return             
-#                
-#             writeToLog("INFO","Step 12: Going to answer quiz as student")  
-#             if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 12: FAILED to answer quiz as student")
-#                 return  
-#                
-#             self.common.base.switch_to_default_content()
-#   
-#             writeToLog("INFO","Step 13 : Going to verify grade as student")  
-#             if self.common.canvas.verifyGradeAsStudentCanvas(self.expectedGrade, self.kalturaVideoQuizName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 13 : FAILED to verify grade as student")  
-#                 return  
-#                                                                    
-#             writeToLog("INFO","Step 14: Going to logout from Canvas as student")  
-#             if self.common.canvas.logOutOfCanvas() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 14: FAILED to logout from Canvas as student")
-#                 return    
-#                    
-#             writeToLog("INFO","Step 15: Going to login to Canvas as main user")  
-#             if self.common.loginAsUser() == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 15: FAILED to login to Canvas as main user")
-#                 return 
-#                 
-#             writeToLog("INFO","Step 16: Going to verify gradebook grade as main user")  
-#             if self.common.canvas.verifyGradeAsAdminCanvas(self.expectedGrade, self.kalturaVideoQuizName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 16: FAILED to verify gradebook grade as main user")
-#                 return 
-#               
-#             writeToLog("INFO","Step 17: Going to delete assignment")  
-#             if self.common.canvas.deleteAssignment(self.kalturaVideoQuizName) == False:
-#                 self.status = "Fail"
-#                 writeToLog("INFO","Step 17: FAILED to delete assignment")
-#                 return                 
-#             
+            writeToLog("INFO","Step 1: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 1: FAILED to upload entry")
+                return
+                                   
+            writeToLog("INFO","Step 2: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 2: FAILED to navigate entry page")
+                return
+                                   
+            writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
+                return
+                                 
+            writeToLog("INFO","Step 4: Going to to navigate to My Media page")    
+            if self.common.kafGeneric.navigateToMyMediaKAF() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FAILED to navigate to My Media page")
+                return            
+                                   
+            writeToLog("INFO","Step 5 : Going to create a new Quiz for the " + self.entryName + " entry")  
+            if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 5 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
+                return 
+                   
+            writeToLog("INFO","Step 6 : Going to navigate to quiz entry page")  
+            if self.common.entryPage.navigateToEntryPageFromMyMedia(self.quizEntryName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 6 : FAILED to navigate to quiz entry page")  
+                return
+                    
+            writeToLog("INFO","Step 7 : Going to edit quiz name")  
+            if self.common.editEntryPage.changeEntryMetadata(self.quizEntryName, self.newEntryName, self.description, self.tags) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 7 : FAILED to edit quiz name")  
+                return 
+                  
+            writeToLog("INFO","Step 8 : Going to create contnet market")  
+            if self.common.blackBoardUltra.createContentMarketBlackboardUltra(self.newEntryName, self.kalturaVideoQuizName, self.ponitesPossible) == False:    
+                self.status = "Fail"
+                writeToLog("INFO","Step 4: FFAILED to select quiz name")
+                return  
+           
+            self.common.base.switch_to_default_content()
+            writeToLog("INFO","Step 4: Going to logout from main user")
+            if self.common.blackBoardUltra.logOutOfBlackBoardUltra(forceNavigate=True) == False:
+                writeToLog("INFO","Step 4: FAILED to logout from user: " + self.studentUsername)
+                return  
+            
+            sleep(10)  
+            writeToLog("INFO","Step 5:Going to login with : " + self.studentUsername)
+            if self.common.blackBoardUltra.loginToBlackBoardUltra(self.studentUsername, self.studentPassword) == False:
+                writeToLog("INFO","Step 5: FAILED to login with " + self.studentUsername)
+                return 
+               
+            writeToLog("INFO","Step 11: Going to navigate to assignment page")  
+            if self.common.blackBoardUltra.navigateToContentMarketBlackboardUltra(self.kalturaVideoQuizName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 11: FAILED to navigate to assignment page")
+                return             
+                
+            writeToLog("INFO","Step 12: Going to answer quiz as student")  
+            if self.common.player.answerQuiz(self.questionDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, expectedQuizScore='') == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 12: FAILED to answer quiz as student")
+                return  
+                
+            self.common.base.switch_to_default_content()
+   
+            writeToLog("INFO","Step 13 : Going to verify grade as student")  
+            if self.common.canvas.verifyGradeAsStudentCanvas(self.expectedGrade, self.kalturaVideoQuizName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 13 : FAILED to verify grade as student")  
+                return  
+                                                                    
+            writeToLog("INFO","Step 14: Going to logout from Canvas as student")  
+            if self.common.canvas.logOutOfCanvas() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 14: FAILED to logout from Canvas as student")
+                return    
+                    
+            writeToLog("INFO","Step 15: Going to login to Canvas as main user")  
+            if self.common.loginAsUser() == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 15: FAILED to login to Canvas as main user")
+                return 
+                 
+            writeToLog("INFO","Step 16: Going to verify gradebook grade as main user")  
+            if self.common.canvas.verifyGradeAsAdminCanvas(self.expectedGrade, self.kalturaVideoQuizName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 16: FAILED to verify gradebook grade as main user")
+                return 
+               
+            writeToLog("INFO","Step 17: Going to delete assignment")  
+            if self.common.canvas.deleteAssignment(self.kalturaVideoQuizName) == False:
+                self.status = "Fail"
+                writeToLog("INFO","Step 17: FAILED to delete assignment")
+                return                 
+             
             #########################################################################
             writeToLog("INFO","TEST PASSED: Gradebook test was done successfully")
         # If an exception happened we need to handle it and fail the test       

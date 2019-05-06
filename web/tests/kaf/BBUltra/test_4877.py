@@ -277,10 +277,10 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
-            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME in self.common.blackBoard.getBlackboardLoginUserName()) == False:
-                self.common.blackBoard.logOutOfBlackBoard()
-                self.common.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
-            self.common.blackBoard.switchToBlackboardIframe()
+            if (localSettings.LOCAL_SETTINGS_LOGIN_USERNAME in self.common.blackBoardUltra.getBlackboardUltraLoginUserName()) == False:
+                self.common.blackBoardUltra.logOutOfBlackBoardUltra(forceNavigate=True)
+                self.common.blackBoardUltra.loginToBlackBoardUltra(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+            self.common.blackBoardUltra.switchToBlackboardUltraIframe()()
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName1, self.entryName2, self.entryName3, self.entryName4])
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
