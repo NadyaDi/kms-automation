@@ -36,7 +36,7 @@ class Test:
     filePathAudio = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\audios\audio.mp3' 
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\30secQrMidLeftSmall.mp4' 
     newUserId = "automation@KalturaSP2013.onmicrosoft.com"
-    newUserPass = "KalKaltura3!"
+    newUserPass = "KalKaltura4!"
     galleryName = "New1"
     
     #run test as different instances on all the supported platforms
