@@ -487,7 +487,7 @@ class  GlobalSearch(Base):
             return False
         
         # Remove the ',' from the suffix of the tag
-        tag = tag.replace(',', '')
+        tag = tag.replace(',', '').lower()
         
         if expectedEntryName != '':
             self.showAllEntriesInGloablPage(60)
@@ -504,13 +504,13 @@ class  GlobalSearch(Base):
         
             # Activate all the details for each available container
             for x in range(0, len(showMoreList)):
-                sleep(0.6)
-                if self.clickElement(showMoreList[x]) == False:
-                    writeToLog("INFO", "FAILED to click on the 'Show More' button for the number " + str(x+1) + " of the entry presented in the global search list")
-                    return False
+                sleep(0.2)
+                
+                # Elements are took even if the show more button is not display, therefore, we wont use if == false
+                self.clickElement(showMoreList[x])
                 
                 sleep(0.4)
-                if self.wait_while_not_visible(self.GLOBAL_SEARCH_LOADING_DETAILS, 25) == False:
+                if self.wait_while_not_visible(self.GLOBAL_SEARCH_LOADING_DETAILS, 35) == False:
                     writeToLog("INFO", "FAILED to load the entry details, after clicking on the show more button")
                     return False
             

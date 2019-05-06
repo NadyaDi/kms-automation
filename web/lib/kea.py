@@ -409,6 +409,7 @@ class Kea(Base):
             if self.keaQuizClickButton(enums.KeaQuizButtons.EDIT_QUIZ) == False:
                 writeToLog("INFO","FAILED to click edit quiz button")
                 return False
+            sleep(3)
         else:
             writeToLog("INFO","FAILED, unknown doneoption: '" + doneOption + "'")
             return False 
@@ -531,7 +532,7 @@ class Kea(Base):
             if self.verifyEditorForClippingPermission() == False:
                 writeToLog("INFO","FAILED to display just relevant editor buttons")
                 return False
-            
+        sleep(3)
         # We wait until the KEA page is successfully loaded
         if self.wait_while_not_visible(self.KEA_LOADING_SPINNER, 45) == False:
             writeToLog("INFO","FAILED to wait until spinner isn't visible")
@@ -2505,12 +2506,11 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to find any quiz question pointer in the time line section")
             return False
         
-        sleep(5)
-        # Take all the available quiz question pointers from the timeline KEA section
-        quizCuePoint = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15)
-        
+        sleep(5)        
         # Iterate each available question
         for questionNumber in changeTimelineOrderDict:
+            # Take all the available quiz question pointers from the timeline KEA section
+            quizCuePoint = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15)
             
             # Take the details for the current question ( number of seconds that the quiz should be moved by )
             questionDetails = changeTimelineOrderDict[questionNumber]
@@ -2518,21 +2518,19 @@ class Kea(Base):
             # Create the locator for the current question
             questionCuePoint = quizCuePoint[int(questionNumber) - 1]
             
-            # Enter in the quiz question editing screen
-            if self.clickElement(questionCuePoint) == False:
-                writeToLog("INFO", "FAILED to select the question cue point for " + questionNumber + " question number")
-                return False
-                
-            action = ActionChains(self.driver)
             # Move the quiz number to a new timeline location
             try:
-                action.move_to_element(questionCuePoint).pause(1).click_and_hold().move_by_offset(35.7*questionDetails, 0).release().perform()
+                ActionChains(self.driver).move_to_element(questionCuePoint).click().pause(2).drag_and_drop_by_offset(None,35.7*questionDetails, 0).perform()
             except Exception:
                 writeToLog("INFO", "FAILED to move question number " + str(questionNumber)  + " by " + str(questionDetails) + " seconds")
                 return False
             
             # Save the new timeline location
             if self.saveQuizChanges() == False:
+                writeToLog("INFO", "FAILED to save the new timeline location for  " + str(questionNumber)  + " question number")
+                return False
+            
+            if self.clickDone(enums.KeaQuizButtons.EDIT_QUIZ) == False:
                 writeToLog("INFO", "FAILED to save the new timeline location for  " + str(questionNumber)  + " question number")
                 return False
                         
@@ -3915,6 +3913,10 @@ class Kea(Base):
             if self.wait_element(self.KEA_QUIZ_TAB_ACTIVE, 1, True) != False:
                 writeToLog("INFO", "KEA Quiz tab is already active")
             else:
+                if self.wait_element(self.KEA_QUIZ_TAB, 45, True) == False:
+                    writeToLog("INFO", "FAILED to find the KEA Quiz tab")
+                    return False
+                
                 if self.click(self.KEA_QUIZ_TAB, 1, True) == False:
                     writeToLog("INFO", "FAILED to click on the KEA Quiz tab")
                     return False
@@ -3941,6 +3943,10 @@ class Kea(Base):
             if self.wait_element(self.KEA_VIDEO_EDITOR_TAB_ACTIVE, 1, True) != False:
                 writeToLog("INFO", "KEA Video Editor tab is already active")
             else:
+                if self.wait_element(self.KEA_VIDEO_EDITOR_TAB, 45, True) == False:
+                    writeToLog("INFO", "FAILED to find the KEA Video Editor tab")
+                    return False
+                
                 if self.click(self.KEA_VIDEO_EDITOR_TAB, 1, True) == False:
                     writeToLog("INFO", "FAILED to click on the KEA Video Editor tab")
                     return False
@@ -3967,6 +3973,10 @@ class Kea(Base):
             if self.wait_element(self.KEA_HOTSPOTS_TAB_ACTIVE, 1, True) != False:
                 writeToLog("INFO", "KEA Hotspots tab is already active")
             else:
+                if self.wait_element(self.KEA_HOTSPOTS_TAB, 45, True) == False:
+                    writeToLog("INFO", "FAILED to find the KEA Hotspots tab")
+                    return False
+                
                 if self.click(self.KEA_HOTSPOTS_TAB, 1, True) == False:
                     writeToLog("INFO", "FAILED to click on the KEA Hotspots tab")
                     return False
