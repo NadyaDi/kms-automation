@@ -113,6 +113,7 @@ class Player(Base):
     PLAYER_QUIZ_SUBMITTED_SCREEN_DONE_BUTTON                    = ('xpath', "//div[@class='confirm-box' and text()='Done !']")
     PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW                     = ('xpath', "//div[contains(@class,'hex-column  right-arrow')]")
     PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW                 = ('xpath', "//div[contains(@class,'hex-column  left-arrow')]")
+    PLAYER_QUIZ_ALMOST_DONE_SCREEN_OK_GOTIT_BUTTON              = ('xpath', "//div[@class='confirm-box' and contains(text(),'Ok')]")
     PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON                  = ('xpath', "//div[@title='Submit your answers']")
     PLAYER_QUIZ_COMPLETED_SCREEN_REVIEW_BUTTON                  = ('xpath', "//div[@title='review your answers']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_TITLE_DEFAULT             = ('xpath', "//div[@class='theQuestion']")
@@ -861,7 +862,7 @@ class Player(Base):
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)
     # If quizEntry = True, it will Skip all the Quiz Related screens, NOTICE that the QR Code for the second where the Question was presented, may not be captured     
-    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizEntry=False):
+    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizEntry=False, resumeFromBeginning=False):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -885,7 +886,27 @@ class Player(Base):
                 self.switchToPlayerIframe()
                 if self.continueFromQuizWelcomeScreen() == False:
                     writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
-                    return False  
+                    return False
+            
+            # Due to the fact that the user may be moved by force to a Quiz Question screen, we can use resumeFromBeginning to make sure that we won't miss any captions
+            if resumeFromBeginning == True:
+                if quizEntry == True:
+                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 15, True) != False:
+                        if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the skip for now button in order to resume the entry from the beginning")
+                            return False
+                        
+                    # We verify that the Almost Completed screen is presented
+                    almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
+                    if self.wait_element(almostDoneScreen, 5) != False:
+                        if self.click(self.PLAYER_QUIZ_ALMOST_DONE_SCREEN_OK_GOTIT_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to close the Almost Done screen")
+                            return False
+                        sleep(2.5)
+                
+                if self.setPlayerAtSecondZero(True) == False:
+                    writeToLog("INFO", "FAILED to resume the entry at the second zero")
+                    return False
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
             QRPathList = []
@@ -2685,7 +2706,7 @@ class Player(Base):
                                 elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
-                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270}:
+                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270} or hotspotLocation == {'x':439, 'y':270} or hotspotLocation == {'x':230, 'y':270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 787, 'y': 419} or hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
