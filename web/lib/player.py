@@ -2660,11 +2660,11 @@ class Player(Base):
                             # Verify the hotspot container size
                             hotspotWidth                = int(presentedHotspots[x].size['width'])
                             hotspotHeight               = int(presentedHotspots[x].size['height'])
-                            if hotspotWidth == 89 and hotspotHeight == 44:
+                            if hotspotWidth >= 79 and hotspotWidth <= 89 and hotspotHeight >= 34 and hotspotHeight <= 50:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.SMALL
-                            elif hotspotWidth == 356 and hotspotHeight == 89:
+                            elif hotspotWidth >= 336 and hotspotWidth <= 386 and hotspotHeight >= 79 and hotspotHeight <= 95:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.MEDIUM
-                            elif hotspotWidth == 506 and hotspotHeight == 178:
+                            elif hotspotWidth >= 490 and hotspotWidth <= 526 and hotspotHeight >= 158 and hotspotHeight <= 198:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.LARGE
                             else:
                                 hotspotContainerSize    = enums.keaHotspotContainerSize.DEFAULT
@@ -2703,7 +2703,7 @@ class Player(Base):
                                 elif hotspotLocation == {'x': 6, 'y': 24}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
-                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270}:
+                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270} or hotspotLocation == {'x':439, 'y':270} or hotspotLocation == {'x':230, 'y':270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
@@ -2739,6 +2739,8 @@ class Player(Base):
                             
                             # Take the opened browser tabs
                             handles               = self.driver.window_handles
+                            # Declare the hotspot link empty by default and it will be populated in the below code if necessary
+                            hotspotLink           = ''
                             hotspotTimeAfterClick = None
                             # Verify if the presented hotspot has a link attached
                             if len(handles) != 1:

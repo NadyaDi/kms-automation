@@ -493,9 +493,9 @@ class  GlobalSearch(Base):
             self.showAllEntriesInGloablPage(60)
             sleep(2)
             # Take the details from the presented entries
-            presentedEntries     = self.wait_elements(self.GLOBAL_SEARCH_CONTAINER_RESULTS, 3)
+            presentedEntries     = self.wait_elements(self.GLOBAL_SEARCH_CONTAINER_RESULTS, 15)
             # Take the elements for each 'Show More' button
-            showMoreList         = self.wait_elements(self.GLOBAL_SEARCH_SHOW_MORE_DETAILS, 3)
+            showMoreList         = self.wait_elements(self.GLOBAL_SEARCH_SHOW_MORE_DETAILS, 15)
             
             # Verify if at least one entry was found
             if presentedEntries == False or showMoreList == False:
@@ -504,11 +504,12 @@ class  GlobalSearch(Base):
         
             # Activate all the details for each available container
             for x in range(0, len(showMoreList)):
+                sleep(0.6)
                 if self.clickElement(showMoreList[x]) == False:
-                    writeToLog("INFO", "FAILED to click on the " + str(x+1) + " entry show more button")
+                    writeToLog("INFO", "FAILED to click on the 'Show More' button for the number " + str(x+1) + " of the entry presented in the global search list")
                     return False
                 
-                sleep(0.2)
+                sleep(0.4)
                 if self.wait_while_not_visible(self.GLOBAL_SEARCH_LOADING_DETAILS, 25) == False:
                     writeToLog("INFO", "FAILED to load the entry details, after clicking on the show more button")
                     return False

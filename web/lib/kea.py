@@ -1384,12 +1384,20 @@ class Kea(Base):
             
             # Verify if there's a gap of one second between the action
             if int(timeLineSectionMarkerUpdated[0]) + 1 == int(timeLocation[-1]):
-                # If the ml seconds are higher than 49 we need a less difference in px
-                if int(timeLineSectionMarkerUpdated[2:]) >= 49:
-                    differencePx = 7
-                # If the ml seconds are less than 49 we need a higher difference in px
+                if self.driver.capabilities['browserName'] == 'firefox':
+                    # If the ml seconds are higher than 49 we need a less difference in px
+                    if int(timeLineSectionMarkerUpdated[2:]) >= 49:
+                        differencePx = 7
+                    # If the ml seconds are less than 49 we need a higher difference in px
+                    else:
+                        differencePx = 22
                 else:
-                    differencePx = 22
+                    # If the ml seconds are higher than 49 we need a less difference in px
+                    if int(timeLineSectionMarkerUpdated[2:]) >= 49:
+                        differencePx = 10
+                    # If the ml seconds are less than 49 we need a higher difference in px
+                    else:
+                        differencePx = 30       
                     
                 actionSetQuizLocationSecond = ActionChains(self.driver)
                 
@@ -2497,8 +2505,9 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to find any quiz question pointer in the time line section")
             return False
         
+        sleep(5)
         # Take all the available quiz question pointers from the timeline KEA section
-        quizCuePoint = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 1)
+        quizCuePoint = self.wait_elements(self.KEA_TIMELINE_SECTION_QUESTION_BUBBLE, 15)
         
         # Iterate each available question
         for questionNumber in changeTimelineOrderDict:

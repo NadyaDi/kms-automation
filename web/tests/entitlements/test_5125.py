@@ -44,11 +44,9 @@ class Test:
     tags                = "Tags,"
     entryName           = None
     entryDescription    = "Public Entry Description"
-    entryTags           = "publicopenchannelauto,"
     
     channelName         = None
     channelDescription  = "Public Channel Description"
-    channelTags         = "publicopenchannelauto,"
 
     # Variable used in order to specify the entry media location
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'    
@@ -70,8 +68,8 @@ class Test:
             # Variables used in order to proper create the Entry
             self.entryName             = clsTestService.addGuidToString("Entitlements - Public Opened Channel in Global", self.testNum)
             self.channelName           = clsTestService.addGuidToString("Public Opened Channel in Global", self.testNum)
-            self.entryTags             = clsTestService.addGuidToString("pocentry,", self.testNum)
-            self.channelTags           = clsTestService.addGuidToString("pocchannel,", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("entry,", self.testNum)
+            self.channelTags           = clsTestService.addGuidToString("channel,", self.testNum)
             self.instanceURL           = self.common.base.driver.current_url
             self.common.admin.enablePublicOpenChannel(True)
             self.common.base.navigate(self.instanceURL)

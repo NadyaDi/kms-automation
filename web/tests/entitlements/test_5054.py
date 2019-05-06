@@ -59,9 +59,9 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.categoryName          = clsTestService.addGuidToString("Private Category", self.testNum)
+            self.categoryName          = "Private Category"
             self.entryName             = clsTestService.addGuidToString("Entitlements - Private Category Entry Global Search", self.testNum)
-            self.entryTags             = clsTestService.addGuidToString("pentry,", self.testNum)
+            self.entryTags             = clsTestService.addGuidToString("entry,", self.testNum)
             ##################### TEST STEPS - MAIN FLOW #####################
             writeToLog("INFO","Step 1: Going to upload " + self.entryName + " entry as " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME)
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
