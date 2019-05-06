@@ -106,7 +106,7 @@ class Test:
             
             sleep(3)
             writeToLog("INFO","Step 6: Going to delete event")
-            if self.common.recscheduling.deteteSingleEvent(self.event) == False:
+            if self.common.recscheduling.deteteEvent(self.event) == False:
                 writeToLog("INFO","Step 6: FAILED to delete event from my schedule page")
                 return
             ##################################################################
@@ -121,7 +121,7 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
-            self.common.recscheduling.deteteSingleEvent(self.event)
+            self.common.recscheduling.deteteEvent(self.event)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

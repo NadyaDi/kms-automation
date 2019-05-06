@@ -18,15 +18,15 @@ class Test:
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
-    #    3. Fill in all fields (description ,tags ) and select a resource
-    #    4. Select start and end time
-    #    5. Click save and exit
-    #    6. Go to my schedule page and verify that the event display in the correct date and time
-    #    7. From my schedule page enter the event and edit the following fields: 
-    #        uncheck the copy details from event to recording and edit the details : name, description, tags ,resource, Event organizer, add Collaborators, time , date, and publish the event
-    #    10. Go to my schedule page and verify that the event details was changed.
+    #    3. Fill in all fields (start/end date, start/end time, description ,tags ) and select a resource
+    #    4. Click save and exit
+    #    5. Go to my schedule page and verify that the event display in the correct date and time
+    #    6. From my schedule page enter the event and edit the following fields: 
+    #       title, description, tags ,resource, Event organizer, add Collaborators, time , date, and publish the event
+    #    7. go to the original start date and verify that the event doesn't display
+    #    8. Go to my schedule page and verify that the event details was changed.
     #
-    #    1-10. The event is created successfully and appears on the agenda view
+    #    1-8. The event is created successfully and appears on the agenda view
     #================================================================================================================================
     testNum = "4970"
     
@@ -126,9 +126,14 @@ class Test:
                 writeToLog("INFO","Step 3: FAILED to create new single event")
                 return
             
-            writeToLog("INFO","Step 4: Going navigate to event page")
+            writeToLog("INFO","Step 4: Going to verify event metadata")
+            if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
+                writeToLog("INFO","Step 4: FAILED to verify event metadata in event page")
+                return
+            
+            writeToLog("INFO","Step 5: Going navigate to event page")
             if self.common.recscheduling.navigateToEventPage(self.event) == False:
-                writeToLog("INFO","Step 4: FAILED navigate to event")
+                writeToLog("INFO","Step 5: FAILED navigate to event")
                 return 
             sleep(2)
             
@@ -144,26 +149,35 @@ class Test:
             self.event.resources = self.editResources
             
             sleep(3)     
-            writeToLog("INFO","Step 5: Going to verify event display in my schedule page")
+            writeToLog("INFO","Step 6: Going to verify event display in my schedule page")
             if self.common.recscheduling.editRescheduleEvent(self.event) == False:
-                writeToLog("INFO","Step 5: FAILED to edit event metadata")
+                writeToLog("INFO","Step 6: FAILED to edit event metadata")
                 return
             
             sleep(3)
-            writeToLog("INFO","Step 6: Going to publish event")
+            writeToLog("INFO","Step 7: Going to publish event")
             if self.common.recscheduling.publishEvent(self.event) == False:
-                writeToLog("INFO","Step 6: FAILED to publish event")
+                writeToLog("INFO","Step 7: FAILED to publish event")
                 return
             
-            writeToLog("INFO","Step 7: Going to add collaborator to event")
+            writeToLog("INFO","Step 8: Going to add collaborator to event")
             if self.common.recscheduling.addCollaboratorToScheduleEvent(self.event, location=enums.Location.SCHEDULE_EVENT_PAGE) == False:
-                writeToLog("INFO","Step 7: FAILED adding collaborator to event")
+                writeToLog("INFO","Step 8: FAILED adding collaborator to event")
                 return
             sleep(3)
             
-            writeToLog("INFO","Step 8: Going to verify event metadata")
+            self.event.startDate = self.startDateForCreateEvent
+            self.event.convertDatetimeToVerifyDate()
+            writeToLog("INFO","Step 9: Going to verify that event does not display in the original start date")
+            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
+                writeToLog("INFO","Step 9:FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
+                return
+            
+            self.event.startDate = self.editStartDate
+            self.event.convertDatetimeToVerifyDate()
+            writeToLog("INFO","Step 10: Going to verify event metadata")
             if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
-                writeToLog("INFO","Step 8: FAILED to verify event metadata in event page")
+                writeToLog("INFO","Step 10: FAILED to verify event metadata in event page")
                 return
             
             ##################################################################
@@ -178,9 +192,11 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
-            if self.common.recscheduling.deteteSingleEvent(self.event) == False:
+            if self.common.recscheduling.deteteEvent(self.event) == False:
+                self.event.startDate =self.startDateForCreateEvent
+                self.event.convertDatetimeToVerifyDate()
                 self.event.title = self.eventTitle
-                self.common.recscheduling.deteteSingleEvent(self.event)
+                self.common.recscheduling.deteteEvent(self.event)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

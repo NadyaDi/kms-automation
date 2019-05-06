@@ -82,15 +82,15 @@ class Test:
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
-#             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
-#             if self.common.admin.enableRecscheduling(True) == False:
-#                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
-#                 return
-#               
-#             writeToLog("INFO","Step 2: Going navigate to home page")            
-#             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-#                 writeToLog("INFO","Step 2: FAILED navigate to home page")
-#                 return
+            writeToLog("INFO","Step 1: Going to set rescheduling in admin")
+            if self.common.admin.enableRecscheduling(True) == False:
+                writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
+                return
+               
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
              
             writeToLog("INFO","Step 3: Going to create new single event")
             if self.common.recscheduling.createRescheduleEvent(self.event) == False:
@@ -115,7 +115,7 @@ class Test:
                         return
             
             writeToLog("INFO","Step 5: Going to delete event series")
-            if self.common.recscheduling.deteteEventSeries(self.event) == False:
+            if self.common.recscheduling.deteteEvents(self.event, viewEventSeries=True) == False:
                 writeToLog("INFO","Step 5: FAILEDto delete event series")
                 return
                 
@@ -145,7 +145,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
             self.event.startDate = self.tmpStartDate
             self.event.verifyDateFormat = self.tmpStartDateFormat
-            self.common.recscheduling.deteteEventSeries(self.event)
+            self.common.recscheduling.deteteEvent(self.event, viewEventSeries=True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
