@@ -124,8 +124,12 @@ class Test:
             self.entryPageURL                    = None
 
             self.filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
+            
+            #/home/kaltura.gen/build/workspace/qaKmsFrontEnd22/web/media/templates/quiz_users_5161.csv
             self.filePathQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_users_5161.csv'
-            self.filePathExoprtedQuizUsers = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_users.csv")
+            
+            #'/mnt/auto_kms_py1/downloads/' + str(localSettings.LOCAL_SETTINGS_GUID)
+            self.filePathExoprtedQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + "/quiz_users.csv"
     
             #    Next line is for local running     
             #    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'
