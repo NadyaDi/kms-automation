@@ -94,10 +94,11 @@ class Test:
             self.filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
             
             self.filePathQuizUsers = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH + '/templates/quiz_users_5159.csv'
-            self.filePathExoprtedQuizUsers =  os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_users.csv")
+            #self.filePathQuizUsers = localSettings.LOCAL_SETTINGS_MEDIA_PATH + '/templates/quiz_users_5159.csv'
+            self.filePathExoprtedQuizUsers =  localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + "/quiz_users.csv"
             
             #    Next line is for local running 
-            #    filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'            
+            #self.filePathExoprtedQuizUsers = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_users.csv'            
 
             ######################### TEST STEPS - MAIN FLOW #######################
             writeToLog("INFO","Step 1: Going to upload entry")    
@@ -105,130 +106,130 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                         
+                          
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                            
+                                             
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                            
+                                             
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                           
+                                                                            
             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-       
+        
             self.common.base.switch_to_default_content()
-                  
+                   
             writeToLog("INFO","Step 5: Going to get entry page URL")
             self.entryPageURL = self.common.base.driver.current_url
-                  
+                   
             writeToLog("INFO","Step 6: Going to publish entry to unlisted")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.quizEntryName, enums.ChannelPrivacyType.UNLISTED, publishFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 6: FAILED failed to publish entry to unlisted")
                 return 
-                  
+                   
             writeToLog("INFO","Step 7 : Going to logout as quiz owner")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7 : FAILED to logout as quiz owner")  
                 return 
-                  
+                   
             writeToLog("INFO","Step 8 : Going to login as " + self.userNameUser1)  
             if self.common.login.loginToKMS(self.userId1, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8 : FAILED to login as " + self.userNameUser1)  
                 return       
-                  
+                   
             writeToLog("INFO","Step 9: Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step 9: FAILED to navigate to entry page link")
                 return             
-                   
+                    
             writeToLog("INFO","Step 10 : Going to answer quiz as " + self.userNameUser1)  
             if self.common.player.answerQuiz(self.user1AnswersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 10 : FAILED to answer quiz as " + self.userNameUser1)  
                 return    
-                   
+                    
             self.common.base.switch_to_default_content()
-                   
+                    
             writeToLog("INFO","Step 11 : Going to logout as " + self.userNameUser1)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11 : FAILED to logout as " + self.userNameUser1)  
                 return  
-              
+               
             writeToLog("INFO","Step 12 : Going to login as " + self.userNameUser2)  
             if self.common.login.loginToKMS(self.userId2, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 12 : FAILED to login as " + self.userNameUser2)  
                 return       
-                  
+                   
             writeToLog("INFO","Step 13: Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step 13: FAILED to navigate to entry page link")
                 return             
-                   
+                    
             writeToLog("INFO","Step 14 : Going to answer quiz as " + self.userNameUser2)  
             if self.common.player.answerQuiz(self.user2AnswersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 14 : FAILED to answer quiz as " + self.userNameUser2)  
                 return    
-                   
+                    
             self.common.base.switch_to_default_content()
-              
+               
             writeToLog("INFO","Step 15 : Going to logout as " + self.userNameUser2)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 15 : FAILED to logout as " + self.userNameUser2)  
                 return              
-              
+               
             writeToLog("INFO","Step 16 : Going to login as " + self.userNameUser3)  
             if self.common.login.loginToKMS(self.userId3, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 16 : FAILED to login as " + self.userNameUser3)  
                 return       
-                  
+                   
             writeToLog("INFO","Step 17: Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step 17: FAILED to navigate to entry page link")
                 return             
-                   
+                    
             writeToLog("INFO","Step 18 : Going to answer quiz as " + self.userNameUser3)  
             if self.common.player.answerQuiz(self.user3AnswersDict, skipWelcomeScreen=True, submitQuiz=True, location=enums.Location.ENTRY_PAGE, timeOut=3, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 18 : FAILED to answer quiz as " + self.userNameUser3)  
                 return    
-                   
+                    
             self.common.base.switch_to_default_content()
-                   
+                    
             writeToLog("INFO","Step 19 : Going to logout as " + self.userNameUser3)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 19 : FAILED to logout as " + self.userNameUser3)  
                 return  
-                  
+                   
             writeToLog("INFO","Step 20 : Going to login as quiz owner")  
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 20 : FAILED to login as quiz owner")  
                 return   
-             
+              
             writeToLog("INFO","Step 21 : Going to export question csv file")  
             if self.common.quizAnalytics.exportCsvFileQuizAnalyticsPage(enums.quizAnalytics.QUIZ_USERS, self.quizEntryName, True)  == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 21 : FAILED to export question csv file")  
                 return
-            
+             
             sleep(10)
             
             writeToLog("INFO","Step 22 : Going to verify that quiz questions csv files is download correctly")  

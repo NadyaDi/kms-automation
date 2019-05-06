@@ -378,7 +378,7 @@ class Common():
     # @Author: Inbar Willman
     # Compare between two csv files
     def compareBetweenTwoCsvFiles(self, file1, file2):
-        with open(file1, 'r') as t1, open(file2, 'r') as t2:
+        with open(file1, 'r', encoding='utf-8') as t1, open(file2, 'r', encoding='utf-8') as t2:
             fileOne = t1.readlines()
             fileTwo = t2.readlines()
  

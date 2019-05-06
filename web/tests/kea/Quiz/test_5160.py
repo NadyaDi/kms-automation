@@ -125,7 +125,7 @@ class Test:
             
             self.filePathEntry = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
             self.filePathQuizQuestions = localSettings.LOCAL_SETTINGS_JENKINS_NODE_MEDIA_PATH +'/templates/quiz_questions_5160.csv'
-            self.filePathExoprtedQuizQuestions = os.path.join(localSettings.LOCAL_SETTINGS_TEMP_DOWNLOADS, "quiz_questions.csv")
+            self.filePathExoprtedQuizQuestions = localSettings.LOCAL_SETTINGS_JENKINS_NODE_SHARED_DOWNLOAD + "/quiz_questions.csv"
     
             #    Next line is for local running 
             #    filePathExoprtedQuizQuestions = 'C:\\Users\\inbar.willman\\eclipse-workspace\\kms-automation\\web\\temp\\downloads\\quiz_questions.csv'            
