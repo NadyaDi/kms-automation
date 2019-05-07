@@ -128,6 +128,7 @@ LOCAL_SETTINGS_APPLICATION_UNDER_TEST       = enums.Application.MEDIA_SPACE
 TEST_CURRENT_IFRAME_ENUM                    = enums.IframeName.DEFAULT
 
 # KAF Variables
+LOCAL_SETTINGS_PITCH_BASE_URL                       = 'https://www.kpitch-test.net'
 LOCAL_SETTINGS_KAF_BLACKBOARD_BASE_URL              = 'https://il-qa-blackboard-q2-2018.dev.kaltura.com:8443'
 LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL_PRODUCTION   = 'https://kalturasp2013.sharepoint.com/sites/QA/QA1/automationproduction/SitePages'
 LOCAL_SETTINGS_KAF_SHAREPOINT_BASE_URL_TESTING      = 'https://kalturasp2013.sharepoint.com/sites/QA/QAtesting/automation/SitePages'

@@ -7,6 +7,7 @@ class Application(Enum):
         return str(self.value)
 
     MEDIA_SPACE         = 'Media Space'
+    PITCH               = 'Pitch'
     BLACK_BOARD         = 'Black Board'       
     CANVAS              = 'Canvas'
     MOODLE              = 'Moodle'
