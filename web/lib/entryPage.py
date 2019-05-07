@@ -26,7 +26,7 @@ class EntryPage(Base):
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_DELETE_BUTTON          = ('id', "tab-Delete")
     ENTRY_PAGE_CONFIRM_DELETE_BUTTON                       = ('xpath', "//a[contains(@id,'delete_button_') and @class='btn btn-danger']")
     ENTRY_PAGE_DOWNLOAD_TAB                                = ('xpath', "//a[@id='tab-download-tab']")
-    ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//span[@class='media-processing__msg' and contains(text(), 'Media is being processed')]")
+    ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED                    = ('xpath', "//span[contains(@class,'media-processing') and contains(text(),'is being processed')]")
     ENTRY_PAGE_PLAYER_IFRAME                               = ('xpath',"//iframe[@id='kplayer_ifp' and @class='mwEmbedKalturaIframe']") 
     ENTRY_PAGE_PLAYER_IFRAME1                              = ('class_name','mwEmbedKalturaIframe')
     ENTRY_PAGE_PLAYER_IFRAME2                              = ('id','kplayer_ifp')
@@ -79,6 +79,7 @@ class EntryPage(Base):
     ENTRY_PAGE_COMMENTS_PART_TITLE                         = ('xpath', '//a[@id="comments-tab-tab"]')
     ENTRY_PAGE_ELEMENT_LOADER_SHARE                        = ('xpath', '//div[@class="elementLoader"]')
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION       = ('xpath', '//span[@id="tabLabel-userreports" and text()="Analytics"]')
+#    ENTRY_PAGE_CAPTIONS_REQUESTS_OPTION                    = ('css', 'span.tabLabel:contains(" Captions Requests")')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -325,7 +326,7 @@ class EntryPage(Base):
     def waitTillMediaIsBeingProcessed(self, timeout=450):
         sleep(6)
         self.wait_while_not_visible(self.ENTRY_PAGE_MEDIA_IS_BEING_PROCESSED, timeout)
-        if self.wait_visible(self.clsCommon.player.PLAYER_IFRAME, 60) == False:
+        if self.wait_visible(self.clsCommon.player.PLAYER_IFRAME, 90) == False:
             writeToLog("INFO", "FAILED to verify the player Iframe while waiting for the media to be processed ")
             return False
         return True
@@ -1223,4 +1224,20 @@ class EntryPage(Base):
             return False
                 
         writeToLog("INFO", "The commnet: " + comment + " has been successfully added at time location: " + timeStamp)
-        return True                
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    def chooseCaptionsRequestsOption(self, entryName='', forceNavigate=False):
+        if forceNavigate == True:
+            if self.navigateToEntryPageFromMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED to navigate to " + entryName + " page")
+                return False  
+            
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+            writeToLog("INFO","FAILED to click on action dropdown list")
+            return False        
+              
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION) == False:
+            writeToLog("INFO","FAILED to click on quizAnalytics option")
+            return False                       

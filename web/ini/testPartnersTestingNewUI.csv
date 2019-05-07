@@ -138,7 +138,7 @@ test_4868,Blackboard Ultra- Ultra Publish from my media,,,oleg.sigalov@kaltura.c
 test_4869,Blackboard Ultra- Ultra Publish from entry page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4875,Blackboard Ultra- Search by Name / Description / Tags,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4878,Blackboard Ultra- Filter media view different media types,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
-test_4877,Blackboard Ultra- Filter media view different statuses,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_4877,Blackboard Ultra- Filter media view different statuses,,,oleg.sigalov@kaltura.com,Kaltura!1,kstudent,123456
 test_4883,Blackboard Ultra- Upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4884,Blackboard Ultra- Remove media from media gallery,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_5156,Blackboard Ultra- Gradebook,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
@@ -760,6 +760,7 @@ test_4740,eSearch - Filter by media type no search - add to category SR tab,2443
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4852,Recscheduling - Create new single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4962,Recscheduling - Create new recurring event - Daily - Every X days,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_4969,Recscheduling - Delete an occurrence,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4971,Recscheduling - Edit an event series,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_5162,Recscheduling - Delete Event Series,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!

@@ -58,7 +58,7 @@ class Kea(Base):
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
     KEA_LOADING_CONTAINER                                                   = ('xpath', "//div[contains(@class,'loading__container')]") 
-    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and text()='Please wait while media is processing']") 
+    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and contains(text(),'media is processing')]") 
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
     KEA_QUIZ_ANSWER_GENERAL                                                 = ('xpath', "//textarea[contains(@id,'answer-text')]") 
@@ -1047,7 +1047,7 @@ class Kea(Base):
     # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
     # questionOpen         = ['0:25', enums.QuizQuestionType.OPEN_QUESTION, 'Question title for Open-Q'] 
     # If you want to change the answer order you can use this function: changeAnswerOrder
-    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=20):
+    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=25):
         sleep(25)
    
         # Need this step in order to workaround an issue that may fail a test case after uploading an entry
@@ -1340,7 +1340,7 @@ class Kea(Base):
         self.switchToKeaIframe()
         
         # Take the details from the kea time line section
-        keaTimelineSection  = self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 10, True)
+        keaTimelineSection  = self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 60, True)
 
         # Verify that the time line section is available       
         if keaTimelineSection == False:
@@ -4863,7 +4863,7 @@ class Kea(Base):
             return False
         
         # Verify that the timeline section is presented
-        if self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 15, True) == False:
+        if self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 30, True) == False:
             writeToLog("INFO", "FAILED, the timeline section for " + keaTab.value + " is not presented")
             return False
         

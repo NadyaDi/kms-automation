@@ -113,7 +113,7 @@ class Test:
             self.tmpStartDateFormat = self.event.verifyDateFormat
             writeToLog("INFO","Step 4: Going to verify event display in my schedule page")
             for day in range(0,self.numberOfRecurrenceDays+1):
-                self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
+                self.event.startDate = (self.startDateInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
                 self.event.convertDatetimeToVerifyDate()
                 self.event.expectedEvent = not(self.event.expectedEvent)
                 
@@ -126,7 +126,7 @@ class Test:
                         return
             
             writeToLog("INFO","Step 5: Going to verify that event isn't display in after event date end date")
-            self.event.startDate = (self.startTimeInDatetimeFormat + timedelta(days=self.numberOfRecurrenceDays+2)).strftime("%d/%m/%Y")
+            self.event.startDate = (self.startDateInDatetimeFormat + timedelta(days=self.numberOfRecurrenceDays+2)).strftime("%d/%m/%Y")
             self.event.convertDatetimeToVerifyDate()
             self.event.expectedEvent = False
             if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
@@ -147,7 +147,7 @@ class Test:
             writeToLog("INFO","**************** Starting: teardown_method ****************")   
             self.event.startDate = self.tmpStartDate
             self.event.verifyDateFormat = self.tmpStartDateFormat
-            self.common.recscheduling.deteteEventSeries(self.event)
+            self.common.recscheduling.deteteEvent(self.event, viewEventSeries=True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

@@ -46,7 +46,7 @@ class Test:
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\qrcode_middle_4.png'
     galleryName = "New1"
     userName1 = "automation@KalturaSP2013.onmicrosoft.com"
-    userPass1 = "KalKaltura3!"
+    userPass1 = "KalKaltura4!"
     filterByPrivate = None
     filterByPublished = None
     filterByRejected = None

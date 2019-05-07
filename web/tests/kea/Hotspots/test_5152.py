@@ -16,11 +16,10 @@ class Test:
     #  @Author: Horia Cus
     # Test Name : Hotspots - Change Hotspot Size using Advanced Settings
     # Test description:
-    # Create four hotspots inside a new entry that contains:
-    # The first hotspot is created with the default container size ( without modifying anything to the width / height )
-    # The second hotspot is created using smaller sizes that the default one
-    # The third and forth are created using larger sizes that the default one
-    # Hotspots container sizes and the style proprities are verified in the entry page
+    # Create three hotspots inside a new entry that contains:
+    # The First hotspot is created using smaller sizes that the default one
+    # The second and third are created using larger sizes that the default one
+    # Hotspots container sizes and the style properties are verified in the entry page
     #================================================================================================================================
     testNum = "5152"
 
@@ -31,7 +30,7 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "Entry that used the Default Size and three other sizes inserted in Advanced Settings"
+    typeTest            = "Entry that used three other sizes than the default one, inserted in Advanced Settings"
     description         = "Description"
     tags                = "Tags,"
     entryName           = None
@@ -42,11 +41,10 @@ class Test:
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
     
     # These lists and dictionary are used in order to create new hotspots inside the entry
-    hotspotOne                  = ['Hotspot Default', enums.keaLocation.CENTER, 0, 10, 'https://autoone.kaltura.com/', enums.textStyle.BOLD, '', '', 18, 12]
-    hotspotTwo                  = ['Hotspot Small', enums.keaLocation.CENTER, 10, 15, '', enums.textStyle.NORMAL, '', '', 12, 12, enums.keaHotspotContainerSize.SMALL]
-    hotspotThree                = ['Hotspot Medium', enums.keaLocation.CENTER, 15, 20, '', enums.textStyle.THIN, '', '', 12, 12, enums.keaHotspotContainerSize.MEDIUM]
-    hotspotFour                 = ['Hotspot Large', enums.keaLocation.CENTER, 20, 25, '', enums.textStyle.BOLD, '', '', 12, 16, enums.keaHotspotContainerSize.LARGE]
-    hotspotsDict                = {'1':hotspotOne,'2':hotspotTwo, '3':hotspotThree, '4':hotspotFour}
+    hotspotSmall                = ['Hotspot Small', enums.keaLocation.CENTER, 0, 10, '', enums.textStyle.NORMAL, '', '', 12, 12, enums.keaHotspotContainerSize.SMALL]
+    hotspotMedium               = ['Hotspot Medium', enums.keaLocation.CENTER, 15, 20, '', enums.textStyle.THIN, '', '', 12, 12, enums.keaHotspotContainerSize.MEDIUM]
+    hotspotLarge                = ['Hotspot Large', enums.keaLocation.CENTER, 25, 30, '', enums.textStyle.BOLD, '', '', 12, 16, enums.keaHotspotContainerSize.LARGE]
+    hotspotsDict                = {'1':hotspotSmall, '2':hotspotMedium, '3':hotspotLarge}
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -86,9 +84,10 @@ class Test:
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 4: FAILED to navigate to the entry page of " + self.entryName)
                 return
-  
+            
+            presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step 5: Going to verify the hotspots from the " + self.entryName + " entry")
-            if self.common.player.hotspotVerification(self.hotspotsDict, enums.Location.ENTRY_PAGE, embed=False) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList) == False:
                 writeToLog("INFO","Step 5: FAILED to verify the hotspots from the " + self.entryName + " entry")
                 return
             ##################################################################

@@ -154,6 +154,9 @@ class Test:
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
                 writeToLog("INFO","Step 14: FAILED to verify that only the Slides that should be kept are presented ( after the entry was clipped)")
                 return
+
+            self.common.base.refresh()
+            sleep(8)
             
             writeToLog("INFO","Step 15: Going to collect all the presented captions on the player (after the entry was clipped)")  
             self.captionList = self.common.player.collectCaptionsFromPlayer("Clip of " + self.entryName)
