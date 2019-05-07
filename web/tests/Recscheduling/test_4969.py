@@ -14,21 +14,19 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Recscheduling -  Edit an event series 
+    # Test Name : Recscheduling - Delete an occurrence 
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
     #    3. Fill in all fields :start/end date, start,end, time, description ,tags, rcurrence(new recurring event - Daily - Every X day) and select a resource
     #    4. Click save and exit
     #    5. Go to my schedule page and verify that all events display with the correct date and time
-    #    6. From my schedule page enter the event (that is in the start date) and edit the following fields: 
-    #       title, description, tags ,resource, Event organizer, add Collaborators, time ,date, rcurrence (change the number of 'resource every X days')and publish the event
-    #    7. go to the original start date and verify that the event doesn't display
-    #    8. Go to my schedule page and verify that all the events details was changed.
+    #    6. From my schedule page enter one event and delete only this event  
+    #    7. Go to my schedule page and verify that only the event that was chosen deleted and the rest of events are still display
     #
-    #    1-8. The event is created successfully and appears on the agenda view
+    #    1-7. The event is created successfully and appears on the agenda view
     #================================================================================================================================
-    testNum = "4971"
+    testNum = "4969"
     
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

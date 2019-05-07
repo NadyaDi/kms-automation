@@ -186,6 +186,8 @@ class  Recscheduling(Base):
     SCHEDULE_EVENT_PAGE_GO_TO_SERIES_BUTTON                                 = ('css', "a#gotoSeries")
     SCHEDULE_VIEW_EVENT_SERIES_MESSAGE                                      = ('xpath', "//p[contains(text(),'You are viewing an event series')]")
     SCHEDULE_EDIT_EVENT_PAGE_RECURRENCE_BUTTON                              = ('css', "button#CreateEvent-recurrenceMain")
+    SCHEDULE_CONTINUE_TO_SERIES_PAGE_WITHOUT_SAVE_MESSAGE                   = ('xpath', "//a[@class='btn btn-danger' and contains(text(),'Continue')]")
+    SCHEDULE_VIEW_EVENT_PUBLISH_IN_SECTION_AFTER_PUBLISH                    = ('css', "div.pblBadge")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -791,10 +793,6 @@ class  Recscheduling(Base):
                 writeToLog("INFO","Already in event page")
                 return True 
         
-        if self.navigateToMySchedule() == False:
-            writeToLog("INFO","FAILED navigate to my schedule page")
-            return False 
-        
         sleep(2)
         if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
             writeToLog("INFO","FAILED to move to start time '" + eventInstance.verifyDateFormat + "' in my schedule page")
@@ -810,6 +808,12 @@ class  Recscheduling(Base):
             if self.click(self.SCHEDULE_EVENT_PAGE_GO_TO_SERIES_BUTTON) == False:
                 writeToLog("INFO","FAILED to click on 'go to series button' in event page")
                 return False 
+            
+            # if a change were made in event page without save a popup message will display and ask if we wont to continue without save
+            if self.wait_element(self.SCHEDULE_CONTINUE_TO_SERIES_PAGE_WITHOUT_SAVE_MESSAGE, timeout=6) == True:
+                if self.click(self.SCHEDULE_CONTINUE_TO_SERIES_PAGE_WITHOUT_SAVE_MESSAGE) == False:
+                    writeToLog("INFO","FAILED click on continue button in order to go to serires page")
+                    return False
             self.clsCommon.general.waitForLoaderToDisappear()
             sleep(1)
             
@@ -908,9 +912,12 @@ class  Recscheduling(Base):
                     return False
             sleep(1)
             self.get_body_element().send_keys(Keys.PAGE_DOWN)
-            sleep(3)
+            sleep(1)
+            self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            sleep(1)
+            self.wait_element(self.SCHEDULE_VIEW_EVENT_PUBLISH_IN_SECTION_AFTER_PUBLISH, timeout=30)
             try:
-                tmpPublish = self.get_element(self.clsCommon.myMedia.PUBLISH_IN_SECTION_AFTER_PUBLISH).text
+                tmpPublish = self.get_element(self.SCHEDULE_VIEW_EVENT_PUBLISH_IN_SECTION_AFTER_PUBLISH).text
             except:
                 writeToLog("INFO","FAILED to find publish section in event page")
                 return False
