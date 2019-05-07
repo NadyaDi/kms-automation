@@ -1438,7 +1438,7 @@ class MyMedia(Base):
             return True
 
 
-    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=120, afterSearch=False):
+    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=600, afterSearch=False):
         # Check if we are in My Media page
         if searchIn == enums.Location.MY_MEDIA:
             tmp_table_size = self.MY_MEDIA_TABLE_SIZE
