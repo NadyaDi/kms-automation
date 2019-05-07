@@ -111,12 +111,7 @@ class Test:
             if self.common.player.downloadQuizPDF(self.filePathDownloaded, embed=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to download the PDF file, while using an Anonymous User")
-                return
-            
-            writeToLog("INFO","Step 8: Going to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
-            if self.common.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD, url=self.instanceUrl + 'user/login') == False:
-                writeToLog("INFO", "Step 8:FAILED to authenticate using " + localSettings.LOCAL_SETTINGS_LOGIN_USERNAME + " account, in order to teardown")
-                return                 
+                return                
             ##################################################################
             writeToLog("INFO","TEST PASSED: The download option for the Allow Download of Questions List option has proper functionality for Anonymous User with embedSecure off")
         # if an exception happened we need to handle it and fail the test       

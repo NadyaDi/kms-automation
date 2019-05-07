@@ -116,9 +116,7 @@ class Test:
             if self.common.player.downloadQuizPDF(self.filePathDownloaded, embed=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 8: FAILED to download the PDF file, while using an Anonymous User")
-                return
-            
-            self.common.base.navigate(self.instanceUrl)           
+                return         
             ##################################################################
             writeToLog("INFO","TEST PASSED: The download option for the Allow Download of Questions List option has proper functionality for KMS User with embedSecure on")
         # if an exception happened we need to handle it and fail the test       
@@ -130,6 +128,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
             self.common.base.switch_to_default_content()
+            self.common.base.navigate(self.instanceUrl)
             self.common.myMedia.deleteEntriesFromMyMedia([self.entryName, self.entryNameQuiz])
             self.common.deleteFile(self.embedLinkFilePath)
             self.common.admin.enableSecureEmbed(False)
