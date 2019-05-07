@@ -79,6 +79,7 @@ class EntryPage(Base):
     ENTRY_PAGE_COMMENTS_PART_TITLE                         = ('xpath', '//a[@id="comments-tab-tab"]')
     ENTRY_PAGE_ELEMENT_LOADER_SHARE                        = ('xpath', '//div[@class="elementLoader"]')
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION       = ('xpath', '//span[@id="tabLabel-userreports" and text()="Analytics"]')
+#    ENTRY_PAGE_CAPTIONS_REQUESTS_OPTION                    = ('css', 'span.tabLabel:contains(" Captions Requests")')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -1223,4 +1224,20 @@ class EntryPage(Base):
             return False
                 
         writeToLog("INFO", "The commnet: " + comment + " has been successfully added at time location: " + timeStamp)
-        return True                
+        return True  
+    
+    
+    # @Author: Inbar Willman
+    def chooseCaptionsRequestsOption(self, entryName='', forceNavigate=False):
+        if forceNavigate == True:
+            if self.navigateToEntryPageFromMyMedia(entryName) == False:
+                writeToLog("INFO","FAILED to navigate to " + entryName + " page")
+                return False  
+            
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST) == False:
+            writeToLog("INFO","FAILED to click on action dropdown list")
+            return False        
+              
+        if self.click(self.ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION) == False:
+            writeToLog("INFO","FAILED to click on quizAnalytics option")
+            return False                       
