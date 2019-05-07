@@ -128,7 +128,7 @@ class Test:
             
             presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step 11: Going to verify the hotspots from the " + self.entryName + " entry, after duplicating the " + self.hotspotOne[0])
-            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDictUpdatedTimeline, presentedHotspotsDetailsList) == False:
                 writeToLog("INFO","Step 11: FAILED to verify the hotspots from the " + self.entryName + " entry, after duplicating the " + self.hotspotOne[0])
                 return
             ##################################################################
