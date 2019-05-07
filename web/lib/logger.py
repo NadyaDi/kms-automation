@@ -83,7 +83,9 @@ def writeToLog(logLevel, logLine):
 #===============================================================================
 def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
     # Set the Application under test (KMS, BB, Moodle, Canvas...) - Default is Media Space
-    if application == enums.Application.BLACK_BOARD:
+    if application == enums.Application.PITCH:
+        localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.PITCH
+    elif application == enums.Application.BLACK_BOARD:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.BLACK_BOARD
     elif application == enums.Application.SHARE_POINT:
         localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.SHARE_POINT

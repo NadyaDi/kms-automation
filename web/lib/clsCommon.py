@@ -22,6 +22,7 @@ from upload import Upload
 from webcast import Webcast
 from home import Home
 from freeTrial import FreeTrial
+from pitch import Pitch
 from kafBB import BlackBoard
 from kafSharepoint import SharePoint
 from selenium.webdriver.common.keys import Keys
@@ -72,6 +73,7 @@ class Common():
         self.webcast            = Webcast(self, driver)
         self.recscheduling      = Recscheduling(self, driver)
         self.quizAnalytics      = QuizAnalytics(self, driver)
+        self.pitch              = Pitch(self, driver)
         ### KAF ###
         self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
@@ -155,6 +157,8 @@ class Common():
     def loginAsUser(self):
         if self.base.getAppUnderTest() == enums.Application.MEDIA_SPACE:
             return self.login.loginToKMS(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
+        elif self.base.getAppUnderTest() == enums.Application.PITCH:
+            return self.pitch.loginToPitch(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)        
         elif self.base.getAppUnderTest() == enums.Application.BLACK_BOARD:
             return self.blackBoard.loginToBlackBoard(localSettings.LOCAL_SETTINGS_LOGIN_USERNAME, localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD)
         elif self.base.getAppUnderTest() == enums.Application.SHARE_POINT:
