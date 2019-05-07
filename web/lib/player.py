@@ -951,7 +951,7 @@ class Player(Base):
                     # Add a redundancy for the quiz entries
                     if quizEntry == True:
                         # Verify that we didn't missed any qrPath by being in the Question Screen
-                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10, True) != False:
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 15, True) != False:
                             writeToLog("INFO", "Still in the Question Screen and will continue to iterate through the video")
                         else:
                             # If we confirmed that we are not in a Question Screen, we will break
@@ -998,7 +998,26 @@ class Player(Base):
             if quizEntry == True:
                 # Remove invalid elements ( None )  from the QR Code List
                 QRcodeList = [x for x in QRcodeList if x != None]
-                                
+                
+                # Re take the QR Code list if less than two QR code were found for a quiz entry
+                if len(QRcodeList) <= 2:
+                    writeToLog("INFO", "Less than two QR code were found for the quiz entry, re taking the QR codes..")
+                    for x in range(0,1):
+                        self.driver.refresh()
+                        sleep(15)
+                        
+                        # Take the QR Code list for the second time
+                        QRcodeListSecond = self.collectQrOfSlidesFromPlayer(entryName, embed, fromActionBar, quizEntry, True)
+                        
+                        if QRcodeListSecond is not list:
+                            writeToLog("INFO", "FAILED to take the QR Code list during the second attempt")
+                        else:
+                            QRcodeList = QRcodeListSecond
+                        
+                        # Verify that QR Code list has more than two QR Codes
+                        if QRcodeList > 2:
+                            break
+                        
             self.clsCommon.base.switch_to_default_content()    
             return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
