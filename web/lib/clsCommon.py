@@ -37,6 +37,7 @@ from kafSakai import Sakai
 from recscheduling import Recscheduling
 from kafBBUltra import BlackBoardUltra
 from quizAnalytics import QuizAnalytics
+from reach import Reach
 
 
 
@@ -72,6 +73,7 @@ class Common():
         self.webcast            = Webcast(self, driver)
         self.recscheduling      = Recscheduling(self, driver)
         self.quizAnalytics      = QuizAnalytics(self, driver)
+        self.reach              = Reach(self, driver)
         ### KAF ###
         self.kafGeneric         = KafGeneric(self, driver)
         self.blackBoard         = BlackBoard(self, driver)
