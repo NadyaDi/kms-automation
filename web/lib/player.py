@@ -1805,7 +1805,7 @@ class Player(Base):
 
     # @Author: Horia Cus
     # expectedNumberOfAttempts = int, How many attempts user has. Empty when user isn't able to retake the quiz again
-    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts='', location, embed):
+    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts='', location=enums.Location.ENTRY_PAGE, embed=False):
         #we verify if the "Continue" button specific for the Quiz "Welcome Screen" is present or not     
         if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
             writeToLog("INFO", "Continue button has been found in welcome screen")
