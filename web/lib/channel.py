@@ -162,7 +162,7 @@ class Channel(Base):
     CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG               = ('xpath', '//div[@class="alert alert-info endlessScrollAlert"]')
     CHANNEL_PENDING_TAB_SEARCH_BAR                      = ('xpath', '//input[@placeholder="Search in Pending" and @class="searchForm__text"]')
     CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG             = ('xpath', '//div[@class="message" and text()="Loading..."]')
-    CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem visible-v2ui hidden-phone")]')
+    #CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem visible-v2ui hidden-phone")]')
     CHANNEL_NO_RESULT_FILTER                            = ('xpath', "//div[contains(@class,'alert alert-info') and text()='No Media Found' or text()='No media found']")
     CHANNEL_NO_RESULT_FILTER_MODERATION                 = ('xpath', "//div[@id='js-categoryModerationTable-container']//div[contains(@class,'alert alert-info')]")
     CHANNEL_ENTRY_ID_CHECKBOX                           = ('xpath', "//input[@id='ENTRY_ID']")
@@ -174,6 +174,7 @@ class Channel(Base):
     CHANNEL_ENTRY_PARENT_CHECKBOX                       = ('xpath', "//input[@type='checkbox' and @title='ENTRY_NAME']") 
     CHANNEL_GO_TO_MEDIA_GALLERY_AFTER_UPLOAD            = ('xpath', '//a[@id="next" and text()="Go To Media Gallery"]')
     CHANNEL_PLAYLIST_ENTRY_NAME                         = ('xpath', "//span[@class='searchme' and text()='ENTRY_NAME']")
+    CHANNEL_CHANNEL_PAGE_TABLE_SIZE                     = ('xpath', '//li[contains(@class,"galleryItem isotope-item")]')
     #============================================================================================================
     
     #  @Author: Tzachi Guetta    
@@ -2698,7 +2699,7 @@ class Channel(Base):
             else:
                 writeToLog("INFO", "Some entries are present, we will verify the dictionaries")
                 
-        if self.clsCommon.myMedia.showAllEntries(searchIn, timeOut=120) == False:
+        if self.clsCommon.myMedia.showAllEntries(searchIn, timeOut=400) == False:
             writeToLog("INFO","FAILED to show all entries in Add to channel")
             return False
         
@@ -2837,7 +2838,7 @@ class Channel(Base):
     
     # @Author: Oded.berihon
     # Show all entries both in channel and category page    
-    def showAllEntriesInChannelCategoryPage(self, timeOut=35):
+    def showAllEntriesInChannelCategoryPage(self, timeOut=200):
         tmp_table_size = self.CHANNEL_CHANNEL_PAGE_TABLE_SIZE
         loading_message = self.CHANNEL_PENDING_TAB_LOADING_ENTRIES_MSG
         no_entries_page_msg = self.CHANNEL_PENDING_TAB_NO_MORE_MEDIA_MSG                       
