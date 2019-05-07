@@ -929,7 +929,29 @@ class Player(Base):
                             return False
                         
                 if qrPath == False:
-                    break
+                    # Add a redundancy for the quiz entries
+                    if quizEntry == True:
+                        # Verify that we didn't missed any qrPath by being in the Question Screen
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10, True) != False:
+                            writeToLog("INFO", "Still in the Question Screen and will continue to iterate through the video")
+                        else:
+                            # If we confirmed that we are not in a Question Screen, we will break
+                            break
+                        # If we were in the Question Screen, we will skip the screen and continue to take the QR codes
+                        sleep(3)
+                        # Resume the playing process by skipping the Question Screen
+                        if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the Skip for now button")
+                            return False
+                        
+                        # Make sure that we capture only the Slide Images
+                        if self.wait_visible(self.PLAYER_SLIDE_PRESENTED_IMAGE, 1.5, True) == False:
+                            writeToLog("INFO", "FAILED to displayed the Slide Images after dismissing the Question Screen")
+                            return False
+                        
+                        qrPath = None
+                    else:
+                        break
                     
                 QRPathList.append(qrPath)
                 qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
@@ -2712,8 +2734,9 @@ class Player(Base):
                                 
                                 elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
-                                    
-                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270} or hotspotLocation == {'x':439, 'y':270} or hotspotLocation == {'x':230, 'y':270}:
+                                
+                                # Allow any X location because the Y dictates if the hotspot is at the center or not
+                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 787, 'y': 419} or hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
@@ -2733,7 +2756,8 @@ class Player(Base):
                                 elif hotspotLocation == {'x': 6, 'y': 24}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
-                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270} or hotspotLocation == {'x':439, 'y':270} or hotspotLocation == {'x':230, 'y':270}:
+                                # Allow any X location because the Y dictates if the hotspot is at the center or not
+                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:

@@ -150,7 +150,7 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, before trim")
                 return
  
-            self.isExistQR = ["1", "4", "5", "8"];
+            self.isExistQR = ["1", "2", "4"];
             self.isAbsentQR = ["33", "55", "100", "99"];
             writeToLog("INFO","Step 10: Going to verify that the presented Slides matches with the Expected slides, before trim")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
@@ -166,7 +166,7 @@ class Test:
                 writeToLog("INFO","Step 11: FAILED to collect all the presented captions from the " + self.quizEntryName + " entrie's player, before trim")
                 return
  
-            self.isExist = ["Caption2search", "Caption7search", "Caption12search", "Caption14search"];
+            self.isExist = ["Caption2search", "Caption7search", "Caption14search"];
             self.isAbsent = ["Caption100search", "Caption32search"];
             writeToLog("INFO","Step 11: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, before trim")
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
@@ -198,7 +198,7 @@ class Test:
                 writeToLog("INFO","Step 15: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, after trim")
                 return
  
-            self.isExistQR = ["1", "2", "8", "9"];
+            self.isExistQR = ["1", "2", "9"];
             self.isAbsentQR = ["6", "7", "16", "12"];
             writeToLog("INFO","Step 16: Going to verify that the presented Slides matches with the Expected slides, after trim")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
@@ -214,7 +214,7 @@ class Test:
                 writeToLog("INFO","Step 17: FAILED to collect all the presented captions from the " + self.quizEntryName + " entrie's player, after trim")
                 return
 
-            self.isExist = ["Caption1search", "Caption7search", "Caption23search", "Caption28search"];
+            self.isExist = ["Caption1search", "Caption7search", "Caption23search"];
             self.isAbsent = ["Caption18search", "Caption14search", "Caption15search", "Caption17search"];
             writeToLog("INFO","Step 18: Going to verify that the presented captions for " + self.quizEntryName + " entry displays the expected ones, after trim")
             if self.common.player.compareLists(self.captionList, self.isExist, self.isAbsent, enums.PlayerObjects.CAPTIONS) == False:
