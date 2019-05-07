@@ -151,12 +151,16 @@ class Test:
                 writeToLog("INFO","Step 9: FAILED to collect " + self.quizEntryName + " entrie's QR codes from Slider, before clipping")  
                 return
                            
-            self.isExistQR = ["1", "2", "4"];
-            self.isAbsentQR = ["33", "55", "100", "99"];
+            self.isExistQR       = ["2", "4", "7"];
+            self.isExistQRSecond = ["3", "6", "9"];
+            self.isAbsentQR      = ["33", "55", "100", "99"];
             writeToLog("INFO","Step 10: Going to verify that the presented Slides matches with the Expected slides, before clipping")
             if self.common.player.compareLists(self.QRlist, self.isExistQR, self.isAbsentQR, enums.PlayerObjects.QR) == False:
-                writeToLog("INFO","Step 10: FAILED to verify that the presented Slides matches with the Expected slides, before clipping")
-                return
+                # Because we may have a QR code that couldn't be catch we add a redundancy
+                writeToLog("INFO","Step 10.1: FAILED to verify that the presented Slides matches with the Expected slides, while using the first list of QR Codes, before clipping")
+                if self.common.player.compareLists(self.QRlist, self.isExistQRSecond, self.isAbsentQR, enums.PlayerObjects.QR) == False:           
+                    writeToLog("INFO","Step 10.2: FAILED to verify that the presented Slides matches with the Expected slides, while using the second list of QR Codes, before clipping")
+                    return
                
             self.common.base.refresh()
             sleep(8)
