@@ -274,18 +274,37 @@ class Player(Base):
                                 writeToLog("INFO", "FAILED to click on the Skip for now button")
                                 return False
                             
-                            # Make sure that we capture only the Slide Images
+                            # Make sure that we capture only the Caption Text
                             if self.wait_visible(self.PLAYER_CAPTIONS_TEXT, 1.5, True) == False:
                                 writeToLog("INFO", "FAILED to displayed the Captions after dismissing the Question Screen")
                                 return False                
     
                     if captionText == False:
-                        writeToLog("INFO","FAILED to extract caption from player")
-                        return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
-    
+                        if quizEntry == True:
+                            # Verify that we didn't missed any captionText by being in the Question Screen
+                            if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10, True) != False:
+                                writeToLog("INFO", "Still in the Question Screen and will continue to iterate through the video")
+                            else:
+                                # If we confirmed that we are not in a Question Screen, we will break
+                                break
+                            # If we were in the Question Screen, we will skip the screen and continue to take the QR codes
+                            sleep(3)
+                            # Resume the playing process by skipping the Question Screen
+                            if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                                writeToLog("INFO", "FAILED to click on the Skip for now button")
+                                return False
+                            
+                            # Make sure that we capture only the Caption Text
+                            if self.wait_visible(self.PLAYER_CAPTIONS_TEXT, 1.5, True) == False:
+                                writeToLog("INFO", "FAILED to displayed the Captions after dismissing the Question Screen")
+                                return False 
+                            
+                            captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT, 1).text
+                        else:
+                            break
                     
                     captionsList.append(captionText)
-                    playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                    playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1.5)
                     sleep(0.3)
                 except StaleElementReferenceException:
                     pass    
