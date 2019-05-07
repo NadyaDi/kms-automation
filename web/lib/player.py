@@ -1458,8 +1458,16 @@ class Player(Base):
             if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
                 self.removeTouchOverlay()
                 if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
-                    writeToLog("INFO", "FAILED to click on the scrubber done bubble")
-                    return False
+                    writeToLog("INFO", "FAILED to click on the scrubber done bubble during the first attempt")
+                    # Verify if a Question Screen it's still displayed, if so, we will close it by clicking on the skip / continue button
+                    if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) != False:
+                        if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to move to the done bubble")
+                            return False
+                        
+                    if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the scrubber done bubble during the second attempt")
+                        return False
         
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
@@ -2515,8 +2523,9 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
-        # Verify if the user got stucked inside a Question Screen
-        if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 2, True) != False:
+        # Verify if the UI remained blocked inside a Question Screen
+        # First attempt ( quick )
+        if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) != False:
             if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to proceed to the Almost Done Screen")
                 return False
@@ -2524,8 +2533,17 @@ class Player(Base):
         # We verify that the Almost Completed screen is presented
         almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
         if self.wait_element(almostDoneScreen, timeOut) == False:
-            writeToLog("INFO", "FAILED, the Almost Completed Screen was not displayed after resuming the Quiz")
-            return False
+            writeToLog("INFO", "The Almost Completed Screen was not displayed during the first attempt")
+            # Add a redundancy for the Question Screen verification
+            # Second attempt ( after the timeOut )
+            if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) != False:
+                if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to proceed to the Almost Done Screen, during the second try")
+                    return False
+                
+            if self.wait_element(almostDoneScreen, timeOut) == False:
+                writeToLog("INFO", "FAILED, the Almost Completed Screen was not displayed after resuming the Quiz neither after the second try")
+                return False
         
         # We verify that the score is not present
         description = self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_SUB_TEXT, 10).text
@@ -2661,11 +2679,10 @@ class Player(Base):
     
     
     # @Author: Horia Cus
-    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
-    # location=enums.Location.ENTRY_PAGE
+    # This function will iterate through the entry, where it will take all the style properties and links for each presented hotspot
+    # In the end it will return a List that contains the presented hotspot details
     # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
-    # To be Developed: Cue Point Verification interval
-    def hotspotVerification(self, hotspotsDict, location=enums.Location.ENTRY_PAGE, embed=False):        
+    def returnPresentedHotspotDetails(self, location=enums.Location.ENTRY_PAGE, embed=False):
         if self.verifyAndClickOnPlay(location, 30, embed) == False:
             return False
         
@@ -2888,16 +2905,40 @@ class Player(Base):
                     # This try catch help us when the element details are no longer available in DOM
                     except StaleElementReferenceException:
                         pass
-                
-        # Verify the expected hotspots properties with the presented hotspots properties
-        for hotspotNumber in hotspotsDict:
-            # Take the details for the iterated hotspot from the given dictionary
-            currentExpectedList = hotspotsDict[hotspotNumber]
             
-            if len(presentedHotspotsDetailsList) < len(hotspotsDict):
-                writeToLog("INFO", "FAILED, a number of minimum " + str(len(hotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found")
+        writeToLog("INFO", "A list with all the presented hotspots has been returned")
+        return presentedHotspotsDetailsList
+
+
+    # @Author: Horia Cus
+    # expectedHotspotsDict must contain the following structure {'1': list} list = ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
+    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
+    # presentedHotspotsDetailsList is took using the returnPresentedHotspotDetails function
+    # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
+    # The function will verify that the expectedHotspotDict matches with the presentedHotspotDetailsList
+    def hotspotVerification(self, expectedHotspotsDict, presentedHotspotsDetailsList):  
+        # Verify that the same number of hotspots that were expected are actually presented
+        if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
+            writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the first attempt")
+            # Add a redundancy step, where we take for the second time the presented hotspot details
+            self.driver.refresh()
+            sleep(15)
+            presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
+            
+            # Verify that we received a list with the presented hotspots
+            if type(presentedHotspotsDetailsList) is not list:
+                writeToLog("INFO", "FAILED to take the presented hotspot details list")
                 return False
             
+            if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
+                writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the second attempt")
+                return False
+        
+        # Verify the expected hotspots properties with the presented hotspots properties
+        for hotspotNumber in expectedHotspotsDict:
+            # Take the details for the iterated hotspot from the given dictionary
+            currentExpectedList = expectedHotspotsDict[hotspotNumber]
+                        
             # Verify the expected hotspots with presented hotspots
             for x in range(0, len(presentedHotspotsDetailsList)):
                 currentPresentedList = presentedHotspotsDetailsList[x]
@@ -2933,7 +2974,7 @@ class Player(Base):
                     
                     # Verify that the expected hotspot details, matches with the presented hotspot details
                     if currentExpectedList != currentPresentedList:
-                        # Create a list with the inconsitencies between the expected and presented hotspots
+                        # Create a list with the inconsistencies between the expected and presented hotspots
                         inconsitencyList = []
                         
                         try:
@@ -2942,9 +2983,9 @@ class Player(Base):
                                     inconsitencyList.append("FAILED, Expected " + str(currentExpectedList[x]) + " \n Presented " + str(currentPresentedList[x]) + " \n")
                             
                             if len(inconsitencyList) > 1:
-                                inconsitencies = "\n".join(inconsitencyList)
+                                inconsistencies = "\n".join(inconsitencyList)
                             else:
-                                inconsitencies = inconsitencyList[0]
+                                inconsistencies = inconsitencyList[0]
                             
                         except Exception:
                             writeToLog("INFO", "FAILED to take the inconsistency list")
@@ -2952,7 +2993,7 @@ class Player(Base):
                         presentedHotspotDetailsString = "".join(str(currentPresentedList))
                         expectedHotspotDetailsString  = "".join(str(currentExpectedList))
                         writeToLog("INFO", "LIST for presented hotspot: " + presentedHotspotDetailsString + "\n LIST For expected hotspot: "  + expectedHotspotDetailsString)
-                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed for " + currentPresentedList[0] +" hotspot " + str(inconsitencies))
+                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed for " + currentPresentedList[0] +" hotspot " + str(inconsistencies))
                         return  False
                     else:
                         writeToLog("INFO", "The hotspot:" + currentExpectedList[0] + " has been successfully presented")
@@ -2960,13 +3001,13 @@ class Player(Base):
                 
                 # Verify that the expected hotspot was found within the number of available presented hotspots
                 if x + 1 == len(presentedHotspotsDetailsList):
-                    writeToLog("INFO", "FAILED to find the " + currentExpectedList[0] + " inside the presented hotspot list: " + hotspots)
+                    writeToLog("INFO", "FAILED to find the " + currentExpectedList[0] + " inside the presented hotspot list")
                     return False
         
         # Create a list with the successfully verified hotspots
         expectedHotspotNameList = []
-        for hotspotNumber in hotspotsDict:
-            expectedHotspotNameList.append(hotspotsDict[hotspotNumber][0])
+        for hotspotNumber in expectedHotspotsDict:
+            expectedHotspotNameList.append(expectedHotspotsDict[hotspotNumber][0])
         
         if len(expectedHotspotNameList) > 1:   
             hotspots = "\n".join(expectedHotspotNameList)

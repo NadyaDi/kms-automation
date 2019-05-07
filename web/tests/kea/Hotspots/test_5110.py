@@ -117,9 +117,10 @@ class Test:
                 return
             else:
                 i += 1
-                
+            
+            presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step " + str(i) + ": Going to verify the hotspots from the " + self.entryName + " entry, while using the second Hotspot location")
-            if self.common.player.hotspotVerification(self.hotspotsDictChanged, enums.Location.ENTRY_PAGE, embed=False) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to verify the hotspots from the " + self.entryName + " entry, while using the second Hotspot location")
                 return
             ##################################################################
