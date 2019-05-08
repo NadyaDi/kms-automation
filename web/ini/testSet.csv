@@ -332,7 +332,7 @@ test_4622,0,1,0,0,KEA Trim Quiz with caption and slide
 test_4742,1,0,0,0,KEA - Quiz Details section in KEA Editor
 test_4746,1,0,0,0,KEA - Quiz Details section in Entry Page
 test_4746,1,0,0,0,Quiz - Details section in Entry Page
-test_4757,1,0,0,0,Quiz - Details - Download functionality
+test_4757,0,1,0,0,Quiz - Details - Download functionality
 test_4758,1,0,0,0,Quiz - Scores section in KEA Page
 test_4759,1,0,0,0,Quiz - Scores section in Entry Page - Enabled
 test_4766,1,0,0,0,Quiz - Experience section in KEA Page
@@ -351,7 +351,7 @@ test_4791,1,0,0,0,Quiz - Submitted Quiz 0% score with Media Owner
 test_4792,1,0,0,0,Quiz - Submitted Quiz 50% score with Media Owner
 test_4804,1,0,0,0,Quiz - Submitted Quiz in Channel with Normal User
 test_4805,1,0,0,0,Quiz - Submitted Quiz with Media Owner and reopen it with Normal user ( New state for Quiz)
-test_4806,1,0,0,0,Quiz - Details Section - Download functionality - Anonymous User in KMS
+test_4806,0,1,0,0,Quiz - Details Section - Download functionality - Anonymous User in KMS
 test_4807,1,0,0,0,Quiz - Answer Quiz (without submitting it) with KMS Anonymous and Refresh
 test_4808,1,0,0,0,Quiz - Submitted Quiz for Audio Entry
 test_4809,1,0,0,0,Quiz - Resumed Quiz for Audio Entry
@@ -415,7 +415,7 @@ test_5161,1,0,0,0,Quiz - Analytics - Export quiz answers - Allow multiple attemp
 test_5163,1,0,0,0,Quiz - Analytics - Export quiz questions - after clearing all attempts
 test_5164,1,0,0,0,Quiz - Analytics - Export quiz answers - after clearing all attempts
 test_4908,1,0,0,0,Editor: Clip video entry (with Slides and Captions)
-test_4913,1,0,0,0,Editor: Clip Quiz entry (with Slides and Captions)
+test_4913,0,1,0,0,Editor: Clip Quiz entry (with Slides and Captions)
 test_4937,0,1,0,0,Editor: Reset timeline functionality
 test_4938,0,1,0,0,Editor: Redo timeline functionality
 test_4939,0,1,0,0,Editor: Undo timeline functionality
@@ -464,6 +464,7 @@ test_5124,1,0,0,0,Hotspots - Hotspots list - General UI
 test_5141,1,0,0,0,Hotspots - Hotspot with all the Link types ( Web Pages Time Locations)
 test_5151,1,0,0,0,Hotspots - Change Hotspot Location using Advanced Settings
 test_5152,1,0,0,0,Hotspots - Change Hotspot Size using Advanced Settings
+test_5179,1,0,0,0,Hotspots - Edit hotspots start and end time Advanced settings
 test_5122,1,0,0,0,Editor - Create comments and sub comments with time stamp and then Trimming the Entry
 test_3273,0,1,0,0,Slide Deck Upload
 test_3274,0,1,0,0,Slide Deck Upload-delete slides
