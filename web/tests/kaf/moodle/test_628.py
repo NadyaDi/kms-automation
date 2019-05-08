@@ -129,7 +129,7 @@ class Test:
                 return    
              
             writeToLog("INFO","Step 11: Going to create embed, not assignment submission - from media gallery")    
-            if self.common.moodle.createEmbedActivity(self.entryName2, self.activityName2, embedFrom=enums.Location.MEDIA_GALLARY,chooseMediaGalleryinEmbed=True, mediaGalleryName=self.galleryName, isAssignmentEnable=True) == False:
+            if self.common.moodle.createEmbedActivity(self.entryName2, self.activityName2, embedFrom=enums.Location.MEDIA_GALLARY,chooseMediaGalleryinEmbed=False, mediaGalleryName=self.galleryName, isAssignmentEnable=True) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 11: FAILED to create embed, not assignment submission - from media gallery")
                 return     
