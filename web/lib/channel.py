@@ -220,9 +220,15 @@ class Channel(Base):
                 return False
             
             if self.clickDeleteChannel() == False:
-                writeToLog("INFO","FAILED to click on Delete channel button (at Edit channel page)")
-                return False
-            sleep(3)
+                # Add a redundancy step in order to verify if we were in the edit page and that the delete button is present
+                if self.wait_element(self.EDIT_CHANNEL_DELETE, 10, True) == False:
+                    writeToLog("INFO", "The Channel Delete button was not found")
+                    return False
+                else:
+                    if self.click(self.EDIT_CHANNEL_DELETE, 1, True) == False:
+                        writeToLog("INFO","FAILED to click on Delete channel button (at Edit channel page)")
+                        return False
+            sleep(4.5)
             
             if self.click(self.EDIT_CHANNEL_DELETE_CONFIRM) == False:
                 writeToLog("INFO","FAILED to click on Delete confirmation button")

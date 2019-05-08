@@ -163,6 +163,8 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_LOCATION_Y                                            = ('xpath', '//input[@id="position-y"]')
     KEA_HOTSPOTS_FORM_SIZE_WIDTH                                            = ('xpath', '//input[@id="size-width"]')
     KEA_HOTSPOTS_FORM_SIZE_HEIGHT                                           = ('xpath', '//input[@id="size-height"]')
+    KEA_HOTSPOTS_FORM_START_TIME                                            = ('xpath', '//input[@id="startTime"]')
+    KEA_HOTSPOTS_FORM_END_TIME                                              = ('xpath', '//input[@id="endTime"]')
     KEA_HOTSPOTS_LIST_HEADER                                                = ('xpath', "//div[@class='panel__header']")
     KEA_HOTSPOTS_LIST_CONTENT                                               = ('xpath', "//div[@class='panel__content']")
     KEA_HOTSPOTS_LIST_PANEL_HOTSPOT                                         = ('xpath', "//kea-hotspots-list-item[contains(@class,'ng-star-inserted')]")
@@ -4021,7 +4023,12 @@ class Kea(Base):
         # Verify that we are in the Hotspot Section
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
             writeToLog("INFO", "FAILED To verify that we are in the Hotspots Section")
-            return False        
+            return False     
+        
+        # Real Time marker must be at second zero in order to proper take the information needed from the Blank Hotspot
+        if self.setRealTimeMarkerToTime('00:00') == False:
+            writeToLog("INFO", "FAILED to set the real time marker at the beginning of the timeline")
+            return False
         
         # Create a Blank Hotspot in order to take the properties that we need
         if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 15, True) == False:
@@ -5243,4 +5250,67 @@ class Kea(Base):
             return False
         
         writeToLog("INFO", "Hotspot Advanced Setting Screen has been successfully opened for: " + hotspotName)
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function changes the time stamp location for an existing hotspotName
+    # hotspotName must contain the entire name of the desired hotspot
+    # You may modify only the start time or endtime or even both
+    # startTime and endTime must have the following format mm:ss
+    def changeHotspotTimeStamp(self, hotspotName, startTime, endTime):
+        self.switchToKeaIframe()
+        
+        # Trigger the advanced settings screen for the desired hotspotName
+        if self.openHotspotAdvancedSettings(hotspotName) == False:
+            writeToLog("INFO", "FAILED to enter in the Hotspot Advanced Screen for: " + hotspotName + " hotspot")
+            return False
+        
+        if startTime != '':
+            # Select the Start Time input field
+            if self.click(self.KEA_HOTSPOTS_FORM_START_TIME, 1, True) == False:
+                writeToLog("INFO", "FAILED to highlight the start time input field from the Advanced Settings screen for hotspot: " + hotspotName)
+                return False
+
+            # Select the presented Start Time text
+            if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                writeToLog("INFO", "FAILED to select the presented start time text from the input field")
+                return False
+            
+            # Insert the new desired Start Time inside the input field
+            try:
+                ActionChains(self.driver).send_keys(startTime).pause(0.2).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to set the start time for " + hotspotName + " at: " + startTime)
+                return False
+        
+        if endTime != '':
+            # Select the End Time input field
+            if self.click(self.KEA_HOTSPOTS_FORM_END_TIME, 1, True) == False:
+                writeToLog("INFO", "FAILED to highlight the End time input field from the Advanced Settings screen for hotspot: " + hotspotName)
+                return False
+
+            # Select the presented End Time text
+            if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                writeToLog("INFO", "FAILED to select the presented End time text from the input field")
+                return False
+
+            # Insert the new desired End Time inside the input field
+            try:
+                ActionChains(self.driver).send_keys(endTime).pause(0.2).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to set the End time for " + hotspotName + " at: " + endTime)
+                return False
+            
+        # Save the new time stamp location for the desired hotspotName
+        if self.saveHotspotChanges(settingsChanges=True) == False:
+            writeToLog("INFO", "FAILED to save the time stamp changes for the " + hotspotName + "  hotspot")
+            return False
+                
+        if startTime == '':
+            startTime = 'unchanged'
+        if endTime == '':
+            endTime = 'unchanged'
+        
+        writeToLog("INFO", "The hotspot: " + hotspotName + " time stamp location has been successfully set to: start time: " + startTime + " end time: " + endTime )
         return True
