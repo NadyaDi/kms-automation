@@ -98,7 +98,7 @@ class Test:
             
             presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails() 
             writeToLog("INFO","Step 6: Going to verify the hotspots from the " + self.entryName + " entry, before editing the " + self.hotspotOne[0])
-            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 6: FAILED to verify the hotspots from the " + self.entryName + " entry, before editing the " + self.hotspotOne[0])
                 return
                
@@ -125,7 +125,7 @@ class Test:
             
             presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step 11: Going to verify the hotspots from the " + self.entryName + " entry, after editing the " + self.hotspotOne[0])
-            if self.common.player.hotspotVerification(self.hotspotsDictUpdated, presentedHotspotsDetailsList) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDictUpdated, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 11: FAILED to verify the hotspots from the " + self.entryName + " entry, after editing the " + self.hotspotOne[0])
                 return
             ##################################################################

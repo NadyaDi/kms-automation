@@ -300,8 +300,13 @@ class MyMedia(Base):
     def clickEntryAfterSearchInMyMedia(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
-                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
-                return False
+                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "' during the first try")
+                self.getSearchBarElement().send_keys(Keys.ENTER)
+                sleep(1)
+                self.clsCommon.general.waitForLoaderToDisappear()
+                if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
+                    writeToLog("INFO","FAILED to click on Entry: '" + entryName + "' at the second try")
+                    return False
         else:
             result = self.getResultAfterSearch(entryName)
             if result == False:
@@ -1120,7 +1125,7 @@ class MyMedia(Base):
                 return False
 
         if self.wait_visible(tmp_entry_name, 30) == False:
-            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "' via my media page thumbnail")
             return False
 
         sleep(2)
