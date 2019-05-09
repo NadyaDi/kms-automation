@@ -132,7 +132,7 @@ class Test:
                 
             presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step 13: Going to verify that the hotspots from the " + self.entryName + " entry are kept, while Hotspots Module is disabled")
-            if self.common.player.hotspotVerification(self.hotspotOneDict, presentedHotspotsDetailsList) == False:
+            if self.common.player.hotspotVerification(self.hotspotOneDict, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 13: FAILED to display existing hotspots for the " + self.entryName + " entry, while the Hotspots Module is disabled")
                 return
             self.common.base.switch_to_default_content()

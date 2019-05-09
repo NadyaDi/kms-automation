@@ -109,7 +109,7 @@ class Test:
             
             presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails() 
             writeToLog("INFO","Step 9: Going to verify the hotspots from the " + self.entryName + " entry, while having special hotspot configurations")
-            if self.common.player.hotspotVerification(hotspotSpecialDict, presentedHotspotsDetailsList) == False:
+            if self.common.player.hotspotVerification(hotspotSpecialDict, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 9: FAILED to verify the hotspots from the " + self.entryName + " entry, while having special hotspot configurations")
                 return
                 

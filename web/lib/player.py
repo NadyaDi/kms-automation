@@ -1545,7 +1545,7 @@ class Player(Base):
                 return False
             
         sleep(0.5)
-        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 15) == False:
+        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 20) == False:
             writeToLog("INFO", "FAILED to wait until the loading spinner disappeared")
             return False
         sleep(0.1)
@@ -2776,12 +2776,48 @@ class Player(Base):
                             
                             writeToLog("INFO", "The size of: " + hotspotTitle + " is: width: " + str(hotspotWidth) + " height: " + str(hotspotHeight) + " resulting in: " + hotspotContainerSize.value)
                             
-                            hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
-                            hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
-                            hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
-                            hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
+                            # Font color it will be returned in a list that contains the Decimals
+                            try:
+                                # Get the string details from the Font Color RGB
+                                hotspotStyleFontColorRGB            = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('color:')+1:hotspotStyleProperties.index('border-radius:')]).replace('rgb','').split(',')
+                                # Take the R,G,B numbers
+                                R,G,B                               = hotspotStyleFontColorRGB[0].replace('(',''), hotspotStyleFontColorRGB[1].replace('(',''), hotspotStyleFontColorRGB[2].replace('(','')
+                                # Make sure that the R,G,B are returned integer
+                                R,G,B                               = int(re.search(r'\d+', R).group()), int(re.search(r'\d+', G).group()), int(re.search(r'\d+', B).group())
+                                # Create a Tuple with the R,G,B integers
+                                hotspotStyleFontColorRGBTuple       = (R,G,B)
+                                # Convert the R,G,B Tuple to HEX
+                                hotspotStyleFontColorHEX            = ('#%02x%02x%02x' % hotspotStyleFontColorRGBTuple).upper()
+                            except Exception:
+                                hotspotStyleFontColorHEX            = ''
                             
-                            hotspotLocation             = presentedHotspots[x].location
+                            # Return empty string if the default value has been found
+                            if hotspotStyleFontColorHEX == '#000000':
+                                hotspotStyleFontColorHEX = ''
+                                
+                            hotspotStyleFontSize                    = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
+                            hotspotStyleBorderRadius                = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
+                        
+                            try:
+                                # Get the string details form the Background Color RGB
+                                hotspotStyleBackgroundColorRGB      = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')]).replace('rgb','').split(',')
+                                # Take the R,G,B numbers
+                                R,G,B                               = hotspotStyleBackgroundColorRGB[0].replace('(',''), hotspotStyleBackgroundColorRGB[1].replace('(',''), hotspotStyleBackgroundColorRGB[2].replace('(','')
+                                # Make sure that the R,G,B are returned integer
+                                R,G,B                               = int(re.search(r'\d+', R).group()), int(re.search(r'\d+', G).group()), int(re.search(r'\d+', B).group())
+                                # Create a Tuple with the R,G,B integers
+                                hotspotStyleBackgroundColorRGBTuple       = (R,G,B)
+                                # Conver the RGB Tuple to HEX
+                                hotspotStyleBackgroundColorHEX      = ('#%02x%02x%02x' % hotspotStyleBackgroundColorRGBTuple).upper()
+                            except Exception:
+                                hotspotStyleBackgroundColorHEX      = ''
+                                
+                            # Return empty string if the default value has been found
+                            if hotspotStyleBackgroundColorHEX == '#000000':
+                                hotspotStyleBackgroundColorHEX = ''
+                            
+                            hotspotLocation                     = presentedHotspots[x].location
+                            
                             # Verify the location for normal hotspots
                             if hotspotTitle.count('Duplicated') == 0:
                                 if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2}:
@@ -2923,7 +2959,7 @@ class Player(Base):
                                     continue
 
                             # Create a list that contains all the details necessary for the hotspot verification
-                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius), hotspotContainerSize]
+                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColorHEX, hotspotStyleBackgroundColorHEX, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius), hotspotContainerSize]
                             presentedHotspotsDetailsList.append(presentedHotspotDetails)
                             presentedHotspotsNameList.append(hotspotTitle)
                             hotspots = "\n".join(presentedHotspotsNameList)
@@ -2954,7 +2990,8 @@ class Player(Base):
     # presentedHotspotsDetailsList is took using the returnPresentedHotspotDetails function
     # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
     # The function will verify that the expectedHotspotDict matches with the presentedHotspotDetailsList
-    def hotspotVerification(self, expectedHotspotsDict, presentedHotspotsDetailsList):  
+    # if doubleCheck = True, if at the first try, the function returned false, we will re-take all the presented hotspots and verify with the expected hotspots for the second time
+    def hotspotVerification(self, expectedHotspotsDict, presentedHotspotsDetailsList, doubleCheck=False):  
         # Verify that the same number of hotspots that were expected are actually presented
         if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
             writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the first attempt")
@@ -2985,12 +3022,14 @@ class Player(Base):
                 if currentExpectedList[0] == currentPresentedList[0]:                    
                     # Set to the list the default value for Font Color if it wasn't set in hotspotDict
                     if currentExpectedList[6] == '':
-                        currentExpectedList.insert(6, 'white')
+                        # During the returnPresentedHotspotDetails, the Font Color it's returned as empty string if the default value has been used
+                        currentExpectedList.insert(6, '')
                         currentExpectedList.pop(7)
                     
                     # Set to the list the default value for Background Color if it wasn't set in hotspotDict
                     if currentExpectedList[7] == '':
-                        currentExpectedList.insert(7, 'rgba(0,0,0,0.6)')
+                        # During the returnPresentedHotspotDetails, the Background Color it's returned as empty string if the default value has been used
+                        currentExpectedList.insert(7, '')
                         currentExpectedList.pop(8)
                     
                     # Set to the list the default value for Font Size if it wasn't set in hotspotDict
@@ -3012,6 +3051,21 @@ class Player(Base):
                     
                     # Verify that the expected hotspot details, matches with the presented hotspot details
                     if currentExpectedList != currentPresentedList:
+                        
+                        # Add a second step where we will re take the presented hotspots and compare with the expected ones
+                        if doubleCheck == True:
+                            writeToLog("INFO", "There was an inconsistency between the first presented hotspots and the expected hotspots, double checking...")
+                            self.driver.refresh()
+                            sleep(15)
+                            presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
+                            
+                            if self.hotspotVerification(expectedHotspotsDict, presentedHotspotsDetailsList) == True:
+                                writeToLog("INFO", "The presented hotspots matches with the expected hotspots after the double check")
+                                return True
+                            else:
+                                writeToLog("INFO", "FAILED, the presented hotspots didn't matched with the expected ones after the double check")
+                                return False
+                        
                         # Create a list with the inconsistencies between the expected and presented hotspots
                         inconsitencyList = []
                         

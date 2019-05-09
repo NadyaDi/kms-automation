@@ -93,8 +93,15 @@ class EntryPage(Base):
         self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName)
         # Wait page load - wait for entry title
         if self.wait_visible(tmp_entry_name, 30) == False:
-            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
-            return False
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "' during the first try")
+            # Because the search may have not be triggered, we added this redundancy step
+            self.clsCommon.myMedia.getSearchBarElement().send_keys(Keys.ENTER)
+            sleep(1)
+            self.clsCommon.general.waitForLoaderToDisappear()
+            self.clsCommon.myMedia.clickEntryAfterSearchInMyMedia(entryName)
+            if self.wait_visible(tmp_entry_name, 20) == False:
+                writeToLog("INFO","FAILED to enter entry page: '" + entryName + "' during the second try")
+                return False
         
         return True
         
