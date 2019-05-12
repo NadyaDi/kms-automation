@@ -68,10 +68,10 @@ class Test:
             self.startDateForCreateEvent = datetime.datetime.now().strftime("%d/%m/%Y")
             self.endDate = datetime.datetime.now().strftime("%d/%m/%Y")
 
-            self.startEventTime = time.time() + (60*60)
+            self.startEventTime = time.time() + 4*(60*60)
             self.startEventTime = time.strftime("%I:%M%p",time.localtime(self.startEventTime))
              
-            self.endTime = time.time() + 2*(60*60)
+            self.endTime = time.time() + 5*(60*60)
             self.endTime = time.strftime("%I:%M%p",time.localtime(self.endTime))
             self.event1 = SechdeuleEvent(self.eventTitle1, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, "True")
             self.eventWithConflict = SechdeuleEvent(self.eventTitle2, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, "True")
