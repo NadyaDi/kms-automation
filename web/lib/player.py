@@ -2743,6 +2743,10 @@ class Player(Base):
                             # Take the presented hotspot details for the current iterated hotspot
                             hotspotStartTime            = self.returnEntryCurrentTimeInSeconds()
                             
+                            # Because the entry current time may have a delay, we allow that the first second to be changed to zero
+                            if hotspotStartTime == 1:
+                                hotspotStartTime = 0
+                            
                             hotspotTitle                = presentedHotspots[x].text             
                             hotspotStyleProperties      = presentedHotspots[x].get_attribute('style').split()
                             
@@ -2820,14 +2824,14 @@ class Player(Base):
                             
                             # Verify the location for normal hotspots
                             if hotspotTitle.count('Duplicated') == 0:
-                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2}:
+                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2} or hotspotLocation == {'x': 786, 'y':0}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
-                                elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1}:
+                                elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1} or hotspotLocation == {'x': 6, 'y':0}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                 
                                 # Allow any X location because the Y dictates if the hotspot is at the center or not
-                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270}:
+                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270} or hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 269}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 787, 'y': 419} or hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
@@ -2848,7 +2852,7 @@ class Player(Base):
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
                                 # Allow any X location because the Y dictates if the hotspot is at the center or not
-                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270}:
+                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270} or hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 269}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
@@ -2896,6 +2900,7 @@ class Player(Base):
                                     hotspotLink = self.clsCommon.base.driver.current_url
                                     self.driver.close()
                                     self.driver.switch_to.window(handles[0])
+                                    self.switch_to_default_content()
                                     self.verifyAndClickOnPlay(location, 2, embed)
                                 except Exception:
                                     writeToLog("INFO", "FAILED to take the presented link for " + hotspotTitle)
@@ -2996,9 +3001,18 @@ class Player(Base):
         if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
             writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the first attempt")
             # Add a redundancy step, where we take for the second time the presented hotspot details
+            
+            # Switch to the default content in order to exit any other iframe
             self.switch_to_default_content()
-            self.driver.refresh()
-            sleep(20)
+            # Take the entry page URL
+            self.entryPageURL = self.clsCommon.base.driver.current_url
+            # Navigate to the Home page in order to clean the elements
+            self.clsCommon.navigateTo(enums.Location.HOME)
+            sleep(5)
+            # Re navigate to the entry page using a direct link
+            self.clsCommon.base.navigate(self.entryPageURL)
+            sleep(15)
+            # Re take the presented hotspots
             presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
             
             # Verify that we received a list with the presented hotspots
@@ -3058,8 +3072,17 @@ class Player(Base):
                         # Add a second step where we will re take the presented hotspots and compare with the expected ones
                         if doubleCheck == True:
                             writeToLog("INFO", "There was an inconsistency between the first presented hotspots and the expected hotspots, double checking...")
-                            self.driver.refresh()
+                            # Switch to the default content in order to exit any other iframe
+                            self.switch_to_default_content()
+                            # Take the entry page URL
+                            self.entryPageURL = self.clsCommon.base.driver.current_url
+                            # Navigate to the Home page in order to clean the elements
+                            self.clsCommon.navigateTo(enums.Location.HOME)
+                            sleep(5)
+                            # Re navigate to the entry page using a direct link
+                            self.clsCommon.base.navigate(self.entryPageURL)
                             sleep(15)
+                            # Re take the presented hotspots
                             presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
                             
                             if self.hotspotVerification(expectedHotspotsDict, presentedHotspotsDetailsList) == True:

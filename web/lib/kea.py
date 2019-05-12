@@ -3305,8 +3305,10 @@ class Kea(Base):
         # Navigate to the Hotspot tab if needed
         if openHotspotsTab == True:
             if self.launchKEATab('', enums.keaTab.HOTSPOTS) == False:
-                writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab")
-                return False
+                writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab during the first try")
+                if self.launchKEATab('', enums.keaTab.HOTSPOTS) == False:
+                    writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab during the second try")
+                    return False
         
         # Create all the desired Hotspots
         for hotspotNumber in hotspotsDict:
@@ -3522,9 +3524,19 @@ class Kea(Base):
             if len(hotspotDetails) >= 3:
                 if hotspotDetails[2] != None or hotspotDetails[3] != None:
                     if creationType == enums.keaHotspotCreationType.VIDEO_PAUSED:
-                        if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
-                            writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
-                            return False
+                        if self.driver.capabilities['browserName'] == 'firefox':
+                            if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                                writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Firefox Browser")
+                                return False
+                        else:
+                            if creationType == enums.keaHotspotCreationType.VIDEO_PLAYING:
+                                if self.changeHotspotTimeStamp(hotspotDetails[0], '', hotspotDetails[3]) == False:
+                                    writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser on a played video")
+                                    return False
+                            else:             
+                                if self.changeHotspotTimeStamp(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                                    writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser")
+                                    return False
                         
                         # Move back the real time marker to the initial position
                         if self.setRealTimeMarkerToTime('00:00') == False:
@@ -4151,19 +4163,30 @@ class Kea(Base):
                         writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
                         return False
             
-            # Verify that the presented hotspot is presented at the expected X location
+            # Verify that the presented hotspot is presented at the expected X location           
             if presentedHotspotXValue != expectedHotspotXValue:
                 # Allow a five px inconsistency
+                # With positive value
                 for x in range(0,7):
                     if presentedHotspotXValue == expectedHotspotXValue + x:
                         break
                     
                     if x >= 5:
                         if presentedHotspotXValue + 1 != expectedHotspotXValue:
-                            writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
-                            return False
-                        else:
-                            break
+                            writeToLog("INFO", "The x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
+                            
+                            # With negative value
+                            for k in range(0,7 ):
+                                if presentedHotspotXValue == expectedHotspotXValue - k:
+                                    break
+                                
+                                if k >= 5:
+                                    if presentedHotspotXValue != expectedHotspotXValue - 1:
+                                        writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
+                                        return False
+                                    else:
+                                        break
+                        break
             
             # Verify that the current iterated hotspot is displayed on a higher Y value than the previous hotspot
             if presentedHotspotYValue <= previousYValue:
@@ -5262,6 +5285,13 @@ class Kea(Base):
     def changeHotspotTimeStamp(self, hotspotName, startTime, endTime):
         self.switchToKeaIframe()
         
+        # Convert the integer seconds to a mm:ss string format
+        if type(startTime) is int:
+            startTime = time.strftime('%M:%S', time.gmtime(startTime))
+        
+        if type(endTime) is int:
+            endTime = time.strftime('%M:%S', time.gmtime(endTime))
+        
         # Trigger the advanced settings screen for the desired hotspotName
         if self.openHotspotAdvancedSettings(hotspotName) == False:
             writeToLog("INFO", "FAILED to enter in the Hotspot Advanced Screen for: " + hotspotName + " hotspot")
@@ -5272,15 +5302,17 @@ class Kea(Base):
             if self.click(self.KEA_HOTSPOTS_FORM_START_TIME, 1, True) == False:
                 writeToLog("INFO", "FAILED to highlight the start time input field from the Advanced Settings screen for hotspot: " + hotspotName)
                 return False
-
-            # Select the presented Start Time text
-            if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
-                writeToLog("INFO", "FAILED to select the presented start time text from the input field")
-                return False
+            sleep(0.2)
+            
+            if self.driver.capabilities['browserName'] == 'firefox':
+                # Select the presented Start Time text
+                if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                    writeToLog("INFO", "FAILED to select the presented start time text from the input field")
+                    return False
             
             # Insert the new desired Start Time inside the input field
             try:
-                ActionChains(self.driver).send_keys(startTime).pause(0.2).perform()
+                ActionChains(self.driver).send_keys(startTime).pause(0.4).perform()
             except Exception:
                 writeToLog("INFO", "FAILED to set the start time for " + hotspotName + " at: " + startTime)
                 return False
@@ -5290,15 +5322,17 @@ class Kea(Base):
             if self.click(self.KEA_HOTSPOTS_FORM_END_TIME, 1, True) == False:
                 writeToLog("INFO", "FAILED to highlight the End time input field from the Advanced Settings screen for hotspot: " + hotspotName)
                 return False
-
-            # Select the presented End Time text
-            if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
-                writeToLog("INFO", "FAILED to select the presented End time text from the input field")
-                return False
+            sleep(0.2)
+            
+            if self.driver.capabilities['browserName'] == 'firefox':
+                # Select the presented End Time text
+                if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                    writeToLog("INFO", "FAILED to select the presented End time text from the input field")
+                    return False
 
             # Insert the new desired End Time inside the input field
             try:
-                ActionChains(self.driver).send_keys(endTime).pause(0.2).perform()
+                ActionChains(self.driver).send_keys(endTime).pause(0.4).perform()
             except Exception:
                 writeToLog("INFO", "FAILED to set the End time for " + hotspotName + " at: " + endTime)
                 return False
