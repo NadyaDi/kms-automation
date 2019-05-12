@@ -2816,7 +2816,6 @@ class Kea(Base):
             # Use the zoom in option, by drag and drop of Zoom Level Pointer element
             try:
                 action.move_to_element(zoomLevelPointer).click_and_hold(zoomLevelPointer).move_to_element_with_offset(zoomOutButtonElement, 45+zoomInPosition, 0).release().pause(1).perform()
-#                 action.reset_actions()
                 sleep(2)
             except Exception:
                 writeToLog("INFO", "FAILED to use zoom in option properly at the " + str(x+1) + " try")
@@ -2829,12 +2828,12 @@ class Kea(Base):
             
             # Verify that the Timeline pointer location has been changed after using the zoom in option
             if pointerInitial >= pointerUpdated:
-                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
+                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated) + " or higher value")
                 return False
             
             # Verify that the Timeline container size is bigger after using the zoom in option
             if containerInitialSize >= containerUpdatedSize:
-                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
+                writeToLog("INFO", "FAILED, Zoom Level container was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
                 return False
                        
         # Use the zoom out option, by drag and drop of Zoom Level Pointer element, in order to reach zero state
@@ -3337,6 +3336,12 @@ class Kea(Base):
                     if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 1, True) == False:
                         writeToLog("INFO", "FAILED, the Video Playing process didn't stopped after clicking on ADD New Hotspot")
                         return False
+                    
+            # Leave time for the Hotspot Creation tool tip to proper be displayed     
+            sleep(1)
+            if self.wait_element(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 5, True) == False:
+                writeToLog("INFO", "FAILED to display the Advanced Settings option within the Hotspot creation tool tip")
+                return False
             
             if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
                 writeToLog("INFO", "FAILED to activate the Advanced Settings for Hotspots")
@@ -5173,7 +5178,7 @@ class Kea(Base):
         if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 5, True) == False:
             writeToLog("INFO", "FAILED to click on the Add new Button")
             return False
-        
+        sleep(1)
         # Reach the Advanced Settings creen and take the specific locators
         if hotspotCreationScreen == enums.keaHotspotCreationScreen.ADVANCED_SETTINGS:
             if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:

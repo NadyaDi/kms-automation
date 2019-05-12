@@ -2824,7 +2824,7 @@ class Player(Base):
                             
                             # Verify the location for normal hotspots
                             if hotspotTitle.count('Duplicated') == 0:
-                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2} or hotspotLocation == {'x': 786, 'y':0}:
+                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2} or hotspotLocation == {'x': 786, 'y':0} or hotspotLocation == {'x': 785, 'y':0}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
                                 elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1} or hotspotLocation == {'x': 6, 'y':0}:
@@ -2845,7 +2845,7 @@ class Player(Base):
                             
                             # Verify the location for duplicated hotspots
                             elif hotspotTitle.count('Duplicated') == 1:
-                                if hotspotLocation == {'x': 786, 'y': 24} or hotspotLocation == {'x': 785, 'y': 25}:
+                                if hotspotLocation == {'x': 786, 'y': 24} or hotspotLocation == {'x': 785, 'y': 25} or hotspotLocation == {'x': 786, 'y': 22}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
                                 elif hotspotLocation == {'x': 6, 'y': 24}:
@@ -2996,7 +2996,12 @@ class Player(Base):
     # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
     # The function will verify that the expectedHotspotDict matches with the presentedHotspotDetailsList
     # if doubleCheck = True, if at the first try, the function returned false, we will re-take all the presented hotspots and verify with the expected hotspots for the second time
-    def hotspotVerification(self, expectedHotspotsDict, presentedHotspotsDetailsList, doubleCheck=False):  
+    def hotspotVerification(self, expectedHotspotsDict, presentedHotspotsDetailsList, doubleCheck=False):
+        # Verify that we were able to take the presented hotspot details
+        if type(presentedHotspotsDetailsList) is bool:
+            writeToLog("INFO", "FAILED to take the presented hotspot details")
+            return False
+        
         # Verify that the same number of hotspots that were expected are actually presented
         if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
             writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the first attempt")
