@@ -3909,6 +3909,7 @@ class Kea(Base):
             if self.verifyKeaEntryName(entryName, 60) == False:
                 writeToLog("INFO", "FAILED to load the page until the " + entryName + " was present")
                 return False
+            sleep(7)
             
         self.switchToKeaIframe()
         if keaTab == enums.keaTab.QUIZ:
