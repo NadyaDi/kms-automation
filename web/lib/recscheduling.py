@@ -192,6 +192,8 @@ class  Recscheduling(Base):
     SCHEDULE_EDIT_EVENT_PAGE_RECURRENCE_BUTTON                              = ('css', "button#CreateEvent-recurrenceMain")
     SCHEDULE_CONTINUE_TO_SERIES_PAGE_WITHOUT_SAVE_MESSAGE                   = ('xpath', "//a[@class='btn btn-danger' and contains(text(),'Continue')]")
     SCHEDULE_VIEW_EVENT_PUBLISH_IN_SECTION_AFTER_PUBLISH                    = ('css', "div.pblBadge")
+    SCHEDULE_CONFLICT_POP_UP_MESSAGE                                        = ('css', "div.bootbox.modal.fade.in")
+    SCHEDULE_CONFLICT_POP_UP_MESSAGE_OK_BUTTON                              = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'OK')]")
     #=============================================================================================================
     
     # @Author: Michal Zomper 

@@ -765,5 +765,6 @@ test_4968,Recscheduling - Create event with resource conflict,2534391,qakmstest.
 test_4969,Recscheduling - Delete an occurrence,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4971,Recscheduling - Edit an event series,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_4972,Recscheduling - Edit an occurrence,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_5162,Recscheduling - Delete Event Series,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_5178,Reach - Navigate to captions requests,4770,qakmstest.dev.kaltura.com,ella.lidich@kaltura.com,Q1w2e3r4*,ella.lidich@kaltura.com,Q1w2e3r4*
