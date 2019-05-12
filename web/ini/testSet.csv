@@ -767,3 +767,4 @@ test_4970,1,0,0,0,Recscheduling - Edit Single event
 test_4971,1,0,0,0,Recscheduling - Edit an event series
 test_5162,1,0,0,0,Recscheduling - Delete Event Series
 test_5158,1,0,0,0,Groups- Create Group
+test_5178,1,0,0,0,Reach - Navigate to captions requests
