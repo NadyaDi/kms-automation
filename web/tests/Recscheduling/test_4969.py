@@ -42,7 +42,7 @@ class Test:
     endDate = None
     startEventTime = None
     endTime = None
-    resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
+    resource = enums.RecschedulingResourceOptions.MAIN_AUDITORIUM
     numberOfRecurrenceDays = 6
     resourceEveryXDays = 2 
     
@@ -153,7 +153,7 @@ class Test:
                 
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Rescheduling -  Delete an occurrence ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Rescheduling - Delete an occurrence' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

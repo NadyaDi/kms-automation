@@ -14,7 +14,7 @@ class Test:
     
     #================================================================================================================================
     #  @Author: Michal Zomper
-    # Test Name : Recscheduling -  Edit an event series 
+    # Test Name : Recscheduling - Edit an event series 
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
