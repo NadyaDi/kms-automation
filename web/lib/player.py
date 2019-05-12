@@ -2996,14 +2996,17 @@ class Player(Base):
         if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
             writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the first attempt")
             # Add a redundancy step, where we take for the second time the presented hotspot details
+            self.switch_to_default_content()
             self.driver.refresh()
-            sleep(15)
+            sleep(20)
             presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
             
             # Verify that we received a list with the presented hotspots
             if type(presentedHotspotsDetailsList) is not list:
                 writeToLog("INFO", "FAILED to take the presented hotspot details list")
                 return False
+            else:
+                writeToLog("INFO", "A new list with the presented hotspot has been provided")
             
             if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
                 writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the second attempt")
