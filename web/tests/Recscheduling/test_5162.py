@@ -115,7 +115,7 @@ class Test:
                         return
             
             writeToLog("INFO","Step 5: Going to delete event series")
-            if self.common.recscheduling.deteteEvents(self.event, viewEventSeries=True) == False:
+            if self.common.recscheduling.deteteEvent(self.event, viewEventSeries=True) == False:
                 writeToLog("INFO","Step 5: FAILEDto delete event series")
                 return
                 
