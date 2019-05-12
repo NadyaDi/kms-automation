@@ -49,27 +49,32 @@ class Test:
             self.common = Common(self.driver)
             
             ########################################################################
-            self.entryName = clsTestService.addGuidToString('MyHistoryEntry', self.testNum)
+            self.entryName = clsTestService.addGuidToString('Reach - Add captions', self.testNum)
             ######################### TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to upload entry")
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
-                writeToLog("INFO","Step 1: FAILED to upload entry")
-                return       
-                
-            writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
-            if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
-                writeToLog("INFO","Step 3: FAILED to navigate to entry page")
-                return           
-                
-            writeToLog("INFO","Step 4: Going to wait until media will finish processing")
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                writeToLog("INFO","Step 4: FAILED - New entry is still processing")
-                return
+#             writeToLog("INFO","Step 1: Going to upload entry")
+#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
+#                 writeToLog("INFO","Step 1: FAILED to upload entry")
+#                 return       
+#                 
+#             writeToLog("INFO","Step 3: Going to navigate to uploaded entry page")
+#             if self.common.entryPage.navigateToEntry(navigateFrom = enums.Location.UPLOAD_PAGE) == False:
+#                 writeToLog("INFO","Step 3: FAILED to navigate to entry page")
+#                 return           
+#                 
+#             writeToLog("INFO","Step 4: Going to wait until media will finish processing")
+#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+#                 writeToLog("INFO","Step 4: FAILED - New entry is still processing")
+#                 return
             
             writeToLog("INFO","Step 5: Going to choose 'Captions Requests' option")
-            if self.common.entryPage.chooseCaptionsRequestsOption() == False:
+            if self.common.entryPage.chooseCaptionsRequestsOption('ukrainfamilyhorse', True) == False:
                 writeToLog("INFO","Step 5: FAILED to choose 'Captions Requests' option")
-                return            
+                return 
+            
+            writeToLog("INFO","Step 6: Going to verify that 'Captions Requests' section is empty")
+            if self.common.reach.verifyCaptionsRequestsSection() == False:
+                writeToLog("INFO","Step 6: FAILED to verify that 'Captions Requests' section is empty")
+                return                        
                 
 
             #########################################################################
