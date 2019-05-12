@@ -87,7 +87,7 @@ class SechdeuleEvent():
     
     
     # Constructor
-    def __init__(self, title, startDate, endDate, startTime, endTime, description, tags, expectedEvent):
+    def __init__(self, title, startDate, endDate, startTime, endTime, description, tags, expectedEvent, organizer=""):
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
@@ -96,6 +96,10 @@ class SechdeuleEvent():
         self.description = description
         self.tags = tags
         self.expectedEvent = expectedEvent
+        if organizer == "":
+            self.organizer = localSettings.LOCAL_SETTINGS_LOGIN_USERNAME
+        else:
+            self.organizer = organizer
         self.convertDatetimeToVerifyDate()
     
     def convertDatetimeToVerifyDate(self):
@@ -866,7 +870,7 @@ class  Recscheduling(Base):
                         writeToLog("INFO","FAILED to verify event resource '" + resource.value + "'")
                         return False
             else:
-                if (self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text == eventInstance.resources.value) == False:
+                if (eventInstance.resources.value in self.wait_element(self.SCHEDULE_EDIT_EVENT_PAGE_SELECTED_RESOURCES).text) == False:
                     writeToLog("INFO","FAILED to verify event resource '" + eventInstance.resources.value + "'")
                     return False
             
@@ -882,7 +886,7 @@ class  Recscheduling(Base):
                     writeToLog("INFO","FAILED to verify event tag '" + tag + "'")
                     return False
         
-        if eventInstance.collaboratorUser != False:
+        if eventInstance.collaboratorUser != '':
             # Check that the user was added to collaboration permissions table
             tmpUserName = (self.clsCommon.editEntryPage.EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE[0], self.clsCommon.editEntryPage.EDIT_ENTRY_CHOSEN_USER_IN_COLLABORATOR_TABLE[1].replace('USER_NAME', eventInstance.collaboratorUser))
             parentEl = self.get_element(tmpUserName)

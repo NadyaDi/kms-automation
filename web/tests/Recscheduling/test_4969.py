@@ -43,18 +43,8 @@ class Test:
     startEventTime = None
     endTime = None
     resource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
-    publishTo = 'category'
-    category = "Apps Automation Category"
-    
-    editDescription = "Edit Description"
-    editTags = "Edit Tags, schedule,"
-    editResources = [enums.RecschedulingResourceOptions.FALL_CONFERENCE_ROOM]
-    editOrganizer = 'Automation_User_1' 
-    userId = 'AutomationUser8'
     numberOfRecurrenceDays = 6
     resourceEveryXDays = 2 
-    editNumberOfRecurrenceDays = 13
-    editResourceEveryXDays = 4 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -78,43 +68,18 @@ class Test:
             
             self.startDateInDatetimeFormat = (datetime.datetime.now())
             self.startDateForCreateEvent = self.startDateInDatetimeFormat.strftime("%d/%m/%Y")
-            self.editStartDateInDatetimeFormat = (datetime.datetime.now() + timedelta(days=2))
-            self.editStartDate = self.editStartDateInDatetimeFormat.strftime("%d/%m/%Y")
             
             self.endDate = (datetime.datetime.now() + timedelta(days=self.numberOfRecurrenceDays)).strftime("%d/%m/%Y")
-            self.editEndDate = (datetime.datetime.now() + timedelta(days=(self.editNumberOfRecurrenceDays+2))).strftime("%d/%m/%Y")
 
             self.startEventTime = time.time() + 1.5*(60*60)
             self.startEventTime = time.strftime("%I:%M %p",time.localtime(self.startEventTime))
-
-            
-            self.editStartEventTime = time.time() + 0.5*(60*60)
-            self.editStartEventTime = time.strftime("%I:%M %p",time.localtime(self.editStartEventTime))
-            tmpTime = self.editStartEventTime.split(":")
-            tmpHour = int(tmpTime[0])
-            tmpHour = str(tmpHour)
-            self.editStartEventTime = tmpHour + ":" + tmpTime[1]
             
             self.endTime = time.time() + 2*(60*60)
             self.endTime = time.strftime("%I:%M %p",time.localtime(self.endTime))
-
-            
-            self.editEndTime = time.time() + (60*60)
-            self.editEndTime = time.strftime("%I:%M %p",time.localtime(self.editEndTime))
-            tmpTime = self.editEndTime.split(":")
-            tmpHour = int(tmpTime[0])
-            tmpHour = str(tmpHour)
-            self.editEndTime = tmpHour + ":" + tmpTime[1]
             
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, "True")
             
             self.event.resources = self.resource
-            self.event.publishTo = self.publishTo
-            self.event.categoryList = self.category
-            self.event.fieldsToUpdate = ["title", "Organizer", "tags", "description", "resources"]
-            self.event.collaboratorUser = self.userId
-            self.event.coEditor = True
-            self.event.coPublisher = False
             self.event.expectedEvent = False
             self.event.isRecurrence = True
             self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
@@ -156,88 +121,39 @@ class Test:
             
             self.event.startDate = self.tmpStartDate
             self.event.convertDatetimeToVerifyDate()
-            writeToLog("INFO","Step 5: Going navigate to event page")
-            if self.common.recscheduling.navigateToEventPage(self.event, viewEventSeries=True) == False:
-                writeToLog("INFO","Step 5: FAILED navigate to event")
+            writeToLog("INFO","Step 5: Going to delete an event occurrence, delete the first event in the series")
+            if self.common.recscheduling.deteteEvent(self.event) == False:
+                writeToLog("INFO","Step 5: FAILED to delete an event occurrence, delete the first event in the series")
                 return 
-            sleep(2)
-            
-            self.event.title = self.editEventTitle
-            self.event.startDate = self.editStartDate
-            self.event.convertDatetimeToVerifyDate()
-            self.event.endDate = self.editEndDate
-            self.event.startTime = self.editStartEventTime
-            self.event.endTime = self.editEndTime
-            self.event.description = self.editDescription
-            self.event.tags = self.editTags
-            self.event.organizer = self.editOrganizer
-            self.event.resources = self.editResources
-            self.event.dailyDays = self.editResourceEveryXDays
-            
-            sleep(3)     
-            writeToLog("INFO","Step 6: Going to edit event metadata")
-            if self.common.recscheduling.editRescheduleEvent(self.event) == False:
-                writeToLog("INFO","Step 6: FAILED to edit event metadata")
-                return
-            
-            sleep(3)
-            writeToLog("INFO","Step 7: Going to publish event")
-            if self.common.recscheduling.publishEvent(self.event, viewEventSeries=True) == False:
-                writeToLog("INFO","Step 7: FAILED to publish event")
-                return
-            
-            writeToLog("INFO","Step 8: Going to add collaborator to event")
-            if self.common.recscheduling.addCollaboratorToScheduleEvent(self.event, location=enums.Location.SCHEDULE_EVENT_PAGE, viewEventSeries=True) == False:
-                writeToLog("INFO","Step 8: FAILED adding collaborator to event")
-                return
             sleep(3)
             
-            self.event.startDate = self.startDateForCreateEvent
-            self.event.convertDatetimeToVerifyDate()
+            writeToLog("INFO","Step 6: Going to verify that only the first occurrence of the event series was deleted")
             self.event.expectedEvent = False
-            writeToLog("INFO","Step 9: Going to verify that event does not display in the original start date")
-            if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
-                writeToLog("INFO","Step 9:FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
-                return
-            
-            self.event.startDate = self.editStartDate
-            self.event.convertDatetimeToVerifyDate()  
-            self.tmpStartDate = self.editStartDate
-            self.tmpStartDateFormat = self.event.verifyDateFormat
-            self.tmpEndDate = self.event.endDate
             self.numberOfDaysSinceEventDispaly = 1
-            self.event.expectedEvent = True
-            writeToLog("INFO","Step 10: Going to verify all events series were updated")
-            for day in range(0,self.editNumberOfRecurrenceDays+1):
-                self.event.startDate = (self.editStartDateInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
-                self.event.endDate = self.event.startDate
+            for day in range(0,self.numberOfRecurrenceDays+1):
+                self.event.startDate = (self.startDateInDatetimeFormat + timedelta(days=day)).strftime("%d/%m/%Y")
                 self.event.convertDatetimeToVerifyDate()
                 
                 if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
                     if self.event.expectedEvent == True:
-                        writeToLog("INFO","Step 10: FAILED to verify event in my schedule page for date: " + self.event.startDate)
+                        writeToLog("INFO","Step 6: FAILED to verify event in my schedule page for date: " + self.event.startDate)
                         return
                     elif self.event.expectedEvent == False:
-                        writeToLog("INFO","Step 10: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
-                        return
-                    
-                if self.event.expectedEvent == True:
-                    if self.common.recscheduling.VerifyEventDeatailsInEventPage(self.event) == False:
-                        writeToLog("INFO","Step 10: FAILED to verify event metadata in event page")
+                        writeToLog("INFO","Step 6: FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
                         return
                 
-                # the edit event need to display every 4 days so we need to count 4 days from the time that the event display
-                if self.numberOfDaysSinceEventDispaly < 4:
-                    self.numberOfDaysSinceEventDispaly =  self.numberOfDaysSinceEventDispaly + 1
+                # the first event in the series was deleted and after it the event series stay the same so we need to make sure that the first occurrence will be in the 3 day after the series started 
+                if self.numberOfDaysSinceEventDispaly < 2:
+                    self.numberOfDaysSinceEventDispaly = self.numberOfDaysSinceEventDispaly + 1
                     self.event.expectedEvent = False
                 else:
-                    self.event.expectedEvent = True
-                    # each time we see event we need to rest this parameter
-                    self.numberOfDaysSinceEventDispaly = 1
+                    self.numberOfDaysSinceEventDispaly = self.numberOfDaysSinceEventDispaly + 1
+                    self.event.expectedEvent = not(self.event.expectedEvent)
+                    
                 
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Rescheduling - Edit an event series' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Rescheduling -  Delete an occurrence ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -247,13 +163,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************") 
-            self.event.startDate = self.editStartDate
+            self.event.startDate = self.endDate
             self.event.convertDatetimeToVerifyDate() 
-            if self.common.recscheduling.deteteEvent(self.event, viewEventSeries=True) == False:
-                self.event.startDate = self.tmpStartDate
-                self.event.verifyDateFormat = self.tmpStartDateFormat
-                self.event.title = self.eventTitle
-                self.common.recscheduling.deteteEvent(self.event, viewEventSeries=True)
+            self.common.recscheduling.deteteEvent(self.event, viewEventSeries=True)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            
