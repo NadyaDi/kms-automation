@@ -60,10 +60,10 @@ class Reach(Base):
 #                 return False   
             
             # Verify that service type is displayed
-            captionsRequestsService = (self.REACH_CAPTIONS_REQUESTS_SERVICE_FIELD[0], self.REACH_CAPTIONS_REQUESTS_SERVICE_FIELD[1].replace('SERVICE', tmpRequestService)) 
-            if self.wait_element(captionsRequestsService)[tmpRowNumber] == False:
-                writeToLog("INFO","FAILED to display correct request date")
-                return False                            
+#             captionsRequestsService = (self.REACH_CAPTIONS_REQUESTS_SERVICE_FIELD[0], self.REACH_CAPTIONS_REQUESTS_SERVICE_FIELD[1].replace('SERVICE', tmpRequestService)) 
+#             if self.wait_element(captionsRequestsService)[tmpRowNumber] == False:
+#                 writeToLog("INFO","FAILED to display correct request date")
+#                 return False                            
             
             
         
