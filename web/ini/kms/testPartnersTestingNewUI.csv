@@ -41,10 +41,10 @@ test_2290,Canvas - My Media - Search by Name / Description / Tags,,,pythonautoma
 test_2291,Canvas - My Media - Sort Media,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2292,Canvas - My Media - filter media view different statuses,,,pythonautomation3@gmail.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
 test_2293,Canvas - My Media - filter media view different media types,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2295,Canvas - Embed on BSE from shared repository,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2297,Canvas - Embed on BSE from media gallery,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2309,Canvas - Embed on BSE from my media,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_2310,Canvas - Embed on BSE from upload,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2295,Canvas - Embed on BSE from shared repository - v3,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2297,Canvas - Embed on BSE from media gallery - v3,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2309,Canvas - Embed on BSE from my media - v3,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_2310,Canvas - Embed on BSE from upload - v3,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2302,Canvas - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2303,Canvas - Edit Entry page - Close discussion,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2298,Canvas - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
@@ -54,7 +54,12 @@ test_2335,Canvas - Upload Media From Media Gallery Page,,,pythonautomation3@gmai
 test_2336,Canvas - Gallery Moderation,,,pythonautomation3@gmail.com,Kaltura1!,studentautomation@mailinator.com,Kaltura1!
 test_2294,Canvas - Publish from my media to shared repository,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2296,Canvas - Publish to course galleries from  shared repository,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
-test_4856,Canvas - Gradebook,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_4856,Canvas - Gradebook - v3,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_5189,Canvas - Embed on BSE from shared repository - v2,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_5190,Canvas - Embed on BSE from media gallery - v2,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_5191,Canvas - Embed on BSE from my media - v2,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_5192,Canvas - Embed on BSE from upload - v2,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
+test_5193,Canvas - Gradebook - v2,,,pythonautomation3@gmail.com,Kaltura1!,autocanvas@mailinator.com,Kaltura1!
 test_2543,D2L - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
 test_2533,D2L - Edit Entry Metadata,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
 test_2534,D2l - Edit Entry page - Disable comments,,,pythonautomation3@gmail.com,Kaltura1!,autod2l,Kaltura1!
@@ -97,9 +102,12 @@ test_2507,Jive - My Media - Filter by media Type,,,pythonautomation3@gmail.com,K
 test_2523,Jive - Remove Media From Media Gallery,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
 test_2524,Jive - Upload Media From Media Gallery Page,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
 test_2525,Jive - Gallery Moderation,,,pythonautomation3@gmail.com,Kaltura1!,hrmanager,hrmanager
-test_2512,Jive - Embed media in document,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2509,Jive - Embed media in discussion,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
-test_2511,Jive - Discussions Upload And Embed From BSE Page,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2512,Jive - Embed media in document - v3,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2509,Jive - Embed media in discussion - v3,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_2511,Jive - Discussions Upload And Embed From BSE Page - v3,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_5186,Jive - Embed media in discussion - v2,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_5187,Jive - Discussions Upload And Embed From BSE Page - v2,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
+test_5188,Jive - Embed media in document - v2,,,pythonautomation3@gmail.com,Kaltura1!,jiveauto,Kaltura1!
 test_2940,Sakai - Preview all kinds of media from My Media and Gallery,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
 test_2910,Sakai - View Collapsed Expanded Modes,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
 test_2911,Sakai - Upload media from desktop,,,pythonautomation3@gmail.com,Kaltura1!,sakaiauto,Kaltura1!
@@ -249,8 +257,8 @@ test_2673,Watch History - Entry Viewed in Embed,2373952,qakmstest.dev.kaltura.co
 test_2742,Watch History - Entry appear in both continue watch and recently watched playlists - Replay,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_687,Entry page - Embed Entry,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_673,Playlists - Embed playlist,2373952,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
-test_109,KAF BB - Embed Media As Standalone From Kaltura media,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_113,KAF BB - Embed Media From SR - Add New Announcements,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_109,KAF BB - Embed Media As Standalone From Kaltura media - v3,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
+test_113,KAF BB - Embed Media From SR - Add New Announcements- v3,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
 test_604,KAF BB -Upload media from desktop,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_594,KAF BB - Entry Thumbnail,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_589,KAF BB - Edit Entry Metadata,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
@@ -273,10 +281,15 @@ test_610,KAF BB - My Media - Filter Media View Different Statuses,,,oleg.sigalov
 test_222,KAF BB - Adding media to Faculty Repository From My Media,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_114,KAF BB - Add Remove Featured Media Module,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_1648,KAF BB - Upload new media to Faculty Repository and then publish entries to course,,,apps.qa.automation@mailinator.com,Kaltura1!,apps.qa.automation@mailinator.com,Kaltura1!
-test_2087,KAF BB - Embed Media As Standalone From Wysiwyg,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
-test_2088,KAF BB - Upload From Embed As Standalone,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_2087,KAF BB - Embed Media As Standalone From Wysiwyg- v3,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_2088,KAF BB - Upload From Embed As Standalone - v3,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_4424,KAF BB - upload media from media gallery page,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
-test_1030,KAF BB - Gradebook,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_1030,KAF BB - Gradebook- v3,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_5181,KAF BB - Embed Media As Standalone From Kaltura media - v2,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_5182,KAF BB - Embed Media From SR - Add New Announcements - v2,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_5183,KAF BB - My Media - Embed Media As Standalone From Wysiwyg - v2,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_5184,KAF BB - Upload From Embed As Standalone - v2,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
+test_5185,KAF BB - Gradebook - v2,,,oleg.sigalov@kaltura.com,Kaltura!1,apps.qa.automation@mailinator.com,Kaltura1!
 test_2882,Sharepoint - Upload media from desktop,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura4!
 test_2880,SharePoint - Preview all kinds of media from My Media and Gallery,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura4!
 test_2881,Sharepoint - View Collapsed Expanded Modes,,,admin_user,admin_pass,automation@KalturaSP2013.onmicrosoft.com,KalKaltura4!
