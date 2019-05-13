@@ -194,6 +194,7 @@ class  Recscheduling(Base):
     SCHEDULE_VIEW_EVENT_PUBLISH_IN_SECTION_AFTER_PUBLISH                    = ('css', "div.pblBadge")
     SCHEDULE_CONFLICT_POP_UP_MESSAGE                                        = ('css', "div.bootbox.modal.fade.in")
     SCHEDULE_CONFLICT_POP_UP_MESSAGE_OK_BUTTON                              = ('xpath', "//a[@class='btn btn-primary' and contains(text(),'OK')]")
+    SCHEDULE_POP_UP_MESSAGE_SAVE_SINGLE_EVENT_THAT_BELONG_TO_SERIES         = ('xpath', "//div[contains(text(),'Changes were made to a single occurrence from a series.')]")
     #=============================================================================================================
     
     # @Author: Michal Zomper 
@@ -640,7 +641,7 @@ class  Recscheduling(Base):
         if self.setScheduleInMySchedulePage(eventInstance.verifyDateFormat) == False:
             writeToLog("INFO","FAILED to move to start time '" + eventInstance.startDate + "' in my schedule page")
             return False  
-        
+        sleep(1)
         tmpEventTiltle = (self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[0], self.SCHEDULE_EVENT_TITLE_IN_MY_SCHDULE_PAGE[1].replace('EVENT_TITLE', eventInstance.title))
         event = self.wait_element(tmpEventTiltle, multipleElements=True)
         if event == False:
@@ -992,8 +993,16 @@ class  Recscheduling(Base):
             if self.click(self.SCHEDULE_SAVE_AND_EXIT_EVENT) == False:
                 writeToLog("INFO","FAILED click on save and exit event button")
                 return False
-            self.clsCommon.general.waitForLoaderToDisappear()
+            sleep(2)
             
+            # if we are changing a single event that was created as part of event series a pop up will display and ask if we wont to save the changes
+            if self.wait_element(self.SCHEDULE_POP_UP_MESSAGE_SAVE_SINGLE_EVENT_THAT_BELONG_TO_SERIES) != False:
+                sleep(1)
+                if self.click(self.SCHEDULE_RECURRENCE_SAVE_BUTTON, multipleElements=True) == False:
+                    writeToLog("INFO","FAILED to click on save button in order to save event occurrence changes")
+                    return False
+            self.clsCommon.general.waitForLoaderToDisappear()  
+             
             if self.wait_element(self.SCHEDULE_PAGE_TITLE, 15) == False:
                 writeToLog("INFO","FAILED to verify 'My Schedule page' display after clicking on save and exit event button")
                 return False
@@ -1005,6 +1014,7 @@ class  Recscheduling(Base):
     # The function edit reschedule event without recurrence
     def editRescheduleEventWithoutRecurrence(self, eventInstance): 
         for update in eventInstance.fieldsToUpdate:
+            sleep(1)
             if update.lower() == "title":
                 if self.updateEventTitle(eventInstance.title) == False:
                     writeToLog("INFO","FAILED to update event title")
@@ -1132,7 +1142,7 @@ class  Recscheduling(Base):
         if self.click(self.SCHEDULE_EVENT_RESOURCES) == False:
             writeToLog("INFO","FAILED to click and open resource option")
             return False
-        
+        sleep(1)
         if type(resources) is list: 
             for resource in resources:
                 tmpResource = (self.SCHEDULE_EVENT_RESOURCE[0], self.SCHEDULE_EVENT_RESOURCE[1].replace('RESOURCE_NAME', resource.value))
