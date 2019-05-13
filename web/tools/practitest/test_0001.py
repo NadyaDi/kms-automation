@@ -16,7 +16,7 @@ class Test:
     testNum     = "0001"
     status      = "Pass"   
 #     csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','EE_export_auto.csv'))
-    csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','EE_export_manual.csv'))
+    csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','EE_export_manual.csv'))
     # Filter ID of regression test sets: 373033
     ptFilterId = '373033'
     # Field ID of Automation EE: '---f-38303'

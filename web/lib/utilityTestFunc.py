@@ -12,15 +12,22 @@ from logger import *
 
 
 # Read from testPartners csv the test details(base URL, credentials, Practitest ID       
-def updateTestCredentials(case_str):    
+def updateTestCredentials(case_str, application):    
     found = False
     # SET PARTNER DETAILS
     localSettings.LOCAL_SETTINGS_PARTNER            = ''
     localSettings.LOCAL_SETTINGS_LOGIN_USERNAME     = ''
     localSettings.LOCAL_SETTINGS_LOGIN_PASSWORD     = ''
     localSettings.LOCAL_SETTINGS_ADMIN_USERNAME     = ''
-    localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = ''    
-    testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
+    localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = ''
+
+    if application==enums.Application.MEDIA_SPACE:
+        testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
+    elif application==enums.Application.PITCH:
+        testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','pitch','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
+    else:
+        writeToLog("INFO","UNSUPPORTED APPLICATION NAME: '" + str(application) + "'")
+    
     with codecs.open(testPartnersPath,'r',encoding='utf8') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
         for row in testPartners:
@@ -40,7 +47,7 @@ def updateTestCredentials(case_str):
 
 
 def getPartnerDetails(partner):
-    testPartnerDetailsPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','partnerDetails.csv'))
+    testPartnerDetailsPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','partnerDetails.csv'))
     with open(testPartnerDetailsPath, 'r') as csv_mat:
         partnerDetails = csv.DictReader(csv_mat)
         for row in partnerDetails:
@@ -233,7 +240,7 @@ def clearFilesFromLogFolderPath(fileType):
 # Get all instances from csv file
 def getListOfInstances():
     instacesList = {} #[instance:(adminUsername,adminPassword)]
-    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
+    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
     with open(matrixPath, 'r') as csv_mat: #windows
         testRow = csv.DictReader(csv_mat)
         for row in testRow:

@@ -120,7 +120,7 @@ def logStartTest(test, browser, application=enums.Application.MEDIA_SPACE):
     
     try:        
         # Update localSetting partner details(base URL, credentials, Practitest ID
-        if utilityTestFunc.updateTestCredentials('test_' + test.testNum) == False:
+        if utilityTestFunc.updateTestCredentials('test_' + test.testNum, application) == False:
             writeToLog("INFO","Unable to find credentials for test: '" + test.testNum + "'")
             return False
     except:

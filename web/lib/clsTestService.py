@@ -148,14 +148,20 @@ def testTimedOut(testNum, startTime,reason):
 
 
 # Get from testPartners scv the test credentials by test id and env
-def updatePlatforms(test_num):
+def updatePlatforms(test_num, application=enums.Application.MEDIA_SPACE):
     env = ""
     if isAutomationEnv() == True:
         env = "Auto"
     
     supported_platforms=[]
     case_str = "test_" + test_num
-    matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet' + env +  '.csv'))
+    if application==enums.Application.MEDIA_SPACE:
+        matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSet' + env +  '.csv'))
+    elif application==enums.Application.PITCH:
+        matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','pitch','testSet' + env +  '.csv'))
+    else:
+        writeToLog("INFO","UNSUPPORTED APPLICATION NAME: '" + str(application) + "'")
+        
     with open(matrixPath, 'r') as csv_mat: #windows
         platform_matrix = csv.DictReader(csv_mat)
         for row in platform_matrix:
@@ -365,7 +371,10 @@ def getSeleniumHubURL(applicationName):
         "qaKmsFrontEnd20": "il-KmsHub3-qa.dev.kaltura.com",
         "qaKmsFrontEnd21": "il-KmsHub3-qa.dev.kaltura.com",
         "qaKmsFrontEnd22": "il-KmsHub3-qa.dev.kaltura.com",
-        "qaKmsFrontEnd23": "il-KmsHub3-qa.dev.kaltura.com"
+        "qaKmsFrontEnd23": "il-KmsHub3-qa.dev.kaltura.com",
+        # Pitch
+        "PitchNode1": "il-KmsHub3-qa.dev.kaltura.com",
+        "PitchNode2": "il-KmsHub3-qa.dev.kaltura.com"
     }
     return("http://" + switcher.get(applicationName, "Invalid Application Name of the windows node") + ":4444/wd/hub")    
     

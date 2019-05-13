@@ -1,0 +1,2 @@
+case,test_name,partner,base_url,admin_username,admin_password,login_username,login_password
+test_1,Pitch - Login test,,,automation@mailinator.com,Kaltura!1,automation@mailinator.com,Kaltura1!
