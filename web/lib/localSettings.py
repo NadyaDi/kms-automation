@@ -72,7 +72,7 @@ else:
 ################################ PractiTest Variables ####################################################
 # OVP APP QA - Media Space
 LOCAL_SETTINGS_PRACTITEST_KMS_PROJECT_ID                            = 1328
-LOCAL_SETTINGS_PRACTITEST_KMS_NIGHT_RUN_FILTER_ID                   = '467658'
+LOCAL_SETTINGS_PRACTITEST_KMS_NIGHT_RUN_FILTER_ID                   = '476525'
 LOCAL_SETTINGS_PRACTITEST_KMS_ONLY_EXECUTE_AT_NIGHT                 = True
 LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_PLATFORM_FIELD             = '---f-30772'
 LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_ENV_FIELD                  = '---f-30761'
