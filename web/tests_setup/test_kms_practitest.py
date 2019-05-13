@@ -14,8 +14,6 @@ class Test:
     testNum     = "kms_practitest"
     status      = "Fail"   
     localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
-    # Update the PractiTest variables by the Project name
-    practiTest.setPractitestVariables()
     
     def test_01(self,env):
         

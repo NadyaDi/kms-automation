@@ -15,7 +15,10 @@ import itertools
 # The class contains functions that manage PraciTest integration with automation framework 
 #=============================================================================================================
 class clsPractiTest:
-    
+    # Update the PractiTest variables by the Project name
+    def __init__(self): 
+        self.setPractitestVariables() 
+            
     # ENUMS
     class TEST_STATUS(Enum):
         def __str__(self):
