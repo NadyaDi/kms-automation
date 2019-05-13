@@ -102,12 +102,8 @@ class Test:
             
             self.event = SechdeuleEvent(self.eventTitle, self.startDateForCreateEvent, self.endDate, self.startEventTime, self.endTime, self.description, self.tags, "True")
             self.event.resources = self.resource
-            self.event.publishTo = self.publishTo
-            self.event.categoryList = self.category
             self.event.fieldsToUpdate = ["title", "Organizer","startDate", "endDate", "startTime", "endTime", "description", "tags", "resources"]
-            self.event.collaboratorUser = self.userId
-            self.event.coEditor = True
-            self.event.coPublisher = False
+
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
 
@@ -147,6 +143,11 @@ class Test:
             self.event.tags = self.editTags
             self.event.organizer = self.editOrganizer
             self.event.resources = self.editResources
+            self.event.collaboratorUser = self.userId
+            self.event.coEditor = True
+            self.event.coPublisher = False
+            self.event.publishTo = self.publishTo
+            self.event.categoryList = self.category
             
             sleep(3)     
             writeToLog("INFO","Step 6: Going to verify event display in my schedule page")
@@ -168,6 +169,7 @@ class Test:
             
             self.event.startDate = self.startDateForCreateEvent
             self.event.convertDatetimeToVerifyDate()
+            self.event.expectedEvent = False
             writeToLog("INFO","Step 9: Going to verify that event does not display in the original start date")
             if self.common.recscheduling.verifyScheduleEventInMySchedulePage(self.event) == False:
                 writeToLog("INFO","Step 9:FAILED, event display in my schedule page for date: " + self.event.startDate + "  although it shouldn't")
