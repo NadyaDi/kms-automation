@@ -21,12 +21,10 @@ def updateTestCredentials(case_str, application):
     localSettings.LOCAL_SETTINGS_ADMIN_USERNAME     = ''
     localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD     = ''
 
-    if application==enums.Application.MEDIA_SPACE:
-        testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
-    elif application==enums.Application.PITCH:
+    if application==enums.Application.PITCH:
         testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','pitch','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
     else:
-        writeToLog("INFO","UNSUPPORTED APPLICATION NAME: '" + str(application) + "'")
+        testPartnersPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testPartners' + localSettings.LOCAL_SETTINGS_ENV_NAME + '.csv'))
     
     with codecs.open(testPartnersPath,'r',encoding='utf8') as csv_mat: #windows
         testPartners = csv.DictReader(csv_mat)
