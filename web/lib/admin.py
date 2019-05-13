@@ -87,6 +87,9 @@ class Admin(Base):
     ADD_USERS_FRAME                                 = ('xpath', '//input[@id="react-select-2-input"]')
     ADD_GROUP                                       = ('xpath', '//button[@class="btn btn-primary "]')
     CONFIRM_GROUP_ADDED                             = ('xpath', '//div[@class="message alert alert-success" and contains(text(),"You successfully added the group")]')    
+    ENABLE_NEW_BSEUI_DROPDOWN                       = ('css', 'select#enableNewBSEUI')
+    ENABLE_NEW_BSEUI_OPTION                         = ('xpath', '//option[@label="LABEL_OPTION"]')
+    ENABLE_NEW_BSEUI_SELECTED_OPTION                = ('xpath', '//option[@selected="selected" and text()="LABEL_OPTION"]')
     #=============================================================================================================
     # @Author: Oleg Sigalov 
     def navigateToAdminPage(self):
@@ -1469,3 +1472,46 @@ class Admin(Base):
             
         writeToLog("INFO","Public Open Channel has been set successfully to: " + str(selection) + "' state")
         return True 
+    
+    
+    # @Author: Inbar Willman
+    # enableNewBSEUI in Browse and embed module
+    # Field can be v1, v2 or v3
+    # leabl option=String. v1, v2, or v3
+    def enableNewBSEUI(self, labelOption):
+        #Login to Admin
+        if self.loginToAdminPage() == False:
+            writeToLog("INFO","FAILED to login to admin page")
+            return False
+        
+        #Navigate to browse and embed module
+        if self.navigate(localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL + '/config/tab/browseandembed') == False:
+            writeToLog("INFO","FAILED to load the channels tab in admin area")
+            return False
+        sleep(1) 
+        
+        if self.click(self.ENABLE_NEW_BSEUI_DROPDOWN) == False:
+            writeToLog("INFO","FAILED to click on 'enableNewBSEUI' dropdown")
+            return False    
+        
+        tmpDropdownOption = (self.ENABLE_NEW_BSEUI_OPTION[0], self.ENABLE_NEW_BSEUI_OPTION[1].replace('LABEL_OPTION', labelOption))    
+        if self.click(tmpDropdownOption) == False:
+            writeToLog("INFO","FAILED to click on " + labelOption + " option")
+            return False  
+        
+        if self.click(self.ADMIN_SAVE_BUTTON) == False:
+            writeToLog("INFO","FAILED to click on save button")
+            return False
+        
+        tmpSelectedOption = (self.ENABLE_NEW_BSEUI_SELECTED_OPTION[0], self.ENABLE_NEW_BSEUI_SELECTED_OPTION[1].replace('LABEL_OPTION', labelOption))    
+        if self.wait_element(tmpSelectedOption) == False:
+            writeToLog("INFO","FAILED to save " + labelOption + " option")
+            return False
+        
+        sleep(2)  
+        if self.click(self.ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON, 10, multipleElements=True) == False:
+            writeToLog("INFO","FAILED to click on confirm clear cache button")
+            return False        
+                              
+        writeToLog("INFO","Label option change to " + labelOption + " Successfully")
+        return True   

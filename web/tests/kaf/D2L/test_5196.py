@@ -14,12 +14,12 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : D2L: Discussions BSE From My Media - v3
+    # Test Name : D2L: Discussions BSE From My Media - v2
     # Test description:
     # Upload new media -> Go to discussions -> Create new discussion -> click on wysisyg -> Choose media from 'My Media' tab
     # Verify that embed is displayed and played 
     #================================================================================================================================
-    testNum     = "2908"
+    testNum     = "5196"
     application = enums.Application.D2L
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -49,8 +49,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromMyMediaV3", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed video from My Media v3", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedFromMyMediaV2", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed video from My Media v2", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
             
             if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
@@ -62,9 +62,9 @@ class Test:
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
                 return
                              
             writeToLog("INFO","Step 2: Going to upload entry")   
@@ -92,7 +92,7 @@ class Test:
                 return  
                
             writeToLog("INFO","Step 6: Going to create embed discussion")    
-            if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName) == False:
+            if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName, v3=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 6: FAILED to create embed discussion")
                 return             
@@ -109,7 +109,7 @@ class Test:
                 writeToLog("INFO","Step 8: FAILED to delete embed announcement")
                 return              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v3) from My Media tab ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v2) from My Media tab ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

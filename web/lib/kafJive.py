@@ -150,7 +150,7 @@ class Jive(Base):
     # @Author: Inbar Willman
     # isDiscussion=True: Create embed from discussion page
     # isDocument=True: Create embed from document page
-    def createEmbedMedia(self, embedTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True, isDiscussion=True, isDocument=False):
+    def createEmbedMedia(self, embedTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True, isDiscussion=True, isDocument=False, v3=True):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
             writeToLog("INFO","FAILED navigate to courses 'New1'")
             return False
@@ -184,7 +184,7 @@ class Jive(Base):
             writeToLog("INFO","FAILED to switch to jive inner BSE iframe")
             return False                    
         
-        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.JIVE, isTagsNeeded=isTagsNeeded) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.JIVE, isTagsNeeded=isTagsNeeded, v3=v3) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
         

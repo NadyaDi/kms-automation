@@ -15,7 +15,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : D2L: Discussions Upload And Embed From BSE Page
+    # Test Name : D2L: Discussions Upload And Embed From BSE Page - v3
     # Test description:
     # Go to discussions -> Create new discussion -> click on wysisyg -> Click on 'Add new' and upload new media
     # Verify that embed is displayed and played 
@@ -50,30 +50,43 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromUpload", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed video from upload", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedFromUploadV3", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed video from upload v3", self.testNum)
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                 
-            writeToLog("INFO","Step 1: Going to create embed discussion")    
+            if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-1.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-9.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+                
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
+            if self.common.admin.enableNewBSEUI('v3') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+                return
+                             
+            writeToLog("INFO","Step 2: Going to create embed discussion")    
             if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName, self.galleryName, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=None, isTagsNeeded=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 1: FAILED to create embed discussion")
+                writeToLog("INFO","Step 2: FAILED to create embed discussion")
                 return             
               
-            writeToLog("INFO","Step 2: Going to to verify embed announcement")    
+            writeToLog("INFO","Step 3: Going to to verify embed announcement")    
             if self.common.kafGeneric.verifyEmbedEntry(self.entryName, self.uploadThumbnailExpectedResult, '', enums.Application.D2L) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to verify embed announcement")
+                writeToLog("INFO","Step 3: FAILED to verify embed announcement")
                 return     
              
-            writeToLog("INFO","Step 3: Going to to delete embed announcement")    
+            writeToLog("INFO","Step 4: Going to to delete embed announcement")    
             if self.common.d2l.deleteDiscussion(self.discussionName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED to delete embed announcement")
+                writeToLog("INFO","Step 4: FAILED to delete embed announcement")
                 return              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Create embed discussion from new upload ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v3) from new upload ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

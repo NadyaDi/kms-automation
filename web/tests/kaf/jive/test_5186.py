@@ -14,17 +14,16 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : D2L: Discussions BSE From My Media - v3
+    # Test Name : Jive - Embed media in discussion - v2
     # Test description:
-    # Upload new media -> Go to discussions -> Create new discussion -> click on wysisyg -> Choose media from 'My Media' tab
-    # Verify that embed is displayed and played 
+    # upload media -> Click on 'Create' and choose 'Discussion' -> Click on wysisyg -> Choose media from My media tab -> Save emebed
+    # Verify that embed is displayed and played
     #================================================================================================================================
-    testNum     = "2908"
-    application = enums.Application.D2L
+    testNum     = "5186"
+    application = enums.Application.JIVE
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
-    status = "Pass"
-    timeout_accured = "False"
+    status = "Fail"
     # Test variables
     entryName = None
     description = "Description" 
@@ -49,67 +48,61 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromMyMediaV3", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed video from My Media v3", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedDiscussionFromMyMediaV2", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed discussion from My Media v2", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
             if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
-                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-1.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-3.kaftest.dev.kaltura.com/admin'
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
             else: # testing 
-                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-9.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-1.kaf.kaltura.com/admin'
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
                 return
-                             
+                 
             writeToLog("INFO","Step 2: Going to upload entry")   
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
-                       
+                          
             writeToLog("INFO","Step 3: Going navigate to edit entry page")    
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
-                   
+                      
             writeToLog("INFO","Step 4: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to navigate entry page")
                 return
-                   
+                      
             writeToLog("INFO","Step 5: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to wait until media end upload process")
                 return  
-               
-            writeToLog("INFO","Step 6: Going to create embed discussion")    
-            if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName) == False:
-                self.status = "Fail"
+                
+            writeToLog("INFO","Step 6: Going to to create embed discussion")    
+            if self.common.jive.createEmbedMedia(self.discussionName, self.entryName, v3=False) == False:
                 writeToLog("INFO","Step 6: FAILED to create embed discussion")
-                return             
+                return
                
-            writeToLog("INFO","Step 7: Going to to verify embed announcement")    
-            if self.common.kafGeneric.verifyEmbedEntry(self.entryName, '', self.timeToStop, enums.Application.D2L) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify embed announcement")
-                return     
-             
-            writeToLog("INFO","Step 8: Going to to delete embed announcement")    
-            if self.common.d2l.deleteDiscussion(self.discussionName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to delete embed announcement")
-                return              
+            writeToLog("INFO","Step 7: Going to to verify embed discussion")    
+            if self.common.jive.verifyEmbedMedia(self.discussionName, '', self.timeToStop) == False:
+                writeToLog("INFO","Step 7: FAILED to verify embed discussion")
+                return 
+            
+            writeToLog("INFO","Step 8: Going to to delete embed discussion")    
+            if self.common.jive.deleteEmbedMedia(self.discussionName) == False:
+                writeToLog("INFO","Step 8: FAILED to delete embed discussion")
+                return                                                                     
+            
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v3) from My Media tab ' was done successfully")
+            self.status = "Pass"
+            writeToLog("INFO","TEST PASSED: 'Jive - Embed media (v2) in discussion from My Media ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -120,7 +113,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.d2l.deleteDiscussion(self.discussionName, True)   
+            self.common.jive.deleteEmbedMedia(self.discussionName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

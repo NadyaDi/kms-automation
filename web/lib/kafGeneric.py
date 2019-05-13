@@ -409,7 +409,7 @@ class KafGeneric(Base):
     
     # @Author: Inbar Willman
     # Before and after calling this function need to call switch window
-    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False, isTagsNeeded=True, isGradebook=False):
+    def embedMedia(self, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, application=enums.Application.BLACK_BOARD, activity=enums.MoodleActivities.SITE_BLOG, isAssignmentEnable=False, submitAssignment=False, isTagsNeeded=True, isGradebook=False, v3=True):
         if application == enums.Application.MOODLE:
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
@@ -486,24 +486,29 @@ class KafGeneric(Base):
             
         if self.searchInEmbedPage(entryName, embedPage=embedFrom) == False:
             writeToLog("INFO","FAILED to make a search in embed page")
-            return False 
+            return False
+         
+        if v3 == True:
+            # Get an element witch contains the entry name
+            tmpResult = (self.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
+            entryElement = self.wait_element(tmpResult)
+            if entryElement == False:
+                writeToLog("INFO","FAILED to get after search result element")
+                return False        
         
-        # Get an element witch contains the entry name
-        tmpResult = (self.KAF_EMBED_RESULT_AFTER_SEARCH[0], self.KAF_EMBED_RESULT_AFTER_SEARCH[1].replace('ENTRY_NAME', entryName))
-        entryElement = self.wait_element(tmpResult)
-        if entryElement == False:
-            writeToLog("INFO","FAILED to get after search result element")
-            return False        
+            # Get the entry ID from the element
+            entryId = entryElement.get_attribute("id").split('-')[2]
+            tmpSelectBtn = (self.KAF_EMBED_EMBED_MEDIA_BTN[0], self.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
         
-        # Get the entry ID from the element
-        entryId = entryElement.get_attribute("id").split('-')[2]
-        tmpSelectBtn = (self.KAF_EMBED_EMBED_MEDIA_BTN[0], self.KAF_EMBED_EMBED_MEDIA_BTN[1].replace('ENTRY_ID', entryId))
-        
+        else:
+            tmpSelectBtn = (self.KAF_EMBED_SELECT_MEDIA_BTN[0], self.KAF_EMBED_SELECT_MEDIA_BTN[1].replace('ENTRY_NAME', entryName))
+            
         # Use the entry ID to click on the '</> Embed' button
         if self.click(tmpSelectBtn, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on the '</> Embed' button")
             return False
-        
+
+            
 #        self.clsCommon.general.waitForLoaderToDisappear()
         sleep(10)
         

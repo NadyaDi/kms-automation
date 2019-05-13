@@ -15,7 +15,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : D2L: Discussions BSE From Media Gallery
+    # Test Name : D2L: Discussions BSE From Media Gallery - v3
     # Test description:
     # Upload new media -> Go to discussions -> Create new discussion -> click on wysisyg -> Choose media from 'Media Gallery' tab
     # Verify that embed is displayed and played 
@@ -51,11 +51,24 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromMediaGallery", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed video from Media Gallery", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedFromMediaGalleryV3", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed video from Media Gallery v3", self.testNum)
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                 
+            if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-1.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-9.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+                
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
+            if self.common.admin.enableNewBSEUI('v3') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+                return
+                             
             writeToLog("INFO","Step 1: Going to navigate to media gallery")    
             if self.common.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
                 writeToLog("INFO","Step 1: FAILED to navigate to media gallery")
@@ -99,7 +112,7 @@ class Test:
                 writeToLog("INFO","Step 7: FAILED to delete embed announcement")
                 return              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Create embed discussion from Media Gallery tab ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v3) from Media Gallery tab ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

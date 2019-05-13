@@ -14,25 +14,23 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Embed Media As Standalone From Wysiwyg - v3
+    # Test Name : Embed Media As Standalone From Kaltura media - v2
     # Test description:
-    # Go to course page -> Click content -> click build content - > click create and choose item -> Click on wysiwyg -> mashups -> kaltura mesdia
-    # select media from my media > click embed -> make sure embed was created and successfuly played
+    # Go to course page -> Click content -> click build content - > click kaltura media -> 
+    # select media from media gallery > click embed -> make sure embed was created and successfully played
     # Make the same steps for media gallery
     #================================================================================================================================
-    testNum     = "2087"
+    testNum     = "5181"
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
     status = "Fail"
     # Test variables
-    entryName = None
     description = "Description"
     tags = "Tags,"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
     galleryName = "New1"
     module = "embed media from wysiwyg"
-    itemNameEmbedMyMedia = None
     delay = "0:08"
     
     
@@ -51,8 +49,11 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("embedEntryV3", self.testNum)  
-            self.itemNameEmbedMyMedia = clsTestService.addGuidToString("EmbedFromMyMediaV3", self.testNum)   
+            self.entryName = clsTestService.addGuidToString("embedEntry", self.testNum)  
+            self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
+            self.uploadEntrieList = [self.entryToUpload] 
+            self.itemNameEmbedMediaGallery = clsTestService.addGuidToString("EmbedFromMediaGallery", self.testNum)
+             
             ######################### TEST STEPS - MAIN FLOW #######################
             if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
                 localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = ' https://1765561-2.kaftest.dev.kaltura.com/admin'
@@ -62,45 +63,50 @@ class Test:
                 localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = ' https://1850231.kaf.kaltura.com/admin'
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'michal11@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
-                
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
-                return
-             
-            writeToLog("INFO","Step 2: Going to upload entry")    
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                writeToLog("INFO","Step 2: FAILED to upload entry")
-                return
-             
-            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                writeToLog("INFO","Step 3: FAILED to navigate entry page")
-                return
-             
-            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
-            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
-                return
+                            
+#             writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+#             if self.common.admin.enableNewBSEUI('v2') == False:
+#                 writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
+#                 return
+#         
+#             writeToLog("INFO","Step 2: Going to upload entry")    
+#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+#                 writeToLog("INFO","Step 2: FAILED to upload entry")
+#                 return
+#               
+#             writeToLog("INFO","Step 3: Going to to navigate to entry page")    
+#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+#                 writeToLog("INFO","Step 3: FAILED to navigate entry page")
+#                 return
+#               
+#             writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
+#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+#                 writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+#                 return
+#               
+#             writeToLog("INFO","Step 5: Going to PUBLISH entry to gallery")    
+#             if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, False) == False:
+#                 writeToLog("INFO","Step 5: FAILED to PUBLISH entry to gallery")
+#                 return
  
-            writeToLog("INFO","Step 5: Going to create embed entry from my media")  
-            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedMyMedia) == False:
-                writeToLog("INFO","Step 5: FAILED to create embed entry from my media")
-                return
+            writeToLog("INFO","Step 6: Going to CREATE embed kaltura media from media gallery")  
+            if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, 'F9A6CF91-5181-embedEntry', self.itemNameEmbedMediaGallery,v3=False)== False:
+                writeToLog("INFO","Step 6: FAILED to CREATE embed kaltura media from media gallery")
+                return   
             
-            writeToLog("INFO","Step 6: Going to verify embed media")  
-            if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedMyMedia, '', self.delay) == False:
-                writeToLog("INFO","Step 6: FAILED to verify embed media")
-                return            
+            writeToLog("INFO","Step 7: Going to VERIFY embed kaltura media from media gallery")  
+            if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedMediaGallery,'', '0:08')== False:
+                writeToLog("INFO","Step 7: FAILED to VERIFY embed kaltura media from media gallery")
+                return              
             
-            writeToLog("INFO","Step 7: Going to delete embed content from my media")  
-            if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMyMedia) == False:
-                writeToLog("INFO","Step 7: FAILED to delete embed content from my media")
-                return                         
+            writeToLog("INFO","Step 8: Going to DELETE embed content from media gallery")  
+            if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery) == False:
+                writeToLog("INFO","Step 8: FAILED to DELETE embed content from my media")
+                return                      
             
             #########################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Create embed media (v3) from my media page was done successfully")
+            writeToLog("INFO","TEST PASSED: Create embed kaltura media from media gallery page was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -110,8 +116,9 @@ class Test:
         try:
             self.common.handleTestFail(self.status)  
             writeToLog("INFO","**************** Starting: teardown_method **************** ")
+            self.common.kafGeneric.switchToKAFIframeGeneric()
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMyMedia)
+            self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedMediaGallery)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
             pass            
