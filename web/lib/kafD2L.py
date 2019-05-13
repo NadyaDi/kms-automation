@@ -189,7 +189,7 @@ class D2L(Base):
         
     
     # @Author: Inbar Willman
-    def createEmbedDiscussion(self, discussionTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True):
+    def createEmbedDiscussion(self, discussionTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True, v3=True):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
             writeToLog("INFO","FAILED navigate to New1 media gallery page")
             return False 
@@ -249,11 +249,11 @@ class D2L(Base):
         
         # In embed page, choose page to embed from and media
         if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
-            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, True, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, True, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded, v3=v3) == False:    
                 writeToLog("INFO","FAILED to choose media in embed page")
                 return False            
         else:
-            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded) == False:    
+            if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.D2L, isTagsNeeded=isTagsNeeded, v3=v3) == False:    
                 writeToLog("INFO","FAILED to choose media in embed page")
                 return False  
         
@@ -367,7 +367,7 @@ class D2L(Base):
     
     
     # @Author: Inbar Willman 
-    def createGradebook(self, entryName, gradebookTitle):  
+    def createGradebook(self, entryName, gradebookTitle, v3=True):  
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
             writeToLog("INFO","FAILED navigate to New1 media gallery page")
             return False  
@@ -410,7 +410,7 @@ class D2L(Base):
         self.swith_to_iframe(self.D2L_INSERT_STUFF_IFRAME)
         self.swith_to_iframe(self.D2L_GRADEBOOK_EMBED_IFRAME)
         
-        if self.clsCommon.kafGeneric.embedMedia(entryName,isGradebook=True) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName,isGradebook=True, v3=v3) == False:
             writeToLog("INFO","FAILED to choose media in BSE page")
             return False  
         

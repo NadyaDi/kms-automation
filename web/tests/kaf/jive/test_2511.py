@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Jive - Discussions Upload And Embed From BSE Page
+    # Test Name : Jive - Discussions Upload And Embed From BSE Page - v3
     # Test description:
     # upload media -> Click on 'Create' and choose 'Discussion' -> Click on wysisyg -> Click on 'Add new' -> Upload new media -> Save emebed
     # Verify that embed is displayed and played
@@ -47,28 +47,41 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedDiscussionFromUpload", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed discussion from upload", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedDiscussionFromUploadV3", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed discussion from upload v3", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-3.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-1.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to to create embed discussion")    
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
+            if self.common.admin.enableNewBSEUI('v3') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+                return
+                            
+            writeToLog("INFO","Step 2: Going to to create embed discussion")    
             if self.common.jive.createEmbedMedia(self.discussionName, self.entryName, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, isTagsNeeded=False) == False:
-                writeToLog("INFO","Step 1: FAILED to create embed discussion")
+                writeToLog("INFO","Step 2: FAILED to create embed discussion")
                 return
                
-            writeToLog("INFO","Step 2: Going to to verify embed discussion")    
+            writeToLog("INFO","Step 3: Going to to verify embed discussion")    
             if self.common.jive.verifyEmbedMedia(self.discussionName, self.uploadThumbnailExpectedResult, '') == False:
-                writeToLog("INFO","Step 2: FAILED to verify embed discussion")
+                writeToLog("INFO","Step 3: FAILED to verify embed discussion")
                 return 
             
-            writeToLog("INFO","Step 3: Going to to delete embed discussion")    
+            writeToLog("INFO","Step 4: Going to to delete embed discussion")    
             if self.common.jive.deleteEmbedMedia(self.discussionName) == False:
-                writeToLog("INFO","Step 3: FAILED to delete embed discussion")
+                writeToLog("INFO","Step 4: FAILED to delete embed discussion")
                 return                                                                     
             
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Jive - Embed media in document from My Media ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Jive - Embed media (v3) in document from My Media ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

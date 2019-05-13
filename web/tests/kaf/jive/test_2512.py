@@ -14,7 +14,7 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Jive - Embed media in document
+    # Test Name : Jive - Embed media in document - v3
     # Test description:
     # upload media -> Click on 'Create' and choose 'Document' -> Click on wysisyg -> Choose media from My media tab -> Save emebed
     # Verify that embed is displayed and played
@@ -47,38 +47,51 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedDocumentFromMyMedia", self.testNum)
-            self.documentName = clsTestService.addGuidToString("Embed document from My Media", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedDocumentFromMyMediaV3", self.testNum)
+            self.documentName = clsTestService.addGuidToString("Embed document from My Media v3", self.testNum)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                 
-            writeToLog("INFO","Step 1: Going to upload entry")   
+            if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-3.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-1.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+                
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
+            if self.common.admin.enableNewBSEUI('v3') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+                return
+                             
+            writeToLog("INFO","Step 2: Going to upload entry")   
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                writeToLog("INFO","Step 1: FAILED to upload entry")
+                writeToLog("INFO","Step 2: FAILED to upload entry")
                 return
                         
-            writeToLog("INFO","Step 2: Going navigate to edit entry page")    
+            writeToLog("INFO","Step 3: Going navigate to edit entry page")    
             if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                writeToLog("INFO","Step 2: FAILED navigate to edit entry '" + self.entryName + "' page")
+                writeToLog("INFO","Step 3: FAILED navigate to edit entry '" + self.entryName + "' page")
                 return 
                     
-            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
+            writeToLog("INFO","Step 4: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                writeToLog("INFO","Step 3: FAILED to navigate entry page")
+                writeToLog("INFO","Step 4: FAILED to navigate entry page")
                 return
                     
-            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
+            writeToLog("INFO","Step 5: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                writeToLog("INFO","Step 5: FAILED to wait until media end upload process")
                 return  
               
-            writeToLog("INFO","Step 5: Going to to create embed document")    
+            writeToLog("INFO","Step 6: Going to to create embed document")    
             if self.common.jive.createEmbedMedia(self.documentName, self.entryName, isDiscussion=False, isDocument=True) == False:
-                writeToLog("INFO","Step 5: FAILED to create embed document")
+                writeToLog("INFO","Step 6: FAILED to create embed document")
                 return
              
-            writeToLog("INFO","Step 6: Going to to verify embed document")    
+            writeToLog("INFO","Step 7: Going to to verify embed document")    
             if self.common.jive.verifyEmbedMedia(self.documentName, '', self.timeToStop) == False:
-                writeToLog("INFO","Step 6: FAILED to verify embed document")
+                writeToLog("INFO","Step 7: FAILED to verify embed document")
                 return 
             
 #             writeToLog("INFO","Step 7: Going to to delete embed document")    
@@ -89,7 +102,7 @@ class Test:
             
             ##################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: 'Jive - Embed media in document from My Media ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Jive - Embed media (v3) in document from My Media ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

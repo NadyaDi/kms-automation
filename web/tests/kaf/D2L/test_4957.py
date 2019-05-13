@@ -14,7 +14,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : D2L: Gradebook
+    # Test Name : D2L: Gradebook - v3
     # Test description:
     # Upload new media -> Create new quiz-> Go to course page -> Click on content tab ->  Click on 'Add Existing Activities' -> choose 'QAapp BSE" (testing)/ 'QA PROD BSE' (production)
     # Choose in embed page quiz -> Login as student -> Answer the quiz -> Verify that grade is display for student and admin
@@ -73,9 +73,9 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz_Gradebook", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz_Gradebook - Quiz", self.testNum)
-            self.newEntryName = clsTestService.addGuidToString("Quiz_Gradebook-Quiz", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Quiz_GradebookV3", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz_GradebookV3 - Quiz", self.testNum)
+            self.newEntryName = clsTestService.addGuidToString("Quiz_GradebookV3-Quiz", self.testNum)
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
             self.uploadEntrieList = [self.entryToUpload] 
             self.ponitesPossible = '100'
@@ -88,7 +88,20 @@ class Test:
             self.studentUsername = 'student'
             self.studentPassword = 'Kaltura1!'
             ##################### TEST STEPS - MAIN FLOW ##################### 
-                 
+            if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-1.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1665211-9.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+                
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
+            if self.common.admin.enableNewBSEUI('v3') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+                return
+                             
             writeToLog("INFO","Step 1: Going to to upload entry") 
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
                 self.status = "Fail"
@@ -200,7 +213,7 @@ class Test:
                 return                                                                 
             
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'D2L - Gradebook' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'D2L - Gradebook' (v3) was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

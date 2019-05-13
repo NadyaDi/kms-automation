@@ -14,7 +14,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Embed Media From SR - Add New Announcements
+    # Test Name : Embed Media From SR - Add New Announcements - v3
     # Test description:
     # Go to course page -> Click content -> click on tools - > click 'More Tools' -> Click 'Announcements'
     # select media from SR > click embed -> make sure embed was created and successfully played
@@ -52,46 +52,60 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("embedEntry", self.testNum)  
-            self.itemNameEmbedSharedRepository = clsTestService.addGuidToString("EmbedFromSharedRepositoryPage", self.testNum) 
+            self.entryName = clsTestService.addGuidToString("embedEntryV3", self.testNum)  
+            self.itemNameEmbedSharedRepository = clsTestService.addGuidToString("EmbedFromSharedRepositoryPageV3", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
-            writeToLog("INFO","Step 1: Going to add shared repository module")     
+            if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = ' https://1765561-2.kaftest.dev.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+            else: # testing 
+                localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = ' https://1850231.kaf.kaltura.com/admin'
+                localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'michal11@mailinator.com'
+                localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
+                
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
+            if self.common.admin.enableNewBSEUI('v3') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+                return
+                        
+            writeToLog("INFO","Step 2: Going to add shared repository module")     
             if self.common.blackBoard.addRemoveSharedRepositoryModule(True) == False:
-                writeToLog("INFO","Step 1: FAILED to add shared repository module")
+                writeToLog("INFO","Step 2: FAILED to add shared repository module")
                   
-            writeToLog("INFO","Step 2: Going to upload entry")   
+            writeToLog("INFO","Step 3: Going to upload entry")   
             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                writeToLog("INFO","Step 2: FAILED to upload entry")
+                writeToLog("INFO","Step 3: FAILED to upload entry")
                 return
               
-            writeToLog("INFO","Step 3: Going to completed the required fields order to publish")
+            writeToLog("INFO","Step 4: Going to completed the required fields order to publish")
             if self.common.blackBoard.addSharedRepositoryMetadata(self.entryName, self.SR_RequiredField) == False:
-                writeToLog("INFO","Step 3: FAILED to add required fields")
+                writeToLog("INFO","Step 4: FAILED to add required fields")
                 return
    
-            writeToLog("INFO","Step 4: Going to publish entry from upload page")  
+            writeToLog("INFO","Step 5: Going to publish entry from upload page")  
             if self.common.myMedia.publishSingleEntry(self.entryName, "", "", [self.galleryNameSharedrepository], publishFrom = enums.Location.MY_MEDIA, disclaimer=False) == False:
-                writeToLog("INFO","Step 4: FAILED to publish entry' " + self.entryName + " to gallery upload page")
+                writeToLog("INFO","Step 5: FAILED to publish entry' " + self.entryName + " to gallery upload page")
                 return
              
-            writeToLog("INFO","Step 5: Going to create embed kaltura media from media gallery")  
+            writeToLog("INFO","Step 6: Going to create embed kaltura media from media gallery")  
             if self.common.blackBoard.createEmbedAnnouncemnets(self.galleryName, self.entryName, self. itemNameEmbedSharedRepository, self.uploadThumbnailExpectedResult, mediaType=enums.MediaType.IMAGE)== False:
-                writeToLog("INFO","Step 5: FAILED to create embed kaltura media from media gallery")
+                writeToLog("INFO","Step 6: FAILED to create embed kaltura media from media gallery")
                 return 
             
-            writeToLog("INFO","Step 6: Going to verify embed media")  
+            writeToLog("INFO","Step 7: Going to verify embed media")  
             if self.common.kafGeneric.verifyEmbedEntry(self.itemNameEmbedSharedRepository, self.uploadThumbnailExpectedResult, '') == False:
-                writeToLog("INFO","Step 6: FAILED to verify embed media")
+                writeToLog("INFO","Step 7: FAILED to verify embed media")
                 return               
             
-            writeToLog("INFO","Step 7: Going to delete embed content from media gallery")  
+            writeToLog("INFO","Step 8: Going to delete embed content from media gallery")  
             if self.common.blackBoard.deleteEmbedItem(self.galleryName, 'Delete', self.itemNameEmbedSharedRepository, embedOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
-                writeToLog("INFO","Step 7: FAILED to delete embed content from my media")
+                writeToLog("INFO","Step 8: FAILED to delete embed content from my media")
                 return                      
             
             #########################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Create embed announcements from SR page was done successfully")
+            writeToLog("INFO","TEST PASSED: Create embed announcements (v3) from SR page was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

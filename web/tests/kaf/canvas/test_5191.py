@@ -14,14 +14,14 @@ import ctypes
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Canvas: Embed on BSE from my media - v3
+    # Test Name : Canvas: Embed on BSE from my media - v2
     # Test description:
     # Upload entry
     # Go course -> Go to 'Announcements' tab -> Add new announcement -> In announcement, click on wysiwyg and choose media to embed from 'My Media'
     # Verify that the embed was created successfully 
     # Verify that the embed was deleted successfully
     #================================================================================================================================
-    testNum     = "2309"
+    testNum     = "5191"
     application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -50,8 +50,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromMyMediaV3", self.testNum)
-            self.announcementName = clsTestService.addGuidToString("EmbedAnnouncementFromMyMediaV3", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedFromMyMediaV2", self.testNum)
+            self.announcementName = clsTestService.addGuidToString("EmbedAnnouncementFromMyMediaV2", self.testNum)
             
             ######################### TEST STEPS - MAIN FLOW #######################
             if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
@@ -63,9 +63,9 @@ class Test:
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
                 return
                         
             writeToLog("INFO","Step 1: Going to upload entry")
@@ -87,7 +87,7 @@ class Test:
                 return  
              
             writeToLog("INFO","Step 4: Going to to create embed announcement from my media")    
-            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName) == False:
+            if self.common.canvas.createEmbedAnnouncements(self.announcementName, self.entryName, v3=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4: FAILED to create embed announcement from my media")
                 return  
@@ -105,7 +105,7 @@ class Test:
                 return                                          
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: 'Embed on BSE (v3) from my media ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Embed on BSE (v2) from my media ' was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

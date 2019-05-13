@@ -15,7 +15,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Canvas: Gradebook - v3
+    # Test Name : Canvas: Gradebook - v2
     # Test description:
     # Upload entry
     # Go course -> Go to 'Announcements' tab -> Add new announcement -> In announcement, click on wysiwyg and choose media to embed from upload page
@@ -78,14 +78,14 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("Quiz_GradebookV3", self.testNum)
-            self.quizEntryName = clsTestService.addGuidToString("Quiz_GradebookV3 - Quiz", self.testNum)
-            self.newEntryName = clsTestService.addGuidToString("Quiz_GradebookV3-Quiz", self.testNum)
+            self.entryName = clsTestService.addGuidToString("Quiz_GradebookV2", self.testNum)
+            self.quizEntryName = clsTestService.addGuidToString("Quiz_GradebookV2 - Quiz", self.testNum)
+            self.newEntryName = clsTestService.addGuidToString("Quiz_GradebookV2-Quiz", self.testNum)
             self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags, timeout=60, retries=3)
             self.uploadEntrieList = [self.entryToUpload] 
             self.ponitesPossible = '100'
             self.expectedGrade = '66.67'
-            self.kalturaVideoQuizName = clsTestService.addGuidToString("gradebookV3", self.testNum) 
+            self.kalturaVideoQuizName = clsTestService.addGuidToString("gradebookV2", self.testNum) 
             
             self.galleryName = "New1"
             
@@ -102,9 +102,9 @@ class Test:
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
                 return
                         
             writeToLog("INFO","Step 2: Going to upload entry")    
@@ -150,7 +150,7 @@ class Test:
                 return 
                  
             writeToLog("INFO","Step 9 : Going to create embed assignment")  
-            if self.common.canvas.createEmbedAssignment(self.kalturaVideoQuizName, self.newEntryName, self.ponitesPossible) == False:
+            if self.common.canvas.createEmbedAssignment(self.kalturaVideoQuizName, self.newEntryName, self.ponitesPossible, v3=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 9 : FAILED to create embed assignment")  
                 return  
@@ -213,7 +213,7 @@ class Test:
                 return                 
             
             #########################################################################
-            writeToLog("INFO","TEST PASSED: Gradebook (v3) test was done successfully")
+            writeToLog("INFO","TEST PASSED: Gradebook (v2) test was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

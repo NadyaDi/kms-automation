@@ -620,7 +620,7 @@ class BlackBoard(Base):
     # Create embed item
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedItem(self, galleryName, entryName, itemName, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags=''):
+    def createEmbedItem(self, galleryName, entryName, itemName, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath='', description='', tags='', v3=True):
         if self.navigateToContentEmbedPage(galleryName) == False:
             writeToLog("INFO","FAILED to navigate to content item page")
             return False 
@@ -653,7 +653,7 @@ class BlackBoard(Base):
         self.clsCommon.base.driver.maximize_window()
         
         # Select media in embed page 
-        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags,v3=v3) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False  
         
@@ -703,14 +703,14 @@ class BlackBoard(Base):
     # Create embed kaltura media
     # chooseMediaGalleryinEmbed = False - Media gallery tab in embed page includes just one media gallery
     # chooseMediaGalleryinEmbed = True - Media gallery tab in embed page includes more than one media gallery
-    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags=''):
+    def createEmbedKalturaMedia(self, galleryName, entryName, itemName, embedFrom=enums.Location.MEDIA_GALLARY, chooseMediaGalleryinEmbed=False, filePath='', description ='', tags='', v3=True):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.BUILD_CONTENT, menuOption=enums.BBContentPageMenusOptions.KALTURA_MEDIA) == False:
             writeToLog("INFO","FAILED to navigate to content kaltura media page")
             return False 
          
         self.switchToBlackboardEmbedKaltruaMedia()
  
-        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, v3=v3) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False 
          
@@ -759,7 +759,7 @@ class BlackBoard(Base):
     
     
     # @Author: Inbar Willman
-    def createEmbedAnnouncemnets(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.SHARED_REPOSITORY, chooseMediaGalleryinEmbed=False, mediaType=enums.MediaType.VIDEO):
+    def createEmbedAnnouncemnets(self, galleryName, entryName, itemName, imageThumbnail='', delayTime='', embedFrom=enums.Location.SHARED_REPOSITORY, chooseMediaGalleryinEmbed=False, mediaType=enums.MediaType.VIDEO, v3=True):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.TOOLS, menuOption=enums.BBContentPageMenusOptions.ANNOUNCEMENTS) == False:
             writeToLog("INFO","FAILED to navigate to announcements page")
             return False
@@ -787,7 +787,7 @@ class BlackBoard(Base):
         self.clsCommon.base.driver.maximize_window()
         
         # Select media in embed page 
-        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName, galleryName, embedFrom, chooseMediaGalleryinEmbed,v3=v3) == False:
             writeToLog("INFO","FAILED to embed item in item page")
             return False  
          
@@ -928,14 +928,14 @@ class BlackBoard(Base):
     
     
     # @Author: Inbar Willman
-    def createKaltureVideoQuiz(self, galleryName, entryName, kalturaVideoQuizName, gradeOption=enums.KAFGradebookGradeOptions.SCORE):
+    def createKaltureVideoQuiz(self, galleryName, entryName, kalturaVideoQuizName, gradeOption=enums.KAFGradebookGradeOptions.SCORE, v3=True):
         if self.navigateToContentEmbedPage(galleryName, BBCoursePages=enums.BBCoursePages.CONTENT, menu=enums.BBContentPageMenus.ASSESSMENTS, menuOption=enums.BBContentPageMenusOptions.KALTURA_VIDEO_QUIZ) == False:
             writeToLog("INFO","FAILED to navigate to content kaltura video quiz page")
             return False 
         
         self.switchToBlackboardEmbedKaltruaMedia()
             
-        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:
+        if self.clsCommon.kafGeneric.embedMedia(entryName, v3=v3) == False:
             writeToLog("INFO","FAILED to choose media in kaltura video quiz page")
             return False
         

@@ -9,17 +9,18 @@ from localSettings import *
 import localSettings
 from utilityTestFunc import *
 import ctypes
+from upload import UploadEntry
 
 
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : D2L: Discussions BSE From My Media - v3
+    # Test Name : D2L: Discussions BSE From Media Gallery - v2
     # Test description:
-    # Upload new media -> Go to discussions -> Create new discussion -> click on wysisyg -> Choose media from 'My Media' tab
+    # Upload new media -> Go to discussions -> Create new discussion -> click on wysisyg -> Choose media from 'Media Gallery' tab
     # Verify that embed is displayed and played 
     #================================================================================================================================
-    testNum     = "2908"
+    testNum     = "5195"
     application = enums.Application.D2L
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
@@ -31,6 +32,7 @@ class Test:
     tags = "Tags,"
     discussionName = None
     timeToStop = "0:07"
+    galleryName = "New1"
     filePath = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\10sec_QR_mid_right.mp4'
 
     
@@ -49,10 +51,10 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("EmbedFromMyMediaV3", self.testNum)
-            self.discussionName = clsTestService.addGuidToString("Embed video from My Media v3", self.testNum)
+            self.entryName = clsTestService.addGuidToString("EmbedFromMediaGalleryV2", self.testNum)
+            self.discussionName = clsTestService.addGuidToString("Embed video from Media Gallery v2", self.testNum)
+            self.entryToUpload = UploadEntry(self.filePath, self.entryName, self.description, self.tags)
             ##################### TEST STEPS - MAIN FLOW ##################### 
-            
             if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
                 localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = 'https://1765561-1.kaftest.dev.kaltura.com/admin'
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liatv21@mailinator.com'
@@ -62,54 +64,55 @@ class Test:
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'liat@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
                 return
                              
-            writeToLog("INFO","Step 2: Going to upload entry")   
-            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 2: FAILED to upload entry")
-                return
-                       
-            writeToLog("INFO","Step 3: Going navigate to edit entry page")    
-            if self.common.editEntryPage.navigateToEditEntryPageFromMyMedia(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 3: FAILED navigate to edit entry '" + self.entryName + "' page")
+            writeToLog("INFO","Step 1: Going to navigate to media gallery")    
+            if self.common.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL) == False:
+                writeToLog("INFO","Step 1: FAILED to navigate to media gallery")
                 return 
-                   
-            writeToLog("INFO","Step 4: Going to to navigate to entry page")    
-            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-                self.status = "Fail"
-                writeToLog("INFO","Step 4: FAILED to navigate entry page")
+             
+            self.common.base.swith_to_iframe(self.common.d2l.D2L_MEDIA_SPACE_IFRAME)
+ 
+            writeToLog("INFO","Step 2: Going to upload new entry to media gallery")    
+            if self.common.channel.addNewContentToChannelWithoutNavigate(self.entryToUpload, application=enums.Application.D2L) == False:
+                writeToLog("INFO","Step 2: FAILED to upload new entry to media gallery")
                 return
-                   
-            writeToLog("INFO","Step 5: Going to to wait until media end upload process")    
+             
+            self.common.base.switch_to_default_content()     
+             
+            writeToLog("INFO","Step 3: Going to navigate to entry page")    
+            if self.common.entryPage.navigateToEntry(self.entryName) == False:
+                writeToLog("INFO","Step 3: FAILED to upload new entry to media gallery")
+                return   
+             
+            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 5: FAILED to wait until media end upload process")
-                return  
-               
-            writeToLog("INFO","Step 6: Going to create embed discussion")    
-            if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName) == False:
+                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                return                           
+              
+            writeToLog("INFO","Step 5: Going to create embed discussion")    
+            if self.common.d2l.createEmbedDiscussion(self.discussionName, self.entryName, self.galleryName, embedFrom=enums.Location.MEDIA_GALLARY, v3=False) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 6: FAILED to create embed discussion")
+                writeToLog("INFO","Step 5: FAILED to create embed discussion")
                 return             
-               
-            writeToLog("INFO","Step 7: Going to to verify embed announcement")    
+              
+            writeToLog("INFO","Step 6: Going to to verify embed announcement")    
             if self.common.kafGeneric.verifyEmbedEntry(self.entryName, '', self.timeToStop, enums.Application.D2L) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 7: FAILED to verify embed announcement")
+                writeToLog("INFO","Step 6: FAILED to verify embed announcement")
                 return     
              
-            writeToLog("INFO","Step 8: Going to to delete embed announcement")    
+            writeToLog("INFO","Step 7: Going to to delete embed announcement")    
             if self.common.d2l.deleteDiscussion(self.discussionName) == False:
                 self.status = "Fail"
-                writeToLog("INFO","Step 8: FAILED to delete embed announcement")
+                writeToLog("INFO","Step 7: FAILED to delete embed announcement")
                 return              
             ##################################################################
-            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v3) from My Media tab ' was done successfully")
+            writeToLog("INFO","TEST PASSED: 'Create embed discussion (v2) from Media Gallery tab ' was done successfully")
         # if an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
@@ -120,7 +123,7 @@ class Test:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")      
             self.common.myMedia.deleteSingleEntryFromMyMedia(self.entryName)
-            self.common.d2l.deleteDiscussion(self.discussionName, True)   
+            self.common.d2l.deleteDiscussion(self.discussionName, True)     
             writeToLog("INFO","**************** Ended: teardown_method *******************")            
         except:
             pass            

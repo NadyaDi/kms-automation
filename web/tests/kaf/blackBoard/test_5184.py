@@ -14,7 +14,7 @@ from upload import UploadEntry
 class Test:
     #================================================================================================================================
     # @Author: Inbar Willman
-    # Test Name : Upload From Embed As Standalone - v3
+    # Test Name : Upload From Embed As Standalone - v2
     # Test description:
     # Go to course page -> Click content -> Click on bulid content - > click on kaltura media -> upload new media
     # select new media > click embed -> make sure embed was created and successfully played
@@ -51,8 +51,8 @@ class Test:
             #initialize all the basic vars and start playing
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
-            self.entryName = clsTestService.addGuidToString("embedEntryV3", self.testNum)  
-            self.itemNameEmbedUpload = clsTestService.addGuidToString("EmbedFromUploadPageV3", self.testNum) 
+            self.entryName = clsTestService.addGuidToString("embedEntryV2", self.testNum)  
+            self.itemNameEmbedUpload = clsTestService.addGuidToString("EmbedFromUploadPageV2", self.testNum) 
             ######################### TEST STEPS - MAIN FLOW #######################
             if LOCAL_SETTINGS_ENV_NAME != 'ProdNewUI':
                 localSettings.LOCAL_SETTINGS_KMS_ADMIN_URL = ' https://1765561-2.kaftest.dev.kaltura.com/admin'
@@ -63,13 +63,13 @@ class Test:
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'michal11@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                 
-            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v3")    
-            if self.common.admin.enableNewBSEUI('v3') == False:
-                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v3")
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
                 return
                         
             writeToLog("INFO","Step 2: Going to create embed item media from upload entry")  
-            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedUpload, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=self.tags)== False:
+            if self.common.blackBoard.createEmbedItem(self.galleryName, self.entryName, self.itemNameEmbedUpload, embedFrom=enums.Location.UPLOAD_PAGE_EMBED, filePath=self.filePath, description=self.description, tags=self.tags, v3=False)== False:
                 writeToLog("INFO","Step 2: FAILED to create embed item media from upload entry")
                 return
             
@@ -85,7 +85,7 @@ class Test:
             
             #########################################################################
             self.status = "Pass"
-            writeToLog("INFO","TEST PASSED: Create embed announcements (v3) from SR page was done successfully")
+            writeToLog("INFO","TEST PASSED: Create embed announcements (v2) from SR page was done successfully")
         # If an exception happened we need to handle it and fail the test       
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)

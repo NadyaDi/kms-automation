@@ -197,7 +197,7 @@ class Canvas(Base):
     
 
     # @Author: Inbar Willman
-    def createEmbedAnnouncements(self, announcementTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True):
+    def createEmbedAnnouncements(self, announcementTitle, entryName, mediaGalleryName=None, embedFrom=enums.Location.MY_MEDIA, chooseMediaGalleryinEmbed=False, filePath=None, description=None, tags=None, isTagsNeeded=True, v3=True):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ANNOUNCEMENTS_URL) == False:
             writeToLog("INFO","FAILED navigate to announcements page")
             return False 
@@ -217,7 +217,7 @@ class Canvas(Base):
         self.clsCommon.base.swith_to_iframe(self.CANVAS_EMBED_IFRAME)
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.CANVAS, isTagsNeeded=isTagsNeeded) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, mediaGalleryName, embedFrom, chooseMediaGalleryinEmbed, filePath, description, tags, application=enums.Application.CANVAS, isTagsNeeded=isTagsNeeded, v3=v3) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False  
    
@@ -358,7 +358,7 @@ class Canvas(Base):
     
     
     # @Author: Inbar Willman
-    def createEmbedAssignment(self, assignmentTitle, entryName, ponitesPossible):
+    def createEmbedAssignment(self, assignmentTitle, entryName, ponitesPossible, v3=True):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_GALLERY_ASSIGNMENTSS_URL) == False:
             writeToLog("INFO","FAILED navigate to assignment page")
             return False 
@@ -398,7 +398,7 @@ class Canvas(Base):
         self.clsCommon.base.swith_to_iframe(self.CANVAS_EXTERNAL_TOOL_IFRAME)
         
         # In embed page, choose page to embed from and media
-        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:    
+        if self.clsCommon.kafGeneric.embedMedia(entryName, v3=v3) == False:    
             writeToLog("INFO","FAILED to choose media in embed page")
             return False 
         
