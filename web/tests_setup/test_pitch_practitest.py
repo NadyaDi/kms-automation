@@ -16,7 +16,6 @@ class Test:
     status      = "Fail"   
     localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.PITCH
     # Update the PractiTest variables by the Project name
-    practiTest.setPractitestVariables()
     
     def test_01(self,env):
         
