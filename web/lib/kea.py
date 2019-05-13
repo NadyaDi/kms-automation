@@ -3338,7 +3338,7 @@ class Kea(Base):
                         return False
                     
             # Leave time for the Hotspot Creation tool tip to proper be displayed     
-            sleep(1)
+            sleep(1.3)
             if self.wait_element(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 5, True) == False:
                 writeToLog("INFO", "FAILED to display the Advanced Settings option within the Hotspot creation tool tip")
                 return False
@@ -3529,19 +3529,23 @@ class Kea(Base):
             if len(hotspotDetails) >= 3:
                 if hotspotDetails[2] != None or hotspotDetails[3] != None:
                     if creationType == enums.keaHotspotCreationType.VIDEO_PAUSED:
+                        # Start and End time set on Firefox driver using the timleine section
                         if self.driver.capabilities['browserName'] == 'firefox':
                             if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
                                 writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Firefox Browser")
                                 return False
                         else:
-                            if creationType == enums.keaHotspotCreationType.VIDEO_PLAYING:
-                                if self.changeHotspotTimeStamp(hotspotDetails[0], '', hotspotDetails[3]) == False:
-                                    writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser on a played video")
-                                    return False
-                            else:             
-                                if self.changeHotspotTimeStamp(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
-                                    writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser")
-                                    return False
+                            # Because the start and end time of the hotspot may not be saved properly during the first time on Chrome, we run it twice
+                            # Start and end time is set with Advanced Settings
+                            for x in range(0, 2):
+                                if creationType == enums.keaHotspotCreationType.VIDEO_PLAYING:
+                                    if self.changeHotspotTimeStamp(hotspotDetails[0], '', hotspotDetails[3]) == False:
+                                        writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser on a played video, during the " + str(x) + " try")
+                                        return False
+                                else:             
+                                    if self.changeHotspotTimeStamp(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                                        writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser, during the " + str(x) + " try")
+                                        return False
                         
                         # Move back the real time marker to the initial position
                         if self.setRealTimeMarkerToTime('00:00') == False:
@@ -3793,11 +3797,12 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to highligth the " + hotspotName + " hotspot")
             return False
         
+        sleep(1)
         # Trigger the Action Drop Down Menu
         if self.clickElement(hotspotsActionMenu[hotspotIndexLocation]) == False:
             writeToLog("INFO", "FAILED to trigger the action menu for hotspot: " + hotspotName + " at the second try")
             return False
-            
+        sleep(1)
         if hotspotAction == enums.keaHotspotActions.DUPLICATE:
             # Duplicate the hotspotName
             if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE, 1, True) == False:
@@ -4379,12 +4384,15 @@ class Kea(Base):
                     if addHotspotToolTip.text.strip() != "Can't add hotspot on the protected zone":
                         writeToLog("INFO", "FAILED, an invalid tool tip text was presented: " + addHotspotToolTip.text.strip() + " while being in protected zone")
                         return False                
-                         
+                
+                hotspotToolTipLocationChrome = {'x': 0, 'y':0}
                 if location == enums.keaLocation.TOP_LEFT:
-                    hotspotToolTipLocation = {'x': 503, 'y': 75}
+                    hotspotToolTipLocation          = {'x': 503, 'y': 75}
+                    hotspotToolTipLocationChrome    = {'x': 503, 'y': 73}
                     
                 elif location == enums.keaLocation.TOP_RIGHT:
-                    hotspotToolTipLocation = {'x': 916, 'y': 75}
+                    hotspotToolTipLocation          = {'x': 916, 'y': 75}
+                    hotspotToolTipLocationChrome    = {'x': 916, 'y': 73}
                     
                 elif location == enums.keaLocation.CENTER:
                     hotspotToolTipLocation = {'x': 782, 'y': 268}
@@ -4405,7 +4413,7 @@ class Kea(Base):
                     hotspotToolTipLocation = {'x': 849, 'y': 433}
     
                 # Verify the Add Hotspot tool tip location
-                if addHotspotToolTip.location != hotspotToolTipLocation:
+                if addHotspotToolTip.location != hotspotToolTipLocation and hotspotToolTipLocationChrome != addHotspotToolTip.location:
                     writeToLog("INFO", "FAILED, the tool tip for " + location.value + " was displayed at X:" + str(addHotspotToolTip.location['x']) + " and Y:" + addHotspotToolTip.location['y'] + " coordinates" )
                     return False
                 

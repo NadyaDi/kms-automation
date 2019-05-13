@@ -382,14 +382,27 @@ class D2L(Base):
             writeToLog("INFO","FAILED to click on 'Add Existing Activities' dropdown")
             return False 
         
-        self.clsCommon.sendKeysToBodyElement(Keys.PAGE_DOWN) 
-             
+        # Create the locator for the BSE environment             
         if localSettings.LOCAL_SETTINGS_ENV_NAME == 'ProdNewUI':
             tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QA PROD BSE')) 
             
         elif localSettings.LOCAL_SETTINGS_ENV_NAME == 'TestingNewUI':
             tmpBseEnviorment = (self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[0], self.D2L_ADD_EXISTING_ACTIVITIES_OPTION[1].replace('BSE_EVIORMENT', 'QAapp BSE'))  
-            
+        
+        # Take the BSE Environment element
+        bseEnvironmentElement = self.wait_element(tmpBseEnviorment, 15, True)
+        
+        if bseEnvironmentElement == False:
+            writeToLog("INFO", "FAILED to take the BSE environment element from the drop down list")
+            return False
+        
+        # Scroll into view the BSE environment element
+        try:
+            self.driver.execute_script("arguments[0].scrollIntoView(true);", bseEnvironmentElement)
+        except Exception:
+            writeToLog("INFO", "FAILED to scroll to the BSE Environment element")
+            return False
+        
         if self.click(tmpBseEnviorment) == False:
             writeToLog("INFO","FAILED to click on BSE option")
             return False 
