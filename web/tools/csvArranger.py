@@ -75,8 +75,8 @@ def createNewSortedCsv(csvPath, csvPathReady, idsList):
 
 
 if __name__ == '__main__':
-    csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSet.csv'))
-    csvPathReady = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetReady.csv'))
+    csvPath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSet.csv'))
+    csvPathReady = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetReady.csv'))
     
     listDuplicates = getDuplicatedTestIds(csvPath)
     listDuplicatedLines = createListOfDuplicatedLines(csvPath, listDuplicates)

@@ -1,6 +1,5 @@
 import pytest
 import sys,os
-sys.path.insert(1,os.path.abspath(os.path.join(os.path.dirname( __file__ ),'..','lib')))
 from utilityTestFunc import *
 from clsPractiTest import clsPractiTest
 import clsTestService
@@ -12,8 +11,11 @@ class Test:
     #=============================================================================================================
     
     practiTest = clsPractiTest()
-    testNum     = "0000"
-    status      = "Pass"   
+    testNum     = "kms_practitest"
+    status      = "Fail"   
+    localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
+    # Update the PractiTest variables by the Project name
+    practiTest.setPractitestVariables()
     
     def test_01(self,env):
         
@@ -22,7 +24,7 @@ class Test:
         try:
             self.startTime = time.time() 
             writeToLog("INFO","************************************************************************************************************************")
-            writeToLog("INFO","Start setup test test_0000")            
+            writeToLog("INFO","Start setup test test_kms_practitest")            
             
             prSessionInfo = self.practiTest.getPractiTestAutomationSession()
             if (prSessionInfo["sessionSystemID"] != -1):
@@ -31,12 +33,13 @@ class Test:
                     self.practiTest.createAutomationTestSetFile(prSessionInfo["hostname"], prSessionInfo["environment"], prSessionInfo["setPlatform"], testIDsDct)
                 else:
                     writeToLog("INFO","Unable to get test list")
+                    return
                                     
                 if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
-                    self.status = "Fail"
                     writeToLog("INFO","Unable to set test set as processed") 
                     return
-         
+                
+                self.status = 'Pass'
         except Exception as inst:
             self.status = clsTestService.handleException(self,inst,self.startTime)
                 

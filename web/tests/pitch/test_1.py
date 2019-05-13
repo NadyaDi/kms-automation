@@ -11,9 +11,9 @@ class Test:
     # Test Name : Pitch - Login Test 
     # Test description:
     #================================================================================================================================
-    testNum     = "5165"
+    testNum     = "1"
     application = enums.Application.PITCH
-    supported_platforms = clsTestService.updatePlatforms(testNum)
+    supported_platforms = clsTestService.updatePlatforms(testNum, application)
     
     
     status = "Fail"

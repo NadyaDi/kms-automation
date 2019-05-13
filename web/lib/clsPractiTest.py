@@ -35,7 +35,35 @@ class clsPractiTest:
         PROCESSED       = 'PROCESSED'
         PENDING         = 'PENDING'       
 
-    
+
+    #=============================================================================================================
+    # Update the PractiTest variables by the Project name 
+    #=============================================================================================================   
+    def setPractitestVariables(self):
+        application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
+        
+        if application == enums.Application.MEDIA_SPACE:
+            localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                          = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_PROJECT_ID
+            localSettings.LOCAL_SETTINGS_PRACTITEST_NIGHT_RUN_FILTER_ID                 = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_NIGHT_RUN_FILTER_ID
+            localSettings.LOCAL_SETTINGS_PRACTITEST_ONLY_EXECUTE_AT_NIGHT               = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_ONLY_EXECUTE_AT_NIGHT
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_PLATFORM_FIELD           = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_PLATFORM_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_ENV_FIELD                = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_ENV_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ON_HOSTNAME_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_RUN_ON_HOSTNAME_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ONLY_FAILED_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_RUN_ONLY_FAILED_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AUTOMATED                   = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_EXECUTE_AUTOMATED
+            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT                    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_EXECUTE_AT_NIGHT
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS                   = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_STATUS
+        elif application == enums.Application.PITCH:
+            localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                          = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_PROJECT_ID
+            localSettings.LOCAL_SETTINGS_PRACTITEST_NIGHT_RUN_FILTER_ID                 = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_NIGHT_RUN_FILTER_ID
+            localSettings.LOCAL_SETTINGS_PRACTITEST_ONLY_EXECUTE_AT_NIGHT               = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_ONLY_EXECUTE_AT_NIGHT
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_PLATFORM_FIELD           = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_AUTOMATION_PLATFORM_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_ENV_FIELD                = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_AUTOMATION_ENV_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ON_HOSTNAME_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_AUTOMATION_RUN_ON_HOSTNAME_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ONLY_FAILED_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_AUTOMATION_RUN_ONLY_FAILED_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AUTOMATED                   = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_EXECUTE_AUTOMATED
+            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT                    = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_EXECUTE_AT_NIGHT
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS                   = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_AUTOMATION_STATUS
     #=============================================================================================================
     # Function that returns all instances of a specific session 
     #=============================================================================================================    
@@ -52,7 +80,11 @@ class clsPractiTest:
                 'Connection':'close'
             }
                          
-            practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(prSessionID) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&page[number]=" + str(page) + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
+            practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + \
+                                        "/instances.json?set-ids=" + str(prSessionID) + \
+                                        "&developer_email=" + localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL + \
+                                        "&page[number]=" + str(page) + \
+                                        "&api_token=" + localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN
             # For next iteration
             page = page + 1
              
@@ -65,12 +97,12 @@ class clsPractiTest:
                         # testInstance['attributes']['custom-fields']['---f-30772'] - Platform(CH, FF..)
                         # Check if test has specified platform, if not, use default platform
                         try:
-                            platform = testInstance['attributes']['custom-fields']['---f-30772']  
+                            platform = testInstance['attributes']['custom-fields'][localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_PLATFORM_FIELD]  
                         except Exception:
                             platform = defaultPlatform
                              
                         try:
-                            executeAutomated = testInstance['attributes']['custom-fields']['---f-34162']  
+                            executeAutomated = testInstance['attributes']['custom-fields'][localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AUTOMATED]  
                         except Exception:
                             executeAutomated = 'No'                        
                          
@@ -97,15 +129,18 @@ class clsPractiTest:
         return sessionInstancesDct    
     
     
-    #=============================================================================================================
-    # Function that returns all sessions that are located under the filter "pending for automation"  
-    #=============================================================================================================
+    #=====================================================================================================================
+    # Function that returns all sessions that are located under the filter "pending for automation" in Media Space Project 
+    #=====================================================================================================================
     def getPractiTestAutomationSession(self):
         #FOR DEBUG, DON'T REMOVE
         # PractiTest filter ID:
         # qaKmsFrontEnd = 442156
         filterId = os.getenv('PRACTITEST_FILTER_ID',"")
-        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
+        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + \
+                                    "api_token=" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + \
+                                    "&developer_email=" + str(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL) + \
+                                    "&filter-id=" + str(filterId)
         
         prSessionInfo = {
             "sessionSystemID"       : -1,
@@ -128,10 +163,10 @@ class clsPractiTest:
                 if (dctSets["data"][0]["attributes"]["instances-count"] > 0):
                     prSessionInfo["sessionSystemID"]  = dctSets["data"][0]["id"]
                     prSessionInfo["sessionDisplayID"] = dctSets["data"][0]["attributes"]["display-id"]
-                    prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30772'] #PractiTest Field: Automation Platform
-                    prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"]['---f-30761'] #PractiTest Field: Automation Env
-                    prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"]['---f-34785'] #PractiTest Field: Run On Hostname
-                    prSessionInfo["runOnlyFailed"]    = dctSets["data"][0]["attributes"]["custom-fields"]['---f-38033'] #PractiTest Field: Automation Run Only FAILED
+                    prSessionInfo["setPlatform"]      = dctSets["data"][0]["attributes"]["custom-fields"][localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_PLATFORM_FIELD] #PractiTest Field: Automation Platform
+                    prSessionInfo["environment"]      = dctSets["data"][0]["attributes"]["custom-fields"][localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_ENV_FIELD] #PractiTest Field: Automation Env
+                    prSessionInfo["hostname"]         = dctSets["data"][0]["attributes"]["custom-fields"][localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ON_HOSTNAME_FIELD] #PractiTest Field: Run On Hostname
+                    prSessionInfo["runOnlyFailed"]    = dctSets["data"][0]["attributes"]["custom-fields"][localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ONLY_FAILED_FIELD] #PractiTest Field: Automation Run Only FAILED
                     
                     writeToLog("INFO","Automation set found: " + str(prSessionInfo["sessionDisplayID"]) + " on platform: " + prSessionInfo["setPlatform"])
                 else:
@@ -141,14 +176,19 @@ class clsPractiTest:
         
         return prSessionInfo
     
-
+    
     #=============================================================================================================
     # Function that returns specific test set by ID 
     #=============================================================================================================
     def getPractiTestSetById(self, testSetId):
 #         testSetId = '367544'
         page = '1'
-        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(testSetId) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&page[number]=" + str(page) + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
+        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + \
+                                    str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + \
+                                    "/instances.json?set-ids=" + str(testSetId) + \
+                                    "&developer_email=" + localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL + \
+                                    "&page[number]=" + str(page) + \
+                                    "&api_token=" + localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN
 
         headers = {
             'Content-Type': 'application/json',
@@ -190,7 +230,10 @@ class clsPractiTest:
     # Function that returns all tests sets that are located under the given filter 
     #=============================================================================================================
     def getPractiTestTestSetByFilterId(self, filterId, onlyExecuteAtNight=False):
-        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) + "&filter-id=" + str(filterId)
+        practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets.json?" + \
+                                    "api_token=" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + \
+                                    "&developer_email=" + str(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL) + \
+                                    "&filter-id=" + str(filterId)
         
         listTestSet = []    
 
@@ -208,7 +251,7 @@ class clsPractiTest:
                     if onlyExecuteAtNight == True:
                         try:
                             #'---f-41840' = "Execute at Night"
-                            if testSet['attributes']['custom-fields']['---f-41840'] == 'yes':
+                            if testSet['attributes']['custom-fields'][localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT] == 'yes':
                                 listTestSet.append(testSet)
                                 writeToLog("INFO","TestSet name: " + str(testSet['attributes']['name']) + "; ID: " + str(testSet['attributes']['display-id']) + 
                                            " was added to list")
@@ -238,7 +281,7 @@ class clsPractiTest:
         instance = ""
         
         case_str = "test_" + testID
-        testSetFilePath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
+        testSetFilePath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetAuto.csv'))
         with open(testSetFilePath, 'r') as csv_mat: #windows
                 platform_matrix = csv.DictReader(csv_mat)
                 for row in platform_matrix:
@@ -255,7 +298,7 @@ class clsPractiTest:
         runningTestNum    = os.getenv('RUNNING_TEST_ID',"")
         TEST_LOG_FILE_FOLDER_PATH = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'logs',str(runningTestNum)))
         
-        practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
+        practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
        
         if (testStatus == "Pass"):
             exit_code = "0"
@@ -269,7 +312,7 @@ class clsPractiTest:
 
         r = requests.post(practiTestUpdateTestInstanceResultsURL,
             data=data_json,
-            auth=(LOCAL_SETTINGS_DEVELOPER_EMAIL, str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
+            auth=(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL, str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
             headers={'Content-type': 'application/json', 'Connection':'close'})    
 
         if (r.status_code == 200):
@@ -286,7 +329,7 @@ class clsPractiTest:
     # testStatus  = self.practiTest.TEST_STATUS
     #============================================================================================================= 
     def setStatusToEntireTestset(self, testSetList, testStatus):
-        practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
+        practiTestUpdateTestInstanceResultsURL = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/runs.json"
 
         # For each Testset under cpecified filter
         for testSet in testSetList:
@@ -300,7 +343,11 @@ class clsPractiTest:
                     'Connection':'close'
                 }
                              
-                practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances.json?set-ids=" + str(testSetInstanceId) + "&developer_email=" + LOCAL_SETTINGS_DEVELOPER_EMAIL + "&page[number]=" + str(page) + "&api_token=" + LOCAL_SETTINGS_PRACTITEST_API_TOKEN
+                practiTestGetSessionsURL = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + \
+                                            "/instances.json?set-ids=" + str(testSetInstanceId) + \
+                                            "&developer_email=" + localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL + \
+                                            "&page[number]=" + str(page) + \
+                                            "&api_token=" + localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN
                 # For next iteration
                 page = page + 1
                  
@@ -323,7 +370,7 @@ class clsPractiTest:
                             # Send the post to PractiTest API
                             r = requests.post(practiTestUpdateTestInstanceResultsURL,
                                 data=json.dumps(data),
-                                auth=(LOCAL_SETTINGS_DEVELOPER_EMAIL, str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
+                                auth=(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL, str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN)),
                                 headers={'Content-type': 'application/json', 'Connection':'close'})    
                       
                             if (r.status_code == 200):
@@ -411,7 +458,7 @@ class clsPractiTest:
     #=============================================================================================================
     def createAutomationTestSetFile(self, hostname, environment, platform, testIDsDict):
         platformList = ["pc_firefox","pc_chrome","pc_internet explorer","android_chrome"]
-        testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','testSetAuto.csv'))
+        testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetAuto.csv'))
         file = open(testSetFile, "w")
         automationTestSetFileHeader = "hostname,environment,case"
         for plat in platformList:
@@ -439,13 +486,16 @@ class clsPractiTest:
     # Function that that set the test set from status pending to status processed in practitest
     #=============================================================================================================
     def setTestSetAutomationStatusAsProcessed (self, prSessionID):
-        practiTestSetAutomationStatusAsProcessedUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets/" + str(prSessionID) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL)
+        practiTestSetAutomationStatusAsProcessedUrl = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + \
+                                                        "/sets/" + str(prSessionID) + ".json?" + \
+                                                        "api_token=" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + \
+                                                        "&developer_email=" + str(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL)
         
         headers = { 
             'Content-Type': 'application/json',
             'Connection':'close'
         }
-        data = {"data": { "type": "sets", "attributes": {"custom-fields": { "---f-30327": "Processed"}}  } }
+        data = {"data": { "type": "sets", "attributes": {"custom-fields": { localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS: "Processed"}}  } }
         
         r = requests.put(practiTestSetAutomationStatusAsProcessedUrl,headers = headers, data = json.dumps(data))
         if (r.status_code == 200):
@@ -461,7 +511,10 @@ class clsPractiTest:
     # customFiledId example: "---f-38302"
     #=============================================================================================================
     def updateInstanceCustomField(self, instanceId, customFieldId, customFieldValue):
-        practiTestUpdateASpecificInstanceUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/instances/" + str(instanceId) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL)
+        practiTestUpdateASpecificInstanceUrl = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + \
+                                                "/instances/" + str(instanceId) + ".json?" + \
+                                                "api_token=" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + \
+                                                "&developer_email=" + str(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL)
         
         headers = { 
             'Content-Type': 'application/json',
@@ -482,7 +535,10 @@ class clsPractiTest:
     # customFiledId example: "---f-38302"
     #=============================================================================================================
     def updateInstanceCustomFields(self, instanceId, customFiledsDict):
-        practiTestUpdateASpecificTestsetInstanceUrl = "https://api.practitest.com/api/v2/projects/" + str(LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + "/sets/" + str(instanceId) + ".json?" + "api_token=" + str(LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + "&developer_email=" + str(LOCAL_SETTINGS_DEVELOPER_EMAIL) 
+        practiTestUpdateASpecificTestsetInstanceUrl = "https://api.practitest.com/api/v2/projects/" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID) + \
+                                                        "/sets/" + str(instanceId) + ".json?" + \
+                                                        "api_token=" + str(localSettings.LOCAL_SETTINGS_PRACTITEST_API_TOKEN) + \
+                                                        "&developer_email=" + str(localSettings.LOCAL_SETTINGS_DEVELOPER_EMAIL) 
         headers = { 
             'Content-Type': 'application/json',
             'Connection':'close'
