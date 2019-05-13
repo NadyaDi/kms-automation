@@ -40,7 +40,6 @@ test_4869,1,0,0,0,Blackboard Ultra- Publish from entry page
 test_4870,1,0,0,0,Blackboard Ultra- Preview all kinds of media from My Media and Gallery 
 test_4871,1,0,0,0,Blackboard Ultra- View Collapsed Expanded Modes
 test_4872,1,0,0,0,Blackboard Ultra- Upload media from desktop
-test_4875,1,0,0,0,Blackboard Ultra- Search by Name / Description / Tags
 test_4876,1,0,0,0,Blackboard Ultra- Sort Media
 test_4877,1,0,0,0,Blackboard Ultra- Filter media view different statuses
 test_4875,1,0,0,0,Blackboard Ultra- Filter media view different media types / Description / Tags
@@ -331,7 +330,6 @@ test_4621,1,0,0,0,KEA Clip video with captions
 test_4622,0,1,0,0,KEA Trim Quiz with caption and slide
 test_4742,1,0,0,0,KEA - Quiz Details section in KEA Editor
 test_4746,1,0,0,0,KEA - Quiz Details section in Entry Page
-test_4746,1,0,0,0,Quiz - Details section in Entry Page
 test_4757,0,1,0,0,Quiz - Details - Download functionality
 test_4758,1,0,0,0,Quiz - Scores section in KEA Page
 test_4759,1,0,0,0,Quiz - Scores section in Entry Page - Enabled
@@ -422,7 +420,6 @@ test_4939,0,1,0,0,Editor: Undo timeline functionality
 test_4955,0,1,0,0,Editor: Trim Quiz entry (with Slides and Captions)
 test_4981,1,0,0,0,Entitlements - Entry Private with Initial Owner and Changed Owner
 test_4983,1,0,0,0,Entitlements - Entry Private with Co Publisher and Demoted Co Publisher
-test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
 test_4984,1,0,0,0,Entitlements - Entry Private with Co Editor and Demoted Co Editor
 test_4999,1,0,0,0,Entitlements - Private Channel using Channels Page
 test_5009,1,0,0,0,Entitlements - Open Channel using Channels Page
