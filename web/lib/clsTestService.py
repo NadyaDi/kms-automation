@@ -155,12 +155,10 @@ def updatePlatforms(test_num, application=enums.Application.MEDIA_SPACE):
     
     supported_platforms=[]
     case_str = "test_" + test_num
-    if application==enums.Application.MEDIA_SPACE:
-        matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSet' + env +  '.csv'))
-    elif application==enums.Application.PITCH:
+    if application==enums.Application.PITCH:
         matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','pitch','testSet' + env +  '.csv'))
     else:
-        writeToLog("INFO","UNSUPPORTED APPLICATION NAME: '" + str(application) + "'")
+        matrixPath=os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSet' + env +  '.csv'))
         
     with open(matrixPath, 'r') as csv_mat: #windows
         platform_matrix = csv.DictReader(csv_mat)
