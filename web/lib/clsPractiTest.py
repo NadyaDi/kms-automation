@@ -45,18 +45,7 @@ class clsPractiTest:
     def setPractitestVariables(self):
         application = localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST
         
-        if application == enums.Application.MEDIA_SPACE:
-            localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                          = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_PROJECT_ID
-            localSettings.LOCAL_SETTINGS_PRACTITEST_NIGHT_RUN_FILTER_ID                 = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_NIGHT_RUN_FILTER_ID
-            localSettings.LOCAL_SETTINGS_PRACTITEST_ONLY_EXECUTE_AT_NIGHT               = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_ONLY_EXECUTE_AT_NIGHT
-            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_PLATFORM_FIELD           = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_PLATFORM_FIELD
-            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_ENV_FIELD                = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_ENV_FIELD
-            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ON_HOSTNAME_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_RUN_ON_HOSTNAME_FIELD
-            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ONLY_FAILED_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_RUN_ONLY_FAILED_FIELD
-            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AUTOMATED                   = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_EXECUTE_AUTOMATED
-            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT                    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_EXECUTE_AT_NIGHT
-            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS                   = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_STATUS
-        elif application == enums.Application.PITCH:
+        if application == enums.Application.PITCH:
             localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                          = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_PROJECT_ID
             localSettings.LOCAL_SETTINGS_PRACTITEST_NIGHT_RUN_FILTER_ID                 = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_NIGHT_RUN_FILTER_ID
             localSettings.LOCAL_SETTINGS_PRACTITEST_ONLY_EXECUTE_AT_NIGHT               = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_ONLY_EXECUTE_AT_NIGHT
@@ -67,6 +56,17 @@ class clsPractiTest:
             localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AUTOMATED                   = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_EXECUTE_AUTOMATED
             localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT                    = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_EXECUTE_AT_NIGHT
             localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS                   = localSettings.LOCAL_SETTINGS_PRACTITEST_PITCH_AUTOMATION_STATUS
+        else:
+            localSettings.LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                          = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_PROJECT_ID
+            localSettings.LOCAL_SETTINGS_PRACTITEST_NIGHT_RUN_FILTER_ID                 = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_NIGHT_RUN_FILTER_ID
+            localSettings.LOCAL_SETTINGS_PRACTITEST_ONLY_EXECUTE_AT_NIGHT               = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_ONLY_EXECUTE_AT_NIGHT
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_PLATFORM_FIELD           = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_PLATFORM_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_ENV_FIELD                = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_ENV_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ON_HOSTNAME_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_RUN_ON_HOSTNAME_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_RUN_ONLY_FAILED_FIELD    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_RUN_ONLY_FAILED_FIELD
+            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AUTOMATED                   = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_EXECUTE_AUTOMATED
+            localSettings.LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT                    = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_EXECUTE_AT_NIGHT
+            localSettings.LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS                   = localSettings.LOCAL_SETTINGS_PRACTITEST_KMS_AUTOMATION_STATUS            
     #=============================================================================================================
     # Function that returns all instances of a specific session 
     #=============================================================================================================    
