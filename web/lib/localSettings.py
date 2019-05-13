@@ -107,9 +107,13 @@ LOCAL_SETTINGS_PRACTITEST_EXECUTE_AT_NIGHT                          = None
 LOCAL_SETTINGS_PRACTITEST_AUTOMATION_STATUS                         = None
 LOCAL_SETTINGS_PRACTITEST_API_TOKEN                                 = "deee12e1d8746561e1815d0430814c82c9dbb57d"
 LOCAL_SETTINGS_DEVELOPER_EMAIL                                      = "oleg.sigalov@kaltura.com"
-#TO DELETE #LOCAL_SETTINGS_PRACTITEST_AUTOMATED_SESSION_FILTER_ID = 259788 #PractiteTest Filter: Pending
-###########################################################################################################
 
+LOCAL_SETTINGS_PRACTITEST_PROJECT_ID                  = 1328
+LOCAL_SETTINGS_PRACTITEST_NIGHT_RUN_FILTER_ID         = '476525'
+LOCAL_SETTINGS_PRACTITEST_ONLY_EXECUTE_AT_NIGHT       = True
+LOCAL_SETTINGS_PRACTITEST_API_TOKEN                   = "deee12e1d8746561e1815d0430814c82c9dbb57d"
+LOCAL_SETTINGS_DEVELOPER_EMAIL                        = "oleg.sigalov@kaltura.com"
+###########################################################################################################
 
 # Will be updated after test starts
 LOCAL_SETTINGS_AUTOIT_SCRIPTS                   = os.path.abspath(os.path.join(LOCAL_SETTINGS_KMS_WEB_DIR,'autoit'))

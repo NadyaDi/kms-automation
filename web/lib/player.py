@@ -113,6 +113,7 @@ class Player(Base):
     PLAYER_QUIZ_SUBMITTED_SCREEN_DONE_BUTTON                    = ('xpath', "//div[@class='confirm-box' and text()='Done !']")
     PLAYER_QUIZ_SUBMITTED_SCREEN_NEXT_ARROW                     = ('xpath', "//div[contains(@class,'hex-column  right-arrow')]")
     PLAYER_QUIZ_SUBMITTED_SCREEN_PREVIOUS_ARROW                 = ('xpath', "//div[contains(@class,'hex-column  left-arrow')]")
+    PLAYER_QUIZ_ALMOST_DONE_SCREEN_OK_GOTIT_BUTTON              = ('xpath', "//div[@class='confirm-box' and contains(text(),'Ok')]")
     PLAYER_QUIZ_COMPLETED_SCREEN_SUBMIT_BUTTON                  = ('xpath', "//div[@title='Submit your answers']")
     PLAYER_QUIZ_COMPLETED_SCREEN_REVIEW_BUTTON                  = ('xpath', "//div[@title='review your answers']")
     PLAYER_QUIZ_INCLUDE_ANSWER_SCREEN_TITLE_DEFAULT             = ('xpath', "//div[@class='theQuestion']")
@@ -273,18 +274,37 @@ class Player(Base):
                                 writeToLog("INFO", "FAILED to click on the Skip for now button")
                                 return False
                             
-                            # Make sure that we capture only the Slide Images
+                            # Make sure that we capture only the Caption Text
                             if self.wait_visible(self.PLAYER_CAPTIONS_TEXT, 1.5, True) == False:
                                 writeToLog("INFO", "FAILED to displayed the Captions after dismissing the Question Screen")
                                 return False                
     
                     if captionText == False:
-                        writeToLog("INFO","FAILED to extract caption from player")
-                        return self.removeDuplicate(captionsList, enums.PlayerObjects.CAPTIONS)
-    
+                        if quizEntry == True:
+                            # Verify that we didn't missed any captionText by being in the Question Screen
+                            if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 10, True) != False:
+                                writeToLog("INFO", "Still in the Question Screen and will continue to iterate through the video")
+                            else:
+                                # If we confirmed that we are not in a Question Screen, we will break
+                                break
+                            # If we were in the Question Screen, we will skip the screen and continue to take the QR codes
+                            sleep(3)
+                            # Resume the playing process by skipping the Question Screen
+                            if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                                writeToLog("INFO", "FAILED to click on the Skip for now button")
+                                return False
+                            
+                            # Make sure that we capture only the Caption Text
+                            if self.wait_visible(self.PLAYER_CAPTIONS_TEXT, 1.5, True) == False:
+                                writeToLog("INFO", "FAILED to displayed the Captions after dismissing the Question Screen")
+                                return False 
+                            
+                            captionText = self.wait_element(self.PLAYER_CAPTIONS_TEXT, 1).text
+                        else:
+                            break
                     
                     captionsList.append(captionText)
-                    playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
+                    playback = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 1.5)
                     sleep(0.3)
                 except StaleElementReferenceException:
                     pass    
@@ -861,7 +881,7 @@ class Player(Base):
     # @ Author: Tzachi Guetta
     # This function will play the player from start to end - and collect all the QR codes that were presented on the Slides on the player - and return list of QR codes (filters the duplicates)
     # If quizEntry = True, it will Skip all the Quiz Related screens, NOTICE that the QR Code for the second where the Question was presented, may not be captured     
-    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizEntry=False):
+    def collectQrOfSlidesFromPlayer(self, entryName, embed=False, fromActionBar=True, quizEntry=False, resumeFromBeginning=False):
         try:
             if len(entryName) != 0:
                 if self.clsCommon.entryPage.navigateToEntryPageFromMyMedia(entryName) == False:
@@ -885,7 +905,27 @@ class Player(Base):
                 self.switchToPlayerIframe()
                 if self.continueFromQuizWelcomeScreen() == False:
                     writeToLog("INFO", "FAILED to continue from Quiz Welcome Screen")
-                    return False  
+                    return False
+            
+            # Due to the fact that the user may be moved by force to a Quiz Question screen, we can use resumeFromBeginning to make sure that we won't miss any captions
+            if resumeFromBeginning == True:
+                if quizEntry == True:
+                    if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 15, True) != False:
+                        if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the skip for now button in order to resume the entry from the beginning")
+                            return False
+                    else:
+                        # We verify that the Almost Completed screen is presented
+                        almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
+                        if self.wait_element(almostDoneScreen, 2.5) != False:
+                            if self.click(self.PLAYER_QUIZ_ALMOST_DONE_SCREEN_OK_GOTIT_BUTTON, 1, True) == False:
+                                writeToLog("INFO", "FAILED to close the Almost Done screen")
+                                return False
+                            sleep(2.5)
+                
+                if self.setPlayerAtSecondZero(True) == False:
+                    writeToLog("INFO", "FAILED to resume the entry at the second zero")
+                    return False
             
             qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER)
             QRPathList = []
@@ -908,7 +948,29 @@ class Player(Base):
                             return False
                         
                 if qrPath == False:
-                    break
+                    # Add a redundancy for the quiz entries
+                    if quizEntry == True:
+                        # Verify that we didn't missed any qrPath by being in the Question Screen
+                        if self.wait_element(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 15, True) != False:
+                            writeToLog("INFO", "Still in the Question Screen and will continue to iterate through the video")
+                        else:
+                            # If we confirmed that we are not in a Question Screen, we will break
+                            break
+                        # If we were in the Question Screen, we will skip the screen and continue to take the QR codes
+                        sleep(3)
+                        # Resume the playing process by skipping the Question Screen
+                        if self.click(self.PLAYER_QUIZ_SKIP_FOR_NOW_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the Skip for now button")
+                            return False
+                        
+                        # Make sure that we capture only the Slide Images
+                        if self.wait_visible(self.PLAYER_SLIDE_PRESENTED_IMAGE, 1.5, True) == False:
+                            writeToLog("INFO", "FAILED to displayed the Slide Images after dismissing the Question Screen")
+                            return False
+                        
+                        qrPath = None
+                    else:
+                        break
                     
                 QRPathList.append(qrPath)
                 qrPath = self.wait_visible(self.PLAYER_PAUSE_BUTTON_CONTROLS_CONTAINER, 3)
@@ -936,7 +998,26 @@ class Player(Base):
             if quizEntry == True:
                 # Remove invalid elements ( None )  from the QR Code List
                 QRcodeList = [x for x in QRcodeList if x != None]
-                                
+                
+                # Re take the QR Code list if less than two QR code were found for a quiz entry
+                if len(QRcodeList) <= 2:
+                    writeToLog("INFO", "Less than two QR code were found for the quiz entry, re taking the QR codes..")
+                    for x in range(0,1):
+                        self.driver.refresh()
+                        sleep(15)
+                        
+                        # Take the QR Code list for the second time
+                        QRcodeListSecond = self.collectQrOfSlidesFromPlayer(entryName, embed, fromActionBar, quizEntry, True)
+                        
+                        if QRcodeListSecond is not list:
+                            writeToLog("INFO", "FAILED to take the QR Code list during the second attempt")
+                        else:
+                            QRcodeList = QRcodeListSecond
+                        
+                        # Verify that QR Code list has more than two QR Codes
+                        if QRcodeList > 2:
+                            break
+                        
             self.clsCommon.base.switch_to_default_content()    
             return self.removeDuplicate(QRcodeList, enums.PlayerObjects.QR)
             
@@ -1415,8 +1496,16 @@ class Player(Base):
             if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
                 self.removeTouchOverlay()
                 if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
-                    writeToLog("INFO", "FAILED to click on the scrubber done bubble")
-                    return False
+                    writeToLog("INFO", "FAILED to click on the scrubber done bubble during the first attempt")
+                    # Verify if a Question Screen it's still displayed, if so, we will close it by clicking on the skip / continue button
+                    if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) != False:
+                        if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
+                            writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to move to the done bubble")
+                            return False
+                        
+                    if self.click(self.PLAYER_QUIZ_SCRUBBER_DONE_BUBBLE, 1, True) == False:
+                        writeToLog("INFO", "FAILED to click on the scrubber done bubble during the second attempt")
+                        return False
         
         #we verify that the user is in the "Submitted Screen"
         completedTitle = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Completed'))
@@ -1456,7 +1545,7 @@ class Player(Base):
                 return False
             
         sleep(0.5)
-        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 15) == False:
+        if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 20) == False:
             writeToLog("INFO", "FAILED to wait until the loading spinner disappeared")
             return False
         sleep(0.1)
@@ -1784,13 +1873,20 @@ class Player(Base):
 
     # @Author: Horia Cus
     # expectedNumberOfAttempts = int, How many attempts user has. Empty when user isn't able to retake the quiz again
-    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts=''):
+    def continueFromQuizWelcomeScreen(self, expectedNumberOfAttempts='', location=enums.Location.ENTRY_PAGE, embed=False):
         #we verify if the "Continue" button specific for the Quiz "Welcome Screen" is present or not     
         if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
             writeToLog("INFO", "Continue button has been found in welcome screen")
         else:
-            writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
-            return False
+            # Add a redundancy step for the play button
+            if self.verifyAndClickOnPlay(location, embed=embed) != True:
+                return False
+            else:
+                if self.wait_element(self.PLAYER_QUIZ_CONTINUE_BUTTON, 15, True) != False:
+                    writeToLog("INFO", "Continue button has been found in welcome screen")
+                else:  
+                    writeToLog("INFO", "FAILED to find the continue button from the welcome screen")
+                    return False
         
         # If expected number of attempts != '', we expect to see total attempt message with the number of the available attempts
         if expectedNumberOfAttempts != '':
@@ -1902,7 +1998,7 @@ class Player(Base):
         #we dismiss the "Quiz Welcome Screen" if its enabled 
         sleep(1)
         if skipWelcomeScreen == True:
-            if self.continueFromQuizWelcomeScreen(expectedNumberOfAttempts) == False:
+            if self.continueFromQuizWelcomeScreen(expectedNumberOfAttempts, location, embed) == False:
                 return False
             
         if self.wait_while_not_visible(self.PLAYER_SCREEN_LOADING_SPINNER, 30) == False:
@@ -2465,8 +2561,9 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
-        # Verify if the user got stucked inside a Question Screen
-        if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 2, True) != False:
+        # Verify if the UI remained blocked inside a Question Screen
+        # First attempt ( quick )
+        if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) != False:
             if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
                 writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to proceed to the Almost Done Screen")
                 return False
@@ -2474,8 +2571,17 @@ class Player(Base):
         # We verify that the Almost Completed screen is presented
         almostDoneScreen = (self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[0], self.PLAYER_QUIZ_SUBMITTED_SCREEN_TITLE_TEXT[1].replace('TITLE_NAME', 'Almost Done'))
         if self.wait_element(almostDoneScreen, timeOut) == False:
-            writeToLog("INFO", "FAILED, the Almost Completed Screen was not displayed after resuming the Quiz")
-            return False
+            writeToLog("INFO", "The Almost Completed Screen was not displayed during the first attempt")
+            # Add a redundancy for the Question Screen verification
+            # Second attempt ( after the timeOut )
+            if self.wait_element(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) != False:
+                if self.click(self.PLAYER_QUIZ_QUESTION_SCREEN_CONTINUE_BUTTON, 1, True) == False:
+                    writeToLog("INFO", "FAILED to click on the Continue Button From Question Screen in order to proceed to the Almost Done Screen, during the second try")
+                    return False
+                
+            if self.wait_element(almostDoneScreen, timeOut) == False:
+                writeToLog("INFO", "FAILED, the Almost Completed Screen was not displayed after resuming the Quiz neither after the second try")
+                return False
         
         # We verify that the score is not present
         description = self.wait_element(self.PLAYER_QUIZ_SUBMITTED_SCREEN_SUB_TEXT, 10).text
@@ -2611,11 +2717,10 @@ class Player(Base):
     
     
     # @Author: Horia Cus
-    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
-    # location=enums.Location.ENTRY_PAGE
+    # This function will iterate through the entry, where it will take all the style properties and links for each presented hotspot
+    # In the end it will return a List that contains the presented hotspot details
     # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
-    # To be Developed: Cue Point Verification interval
-    def hotspotVerification(self, hotspotsDict, location=enums.Location.ENTRY_PAGE, embed=False):        
+    def returnPresentedHotspotDetails(self, location=enums.Location.ENTRY_PAGE, embed=False):
         if self.verifyAndClickOnPlay(location, 30, embed) == False:
             return False
         
@@ -2637,6 +2742,10 @@ class Player(Base):
                         if len(presentedHotspotsDetailsList) == 0 or any(presentedHotspots[x].text in sl for sl in presentedHotspotsDetailsList) == False:
                             # Take the presented hotspot details for the current iterated hotspot
                             hotspotStartTime            = self.returnEntryCurrentTimeInSeconds()
+                            
+                            # Because the entry current time may have a delay, we allow that the first second to be changed to zero
+                            if hotspotStartTime == 1:
+                                hotspotStartTime = 0
                             
                             hotspotTitle                = presentedHotspots[x].text             
                             hotspotStyleProperties      = presentedHotspots[x].get_attribute('style').split()
@@ -2671,21 +2780,58 @@ class Player(Base):
                             
                             writeToLog("INFO", "The size of: " + hotspotTitle + " is: width: " + str(hotspotWidth) + " height: " + str(hotspotHeight) + " resulting in: " + hotspotContainerSize.value)
                             
-                            hotspotStyleFontColor       = hotspotStyleProperties[hotspotStyleProperties.index('color:')+1].replace(';','')
-                            hotspotStyleFontSize        = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
-                            hotspotStyleBorderRadius    = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
-                            hotspotStyleBackgroundColor = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')])
+                            # Font color it will be returned in a list that contains the Decimals
+                            try:
+                                # Get the string details from the Font Color RGB
+                                hotspotStyleFontColorRGB            = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('color:')+1:hotspotStyleProperties.index('border-radius:')]).replace('rgb','').split(',')
+                                # Take the R,G,B numbers
+                                R,G,B                               = hotspotStyleFontColorRGB[0].replace('(',''), hotspotStyleFontColorRGB[1].replace('(',''), hotspotStyleFontColorRGB[2].replace('(','')
+                                # Make sure that the R,G,B are returned integer
+                                R,G,B                               = int(re.search(r'\d+', R).group()), int(re.search(r'\d+', G).group()), int(re.search(r'\d+', B).group())
+                                # Create a Tuple with the R,G,B integers
+                                hotspotStyleFontColorRGBTuple       = (R,G,B)
+                                # Convert the R,G,B Tuple to HEX
+                                hotspotStyleFontColorHEX            = ('#%02x%02x%02x' % hotspotStyleFontColorRGBTuple).upper()
+                            except Exception:
+                                hotspotStyleFontColorHEX            = ''
                             
-                            hotspotLocation             = presentedHotspots[x].location
+                            # Return empty string if the default value has been found
+                            if hotspotStyleFontColorHEX == '#000000':
+                                hotspotStyleFontColorHEX = ''
+                                
+                            hotspotStyleFontSize                    = hotspotStyleProperties[hotspotStyleProperties.index('font-size:')+1].replace('px;','')
+                            hotspotStyleBorderRadius                = hotspotStyleProperties[hotspotStyleProperties.index('border-radius:')+1].replace('px;','')
+                        
+                            try:
+                                # Get the string details form the Background Color RGB
+                                hotspotStyleBackgroundColorRGB      = ''.join(hotspotStyleProperties[hotspotStyleProperties.index('background:')+1:hotspotStyleProperties.index('none')]).replace('rgb','').split(',')
+                                # Take the R,G,B numbers
+                                R,G,B                               = hotspotStyleBackgroundColorRGB[0].replace('(',''), hotspotStyleBackgroundColorRGB[1].replace('(',''), hotspotStyleBackgroundColorRGB[2].replace('(','')
+                                # Make sure that the R,G,B are returned integer
+                                R,G,B                               = int(re.search(r'\d+', R).group()), int(re.search(r'\d+', G).group()), int(re.search(r'\d+', B).group())
+                                # Create a Tuple with the R,G,B integers
+                                hotspotStyleBackgroundColorRGBTuple       = (R,G,B)
+                                # Conver the RGB Tuple to HEX
+                                hotspotStyleBackgroundColorHEX      = ('#%02x%02x%02x' % hotspotStyleBackgroundColorRGBTuple).upper()
+                            except Exception:
+                                hotspotStyleBackgroundColorHEX      = ''
+                                
+                            # Return empty string if the default value has been found
+                            if hotspotStyleBackgroundColorHEX == '#000000':
+                                hotspotStyleBackgroundColorHEX = ''
+                            
+                            hotspotLocation                     = presentedHotspots[x].location
+                            
                             # Verify the location for normal hotspots
                             if hotspotTitle.count('Duplicated') == 0:
-                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2}:
+                                if hotspotLocation == {'x': 787, 'y': 0} or hotspotLocation == {'x': 786, 'y': 1} or hotspotLocation == {'x': 785, 'y': 2} or hotspotLocation == {'x': 786, 'y':0} or hotspotLocation == {'x': 785, 'y':0}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
-                                elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1}:
+                                elif hotspotLocation == {'x': 7, 'y': 0} or hotspotLocation == {'x': 6, 'y': 1} or hotspotLocation == {'x': 6, 'y':0}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
-                                    
-                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270}:
+                                
+                                # Allow any X location because the Y dictates if the hotspot is at the center or not
+                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270} or hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 269}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 787, 'y': 419} or hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
@@ -2699,13 +2845,14 @@ class Player(Base):
                             
                             # Verify the location for duplicated hotspots
                             elif hotspotTitle.count('Duplicated') == 1:
-                                if hotspotLocation == {'x': 786, 'y': 24} or hotspotLocation == {'x': 785, 'y': 25}:
+                                if hotspotLocation == {'x': 786, 'y': 24} or hotspotLocation == {'x': 785, 'y': 25} or hotspotLocation == {'x': 786, 'y': 22}:
                                     hotspotLocation = enums.keaLocation.TOP_RIGHT
                                 
                                 elif hotspotLocation == {'x': 6, 'y': 24}:
                                     hotspotLocation = enums.keaLocation.TOP_LEFT
                                     
-                                elif hotspotLocation == {'x': 394, 'y': 270} or hotspotLocation == {'x': 395, 'y': 270} or hotspotLocation == {'x':439, 'y':270} or hotspotLocation == {'x':230, 'y':270}:
+                                # Allow any X location because the Y dictates if the hotspot is at the center or not
+                                elif hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 270} or hotspotLocation == {'x': presentedHotspots[x].location['x'], 'y': 269}:
                                     hotspotLocation = enums.keaLocation.CENTER
                                     
                                 elif hotspotLocation == {'x': 786, 'y': 419} or hotspotLocation == {'x': 785, 'y': 419}:
@@ -2753,6 +2900,7 @@ class Player(Base):
                                     hotspotLink = self.clsCommon.base.driver.current_url
                                     self.driver.close()
                                     self.driver.switch_to.window(handles[0])
+                                    self.switch_to_default_content()
                                     self.verifyAndClickOnPlay(location, 2, embed)
                                 except Exception:
                                     writeToLog("INFO", "FAILED to take the presented link for " + hotspotTitle)
@@ -2816,7 +2964,7 @@ class Player(Base):
                                     continue
 
                             # Create a list that contains all the details necessary for the hotspot verification
-                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColor, hotspotStyleBackgroundColor, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius), hotspotContainerSize]
+                            presentedHotspotDetails     = [hotspotTitle, hotspotLocation, hotspotStartTime, hotspotEndTime, hotspotLink, hotspotStyleFontWeight, hotspotStyleFontColorHEX, hotspotStyleBackgroundColorHEX, int(hotspotStyleFontSize), int(hotspotStyleBorderRadius), hotspotContainerSize]
                             presentedHotspotsDetailsList.append(presentedHotspotDetails)
                             presentedHotspotsNameList.append(hotspotTitle)
                             hotspots = "\n".join(presentedHotspotsNameList)
@@ -2836,16 +2984,58 @@ class Player(Base):
                     # This try catch help us when the element details are no longer available in DOM
                     except StaleElementReferenceException:
                         pass
-                
-        # Verify the expected hotspots properties with the presented hotspots properties
-        for hotspotNumber in hotspotsDict:
-            # Take the details for the iterated hotspot from the given dictionary
-            currentExpectedList = hotspotsDict[hotspotNumber]
             
-            if len(presentedHotspotsDetailsList) < len(hotspotsDict):
-                writeToLog("INFO", "FAILED, a number of minimum " + str(len(hotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found")
+        writeToLog("INFO", "A list with all the presented hotspots has been returned")
+        return presentedHotspotsDetailsList
+
+
+    # @Author: Horia Cus
+    # expectedHotspotsDict must contain the following structure {'1': list} list = ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
+    # hotspotList must contain the following structure ['Hotspot Title', enums.keaLocation.Location, startTime, endTime, 'link.address', enums.textStyle.Style, 'font color code', 'background color code', text size, roundness size]
+    # presentedHotspotsDetailsList is took using the returnPresentedHotspotDetails function
+    # For the link.address we can have a web page ( e.g https://6269.qakmstest.dev.kaltura.com/ ) and also a time location ( e.g 90, which will translate into 01:30 )
+    # The function will verify that the expectedHotspotDict matches with the presentedHotspotDetailsList
+    # if doubleCheck = True, if at the first try, the function returned false, we will re-take all the presented hotspots and verify with the expected hotspots for the second time
+    def hotspotVerification(self, expectedHotspotsDict, presentedHotspotsDetailsList, doubleCheck=False):
+        # Verify that we were able to take the presented hotspot details
+        if type(presentedHotspotsDetailsList) is bool:
+            writeToLog("INFO", "FAILED to take the presented hotspot details")
+            return False
+        
+        # Verify that the same number of hotspots that were expected are actually presented
+        if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
+            writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the first attempt")
+            # Add a redundancy step, where we take for the second time the presented hotspot details
+            
+            # Switch to the default content in order to exit any other iframe
+            self.switch_to_default_content()
+            # Take the entry page URL
+            self.entryPageURL = self.clsCommon.base.driver.current_url
+            # Navigate to the Home page in order to clean the elements
+            self.clsCommon.navigateTo(enums.Location.HOME)
+            sleep(5)
+            # Re navigate to the entry page using a direct link
+            self.clsCommon.base.navigate(self.entryPageURL)
+            sleep(15)
+            # Re take the presented hotspots
+            presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
+            
+            # Verify that we received a list with the presented hotspots
+            if type(presentedHotspotsDetailsList) is not list:
+                writeToLog("INFO", "FAILED to take the presented hotspot details list")
                 return False
+            else:
+                writeToLog("INFO", "A new list with the presented hotspot has been provided")
             
+            if len(presentedHotspotsDetailsList) < len(expectedHotspotsDict):
+                writeToLog("INFO", "FAILED, a number of minimum " + str(len(expectedHotspotsDict)) + " hotspots were expected and only " + str(len(presentedHotspotsDetailsList)) + " were found, during the second attempt")
+                return False
+        
+        # Verify the expected hotspots properties with the presented hotspots properties
+        for hotspotNumber in expectedHotspotsDict:
+            # Take the details for the iterated hotspot from the given dictionary
+            currentExpectedList = expectedHotspotsDict[hotspotNumber]
+                        
             # Verify the expected hotspots with presented hotspots
             for x in range(0, len(presentedHotspotsDetailsList)):
                 currentPresentedList = presentedHotspotsDetailsList[x]
@@ -2854,12 +3044,14 @@ class Player(Base):
                 if currentExpectedList[0] == currentPresentedList[0]:                    
                     # Set to the list the default value for Font Color if it wasn't set in hotspotDict
                     if currentExpectedList[6] == '':
-                        currentExpectedList.insert(6, 'white')
+                        # During the returnPresentedHotspotDetails, the Font Color it's returned as empty string if the default value has been used
+                        currentExpectedList.insert(6, '')
                         currentExpectedList.pop(7)
                     
                     # Set to the list the default value for Background Color if it wasn't set in hotspotDict
                     if currentExpectedList[7] == '':
-                        currentExpectedList.insert(7, 'rgba(0,0,0,0.6)')
+                        # During the returnPresentedHotspotDetails, the Background Color it's returned as empty string if the default value has been used
+                        currentExpectedList.insert(7, '')
                         currentExpectedList.pop(8)
                     
                     # Set to the list the default value for Font Size if it wasn't set in hotspotDict
@@ -2881,7 +3073,31 @@ class Player(Base):
                     
                     # Verify that the expected hotspot details, matches with the presented hotspot details
                     if currentExpectedList != currentPresentedList:
-                        # Create a list with the inconsitencies between the expected and presented hotspots
+                        
+                        # Add a second step where we will re take the presented hotspots and compare with the expected ones
+                        if doubleCheck == True:
+                            writeToLog("INFO", "There was an inconsistency between the first presented hotspots and the expected hotspots, double checking...")
+                            # Switch to the default content in order to exit any other iframe
+                            self.switch_to_default_content()
+                            # Take the entry page URL
+                            self.entryPageURL = self.clsCommon.base.driver.current_url
+                            # Navigate to the Home page in order to clean the elements
+                            self.clsCommon.navigateTo(enums.Location.HOME)
+                            sleep(5)
+                            # Re navigate to the entry page using a direct link
+                            self.clsCommon.base.navigate(self.entryPageURL)
+                            sleep(15)
+                            # Re take the presented hotspots
+                            presentedHotspotsDetailsList = self.returnPresentedHotspotDetails()
+                            
+                            if self.hotspotVerification(expectedHotspotsDict, presentedHotspotsDetailsList) == True:
+                                writeToLog("INFO", "The presented hotspots matches with the expected hotspots after the double check")
+                                return True
+                            else:
+                                writeToLog("INFO", "FAILED, the presented hotspots didn't matched with the expected ones after the double check")
+                                return False
+                        
+                        # Create a list with the inconsistencies between the expected and presented hotspots
                         inconsitencyList = []
                         
                         try:
@@ -2890,9 +3106,9 @@ class Player(Base):
                                     inconsitencyList.append("FAILED, Expected " + str(currentExpectedList[x]) + " \n Presented " + str(currentPresentedList[x]) + " \n")
                             
                             if len(inconsitencyList) > 1:
-                                inconsitencies = "\n".join(inconsitencyList)
+                                inconsistencies = "\n".join(inconsitencyList)
                             else:
-                                inconsitencies = inconsitencyList[0]
+                                inconsistencies = inconsitencyList[0]
                             
                         except Exception:
                             writeToLog("INFO", "FAILED to take the inconsistency list")
@@ -2900,7 +3116,7 @@ class Player(Base):
                         presentedHotspotDetailsString = "".join(str(currentPresentedList))
                         expectedHotspotDetailsString  = "".join(str(currentExpectedList))
                         writeToLog("INFO", "LIST for presented hotspot: " + presentedHotspotDetailsString + "\n LIST For expected hotspot: "  + expectedHotspotDetailsString)
-                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed for " + currentPresentedList[0] +" hotspot " + str(inconsitencies))
+                        writeToLog("INFO", "FAILED, the following inconsistencies were noticed for " + currentPresentedList[0] +" hotspot " + str(inconsistencies))
                         return  False
                     else:
                         writeToLog("INFO", "The hotspot:" + currentExpectedList[0] + " has been successfully presented")
@@ -2908,13 +3124,13 @@ class Player(Base):
                 
                 # Verify that the expected hotspot was found within the number of available presented hotspots
                 if x + 1 == len(presentedHotspotsDetailsList):
-                    writeToLog("INFO", "FAILED to find the " + currentExpectedList[0] + " inside the presented hotspot list: " + hotspots)
+                    writeToLog("INFO", "FAILED to find the " + currentExpectedList[0] + " inside the presented hotspot list")
                     return False
         
         # Create a list with the successfully verified hotspots
         expectedHotspotNameList = []
-        for hotspotNumber in hotspotsDict:
-            expectedHotspotNameList.append(hotspotsDict[hotspotNumber][0])
+        for hotspotNumber in expectedHotspotsDict:
+            expectedHotspotNameList.append(expectedHotspotsDict[hotspotNumber][0])
         
         if len(expectedHotspotNameList) > 1:   
             hotspots = "\n".join(expectedHotspotNameList)

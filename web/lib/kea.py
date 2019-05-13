@@ -58,7 +58,7 @@ class Kea(Base):
     KEA_QUIZ_PLAYER                                                         = ('id', 'quiz-player_ifp')
     KEA_LOADING_SPINNER                                                     = ('class_name', 'spinner')
     KEA_LOADING_CONTAINER                                                   = ('xpath', "//div[contains(@class,'loading__container')]") 
-    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and text()='Please wait while media is processing']") 
+    KEA_MEDIA_IS_BEING_PROCESSED                                            = ('xpath', "//div[@class='kErrorMessageText' and contains(text(),'media is processing')]") 
     KEA_QUIZ_QUESTION_FIELD                                                 = ('id', 'questionTxt')
     KEA_QUIZ_ANSWER                                                         = ('id', 'ANSWER_NUMBER')
     KEA_QUIZ_ANSWER_GENERAL                                                 = ('xpath', "//textarea[contains(@id,'answer-text')]") 
@@ -163,6 +163,8 @@ class Kea(Base):
     KEA_HOTSPOTS_FORM_LOCATION_Y                                            = ('xpath', '//input[@id="position-y"]')
     KEA_HOTSPOTS_FORM_SIZE_WIDTH                                            = ('xpath', '//input[@id="size-width"]')
     KEA_HOTSPOTS_FORM_SIZE_HEIGHT                                           = ('xpath', '//input[@id="size-height"]')
+    KEA_HOTSPOTS_FORM_START_TIME                                            = ('xpath', '//input[@id="startTime"]')
+    KEA_HOTSPOTS_FORM_END_TIME                                              = ('xpath', '//input[@id="endTime"]')
     KEA_HOTSPOTS_LIST_HEADER                                                = ('xpath', "//div[@class='panel__header']")
     KEA_HOTSPOTS_LIST_CONTENT                                               = ('xpath', "//div[@class='panel__content']")
     KEA_HOTSPOTS_LIST_PANEL_HOTSPOT                                         = ('xpath', "//kea-hotspots-list-item[contains(@class,'ng-star-inserted')]")
@@ -1047,7 +1049,7 @@ class Kea(Base):
     # dictQuestions        = {'1':questionMultiple,'2':questionTrueAndFalse,'3':questionReflection}
     # questionOpen         = ['0:25', enums.QuizQuestionType.OPEN_QUESTION, 'Question title for Open-Q'] 
     # If you want to change the answer order you can use this function: changeAnswerOrder
-    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=20):
+    def quizCreation(self, entryName, dictQuestions, dictDetails='', dictScores='', dictExperience='', timeout=25):
         sleep(25)
    
         # Need this step in order to workaround an issue that may fail a test case after uploading an entry
@@ -1340,7 +1342,7 @@ class Kea(Base):
         self.switchToKeaIframe()
         
         # Take the details from the kea time line section
-        keaTimelineSection  = self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 10, True)
+        keaTimelineSection  = self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 60, True)
 
         # Verify that the time line section is available       
         if keaTimelineSection == False:
@@ -2814,7 +2816,6 @@ class Kea(Base):
             # Use the zoom in option, by drag and drop of Zoom Level Pointer element
             try:
                 action.move_to_element(zoomLevelPointer).click_and_hold(zoomLevelPointer).move_to_element_with_offset(zoomOutButtonElement, 45+zoomInPosition, 0).release().pause(1).perform()
-#                 action.reset_actions()
                 sleep(2)
             except Exception:
                 writeToLog("INFO", "FAILED to use zoom in option properly at the " + str(x+1) + " try")
@@ -2827,12 +2828,12 @@ class Kea(Base):
             
             # Verify that the Timeline pointer location has been changed after using the zoom in option
             if pointerInitial >= pointerUpdated:
-                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
+                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated) + " or higher value")
                 return False
             
             # Verify that the Timeline container size is bigger after using the zoom in option
             if containerInitialSize >= containerUpdatedSize:
-                writeToLog("INFO", "FAILED, Zoom Level pointer was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
+                writeToLog("INFO", "FAILED, Zoom Level container was set at " + str(pointerInitial) + " and we expected " + str(pointerUpdated))
                 return False
                        
         # Use the zoom out option, by drag and drop of Zoom Level Pointer element, in order to reach zero state
@@ -3303,8 +3304,10 @@ class Kea(Base):
         # Navigate to the Hotspot tab if needed
         if openHotspotsTab == True:
             if self.launchKEATab('', enums.keaTab.HOTSPOTS) == False:
-                writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab")
-                return False
+                writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab during the first try")
+                if self.launchKEATab('', enums.keaTab.HOTSPOTS) == False:
+                    writeToLog("INFO", "FAILED to navigate to the KEA Hotsptos tab during the second try")
+                    return False
         
         # Create all the desired Hotspots
         for hotspotNumber in hotspotsDict:
@@ -3333,6 +3336,12 @@ class Kea(Base):
                     if self.wait_element(self.KEA_PLAYER_CONTROLS_PLAY_BUTTON, 1, True) == False:
                         writeToLog("INFO", "FAILED, the Video Playing process didn't stopped after clicking on ADD New Hotspot")
                         return False
+                    
+            # Leave time for the Hotspot Creation tool tip to proper be displayed     
+            sleep(1.3)
+            if self.wait_element(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 5, True) == False:
+                writeToLog("INFO", "FAILED to display the Advanced Settings option within the Hotspot creation tool tip")
+                return False
             
             if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
                 writeToLog("INFO", "FAILED to activate the Advanced Settings for Hotspots")
@@ -3520,9 +3529,23 @@ class Kea(Base):
             if len(hotspotDetails) >= 3:
                 if hotspotDetails[2] != None or hotspotDetails[3] != None:
                     if creationType == enums.keaHotspotCreationType.VIDEO_PAUSED:
-                        if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
-                            writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3])
-                            return False
+                        # Start and End time set on Firefox driver using the timleine section
+                        if self.driver.capabilities['browserName'] == 'firefox':
+                            if self.hotspotCuePoint(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                                writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Firefox Browser")
+                                return False
+                        else:
+                            # Because the start and end time of the hotspot may not be saved properly during the first time on Chrome, we run it twice
+                            # Start and end time is set with Advanced Settings
+                            for x in range(0, 2):
+                                if creationType == enums.keaHotspotCreationType.VIDEO_PLAYING:
+                                    if self.changeHotspotTimeStamp(hotspotDetails[0], '', hotspotDetails[3]) == False:
+                                        writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser on a played video, during the " + str(x) + " try")
+                                        return False
+                                else:             
+                                    if self.changeHotspotTimeStamp(hotspotDetails[0], hotspotDetails[2], hotspotDetails[3]) == False:
+                                        writeToLog("INFO", "FAILED to set for the " + hotspotDetails[0] + " hotspot, start time to " + hotspotDetails[2] + " and end time to " + hotspotDetails[3] + " while using Chrome Browser, during the " + str(x) + " try")
+                                        return False
                         
                         # Move back the real time marker to the initial position
                         if self.setRealTimeMarkerToTime('00:00') == False:
@@ -3774,11 +3797,12 @@ class Kea(Base):
             writeToLog("INFO", "FAILED to highligth the " + hotspotName + " hotspot")
             return False
         
+        sleep(1)
         # Trigger the Action Drop Down Menu
         if self.clickElement(hotspotsActionMenu[hotspotIndexLocation]) == False:
             writeToLog("INFO", "FAILED to trigger the action menu for hotspot: " + hotspotName + " at the second try")
             return False
-            
+        sleep(1)
         if hotspotAction == enums.keaHotspotActions.DUPLICATE:
             # Duplicate the hotspotName
             if self.click(self.KEA_HOTSPOTS_PANEL_ACTION_MENU_DUPLICATE, 1, True) == False:
@@ -3907,6 +3931,7 @@ class Kea(Base):
             if self.verifyKeaEntryName(entryName, 60) == False:
                 writeToLog("INFO", "FAILED to load the page until the " + entryName + " was present")
                 return False
+            sleep(7)
             
         self.switchToKeaIframe()
         if keaTab == enums.keaTab.QUIZ:
@@ -4021,7 +4046,12 @@ class Kea(Base):
         # Verify that we are in the Hotspot Section
         if self.wait_element(self.EDITOR_REALTIME_MARKER, 15, True) == False:
             writeToLog("INFO", "FAILED To verify that we are in the Hotspots Section")
-            return False        
+            return False     
+        
+        # Real Time marker must be at second zero in order to proper take the information needed from the Blank Hotspot
+        if self.setRealTimeMarkerToTime('00:00') == False:
+            writeToLog("INFO", "FAILED to set the real time marker at the beginning of the timeline")
+            return False
         
         # Create a Blank Hotspot in order to take the properties that we need
         if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 15, True) == False:
@@ -4143,19 +4173,30 @@ class Kea(Base):
                         writeToLog("INFO", "FAILED, the length of " + presentedHotspotTitle + " was " + str(presentedHotspotTime) + " while we expected " + str(expectedHotspotTime))
                         return False
             
-            # Verify that the presented hotspot is presented at the expected X location
+            # Verify that the presented hotspot is presented at the expected X location           
             if presentedHotspotXValue != expectedHotspotXValue:
                 # Allow a five px inconsistency
+                # With positive value
                 for x in range(0,7):
                     if presentedHotspotXValue == expectedHotspotXValue + x:
                         break
                     
                     if x >= 5:
                         if presentedHotspotXValue + 1 != expectedHotspotXValue:
-                            writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
-                            return False
-                        else:
-                            break
+                            writeToLog("INFO", "The x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
+                            
+                            # With negative value
+                            for k in range(0,7 ):
+                                if presentedHotspotXValue == expectedHotspotXValue - k:
+                                    break
+                                
+                                if k >= 5:
+                                    if presentedHotspotXValue != expectedHotspotXValue - 1:
+                                        writeToLog("INFO", "FAILED, the x Location of " + presentedHotspotTitle + " was " + str(presentedHotspotXValue) + " while we expected " + str(expectedHotspotXValue))
+                                        return False
+                                    else:
+                                        break
+                        break
             
             # Verify that the current iterated hotspot is displayed on a higher Y value than the previous hotspot
             if presentedHotspotYValue <= previousYValue:
@@ -4343,12 +4384,15 @@ class Kea(Base):
                     if addHotspotToolTip.text.strip() != "Can't add hotspot on the protected zone":
                         writeToLog("INFO", "FAILED, an invalid tool tip text was presented: " + addHotspotToolTip.text.strip() + " while being in protected zone")
                         return False                
-                         
+                
+                hotspotToolTipLocationChrome = {'x': 0, 'y':0}
                 if location == enums.keaLocation.TOP_LEFT:
-                    hotspotToolTipLocation = {'x': 503, 'y': 75}
+                    hotspotToolTipLocation          = {'x': 503, 'y': 75}
+                    hotspotToolTipLocationChrome    = {'x': 503, 'y': 73}
                     
                 elif location == enums.keaLocation.TOP_RIGHT:
-                    hotspotToolTipLocation = {'x': 916, 'y': 75}
+                    hotspotToolTipLocation          = {'x': 916, 'y': 75}
+                    hotspotToolTipLocationChrome    = {'x': 916, 'y': 73}
                     
                 elif location == enums.keaLocation.CENTER:
                     hotspotToolTipLocation = {'x': 782, 'y': 268}
@@ -4369,7 +4413,7 @@ class Kea(Base):
                     hotspotToolTipLocation = {'x': 849, 'y': 433}
     
                 # Verify the Add Hotspot tool tip location
-                if addHotspotToolTip.location != hotspotToolTipLocation:
+                if addHotspotToolTip.location != hotspotToolTipLocation and hotspotToolTipLocationChrome != addHotspotToolTip.location:
                     writeToLog("INFO", "FAILED, the tool tip for " + location.value + " was displayed at X:" + str(addHotspotToolTip.location['x']) + " and Y:" + addHotspotToolTip.location['y'] + " coordinates" )
                     return False
                 
@@ -4863,7 +4907,7 @@ class Kea(Base):
             return False
         
         # Verify that the timeline section is presented
-        if self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 15, True) == False:
+        if self.wait_element(self.KEA_TIMELINE_PRESENTED_SECTIONS, 30, True) == False:
             writeToLog("INFO", "FAILED, the timeline section for " + keaTab.value + " is not presented")
             return False
         
@@ -5142,7 +5186,7 @@ class Kea(Base):
         if self.click(self.KEA_HOTSPOTS_ADD_NEW_BUTTON, 5, True) == False:
             writeToLog("INFO", "FAILED to click on the Add new Button")
             return False
-        
+        sleep(1)
         # Reach the Advanced Settings creen and take the specific locators
         if hotspotCreationScreen == enums.keaHotspotCreationScreen.ADVANCED_SETTINGS:
             if self.click(self.KEA_HOTSPOTS_ADVANCED_SETTINGS, 1, True) == False:
@@ -5243,4 +5287,78 @@ class Kea(Base):
             return False
         
         writeToLog("INFO", "Hotspot Advanced Setting Screen has been successfully opened for: " + hotspotName)
+        return True
+    
+    
+    # @Author: Horia Cus
+    # This function changes the time stamp location for an existing hotspotName
+    # hotspotName must contain the entire name of the desired hotspot
+    # You may modify only the start time or endtime or even both
+    # startTime and endTime must have the following format mm:ss
+    def changeHotspotTimeStamp(self, hotspotName, startTime, endTime):
+        self.switchToKeaIframe()
+        
+        # Convert the integer seconds to a mm:ss string format
+        if type(startTime) is int:
+            startTime = time.strftime('%M:%S', time.gmtime(startTime))
+        
+        if type(endTime) is int:
+            endTime = time.strftime('%M:%S', time.gmtime(endTime))
+        
+        # Trigger the advanced settings screen for the desired hotspotName
+        if self.openHotspotAdvancedSettings(hotspotName) == False:
+            writeToLog("INFO", "FAILED to enter in the Hotspot Advanced Screen for: " + hotspotName + " hotspot")
+            return False
+        
+        if startTime != '':
+            # Select the Start Time input field
+            if self.click(self.KEA_HOTSPOTS_FORM_START_TIME, 1, True) == False:
+                writeToLog("INFO", "FAILED to highlight the start time input field from the Advanced Settings screen for hotspot: " + hotspotName)
+                return False
+            sleep(0.2)
+            
+            if self.driver.capabilities['browserName'] == 'firefox':
+                # Select the presented Start Time text
+                if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                    writeToLog("INFO", "FAILED to select the presented start time text from the input field")
+                    return False
+            
+            # Insert the new desired Start Time inside the input field
+            try:
+                ActionChains(self.driver).send_keys(startTime).pause(0.4).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to set the start time for " + hotspotName + " at: " + startTime)
+                return False
+        
+        if endTime != '':
+            # Select the End Time input field
+            if self.click(self.KEA_HOTSPOTS_FORM_END_TIME, 1, True) == False:
+                writeToLog("INFO", "FAILED to highlight the End time input field from the Advanced Settings screen for hotspot: " + hotspotName)
+                return False
+            sleep(0.2)
+            
+            if self.driver.capabilities['browserName'] == 'firefox':
+                # Select the presented End Time text
+                if self.clsCommon.sendKeysToBodyElement(Keys.CONTROL + 'a') != True:
+                    writeToLog("INFO", "FAILED to select the presented End time text from the input field")
+                    return False
+
+            # Insert the new desired End Time inside the input field
+            try:
+                ActionChains(self.driver).send_keys(endTime).pause(0.4).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to set the End time for " + hotspotName + " at: " + endTime)
+                return False
+            
+        # Save the new time stamp location for the desired hotspotName
+        if self.saveHotspotChanges(settingsChanges=True) == False:
+            writeToLog("INFO", "FAILED to save the time stamp changes for the " + hotspotName + "  hotspot")
+            return False
+                
+        if startTime == '':
+            startTime = 'unchanged'
+        if endTime == '':
+            endTime = 'unchanged'
+        
+        writeToLog("INFO", "The hotspot: " + hotspotName + " time stamp location has been successfully set to: start time: " + startTime + " end time: " + endTime )
         return True

@@ -95,9 +95,10 @@ class Test:
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 6: FAILED to navigate to the entry page for " + self.entryName)
                 return
-               
+            
+            presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step 7: Going to verify the hotspots from the " + self.entryName + " entry")
-            if self.common.player.hotspotVerification(self.hotspotsDict, enums.Location.ENTRY_PAGE, embed=False) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 7: FAILED to verify the hotspots from the " + self.entryName + " entry")
                 return
             ##################################################################

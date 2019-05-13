@@ -138,7 +138,6 @@ class MyMedia(Base):
     FILTER_SORT_TYPE_DISABLED                                   = ('xpath', '//a[@aria-checked="false" and @aria-label="DROPDOWNLIST_ITEM undefined"]')
     FILTER_SORT_TYPE_REMOVE_BUTTON                              = ('xpath', "//a[@class='cursor-pointer bubble__a' and @aria-label='DROPDOWNLIST_ITEM']")
     FILTER_CUSTOM_DURATION_SIDEBAR                              = ('xpath', "//div[@class='input-range__track input-range__track--active' and contains(@style,'left:')]")
-    PUBLISH_IN_SECTION_AFTER_PUBLISH                            = ('css', "div.pblBadge")
     #=============================================================================================================
     def getSearchBarElement(self):
         try:
@@ -301,8 +300,13 @@ class MyMedia(Base):
     def clickEntryAfterSearchInMyMedia(self, entryName):
         if localSettings.LOCAL_SETTINGS_IS_NEW_UI == False:
             if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
-                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "'")
-                return False
+                writeToLog("INFO","FAILED to click on Entry: '" + entryName + "' during the first try")
+                self.getSearchBarElement().send_keys(Keys.ENTER)
+                sleep(1)
+                self.clsCommon.general.waitForLoaderToDisappear()
+                if self.click(('xpath', "//span[@class='entry-name' and text()='" + entryName + "']"), 10) == False:
+                    writeToLog("INFO","FAILED to click on Entry: '" + entryName + "' at the second try")
+                    return False
         else:
             result = self.getResultAfterSearch(entryName)
             if result == False:
@@ -1121,7 +1125,7 @@ class MyMedia(Base):
                 return False
 
         if self.wait_visible(tmp_entry_name, 30) == False:
-            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "'")
+            writeToLog("INFO","FAILED to enter entry page: '" + entryName + "' via my media page thumbnail")
             return False
 
         sleep(2)
@@ -1438,7 +1442,7 @@ class MyMedia(Base):
             return True
 
 
-    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=120, afterSearch=False):
+    def showAllEntries(self, searchIn = enums.Location.MY_MEDIA, timeOut=600, afterSearch=False):
         # Check if we are in My Media page
         if searchIn == enums.Location.MY_MEDIA:
             tmp_table_size = self.MY_MEDIA_TABLE_SIZE

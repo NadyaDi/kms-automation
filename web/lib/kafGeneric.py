@@ -414,6 +414,9 @@ class KafGeneric(Base):
             if activity == enums.MoodleActivities.SITE_BLOG:
                 self.clsCommon.base.swith_to_iframe(self.clsCommon.moodle.MOODLE_EMBED_IFRAME)
                 
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            self.clsCommon.blackBoardUltra.switchToBlackboardUltraIframe()
+                
         sleep(10)
           
         if self.wait_element(self.KAF_EMBED_FROM_MY_MEDIA_PAGE, timeout=60) == False:

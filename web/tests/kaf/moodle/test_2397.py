@@ -88,7 +88,7 @@ class Test:
                 return         
               
             writeToLog("INFO","Step 5: Going to create embed site blog from 'My Media'")    
-            if self.common.moodle.createEmbedSiteBlog(self.entryName, self.siteBlogTitle, embedFrom=enums.Location.MEDIA_GALLARY,chooseMediaGalleryinEmbed=True, mediaGalleryName=self.galleryName) == False:
+            if self.common.moodle.createEmbedSiteBlog(self.entryName, self.siteBlogTitle, embedFrom=enums.Location.MEDIA_GALLARY,chooseMediaGalleryinEmbed=False, mediaGalleryName=self.galleryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 5: FAILED to create embed site blog from 'My Media'")
                 return 

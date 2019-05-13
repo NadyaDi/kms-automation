@@ -98,9 +98,10 @@ class Test:
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 5: FAILED to navigate to the entry page for " + self.entryName)
                 return
-                 
+            
+            presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()    
             writeToLog("INFO","Step 6: Going to verify the hotspots from the " + self.entryName + " entry, before duplicating the " + self.hotspotOne[0])
-            if self.common.player.hotspotVerification(self.hotspotsDict, enums.Location.ENTRY_PAGE, embed=False) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDict, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 6: FAILED to verify the hotspots from the " + self.entryName + " entry, before duplicating the " + self.hotspotOne[0])
                 return
                
@@ -124,9 +125,10 @@ class Test:
             if self.common.entryPage.navigateToEntry(self.entryName) == False:
                 writeToLog("INFO","Step 10: FAILED to navigate to the entry page for " + self.entryName)
                 return
-               
+            
+            presentedHotspotsDetailsList = self.common.player.returnPresentedHotspotDetails()
             writeToLog("INFO","Step 11: Going to verify the hotspots from the " + self.entryName + " entry, after duplicating the " + self.hotspotOne[0])
-            if self.common.player.hotspotVerification(self.hotspotsDictUpdatedPlayer, enums.Location.ENTRY_PAGE, embed=False) == False:
+            if self.common.player.hotspotVerification(self.hotspotsDictUpdatedTimeline, presentedHotspotsDetailsList, True) == False:
                 writeToLog("INFO","Step 11: FAILED to verify the hotspots from the " + self.entryName + " entry, after duplicating the " + self.hotspotOne[0])
                 return
             ##################################################################

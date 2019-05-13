@@ -29,6 +29,14 @@ class BlackBoardUltra(Base):
     BB_ULTRA_MY_MEDIA_BUTTON_IN_TOOLS_MENU              = ('xpath', "//span[@class='tool-title' and @title='Automation my media']")
     BB_ULTRA_MEDIA_GALLERY_BUTTON_IN_COURSE             = ('xpath', "//span[text()='New1']/ancestor::a[@class='content-title']")
     BB_ULTRA_ADD_CONTENT_BUTTON                         = ('xpath', "//div[@class='add-element no-select js-add-content-button course-outline-add-button']")
+    BB_ULTRA_CONTENT_MARKET_BUTTON                      = ('xpath', "//button[@name='Content Market' and @role='menuitem']")
+    BB_ULTRA_BSE_IVQ_BUTTON                             = ('xpath', "//p[@class='tool-title' and @title='Automation IVQ']")
+    BB_ULTRA_MORE_OPTION_FOR_EMBED_BUTTON               = ('xpath', "//button[@aria-label='More options for EMBED_NAME' and @class='overflow-menu-button']")
+    BB_ULTRA_EDIT_BUTTON_FOR_EMBED                      = ('xpath', "//span[contains(text(),'Edit')]")
+    BB_ULTRA_CONTENT_MARKET_POINTS_POSSIBL              = ('xpath', "//input[@name='grade-possible' and @type='text']")
+    BB_ULTRA_CONTENT_MARKET_SAVE_BUTTON                 = ('xpath', "//button[@type='submit' and contains(text(), 'Save')]")
+    BB_ULTRA_CONTENT_MARKET_EMBED_LINK                  = ('xpath', "//span[text()='EMBED_NAME']/ancestor::a[@class='content-title']")
+    BB_ULTRA_CONTENT_MARKET_LAUNCH_BUTTON               = ('xpath', "//button[@class='button launch-link link' and contains(text(), 'Launch')]")
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -167,25 +175,82 @@ class BlackBoardUltra(Base):
     
     
     # Author: Oded Berihon    
-    def createContentMarket(self):
+    def createContentMarketBlackboardUltra(self, entryName, kalturaVideoQuizName, ponitesPossible):
         if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_CONTENT_PAGE) == False:
-            writeToLog("INFO","FAILED navigate to assignment page")
+            writeToLog("INFO","FAILED navigate to main page")
             return False 
         
+        self.switchToBlackboardUltraIframe()
+        if self.click(self.COURSES_LIST_PAGE) == False:
+            writeToLog("INFO","FAILED to click on course list page")
+            return False 
+              
+        sleep(5)
         if self.click(self.BB_ULTRA_ADD_CONTENT_BUTTON) == False:
-            writeToLog("INFO","fail to click on add button")
-            return False            
-                   
-         
-        return True    
+            writeToLog("INFO","fail to click on + button")
+            return False 
         
+        if self.click(self.BB_ULTRA_CONTENT_MARKET_BUTTON) == False:
+            writeToLog("INFO","fail to click on content market from menu")
+            return False         
+        
+        if self.click(self.BB_ULTRA_BSE_IVQ_BUTTON) == False:
+            writeToLog("INFO","fail to click on automation ivq button")
+            return False 
+        
+        if self.clsCommon.kafGeneric.embedMedia(entryName) == False:    
+            writeToLog("INFO","FAILED to choose media in embed page")
+            return False
+  
+        self.switch_to_default_content()
+        temp_button = (self.BB_ULTRA_MORE_OPTION_FOR_EMBED_BUTTON[0], self.BB_ULTRA_MORE_OPTION_FOR_EMBED_BUTTON[1].replace('EMBED_NAME', kalturaVideoQuizName))
+        if self.click(temp_button) == False:
+            writeToLog("INFO","fail to click on menu button")
+            return False
+        
+        if self.click(self.BB_ULTRA_EDIT_BUTTON_FOR_EMBED) == False:
+            writeToLog("INFO","fail to click on edit button")
+            return False                               
+       
+        if self.clear_and_send_keys(self.BB_ULTRA_CONTENT_MARKET_POINTS_POSSIBL, ponitesPossible) == False:
+            writeToLog("INFO","FAILED to insert possible points")
+            return False
+        
+        if self.click(self.BB_ULTRA_CONTENT_MARKET_SAVE_BUTTON) == False:
+            writeToLog("INFO","fail to click on save button")
+            return False           
+        
+        return True    
     
-#     def getBlackboardUltraLoginUserName(self):
-#         try:
-#             userName = self.get_element_text(self.BB_USER_NAME)
-#         except NoSuchElementException:
-#             writeToLog("INFO","FAILED to get user name element")
-#             return False
-#         return userName   
+    # Author: Oded Berihon   
+    def navigateToContentMarketBlackboardUltra(self, kalturaVideoQuizName):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_CONTENT_PAGE) == False:
+            writeToLog("INFO","FAILED navigate to main page")
+            return False 
+        
+        self.switchToBlackboardUltraIframe()
+        if self.click(self.COURSES_LIST_PAGE) == False:
+            writeToLog("INFO","FAILED to click on course list page")
+            return False 
+        
+        self.switch_to_default_content()   
+        content_market_name = (self.BB_ULTRA_CONTENT_MARKET_EMBED_LINK[0], self.BB_ULTRA_CONTENT_MARKET_EMBED_LINK[1].replace('EMBED_NAME', kalturaVideoQuizName))
+        if self.click(content_market_name) == False:
+            writeToLog("INFO","fail to click on menu button")
+            return False        
+            
+        if self.click(self.BB_ULTRA_CONTENT_MARKET_LUNCH_BUTTON) == False:
+            writeToLog("INFO","fail to click on launch button")
+            return False        
+                        
+        return True         
+    
+    def getBlackboardUltraLoginUserName(self):
+        try:
+            userName = self.get_element_text(self.BB_ULTRA_USER_NAME)
+        except NoSuchElementException:
+            writeToLog("INFO","FAILED to get user name element")
+            return False
+        return userName   
     
     

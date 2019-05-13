@@ -810,3 +810,43 @@ class UserRoles(Enum):
     PRIVATE_ONLY_ROLE       = 'Private Only Role'   
     ADMIN_ROLE              = 'Admin Role' 
     UNMODERATED_ADMIN_ROLE  = 'Unmoderated Admin Role'    
+    
+    
+class OrderCaptionsFields(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    SERVICE                 = 'Service'
+    FEATURE                 = 'Feature'     
+    SOURCE_MEDIA_LANGUAGE   = 'Source Media Language' 
+    TURNAROUND_TIME         = 'Turnaround Time'
+    INSTRUCTIONS_AND_NOTE   = 'Instructions & Notes'
+    
+    
+class OrderCaptionsServiceOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+        
+    PROFESSIONAL            = 'Professional'
+    MACHINE                 = 'Machine'
+    
+ 
+class OrderCaptionsFeatureOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+        
+    CAPTIONS               = 'Captions'
+ 
+ 
+class OrderCaptionsSourceMediaLanguageOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+        
+    CAPTIONS               = 'Captions' 
+    
+    
+class OrderCaptionsTurnaroundTimeOptions(Enum):
+    def __str__(self):
+        return str(self.value)
+        
+    IMMEDIATE               = 'Immediate'    
