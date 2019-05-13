@@ -279,9 +279,14 @@ class clsPractiTest:
     #=============================================================================================================
     def getTestInstanceFromTestSetFile(self, testID):
         instance = ""
-        
         case_str = "test_" + testID
-        testSetFilePath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetAuto.csv'))
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MEDIA_SPACE:
+            testSetFilePath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetAuto.csv'))
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.PITCH:
+            testSetFilePath = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','pitch','testSetAuto.csv'))
+        else:
+            writeToLog("INFO","UNSUPPORTED APPLICATION NAME: '" + str(localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST) + "'")          
+        
         with open(testSetFilePath, 'r') as csv_mat: #windows
                 platform_matrix = csv.DictReader(csv_mat)
                 for row in platform_matrix:
@@ -458,7 +463,14 @@ class clsPractiTest:
     #=============================================================================================================
     def createAutomationTestSetFile(self, hostname, environment, platform, testIDsDict):
         platformList = ["pc_firefox","pc_chrome","pc_internet explorer","android_chrome"]
-        testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetAuto.csv'))
+            
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.MEDIA_SPACE:
+            testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','kms','testSetAuto.csv'))
+        elif localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.PITCH:
+            testSetFile  = os.path.abspath(os.path.join(localSettings.LOCAL_SETTINGS_KMS_WEB_DIR,'ini','pitch','testSetAuto.csv'))
+        else:
+            writeToLog("INFO","UNSUPPORTED APPLICATION NAME: '" + str(localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST) + "'")            
+            
         file = open(testSetFile, "w")
         automationTestSetFileHeader = "hostname,environment,case"
         for plat in platformList:
