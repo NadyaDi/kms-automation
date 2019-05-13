@@ -67,15 +67,24 @@ class Test:
 #                 return
             
             writeToLog("INFO","Step 5: Going to choose 'Captions Requests' option")
-            if self.common.entryPage.chooseCaptionsRequestsOption('ukrainfamilyhorse', True) == False:
+            if self.common.entryPage.chooseCaptionsRequestsOption('39039867-5178-MyHistoryEntry', True) == False:
                 writeToLog("INFO","Step 5: FAILED to choose 'Captions Requests' option")
                 return 
             
             writeToLog("INFO","Step 6: Going to verify that 'Captions Requests' section is empty")
-            if self.common.reach.verifyCaptionsRequestsSection() == False:
+            if self.common.reach.verifyCaptionsRequestsSection(True) == False:
                 writeToLog("INFO","Step 6: FAILED to verify that 'Captions Requests' section is empty")
-                return                        
-                
+                return
+            
+            writeToLog("INFO","Step 7: Going to add caption 'Captions Requests' section is empty")
+            if self.common.reach.verifyCaptionsRequestsSection(True) == False:
+                writeToLog("INFO","Step 7: FAILED to verify that 'Captions Requests' section is empty")
+                return     
+            
+            writeToLog("INFO","Step 8: Going to order captions")
+            if self.common.reach.orderCaptionViaKMS(service=enums.OrderCaptionsServiceOptions.PROFESSIONAL) == False:
+                writeToLog("INFO","Step 8: FAILED to order captions")
+                return                                                
 
             #########################################################################
             self.status = "Pass"
