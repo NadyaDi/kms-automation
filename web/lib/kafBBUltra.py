@@ -33,10 +33,16 @@ class BlackBoardUltra(Base):
     BB_ULTRA_BSE_IVQ_BUTTON                             = ('xpath', "//p[@class='tool-title' and @title='Automation IVQ']")
     BB_ULTRA_MORE_OPTION_FOR_EMBED_BUTTON               = ('xpath', "//button[@aria-label='More options for EMBED_NAME' and @class='overflow-menu-button']")
     BB_ULTRA_EDIT_BUTTON_FOR_EMBED                      = ('xpath', "//span[contains(text(),'Edit')]")
+    BB_ULTRA_DELETE_BUTTON_FOR_EMBED                    = ('xpath', "//span[contains(text(),'Delete')]")
+    BB_ULTRA_DELETE_CONFIRMATION_BUTTON_FOR_EMBED       = ('xpath', "//button[@class='button js-delete-confirm']")
     BB_ULTRA_CONTENT_MARKET_POINTS_POSSIBL              = ('xpath', "//input[@name='grade-possible' and @type='text']")
     BB_ULTRA_CONTENT_MARKET_SAVE_BUTTON                 = ('xpath', "//button[@type='submit' and contains(text(), 'Save')]")
     BB_ULTRA_CONTENT_MARKET_EMBED_LINK                  = ('xpath', "//span[text()='EMBED_NAME']/ancestor::a[@class='content-title']")
     BB_ULTRA_CONTENT_MARKET_LAUNCH_BUTTON               = ('xpath', "//button[@class='button launch-link link' and contains(text(), 'Launch')]")
+    BB_ULTRA_EMBED_NAME_ON_GRADES_PAGE_FOR_STUDENT      = ('xpath', '//a[contains(@ng-click,"courseGradesStudent.openItem(grade)") and text()="EMBED_NAME"]/ancestor::div[@class="row tabular-row js-row last-tabular-row-container child-is-invokable"]/descendant::bb-display-grade-pill[@grade="grade"]')
+    BB_ULTRA_EMBED_NAME_ON_GRADES_PAGE_FOR_ADMIN        = ('xpath', "//div[@class='score' and contains(@aria-label,'grade is GRADE for EMBED_NAME. Press enter to edit. Posted')]")
+    BB_ULTRA_GRADE_NAUMBER                              = ('xpath', "//a[contains(text(),'GRADE')]")
+    
     #====================================================================================================================================
     #====================================================================================================================================
     #                                                           Methods:
@@ -80,6 +86,8 @@ class BlackBoardUltra(Base):
             # Enter test partner password
             self.send_keys(self.LOGIN_PASSWORD_FIELD, password)
             # Click Sign In
+            
+            sleep(6)
             self.click(self.LOGIN_SIGN_IN_BTN)
             # Wait page load
             self.wait_for_page_readyState()
@@ -108,6 +116,8 @@ class BlackBoardUltra(Base):
                 return False  
         
         # Click on the user menu button
+        self.clsCommon.base.switch_to_default_content() 
+        sleep(3)
         if self.click(self.USER_LOGOUT_BTN) == False:
             writeToLog("INFO","FAILED to click on logout button")
             return False
@@ -128,10 +138,12 @@ class BlackBoardUltra(Base):
             writeToLog("INFO","FAILED navigate to my media page")
             return False
         
+        self.switchToBlackboardUltraIframe()
         if self.click(self.BB_ULTRA_MY_MEDIA_BUTTON_IN_TOOLS_MENU) == False:
             writeToLog("INFO","FAILED to click on my media button")
             return False
-        sleep(4)
+        
+        sleep(6)
         self.switchToBlackboardUltraIframe()
         if self.wait_element(self.clsCommon.myMedia.MY_MEDIA_TITLE, timeout=30) == False:
             writeToLog("INFO","FAILED navigate to My Media")
@@ -239,11 +251,85 @@ class BlackBoardUltra(Base):
             writeToLog("INFO","fail to click on menu button")
             return False        
             
-        if self.click(self.BB_ULTRA_CONTENT_MARKET_LUNCH_BUTTON) == False:
+        if self.click(self.BB_ULTRA_CONTENT_MARKET_LAUNCH_BUTTON) == False:
             writeToLog("INFO","fail to click on launch button")
             return False        
                         
         return True         
+
+    # Author: Oded Berihon   
+    def deleteEmbedBlackboardUltra(self, kalturaVideoQuizName):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_CONTENT_PAGE) == False:
+            writeToLog("INFO","FAILED navigate to main page")
+            return False 
+        
+        self.switchToBlackboardUltraIframe()
+        if self.click(self.COURSES_LIST_PAGE) == False:
+            writeToLog("INFO","FAILED to click on course list page")
+            return False 
+
+        sleep(10)       
+        self.switch_to_default_content()
+        temp_button = (self.BB_ULTRA_MORE_OPTION_FOR_EMBED_BUTTON[0], self.BB_ULTRA_MORE_OPTION_FOR_EMBED_BUTTON[1].replace('EMBED_NAME', kalturaVideoQuizName))
+        if self.click(temp_button) == False:
+            writeToLog("INFO","fail to click on menu button")
+            return False
+        
+        if self.click(self.BB_ULTRA_DELETE_BUTTON_FOR_EMBED) == False:
+            writeToLog("INFO","fail to click on delete button")
+            return False           
+
+        if self.click(self.BB_ULTRA_DELETE_CONFIRMATION_BUTTON_FOR_EMBED) == False:
+            writeToLog("INFO","fail to click on delete confirmation button")
+            return False                  
+                        
+        return True  
+    
+    # Author: Oded Berihon   
+    def verifyGradeAsStudentBlackboardUltra(self, grade, kalturaVideoQuizName):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_GRADES_STUDENT_URL) == False:
+            writeToLog("INFO","FAILED navigate to main page")
+            return False 
+        
+        tmpGradeParent = (self.BB_ULTRA_EMBED_NAME_ON_GRADES_PAGE_FOR_STUDENT[0], self.BB_ULTRA_EMBED_NAME_ON_GRADES_PAGE_FOR_STUDENT[1].replace('EMBED_NAME', kalturaVideoQuizName))
+        tmpAssignmentGradeParentElement = self.wait_element(tmpGradeParent)        
+        
+        sleep(4)
+        if tmpAssignmentGradeParentElement == False:
+            writeToLog("INFO","FAILED to find grade element")
+            return False 
+        
+        # Get student grade
+        gradeForStudent = tmpAssignmentGradeParentElement.text.split('\n')[-1]
+                       
+        if grade not in gradeForStudent:
+            writeToLog("INFO","FAILED to display grade for " + kalturaVideoQuizName)
+            return False 
+        writeToLog("INFO","Success: Correct grade is displayed")               
+        
+        return True        
+
+    # Author: Oded Berihon  
+    def verifyGradeAsAdminBlackboardUltra(self, grade, kalturaVideoQuizName):
+        if self.clsCommon.base.navigate(localSettings.LOCAL_SETTINGS_COURSE_GRADES_ADMIN_URL) == False:
+            writeToLog("INFO","FAILED navigate to main page")
+            return False 
+        
+        tmpQuizGrade = (self.BB_ULTRA_EMBED_NAME_ON_GRADES_PAGE_FOR_ADMIN[0], self.BB_ULTRA_EMBED_NAME_ON_GRADES_PAGE_FOR_ADMIN[1].replace('EMBED_NAME', kalturaVideoQuizName).replace('GRADE', grade))
+        quiGradeElement = self.wait_element(tmpQuizGrade)
+        if quiGradeElement == False:
+            writeToLog("INFO","FAILED to find quiz in full grade center")          
+            return False 
+
+        gradeForStudent = quiGradeElement.text.split(" ")[0]
+        
+        if gradeForStudent != grade:
+            writeToLog("INFO","FAILED to display correct quiz grade")          
+            return False     
+        
+        writeToLog("INFO","Success: quiz grade is displayed correctly in full grade center")             
+        
+        return True     
     
     def getBlackboardUltraLoginUserName(self):
         try:
@@ -252,5 +338,4 @@ class BlackBoardUltra(Base):
             writeToLog("INFO","FAILED to get user name element")
             return False
         return userName   
-    
-    
+ 

@@ -1890,7 +1890,10 @@ class Player(Base):
             writeToLog("INFO", "FAILED to switch the player iframe for the " + location.value + " location")
             return False
         
-        sleep(1)
+        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACKBOARD_ULTRA:
+            sleep(20)
+        else:
+            sleep(1)
         #we resume the entry from the beginning
         if self.resumeFromBeginningQuiz(location, embed=embed) == False:
             return False                  

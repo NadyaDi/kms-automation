@@ -125,6 +125,8 @@ def setTestURLs(row):
         localSettings.LOCAL_SETTINGS_KMS_MY_MEDIA_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/tools'
         localSettings.LOCAL_SETTINGS_GALLERY_NEW1_URL           = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/courses'
         localSettings.LOCAL_SETTINGS_COURSE_CONTENT_PAGE        = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/course'
+        localSettings.LOCAL_SETTINGS_COURSE_GRADES_STUDENT_URL  = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/courses/_1177_1/grades'
+        localSettings.LOCAL_SETTINGS_COURSE_GRADES_ADMIN_URL    = localSettings.LOCAL_SETTINGS_TEST_BASE_URL + '/ultra/courses/_1177_1/grades?gradebookView=grid'
     return
 
 
