@@ -9,11 +9,11 @@ class Test:
     #=============================================================================================================
     #This is the test that does setup
     #=============================================================================================================
-    
+    localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
     practiTest = clsPractiTest()
     testNum     = "kms_practitest"
     status      = "Fail"   
-    localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST = enums.Application.MEDIA_SPACE
+    
     
     def test_01(self,env):
         
