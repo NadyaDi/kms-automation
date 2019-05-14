@@ -34,14 +34,19 @@ class Test:
             #capture test start time
             self.startTime = time.time()
             #initialize all the basic vars and start playing
-            self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
+            self,self.driver = clsTestService.initialize(self, driverFix)
+            #self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
         
             ##################### TEST STEPS - MAIN FLOW ##################### 
+            writeToLog("INFO","Step 1: Going to login")
+            if self.common.loginAsUser() == None:
+                writeToLog("INFO","Step 2: FAILED failed to logout")
+                return
             
-            writeToLog("INFO","Step 1: Going to logout")
+            writeToLog("INFO","Step 2: Going to logout")
             if self.common.pitch.logOutPitch() == None:
-                writeToLog("INFO","Step 1: FAILED failed to logout")
+                writeToLog("INFO","Step 2: FAILED failed to logout")
                 return
                
             writeToLog("INFO","TEST PASSED: 'Pitch - Login Test'  was done successfully")

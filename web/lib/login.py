@@ -57,11 +57,11 @@ class Login(Base):
         if url == '':
             self.navigate(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)
             if verifyUrl == True:
-                self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, verifyIn=True, isRegex=False)    
+                return self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL, verifyIn=True, isRegex=False)    
         else:
             self.navigate(url)
             if verifyUrl == True:
-                self.clsCommon.myMedia.verifyUrl(url, False)
+                return self.clsCommon.myMedia.verifyUrl(url, False)
            
     
     # If allowAnonymous=False, we will no longer verify if the user is guest because the authentication screen is presented

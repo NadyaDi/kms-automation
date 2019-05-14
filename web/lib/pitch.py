@@ -22,42 +22,40 @@ class Pitch(Base):
     # @Author: Oleg Sigalov
     # Perform login with given username and password and verify an element on the landing page (to make sure login was successful)
     def loginToPitch(self, username, password, url=''):
-        try:
-            writeToLog("INFO","Going to login as '" + username + " / " + password + "'")
-            # Navigate to login page
-            if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL)==False:
-                self.clsCommon.login.navigateToLoginPage(url)
-                
-            # Enter username
-            if self.send_keys(self.LOGIN_USERNAME_FIELD, username) == False:
-                writeToLog("INFO","FAILED to set username: '" + username + "'")
+        writeToLog("INFO","Going to login as '" + username + " / " + password + "' to URL: " + url + "'")
+        # Navigate to login page
+        if self.clsCommon.myMedia.verifyUrl(localSettings.LOCAL_SETTINGS_KMS_LOGIN_URL) == False:
+            if self.clsCommon.login.navigateToLoginPage(url) == False:
+                writeToLog("INFO","FAILED navigate to: '" + url + "'")
                 return False
             
-            # Enter password
-            if self.send_keys(self.LOGIN_PASSWORD_FIELD, password) == False:
-                writeToLog("INFO","FAILED to set password: '" + password + "'")
-                return False
-            
-            # Click Sign In
-            if self.click(self.LOGIN_SIGN_IN_BTN) == False:
-                writeToLog("INFO","FAILED to click on Sing In")
-                return False
-            
-            # Wait page load
-            if self.wait_for_page_readyState() == False:
-                writeToLog("INFO","FAILED to login after clicking on 'Sing In' button")
-                return False
-            
-            # Verify logged in - Verify the menu button on the top right corner is visible
-            if self.wait_element(self.USER_MENU_TOGGLE_BTN) == False:
-                writeToLog("INFO","FAILED to login after clicking on 'Sing In' button")
-                return False
-            
-            return True
-        except Exception as inst:
-            writeToLog("INFO","FAILED to login as '" + username + "@" + password + "'")
-            self.takeScreeshotGeneric("FAIL_LOGIN_TO_PITCH")
+        # Enter username
+        if self.send_keys(self.LOGIN_USERNAME_FIELD, username) == False:
+            writeToLog("INFO","FAILED to set username: '" + username + "'")
             return False
+        
+        # Enter password
+        if self.send_keys(self.LOGIN_PASSWORD_FIELD, password) == False:
+            writeToLog("INFO","FAILED to set password: '" + password + "'")
+            return False
+        
+        # Click Sign In
+        if self.click(self.LOGIN_SIGN_IN_BTN) == False:
+            writeToLog("INFO","FAILED to click on Sing In")
+            return False
+        
+        # Wait page load
+        if self.wait_for_page_readyState() == False:
+            writeToLog("INFO","FAILED to login after clicking on 'Sing In' button")
+            return False
+        
+        # Verify logged in - Verify the menu button on the top right corner is visible
+        if self.wait_element(self.USER_MENU_TOGGLE_BTN) == False:
+            writeToLog("INFO","FAILED to login after clicking on 'Sing In' button")
+            return False
+            
+        writeToLog("INFO","Logged in successfully with username: '" + username + "' and password: '" + password + "'")    
+        return True
             
             
     # @Author: Oleg Sigalov
