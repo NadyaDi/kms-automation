@@ -44,7 +44,7 @@ class Test:
     startEventTime = None
     endTime = None
     seriesResource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
-    occurrenceEventEditResource = enums.RecschedulingResourceOptions.SUMMER_CONFERENCE_ROOM
+#     occurrenceEventEditResource = enums.RecschedulingResourceOptions.SUMMER_CONFERENCE_ROOM
     numberOfRecurrenceDays = 6
     resourceEveryXDays = 2 
     
@@ -98,20 +98,20 @@ class Test:
             self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
             
             self.occurrenceEvent = SechdeuleEvent(self.occurrenceEventTitle, self.occurrenceEventEditStartDate, self.occurrenceEventEditEndDate, self.occurrenceEventEditStartTime, self.occurrenceEventEditEndTime, self.editDescription, self.editTags, "True")
-            self.occurrenceEvent.resources= self.occurrenceEventEditResource
+#             self.occurrenceEvent.resources= self.occurrenceEventEditResource
             self.occurrenceEvent.fieldsToUpdate = ["title", "tags", "description", "resources", "startDate", "endDate", "startTime", "endTime"]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
-#             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
-#             if self.common.admin.enableRecscheduling(True) == False:
-#                 writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
-#                 return
-#                 
-#             writeToLog("INFO","Step 2: Going navigate to home page")            
-#             if self.common.home.navigateToHomePage(forceNavigate=True) == False:
-#                 writeToLog("INFO","Step 2: FAILED navigate to home page")
-#                 return
-#             
+            writeToLog("INFO","Step 1: Going to set rescheduling in admin")
+            if self.common.admin.enableRecscheduling(True) == False:
+                writeToLog("INFO","Step 1: FAILED set rescheduling in admin")
+                return
+                 
+            writeToLog("INFO","Step 2: Going navigate to home page")            
+            if self.common.home.navigateToHomePage(forceNavigate=True) == False:
+                writeToLog("INFO","Step 2: FAILED navigate to home page")
+                return
+             
             writeToLog("INFO","Step 3: Going to create event series")
             if self.common.recscheduling.createRescheduleEvent(self.event) == False:
                 writeToLog("INFO","Step 3: FAILED to create new single event")

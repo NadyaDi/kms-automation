@@ -37,7 +37,7 @@ from general import General
 # channelList = this parameter will have the name of the channel to publish to , if we have more then 1 channel need to be in a list ([]) format
 # verifyDateFormat - this parameter is created in the Constructor. it will build a date format to us in my schedule page
 # fieldsToUpdate - this parameter will have the fields name that need to be update in edit tests, need to be in a list ([]) format.   
-#                  if the event is recurrence and we need to update so of the recurrence fields we don't need to write the fields to update since it will go over all the recurrence fields and rewrite them  
+#                  if the event is recurrence and we need to update some of the recurrence fields we don't need to write the fields to update since it will go over all the recurrence fields and rewrite them  
 #                  we just need to update the needed fields with the new parameters before calling the edit function.
 #                  if the event that we need to update is a single event all the needed parameters need to be in the list
 # collaboratorUser - this parameter will have the the user id for collaborator 
@@ -79,7 +79,6 @@ class SechdeuleEvent():
     channelList = ''
     verifyDateFormat = ''
     fieldsToUpdate = ''
-    eventRecurrencefieldsToUpdate = ''
     collaboratorUser = ''
     coEditor = ''
     coPublisher = ''
