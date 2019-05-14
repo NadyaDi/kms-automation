@@ -1503,15 +1503,15 @@ class Admin(Base):
             writeToLog("INFO","FAILED to click on save button")
             return False
         
-        tmpSelectedOption = (self.ENABLE_NEW_BSEUI_SELECTED_OPTION[0], self.ENABLE_NEW_BSEUI_SELECTED_OPTION[1].replace('LABEL_OPTION', labelOption))    
-        if self.wait_element(tmpSelectedOption) == False:
-            writeToLog("INFO","FAILED to save " + labelOption + " option")
-            return False
-        
         sleep(2)  
         if self.click(self.ADMIN_CONFIRMATION_MSG_CLEAR_CACHE_BUTTON, 10, multipleElements=True) == False:
             writeToLog("INFO","FAILED to click on confirm clear cache button")
             return False        
+        
+        tmpSelectedOption = (self.ENABLE_NEW_BSEUI_SELECTED_OPTION[0], self.ENABLE_NEW_BSEUI_SELECTED_OPTION[1].replace('LABEL_OPTION', labelOption))    
+        if self.wait_element(tmpSelectedOption) == False:
+            writeToLog("INFO","FAILED to save " + labelOption + " option")
+            return False
                               
         writeToLog("INFO","Label option change to " + labelOption + " Successfully")
         return True   

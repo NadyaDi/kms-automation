@@ -64,30 +64,30 @@ class Test:
                 localSettings.LOCAL_SETTINGS_ADMIN_USERNAME = 'michal11@mailinator.com'
                 localSettings.LOCAL_SETTINGS_ADMIN_PASSWORD = 'Kaltura1!'
                             
-#             writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
-#             if self.common.admin.enableNewBSEUI('v2') == False:
-#                 writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
-#                 return
-#         
-#             writeToLog("INFO","Step 2: Going to upload entry")    
-#             if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
-#                 writeToLog("INFO","Step 2: FAILED to upload entry")
-#                 return
-#               
-#             writeToLog("INFO","Step 3: Going to to navigate to entry page")    
-#             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
-#                 writeToLog("INFO","Step 3: FAILED to navigate entry page")
-#                 return
-#               
-#             writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
-#             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
-#                 writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
-#                 return
-#               
-#             writeToLog("INFO","Step 5: Going to PUBLISH entry to gallery")    
-#             if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, False) == False:
-#                 writeToLog("INFO","Step 5: FAILED to PUBLISH entry to gallery")
-#                 return
+            writeToLog("INFO","Step 1: Going to set enableNewBSEUI to v2")    
+            if self.common.admin.enableNewBSEUI('v2') == False:
+                writeToLog("INFO","Step 1: FAILED to set enableNewBSEUI to v2")
+                return
+         
+            writeToLog("INFO","Step 2: Going to upload entry")    
+            if self.common.upload.uploadEntry(self.filePath, self.entryName, self.description, self.tags) == False:
+                writeToLog("INFO","Step 2: FAILED to upload entry")
+                return
+               
+            writeToLog("INFO","Step 3: Going to to navigate to entry page")    
+            if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
+                writeToLog("INFO","Step 3: FAILED to navigate entry page")
+                return
+               
+            writeToLog("INFO","Step 4: Going to to wait until media end upload process")    
+            if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
+                writeToLog("INFO","Step 4: FAILED to wait until media end upload process")
+                return
+               
+            writeToLog("INFO","Step 5: Going to PUBLISH entry to gallery")    
+            if self.common.kafGeneric.addMediaToGallery(self.galleryName, self.entryName, False) == False:
+                writeToLog("INFO","Step 5: FAILED to PUBLISH entry to gallery")
+                return
  
             writeToLog("INFO","Step 6: Going to CREATE embed kaltura media from media gallery")  
             if self.common.blackBoard.createEmbedKalturaMedia(self.galleryName, 'F9A6CF91-5181-embedEntry', self.itemNameEmbedMediaGallery,v3=False)== False:
