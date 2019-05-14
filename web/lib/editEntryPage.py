@@ -598,16 +598,18 @@ class EditEntryPage(Base):
     
     
     # Author: Oleg Sigalov
-    # We have class of 'old day', 'day' and 'today active day'. The issue is when we have the same day on specific month.
-    # The solution is to get_elemets of contains(@class,'day') and NOT click on 'old day'    
+    # We have class of 'old day', 'day', 'today active day' and 'new day'. The issue is when we have the same day on specific month.
+    # The solution is to get_elemets of contains(@class,'day') and to click on the one with class day    
     # Help method for setScheduleDate or setScheduleEndDate
     def clickOnDayFromDatePicker(self, day):
         tmpDayLocator = (self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[0], self.EDIT_ENTRY_SCHEDULING_CALENDAR_DAY[1].replace('DAY', day))
         elements = self.wait_elements(tmpDayLocator)
         for el in elements:
-            if el.get_attribute("class") != 'old day':
-                el.click()
-                return True
+            # if the class don't have the world 'old' ot 'new' that mean that this is the element that we need 
+            if ('old' in el.get_attribute("class")) == False:
+                if ('new' in el.get_attribute("class")) == False:
+                    el.click()
+                    return True
         return False
     
         
