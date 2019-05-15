@@ -99,6 +99,7 @@ class EditEntryPageTabName(Enum):
     TIMELINE               = 'timeline'
     REPLACE_VIDEO          = 'replace video'
     ATTACHMENTS            = 'Attachments'
+    DISPLAY                = 'Display'
     
     
 class IframeName(Enum):
@@ -849,4 +850,18 @@ class OrderCaptionsTurnaroundTimeOptions(Enum):
     def __str__(self):
         return str(self.value)
         
-    IMMEDIATE               = 'Immediate'    
+    IMMEDIATE               = 'Immediate'
+    
+    
+class EditEntryDisplayElements(Enum):
+    def __str__(self):
+        return str(self.value)
+    
+    
+    HEADER                 = 'Header'
+    HEADER_LOGO            = 'Header Logo'
+    SIDEBAR                = 'Sidebar'
+    ENTRY_PROPERTIES       = 'Entry Properties'
+    ENTRY_TABS             = 'Entry Tabs'
+    COMMENTS               = 'Comments'
+    FOOTER                 = 'Footer'
