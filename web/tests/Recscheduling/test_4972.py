@@ -46,7 +46,7 @@ class Test:
     seriesResource = enums.RecschedulingResourceOptions.AUTOMATION_ROOM
 #     occurrenceEventEditResource = enums.RecschedulingResourceOptions.SUMMER_CONFERENCE_ROOM
     numberOfRecurrenceDays = 6
-    resourceEveryXDays = 2 
+    recurrenceEveryXDays = 2 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -94,12 +94,13 @@ class Test:
             self.event.isRecurrence = True
             self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
             self.event.dailyOption =  enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS
-            self.event.dailyDays = self.resourceEveryXDays
+            self.event.dailyDays = self.recurrenceEveryXDays
             self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
             
             self.occurrenceEvent = SechdeuleEvent(self.occurrenceEventTitle, self.occurrenceEventEditStartDate, self.occurrenceEventEditEndDate, self.occurrenceEventEditStartTime, self.occurrenceEventEditEndTime, self.editDescription, self.editTags, "True")
 #             self.occurrenceEvent.resources= self.occurrenceEventEditResource
-            self.occurrenceEvent.fieldsToUpdate = ["title", "tags", "description", "resources", "startDate", "endDate", "startTime", "endTime"]
+            #self.occurrenceEvent.fieldsToUpdate = ["title", "tags", "description", "resources", "startDate", "endDate", "startTime", "endTime"]
+            self.occurrenceEvent.fieldsToUpdate = ["title", "tags", "description", "startDate", "endDate", "startTime", "endTime"]
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
             writeToLog("INFO","Step 1: Going to set rescheduling in admin")
