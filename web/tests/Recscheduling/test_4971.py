@@ -54,9 +54,9 @@ class Test:
     editOrganizer = 'Automation_User_1' 
     userId = 'AutomationUser8'
     numberOfRecurrenceDays = 6
-    resourceEveryXDays = 2 
+    recurrenceEveryXDays = 2 
     editNumberOfRecurrenceDays = 13
-    editResourceEveryXDays = 4 
+    editrecurrenceEveryXDays = 4 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -121,7 +121,7 @@ class Test:
             self.event.isRecurrence = True
             self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
             self.event.dailyOption =  enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS
-            self.event.dailyDays = self.resourceEveryXDays
+            self.event.dailyDays = self.recurrenceEveryXDays
             self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
             
             ##################### TEST STEPS - MAIN FLOW ##################### 
@@ -174,7 +174,7 @@ class Test:
             self.event.tags = self.editTags
             self.event.organizer = self.editOrganizer
             self.event.resources = self.editResources
-            self.event.dailyDays = self.editResourceEveryXDays
+            self.event.dailyDays = self.editrecurrenceEveryXDays
             
             sleep(3)     
             writeToLog("INFO","Step 6: Going to edit event metadata")

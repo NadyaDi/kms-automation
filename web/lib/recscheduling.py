@@ -527,7 +527,7 @@ class  Recscheduling(Base):
     # @Author: Michal Zomper 
     # endDateOption - this parameter need to be send as enum: scheduleRecurrenceEndDateOption
     # numberOfRecurrence - this parameter is for end date option 'end after X occurrences' 
-    def setRecurrenceRange(self, eventInstance): #endDateOption, reccurenceStartTime,reccurenceStartDate, reccurenceEndTime, reccurenceEndDate, numberOfRecurrence =''):
+    def setRecurrenceRange(self, eventInstance): 
         if (self.changeDateOrder(self.wait_element(self.SCHEDULE_RECURRENCE_START_DATE_CALENDAR).get_attribute("value")) == eventInstance.startDate) == False:
             if self.setRecurrenceStartDate(eventInstance.startDate) == False:
                 writeToLog("INFO","FAILED to set event start date")

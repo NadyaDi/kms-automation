@@ -18,7 +18,7 @@ class Test:
     # Test description:
     #    1. Login with Rescheduling admin user
     #    2. Click on my schedule > create event
-    #    3. Fill in all fields :start/end date, start,end, time, description ,tags, rcurrence(new recurring event - Daily - Every X day) and select a resource
+    #    3. Fill in all fields :start/end date, start/end time, description ,tags, rcurrence(new recurring event - Daily - Every X day) and select a resource
     #    4. Click save and exit
     #    5. Go to my schedule page and verify that all events display with the correct date and time
     #    6. From my schedule page enter one event and delete only this event  
@@ -44,7 +44,7 @@ class Test:
     endTime = None
     resource = enums.RecschedulingResourceOptions.MAIN_AUDITORIUM
     numberOfRecurrenceDays = 6
-    resourceEveryXDays = 2 
+    recurrenceEveryXDays = 2 
     
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
@@ -84,7 +84,7 @@ class Test:
             self.event.isRecurrence = True
             self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
             self.event.dailyOption =  enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS
-            self.event.dailyDays = self.resourceEveryXDays
+            self.event.dailyDays = self.recurrenceEveryXDays
             self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
             
             ##################### TEST STEPS - MAIN FLOW ##################### 

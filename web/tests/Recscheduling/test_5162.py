@@ -39,7 +39,7 @@ class Test:
     endTime = None
     munberOfRecurrenceDays = 8
     resource = enums.RecschedulingResourceOptions.MAIN_CONFERENCE_ROOM
-    resourceEveryXDays = 2 
+    recurrenceEveryXDays = 2 
     
     
     #run test as different instances on all the supported platforms
@@ -76,7 +76,7 @@ class Test:
             self.event.isRecurrence = True
             self.event.recurrenceInterval = enums.scheduleRecurrenceInterval.DAYS
             self.event.dailyOption =  enums.scheduleRecurrenceDailyOption.EVERY_X_DAYS
-            self.event.dailyDays = self.resourceEveryXDays
+            self.event.dailyDays = self.recurrenceEveryXDays
             self.event.endDateOption = enums.scheduleRecurrenceEndDateOption.END_BY
             
             
