@@ -786,3 +786,10 @@ test_4972,1,0,0,0,Recscheduling - Edit an occurrence
 test_5162,1,0,0,0,Recscheduling - Delete Event Series
 test_5158,1,0,0,0,Groups- Create Group
 test_5178,1,0,0,0,Reach - Navigate to captions requests
+test_5205,1,0,0,0,Entry Design - Show Elements Enabled
+test_5471,1,0,0,0,Entry Design - Show Elements Disabled
+test_5472,1,0,0,0,Entry Design - Background Color
+test_5473,1,0,0,0,Entry Design - Custom CSS
+test_5474,1,0,0,0,Entry Design - Different Logo
+test_5475,1,0,0,0,Entry Design - Change the Theme and then Reset To Default
+test_5476,1,0,0,0,Entry Design - Create custom Theme
