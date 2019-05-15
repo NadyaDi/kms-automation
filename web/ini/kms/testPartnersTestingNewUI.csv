@@ -778,6 +778,7 @@ test_4740,eSearch - Filter by media type no search - add to category SR tab,2443
 test_4741,eSearch - Filter by media type with search - add to category SR tab,2443872,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Kaltura1!,inbar.willman@kaltura.com,Kaltura1!
 test_4852,Recscheduling - Create new single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4962,Recscheduling - Create new recurring event - Daily - Every X days,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
+test_4963,Recscheduling - Create new recurring event - Daily - Every weekday,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4968,Recscheduling - Create event with resource conflict,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4969,Recscheduling - Delete an occurrence,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
 test_4970,Recscheduling - Edit Single event,2534391,qakmstest.dev.kaltura.com,pythonautomation3@gmail.com,Kaltura1!,AutomationUser7,Kaltura1!
