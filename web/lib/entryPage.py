@@ -2,7 +2,7 @@ from base import *
 import clsTestService
 import enums
 from selenium.webdriver.common.keys import Keys
-
+from PIL import Image
 
 
 class EntryPage(Base):
@@ -80,6 +80,15 @@ class EntryPage(Base):
     ENTRY_PAGE_ELEMENT_LOADER_SHARE                        = ('xpath', '//div[@class="elementLoader"]')
     ENTRY_PAGE_ACTIONS_DROPDOWNLIST_ANALYTICS_OPTION       = ('xpath', '//span[@id="tabLabel-userreports" and text()="Analytics"]')
     ENTRY_PAGE_CAPTIONS_REQUESTS_OPTION                    = ('xpath', '//span[@class="tabLabel" and text()=" Captions Requests"]')
+    ENTRY_PAGE_BODY                                        = ('xpath', '//body[contains(@class,"entry")]')
+    ENTRY_PAGE_HEADER_NAVBAR                               = ('xpath', '//div[contains(@class,"navbar") and @id="header"]')
+    ENTRY_PAGE_FOOTER_NAVBAR                               = ('xpath', '//div[contains(@class,"navbar") and @id="footer"]')
+    ENTRY_PAGE_HEADER_LOGO                                 = ('xpath', '//a[contains(@href,"/") and contains(@class,"brand")]')
+    ENTRY_PAGE_HEADER_LOGO_IMAGE                           = ('xpath', '//a[contains(@href,"/") and contains(@class,"logoImg brand")]')
+    ENTRY_PAGE_SIDEBAR                                     = ('xpath', '//div[@id="mySidebar"]')
+    ENTRY_PAGE_ENTRY_PROPERTIES                            = ('xpath', '//div[@class="row-fluid tight"]')
+    ENTRY_PAGE_ENTRY_TABS_CONTAINER                        = ('xpath', '//ul[contains(@class,"inline tabs-container")]')
+    ENTRY_PAGE_COMMENT_TAB_PANEL                           = ('xpath', '//div[@id="comments-tab-pane"]')
     #=============================================================================================================
     
     def navigateToEntryPageFromMyMedia(self, entryName):
@@ -1251,4 +1260,202 @@ class EntryPage(Base):
             return False    
         
         writeToLog("INFO", "'Captions Requests' option was successfully chosen")
-        return True  
+        return True
+    
+    
+    # Author: Horia Cus
+    # This function will verify the changes performed within the Entry Design
+    # You may verify only the desired design elements from the Entry Page, by leaving the ones that should not be verified as empty ''
+    # expectedElementsDict must contain the enum class and the status of the element ( True or False ) and must have inside, a list with all the available elements
+    # expectedElementDict must contain the following structure {enums.EditEntryDisplayElements.DESIRED_ELEMENT:True}
+        # If True, it will verify that the Element is presented
+        # If false, it will verify that the Element is not presented
+    # expectedBackgroundColor must contain the HEX code of the background color (e.g #C06C84)
+    # expectedCSSFilePath and expectedLogoFilePath must contain the path, where the specific files are saved ( e.g localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\kaltura_logo.png')
+    def verifyEntryDisplay(self, expectedElementsDict, expectedBackgroundColor, expectedCSSFilePath, expectedLogoFilePath):
+        # Verify that the Player Screen is always displayed
+        if self.wait_element(self.clsCommon.player.PLAYER_SCREEN, 30, True) == False:
+            writeToLog("INFO", "FAILED, the player screen was not displayed, although it should be always present, despite of the Entry Desing changes")
+            return False
+        
+        # Verify if we want to verify the presented elements specific for Entry Design from the Entry Page
+        if expectedElementsDict != '':
+            # Take the status of the presented elements from the entry page
+            headerElement                = self.wait_element(self.ENTRY_PAGE_HEADER_NAVBAR, 0.3, True)
+            headerLogoElement            = self.wait_element(self.ENTRY_PAGE_HEADER_LOGO, 0.3, True)
+            sideBarElement               = self.wait_element(self.ENTRY_PAGE_SIDEBAR, 0.3, True)
+            entryPropertiesElement       = self.wait_element(self.ENTRY_PAGE_ENTRY_PROPERTIES, 0.3, True)
+            entryTabsElement             = self.wait_element(self.ENTRY_PAGE_ENTRY_TABS_CONTAINER, 0.3, True)
+            commentTabElement            = self.wait_element(self.ENTRY_PAGE_COMMENT_TAB_PANEL, 0.3, True)
+            footerElement                = self.wait_element(self.ENTRY_PAGE_FOOTER_NAVBAR, 0.3, True)
+            
+            # Each index from the List is used in order to append the results in the presentedElementsDict, using this exact order
+            presentedElementList        = [headerElement, headerLogoElement, sideBarElement, entryPropertiesElement, entryTabsElement, commentTabElement, footerElement]
+            
+            # Create a list with the boolean status of the element
+            presentedElementListBoolean = []
+            for presentedElement in presentedElementList:
+                # If an element has been found, we will return it as True
+                if type(presentedElement) is not bool:
+                    presentedElement = True
+                    
+                presentedElementListBoolean.append(presentedElement)
+            
+            # Create a dictionary that contains the status of the presented elements from the entry page
+            presentedElementsDict    = {enums.EditEntryDisplayElements.HEADER:presentedElementListBoolean[0], 
+                                        enums.EditEntryDisplayElements.HEADER_LOGO:presentedElementListBoolean[1], 
+                                        enums.EditEntryDisplayElements.SIDEBAR:presentedElementListBoolean[2],
+                                        enums.EditEntryDisplayElements.ENTRY_PROPERTIES:presentedElementListBoolean[3],
+                                        enums.EditEntryDisplayElements.ENTRY_TABS:presentedElementListBoolean[4],
+                                        enums.EditEntryDisplayElements.COMMENTS:presentedElementListBoolean[5],
+                                        enums.EditEntryDisplayElements.FOOTER:presentedElementListBoolean[6]} 
+            
+            # Compare the expected elements status with the presented element status
+            if expectedElementsDict != presentedElementsDict:
+                # Take the string out of the expected and presented dictionaries
+                expectedElementDictString       = ', '.join("{!s}={!r}".format(key,val) for (key,val) in expectedElementsDict.items())
+                presentedElementsDictString     = ', '.join("{!s}={!r}".format(key,val) for (key,val) in presentedElementsDict.items())
+                
+                # Print the presented and expected dictionaries
+                writeToLog("INFO", "\nPresented Dictionary:\n" + presentedElementsDictString + "\nExpected Dictionary:\n" + expectedElementDictString)
+                inconsitencyList = []
+                
+                # Create an inconsistency list in order to highlight where it failed
+                try:
+                    for expectedElement in expectedElementsDict:
+                        if expectedElementsDict[expectedElement] != presentedElementsDict[expectedElement]:
+                            if expectedElementsDict[expectedElement] == False:
+                                expectedStatus = "to not be displayed but it was presented"
+                            else:
+                                expectedStatus = "to be displayed, at it was not presented" 
+                            inconsitencyList.append("FAILED, Inconsistency for the element " + expectedElement.value + " we expected that the element " + expectedStatus)
+                    
+                    if len(inconsitencyList) > 1:
+                        inconsistencies = "\n".join(inconsitencyList)
+                    else:
+                        inconsistencies = inconsitencyList[0]
+                except Exception:
+                    inconsistencies = 'Exception'
+                    
+                writeToLog("INFO", "FAILED, the following inconsistencies were noticed in the Entry Page " + str(inconsistencies))
+                return  False
+        
+        # Verify if we want to verify the expected background color
+        if expectedBackgroundColor != '':
+            # Take the presented background color from the body element using css property
+            try:
+                bodyElementBackgroundColor = self.wait_element(self.ENTRY_PAGE_BODY, 1, True).value_of_css_property('background-color').replace('rgb','').split(',')
+            except Exception:
+                writeToLog("INFO", "FAILED to take the background color details from the body element")
+                return False
+            
+            # Take the R,G,B numbers
+            R,G,B                               = bodyElementBackgroundColor[0].replace('(',''), bodyElementBackgroundColor[1].replace('(',''), bodyElementBackgroundColor[2].replace('(','')
+            # Make sure that the R,G,B are returned integer
+            R,G,B                               = int(re.search(r'\d+', R).group()), int(re.search(r'\d+', G).group()), int(re.search(r'\d+', B).group())
+            # Create a Tuple with the R,G,B integers
+            bodyElementBackgroundColorTuple     = (R,G,B)
+            # Convert the R,G,B Tuple to HEX
+            bodyElementBackgroundColorHEX       = ('#%02x%02x%02x' % bodyElementBackgroundColorTuple).upper()
+            
+            if bodyElementBackgroundColorHEX != expectedBackgroundColor:
+                writeToLog("INFO", "FAILED, the " + bodyElementBackgroundColorHEX + " background color has been presented, while we expected: " + expectedBackgroundColor)
+                return False
+            
+        # Verify if the changes were performed within the CSS
+        if expectedCSSFilePath != '':
+            try:
+                expectedCSSString       = open(expectedCSSFilePath).read()
+            except Exception:
+                writeToLog("INFO", "FAILED to read the expected CSS file")
+                return False
+            
+            # Take a list with all the expected CSS list attributes and values
+            expectedCSSList            = expectedCSSString.strip('body').replace('{','').replace('}','').split()
+            
+            # Create a list with the attribute changes in order to proper iterate through the dictionary
+            expectedCSSAtributeChangesList      = []
+            expectedCSSChangesDict              = {}
+            for x in range(0,len(expectedCSSList)):
+                # Verify that we reached an attribute within the expectedCSSList
+                if expectedCSSList[x][-1] == ':':
+                    attributeCSSExpected    = expectedCSSList[x].replace(':','')
+                    # Supports only one value
+                    valueCSSExpected        = expectedCSSList[x+1].replace(';','')
+                    # Create a list that contains all the attributes that are expected to be changed
+                    expectedCSSAtributeChangesList.append(attributeCSSExpected)
+                    # Create a dictionary that contains the expected attributes and values
+                    expectedCSSChangesDict.update({attributeCSSExpected:valueCSSExpected})                   
+            
+            # CSS changes affects the body element
+            bodyElement             = self.wait_element(self.ENTRY_PAGE_BODY, 15, True)
+            
+            # Verify that we were able to take the body element
+            if bodyElement == False:
+                writeToLog("INFO", "FAILED to take the body element")
+                return False
+            
+            # Verify that we were able to find at least one attribute with the expected CSS File path
+            if len(expectedCSSAtributeChangesList) == 0:
+                writeToLog("INFO", "FAILED to find any attributes within the expected CSS file path")
+                return False
+            
+            # Verify that the value for the expected changed attributes matches with the presented values
+            for x in range(0, len(expectedCSSAtributeChangesList)):
+                # Take the changed attribute name
+                currentAttribute         = expectedCSSAtributeChangesList[x]
+                # Take the presented value of the current attribute
+                presentedAttributeValue  = bodyElement.value_of_css_property(currentAttribute)
+                # Take the expected value of the current attribute
+                expectedAttributeValue   = expectedCSSChangesDict[expectedCSSAtributeChangesList[x]]
+                
+                # Verify that the presented and expected values for the current attribute matches
+                if presentedAttributeValue != expectedAttributeValue:
+                    writeToLog("INFO", "FAILED, we expected for the attribute: " + currentAttribute + " to have a value of: " + expectedAttributeValue + " but the value was: " + presentedAttributeValue)
+                    return False
+        
+        # Verify if we expect to have a Logo Image in the header
+        if expectedLogoFilePath != '':
+            # Take the element for the header logo
+            headerLogoElement = self.wait_element(self.ENTRY_PAGE_HEADER_LOGO_IMAGE, 1, True)
+            
+            # Verify that a header logo element is presented
+            if headerLogoElement == False:
+                writeToLog("INFO", "FAILED, we expected to have a Logo Image, but there's no logo image displayed")
+                return False
+            
+            # Take the element for the logo image
+            try:
+                imageElement = self.get_child_element_by_type(headerLogoElement, 'tag_name', 'img')
+            except Exception:
+                writeToLog("INFO", "FAILED to take the logo image element")
+                return False
+            
+            # Take the presented width and height of the logo
+            try:
+                presentedWidth, presentedHeight = imageElement.rect['width'], imageElement.rect['height']
+            except Exception:
+                writeToLog("INFO", "FAILED to take the presented width and height")
+                return False
+            
+            # Take the expected width and height of the logo
+            with Image.open(expectedLogoFilePath) as expectedImage:
+                expectedWidth, expectedHeight = expectedImage.size
+            
+            # Compare the width and height of the presented with the expected logo image, in order to verify that the expected logo is displayed
+            if int(presentedWidth) != int(expectedWidth):
+                writeToLog("INFO", "FAILED, we expected a Logo image with width size of " + str(expectedWidth) + " but the width size was " + str(presentedWidth))
+                return False
+            
+            if int(presentedHeight) != int(expectedHeight):
+                writeToLog("INFO", "FAILED, we expected a Logo image with height size of " + str(expectedHeight) + " but the height size was " + str(presentedHeight))
+                return False           
+        
+        # Verify that the HEADER logo is not displayed, but a Text
+        else:
+            if self.wait_element(self.ENTRY_PAGE_HEADER_LOGO_IMAGE, 1, True) != False:
+                writeToLog("INFO", "FAILED, we expected to not have a Logo Image, but a Logo Image is displayed in the header")
+                return False      
+        
+        writeToLog("INFO", "Entry Design changes were displayed as expected")           
+        return True

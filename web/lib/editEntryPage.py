@@ -5,6 +5,7 @@ import clsCommon
 import clsTestService
 import enums
 import utilityTestFunc
+from selenium.common.exceptions import MoveTargetOutOfBoundsException
 
 
 class EditEntryPage(Base):
@@ -33,12 +34,12 @@ class EditEntryPage(Base):
     EDIT_ENTRY_SAVE_BUTTON                                      = ('xpath', "//button[@id='Entry-submit']")
     EDIT_ENTRY_OPTIONS_TAB_SAVE_BUTTON                          = ('id', "EntryOptions-submit")
     EDIT_ENTRY_SAVE_BUTTON_FLAVOR                               = ('id', "EditFlavors-submit")
-    EDIT_ENTRY_DETAILS_TAB                                      = ('id', 'details-tab')
     EDIT_ENTRY_OPTION_TAB                                       = ('id', 'options-tab')
     EDIT_ENTRY_THUMBNAIL_TAB                                    = ('id', 'thumbnails-tab-tab')
     EDIT_ENTRY_CAPTION_TAB                                      = ('id', 'captions-tab-tab')
     EDIT_ENTRY_DOWNLOADS_TAB                                    = ('id', 'downloads-tab-tab')
     EDIT_ENTRY_TIMELINE_TAB                                     = ('id', 'chapters-tab')
+    EDIT_ENTRY_TAB_LOADING                                      = ('xpath' , "//div[@class='elementLoader']")
     EDIT_ENTRY_DISABLE_COMMENTS_CHECKBOX                        = ('id', 'EntryOptions-commentsMulti-commentsDisabled')
     EDIT_ENTRY_ENABLE_SCHEDULING_RADIO                          = ('xpath', "//label[@class='schedulerRadioLabel radio' and contains(text(), 'Specific Time Frame')]")
     EDIT_ENTRY_SCHEDULING_START_TIME_CALENDAR                   = ('xpath' , "//input[@aria-label='Start Time Time']")
@@ -95,6 +96,7 @@ class EditEntryPage(Base):
     EDIT_ENTRY_APPROVE_REPLACMENT_BUTTON                        = ('xpath', '//button[@id="approveReplacmentBtn"]')
     EDIT_ENTRY_MEDIA_SUCCESSFULLY_REPLACED_MSG                  = ('xpath', '//div[@class="alert alert-success " and contains(text(),"Your media was successfully replaced")]') 
     EDIT_ENTRY_MEDIA_IS_BEING_PROCCESSED_MSG                    = ('xpath', '//div[@class="alert alert-success " and text()="Your media is being processed"]')
+    EDIT_ENTRY_DETAILS_TAB                                      = ('id', 'details-tab')
     EDIT_ENTRY_ATTACHMENTS_TAB                                  = ('xpath', '//a[contains(@id,"attachments-tab")]')# USE multipleElements=True
     EDIT_ENTRY_ATTACHMENTS_UPLOAD_FILE                          = ('xpath', '//a[contains(@href, "attachments") and text()="Upload File    "]')
     EDIT_ENTRY_ATTACHMENTS_SELECT_FILE                          = ('xpath', '//label[@for="attachments_fileinput"]')
@@ -124,7 +126,22 @@ class EditEntryPage(Base):
     EDIT_ENTRY_CUSTOM_DATE_DAY                                  = ('xpath', "//td[@class='day'][contains(text(),'DAY')]")  
     EDIT_ENTRY_CHANGE_MEDIA_OWNER                               = ('xpath', "//a[@id='change_owner']")
     EDIT_ENTRY_CHANGE_MEDIA_OWNER_POP_UP_TITLE                  = ('xpath', "//h3[contains(text(),'Change Media Owner')]") 
-    EDIT_ENTRY_CHANGE_MEDIA_OWNER_SAVE_BUTTON                   = ('xpath', "//a[contains(text(),'Save')]")                                                    
+    EDIT_ENTRY_CHANGE_MEDIA_OWNER_SAVE_BUTTON                   = ('xpath', "//a[contains(text(),'Save')]")
+    EDIT_ENTRY_DISPLAY_TAB                                      = ('xpath', '//a[contains(@id,"theme-tab")]')
+    EDIT_ENTRY_DISPLAY_TAB_BACKGROUND_COLOR_INPUT_FIELD         = ('xpath', "//input[@id='backgroundColor']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_HEADER_INPUT_FIELD                   = ('xpath', "//input[@id='showElements-header']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_HEADER_LOGO_INPUT_FIELD              = ('xpath', "//input[@id='showElements-headerLogo']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_SIDEBAR_INPUT_FIELD                  = ('xpath', "//input[@id='showElements-sidebar']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_ENTRY_PROPERTIES_INPUT_FIELD         = ('xpath', "//input[@id='showElements-entryProperties']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_ENTRY_TABS_INPUT_FIELD               = ('xpath', "//input[@id='showElements-entryTabs']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_COMMENTS_INPUT_FIELD                 = ('xpath', "//input[@id='showElements-comments']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_FOOTER_INPUT_FIELD                   = ('xpath', "//input[@id='showElements-footer']")
+    EDIT_ENTRY_DISPLAY_TAB_CSS_INPUT_FIELD                      = ('xpath', "//input[@id='cssFile']")                                                               
+    EDIT_ENTRY_DISPLAY_TAB_LOGO_INPUT_FIELD                     = ('xpath', "//input[@id='logoFile']")
+    EDIT_ENTRY_DISPLAY_TAB_UPLOAD_CSS_BUTTON                    = ('xpath', "//button[@id='cssUploadButton']")                                                                                             
+    EDIT_ENTRY_DISPLAY_TAB_UPLOAD_LOGO_BUTTON                   = ('xpath', "//button[@id='logoUploadButton']")                                                                                             
+    EDIT_ENTRY_DISPLAY_TAB_SAVE_ENTRY_THEME_BUTTON              = ('xpath', "//input[@value='Save entry theme']")                                 
+    EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD                        = ('xpath', "//span[@class='alert-message' and contains(text(),'File uploaded successfully')]")                                 
     #=============================================================================================================
     
     
@@ -163,6 +180,7 @@ class EditEntryPage(Base):
         if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.BLACK_BOARD or localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SAKAI:
             self.click(self.clsCommon.entryPage.ENTRY_PAGE_DETAILS_BUTTON, timeout=5 ,multipleElements=True)
             self.get_body_element().send_keys(Keys.PAGE_DOWN)
+            #self.get_body_element().send_keys(Keys.ENTER)
             
 #        if localSettings.LOCAL_SETTINGS_APPLICATION_UNDER_TEST == enums.Application.SHARE_POINT:
             
@@ -446,10 +464,21 @@ class EditEntryPage(Base):
         elif tabName == enums.EditEntryPageTabName.ATTACHMENTS:
             if self.click(self.EDIT_ENTRY_ATTACHMENTS_TAB, 30, multipleElements=True) == False:
                 writeToLog("INFO","FAILED to click on attachment tab")
+                return False
+
+        elif tabName == enums.EditEntryPageTabName.DISPLAY:
+            if self.click(self.EDIT_ENTRY_DISPLAY_TAB, 30, True) == False:
+                writeToLog("INFO","FAILED to click on " + tabName.value + " tab")
                 return False             
-                                  
+                         
         else:
             writeToLog("INFO","FAILED, Unknown tabName")
+            return False
+        
+        sleep(0.5)
+        
+        if self.wait_while_not_visible(self.EDIT_ENTRY_TAB_LOADING, 30) == False:
+            writeToLog("INFO", "FAILED to load the " + tabName.value + " tab")
             return False
         
         return True   
@@ -1727,4 +1756,230 @@ class EditEntryPage(Base):
             return False
         sleep(1)
         writeToLog("INFO", "The " + userID + " has been successfully removed from the Collaboration list")
+        return True
+    
+    
+    # Author: Horia Cus
+    # This function will perform changes within the Entry Design based on the values inserted in the signature
+    # You may change only certain design elements, by leaving the ones that are not relevant as empty ''
+    # expectedElementsDict must contain the enum class and the status of the element ( True or False ) and must have inside, a list with all the available elements
+    # expectedElementDict must contain the following structure {enums.EditEntryDisplayElements.DESIRED_ELEMENT:True}
+        # If True, it will verify that the Element is presented
+        # If false, it will verify that the Element is not presented
+    # expectedBackgroundColor must contain the HEX code of the background color (e.g #C06C84)
+    # expectedCSSFilePath and expectedLogoFilePath must contain the path, where the specific files are saved ( e.g localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\kaltura_logo.png')
+    def changeEntryDisplay(self, showElementsDict, backgroundColor, cssFilePath, logoFilePath):
+        if self.clickOnEditTab(enums.EditEntryPageTabName.DISPLAY) == False:
+            return False
+        
+        # Verify if we want to modify the show elements
+        if showElementsDict != '':
+            # Iterate through each show element in order to enable or disable it
+            for showElementName in showElementsDict:
+                # Take the locator for the current showElementName
+                if showElementName == enums.EditEntryDisplayElements.HEADER:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_HEADER_INPUT_FIELD, 10, True)
+                    
+                elif showElementName == enums.EditEntryDisplayElements.HEADER_LOGO:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_HEADER_LOGO_INPUT_FIELD, 10, True)
+                
+                elif showElementName == enums.EditEntryDisplayElements.SIDEBAR:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_SIDEBAR_INPUT_FIELD, 10, True)
+                
+                elif showElementName == enums.EditEntryDisplayElements.ENTRY_PROPERTIES:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_ENTRY_PROPERTIES_INPUT_FIELD, 10, True)
+                
+                elif showElementName == enums.EditEntryDisplayElements.ENTRY_TABS:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_ENTRY_TABS_INPUT_FIELD, 10, True)
+                
+                elif showElementName == enums.EditEntryDisplayElements.COMMENTS:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_COMMENTS_INPUT_FIELD, 10, True)
+                
+                elif showElementName == enums.EditEntryDisplayElements.FOOTER:
+                    showElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_FOOTER_INPUT_FIELD, 10, True)
+                
+                else:
+                    writeToLog("INFO", "FAILED to find the element " + showElementName.value + " in the EditEntryDisplayElements enum class")
+                    return False
+                
+                # Verify that the locator from showElementName returned an element
+                if showElement == False:
+                    writeToLog("INFO", "FAILED, the " + showElementName.value + " element could not be found")
+                    return False
+                
+                # Verify if the we want to enable the showElementName
+                if showElementsDict[showElementName] == True:
+                    
+                    # Take the attributes from the showElementName in order to check if it's already enabled
+                    try:
+                        showElementAttributes = self.driver.execute_script('var items = {}; for (index = 0; index < arguments[0].attributes.length; ++index) { items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value }; return items;', showElement)
+                    except Exception:
+                        writeToLog("INFO", "FAILED to take the attributes of the " + showElementName.value + " element")
+                        return False
+                    
+                    # Convert the dictionary from showElementAttributes into a string
+                    showelementAttributesString = ', '.join("{!s}={!r}".format(key,val) for (key,val) in showElementAttributes.items())
+                    
+                    # Verify if the showElementName is already checked
+                    if showelementAttributesString.count('checked') >= 1:
+                        writeToLog("INFO", "The show element " + showElementName.value + " is already enabled")
+                    
+                    else:
+                        # Enable the desired show element
+                        if self.clickElement(showElement) == False:
+                            writeToLog('INFO', "FAILED to click on the " + showElementName.value + " element")
+                            return False
+                
+                # Verify if we want to display the showElementName
+                elif showElementsDict[showElementName] == False:
+                    # Take the attributes from the showElementName in order to check if it's already disabled
+                    try:
+                        showElementAttributes = self.driver.execute_script('var items = {}; for (index = 0; index < arguments[0].attributes.length; ++index) { items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value }; return items;', showElement)
+                    except Exception:
+                        writeToLog("INFO", "FAILED to take the attributes of the " + showElementName.value + " element")
+                        return False
+                    
+                    # Convert the dictionary from showElementAttributes into a string
+                    showelementAttributesString = ', '.join("{!s}={!r}".format(key,val) for (key,val) in showElementAttributes.items())
+                    
+                    # Verify if the showElementName is already checked
+                    if showelementAttributesString.count('checked') == 0:
+                        writeToLog("INFO", "The show element " + showElementName.value + " is already disabled")
+                    
+                    else:
+                        # Disable the desired show element
+                        if self.clickElement(showElement) == False:
+                            writeToLog('INFO', "FAILED to click on the " + showElementName.value + " element")
+                            return False            
+                else:
+                    writeToLog("INFO", "FAILED, please make sure that you've used the correct format for showElementsDict")
+                    return False
+            
+        # Verify if the Background Color needs to be updated        
+        if backgroundColor != '':
+            # Highlight the background color input field
+            if self.click(self.EDIT_ENTRY_DISPLAY_TAB_BACKGROUND_COLOR_INPUT_FIELD, 5, True) == False:
+                writeToLog("INFO", "FAILED to click on the Background Color input field")
+                return False
+            
+            # Insert the desired HEX color code
+            if self.clear_and_send_keys(self.EDIT_ENTRY_DISPLAY_TAB_BACKGROUND_COLOR_INPUT_FIELD, backgroundColor, True) == False:
+                writeToLog("INFO", "FAILED to insert the " + backgroundColor + " background color inside the input field")
+                return False
+            
+            # Confirm the color code by pressing on the enter button
+            try:
+                ActionChains(self.driver).send_keys(Keys.ENTER).perform()
+            except Exception:
+                writeToLog("INFO", "FAILED to confirm the background color")
+                return False
+            
+            # Wait for the changes to be saved
+            self.clsCommon.general.waitForLoaderToDisappear()
+        
+        # Verify if the CSS File Path needs to be updated
+        if cssFilePath != '':
+            # Take the element for the Browse CSS button
+            cssBrowseButtonElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_CSS_INPUT_FIELD, 5, True)
+            
+            # Verify that the CSS option is enabled
+            if cssBrowseButtonElement == False:
+                writeToLog("INFO", "FAILED, the CSS option is not enabled")
+                return False
+            
+            # Trigger the File Upload Dialog
+            try:
+                ActionChains(self.driver).click(cssBrowseButtonElement).perform()
+            except MoveTargetOutOfBoundsException:
+                # Put in view the CSS browse button
+                try:
+                    self.driver.execute_script("arguments[0].scrollIntoView();", cssBrowseButtonElement)
+                except Exception:
+                    writeToLog("INFO", "FAILED to scroll to the CSS Browse element button")
+                    return False
+                
+                # Trigger the File Upload Dialog when the CSS Browse button is in view
+                try:
+                    ActionChains(self.driver).click(cssBrowseButtonElement).perform()
+                except Exception:
+                    writeToLog("INFO", "FAILED to click on the CSS Browse button")
+                    return False
+            
+            sleep(1)
+            # Insert the cssFilePath
+            self.clsCommon.upload.typeIntoFileUploadDialog(cssFilePath)
+            sleep(1)
+            
+            # Click on the Upload CSS button in order to successfully upload the CSS File
+            if self.click(self.EDIT_ENTRY_DISPLAY_TAB_UPLOAD_CSS_BUTTON, 5, True) == False:
+                writeToLog("INFO", "FAILED to click on Upload CSS button")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            # Verify that the CSS File has been successfully uploaded
+            if self.wait_element(self.EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD, 15, True) == False:
+                writeToLog("INFO", "FAILED to display the confirmation message after the CSS has been uploaded")
+                return False
+            
+        # Verify if the Logo needs to be updated
+        if logoFilePath != '':
+            # Take the element for the Browse CSS button
+            logoBrowseButtonElement = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_LOGO_INPUT_FIELD, 5, True)
+            
+            # Verify that the Different Logo option is enabled
+            if logoBrowseButtonElement == False:
+                writeToLog("INFO", "FAILED, the Different Logo option is not enabled")
+                return False
+            
+            # Trigger the File Upload Dialog
+            try:
+                ActionChains(self.driver).click(logoBrowseButtonElement).perform()
+            except MoveTargetOutOfBoundsException:
+                # Put in view the Different Logo browse button
+                try:
+                    self.driver.execute_script("arguments[0].scrollIntoView();", logoBrowseButtonElement)
+                except Exception:
+                    writeToLog("INFO", "FAILED to scroll to the Different Logo Browse element button")
+                    return False
+                
+                # Trigger the File Upload Dialog when the Different Logo button is in view
+                try:
+                    ActionChains(self.driver).click(logoBrowseButtonElement).perform()
+                except Exception:
+                    writeToLog("INFO", "FAILED to click on the Different Logo Browse button")
+                    return False
+            
+            # Insert the cssFilePath
+            sleep(1)
+            self.clsCommon.upload.typeIntoFileUploadDialog(logoFilePath)
+            sleep(1)
+            
+            # Click on the Upload Logo button in order to successfully upload the Logo File
+            if self.click(self.EDIT_ENTRY_DISPLAY_TAB_UPLOAD_LOGO_BUTTON, 5, True) == False:
+                writeToLog("INFO", "FAILED to click on Upload Logo button")
+                return False
+            
+            self.clsCommon.general.waitForLoaderToDisappear()
+            
+            # Verify that the Logo File has been successfully uploaded
+            if self.wait_element(self.EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD, 15, True) == False:
+                writeToLog("INFO", "FAILED to display the confirmation message after the CSS has been uploaded")
+                return False
+        
+        # Verify that both css and logo file changes were properly saved by verifing that a number of two confirmation messages are displayed
+        if cssFilePath != '' and logoFilePath != '':
+            confirmationMessageElements = self.wait_elements(self.EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD, 5)
+            
+            if len(confirmationMessageElements) != 2:
+                writeToLog("INFO", "FAILED, we expected to have two confirmation messages after saving the Logo and CSS file changes, but a number of " + str(len(confirmationMessageElements)) + " confirmation messages were displayed")
+                return False
+
+        # Save all the Entry Design changes
+        if self.click(self.EDIT_ENTRY_DISPLAY_TAB_SAVE_ENTRY_THEME_BUTTON, 5, True) == False:
+            writeToLog("INFO", "FAILED to click on the save entry theme button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        writeToLog("INFO", "Entry Design changes were successfully applied in the Edit Entry Page")
         return True
