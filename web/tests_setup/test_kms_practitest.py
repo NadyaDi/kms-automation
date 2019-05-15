@@ -31,7 +31,6 @@ class Test:
                     self.practiTest.createAutomationTestSetFile(prSessionInfo["hostname"], prSessionInfo["environment"], prSessionInfo["setPlatform"], testIDsDct)
                 else:
                     writeToLog("INFO","Unable to get test list")
-                    return
                                     
                 if (self.practiTest.setTestSetAutomationStatusAsProcessed(prSessionInfo["sessionSystemID"]) != True):
                     writeToLog("INFO","Unable to set test set as processed") 
