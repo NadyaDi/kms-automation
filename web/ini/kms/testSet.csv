@@ -776,6 +776,7 @@ test_4725,1,0,0,0,Filters Section - with search - Channel Page - Media Tab
 test_4726,1,0,0,0,Filters Section - no search - Channel Page - Media Tab
 test_4852,1,0,0,0,Recscheduling - Create new single event
 test_4962,1,0,0,0,Recscheduling - Create new recurring event - Daily - Every X days
+test_4963,1,0,0,0,Recscheduling - Create new recurring event - Daily - Every weekday
 test_4968,1,0,0,0,Recscheduling - Create event with resource conflict
 test_4969,1,0,0,0,Recscheduling - Delete an occurrence
 test_4970,1,0,0,0,Recscheduling - Edit Single event
