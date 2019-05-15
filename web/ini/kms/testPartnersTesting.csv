@@ -293,3 +293,10 @@ test_5054,Entitlements - Private Category using Global Page,6269,qakmstest.dev.k
 test_5055,Entitlements - Restricted Category using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5125,Entitlements - Public Channel Open using Global Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
 test_5127,Entitlements - Public Open Channel using Channels Page,6269,qakmstest.dev.kaltura.com,adi.millman@kaltura.com,kaltura1!,AutoKEA,Aa123456
+test_5205,Entry Design - Show Elements Enabled,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456
+test_5471,Entry Design - Show Elements Disabled,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456
+test_5472,Entry Design - Background Color,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456
+test_5473,Entry Design - Custom CSS,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456
+test_5474,Entry Design - Different Logo,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456
+test_5475,Entry Design - Change the Theme and then Reset To Default,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456
+test_5476,Entry Design - Create custom Theme,2373952-1,qakmstest.dev.kaltura.com,inbar.willman@kaltura.com,Aa123456,inbar.willman@kaltura.com,Aa123456

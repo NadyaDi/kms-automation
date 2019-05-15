@@ -38,7 +38,7 @@ class Test:
 
     # Variables used in order to specify the path of the video entry
     filePathVideo = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\videos\QR_30_sec_new.mp4'
-    logoFilePath  = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\kaltura_logo.png'
+    logoFilePath  = localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\automation.jpg'
         
     #run test as different instances on all the supported platforms
     @pytest.fixture(scope='module',params=supported_platforms)
