@@ -81,7 +81,7 @@ class Test:
             self.ponitesPossible = '100'
             self.expectedGradeInGrades = '67 %'
             self.expectedGradeNotification = '66.67 %'
-            self.gradebookTitle = clsTestService.addGuidToString("Quiz_Gradebook-Quiz (00:30)", self.testNum) 
+            self.gradebookTitle = clsTestService.addGuidToString("Quiz_GradebookV2-Quiz (00:30)", self.testNum) 
             
             self.galleryName = "New1"
             
