@@ -248,7 +248,7 @@ class Test:
              
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to KMS site")  
-            if self.common.login.navigateToLoginPage() == False:
+            if self.common.login.navigateToLoginPage(verifyUrl=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KMS site")  
                 return             
