@@ -5,6 +5,7 @@ from KalturaClient.Plugins.Core import KalturaSessionType, KalturaCategory, \
     KalturaCategoryFilter,KalturaContributionPolicyType, KalturaAppearInListType
 
 from utilityTestFunc import *
+from KalturaClient.Plugins.Reach import KalturaEntryVendorTaskFilter, KalturaEntryVendorTaskStatus, KalturaEntryVendorTask
 
 # This is class for KALTURA API
 # Before use call for self.common.apiClientSession.startCurrentApiClientSession() to start session of current (under test) partner
@@ -34,13 +35,17 @@ class ApiClientSession:
         return True
         
             
-    def startCurrentApiClientSession(self):
+    def startCurrentApiClientSession(self, partner=None):
         # Get Partner Details from partnerDetails.csv file: partnerId,serverUrl,adminSecret
-        serverUrl,adminSecret = getPartnerDetails(localSettings.LOCAL_SETTINGS_PARTNER)
+        if partner == None:
+            tmpPartner = localSettings.LOCAL_SETTINGS_PARTNER
+        else:
+            tmpPartner = partner
+        serverUrl,adminSecret = getPartnerDetails(tmpPartner)
         if serverUrl == None or adminSecret == None:
             writeToLog("INFO","FAILED to get partner details: service URL and Admin Secret")
             return False
-        if self.startApiClientSession(localSettings.LOCAL_SETTINGS_PARTNER, serverUrl, adminSecret) == False:
+        if self.startApiClientSession(tmpPartner, serverUrl, adminSecret) == False:
             writeToLog("INFO","FAILED to start KALTURA API client session")
             return False
         return True
@@ -180,3 +185,53 @@ class ApiClientSession:
             return parentId
         else:
             return self.getCategoryByName(parentId)
+        
+    
+    # @ Author: Inbar Willman
+    # Get entry captions requests by request status
+    # requestStatus=KalturaEntryVendorTaskStatus
+    def getEntryCaptionsRequestsId(self, entryId, requestStatus=KalturaEntryVendorTaskStatus.PENDING):
+        filter = KalturaEntryVendorTaskFilter()      
+        filter.entryIdEqual = entryId
+        filter.statusEqual = requestStatus
+        pager = None
+        
+        try:
+            result = self.client.entryvendortask.getJobs(filter, pager)
+            
+        except Exception as exp:
+            print(exp)
+            result = -1
+        
+        if len(result.objects) == 0:
+            writeToLog("INFO","No captions requests were found for: " + entryId)
+            return -1
+        else:
+            return result.objects[0].id
+        
+    # @ Author: Inbar Willman
+    # Update captions request status
+    # requestStatus=KalturaEntryVendorTaskStatus
+    # captionsRequestId - int
+    # accuracy - int
+    # captionsId - int
+    def updateCaptionsRequestsStatus(self, captionsRequestId, captionsId, accuracy, requestStatus=KalturaEntryVendorTaskStatus.READY):
+        id = captionsRequestId
+        entryVendorTask = KalturaEntryVendorTask()
+        entryVendorTask.status = requestStatus
+        entryVendorTask.accuracy = accuracy
+        entryVendorTask.outputObjectId = captionsId
+        
+        try:
+            result = self.client.entryvendortask.updateJob(id, entryVendorTask)
+            
+        except Exception as exp:
+            print(exp)
+            result = -1
+        
+        if result != -1:
+            writeToLog("INFO","Failed to update caption request status")
+            return False    
+        else:
+            writeToLog("INFO","Caption request status was update successfully")
+            return False                      

@@ -843,8 +843,8 @@ class OrderCaptionsSourceMediaLanguageOptions(Enum):
     def __str__(self):
         return str(self.value)
         
-    CAPTIONS               = 'Captions' 
-    
+    ENGLISH               = 'English' 
+    GERMAN                = 'German'
     
 class OrderCaptionsTurnaroundTimeOptions(Enum):
     def __str__(self):

@@ -17,3 +17,4 @@ partnerId,serverUrl,adminSecret,categoryParentId
 2504461,http://www.kaltura.com,a0c2ff2f29aba8e0ff7628201fe09afa,85509251
 2534391,http://www.kaltura.com,90882d08fe618b7050942dd915c33c1b,85509251
 qa-moodle34-php7,http://www.kaltura.com,244e3e9f171487effe89d4d6dd8813ca,85509251
+4769,http://qa-apache-php7.dev.kaltura.com,db0c631bef6c12328fe42c14d4263d65,85509251
