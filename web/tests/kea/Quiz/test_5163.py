@@ -112,45 +112,45 @@ class Test:
                 self.status = "Fail"
                 writeToLog("INFO","Step 1: FAILED to upload entry")
                 return
-                          
+                           
             self.common.base.get_body_element().send_keys(Keys.PAGE_DOWN)
-                                             
+                                              
             writeToLog("INFO","Step 2: Going to to navigate to entry page")    
             if self.common.upload.navigateToEntryPageFromUploadPage(self.entryName) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 2: FAILED to navigate entry page")
                 return
-                                             
+                                              
             writeToLog("INFO","Step 3: Going to to wait until media end upload process")    
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 3: FAILED to wait until media end upload process")
                 return
-                                                                            
+                                                                             
             writeToLog("INFO","Step 4 : Going to create a new Quiz for the " + self.entryName + " entry")  
             if self.common.kea.quizCreation(self.entryName, self.dictQuestions, timeout=35) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 4 : FAILED to create a new Quiz for the " + self.entryName + " entry")  
                 return
-                    
+                     
             self.common.base.switch_to_default_content()
-                        
+                         
             writeToLog("INFO","Step 5: Going to get entry page URL")
             self.entryPageURL = self.common.base.driver.current_url
-                        
+                         
             writeToLog("INFO","Step 6: Going to publish entry to unlisted")
             if self.common.myMedia.publishSingleEntryToUnlistedOrPrivate(self.quizEntryName, enums.ChannelPrivacyType.UNLISTED, publishFrom=enums.Location.MY_MEDIA) == False:
                 writeToLog("INFO","Step 6: FAILED failed to publish entry to unlisted")
                 return 
-                          
+                           
             writeToLog("INFO","Step 7: Going to navigate to KEA Quiz tab for " + self.quizEntryName)  
             if self.common.kea.initiateQuizFlow(self.quizEntryName, True, 1) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step 7: FAILED to navigate to KEA Quiz tab for " + self.quizEntryName)  
                 return 
-                          
+                           
             i = 8
-                          
+                           
             for option in self.keaAllScoreOptionsList:
                 optionNumber = 0
                 while len(option) != optionNumber:
@@ -162,52 +162,52 @@ class Test:
                     else:
                         i = i + 1                     
                         optionNumber = optionNumber + 1
-                        
+                         
             self.common.base.switch_to_default_content()
-               
+                
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to logout as quiz owner")  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as quiz owner")  
                 return 
-              
+               
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to login as " + self.userNameUser1)  
             if self.common.login.loginToKMS(self.userId1, self.userPass) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to login as " + self.userNameUser1)  
                 return       
-              
+               
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to entry page (by link)")
             if self.common.base.navigate(self.entryPageURL) == False:
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to entry page link")
                 return             
-              
+               
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to answer quiz as " + self.userNameUser1)  
             if self.common.player.verifyQuizAttempts(self.quizAnswersDictAllAttemptsUser1, totalGivenAttempts=self.totalGivenAttempts, scoreType=enums.playerQuizScoreType.LATEST, showScore=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to answer quiz as " + self.userNameUser1)  
                 return    
-                     
+                      
             self.common.base.switch_to_default_content()
-              
+               
             i = i + 1        
             writeToLog("INFO","Step " + str(i) + ": Going to logout as " + self.userNameUser1)  
             if self.common.login.logOutOfKMS() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to logout as " + self.userNameUser1)  
                 return  
-              
+               
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + " : Going to login as quiz owner")  
             if self.common.loginAsUser() == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + " : FAILED to login as quiz owner")  
                 return 
-              
+               
             i = i + 1       
             writeToLog("INFO","Step " + str(i) + ": Going to clear all attempts for " + self.userNameUser1) 
             if self.common.quizAnalytics.deleteUserAttempts(self.userId1, enums.quizAnlyticsDeleteOption.CLEAR_ALL_ATTEMPTS, self.quizEntryName, True) == False:
@@ -224,7 +224,7 @@ class Test:
              
             i = i + 1  
             writeToLog("INFO","Step " + str(i) + ": Going to navigate to KMS site")  
-            if self.common.login.navigateToLoginPage() == False:
+            if self.common.login.navigateToLoginPage(verifyUrl=False) == False:
                 self.status = "Fail"
                 writeToLog("INFO","Step " + str(i) + ": FAILED to navigate to KMS site")  
                 return                                                   
