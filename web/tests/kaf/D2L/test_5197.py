@@ -19,7 +19,7 @@ class Test:
     # Upload new media -> Create new quiz-> Go to course page -> Click on content tab ->  Click on 'Add Existing Activities' -> choose 'QAapp BSE" (testing)/ 'QA PROD BSE' (production)
     # Choose in embed page quiz -> Login as student -> Answer the quiz -> Verify that grade is display for student and admin
     #================================================================================================================================
-    testNum     = "4957"
+    testNum     = "5197"
     application = enums.Application.D2L
     supported_platforms = clsTestService.updatePlatforms(testNum)
     

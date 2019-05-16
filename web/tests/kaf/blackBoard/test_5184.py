@@ -20,7 +20,7 @@ class Test:
     # select new media > click embed -> make sure embed was created and successfully played
     # Make the same steps for media gallery
     #================================================================================================================================
-    testNum     = "2088"
+    testNum     = "5184"
     application = enums.Application.BLACK_BOARD
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
