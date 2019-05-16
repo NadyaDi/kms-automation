@@ -141,7 +141,8 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DISPLAY_TAB_UPLOAD_CSS_BUTTON                    = ('xpath', "//button[@id='cssUploadButton']")                                                                                             
     EDIT_ENTRY_DISPLAY_TAB_UPLOAD_LOGO_BUTTON                   = ('xpath', "//button[@id='logoUploadButton']")                                                                                             
     EDIT_ENTRY_DISPLAY_TAB_SAVE_ENTRY_THEME_BUTTON              = ('xpath', "//input[@value='Save entry theme']")                                 
-    EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD                        = ('xpath', "//span[@class='alert-message' and contains(text(),'File uploaded successfully')]")                                 
+    EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD                        = ('xpath', "//span[@class='alert-message' and contains(text(),'File uploaded successfully')]")   
+    EDIT_ENTRY_GET_CAPTIONS_ID                                  = ('css', 'div.row-fluid captionRow')                              
     #=============================================================================================================
     
     
@@ -1983,3 +1984,29 @@ class EditEntryPage(Base):
         
         writeToLog("INFO", "Entry Design changes were successfully applied in the Edit Entry Page")
         return True
+    
+    
+    # @Author: Inbar Willman
+    # Return captions id. In case captions id wasn't found return False
+    def getCaptionsId(self, entryName, forceNavigate=True, navigateFrom = enums.Location.ENTRY_PAGE):
+        if forceNavigate == True:
+            if self.navigateToEditEntry(entryName, navigateFrom) == False:
+                writeToLog("INFO", "FAILED to navigate to edit entry page")
+                return False                
+        
+        if self.clickOnEditTab(enums.EditEntryPageTabName.CAPTIONS) == False:
+            writeToLog("INFO","FAILED to click on the caption tab")
+            return False
+        sleep(2)
+        
+        tmpCaptionsElement = self.wait_element(self.EDIT_ENTRY_GET_CAPTIONS_ID)
+        if tmpCaptionsElement == False:
+            writeToLog("INFO","FAILED to find captions element")
+            return False 
+        
+        captionsId = tmpCaptionsElement.get_attribute("data-id")   
+        if len(captionsId) == 0:
+            writeToLog("INFO","FAILED to find captions id")
+            return False 
+        else:
+            return captionsId

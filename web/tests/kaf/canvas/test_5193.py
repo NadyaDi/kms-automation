@@ -22,7 +22,7 @@ class Test:
     # Verify that the embed was created successfully 
     # Verify that the embed was deleted successfully
     #================================================================================================================================
-    testNum     = "4856"
+    testNum     = "5193"
     application = enums.Application.CANVAS
     supported_platforms = clsTestService.updatePlatforms(testNum)
     
