@@ -14,13 +14,13 @@ class Test:
 
     #================================================================================================================================
     #  @Author: Horia Cus
-    # Test Name : Entry Design - Show Elements Disabled
+    # Test Name : Entry Design - Create custom Theme
     # Test description:
     # Create a new video entry, in order to change its Entry Design
-    # Disable all of the Show Elements from the Entry Page, Display Tab
-    # Verify that all of the Show Elements were disabled and that only the Player screen is displayed in the Entry Page
+    # Modify all the Entry Design options and save the new theme
+    # Verify that all the Entry Design changes are displayed in the entry page
     #================================================================================================================================
-    testNum = "5471"
+    testNum = "5476"
 
     supported_platforms = clsTestService.updatePlatforms(testNum)
 
@@ -29,12 +29,11 @@ class Test:
     common = None
     # Test variables
 
-    typeTest            = "Entry that has in the Entry Page all of the elements disabled"
+    typeTest            = "Entry that had the Entry Theme changed using all the Entry Design options"
     description         = "Description"
     entryName           = None
     entryDescription    = "description"
     entryTags           = "tag1,"
-    instanceURL         = None
     entryURL            = None
 
     # Variables used in order to specify the path of the video entry
@@ -58,50 +57,49 @@ class Test:
             self,self.driver = clsTestService.initializeAndLoginAsUser(self, driverFix)
             self.common = Common(self.driver)
             # Variables used in order to proper create the Entry
-            self.entryName             = clsTestService.addGuidToString("Entry Design - Show Elements Disabled", self.testNum)
+            self.entryName             = clsTestService.addGuidToString("Entry Design - Custom theme", self.testNum)
 
-            # All elements disabled
-            self.showElementsDictDisabled     = {enums.EditEntryDisplayElements.HEADER:False, 
-                                                 enums.EditEntryDisplayElements.HEADER_LOGO:False, 
-                                                 enums.EditEntryDisplayElements.SIDEBAR:False,
+            # Multiple elements disabled and enabled
+            self.showElementsDictMixed        = {enums.EditEntryDisplayElements.HEADER:True, 
+                                                 enums.EditEntryDisplayElements.HEADER_LOGO:True, 
+                                                 enums.EditEntryDisplayElements.SIDEBAR:True,
                                                  enums.EditEntryDisplayElements.ENTRY_PROPERTIES:False,
-                                                 enums.EditEntryDisplayElements.ENTRY_TABS:False,
+                                                 enums.EditEntryDisplayElements.ENTRY_TABS:True,
                                                  enums.EditEntryDisplayElements.COMMENTS:False,
-                                                 enums.EditEntryDisplayElements.FOOTER:False}  
+                                                 enums.EditEntryDisplayElements.FOOTER:False}
             ##################### TEST STEPS - MAIN FLOW #####################
-            self.instanceUrl = self.common.base.driver.current_url
             writeToLog("INFO","Step 1: Going to upload the " + self.entryName + " entry")
             if self.common.upload.uploadEntry(self.filePathVideo, self.entryName, self.entryDescription, self.entryTags, disclaimer=False) == None:
                 writeToLog("INFO","Step 1: FAILED to upload the " + self.entryName + " entry")
                 return
-              
+               
             writeToLog("INFO","Step 2: Going to navigate to the entry page of " + self.entryName)
             if self.common.entryPage.navigateToEntry(self.entryName, navigateFrom = enums.Location.UPLOAD_PAGE) == False:
                 writeToLog("INFO","Step 2: FAILED to navigate to the entry page of " + self.entryName)
                 return           
-                 
+                  
             writeToLog("INFO","Step 3: Going to wait until the entry has been processed")
             if self.common.entryPage.waitTillMediaIsBeingProcessed() == False:
                 writeToLog("INFO","Step 3: FAILED to wait until the entry has been processed")
                 return
- 
+  
             self.entryURL = self.common.base.driver.current_url
- 
+  
             writeToLog("INFO","Step 4: Going to navigate to the edit entry page of " + self.entryName)
             if self.common.editEntryPage.navigateToEditEntryPageFromEntryPage(self.entryName) == False:
                 writeToLog("INFO","Step 4: FAILED to navigate to the edit entry page of " + self.entryName)
                 return
-              
-            writeToLog("INFO","Step 5: Going to change the Entry Design by disabling all of the available Show Elements")
-            if self.common.editEntryPage.changeEntryDisplay(self.showElementsDictDisabled, '', '', '') == False:
-                writeToLog("INFO","Step 5: FAILED to change the Entry Design by disabling all of the available Show Elements")
+               
+            writeToLog("INFO","Step 5: Going to change the Entry Design by using all the available options / fields")
+            if self.common.editEntryPage.changeEntryDisplay(self.showElementsDictMixed, '#DD1818', self.cssFilePath, self.logoFilePath) == False:
+                writeToLog("INFO","Step 5: FAILED to change the Entry Design by using all the available options / fields")
                 return
              
             # Navigate to the entry page
             self.common.base.navigate(self.entryURL)
-             
+                          
             writeToLog("INFO","Step 6: Going to verify the Entry Design changes while being in the Entry Page of the entry: " + self.entryName)
-            if self.common.entryPage.verifyEntryDisplay(self.showElementsDictDisabled, '', '', '') == False:
+            if self.common.entryPage.verifyEntryDisplay(self.showElementsDictMixed, '#DD1818', self.cssFilePath, self.logoFilePath) == False:
                 writeToLog("INFO","Step 6: FAILED to verify the Entry Design changes while being in the Entry Page of the entry: " + self.entryName)
                 return 
             ##################################################################
@@ -115,7 +113,6 @@ class Test:
         try:
             self.common.handleTestFail(self.status)
             writeToLog("INFO","**************** Starting: teardown_method ****************")
-            self.common.base.navigate(self.instanceUrl)
             self.common.myMedia.deleteEntriesFromMyMedia(self.entryName)
             writeToLog("INFO","**************** Ended: teardown_method *******************")
         except:
