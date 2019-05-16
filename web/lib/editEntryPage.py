@@ -143,6 +143,9 @@ class EditEntryPage(Base):
     EDIT_ENTRY_DISPLAY_TAB_SAVE_ENTRY_THEME_BUTTON              = ('xpath', "//input[@value='Save entry theme']")                                 
     EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD                        = ('xpath', "//span[@class='alert-message' and contains(text(),'File uploaded successfully')]")   
     EDIT_ENTRY_GET_CAPTIONS_ID                                  = ('css', 'div.row-fluid captionRow')                              
+    EDIT_ENTRY_DISPLAY_TAB_RESET_CSS_BUTTON                     = ('xpath', "//button[@id='resetCss']")                                 
+    EDIT_ENTRY_DISPLAY_TAB_RESET_LOGO_BUTTON                    = ('xpath', "//button[@id='resetLogo']")                                 
+    EDIT_ENTRY_ALERT_MESSAGE_FILE_UPLOAD                        = ('xpath', "//span[@class='alert-message' and contains(text(),'File uploaded successfully')]")                                 
     #=============================================================================================================
     
     
@@ -1767,7 +1770,7 @@ class EditEntryPage(Base):
     # expectedElementDict must contain the following structure {enums.EditEntryDisplayElements.DESIRED_ELEMENT:True}
         # If True, it will verify that the Element is presented
         # If false, it will verify that the Element is not presented
-    # expectedBackgroundColor must contain the HEX code of the background color (e.g #C06C84)
+    # expectedBackgroundColor must contain the HEX code of the background color (e.g #C06C84) or None if you want to make sure that no color is used
     # expectedCSSFilePath and expectedLogoFilePath must contain the path, where the specific files are saved ( e.g localSettings.LOCAL_SETTINGS_MEDIA_PATH + r'\images\kaltura_logo.png')
     def changeEntryDisplay(self, showElementsDict, backgroundColor, cssFilePath, logoFilePath):
         if self.clickOnEditTab(enums.EditEntryPageTabName.DISPLAY) == False:
@@ -1863,10 +1866,17 @@ class EditEntryPage(Base):
                 writeToLog("INFO", "FAILED to click on the Background Color input field")
                 return False
             
-            # Insert the desired HEX color code
-            if self.clear_and_send_keys(self.EDIT_ENTRY_DISPLAY_TAB_BACKGROUND_COLOR_INPUT_FIELD, backgroundColor, True) == False:
-                writeToLog("INFO", "FAILED to insert the " + backgroundColor + " background color inside the input field")
-                return False
+            if backgroundColor != None:
+                # Insert the desired HEX color code
+                if self.clear_and_send_keys(self.EDIT_ENTRY_DISPLAY_TAB_BACKGROUND_COLOR_INPUT_FIELD, backgroundColor, True) == False:
+                    writeToLog("INFO", "FAILED to insert the " + backgroundColor + " background color inside the input field")
+                    return False
+            
+            # Change the background color to empty
+            else:
+                if self.clear_and_send_keys(self.EDIT_ENTRY_DISPLAY_TAB_BACKGROUND_COLOR_INPUT_FIELD, '', True) == False:
+                    writeToLog("INFO", "FAILED to empty the Background Input Field")
+                    return False
             
             # Confirm the color code by pressing on the enter button
             try:
@@ -2010,3 +2020,63 @@ class EditEntryPage(Base):
             return False 
         else:
             return captionsId
+
+          
+    # Author: Horia Cus
+    # This function will change the Entry Design theme to the default values
+    # All the Show Elements are enabled
+    # Background color is removed and set to empty
+    # CSS and Logo are wiped if they were presented
+    def changeToDefaultEntryDisplay(self,):
+        # Make sure that we are in the Display Tab
+        if self.clickOnEditTab(enums.EditEntryPageTabName.DISPLAY) == False:
+            return False
+        
+        # Create a dictionary that contains the default status of the presented elements from the entry page
+        defaultStatusOfShowElementDict    = {enums.EditEntryDisplayElements.HEADER:True, 
+                                             enums.EditEntryDisplayElements.HEADER_LOGO:True, 
+                                             enums.EditEntryDisplayElements.SIDEBAR:True,
+                                             enums.EditEntryDisplayElements.ENTRY_PROPERTIES:True,
+                                             enums.EditEntryDisplayElements.ENTRY_TABS:True,
+                                             enums.EditEntryDisplayElements.COMMENTS:True,
+                                             enums.EditEntryDisplayElements.FOOTER:True}
+        
+        # Change the status of the default show elements and make sure that no background color is used
+        if self.changeEntryDisplay(defaultStatusOfShowElementDict, None, '', '') == False:
+            writeToLog("INFO", "FAILED to change to default the Show Elements")
+            return False
+        
+        # Verify if the CSS needs to be reset to default
+        if self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_RESET_CSS_BUTTON, 1, True) != False:
+            writeToLog("INFO", "There are changes to the CSS, going to remove them...")
+            
+            # Change the CSS to default
+            if self.click(self.EDIT_ENTRY_DISPLAY_TAB_RESET_CSS_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to reset to default the CSS changes")
+                return False
+            
+        # Verify if the Logo needs to be reset to default
+        if self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_RESET_LOGO_BUTTON, 1, True) != False:
+            writeToLog("INFO", "There are changes to the CSS, going to remove them...")
+            
+            # Change the CSS to default
+            if self.click(self.EDIT_ENTRY_DISPLAY_TAB_RESET_LOGO_BUTTON, 1, True) == False:
+                writeToLog("INFO", "FAILED to reset to default the CSS changes")
+                return False
+        
+        # Verify that the option to upload new CSS and Logo files is available
+        uploadCSSButton     = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_UPLOAD_CSS_BUTTON, 1, True)    
+        uploadLogoButton    = self.wait_element(self.EDIT_ENTRY_DISPLAY_TAB_UPLOAD_LOGO_BUTTON, 1, True)
+        
+        if uploadCSSButton == False or uploadLogoButton == False:
+            writeToLog("INFO", "FAILED, the upload options were not displayed when we changed to default the entry design")
+            return False
+        
+        # Save all the Entry Design changes
+        if self.click(self.EDIT_ENTRY_DISPLAY_TAB_SAVE_ENTRY_THEME_BUTTON, 5, True) == False:
+            writeToLog("INFO", "FAILED to click on the save entry theme button")
+            return False
+        self.clsCommon.general.waitForLoaderToDisappear()
+        
+        writeToLog("INFO", "Entry Design was changed to the default properties")
+        return True
